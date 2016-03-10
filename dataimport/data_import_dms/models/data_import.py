@@ -157,7 +157,7 @@ class product(osv.osv):
                         # header fields
                         header_field = ln[i].strip().lower()
                         if header_field not in header_fields:
-                            err_log += '\n' + _("Invalid CSV File, Header Field '%s' is not supported !") % ln[i]
+                            err_log += '\n' + _("Invalid EXCEL File, Header Field '%s' is not supported !") % ln[i]
                         # required header fields : account, debit, credit            
                         elif header_field == 'uom':
                             uom_i = i
