@@ -32,7 +32,7 @@ Sale Class
 """,
     'author': 'Seventh Computing',
     'website': 'http://www.7thcomputing.com',
-    'depends': ['base','sale'
+    'depends': ['base','sale','sale_promotions'
     ],
     'data': [        
         'views/class_setup_view.xml',        

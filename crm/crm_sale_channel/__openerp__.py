@@ -32,7 +32,7 @@ Sale Channel
 """,
     'author': 'Seventh Computing',
     'website': 'http://www.7thcomputing.com',
-    'depends': ['base','sale'
+    'depends': ['base','sale','sale_promotions'
     ],
     'data': [        
         'views/sale_channel_view.xml',        

@@ -32,7 +32,7 @@ Sale Branch
 """,
     'author': 'Seventh Computing',
     'website': 'http://www.7thcomputing.com',
-    'depends': ['base','sale'
+    'depends': ['base','sale','sale_promotions'
     ],
     'data': [
        'views/branch_setup_view.xml'

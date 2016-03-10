@@ -35,7 +35,7 @@
 			<field name="view_id" eval="view_channel_tree" />
 		</record>
 
-		<menuitem id="config_channel" parent="base.menu_sale_config"
+		<menuitem id="config_channel" parent="sale_promotions.sales"
 			name="Sale Channels" action="action_channel_view"/>
 		
 	</data>

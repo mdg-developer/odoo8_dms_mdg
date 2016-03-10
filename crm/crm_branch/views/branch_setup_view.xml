@@ -36,7 +36,7 @@
 			<field name="view_id" eval="view_branch_tree" />
 		</record>
 
-		<menuitem id="config_branch" parent="base.menu_sale_config"
+		<menuitem id="config_branch" parent="sale_promotions.sales"
 			name="Sale Branch" action="action_branch_view" />
 		
 	</data>

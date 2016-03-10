@@ -32,7 +32,7 @@ Sale demarcation
 """,
     'author': 'Seventh Computing',
     'website': 'http://www.7thcomputing.com',
-    'depends': ['base','sale'
+    'depends': ['base','sale','sale_promotions'
     ],
     'data': [        
         'views/demarcation_setup_view.xml',        

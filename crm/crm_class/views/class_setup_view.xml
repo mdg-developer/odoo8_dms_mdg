@@ -35,7 +35,7 @@
 			<field name="view_id" eval="view_class_tree" />
 		</record>
 
-		<menuitem id="config_class" parent="base.menu_sale_config"
+		<menuitem id="config_class" parent="sale_promotions.sales"
 			name="Sale Class" action="action_class_view" groups="base.group_system" />
 		
 	</data>

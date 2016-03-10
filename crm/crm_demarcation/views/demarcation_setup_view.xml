@@ -35,7 +35,7 @@
 			<field name="view_id" eval="view_demarcation_tree" />
 		</record>
 
-		<menuitem id="config_demarcation" parent="base.menu_sale_config"
+		<menuitem id="config_demarcation" parent="sale_promotions.sales"
 			name="Sale Demarcation" action="action_demarcation_view" groups="base.group_system" />
 	
 	</data>
