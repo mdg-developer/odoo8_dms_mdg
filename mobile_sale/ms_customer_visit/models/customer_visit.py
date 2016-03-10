@@ -22,7 +22,7 @@ class customer_visit(osv.osv):
         'tablet_id':fields.many2one('tablets.information', 'Tablet ID'),
         'latitude':fields.float('Geo Latitude'),
         'longitude':fields.float('Geo Longitude'),
-       'sale_team_id':fields.many2one('crm.team', 'Sale Team'),
+       'sale_team_id':fields.many2one('crm.case.section', 'Sale Team'),
        'date':fields.datetime('Date'),
         'visit_reason':fields.selection([
                 ('no_shopkeeper', 'No Shopkeeper'),

@@ -28,7 +28,7 @@ class pre_sale_order(osv.osv):
         'sale_plan_day_id':fields.many2one('sale.plan.day', 'Sale Plan Day'),
         'sale_plan_trip_id':fields.many2one('sale.plan.trip', 'Sale Plan Trip'),
         'warehouse_id' : fields.many2one('stock.warehouse', 'Warehouse'),
-        'sale_team':fields.many2one('crm.team', 'Sale Team'),
+        'sale_team':fields.many2one('crm.case.section', 'Sale Team'),
         'location_id'  : fields.many2one('stock.location', 'Location'),
         'm_status':fields.char('Status'),
      'promos_line_ids':fields.one2many('mso.promotion.line', 'promo_line_id', 'Promotion Lines')                

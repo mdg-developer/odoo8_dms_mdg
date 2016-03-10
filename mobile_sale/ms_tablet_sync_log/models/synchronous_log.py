@@ -8,8 +8,8 @@ class sync_log(osv.osv):
     _columns = {
                 'user_id':fields.many2one('res.users', 'User'),
                 'date':fields.date('Date'),
-                'sale_team_id':fields.many2one('crm.team', 'Sale Team'),
-                'tablet_id':fields.many2one('tablets.information','Tablet'),
+                'sale_team_id':fields.many2one('crm.case.section', 'Sale Team'),
+                'tablet_id':fields.many2one('tablets.information', 'Tablet'),
                 'log_description':fields.text('Log Description')
   }
         
