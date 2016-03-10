@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Parent Menu -->
+		<menuitem name="Mobile Sales" id="base.menu_mobile_sale"
+			groups="base.group_sale_salesman,base.group_sale_manager" sequence="5" />
+
+		<!-- Child Menus -->
+		<menuitem name="Mobile Sales" id="base.menu_mobile_sale_menu"
+			sequence="1" parent="base.menu_mobile_sale" />
+		<!-- Filter -->
+		<record id="view_customer_visit_filter" model="ir.ui.view">
+			<field name="name">Customer Visit Filter</field>
+			<field name="model">customer.visit</field>
+			<field name="arch" type="xml">
+				<search string="Search Customer Visit">
+					<group expand="0" string="Group By">
+						<filter name="customer_code" string="Customer Code" domain="[]"
+							context="{'group_by':'customer_code'}" />
+						<filter name="sale_plan_day_id" string="Sale Plan Day"
+							domain="[]" context="{'group_by':'sale_plan_day_id'}" />
+						<filter name="sale_plan_trip_id" string="Sale Plan Trip"
+							domain="[]" context="{'group_by':'sale_plan_trip_id'}" />
+						<filter name="tablet_id" string="Tablet" domain="[]"
+							context="{'group_by':'tablet_id'}" />
+						<filter name="sale_team_id" string="Sale Team" domain="[]"
+							context="{'group_by':'sale_team_id'}" />
+						<filter name="date" string="Date" domain="[]"
+							context="{'group_by':'date'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+		<!-- =============== Customer Visit Form ============ -->
+
+		<record id="view_customer_visit_form" model="ir.ui.view">
+			<field name="name">Customer Visit Form</field>
+			<field name="model">customer.visit</field>
+			<field name="arch" type="xml">
+				<form string="Customer Visit" version="7.0">
+					<sheet>
+						<group>
+							<group>
+								<group>
+									<field name="customer_id" />
+									<field name="customer_code" />
+									<field name="tablet_id" />
+									<field name="latitude" />
+									<field name="longitude" />
+								</group>
+								<group>
+									<field name="date" />
+									<field name="user_id" />
+									<field name="sale_plan_day_id" />
+									<field name="sale_plan_trip_id" />
+									<field name="sale_team_id" />
+									<field name="visit_reason" />
+									<field name="other_reason" placeholder="Additional Reasons..." />
+								</group>
+
+
+
+							</group>
+						</group>
+
+						<hr />
+						<div class="row">
+							<div class="col-md-2">
+								<field name="image" widget='image' class="oe_avatar"
+									options='{"preview_image": "image_medium"}' />
+							</div>
+							<div class="col-md-2">
+								<field name="image1" widget='image' class="oe_avatar"
+									options='{"preview_image": "image_medium1"}' />
+							</div>
+							<div class="col-md-2">
+								<field name="image2" widget='image' class="oe_avatar"
+									options='{"preview_image": "image_medium2"}' />
+							</div>
+							<div class="col-md-2">
+								<field name="image3" widget='image' class="oe_avatar"
+									options='{"preview_image": "image_medium3"}' />
+							</div>
+							<div class="col-md-2">
+								<field name="image4" widget='image' class="oe_avatar"
+									options='{"preview_image": "image_medium4"}' />
+							</div>
+						</div>
+						<widget type="gmap_marker" lat="latitude" lng="longitude"
+							description="field_descriptions" />
+					</sheet>
+
+
+				</form>
+			</field>
+		</record>
+
+
+		<record id="view_customer_visit_tree" model="ir.ui.view">
+			<field name="name">Customer Visit Tree</field>
+			<field name="model">customer.visit</field>
+			<field name="arch" type="xml">
+				<tree string="Customer Visit">
+					<field name="date" />
+					<field name="customer_id" />
+					<field name="customer_code" />
+					<field name="sale_plan_day_id" />
+					<field name="tablet_id" />
+					<field name="sale_team_id" />
+					<field name="visit_reason" />
+					<field name="other_reason" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="action_visit_partner_form1" model="ir.actions.act_window">
+			<field name="name">Customer Visit</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">customer.visit</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_customer_visit_tree" />
+		</record>
+
+		<menuitem id="menu_visit_partner_form" parent="base.menu_mobile_sale_menu"
+			action="action_visit_partner_form1" sequence="6" />
+	</data>
+</openerp>

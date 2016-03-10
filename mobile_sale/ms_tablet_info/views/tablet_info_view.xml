@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Parent Menu -->
+		<menuitem name="Mobile Sales" id="base.menu_mobile_sale"
+			groups="base.group_sale_salesman,base.group_sale_manager" sequence="5" />
+
+
+		<menuitem name="Tablet Infromations" id="base.menu_mobile_sale_tablet_info_menu"
+			sequence="3" parent="base.menu_mobile_sale" />
+		<!-- Filter -->
+		<record id="view_tablet_info_filter" model="ir.ui.view">
+			<field name="name">Tablet Info Filter</field>
+			<field name="model">tablets.information</field>
+			<field name="arch" type="xml">
+				<search string="Search Tablet Information">
+					<group expand="0" string="Group By">
+						<filter name="name" string="Name" domain="[]"
+							context="{'group_by':'name'}" />
+						<filter name="model" string="Model" domain="[]"
+							context="{'group_by':'model'}" />
+						<filter name="mac_address" string="Mac Address" domain="[]"
+							context="{'group_by':'mac_address'}" />
+						<filter name="sale_team_id" string="Sale Team" domain="[]"
+							context="{'group_by':'sale_team_id'}" />
+						<filter name="date" string="Date" domain="[]"
+							context="{'group_by':'date'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+		<!-- Tablet Information -->
+		<!-- tree -->
+		<record id="view_table_information_tree" model="ir.ui.view">
+			<field name="name">Tablet Information Tree</field>
+			<field name="model">tablets.information</field>
+			<field name="arch" type="xml">
+				<tree string="Tablet Information Tree">
+					<field name="name" />
+					<field name="model" />
+					<field name="mac_address" />
+					<field name="sale_team_id" />
+					<field name="date" />
+					<field name="hotline" />
+				</tree>
+
+			</field>
+		</record>
+		<record id="view_table_information_form" model="ir.ui.view">
+			<field name="name">Tablet Information Form</field>
+			<field name="model">tablets.information</field>
+			<field eval="25" name="priority" />
+			<field name="arch" type="xml">
+				<form string="Tablet Information Form" version="7.0">
+					<sheet>
+						<group>
+							<group>
+								<field name="name" />
+								<field name="model" />
+								<field name="type" />
+								<field name="sale_team_id" />
+
+							</group>
+							<group>
+								<field name="mac_address" />
+								<field name="date" />
+								<field name="storage_day" />
+								<field name="hotline" />
+							</group>
+						</group>
+						<field name="note" placeholder="Other Informations...." />
+
+
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- action form -->
+		<record id="action_tablet_information" model="ir.actions.act_window">
+			<field name="name">Tablet Information</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">tablets.information</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_table_information_tree" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create new Tablet Informaton.
+				</p>
+			</field>
+		</record>
+
+		<!-- menu item -->
+		<menuitem id="menu_tablet_information" parent="base.menu_mobile_sale_tablet_info_menu"
+			name="Tablet Information" action="action_tablet_information" />
+	</data>
+</openerp>
