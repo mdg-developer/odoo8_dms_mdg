@@ -42,7 +42,8 @@
         'views/product_division_view.xml',
         'views/product_group_view.xml',
         'views/product_principal_view.xml',
-                ],
+        'views/res_users_view.xml',        
+            ],
     'installable': True,
     'auto_install': False,
 }
