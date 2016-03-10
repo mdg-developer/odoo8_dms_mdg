@@ -242,22 +242,5 @@ class customer_visit(osv.osv):
     _defaults = {
                
     }  
-    
-    def geo_location(self, cr, uid, ids, context=None):
-        result = {
-                 'name'     : 'Go to Report',
-                 'res_model': 'ir.actions.act_url',
-                 'type'     : 'ir.actions.act_url',
-                 'target'   : 'new',
-               }
-        data = self.browse(cr, uid, ids)[0]
-        latitude = data.latitude
-        longitude = data.longitude
-        print 'latitude', latitude
-        print 'longitude', longitude
-        print 'https://www.google.com/maps/@' + str(latitude) + ',' + str(longitude) + ',18z'
-        result['url'] = 'https://www.google.com/maps/@' + str(latitude) + ',' + str(longitude) + ',18z'
-             
-        return result
          
 customer_visit()
