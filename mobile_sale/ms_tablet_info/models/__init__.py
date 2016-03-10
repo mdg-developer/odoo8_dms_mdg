@@ -1,0 +1,1 @@
+import tablet_info
