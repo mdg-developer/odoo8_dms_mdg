@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- for Sale Class Setup -->
+
+		<record id="view_class_form" model="ir.ui.view">
+			<field name="name">class.form</field>
+			<field name="model">sale.class</field>
+			<field name="arch" type="xml">
+				<form string="Class Setup" version="7.0">
+					<group>
+						<field name="class_code" />
+						<field name="name" />
+					</group>
+				</form>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="view_class_tree">
+			<field name="name">class.tree</field>
+			<field name="model">sale.class</field>
+			<field name="arch" type="xml">
+				<tree string="Class Setup">
+					<field name="class_code" />
+					<field name="name" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="action_class_view" model="ir.actions.act_window">
+			<field name="name">Class Setup</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">sale.class</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" eval="view_class_tree" />
+		</record>
+
+		<menuitem id="config_class" parent="base.menu_sale_config"
+			name="Sale Class" action="action_class_view" groups="base.group_system" />
+		
+	</data>
+</openerp>

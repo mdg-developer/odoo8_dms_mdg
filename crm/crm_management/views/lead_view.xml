@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+		<record id="view_lead_form_inherit" model="ir.ui.view">
+			<field name="name">crm.lead.form.inherit</field>
+			<field name="model">crm.lead</field>
+			<field name="inherit_id" ref="crm.crm_case_form_view_leads" />
+			<field name="arch" type="xml">
+
+				<xpath expr="//field[@name='function']" position="after">
+					<field name="outlet_type" />
+				</xpath>
+				
+				<xpath expr="//field[@name='function']" position="replace">
+				<field name="function" invisible="1"/>
+				</xpath>
+				
+<!-- 				<xpath expr="//field[@name='team_id']" position="replace"> -->
+<!-- 				<field name="team_id" widget="selection" domain="[]"/> -->
+<!-- 				</xpath> -->
+				<xpath expr="//field[@name='user_id']" position="after">
+				<field name="section_id" widget="selection" domain="[]"/>
+				</xpath>
+				
+				<xpath expr="//field[@name='partner_id']" position="replace">
+					<field name="partner_id" string="Customer" options='{"create_name_field": "name"}' 
+						context="{'default_name': contact_name, 'default_street': street, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_function': function, 'default_phone': phone, 'default_mobile': mobile, 'default_fax': fax, 'default_email': email_from, 'default_user_id': user_id, 'default_section_id': section_id}"/>
+				</xpath>
+				
+			</field>
+		</record>
+	</data>
+</openerp>

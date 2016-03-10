@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		
+		<!-- customer creation form -->
+		
+		<record id="res_partner_form_view" model="ir.ui.view">
+            <field name="name">res.partner.form.view</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <data>  
+                	<xpath expr="//form/sheet/div[@class='oe_title']/h1/field[@name='name']" position="after">
+						<field name="customer_code" placeholder="Code" />
+					</xpath>                 
+                    <xpath expr="//field[@name='website']" position="after">
+                    	 <field name="outlet_type"/>
+                    	  <field name="sales_channel"/>
+<!--                     	 <field name="branch_id"/> -->
+                    	 <field name="demarcation_id"/>
+                    </xpath>
+                    <xpath expr="//field[@name='street']" position="before">
+						<field name="address" placeholder="Address..." />
+					</xpath>
+                    <xpath expr="//field[@name='function']" position="before">
+                    	 <field name="temp_customer"/>
+                    </xpath>
+                    <xpath expr="//field[@name='title']" position="replace">
+                    	 
+                    </xpath>
+                    <xpath expr="//field[@name='temp_customer']" position="before">
+                    	 <field name="title"/>
+                    </xpath>
+                    <xpath expr="//field[@name='category_id']" position="after">
+                    	 <field name="class_id"/>
+                    	 <field name="old_code"/>                    	
+                    </xpath>
+                    <xpath expr="//page[@name='sales_purchases']/group/group/field[@name='supplier']" position="after">
+                    	 <field name="mobile_customer"/>
+                    </xpath>
+                    <xpath expr="//notebook" position="after">
+                    	<widget type="gmap_marker" lat="partner_latitude" lng="partner_longitude" /> 
+                    </xpath>
+                </data>
+            </field>
+        </record>  
+       
+	   <!--        customer tree view -->
+       <record id="res_partner_tree_view" model="ir.ui.view">
+            <field name="name">res.partner.tree.view</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field name="arch" type="xml">
+                <data>  
+                	<xpath expr="//field[@name='email']" position="after">
+						<field name="outlet_type"/>
+						<field name="township"/>
+						<field name="street"/>
+						<field name="street2"/>
+						<field name="city"/>
+						<field name="demarcation_id"/>
+						<field name="sales_channel"/>						
+					</xpath> 
+					<xpath expr="//field[@name='date_review_next']" position="replace"> 
+					    <field name="date_review_next" invisible="1"/>
+					</xpath>
+					<xpath expr="//field[@name='grade_id']" position="replace"> 
+					    <field name="grade_id" invisible="1"/>
+					</xpath>
+					<xpath expr="//field[@name='activation']" position="replace"> 
+					    <field name="activation" invisible="1"/>
+					</xpath>           			
+           		</data>
+            </field>
+        </record> 
+       
+       <!--        Partner group by	       -->
+       <record id="view_res_partner_filter" model="ir.ui.view">
+			<field name="name">Customer Filter</field>
+			<field name="model">res.partner</field>
+			<field name="arch" type="xml">
+				<search string="Filters">
+					<group expand="0" string="Group By">
+						<filter name="user_id" string="Salesperson" domain="[]"
+							context="{'group_by':'user_id'}" />						
+						<filter name="company_id" string="Company" domain="[]"
+							context="{'group_by':'company_id'}" />
+						<filter name="country_id" string="Country" domain="[]"
+							context="{'group_by':'country_id'}" />
+						<filter name="township" string="Township" domain="[]"
+							context="{'group_by':'township'}" />
+						<filter name="city" string="City" domain="[]" 
+							context="{'group_by':'city'}" />
+						<filter name="state_id" string="State" domain="[]" 
+							context="{'group_by':'state_id'}" />
+						<filter name="demarcation" string="Demarcation" domain="[]" 
+							context="{'group_by':'demarcation'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+	</data>
+</openerp>

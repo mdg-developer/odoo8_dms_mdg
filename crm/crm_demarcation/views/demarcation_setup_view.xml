@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- for Sale Demarcation Setup -->
+			
+		<record id="view_demarcation_form" model="ir.ui.view">
+			<field name="name">demarcation.form</field>
+			<field name="model">sale.demarcation</field>
+			<field name="arch" type="xml">
+				<form string="Demarcation Setup" version="7.0">
+					<group>
+						<field name="name" />
+						<field name="demarcation_desc" />
+					</group>
+				</form>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="view_demarcation_tree">
+			<field name="name">demarcation.tree</field>
+			<field name="model">sale.demarcation</field>
+			<field name="arch" type="xml">
+				<tree string="Demarcation Setup">
+					<field name="name" />
+					<field name="demarcation_desc" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="action_demarcation_view" model="ir.actions.act_window">
+			<field name="name">Demarcation</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">sale.demarcation</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" eval="view_demarcation_tree" />
+		</record>
+
+		<menuitem id="config_demarcation" parent="base.menu_sale_config"
+			name="Sale Demarcation" action="action_demarcation_view" groups="base.group_system" />
+	
+	</data>
+</openerp>
