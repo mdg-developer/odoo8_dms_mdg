@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="view_product_import_form" model="ir.ui.view">
+			<field name="name">Product Import Form</field>
+			<field name="model">data_import.product</field>
+			<field name="arch" type="xml">
+				<form string="Product Data Import" version="7.0">
+					<header>
+						<button name="import_data" string="Import Data" type="object"
+							class="oe_highlight" />
+						<field name="state" widget="statusbar" statusbar_visible="draft,completed,error" />
+					</header>
+					<sheet>
+						<group>
+							<field name="name" />
+							<field name="import_date" />
+							<field name="import_file" filename="import_fname" />
+							<field name="import_fname" invisible="1" class="oe_inline oe_right" />
+							<field name="company_id" />
+							<field name="note" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="view_product_import_tree" model="ir.ui.view">
+			<field name="name">Data Import Product Tree</field>
+			<field name="model">data_import.product</field>
+			<field name="arch" type="xml">
+				<tree string="Data Import Product">
+					<field name="import_date" />
+					<field name="name" />
+					<field name="import_fname" />
+					<field name="note" />
+					<field name="company_id" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Action -->
+		<record id="action_product_import" model="ir.actions.act_window">
+			<field name="name">Product Import</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">data_import.product</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_product_import_tree" />
+		</record>
+
+		<record id="view_partner_import_form" model="ir.ui.view">
+			<field name="name">Partner Import Form</field>
+			<field name="model">data_import.partner</field>
+			<field name="arch" type="xml">
+				<form string="Partner" version="7.0">
+					<header>
+						<button name="import_data" string="Import Customer" type="object"
+							class="oe_highlight" />
+						<field name="state" widget="statusbar" statusbar_visible="draft,completed,error" />
+					</header>
+					<sheet>
+						<group>
+							<field name="name" />
+							<field name="import_date" />
+							<field name="import_file" filename="import_fname" />
+							<field name="import_fname" invisible="1" class="oe_inline oe_right" />
+							<field name="company_id" />
+							<field name="note" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="view_partner_import_tree" model="ir.ui.view">
+			<field name="name">Data Import Partner Tree</field>
+			<field name="model">data_import.partner</field>
+			<field name="arch" type="xml">
+				<tree string="Data Import Customer">
+					<field name="import_date" />
+					<field name="name" />
+					<field name="import_fname" />
+					<field name="note" />
+					<field name="company_id" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Action -->
+		<record id="action_partner_import" model="ir.actions.act_window">
+			<field name="name">Customer Import</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">data_import.partner</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_partner_import_tree" />
+		</record>
+
+
+
+		<record id="view_error_tree" model="ir.ui.view">
+			<field name="name">Data Import Partner Tree</field>
+			<field name="model">temp.customer</field>
+			<field name="arch" type="xml">
+				<tree string="Error Logs">
+					<field name="name" />
+					<field name="display_name" invisible="1" />
+					<field name="temp_customer" invisible="1" />
+					<field name="shop_name" />
+					<field name="address" />
+					<field name="customer_code" />
+					<field name="branch_code" />
+					<field name="street" />
+					<field name="street2" />
+					<field name="shop_type" />
+					<field name="territory" />
+					<field name="township" />
+					<field name="brand" />
+					<field name="phone" />
+					<field name="zip" />
+					<field name="ka_tha" />
+					<field name="display" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="action_error_show" model="ir.actions.act_window">
+			<field name="name">Error Data </field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">temp.customer</field>
+			<field name="view_type">tree</field>
+			<field name="view_mode">tree</field>
+			<field name="view_id" ref="view_error_tree" />
+		</record>
+
+		<!-- =============== Mobile Sale Order ============ -->
+
+		<record id="view_mobile_so_import_id" model="ir.ui.view">
+			<field name="name">Import Sale Order</field>
+			<field name="model">mobile.so_import</field>
+			<field name="arch" type="xml">
+
+				<form string="Import Sale Order Data from Excel" version="7.0">
+					<header>
+						<button name="import_data" string="Import Data" type="object"
+							class="oe_highlight" attrs="{'invisible': [('state', 'not in', ['draft'])]}" />
+
+
+						<field name="state" widget="statusbar" statusbar_visible="draft,completed,error" />
+					</header>
+					<sheet>
+						<group>
+							<field name="name"
+								attrs="{'readonly': [('state', 'in', ['completed'])]}" />
+							<!-- <field name="import_date" /> -->
+							<field name="import_file" filename="import_fname"
+								attrs="{'readonly': [('state', 'in', ['completed'])]}" />
+							<field name="import_fname" invisible="1" class="oe_inline oe_right"
+								attrs="{'readonly': [('state', 'in', ['completed'])]}" />
+							<field name="company_id"
+								attrs="{'readonly': [('state', 'in', ['completed'])]}" />
+							<field name="note"
+								attrs="{'readonly': [('state', 'in', ['completed'])]}" />
+						</group>
+					</sheet>
+
+				</form>
+			</field>
+		</record>
+
+		<record id="view_so_import_tree" model="ir.ui.view">
+			<field name="name">Mobile Sale Order Tree</field>
+			<field name="model">mobile.so_import</field>
+			<field name="arch" type="xml">
+				<tree string="Mobile Sale Order Import">
+					<field name="name" />
+					<field name="import_file" />
+					<field name="import_fname" />
+					<field name="company_id" />
+					<field name="note" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Action -->
+		<record id="action_mobile_so_import" model="ir.actions.act_window">
+			<field name="name">Import Sale Order</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">mobile.so_import</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_so_import_tree" />
+		</record>
+
+		<!-- <menuitem -->
+
+
+		<record id="view_partner_form" model="ir.ui.view">
+			<field name="name">Res Partner Form</field>
+			<field name="model">res.partner</field>
+			<field name="arch" type="xml">
+				<form string="Partner" version="7.0">
+					<field name="website" position="after">
+						<field name="class" />
+					</field>
+				</form>
+			</field>
+		</record>
+
+
+
+
+		<menuitem id="menu_data_import_config" name="Data Import"
+			parent="base.menu_custom" sequence="31" />
+		<menuitem action="data_import_dms.action_product_import" id="menu_data_import_product"
+			parent="menu_data_import_config" sequence="15" />
+		<menuitem action="data_import_dms.action_partner_import" id="menu_data_import_partner"
+			parent="menu_data_import_config" sequence="16" />
+		<menuitem action="data_import_dms.action_mobile_so_import"
+			id="menu_data_import_mobile_so" parent="menu_data_import_config"
+			sequence="17" />
+	</data>
+</openerp>
