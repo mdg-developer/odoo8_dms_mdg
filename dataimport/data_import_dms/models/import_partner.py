@@ -95,9 +95,7 @@ class partner(osv.osv):
     
     def import_data(self, cr, uid, ids, context=None):
         partner_obj = self.pool.get('res.partner')
-        res_country_state_obj = self.pool.get('res.country.state')
         outlet_obj = self.pool.get('outlettype.outlettype')
-        temp_customer_obj = self.pool.get('temp.customer')
         branch_obj = self.pool.get('sale.branch')
         sale_channel_obj = self.pool.get('sale.channel')
         state_obj = self.pool.get('res.country.state')
@@ -106,8 +104,6 @@ class partner(osv.osv):
         city_obj = self.pool.get('res.city')
         class_obj = self.pool.get('sale.class')
         cr.execute('DELETE from temp_customer')
-        cr.execute('select id from res_country where name like %s', ('Myanmar',))
-        country_id = cr.fetchall()[0]
         data = self.browse(cr, uid, ids)[0]
         company_id = data.company_id.id
         import_file = data.import_file
@@ -258,7 +254,7 @@ class partner(osv.osv):
             self.write(cr, uid, ids[0], {'state': 'error'})
         else:
             for aml in amls:
-                sale_channel_ids = township_ids = temp_id = customize_id = sale_channel_id = branch_ids = city_id = sale_channel_idcity_id = shop_id = state_ids = shop_ids = state_id = partner_id = demarcation_ids = class_ids = township_id = partner_ids = None
+                country_id = sale_channel_ids = township_ids = temp_id = demarcation_id = class_id = township_id = customize_id = sale_channel_id = branch_ids = city_id = sale_channel_idcity_id = shop_id = state_ids = shop_ids = state_id = partner_id = demarcation_ids = class_ids = township_id = partner_ids = None
                 value = []
                 region = str(aml['region'])
                 postal_code = str(aml['postal code'])
@@ -282,6 +278,13 @@ class partner(osv.osv):
                 display = str(aml['display'])
                 class_val = str(aml['class'])
                 
+                if not country_id:
+                    cr.execute("""select id from res_country where lower(name) like %s""", ('myanmar',))
+                    data = cr.fetchall()
+                    if data:
+                        country_id = data[0][0]
+                    else:
+                        country_id = None
                 if display:
                     display = display.strip()
                 if ka_tha:
@@ -293,11 +296,12 @@ class partner(osv.osv):
                     city = city.strip()
                     cr.execute("""select id from res_city where lower(name) like %s """, (city.lower(),))
                     data = cr.fetchall()
+                    city_val = {'name':city, 'code':city.upper()}
                     if data:
                         city_id = data[0][0]
+                        city_obj.write(cr, uid, city_id, city_val, context=context)
                     else:
-                        city_id = None
-                print 'city_id >>>', city_id
+                        city_id = city_obj.create(cr, uid, city_val, context=context)
                 if contact:
                     contact = contact.strip()
                 if brand:
@@ -311,14 +315,13 @@ class partner(osv.osv):
                     township = township.strip()
                     cr.execute("""select id from res_township where lower(name) like %s""", (township.lower(),))
                     data = cr.fetchall()
-                    township_val = {'name':township, 'code':township, 'city':city_id}
+                    township_val = {'name':township, 'code':township.upper(), 'city':city_id}
                     if data:
                         township_id = data[0][0]
                         township_obj.write(cr, uid, township_id, township_val, context=context)
                     else:
                         township_ids = township_obj.create(cr, uid, township_val, context=context)
                         township_id = township_ids
-                print 'township_id >>>>', township_id
                 if territory:
                     territory = territory.strip()
                 if street:
@@ -340,7 +343,7 @@ class partner(osv.osv):
                     data = cr.fetchall()
                     if data:
                         class_id = data[0][0]
-                    class_res = {'name':class_val, 'class_code':class_val}
+                    class_res = {'name':class_val, 'class_code':class_val.upper()}
                     if not class_id:
                         class_ids = class_obj.create(cr, uid, class_res, context)
                     else:
@@ -367,7 +370,7 @@ class partner(osv.osv):
                     if data:
                         sale_channel_id = data[0][0]
                     sale_channel = {
-                                      'name':sale_channel, 'code':sale_channel}
+                                      'name':sale_channel, 'code':sale_channel.upper()}
                     if not sale_channel_id :
                         
                         sale_channel_ids = sale_channel_obj.create(cr, uid, sale_channel, context)
@@ -376,20 +379,19 @@ class partner(osv.osv):
                         sale_channel_ids = sale_channel_id
                 if region:
                     region = region.strip()
-                    print 'region', region   
-                    state_id = state_obj.search(cr, uid, [('name', '=', region)])
+                    cr.execute("""select id from res_country_state where lower(name) like %s""", (region.lower(),))
+                    data = cr.fetchall()
                     state_res = {
                                'name':region,
                                'code':region,
                                'country_id':country_id}
-                    if not state_id:
-                        state_ids = state_obj.create(cr, uid, state_res, context)
+                    if data:
+                        state_ids = data[0][0]
+                        state_obj.write(cr, uid, state_id, state_res, context=context)
                     else:
-                        state_ids = state_id[0]
-                print 'state_ids', state_ids   
+                        state_ids = state_obj.create(cr, uid, state_res, context)
                 if branch_code:
                     branch_code = branch_code.strip()
-                    print 'branch_code', branch_code   
                     branch_id = branch_obj.search(cr, uid, [('name', '=', branch_code)])
                     branch_res = {'name':branch_code, 'branch_code':branch_code}
                     if not branch_id:
@@ -420,7 +422,7 @@ class partner(osv.osv):
                        'phone':phone,
                        'brand':brand,
                        'name':shop_name,
-#                        'display_name':shop_name,
+                       'country_id':country_id,
                        'state_id':state_ids,
                        'zip':postal_code,
                        'temp_customer':contact,
@@ -441,42 +443,8 @@ class partner(osv.osv):
                         partner_id = data[0][0]
                     if not partner_id:
                         value['customer_code'] = customer_code
-                        partner_ids = partner_obj.create(cr, uid, value, context)
+                        partner_obj.create(cr, uid, value, context)
                     else:
-                        print 'partner_ids>>>>', partner_ids
-                        partner_ids = partner_obj.write(cr, uid, partner_id, value)
-#                 elif len(shop_name) == 0 or len(customer_code) == 0 or shop_id == '' or sale_channel_ids == '':   
-#                     print 'this is temp_customer'
-#                     temp_id = temp_customer_obj.search(cr, uid, [('customer_code', '=', customer_code)])
-#                     temp_value = {'customer_code':aml['customer_code'],
-#                                'shop_name':aml['shop_name'],
-#                                'address':aml['address'],
-#                                'street':aml['street'],
-#                                'shop_type':aml['shop_type'],
-#                                'territory':aml['territory'],
-#                                'township':aml['township'],
-#                                'village':aml['village'],
-#                                'phone':aml['phone'],
-#                                'brand':aml['brand'],
-#                                'name':aml['name'],
-#                                'sales_channel':aml['sale_channel'],
-#                                'display_name':aml['name'],
-#                                'temp_customer':aml['name'],
-#                                'branch_code':aml['branch_code'],
-#                                'rb_code':aml['rb_code'],
-#                                'region':region,
-#                                'postal_code':postal_code,
-#                                'zip':aml['zip'],
-#                                'class':class_name,
-#                                'ka_tha':ka_tha,
-#                                'display':display
-#                            }
-#                     if not temp_id:
-#                     
-#                         temp_customer_obj.create(cr, uid, temp_value, context)
-#                     else:
-#                         temp_customer_obj.write(cr, uid, temp_id[0], temp_value)
-#                     print 'this is not create in res partner'
-                       
+                        partner_obj.write(cr, uid, partner_id, value)
             self.write(cr, uid, ids[0], {'state': 'completed'})
         print amls

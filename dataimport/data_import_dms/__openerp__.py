@@ -39,7 +39,7 @@ for following data
     'depends': ['base', 'base_import', 'stock', 'address_management_system'],
     'data' : [
 
-              'data_import_view.xml',
-              'sale_plans_import_view.xml'
+              'views/data_import_view.xml',
+              'views/sale_plans_import_view.xml'
     ],
 }
