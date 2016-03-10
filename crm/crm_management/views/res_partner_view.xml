@@ -16,7 +16,7 @@
                     <xpath expr="//field[@name='website']" position="after">
                     	 <field name="outlet_type"/>
                     	  <field name="sales_channel"/>
-<!--                     	 <field name="branch_id"/> -->
+                    	 <field name="branch_id"/>
                     	 <field name="demarcation_id"/>
                     </xpath>
                     <xpath expr="//field[@name='street']" position="before">
@@ -31,7 +31,7 @@
                     <xpath expr="//field[@name='temp_customer']" position="before">
                     	 <field name="title"/>
                     </xpath>
-                    <xpath expr="//field[@name='category_id']" position="after">
+                    <xpath expr="//field[@name='email']" position="after">
                     	 <field name="class_id"/>
                     	 <field name="old_code"/>                    	
                     </xpath>

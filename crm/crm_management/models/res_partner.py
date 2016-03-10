@@ -57,7 +57,7 @@ class res_partner(osv.osv):
                 'old_code': fields.char('Old Code'), 
                 'sales_channel':fields.many2one('sale.channel', 'Sale Channels'),
                 'address':fields.char('Address'),   
-                #'branch_id':fields.many2one('sale.branch', 'Branch'),               
+                'branch_id':fields.many2one('sale.branch', 'Branch'),               
                 'demarcation_id': fields.many2one('sale.demarcation', 'Demarcation'),                 
                 'mobile_customer': fields.boolean('Mobile Customer', help="Check this box if this contact is a mobile customer. If it's not checked, purchase people will not see it when encoding a purchase order."),
     } 
