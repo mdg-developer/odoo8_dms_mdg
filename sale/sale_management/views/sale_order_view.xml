@@ -45,8 +45,6 @@
 					<filter name="section_id" string="Sale Team" filter_domain="[('section_id','ilike',self)]" />
 					<filter name="week" string="Weekly" filter_domain="[('name','ilike',self)]" />
 				</xpath>
-<!-- 				<xpath expr="//search/group/filter[@name='customer']" -->
-<!-- 					position="after"> -->
 				<xpath expr="//search/group/filter[@string='Order Month']"
 					position="before">
 					<filter string="Sale Team" context="{'group_by': 'section_id'}" />
@@ -57,7 +55,10 @@
 					<filter string="Untaxed Amount" context="{'group_by': 'amount_untaxed'}" />
 					<filter string="Weekly" context="{'group_by': 'name'}" />
 				</xpath>
-
+				<xpath expr="//search/group/filter[@string='Salesperson']"
+					position="replace">
+					<filter string="Saleman Name" domain="[]" context="{'group_by':'user_id'}"/>					
+				</xpath>				
 			</field>
 		</record>
 
