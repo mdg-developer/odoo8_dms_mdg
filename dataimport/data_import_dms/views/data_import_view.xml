@@ -100,43 +100,6 @@
 			<field name="view_id" ref="view_partner_import_tree" />
 		</record>
 
-
-
-		<record id="view_error_tree" model="ir.ui.view">
-			<field name="name">Data Import Partner Tree</field>
-			<field name="model">temp.customer</field>
-			<field name="arch" type="xml">
-				<tree string="Error Logs">
-					<field name="name" />
-					<field name="display_name" invisible="1" />
-					<field name="temp_customer" invisible="1" />
-					<field name="shop_name" />
-					<field name="address" />
-					<field name="customer_code" />
-					<field name="branch_code" />
-					<field name="street" />
-					<field name="street2" />
-					<field name="shop_type" />
-					<field name="territory" />
-					<field name="township" />
-					<field name="brand" />
-					<field name="phone" />
-					<field name="zip" />
-					<field name="ka_tha" />
-					<field name="display" />
-				</tree>
-			</field>
-		</record>
-
-		<record id="action_error_show" model="ir.actions.act_window">
-			<field name="name">Error Data </field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">temp.customer</field>
-			<field name="view_type">tree</field>
-			<field name="view_mode">tree</field>
-			<field name="view_id" ref="view_error_tree" />
-		</record>
-
 		<!-- =============== Mobile Sale Order ============ -->
 
 		<record id="view_mobile_so_import_id" model="ir.ui.view">
