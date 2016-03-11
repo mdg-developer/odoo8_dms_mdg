@@ -29,39 +29,8 @@ import datetime
 _logger = logging.getLogger(__name__)
 header_fields = [ 'sale channel', 'postal code', 'region', 'class', 'outlet id code', 'outlet name',
                  'outlet type', 'address', 'ward', 'district', 'township', 'city/town', 'village/ village group',
-                 'telephone', 'contact person', 'rb code', 'selling brand', 'branch code', 'demarcation code', 'display', 'ka_tha']
-
-
-class temp_customer(osv.osv):
-    _name = 'temp.customer'
-    _columns = {
-              'name':fields.char('Name'),
-              'display_name':fields.char('Display Name'),
-              'temp_customer':fields.char('Temp Customer'),
-              'sales_channel':fields.char('Sale Channel'),
-              'class':fields.char('Class'),
-              'shop_name':fields.char('Shop Name'),
-              'address':fields.char('Address'),
-              'customer_code':fields.char('Customer'),
-              'branch_code':fields.char('Branch Code'),
-              'street':fields.char('Street'),
-              'street2':fields.char('Street2'),
-              'shop_type':fields.char('Shop Type'),
-              'territory':fields.char('Territory'),
-              'township':fields.char('Township'),
-              'village ':fields.char('Village'),
-              'demarcation ':fields.char('Demarcation'),
-              'brand':fields.char('Brand'),
-              'phone':fields.char('Phone'),
-              'zip':fields.char('Zip'),
-              'region':fields.char('Region'),
-              'postal_code':fields.char('Postal Code'),
-              'state_id':fields.char('State ID'),
-              'ka_tha':fields.char('Ka_Tha'),
-              'display':fields.char('Display')
-    
-              }
-temp_customer()
+                 'telephone', 'contact person', 'rb code', 'selling brand', 'branch code', 'demarcation code', 'display', 'ka_tha',
+                 'website', 'title', 'job position', 'old code', 'email', 'fax' ]
 
 class partner(osv.osv):
     _name = 'data_import.partner'
@@ -77,7 +46,6 @@ class partner(osv.osv):
                 ('completed', 'Completed'),
                 ('error', 'Error'),
             ], 'States'),
-                'temp_customer':fields.many2one('temp.customer', 'Error Log')
               
               }
     _defaults = {
@@ -103,7 +71,7 @@ class partner(osv.osv):
         demarcation_obj = self.pool.get('sale.demarcation')
         city_obj = self.pool.get('res.city')
         class_obj = self.pool.get('sale.class')
-        cr.execute('DELETE from temp_customer')
+        title_obj = self.pool.get('res.partner.title')
         data = self.browse(cr, uid, ids)[0]
         company_id = data.company_id.id
         import_file = data.import_file
@@ -155,7 +123,7 @@ class partner(osv.osv):
                                 ln.append(str(l))
                             val = len(b3)
                     header_line = True
-                    display_i = city_i = rb_code_i = postal_code_i = region_i = sale_channel_i = class_i = demarcation_i = customer_code_i = shop_name_i = shop_type_i = address_i = street_i = state_id_i = territory_i = township_i = village_i = phone_i = name_i = brand_i = branch_code_i = ka_tha_i = None
+                    website_i = title_i = job_position_i = old_code_i = email_i = fax_i = display_i = city_i = rb_code_i = postal_code_i = region_i = sale_channel_i = class_i = demarcation_i = customer_code_i = shop_name_i = shop_type_i = address_i = street_i = state_id_i = territory_i = township_i = village_i = phone_i = name_i = brand_i = branch_code_i = ka_tha_i = None
                     column_cnt = 0
                     for cnt in range(len(ln)):
                         if ln[cnt] == '':
@@ -170,10 +138,23 @@ class partner(osv.osv):
                         if header_field not in header_fields:
                             err_log += '\n' + _("Invalid EXCEL File, Header Field '%s' is not supported !") % ln[i]
                         # required header fields : account, debit, credit
+                
+                        elif header_field == 'website':
+                            website_i = i
+                        elif header_field == 'title':
+                            title_i = i
+                        elif header_field == 'job position':
+                            job_position_i = i
+                        elif header_field == 'old code':
+                            old_code_i = i
                         elif header_field == 'class':
                             class_i = i
                         elif header_field == 'postal code':
                             postal_code_i = i
+                        elif header_field == 'email':
+                            email_i = i
+                        elif header_field == 'fax':
+                            fax_i = i
                         elif header_field == 'region':
                             region_i = i
                         elif header_field == 'sale channel':
@@ -212,7 +193,7 @@ class partner(osv.osv):
                             ka_tha_i = i                            
                         elif header_field == 'display':
                             display_i = i                          
-                    for f in [(display_i, 'display'), (postal_code_i, 'postal_code'), (city_i, 'city'), (rb_code_i, 'rb_code'), (region_i, 'region'), (sale_channel_i, 'sale_channel'), (class_i, 'class'), (demarcation_i, 'demarcation'), (customer_code_i, 'customer_code'), (shop_name_i, 'shop_name'), (shop_type_i, 'shop_type'), (address_i, 'address'), (street_i, 'street'), (territory_i, 'territory'), (township_i, 'township'), (village_i, 'village'), (phone_i, 'phone'), (name_i, 'name'), (brand_i, 'brand'), (branch_code_i, 'branch_code'), (ka_tha_i, 'ka_tha')]:
+                    for f in [(website_i, 'website'), (title_i, 'title'), (job_position_i, 'job position'), (old_code_i, 'old code'), (email_i, 'email'), (fax_i, 'fax'), (display_i, 'display'), (postal_code_i, 'postal_code'), (city_i, 'city'), (rb_code_i, 'rb_code'), (region_i, 'region'), (sale_channel_i, 'sale_channel'), (class_i, 'class'), (demarcation_i, 'demarcation'), (customer_code_i, 'customer_code'), (shop_name_i, 'shop_name'), (shop_type_i, 'shop_type'), (address_i, 'address'), (street_i, 'street'), (territory_i, 'territory'), (township_i, 'township'), (village_i, 'village'), (phone_i, 'phone'), (name_i, 'name'), (brand_i, 'brand'), (branch_code_i, 'branch_code'), (ka_tha_i, 'ka_tha')]:
                         
                         if not isinstance(f[0], int):
                             err_log += '\n' + _("Invalid EXCEL file, Header '%s' is missing !") % f[1]
@@ -224,7 +205,12 @@ class partner(osv.osv):
                 if ln and ln[0] and ln[0][0] not in ['#', '']:
                     
                     import_vals = {}
-
+                    import_vals['website'] = ln[website_i]
+                    import_vals['title'] = ln[title_i]
+                    import_vals['job position'] = ln[job_position_i]
+                    import_vals['old code'] = ln[old_code_i]
+                    import_vals['email'] = ln[email_i]
+                    import_vals['fax'] = ln[fax_i]
                     import_vals['sale channel'] = ln[sale_channel_i]
                     import_vals['class'] = ln[class_i]
                     import_vals['outlet id code'] = ln[customer_code_i]
@@ -254,8 +240,21 @@ class partner(osv.osv):
             self.write(cr, uid, ids[0], {'state': 'error'})
         else:
             for aml in amls:
-                country_id = sale_channel_ids = township_ids = temp_id = demarcation_id = class_id = township_id = customize_id = sale_channel_id = branch_ids = city_id = sale_channel_idcity_id = shop_id = state_ids = shop_ids = state_id = partner_id = demarcation_ids = class_ids = township_id = partner_ids = None
+                title_id = country_id = sale_channel_ids = township_ids = temp_id = demarcation_id = class_id = township_id = customize_id = sale_channel_id = branch_ids = city_id = sale_channel_idcity_id = shop_id = state_ids = shop_ids = state_id = partner_id = demarcation_ids = class_ids = township_id = partner_ids = None
                 value = []
+                
+                website = str(aml['website'])
+                print 'website', website
+                job_position = str(aml['job position'])
+                print 'job_position', job_position
+                old_code = str(aml['old code'])
+                print 'old_code ', old_code
+                email = str(aml['email'])
+                print 'email ', email
+                fax = str(aml['fax'])
+                print 'fax', fax
+                
+                title = str(aml['title'])
                 region = str(aml['region'])
                 postal_code = str(aml['postal code'])
                 class_name = str(aml['class'])
@@ -278,6 +277,31 @@ class partner(osv.osv):
                 display = str(aml['display'])
                 class_val = str(aml['class'])
                 
+                if website:
+                    website = website.strip()
+                    website = website.replace('.0', '')
+                if job_position:
+                    job_position = job_position.strip()
+                    job_position = job_position.replace('.0', '')
+                if old_code:
+                    old_code = old_code.strip()
+                    old_code = old_code.replace('.0', '')
+                if email:
+                    email = email.strip()
+                    email = email.replace('.0', '')
+                if fax:
+                    fax = fax.strip()
+                    fax = fax.replace('.0', '')
+                if title:
+                    title = title.strip()
+                    title = title.replace('.0', '')
+                    cr.execute("""select id from res_partner_title where lower(name) like %s""", (title.lower(),))
+                    data = cr.fetchall()
+                    title_rel = {'name':title, 'shortcut':title, 'domain':'partner'}
+                    if data:
+                        title_id = data[0][0]
+                    else:
+                        title_id = title_obj.create(cr, uid, title_rel, context=context)
                 if not country_id:
                     cr.execute("""select id from res_country where lower(name) like %s""", ('myanmar',))
                     data = cr.fetchall()
@@ -410,6 +434,9 @@ class partner(osv.osv):
                     else:
                         shop_ids = outlet_obj.write(cr, uid, shop_id[0], shop_res)
                         shop_ids = shop_id[0]
+                        
+                        
+                
                 value = {
                        'customer_code':customer_code,
                        'shop_name':shop_name,
@@ -432,7 +459,13 @@ class partner(osv.osv):
                        'class_id':class_ids,
                        'ref':ka_tha,
                         'city':city_id,
-                       'display':display }
+                       'display':display,
+                       'title':title_id,
+                       'website':website,
+                       'function':job_position,
+                        'old_code':old_code,
+                        'email':email,
+                        'fax':fax}
                 # ##below code is purpose for contained customer_code
             # #   print 'NOT CONTAIN CUSTOMER_CODE'
 #                 if shop_name or customer_code and shop_ids and sale_channel_ids:
