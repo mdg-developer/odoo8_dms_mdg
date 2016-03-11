@@ -28,7 +28,7 @@ import base64
 import logging
 from __builtin__ import True
 _logger = logging.getLogger(__name__)
-header_fields = ['uom', 'name', 'category', 'public_price', 'default_code', 'bar_code', 'product_type', 'division', 'group', 'main_group', 'description', 'costing_method', 'cost_price', 'inventory_valuation', 'full_lots_traceability', 'track_incoming_lots', 'track_outgoing_lots']
+header_fields = ['principal', 'uom', 'name', 'category', 'public_price', 'default_code', 'bar_code', 'product_type', 'division', 'group', 'main_group', 'description', 'costing_method', 'cost_price', 'inventory_valuation', 'full_lots_traceability', 'track_incoming_lots', 'track_outgoing_lots']
 
 class product(osv.osv):
     _name = 'data_import.product'
@@ -68,6 +68,7 @@ class product(osv.osv):
         product_maingroup_obj = self.pool.get('product.maingroup')
         uom_obj = self.pool.get('product.uom')
         category_obj = self.pool.get('product.category')
+        principal_obj = self.pool.get('product.principal')
         
         # #taking the parent categ_id from product_category table
         
@@ -144,7 +145,7 @@ class product(osv.osv):
                                 ln.append(str(l))
                             val = len(b3)
                     header_line = True
-                    product_type_i = uom_i = name_i = category_i = public_price_i = default_code_i = bar_code_i = division_i = group_i = main_group_i = description_i = costing_method_i = cost_price_i = inventory_valuation_i = flt_i = til_i = tol_i = None
+                    principal_i = product_type_i = uom_i = name_i = category_i = public_price_i = default_code_i = bar_code_i = division_i = group_i = main_group_i = description_i = costing_method_i = cost_price_i = inventory_valuation_i = flt_i = til_i = tol_i = None
                     column_cnt = 0
                     for cnt in range(len(ln)):
                         if ln[cnt] == '':
@@ -158,7 +159,9 @@ class product(osv.osv):
                         header_field = ln[i].strip().lower()
                         if header_field not in header_fields:
                             err_log += '\n' + _("Invalid EXCEL File, Header Field '%s' is not supported !") % ln[i]
-                        # required header fields : account, debit, credit            
+                        # required header fields : account, debit, credit         
+                        elif header_field == 'principal':
+                            principal_i = i
                         elif header_field == 'uom':
                             uom_i = i
                         elif header_field == 'description':
@@ -194,7 +197,7 @@ class product(osv.osv):
                         elif header_field == 'track_outgoing_lots':
                             tol_i = i     
 
-                    for f in [(costing_method_i, 'costing_method'), (cost_price_i, 'cost_price'), (inventory_valuation_i, 'inventory_valuation'), (flt_i, 'full_lots_traceability'), (til_i, 'track_incoming_lots'), (tol_i, 'track_outgoing_lots'), (product_type_i, 'product_type'), (uom_i, 'uom'), (name_i, 'name'), (category_i, 'category'), (public_price_i , 'public_price'), (default_code_i, 'default_code'), (bar_code_i, 'bar_code'), (division_i, 'division'), (group_i, 'group'), (main_group_i, 'main_group')]:
+                    for f in [(principal_i, 'principal'), (costing_method_i, 'costing_method'), (cost_price_i, 'cost_price'), (inventory_valuation_i, 'inventory_valuation'), (flt_i, 'full_lots_traceability'), (til_i, 'track_incoming_lots'), (tol_i, 'track_outgoing_lots'), (product_type_i, 'product_type'), (uom_i, 'uom'), (name_i, 'name'), (category_i, 'category'), (public_price_i , 'public_price'), (default_code_i, 'default_code'), (bar_code_i, 'bar_code'), (division_i, 'division'), (group_i, 'group'), (main_group_i, 'main_group')]:
                         if not isinstance(f[0], int):
                             err_log += '\n' + _("Invalid CSV file, Header '%s' is missing !") % f[1]
                         
@@ -223,6 +226,7 @@ class product(osv.osv):
                     import_vals['full_lots_traceability'] = ln[flt_i]
                     import_vals['track_incoming_lots'] = ln[til_i]
                     import_vals['track_outgoing_lots'] = ln[tol_i]
+                    import_vals['principal'] = ln[principal_i]
                     amls.append(import_vals)
                   
         if err_log:
@@ -231,7 +235,7 @@ class product(osv.osv):
         else:
             for aml in amls:
                 try:
-                    iv_ids = s_ids = r_ids = a_ids = uom_id = description = product_name = category_id = product_id = division_id = group_id = main_group_id = fields_id = costing_method = inventory_valuation = flt = til = tol = None
+                    principal_id = iv_ids = s_ids = r_ids = a_ids = uom_id = description = product_name = category_id = product_id = division_id = group_id = main_group_id = fields_id = costing_method = inventory_valuation = flt = til = tol = None
                     value = {}
                     cat_name = str(aml['category'])
                     uom_name = str(aml['uom'])
@@ -239,15 +243,26 @@ class product(osv.osv):
                     group_name = str(aml['group'])
                     main_group_name = str(aml['main_group'])
                     default_code = str(aml['default_code'])
-                    
+                    principal = str(aml['principal'])
                     bar_code = str(aml['bar_code'])
                     product_type = aml['product_type'].lower()
                     
+                    if principal:
+                        principal = principal.strip()
+                        principal = principal.replace('.0', '')
+                        cr.execute("""select id from product_principal where lower(name) like %s""", (principal.lower(),))
+                        principal_val = {'name':principal}
+                        data = cr.fetchall()
+                        if data:
+                            principal_id = data[0][0]
+                        else:
+                            principal_id = principal_obj.create(cr, uid, principal_val, context=context)
                     if bar_code:
                         bar_code = bar_code.strip()
                         bar_code = bar_code.replace('.0', '')
                     if default_code:
                         default_code = default_code.strip()
+                        default_code = default_code.replace('.0', '')
                     if main_group_name:
                         main_group_name = main_group_name.strip()
                     if group_name:
@@ -399,13 +414,10 @@ class product(osv.osv):
                              'barcode_no':bar_code,
                              'track_all':flt,
                              'track_incoming':til,
-                             'track_outgoing':tol
-                             
+                             'track_outgoing':tol,
+                             'product_principal_ids':principal_id
                              }
                     print 'value >>>', value
-                    if len(bar_code) == 13: 
-                        value['ean13'] = aml['bar_code']
-    
                     product_ids = product_template_obj.search(cr, uid, [('default_code', '=', default_code)
                                                                      ])
                     print 'product id s>>>>>', product_ids
