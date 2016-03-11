@@ -8,7 +8,7 @@
     <property name="imageDPI">72</property>
     <list-property name="libraries">
         <structure>
-            <property name="fileName">ms_report/library/report_library.rptlibrary</property>
+            <property name="fileName">birt_report/report_library.rptlibrary</property>
             <property name="namespace">report_library</property>
         </structure>
     </list-property>
