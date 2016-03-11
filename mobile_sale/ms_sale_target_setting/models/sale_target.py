@@ -36,7 +36,7 @@ class sale_target(osv.osv):
         cr.execute("""select count(*)  from sale_plan_day SPD ,
                                             res_partner_sale_plan_day_rel RPS , res_partner RP 
                                             where SPD.id = RPS.sale_plan_day_id 
-                                            and RPS.res_partner_id = RP.id 
+                                            and RPS.partner_id = RP.id 
                                             and SPD.id = %s""", (day_name,))
         datas = cr.fetchone()
         return {'value': {'total_shop_to_visit': datas[0]}
