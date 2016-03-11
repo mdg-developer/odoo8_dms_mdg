@@ -41,6 +41,9 @@
                     <xpath expr="//notebook" position="after">
                     	<widget type="gmap_marker" lat="partner_latitude" lng="partner_longitude" /> 
                     </xpath>
+                     <xpath expr="//field[@name='user_id']" position="replace">
+                    	<field name="user_id" string="Saleman Name" context="{'default_groups_ref': ['base.group_partner_manager']}"/> 
+                    </xpath>                                                        
                 </data>
             </field>
         </record>  
@@ -81,25 +84,14 @@
        <record id="view_res_partner_filter" model="ir.ui.view">
 			<field name="name">Customer Filter</field>
 			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="base.view_res_partner_filter"/>
 			<field name="arch" type="xml">
-				<search string="Filters">
-					<group expand="0" string="Group By">
-						<filter name="user_id" string="Salesperson" domain="[]"
-							context="{'group_by':'user_id'}" />						
-						<filter name="company_id" string="Company" domain="[]"
-							context="{'group_by':'company_id'}" />
-						<filter name="country_id" string="Country" domain="[]"
-							context="{'group_by':'country_id'}" />
-						<filter name="township" string="Township" domain="[]"
-							context="{'group_by':'township'}" />
-						<filter name="city" string="City" domain="[]" 
-							context="{'group_by':'city'}" />
-						<filter name="state_id" string="State" domain="[]" 
-							context="{'group_by':'state_id'}" />
-						<filter name="demarcation" string="Demarcation" domain="[]" 
-							context="{'group_by':'demarcation'}" />
-					</group>
-				</search>
+				<xpath expr="//group/filter[@string='Country']" position="after">		
+					<filter name="township" string="Township" domain="[]" context="{'group_by':'township'}" />
+					<filter name="city" string="City" domain="[]" context="{'group_by':'city'}" />
+					<filter name="state_id" string="State" domain="[]" context="{'group_by':'state_id'}" />
+					<filter name="demarcation_id" string="Demarcation" domain="[]" context="{'group_by':'demarcation_id'}" />
+	            </xpath> 				
 			</field>
 		</record>
 	</data>
