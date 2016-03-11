@@ -22,7 +22,7 @@ class pre_sale_order(osv.osv):
             ], 'Deliver Remark'),
         'date':fields.datetime('Date'),
         'note':fields.text('Note'),
-        'order_line': fields.one2many('mobile.sale.order.line', 'order_id', 'Order Lines', copy=True),
+        'order_line': fields.one2many('pre.sale.order.line', 'order_id', 'Order Lines', copy=True),
         'delivery_order_line': fields.one2many('products.to.deliver', 'sale_order_id', 'Delivery Order Lines', copy=True),
         'tablet_id':fields.many2one('tablets.information', 'Tablet ID'),
         'sale_plan_day_id':fields.many2one('sale.plan.day', 'Sale Plan Day'),
@@ -41,3 +41,22 @@ class pre_sale_order(osv.osv):
     }
     
 pre_sale_order()
+class pre_sale_order_line(osv.osv):
+    
+    _name = "pre.sale.order.line"
+    _description = "Mobile Sales Order"
+
+    _columns = {
+        'product_id':fields.many2one('product.product', 'Products'),
+        'product_uos_qty':fields.float('Quantity'),
+        'uom_id':fields.many2one('product.uom', 'UOM'),
+        'price_unit':fields.float('Unit Price'),
+        'discount':fields.float('Discount (%)'),
+        'order_id': fields.many2one('pre.sale.order', 'Sale Order'),
+        'sub_total':fields.float('Sub Total'),
+        'foc':fields.boolean('FOC'),
+    }
+    _defaults = {
+       'product_uos_qty':1.0,
+    }
+pre_sale_order_line()
