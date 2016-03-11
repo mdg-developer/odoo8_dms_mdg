@@ -42,10 +42,6 @@
 <!-- 						</span> -->
 <!-- 					</group> -->
 <!-- 				</xpath> -->
-
-				<xpath expr="//field[@name='list_price']" position="before">
-					<field name="active" />   
-				</xpath>	
 			 
 				<!-- Accounting Tab -->
 				<xpath expr="//page[@string='Accounting']/group/label[@string='Internal Category']" position="before">
@@ -66,6 +62,10 @@
 					<div>
 						<field name="group" colspan="3" nolabel="1" />
 					</div>					
+				</xpath>
+				
+				<xpath expr="//field[@name='ean13']" position="replace">
+					<field name="barcode_no"/>								
 				</xpath>
 			</field>
 		</record>
