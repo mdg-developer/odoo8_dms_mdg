@@ -7,7 +7,7 @@ class crm_case_section(osv.osv):
                 'region': fields.char('Region'),
                 'channel_ids':fields.many2many('sale.channel'),
                 'code': fields.char('Code',required = True),
-                'product_ids':fields.many2many('product.template'),
+                'product_ids':fields.many2many('product.product'),
                 'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse',required = True),
                 'location_id': fields.many2one('stock.location', 'Location',required = True),
                 'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),

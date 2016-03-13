@@ -1,5 +1,6 @@
 from openerp.osv import fields, osv
 from datetime import datetime
+import ast
 
 class pre_sale_order(osv.osv):
     
@@ -39,6 +40,87 @@ class pre_sale_order(osv.osv):
         'm_status' : 'draft',
        
     }
+    
+    def create_presaleorder(self, cursor, user, vals, context=None):
+        print 'vals',vals
+        sale_order_name_list = []
+        try : 
+            mobile_sale_order_obj=self.pool.get('pre.sale.order')
+            mobile_sale_order_line_obj=self.pool.get('pre.sale.order.line')
+            str ="{"+vals+"}"
+            str = str.replace(":''",":'")#change Order_id
+            str = str.replace("'',","',")#null
+            str = str.replace(":',",":'',")#due to order_id
+            str = str.replace("}{", "}|{")
+            new_arr = str.split('|')
+            result = []
+            for data in new_arr:
+                x = ast.literal_eval(data)
+                result.append(x)
+            sale_order=[]
+            sale_order_line = []
+            for r in result:
+                print "length", len(r)
+                if len(r)>=17:
+                    sale_order.append(r)
+                else:
+                    sale_order_line.append(r)
+            
+            if sale_order:
+                for so in sale_order:
+                    print 'Sale Man Id',so['user_id']
+                    cursor.execute('select id From res_users where partner_id  = %s ',(so['user_id'],))
+                    data = cursor.fetchall()
+                    if data:
+                        saleManId = data[0][0]
+                    else:
+                        saleManId = None
+                    mso_result={
+                        'customer_code':so['customer_code'],
+                        'paid': True,
+                        'warehouse_id':so['warehouse_id'],
+                        'tablet_id':so['tablet_id'],
+                        'delivery_remark':so['delivery_remark'],
+                        'location_id':so['location_id'],
+                        'user_id':so['user_id'],
+                        'name':so['name'],
+                        'partner_id':so['partner_id'],
+                        'sale_plan_name':so['sale_plan_day_name'],
+                        'amount_total':so['amount_total'],
+#                         'type':so['type'],
+#                         'void_flag':so['void_flag'],
+                        'sale_team':so['sale_team'],
+                        'date':so['date'],
+#                         'payment_term':so['payment_term'],
+                        'mso_longitude':so['mso_longitude'],
+                        'mso_latitude':so['mso_latitude']
+                    }
+                    s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
+                    print "Create Sale Order",so['name']
+                    for sol in sale_order_line:
+                        if sol['so_name'] == so['name']:
+                                cursor.execute('select id From product_product where product_tmpl_id  = %s ',(sol['product_id'],))
+                                data = cursor.fetchall()
+                                if data:
+                                    productId = data[0][0]
+                                else:
+                                    productId = None
+                                mso_line_res={                                                            
+                                  'order_id':s_order_id,
+                                  'product_id':productId,
+                                  'price_unit':sol['price_unit'],   
+                                  'product_uos_qty':sol['product_uos_qty'],   
+#                                   'discount':sol['discount'],
+                                  'sub_total':sol['sub_total'],
+                                }
+                                mobile_sale_order_line_obj.create(cursor, user, mso_line_res, context=context) 
+                                print 'Create Order line',sol['so_name']                     
+                    sale_order_name_list.append(so['name'])
+            print 'True'
+            return True       
+        except Exception, e:
+            print 'False'
+            return False 
     
 pre_sale_order()
 class pre_sale_order_line(osv.osv):

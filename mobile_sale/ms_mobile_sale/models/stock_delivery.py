@@ -21,10 +21,73 @@ class stock_delivery(osv.osv):
                  'm_status' : 'draft'
     }  
     
+    def product_qty_in_stock(self, cr, uid, warehouse_id , context=None, **kwargs):
+        cr.execute("""
+                    select product_id,qty_on_hand + qty as qty_on_hand from (
+              select sm.product_id  ,sum(sm.product_uos_qty) as qty_on_hand ,0 as qty
+                                    from stock_move sm , stock_picking sp , stock_picking_type spt
+                                    where sm.picking_id = sp.id
+                        and sm.state = 'done'
+                        and sm.origin is null
+                        and sp.origin is null
+                        and spt.id = sm.picking_type_id
+                        and sp.picking_type_id = sm.picking_type_id
+                        and spt.code = 'internal'
+                        and sm.location_dest_id = %s
+                        and sm.create_date::date = now()::date
+                        group by product_id
+
+            union All
+              select sm.product_id,0 as qty,-sum(sm.product_uos_qty) as qty_on_hand 
+                        from stock_move sm , stock_picking sp , stock_picking_type spt
+                        where sm.picking_id = sp.id
+                        and sm.state = 'done'
+                        and sm.origin is null
+                        and sp.origin is null
+                        and spt.id = sm.picking_type_id
+                        and sp.picking_type_id = sm.picking_type_id
+                        and spt.code = 'internal'
+                        and sm.location_id = %s
+                        and sm.create_date::date = now()::date
+                        group by product_id
+                       )
+                A
+            """, (warehouse_id, warehouse_id,))
+        datas = cr.fetchall()
+        return datas
+    
+    def stock_delivery_line(self, cr, uid, pick_id , context=None, **kwargs):
+        cr.execute(""" select sm.product_id,sum(sm.product_uos_qty) as product_uos_qty  
+                        from stock_move sm , stock_picking sp
+                        where sm.picking_id = sp.id
+                        and sm.state ='assigned'
+                        and sp.id = %s
+                        group by sp.name ,sm.partner_id ,sm.date::date ,sm.product_id
+                    """, (pick_id,))
+                                
+        datas = cr.fetchall()
+        return datas
+    
+    def stock_delivery(self, cr, uid, user_id, context=None, **kwargs):
+        cr.execute("""select sm.origin as so_name, sm.partner_id ,sm.date::date,
+                        sm.tb_ref_no,sp.id as pick_id ,
+                        sp.name as pick_name,sp.tranc_type
+                        from stock_move sm , stock_picking sp
+                        where sm.picking_id = sp.id
+                        and sm.state ='assigned'
+                        and sp.create_uid = %s
+                        group by sp.id,sm.origin ,sm.partner_id ,sm.date::date,
+                        sm.tb_ref_no ,sp.tranc_type ,sp.name
+                        """, (user_id,))
+                                
+        datas = cr.fetchall()
+        return datas
+
     def action_convert_sd(self, cr, uid, ids, context=None):
         for stockdeli in self.browse(cr, uid, ids, context=context):            
             cr.execute('SELECT import_mobile_sd_to_server(%s,%s,%s)', (stockdeli['so_ref_no'], stockdeli.picking_ref_id.id, stockdeli['id']))
             cr.execute("update stock_delivery set m_status='done' where so_ref_no = %s and picking_ref_id = %s and id = %s", (stockdeli['so_ref_no'], stockdeli.picking_ref_id.id, stockdeli['id'],))
+
 stock_delivery()
 
 

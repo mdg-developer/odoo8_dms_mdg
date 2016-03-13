@@ -41,7 +41,7 @@ class product_template(osv.osv):
     
     _columns = {
                 #copy from product.py of odoo9
-                'default_code': fields.char('Product Code'),
+                #'default_code': fields.char('Product Code'),
                 #new column add
                 'product_principal_ids':fields.many2one('product.principal', 'Product Principal'),
                 #################
