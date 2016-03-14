@@ -19,10 +19,11 @@
 			<field name="arch" type="xml">
 				<form string="Mobile Sale Order" version="7.0">
 					<header>
-						<field name="m_status" invisible="1" />
 						<button name="action_convert_so" string="Convert Sale Order"
 							type="object" class="oe_highlight" groups="base.group_user"
 							attrs="{'invisible':[('m_status', '=', 'done')]}"></button>
+						<field name="m_status" widget="statusbar" statusbar_visible="draft,done"
+							statusbar_colors='{"draft":"red","done":"blue"}' />
 					</header>
 					<sheet>
 						<group>
@@ -39,8 +40,8 @@
 								<field name="sale_plan_name" />
 								<field name="sale_plan_day_id" />
 								<field name="sale_plan_trip_id" />
-								<field name="mso_latitude"  digits="(14,15)"/>
-								<field name="mso_longitude"  digits="(14,15)"/>
+								<field name="mso_latitude" digits="(14,15)" />
+								<field name="mso_longitude" digits="(14,15)" />
 
 							</group>
 							<group>
