@@ -29,44 +29,46 @@
 						<group>
 							<group>
 
-								<field name="name" />
-								<field name="partner_id" />
-								<field name="customer_code" />
-								<field name="outlet_type" />
-								<field name="user_id" />
-								<field name="sale_team" />
-								<field name="warehouse_id" />
-								<field name="location_id" />
-								<field name="sale_plan_name" />
-								<field name="sale_plan_day_id" />
-								<field name="sale_plan_trip_id" />
-								<field name="mso_latitude" digits="(14,15)" />
-								<field name="mso_longitude" digits="(14,15)" />
+								<field name="name" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="partner_id" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="customer_code" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="outlet_type" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="user_id" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="sale_team" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="warehouse_id" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="location_id" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="sale_plan_name" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="sale_plan_day_id" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="sale_plan_trip_id" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="mso_latitude" digits="(14,15)"
+									attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="mso_longitude" digits="(14,15)"
+									attrs="{'readonly':[('m_status','=','done')]}" />
 
 							</group>
 							<group>
-								<field name="date" />
-								<field name="due_date" />
-								<field name="payment_term" />
-								<field name="type" />
-								<field name="tablet_id" />
-								<field name="delivery_remark" />
-								<field name="amount_total" />
-								<field name="additional_discount" />
-								<field name="deduction_amount" />
-								<field name="net_amount" />
-								<field name="paid_amount" />
-								<field name="change_amount" />
-								<field name="remaining_amount" />
-								<field name="paid" />
-								<field name="void_flag" />
-								<field name="balance" />
+								<field name="date" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="due_date" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="payment_term" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="type" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="tablet_id" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="delivery_remark" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="amount_total" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="additional_discount" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="deduction_amount" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="net_amount" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="paid_amount" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="change_amount" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="remaining_amount" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="paid" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="void_flag" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="balance" attrs="{'readonly':[('m_status','=','done')]}" />
 							</group>
 						</group>
 
 						<notebook>
 							<page string="Order Lines">
-								<field name="order_line">
+								<field name="order_line" attrs="{'readonly':[('m_status','=','done')]}">
 									<form string="Mobile Sales Order Lines" version="7.0">
 
 										<group>
@@ -83,7 +85,8 @@
 										</group>
 
 									</form>
-									<tree string="Sales Order Lines" editable="bottom">
+									<tree string="Sales Order Lines" editable="bottom"
+										attrs="{'readonly':[('m_status','=','done')]}">
 
 										<field name="product_id" />
 										<field name="uom_id" />
@@ -96,12 +99,13 @@
 									</tree>
 								</field>
 
-								<field name="note" class="oe_inline" placeholder="Terms and conditions..." />
+								<field name="note" class="oe_inline" placeholder="Terms and conditions..."
+									attrs="{'readonly':[('m_status','=','done')]}" />
 
 							</page>
 
 							<page string="Delivery Lines">
-								<field name="delivery_order_line">
+								<field name="delivery_order_line" attrs="{'readonly':[('m_status','=','done')]}">
 									<form string="Mobile Delivery Order Lines" version="7.0">
 
 										<group>
@@ -116,7 +120,8 @@
 										</group>
 
 									</form>
-									<tree string="Mobile Delivery Order Lines" editable="bottom">
+									<tree string="Mobile Delivery Order Lines" editable="bottom"
+										attrs="{'readonly':[('m_status','=','done')]}">
 
 										<field name="product_id" />
 										<field name="uom" />
@@ -126,12 +131,13 @@
 									</tree>
 								</field>
 
-								<field name="note" class="oe_inline" placeholder="Terms and conditions..." />
+								<field name="note" class="oe_inline" placeholder="Terms and conditions..."
+									attrs="{'readonly':[('m_status','=','done')]}" />
 
 							</page>
 
 							<page string="Promotion Lines">
-								<field name="promos_line_ids">
+								<field name="promos_line_ids" attrs="{'readonly':[('m_status','=','done')]}">
 									<form string="Promotion Lines" version="7.0">
 
 										<group>
@@ -145,7 +151,8 @@
 										</group>
 
 									</form>
-									<tree string="Promotion Lines" editable="bottom">
+									<tree string="Promotion Lines" editable="bottom"
+										attrs="{'readonly':[('m_status','=','done')]}">
 
 										<field name="pro_id" on_change='onchange_promo_id(pro_id)' />
 										<field name="from_date" />
