@@ -1,7 +1,7 @@
 try:
     import simplejson as json
 except ImportError:
-    import json     # noqa
+    import json  # noqa
 import urllib
 
 from openerp.osv import fields, osv
@@ -50,15 +50,15 @@ class res_partner(osv.osv):
 
     _inherit = 'res.partner'                           
     _columns = {  
-                'customer_code':fields.char('Code', required=True),  
-                'outlet_type': fields.many2one('outlettype.outlettype', 'Outlet Type', required=True),                
-                'temp_customer':fields.char('Contact Person'),                
-                'class_id':fields.many2one('sale.class', 'Class'),  
-                'old_code': fields.char('Old Code'), 
+                'customer_code':fields.char('Code', required=True),
+                'outlet_type': fields.many2one('outlettype.outlettype', 'Outlet Type', required=True),
+                'temp_customer':fields.char('Contact Person'),
+                'class_id':fields.many2one('sale.class', 'Class'),
+                'old_code': fields.char('Old Code'),
                 'sales_channel':fields.many2one('sale.channel', 'Sale Channels'),
-                'address':fields.char('Address'),   
-                'branch_id':fields.many2one('sale.branch', 'Branch'),               
-                'demarcation_id': fields.many2one('sale.demarcation', 'Demarcation'),                 
+                'address':fields.char('Address'),
+                'branch_id':fields.many2one('sale.branch', 'Branch'),
+                'demarcation_id': fields.many2one('sale.demarcation', 'Demarcation'),
                 'mobile_customer': fields.boolean('Mobile Customer', help="Check this box if this contact is a mobile customer. If it's not checked, purchase people will not see it when encoding a purchase order."),
     } 
     
@@ -77,9 +77,9 @@ class res_partner(osv.osv):
                                                 state=partner.state_id.name,
                                                 country=partner.country_id.name))
             if result:
-                print 'result',result
-                print 'result_latitude',result[0]
-                print 'resul_longitude',result[1]
+                print 'result', result
+                print 'result_latitude', result[0]
+                print 'resul_longitude', result[1]
                 self.write(cr, uid, [partner.id], {
                     'partner_latitude': result[0],
                     'partner_longitude': result[1],
@@ -143,13 +143,11 @@ class res_partner(osv.osv):
         datas = cr.fetchall()
         cr.execute
         return datas
-    #kzo Eidt
+ # kzo Eidt
     def res_partners_return_day(self, cr, uid, section_id, day_id , context=None, **kwargs):
         print'res_partners_return_day'
-        cr.execute('''
-                    
-
- select A.id,A.name,A.image,A.is_company,
+        cr.execute('''                    
+                     select A.id,A.name,A.image,A.is_company,
                      A.image_small,A.street,A.street2,A.city,A.website,
                      A.phone,A.township,A.mobile,A.email,A.company_id,A.customer, 
                      A.customer_code,A.mobile_customer,A.shop_name ,
@@ -157,29 +155,30 @@ class res_partner(osv.osv):
                      A.zip,A.state_name,A.partner_latitude,A.partner_longitude,A.sale_plan_day_id  from (
 
                      select RP.id,RP.name,RP.image,RP.is_company,RPS.sale_plan_day_id,
-                     RP.image_small,RP.street,RP.street2,RP.city,RP.website,
-                     RP.phone,RP.township,RP.mobile,RP.email,RP.company_id,RP.customer, 
+                     RP.image_small,RP.street,RP.street2,RC.name as city,RP.website,
+                     RP.phone,RT.name as township,RP.mobile,RP.email,RP.company_id,RP.customer, 
                      RP.customer_code,RP.mobile_customer,RP.shop_name ,RP.address,RP.territory,
                      RP.village,RP.branch_code,RP.zip ,RP.partner_latitude,RP.partner_longitude,RS.name as state_name
                      from sale_plan_day SPD ,
-                                            res_partner_sale_plan_day_rel RPS , res_partner RP ,res_country_state RS
+                                            res_partner_sale_plan_day_rel RPS , res_partner RP ,res_country_state RS, res_city RC,res_township RT
                                             where SPD.id = RPS.sale_plan_day_id 
                                             and  RS.id = RP.state_id
+                                            and RP.township =RT.id
+                                            and RP.city = RC.id
                                             and RPS.partner_id = RP.id 
                                             and SPD.sale_team = %s
                                             and RPS.sale_plan_day_id = %s
                                             
                         )A 
                         where A.customer_code is not null
-            ''', (section_id,day_id, ))
+            ''', (section_id, day_id,))
         datas = cr.fetchall()
         return datas
-        #kzo Edit add Sale Plan Trip and Day ID
+        # kzo Edit add Sale Plan Trip and Day ID
     def res_partners_return_trip(self, cr, uid, section_id, day_id , context=None, **kwargs):
         cr.execute('''
                     
-
- select A.id,A.name,A.image,A.is_company,
+                     select A.id,A.name,A.image,A.is_company,
                      A.image_small,A.street,A.street2,A.city,A.website,
                      A.phone,A.township,A.mobile,A.email,A.company_id,A.customer, 
                      A.customer_code,A.mobile_customer,A.shop_name ,
@@ -187,21 +186,23 @@ class res_partner(osv.osv):
                      A.zip,A.state_name,A.partner_latitude,A.partner_longitude,A.sale_plan_trip_id   from (
 
                      select RP.id,RP.name,RP.image,RP.is_company,
-                     RP.image_small,RP.street,RP.street2,RP.city,RP.website,
-                     RP.phone,RP.township,RP.mobile,RP.email,RP.company_id,RP.customer, 
+                     RP.image_small,RP.street,RP.street2,RC.name as city,RP.website,
+                     RP.phone,RT.name as township,RP.mobile,RP.email,RP.company_id,RP.customer, 
                      RP.customer_code,RP.mobile_customer,RP.shop_name ,RP.address,RP.territory ,RPT.sale_plan_trip_id,
                      RP.village,RP.branch_code,RP.zip ,RP.partner_latitude,RP.partner_longitude,RS.name as state_name
-                     from sale_plan_trip SPT , res_partner_sale_plan_trip_rel RPT , res_partner RP ,res_country_state RS 
-                                            where SPT.id = RPT.sale_plan_trip_id 
-                        and RPT.partner_id = RP.id 
-                        and  RS.id = RP.state_id
-                        and SPT.sale_team = %s
-                        and RPT.sale_plan_trip_id = %s                   
+                     from sale_plan_trip SPT , res_partner_sale_plan_trip_rel RPT , res_partner RP ,res_country_state RS ,
+                     res_city RC, res_township RT            
+                     where SPT.id = RPT.sale_plan_trip_id 
+                     and RPT.partner_id = RP.id 
+                     and  RS.id = RP.state_id
+                     and  RP.city = RC.id
+                     and RP.township = RT.id
+                     and SPT.sale_team = %s
+                     and RPT.sale_plan_trip_id = %s                   
                         )A 
                         where A.customer_code is not null 
-            ''', (section_id,day_id, ))
+            ''', (section_id, day_id,))
         datas = cr.fetchall()
-        cr.execute
         return datas
 res_partner()
 
