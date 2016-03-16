@@ -17,7 +17,7 @@ Begin
 
 
 for data_record in  select s.date as date,s.name as vr_no,s.customer_code,r.id as customerid,r.name as customer , p.name_template as product,l.product_uos_qty,l.price_unit as sprice_unit,l.discount,
-l.sub_total,c.name as sale_group ,s.m_status,s.type ,rt.name as township ,sc.name as channel, rs.name as state,s.delivery_remark ,s.additional_discount,s.void_flag,t.default_code as product_code
+l.sub_total,c.name as sale_group ,s.m_status,s.type ,rt.name as township ,sc.name as channel, rs.name as state,s.delivery_remark ,s.additional_discount,s.void_flag,p.default_code as product_code
 from mobile_sale_order s
 left join mobile_sale_order_line l  on s.id = l.order_id 
 left join product_product p on l.product_id = p.id
@@ -100,44 +100,6 @@ $BODY$
 ALTER FUNCTION daily_sale_report_without_user(date, date)
   OWNER TO openerp;
 
-  
--- Table: daily_sale_temp
-
--- DROP TABLE daily_sale_temp;
-
-CREATE TABLE daily_sale_temp
-(
-  date date,
-  vr_no character varying,
-  customer_code character varying,
-  customerid integer,
-  customer character varying,
-  product character varying,
-  product_uos_qty double precision,
-  price_unit double precision,
-  discount double precision,
-  sub_total double precision,
-  sale_group character varying,
-  m_status character varying,
-  type character varying,
-  township character varying,
-  channel character varying,
-  territory character varying,
-  state character varying,
-  delivery_remark character varying,
-  additional_discount double precision,
-  sale_plan_day_name character varying,
-  sale_plan_trip_name character varying,
-  void character varying,
-  id serial NOT NULL,
-  product_code character varying,
-  CONSTRAINT report_temp6_pkey PRIMARY KEY (id)
-)
-WITH (
-  OIDS=FALSE
-);
-ALTER TABLE daily_sale_temp
-  OWNER TO openerp;
 
   
   -- Function: daily_sale_report_without_user(date, date, integer)
@@ -162,7 +124,7 @@ if m_group is null then
 end if;
 
 for data_record in  select s.date as date,s.name as vr_no,s.customer_code,r.id as customerid,r.name as customer , p.name_template as product,l.product_uos_qty,l.price_unit as sprice_unit,l.discount,
-l.sub_total,c.name as sale_group ,s.m_status,s.type ,rt.name as township ,sc.name as channel, rs.name as state,s.delivery_remark ,s.additional_discount,s.void_flag,t.default_code as product_code
+l.sub_total,c.name as sale_group ,s.m_status,s.type ,rt.name as township ,sc.name as channel, rs.name as state,s.delivery_remark ,s.additional_discount,s.void_flag,p.default_code as product_code
 from mobile_sale_order s
 left join mobile_sale_order_line l  on s.id = l.order_id 
 left join product_product p on l.product_id = p.id
