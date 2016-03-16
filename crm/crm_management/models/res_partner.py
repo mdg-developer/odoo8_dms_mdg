@@ -50,7 +50,7 @@ class res_partner(osv.osv):
 
     _inherit = 'res.partner'                           
     _columns = {  
-                'customer_code':fields.char('Code', required=True),
+                'customer_code':fields.char('Code', required=False),
                 'outlet_type': fields.many2one('outlettype.outlettype', 'Outlet Type', required=True),
                 'temp_customer':fields.char('Contact Person'),
                 'class_id':fields.many2one('sale.class', 'Class'),
@@ -77,9 +77,6 @@ class res_partner(osv.osv):
                                                 state=partner.state_id.name,
                                                 country=partner.country_id.name))
             if result:
-                print 'result', result
-                print 'result_latitude', result[0]
-                print 'resul_longitude', result[1]
                 self.write(cr, uid, [partner.id], {
                     'partner_latitude': result[0],
                     'partner_longitude': result[1],
@@ -204,19 +201,27 @@ class res_partner(osv.osv):
             ''', (section_id, day_id,))
         datas = cr.fetchall()
         return datas
+    
+    # MMK
+    def generate_customercode(self, cr, uid, ids, val, context=None):
+            codeObj = self.pool.get('res.code')
+            cityId = townshipId = channelId = codeId = code = None
+            codeResult = {}
+            if ids:
+                for resVal in self.browse(cr, uid, ids, context=context):
+                    if resVal:
+                        cityId = resVal.city
+                        townshipId = resVal.township
+                        channelId = resVal.sales_channel
+                        if cityId and townshipId and channelId:
+                            codeId = codeObj.search(cr, uid, [('city_id', '=', cityId.id), ('township_id', '=', townshipId.id), ('sale_channel_id', '=', channelId.id)])
+                            if codeId:
+                                code = codeObj.generateCode(cr, uid, codeId[0], context=context)
+                            else:
+                                codeResult = {'city_id':cityId.id, 'township_id':townshipId.id, 'sale_channel_id':channelId.id, 'nextnumber':1, 'padding':4}
+                                codeId = codeObj.create(cr, uid, codeResult, context=context)
+                                code = codeObj.generateCode(cr, uid, codeId, context=context)
+                if code:
+                    self.write(cr, uid, ids, {'customer_code':code}, context=context)
+            return True
 res_partner()
-
-
-
-  
-
-
-
-
-
-     
-
-
-    
-    
-    
