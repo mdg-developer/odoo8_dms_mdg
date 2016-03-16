@@ -8,8 +8,8 @@
     <property name="imageDPI">120</property>
     <list-property name="libraries">
         <structure>
-            <property name="fileName">birt_report/general_library.rptlibrary</property>
-            <property name="namespace">general_library</property>
+            <property name="fileName">birt_report/report_library.rptlibrary</property>
+            <property name="namespace">report_library</property>
         </structure>
     </list-property>
     <parameters>
@@ -43,8 +43,8 @@
         </scalar-parameter>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="2528"
- extends="general_library.Data Source"/>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="2534"
+ extends="report_library.Data Source"/>
     </data-sources>
     <data-sets>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="Company_Infos" id="732">
