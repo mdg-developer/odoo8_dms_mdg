@@ -567,12 +567,16 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()
         cr.execute
         return datas
+    # KZO
     # Get Res Partner and Res Partner Category res_partner_res_partner_category_rel
     def get_res_partner_category_datas(self, cr, uid , context=None, **kwargs):
-        cr.execute('''select category_id,partner_id from res_partner_res_partner_category_rel''')
-        datas = cr.fetchall()
-        cr.execute
-        return datas
+            cr.execute('''
+            select a.category_id, a.partner_id ,b.name
+            from res_partner_res_partner_category_rel a , res_partner_category b
+            where a.category_id = b.id
+            ''')
+            datas = cr.fetchall()
+            return datas
     
     def get_sale_team_members_datas(self, cr, uid , member_id, saleteam_id, context=None, **kwargs):
         cr.execute('''select u.id as id,u.active as active,u.login as login,u.password as password,u.partner_id as partner_id,p.name as name from res_users u, res_partner p
