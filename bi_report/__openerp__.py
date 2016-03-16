@@ -26,7 +26,7 @@
     'author': 'seventh computing',
     'website': 'http://www.7thcomputing.com',
     'category' : 'Reporting',
-    'depends' : ["base","sale",],
+    'depends' : ["base","sale","ms_mobile_sale"],
     'description': """
     Product for OpenERP
     = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
