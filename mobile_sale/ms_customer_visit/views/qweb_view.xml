@@ -2,8 +2,8 @@
 <openerp>
 	<data>
 		<report id="customer_visit" model="customer.visit" string="Google Map"
-			report_type="qweb-pdf" name="ms_customer_visit.report_document" file="ms_customer_visit.report_document"
-			attachment_use="True"
+			report_type="qweb-pdf" name="ms_customer_visit.report_customer_visit"
+			file="ms_customer_visit.report_customer_visit" attachment_use="True"
 			attachment="('Google Map')+'.pdf'" />
 	</data>
 </openerp>
