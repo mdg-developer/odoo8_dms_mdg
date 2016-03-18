@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+
+	<data>
+
+		<template id="report_job_document">
+			<t>
+				<div t-attf-id="lat{{o.id}}" style="display: none;">
+					<t t-esc="o.latitude" />
+				</div>
+				<div t-attf-id="long{{o.id}}" style="display: none;">
+
+					<t t-esc="o.longitude" />
+				</div>
+				<div t-attf-id="res{{o.id}}" style="display:none;">
+					<t t-esc="o.customer_id.name" />
+				</div>
+
+			</t>
+		</template>
+
+		<template id="report_document">
+			<t t-call="report.html_container">
+				<script src="http://maps.google.com/maps/api/js?sensor=false"
+					type="text/javascript"></script>
+				<t t-foreach="doc_ids" t-as="doc_id">
+					<t
+						t-raw="translate_doc(doc_id, doc_model, 'customer_id.lang', 'ms_customer_visit.report_job_document')" />
+				</t>
+				<div id="map" style="width: 100%; height: 80%;"></div>
+				<script>
+					var arr = new Array();
+					var geoValue=new Array();
+					arr=
+					<t t-esc="doc_ids" />;
+					var value;
+
+					var center=new Array();
+					for(i=0;i!=arr.length;i++){
+					var
+					lat="lat"+arr[i];
+					var
+					long="long"+arr[i];
+					var res= "res"+arr[i];
+					geoValue[i]=[document.getElementById(lat).innerHTML,document.getElementById(long).innerHTML,document.getElementById(res).innerHTML];
+					center[0]=document.getElementById(lat).innerHTML;
+					center[1]=document.getElementById(long).innerHTML
+					}
+					var locations =
+					new Array();
+					if(geoValue.length&gt;0){
+					var c=0;
+					for(i=0;i&lt;geoValue.length;i++){
+					locations[c]=[geoValue[i][2],geoValue[i][0],geoValue[i][1],i];
+					c=c+1;
+					}
+					}
+					var map = new
+					google.maps.Map(document.getElementById('map'), {
+					zoom: 6,
+					center: new google.maps.LatLng(center[0], center[1]),
+					mapTypeId:
+					google.maps.MapTypeId.ROADMAP
+					
+					});
+
+					var infowindow = new
+					google.maps.InfoWindow();
+
+					var marker, i;
+					for (i = 0; i &lt;
+					locations.length; i++) {
+					marker = new google.maps.Marker({
+					position:
+					new google.maps.LatLng(locations[i][1], locations[i][2]),
+					map: map
+					});
+
+					google.maps.event.addListener(marker, 'click', (function(marker,
+					i) {
+					return function() {
+					infowindow.setContent(locations[i][0]);
+					infowindow.open(map, marker);
+					}
+					})(marker, i));
+					}
+				</script>
+			</t>
+		</template>
+	</data>
+</openerp>

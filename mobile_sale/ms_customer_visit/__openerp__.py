@@ -31,9 +31,9 @@ Customer Visit
 """,
     'author': 'Seventh Computing',
     'website': 'http://www.7thcomputing.com',
-    'depends': ['base','crm','address_management_system','ms_sale_plan_setting','ms_tablet_info','web_gmaps'
+    'depends': ['base', 'crm', 'address_management_system', 'ms_sale_plan_setting', 'ms_tablet_info', 'web_gmaps'
     ],
-    'data': ['views/customer_visit_view.xml'
+    'data': ['views/customer_visit_view.xml', 'views/qweb_view.xml', 'views/report_customer_visit.xml'
 
     ],
     'installable': True,
