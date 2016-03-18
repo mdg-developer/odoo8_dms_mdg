@@ -4,5 +4,8 @@
 		<report id="pre_sale_order" model="pre.sale.order" string="Google Map"
 			report_type="qweb-pdf" name="ms_mobile_sale.report_pre_sale" file="ms_mobile_sale.report_pre_sale"
 			attachment_use="True" attachment="('Google Map')+'.pdf'" />
+		<report id="mobile_sale_order" model="mobile.sale.order" string="Google Map"
+			report_type="qweb-pdf" name="ms_mobile_sale.report_mobile_sale_order" file="ms_mobile_sale.report_mobile_sale_order"
+			attachment_use="True" attachment="('Google Map')+'.pdf'" />	
 	</data>
 </openerp>
