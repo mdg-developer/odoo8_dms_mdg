@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<report id="crm_management_customer" model="res.partner" string="Google Map"
+			report_type="qweb-pdf" name="crm_management.report_crm_management" file="crm_management.report_crm_management"
+			attachment_use="True"
+			attachment="('Google Map')+'.pdf'" />
+	</data>
+</openerp>

@@ -40,7 +40,9 @@ e.g YGN-IS-RETAIN-0001,YGN-IS-RETAIN-0002,
     'data': [        
         'views/res_partner_view.xml',
         'views/lead_view.xml',
-        'views/res_code_view.xml'
+        'views/res_code_view.xml',
+        'reports/qweb_view.xml',
+        'reports/report_crm_management.xml'
     ],
     'installable': True,
     'auto_install': False,
