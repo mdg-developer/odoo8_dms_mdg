@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<report id="pre_sale_order" model="pre.sale.order" string="Google Map"
+			report_type="qweb-pdf" name="ms_mobile_sale.report_pre_sale" file="ms_mobile_sale.report_pre_sale"
+			attachment_use="True" attachment="('Google Map')+'.pdf'" />
+	</data>
+</openerp>

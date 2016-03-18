@@ -37,7 +37,9 @@ Mobile Sales
              'views/stock_delivery_view.xml',
              'views/convert_sale_orders_view.xml',
              'views/mobile_sale_order_view.xml',
-             'views/convert_stock_delivery_view.xml'
+             'views/convert_stock_delivery_view.xml',
+             'reports/qweb_view.xml',
+             'reports/report_pre_sale.xml'
 
     ],
     'installable': True,
