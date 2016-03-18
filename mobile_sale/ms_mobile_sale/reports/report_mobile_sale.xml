@@ -4,23 +4,23 @@
 
 	<data>
 
-		<template id="report_customer_visit_document">
+		<template id="report_mobile_sale_document">
 			<t>
 				<div t-attf-id="lat{{o.id}}" style="display: none;">
-					<t t-esc="o.latitude" />
+					<t t-esc="o.mso_latitude" />
 				</div>
 				<div t-attf-id="long{{o.id}}" style="display: none;">
 
-					<t t-esc="o.longitude" />
+					<t t-esc="o.mso_longitude" />
 				</div>
 				<div t-attf-id="order{{o.id}}" style="display: none;">
 
-					<t t-esc="o.customer_id.name" />
+					<t t-esc="o.name" />
 				</div>
 			</t>
 		</template>
 
-		<template id="report_customer_visit">
+		<template id="report_mobile_sale">
 			<t t-call="report.html_container">
 
 				<!-- Multi Point Link -->
@@ -39,7 +39,7 @@
 
 				<t t-foreach="doc_ids" t-as="doc_id">
 					<t
-						t-raw="translate_doc(doc_id, doc_model, 'customer_id.lang', 'ms_customer_visit.report_customer_visit_document')" />
+						t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', 'ms_mobile_sale.report_mobile_sale_document')" />
 				</t>
 
 				<script>
