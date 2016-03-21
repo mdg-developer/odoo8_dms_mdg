@@ -208,3 +208,43 @@ $BODY$
   ROWS 1000;
 ALTER FUNCTION daily_sale_report_without_user(date, date, integer)
   OWNER TO openerp;
+
+   
+  
+-- Table: daily_sale_temp
+
+-- DROP TABLE daily_sale_temp;
+
+CREATE TABLE daily_sale_temp
+(
+  date date,
+  vr_no character varying,
+  customer_code character varying,
+  customerid integer,
+  customer character varying,
+  product character varying,
+  product_uos_qty double precision,
+  price_unit double precision,
+  discount double precision,
+  sub_total double precision,
+  sale_group character varying,
+  m_status character varying,
+  type character varying,
+  township character varying,
+  channel character varying,
+  territory character varying,
+  state character varying,
+  delivery_remark character varying,
+  additional_discount double precision,
+  sale_plan_day_name character varying,
+  sale_plan_trip_name character varying,
+  void character varying,
+  id serial NOT NULL,
+  product_code character varying,
+  CONSTRAINT report_temp6_pkey PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE daily_sale_temp
+  OWNER TO openerp;
