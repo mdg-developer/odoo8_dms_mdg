@@ -88,11 +88,9 @@ class pre_sale_order(osv.osv):
                         'partner_id':so['partner_id'],
                         'sale_plan_name':so['sale_plan_day_name'],
                         'amount_total':so['amount_total'],
-#                         'type':so['type'],
-#                         'void_flag':so['void_flag'],
                         'sale_team':so['sale_team'],
                         'date':so['date'],
-#                         'payment_term':so['payment_term'],
+                        'sale_plan_day_id':so['sale_plan_day_id'],
                         'mso_longitude':so['mso_longitude'],
                         'mso_latitude':so['mso_latitude']
                     }
