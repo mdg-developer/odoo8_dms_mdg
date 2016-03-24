@@ -25,58 +25,58 @@ class mobile_stock_delivery(osv.osv):
     _defaults = {
                  'm_status' : 'draft'
     }
-
     def product_qty_in_stock(self, cr, uid, warehouse_id , context=None, **kwargs):
-        cr.execute("""
-           select product_id,qty_on_hand + qty as qty_on_hand from (
-            select sm.product_id  ,sum(sm.product_uos_qty) as qty_on_hand ,0 as qty
-                                  from stock_move sm , stock_picking sp , stock_picking_type spt
-                                  where sm.picking_id = sp.id
-                      and sm.state = 'done'
-                      and sm.origin is null
-                      and sp.origin is null
-                      and spt.id = sm.picking_type_id
-                      and sp.picking_type_id = sm.picking_type_id
-                      and spt.code = 'internal'
-                      and sm.location_dest_id = %s
-                      and sm.create_date::date = now()::date
-                      group by product_id)A
-            """, (warehouse_id,))
-#         cr.execute("""
-#                   select product_id,qty_on_hand + qty as qty_on_hand from (
-#             select sm.product_id  ,sum(sm.product_uos_qty) as qty_on_hand ,0 as qty
-#                                   from stock_move sm , stock_picking sp , stock_picking_type spt
-#                                   where sm.picking_id = sp.id
-#                       and sm.state = 'done'
-#                       and sm.origin is null
-#                       and sp.origin is null
-#                       and spt.id = sm.picking_type_id
-#                       and sp.picking_type_id = sm.picking_type_id
-#                       and spt.code = 'internal'
-#                       and sm.location_dest_id = %s
-#                       and sm.create_date::date = now()::date
-#                       group by product_id
-# 
-#             union All
-#               select sm.product_id,0 as qty,-sum(sm.product_uos_qty) as qty_on_hand 
-#                         from stock_move sm , stock_picking sp , stock_picking_type spt
-#                         where sm.picking_id = sp.id
-#                         and sm.state = 'done'
-#                         and sm.origin is null
-#                         and sp.origin is null
-#                         and spt.id = sm.picking_type_id
-#                         and sp.picking_type_id = sm.picking_type_id
-#                         and spt.code = 'internal'
-#                         and sm.location_id = %s
-#                         and sm.create_date::date = now()::date
-#                         group by product_id
-#                        )
-#                 A
-#             """, (warehouse_id, warehouse_id,))
-        datas = cr.fetchall()
-        print 'datas',datas
-        return datas
-    
+            cr.execute("""
+                select product_id,qty_on_hand + qty as qty_on_hand,main_group from (
+                select sm.product_id  ,sum(sm.product_uos_qty) as qty_on_hand ,0 as qty, pt.main_group
+                                      from stock_move sm , stock_picking sp , stock_picking_type spt,product_template pt, product_product pp
+                                      where sm.picking_id = sp.id
+                          and sm.state = 'done'
+                          and sm.origin is null
+                          and sp.origin is null                     
+                          and spt.id = sm.picking_type_id
+                          and sp.picking_type_id = sm.picking_type_id
+                          and spt.code = 'internal'
+                          and sm.location_dest_id = %s
+                          and sm.create_date::date = now()::date
+                          and sm.product_id = pp.id
+                          and pp.product_tmpl_id = pt.id
+                          group by product_id, pt.main_group)A
+                """, (warehouse_id,))
+    #         cr.execute("""
+    #                   select product_id,qty_on_hand + qty as qty_on_hand from (
+    #             select sm.product_id  ,sum(sm.product_uos_qty) as qty_on_hand ,0 as qty
+    #                                   from stock_move sm , stock_picking sp , stock_picking_type spt
+    #                                   where sm.picking_id = sp.id
+    #                       and sm.state = 'done'
+    #                       and sm.origin is null
+    #                       and sp.origin is null
+    #                       and spt.id = sm.picking_type_id
+    #                       and sp.picking_type_id = sm.picking_type_id
+    #                       and spt.code = 'internal'
+    #                       and sm.location_dest_id = %s
+    #                       and sm.create_date::date = now()::date
+    #                       group by product_id
+    # 
+    #             union All
+    #               select sm.product_id,0 as qty,-sum(sm.product_uos_qty) as qty_on_hand 
+    #                         from stock_move sm , stock_picking sp , stock_picking_type spt
+    #                         where sm.picking_id = sp.id
+    #                         and sm.state = 'done'
+    #                         and sm.origin is null
+    #                         and sp.origin is null
+    #                         and spt.id = sm.picking_type_id
+    #                         and sp.picking_type_id = sm.picking_type_id
+    #                         and spt.code = 'internal'
+    #                         and sm.location_id = %s
+    #                         and sm.create_date::date = now()::date
+    #                         group by product_id
+    #                        )
+    #                 A
+    #             """, (warehouse_id, warehouse_id,))
+            datas = cr.fetchall()
+            print 'datas',datas
+            return datas
     def stock_delivery_line(self, cr, uid, pick_id , context=None, **kwargs):
         cr.execute(""" select sm.product_id,sum(sm.product_uos_qty) as product_uos_qty
                         from stock_move sm , stock_picking sp
