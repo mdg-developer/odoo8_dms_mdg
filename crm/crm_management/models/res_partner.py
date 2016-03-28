@@ -142,7 +142,6 @@ class res_partner(osv.osv):
         return datas
 # kzo Eidt
     def res_partners_return_day(self, cr, uid, section_id, day_id , context=None, **kwargs):
-        print'res_partners_return_day'
         cr.execute('''                    
                      select A.id,A.name,A.image,A.is_company, A.image_small,A.street,A.street2,A.city,A.website,
                      A.phone,A.township,A.mobile,A.email,A.company_id,A.customer, 
@@ -153,15 +152,16 @@ class res_partner(osv.osv):
                      select RP.id,RP.name,'' as image,RP.is_company,RPS.sale_plan_day_id,
                      '' as image_small,RP.street,RP.street2,RC.name as city,RP.website,
                      RP.phone,RT.name as township,RP.mobile,RP.email,RP.company_id,RP.customer, 
-                     RP.customer_code,RP.mobile_customer,RP.shop_name ,RP.address,RP.territory,
+                     RP.customer_code,RP.mobile_customer,OT.name as shop_name,RP.address,RP.territory,
                      RP.village,RP.branch_code,RP.zip ,RP.partner_latitude,RP.partner_longitude,RS.name as state_name,
                      substring(replace(cast(RP.image_medium as text),'/',''),1,5) as image_medium 
-                     from sale_plan_day SPD ,
+                     from sale_plan_day SPD ,outlettype_outlettype OT,
                                             res_partner_sale_plan_day_rel RPS , res_partner RP ,res_country_state RS, res_city RC,res_township RT
                                             where SPD.id = RPS.sale_plan_day_id 
                                             and  RS.id = RP.state_id
                                             and RP.township =RT.id
                                             and RP.city = RC.id
+                                            and RP.outlet_type = OT.id
                                             and RPS.partner_id = RP.id 
                                             and SPD.sale_team = %s
                                             and RPS.sale_plan_day_id = %s
@@ -184,14 +184,15 @@ class res_partner(osv.osv):
                      select RP.id,RP.name,'' as image,RP.is_company,
                      '' as image_small,RP.street,RP.street2,RC.name as city,RP.website,
                      RP.phone,RT.name as township,RP.mobile,RP.email,RP.company_id,RP.customer, 
-                     RP.customer_code,RP.mobile_customer,RP.shop_name ,RP.address,RP.territory ,RPT.sale_plan_trip_id,
+                     RP.customer_code,RP.mobile_customer,OT.name as shop_name ,RP.address,RP.territory ,RPT.sale_plan_trip_id,
                      RP.village,RP.branch_code,RP.zip ,RP.partner_latitude,RP.partner_longitude,RS.name as state_name
                       ,substring(replace(cast(RP.image_medium as text),'/',''),1,5) as image_medium 
                      from sale_plan_trip SPT , res_partner_sale_plan_trip_rel RPT , res_partner RP ,res_country_state RS ,
-                     res_city RC, res_township RT            
+                     res_city RC, res_township ,RT outlettype_outlettype OT      
                      where SPT.id = RPT.sale_plan_trip_id 
                      and RPT.partner_id = RP.id 
                      and  RS.id = RP.state_id
+                     and RP.outlet_type = OT.id
                      and  RP.city = RC.id
                      and RP.township = RT.id
                      and SPT.sale_team = %s
