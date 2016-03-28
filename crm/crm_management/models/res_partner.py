@@ -188,7 +188,7 @@ class res_partner(osv.osv):
                      RP.village,RP.branch_code,RP.zip ,RP.partner_latitude,RP.partner_longitude,RS.name as state_name
                       ,substring(replace(cast(RP.image_medium as text),'/',''),1,5) as image_medium 
                      from sale_plan_trip SPT , res_partner_sale_plan_trip_rel RPT , res_partner RP ,res_country_state RS ,
-                     res_city RC, res_township ,RT outlettype_outlettype OT      
+                     res_city RC, res_township RT,outlettype_outlettype OT      
                      where SPT.id = RPT.sale_plan_trip_id 
                      and RPT.partner_id = RP.id 
                      and  RS.id = RP.state_id
