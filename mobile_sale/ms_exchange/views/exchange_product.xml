@@ -11,8 +11,7 @@
 				<tree string="Exchange Product Tree">
 					<field name="transaction_id" />
 					<field name="customer_id" />					
-					<field name="date" />
-					<field name="so_No" />
+					<field name="date" />					
 					<field name="exchange_type" />
 					<field name="void_flag" />
 					<field name="e_status" />
@@ -42,15 +41,11 @@
 								</h2>
 								<field name="customer_id" on_change='onchange_customer_id(customer_id)' />
 								<field name="customer_code" />
-								<field name="team_id" />
-								<field name="exchange_type" />
+								<field name="team_id" />								
 							</group>
-							<group>
-								<label for="so_No" />
-								<h2>
-									<field name="so_No" />
-								</h2>
+							<group>						
 								<field name="date" />
+								<field name="exchange_type" />
 								<field name="void_flag" />
 								<field name="location_id" />
 							</group>
@@ -60,7 +55,8 @@
 								<field name="item_line">
 									<form string="Exchange Item Lines">
 										<group>
-											<group>												
+											<group>		
+												<field name="so_No" />										
 												<field name="product_id" />
 												<field name="product_qty" />
 												<field name="trans_type" />
@@ -68,7 +64,8 @@
 											</group>
 										</group>
 									</form>
-									<tree string="Exchange Item Lines" editable="bottom">										
+									<tree string="Exchange Item Lines" editable="bottom">
+										<field name="so_No" />										
 										<field name="product_id" />
 										<field name="product_qty" />
 										<field name="trans_type" />
