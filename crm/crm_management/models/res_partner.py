@@ -48,7 +48,39 @@ outlet_type()
 
 class res_partner(osv.osv):
 
-    _inherit = 'res.partner'                           
+    _inherit = 'res.partner'
+    
+    def _sale_order_count_week(self, cr, uid, ids, field_name, arg, context=None):
+        print 'ids>>>',ids
+        res ={} 
+               
+        cr.execute("""select DATE_PART('day',max(date_order)- min(date_order)) from sale_order where partner_id= %s """, (ids[0],))
+        day_number = cr.fetchall()
+        print 'day_number',day_number
+        if day_number:
+            day = day_number[0][0]    
+            cr.execute('select count(id) from sale_order where partner_id=%s ', (ids[0],))
+            so_number = cr.fetchall()
+            print 'so_number',so_number
+            print 'day', day
+            if so_number:
+                so_count = so_number[0][0] 
+                print 'so_count',so_count
+                print 'type',type(day)
+                
+                if day > 6.0:
+                    week_num= day / 7
+                    print 'week_num',week_num
+                else:
+                    week_num = 1                   
+                    print 'week_num',week_num
+                if week_num > 0.0 :
+                    if so_count > 0:
+                        for partner in self.browse(cr, uid, ids, context):
+                            print 'round', round(so_count / week_num,2), '>>>>',so_count / week_num
+                            res[partner.id] = round(so_count / week_num,2)
+                        
+        return res                               
     _columns = {  
                 'customer_code':fields.char('Code', required=False),
                 'outlet_type': fields.many2one('outlettype.outlettype', 'Outlet Type', required=True),
@@ -60,11 +92,16 @@ class res_partner(osv.osv):
                 'branch_id':fields.many2one('sale.branch', 'Branch'),
                 'demarcation_id': fields.many2one('sale.demarcation', 'Demarcation'),
                 'mobile_customer': fields.boolean('Mobile Customer', help="Check this box if this contact is a mobile customer. If it's not checked, purchase people will not see it when encoding a purchase order."),
+                #'sale_order_count_by_week': fields.function(sale_order_count_by_week, string='# of Sales Order by week', type='integer'),
+                'sale_order_count_week': fields.function(_sale_order_count_week, string='# of Sales Order by week', type='float',digits=(16, 2)),
+                #'avg_sale_order_ids': fields.one2many('sale.order','partner_id','Sales Order'),
     } 
     
     _sql_constraints = [        
         ('customer_code_uniq', 'unique (customer_code)', 'Customer code must be unique !'),
     ]
+    
+     
     
     def geo_localize(self, cr, uid, ids, context=None):
         # Don't pass context to browse()! We need country names in english below

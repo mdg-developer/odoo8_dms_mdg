@@ -40,6 +40,13 @@
 							<button name="generate_customercode" type="object" string="Generate Code" />
 						</group>
 					</xpath>
+					<xpath expr="//div[@name='buttons']" position="inside">
+                    <button class="oe_inline oe_stat_button" type="action" name="%(sale.act_res_partner_2_sale_order)d" 
+                        attrs="{'invisible': [('customer', '=', False)]}"
+                        icon="fa-strikethrough">
+                        <field string="Sales AVG Week" name="sale_order_count_week" widget="statinfo"/>
+                    </button>     
+                </xpath>
 					<xpath
 						expr="//page[@name='sales_purchases']/group/group/field[@name='supplier']"
 						position="after">
