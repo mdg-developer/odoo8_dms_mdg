@@ -35,12 +35,14 @@ e.g YGN-IS-RETAIN-0001,YGN-IS-RETAIN-0002,
 """,
     'author': 'Seventh Computing',
     'website': 'http://www.7thcomputing.com',
-    'depends': ['base', 'sale', 'crm', 'address_management_system', 'crm_class', 'crm_branch', 'crm_demarcation', 'crm_sale_channel', 'base_geolocalize', 'crm_partner_assign'
+    'depends': ['base', 'crm','sale', 'address_management_system', 'crm_class', 'crm_branch', 'crm_demarcation', 'crm_sale_channel', 'base_geolocalize', 'crm_partner_assign'
     ],
     'data': [        
         'views/res_partner_view.xml',
         'views/lead_view.xml',
         'views/res_code_view.xml',
+        'views/sale_order_configuration.xml',
+        #'views/res_partner_opportunity.xml',
         'reports/qweb_view.xml',
         'reports/report_crm_management.xml'
     ],
