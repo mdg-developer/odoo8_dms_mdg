@@ -150,7 +150,7 @@ class res_partner(osv.osv):
                 'address':fields.char('Address'),
                 'branch_id':fields.many2one('sale.branch', 'Branch'),
                 'demarcation_id': fields.many2one('sale.demarcation', 'Demarcation'),
-                'mobile_customer': fields.boolean('Mobile Customer', help="Check this box if this contact is a mobile customer. If it's not checked, purchase people will not see it when encoding a purchase order."),
+                'mobile_customer': fields.boolean('Pending Customer', help="Check this box if this contact is a mobile customer. If it's not checked, purchase people will not see it when encoding a purchase order."),
                 #'sale_order_count_by_week': fields.function(sale_order_count_by_week, string='# of Sales Order by week', type='integer'),
 #                 'pending_customer': fields.function(_sale_order_count_pending, string='Customer Type', type='char',readonly=True, store=True),               
 #                 'idle_customer': fields.function(_sale_order_count_idle, string='Idle Customer', type='char',readonly=True, store=True),
@@ -163,7 +163,7 @@ class res_partner(osv.osv):
     } 
     _defaults = {
         'is_company': True,          
-       
+        
     }
     _sql_constraints = [        
         ('customer_code_uniq', 'unique (customer_code)', 'Customer code must be unique !'),
