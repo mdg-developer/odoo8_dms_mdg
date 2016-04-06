@@ -138,7 +138,9 @@ class exchange_product_line_item(osv.osv):
                 'so_No':fields.char('SO Reference'),
                 'trans_type':fields.selection([('In', 'In'),('Out', 'Out')], 'Type',required=True),
                 'transaction_name':fields.char('Transaction Name'),
-                'note':fields.char('Note'),                 
+                'note':fields.char('Note'),                
+                'exp_date':fields.date('Expired Date'),
+                'batchno':fields.char('Batch No'),                  
                 }
     
 exchange_product_line_item()
