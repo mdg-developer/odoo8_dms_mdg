@@ -42,7 +42,7 @@ e.g YGN-IS-RETAIN-0001,YGN-IS-RETAIN-0002,
         'views/lead_view.xml',
         'views/res_code_view.xml',
         'views/sale_order_configuration.xml',
-        #'views/res_partner_opportunity.xml',
+        'views/res_partner_opportunity.xml',
         'reports/qweb_view.xml',
         'reports/report_crm_management.xml'
     ],

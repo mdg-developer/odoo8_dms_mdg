@@ -42,6 +42,27 @@
 			</field>
 		</record>
 		
+		<record id="res_partner_form_street_view" model="ir.ui.view">
+			<field name="name">res.partner.form.meeting.view</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="address_management_system.view_partner_form_inherit_ext" />
+			<field name="arch" type="xml">
+				<data>
+					
+                
+					<xpath
+						expr="//field[@name='street']"
+						position="replace">
+						<div>
+						<field name="street" placeholder="Street..." class="o_address_street" style="width: 66%%"/>  
+						<field name="unit" placeholder = "Unit" style="width: 30%%"/>
+						</div>
+					</xpath>
+					
+				</data>
+						
+			</field>
+		</record>
 		</data>
 		
 

@@ -158,9 +158,13 @@ class res_partner(osv.osv):
                 'idle': fields.char('Idle Customer',required=False),
                 'pending_customer': fields.function(_sale_order_count_pending, string='Customer Type Function', type='char'),               
                 'idle_customer': fields.function(_sale_order_count_idle, string='Idle Customer Function', type='char'),
+                'unit': fields.char('Unit', required=False),
                 #'avg_sale_order_ids': fields.one2many('sale.order','partner_id','Sales Order'),
     } 
-    
+    _defaults = {
+        'is_company': True,          
+       
+    }
     _sql_constraints = [        
         ('customer_code_uniq', 'unique (customer_code)', 'Customer code must be unique !'),
     ]
