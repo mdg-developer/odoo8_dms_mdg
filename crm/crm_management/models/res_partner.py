@@ -50,34 +50,93 @@ class res_partner(osv.osv):
 
     _inherit = 'res.partner'
     
+    def _sale_order_count_pending(self, cr, uid, ids, field_name, arg, context=None):
+        res ={} 
+        print 'Pending>>>',  ids    
+        cr.execute("""select day from sale_order_configuration where customer_type='pending customer' order by id desc limit 1 """)
+        day_number = cr.fetchall()
+        print 'day_number>>>',day_number
+        if day_number:
+            day = day_number[0][0]
+            print 'day>>>',day
+            cr.execute("""select day from sale_order_configuration where customer_type='idle customer' order by id desc limit 1 """)
+            largeday_number = cr.fetchall()
+            if largeday_number:
+                largeday = largeday_number[0][0]    
+                cr.execute("""select DATE_PART('day',CURRENT_TIMESTAMP- max(date_order)) from sale_order where partner_id= %s """, (ids[0],))
+                order_day_number = cr.fetchall()
+                print 'order_day_number>>>',order_day_number            
+                if order_day_number:
+                    order_day = order_day_number[0][0] 
+                    print 'order_day>>>',order_day
+                    print 'largeday>>>>>',largeday
+                    print day <= order_day
+                    print largeday >= order_day
+                    if day <= order_day and largeday >= order_day:
+                        str_day = str(day) + ' days'                 
+                        print 'condition>>>>>>>>>>'
+                        cr.execute("""update res_partner set pending=%s where id=%s""",(str_day,ids[0],))
+                    else:
+                        str_day = ''
+                        cr.execute("""update res_partner set pending=%s where id=%s""",(str_day,ids[0],))
+                    print 'update>>pending',  str_day                     
+                    for partner in self.browse(cr, uid, ids, context):
+                        print 'str_day>>>',str_day                            
+                        res[partner.id] = str_day
+                        
+        return res
+    def _sale_order_count_idle(self, cr, uid, ids, field_name, arg, context=None):
+        res ={} 
+        print 'Idel>>>',  ids       
+        cr.execute("""select day from sale_order_configuration where customer_type='idle customer' order by id desc limit 1 """)
+        largeday_number = cr.fetchall()
+        if largeday_number:
+            largeday = largeday_number[0][0]    
+            cr.execute("""select DATE_PART('day',CURRENT_TIMESTAMP- max(date_order)) from sale_order where partner_id= %s """, (ids[0],))
+            order_day_number = cr.fetchall()
+            print 'order_day_number>>>',order_day_number            
+            if order_day_number:
+                order_day = order_day_number[0][0] 
+                print 'order_day>>>',order_day
+                    
+                if largeday <= order_day:
+                    str_day = str(largeday) + ' days'                   
+                    cr.execute("""update res_partner set idle=%s where id=%s""",(str_day,ids[0],))
+                else:
+                    str_day = '' 
+                    cr.execute("""update res_partner set idle=%s where id=%s""",(str_day,ids[0],))
+                print 'update>>idle',  str_day                      
+                for partner in self.browse(cr, uid, ids, context):
+                    print 'str_day>>>',str_day                            
+                    res[partner.id] = str_day
+                        
+        return res  
     def _sale_order_count_week(self, cr, uid, ids, field_name, arg, context=None):
-        print 'ids>>>',ids
+        
         res ={} 
                
         cr.execute("""select DATE_PART('day',max(date_order)- min(date_order)) from sale_order where partner_id= %s """, (ids[0],))
         day_number = cr.fetchall()
-        print 'day_number',day_number
+        
         if day_number:
             day = day_number[0][0]    
             cr.execute('select count(id) from sale_order where partner_id=%s ', (ids[0],))
             so_number = cr.fetchall()
-            print 'so_number',so_number
-            print 'day', day
+            
             if so_number:
                 so_count = so_number[0][0] 
-                print 'so_count',so_count
-                print 'type',type(day)
+                
                 
                 if day > 6.0:
                     week_num= day / 7
-                    print 'week_num',week_num
+                    
                 else:
                     week_num = 1                   
-                    print 'week_num',week_num
+                    
                 if week_num > 0.0 :
                     if so_count > 0:
                         for partner in self.browse(cr, uid, ids, context):
-                            print 'round', round(so_count / week_num,2), '>>>>',so_count / week_num
+                            
                             res[partner.id] = round(so_count / week_num,2)
                         
         return res                               
@@ -93,7 +152,12 @@ class res_partner(osv.osv):
                 'demarcation_id': fields.many2one('sale.demarcation', 'Demarcation'),
                 'mobile_customer': fields.boolean('Mobile Customer', help="Check this box if this contact is a mobile customer. If it's not checked, purchase people will not see it when encoding a purchase order."),
                 #'sale_order_count_by_week': fields.function(sale_order_count_by_week, string='# of Sales Order by week', type='integer'),
-                'sale_order_count_week': fields.function(_sale_order_count_week, string='# of Sales Order by week', type='float',digits=(16, 2)),
+#                 'pending_customer': fields.function(_sale_order_count_pending, string='Customer Type', type='char',readonly=True, store=True),               
+#                 'idle_customer': fields.function(_sale_order_count_idle, string='Idle Customer', type='char',readonly=True, store=True),
+                'pending': fields.char('Pending Customer',required=False),
+                'idle': fields.char('Idle Customer',required=False),
+                'pending_customer': fields.function(_sale_order_count_pending, string='Customer Type Function', type='char'),               
+                'idle_customer': fields.function(_sale_order_count_idle, string='Idle Customer Function', type='char'),
                 #'avg_sale_order_ids': fields.one2many('sale.order','partner_id','Sales Order'),
     } 
     

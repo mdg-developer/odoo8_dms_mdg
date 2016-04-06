@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+		<!-- customer creation form -->
+
+		<record id="res_partner_form_opportunity_view" model="ir.ui.view">
+			<field name="name">res.partner.form.opportunity.view</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="crm.view_partners_form_crm1" />
+			<field name="arch" type="xml">
+				<data>
+					
+                
+					<xpath
+						expr="//div[@name='buttons']/button[@icon='fa-star']"
+						position="replace">
+						
+					</xpath>
+					
+				</data>
+						
+			</field>
+		</record>
+		
+		<record id="res_partner_form_meeting_view" model="ir.ui.view">
+			<field name="name">res.partner.form.meeting.view</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="crm.view_partners_form_crm1" />
+			<field name="arch" type="xml">
+				<data>
+					
+                
+					<xpath
+						expr="//div[@name='buttons']/button[@icon='fa-calendar']"
+						position="replace">
+						
+					</xpath>
+					
+				</data>
+						
+			</field>
+		</record>
+		
+		</data>
+		
+
+		
+</openerp>
