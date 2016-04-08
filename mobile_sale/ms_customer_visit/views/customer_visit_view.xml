@@ -38,7 +38,11 @@
 			<field name="model">customer.visit</field>
 			<field name="arch" type="xml">
 				<form string="Customer Visit" version="7.0">
-					<sheet>
+					<header>
+					<field name="m_status" widget="statusbar" statusbar_visible="pending,approved,rejected"
+							statusbar_colors='{"pending":"green","approved":"blue","rejected":"red"}' />
+					</header>
+					<sheet>						
 						<group>
 							<group>
 								<group>

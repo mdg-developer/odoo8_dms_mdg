@@ -32,7 +32,12 @@ class customer_visit(osv.osv):
                  ('other_reason', 'Other Reasons')
             ], 'Reason'),
                 'other_reason':fields.text('Remark'),
+        'm_status':fields.selection([('pending', 'Pending'),('approved', 'Approved'),
+                                                      ('reject', 'Reject')], string='Status'),        
     }
+    _defaults = {        
+        'm_status' : 'pending',       
+    } 
     # image: all image fields are base64 encoded and PIL-supported
     image = openerp.fields.Binary("Image", attachment=True,
         help="This field holds the image used as avatar for this contact, limited to 1024x1024px",
