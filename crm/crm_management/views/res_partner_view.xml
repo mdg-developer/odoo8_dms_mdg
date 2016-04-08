@@ -96,6 +96,8 @@
 						position="after">
 						
 					</xpath>
+					<xpath expr="//notebook/page[@name='internal_notes']" position="replace"></xpath>
+					
 					<xpath expr="//notebook" position="after">
 						<widget type="gmap_marker" lat="partner_latitude" lng="partner_longitude" />
 					</xpath>

@@ -47,8 +47,7 @@
 			<field name="model">res.partner</field>
 			<field name="inherit_id" ref="address_management_system.view_partner_form_inherit_ext" />
 			<field name="arch" type="xml">
-				<data>
-					
+				<data>					
                 
 					<xpath
 						expr="//field[@name='street']"
@@ -63,6 +62,22 @@
 						
 			</field>
 		</record>
+		
+		<record id="res_partner_form_internalnote_view" model="ir.ui.view">
+			<field name="name">res.partner.form.internalnote.view</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="base_geolocalize.view_crm_partner_geo_form" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//notebook[last()]" position="inside">
+						<page name='internal_notes' string="Internal Notes">
+                            <field name="comment" placeholder="Put an internal note..."/>
+                        </page>
+					</xpath>					
+				</data>						
+			</field>
+		</record>
+		
 		</data>
 		
 
