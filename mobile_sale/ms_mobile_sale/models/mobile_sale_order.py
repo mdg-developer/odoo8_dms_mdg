@@ -155,78 +155,77 @@ class mobile_sale_order(osv.osv):
             return False 
 			
 	def create_exchange_product(self, cursor, user, vals, context=None):
-        print 'vals',vals
-        try : 
-            product_trans_obj=self.pool.get('product.transactions')
-            product_trans_line_obj=self.pool.get('product.transactions.line')
-            str ="{"+vals+"}"
-            str = str.replace(":''",":'")#change Order_id
-            str = str.replace("'',","',")#null
-            str = str.replace(":',",":'',")#due to order_id
-            str = str.replace(":'}", ":''}")
-            str = str.replace("}{", "}|{")
-            
-            new_arr = str.split('|')
-            result = []
-            for data in new_arr:
-                x = ast.literal_eval(data)
-                result.append(x)
-            product_trans=[]
-            product_trans_line = []
-            for r in result:
-                print "length", len(r)
-                if len(r)>=13:
-                    product_trans_line.append(r)                   
-                else:
-                    product_trans.append(r)
-            
-            if product_trans:
-                for pt in product_trans:
-#                     print 'Sale Man Id',so['user_id']
-#                     print 'Sale Void', so['void_flag']
-#                     cursor.execute('select id From res_users where partner_id  = %s ',(so['user_id'],))
-#                     data = cursor.fetchall()
-#                     if data:
-#                         saleManId = data[0][0]
-#                     else:
-#                         saleManId = None
-                    mso_result={
-                        'transaction_id':pt['transaction_id'],
-                        'customer_id':pt['customer_id'],
-                        'customer_code':pt['customer_code'] ,
-                        'team_id':pt['team_id'],
-                        'date':pt['date'],
-                        'exchange_type':pt['exchange_type'],
-                        'void_flag':pt['void_flag'],
-                        'location_id':pt['location_id'],                  
-                    }
-                    s_order_id = product_trans_obj.create(cursor, user, mso_result, context=context)
-                    
-                    for ptl in product_trans_line:
-#                         if ptl['so_name'] == so['name']:
-#                                 cursor.execute('select id From product_product where product_tmpl_id  = %s ',(sol['product_id'],))
-#                                 data = cursor.fetchall()
-#                                 if data:
-#                                     productId = data[0][0]
-#                                 else:
-#                                     productId = None
-                                mso_line_res={                                                            
-                                  'transaction_id':s_order_id,
-                                  'product_id':ptl['product_id'],
-                                  'product_qty':ptl['product_qty'],   
-                                  'so_No':ptl['so_No'],   
-                                  'trans_type':ptl['trans_type'],
-                                  'transaction_name':ptl['transaction_name'],
-                                  'note':ptl['note'],
-                                  'exp_date':ptl['exp_date'],
-                                  'batchno':ptl['batchno'],
-                                }
-                                product_trans_line_obj.create(cursor, user, mso_line_res, context=context)
-            print 'True'
-            return True       
-        except Exception, e:
-            print 'False'
-            return False 
+            try : 
+                product_trans_obj=self.pool.get('product.transactions')
+                product_trans_line_obj=self.pool.get('product.transactions.line')
+                str ="{"+vals+"}"
+                str = str.replace(":''",":'")#change Order_id
+                str = str.replace("'',","',")#null
+                str = str.replace(":',",":'',")#due to order_id
+                str = str.replace(":'}", ":''}")
+                str = str.replace("}{", "}|{")
+                
+                new_arr = str.split('|')
+                result = []
+                for data in new_arr:
+                    x = ast.literal_eval(data)
+                    result.append(x)
+                product_trans=[]
+                product_trans_line = []
+                for r in result:
+                    print "length", len(r)
+                    if len(r)>=13:
+                        product_trans_line.append(r)                   
+                    else:
+                        product_trans.append(r)
+                
+                if product_trans:
+                    for pt in product_trans:
+    #                     print 'Sale Man Id',so['user_id']
+    #                     print 'Sale Void', so['void_flag']
+    #                     cursor.execute('select id From res_users where partner_id  = %s ',(so['user_id'],))
+    #                     data = cursor.fetchall()
+    #                     if data:
+    #                         saleManId = data[0][0]
+    #                     else:
+    #                         saleManId = None
+                        mso_result={
+                            'transaction_id':pt['transaction_id'],
+                            'customer_id':pt['customer_id'],
+                            'customer_code':pt['customer_code'] ,
+                            'team_id':pt['team_id'],
+                            'date':pt['date'],
+                            'exchange_type':pt['exchange_type'],
+                            'void_flag':pt['void_flag'],
+                            'location_id':pt['location_id'],                  
+                        }
+                        s_order_id = product_trans_obj.create(cursor, user, mso_result, context=context)
+                        
+                        for ptl in product_trans_line:
+    #                         if ptl['so_name'] == so['name']:
+    #                                 cursor.execute('select id From product_product where product_tmpl_id  = %s ',(sol['product_id'],))
+    #                                 data = cursor.fetchall()
+    #                                 if data:
+    #                                     productId = data[0][0]
+    #                                 else:
+    #                                     productId = None
+                                    mso_line_res={                                                            
+                                      'transaction_id':s_order_id,
+                                      'product_id':ptl['product_id'],
+                                      'product_qty':ptl['product_qty'],   
+                                      'so_No':ptl['so_No'],   
+                                      'trans_type':ptl['trans_type'],
+                                      'transaction_name':ptl['transaction_name'],
+                                      'note':ptl['note'],
+                                      'exp_date':ptl['exp_date'],
+                                      'batchno':ptl['batchno'],
+                                    }
+                                    product_trans_line_obj.create(cursor, user, mso_line_res, context=context)
+                print 'True'
+                return True       
+            except Exception, e:
+                print 'False'
+                return False 
     # MMK   
     def action_convert_so(self, cr, uid, ids, context=None):
         msoObj = self.pool.get('mobile.sale.order')
