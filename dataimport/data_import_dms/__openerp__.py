@@ -40,6 +40,7 @@ for following data
     'data' : [
 
               'views/data_import_view.xml',
-              'views/sale_plans_import_view.xml'
+              'views/sale_plans_import_view.xml',
+              'views/stock_move_import_view.xml'
     ],
 }
