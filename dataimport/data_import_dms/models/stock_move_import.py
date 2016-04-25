@@ -173,8 +173,8 @@ class stock_move_import(osv.osv):
         stock_line_obj = self.pool.get('stock.import.line')
         data = self.browse(cr, uid, ids)[0]
         company_id = data.company_id.id
-        product_list = from_location = to_location = date_expected = None
-
+        from_location = to_location = date_expected = None
+        product_list = {}
         data = self.browse(cr, uid, ids)[0]
         import_file = data.file
         import_filename = data.filename
@@ -286,6 +286,7 @@ class stock_move_import(osv.osv):
                 product_id = uom_id = uom_ids = None
                 product_list = product_name = uom_name = total_qty = from_location_id = to_location_id = transfer_date = tg_no = None
                 quantity = 0.0
+                move_val = {}
                 p_id = c_id = None
                 
                 if aml['from location']:
@@ -322,7 +323,6 @@ class stock_move_import(osv.osv):
                     if from_location_id:
                         product_list = self.get_product_from_inventory(cr, uid, from_location_id, context=context)
                 if product_list:
-                    move_val = {}
                     product_name = product_name.strip()
                     uom_name = uom_name.strip()
                 if aml['quantity']:
