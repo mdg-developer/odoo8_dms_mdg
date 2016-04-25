@@ -105,7 +105,7 @@ class stock_move_import(osv.osv):
         if data.picking_type:
             picking_type = data.picking_type
         line_ids = stock_line_obj.search(cr, uid, [('line_id', '=', data.id)])
-        move_val={}
+        move_val = {}
         if line_ids:
             for id in line_ids:
                 data = stock_line_obj.browse(cr, uid, id, context=context)
@@ -143,6 +143,7 @@ class stock_move_import(osv.osv):
                           'name':'Import',
                           'product_id':data.product_id.id,
                           'product_uom_qty':data.product_uom_qty,
+                          'product_uos_qty':data.product_uom_qty,
                           'product_uom':data.product_uom.id,
                           'selection':'none',
                           'priority':'1',
