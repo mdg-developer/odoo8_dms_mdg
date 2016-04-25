@@ -36,7 +36,7 @@ class mobile_sale_order(osv.osv):
         'balance':fields.float('Balance'),
         'paid_amount':fields.float('Paid Amount'),
         'paid':fields.boolean('Paid'),
-          'void_flag':fields.selection([
+        'void_flag':fields.selection([
                 ('voided', 'Voided'),
                 ('none', 'Unvoid')
             ], 'Void'),
@@ -62,46 +62,6 @@ class mobile_sale_order(osv.osv):
         'm_status' : 'draft',
        
     } 
-	
-	def create_visit(self, cursor, user, vals, context=None):
-        print 'vals',vals
-        customer_visit_obj=self.pool.get('customer.visit')
-        str ="{"+vals+"}"
-#             str = str.replace(":''",":'")#change Order_id
-        str = str.replace("'',","',")#null
-        str = str.replace(":',",":'',")#due to order_id
-        str = str.replace("}{", "}|{")
-        str = str.replace(":'}{", ":''}")
-        new_arr = str.split('|')
-        result = []
-        for data in new_arr:
-            x = ast.literal_eval(data)
-            result.append(x)
-        customer_visit=[]
-        for r in result:
-            print "length", len(r)
-            customer_visit.append(r)  
-        if customer_visit:
-            for vs in customer_visit:
-                visit_result={
-                    'customer_code':vs['customer_code'],
-                    'customer_id':vs['customer_id'],                        
-                    'sale_plan_day_id':vs['sale_plan_day_id'],
-                    'sale_plan_trip_id':vs['sale_plan_trip_id'] ,
-                    'sale_plan_name':vs['sale_plan_name'],
-                    'sale_team':vs['sale_team'],
-                    'sale_team_id':vs['sale_team_id'],
-                    'user_id':vs['user_id'],
-                    'date':vs['date'],
-                    'user_id':vs['visit_reason'],
-                    'tablet_id':vs['tablet_id'],
-                    'other_reason':vs['other_reason'],
-                    'visit_reason':vs['visit_reason'],
-                    'latitude':vs['latitude'],
-                    'longitude':vs['longitude'],                        
-                }
-                customer_visit_obj.create(cursor, user, visit_result, context=context)
-        return True
     
     def create_massive(self, cursor, user, vals, context=None):
         print 'vals',vals
@@ -193,313 +153,120 @@ class mobile_sale_order(osv.osv):
         except Exception, e:
             print 'False'
             return False 
-			
-	def create_exchange_product(self, cursor, user, vals, context=None):
-            try : 
-                product_trans_obj=self.pool.get('product.transactions')
-                product_trans_line_obj=self.pool.get('product.transactions.line')
-                str ="{"+vals+"}"
-                str = str.replace(":''",":'")#change Order_id
-                str = str.replace("'',","',")#null
-                str = str.replace(":',",":'',")#due to order_id
-                str = str.replace(":'}", ":''}")
-                str = str.replace("}{", "}|{")
-                
-                new_arr = str.split('|')
-                result = []
-                for data in new_arr:
-                    x = ast.literal_eval(data)
-                    result.append(x)
-                product_trans=[]
-                product_trans_line = []
-                for r in result:
-                    print "length", len(r)
-                    if len(r)>=13:
-                        product_trans_line.append(r)                   
-                    else:
-                        product_trans.append(r)
-                
-                if product_trans:
-                    for pt in product_trans:
-    #                     print 'Sale Man Id',so['user_id']
-    #                     print 'Sale Void', so['void_flag']
-    #                     cursor.execute('select id From res_users where partner_id  = %s ',(so['user_id'],))
-    #                     data = cursor.fetchall()
-    #                     if data:
-    #                         saleManId = data[0][0]
-    #                     else:
-    #                         saleManId = None
-                        mso_result={
-                            'transaction_id':pt['transaction_id'],
-                            'customer_id':pt['customer_id'],
-                            'customer_code':pt['customer_code'] ,
-                            'team_id':pt['team_id'],
-                            'date':pt['date'],
-                            'exchange_type':pt['exchange_type'],
-                            'void_flag':pt['void_flag'],
-                            'location_id':pt['location_id'],                  
-                        }
-                        s_order_id = product_trans_obj.create(cursor, user, mso_result, context=context)
-                        
-                        for ptl in product_trans_line:
-    #                         if ptl['so_name'] == so['name']:
-    #                                 cursor.execute('select id From product_product where product_tmpl_id  = %s ',(sol['product_id'],))
-    #                                 data = cursor.fetchall()
-    #                                 if data:
-    #                                     productId = data[0][0]
-    #                                 else:
-    #                                     productId = None
-                                    mso_line_res={                                                            
-                                      'transaction_id':s_order_id,
-                                      'product_id':ptl['product_id'],
-                                      'product_qty':ptl['product_qty'],   
-                                      'so_No':ptl['so_No'],   
-                                      'trans_type':ptl['trans_type'],
-                                      'transaction_name':ptl['transaction_name'],
-                                      'note':ptl['note'],
-                                      'exp_date':ptl['exp_date'],
-                                      'batchno':ptl['batchno'],
-                                    }
-                                    product_trans_line_obj.create(cursor, user, mso_line_res, context=context)
-                print 'True'
-                return True       
-            except Exception, e:
-                print 'False'
-                return False 
-    # MMK   
-    def action_convert_so(self, cr, uid, ids, context=None):
-        msoObj = self.pool.get('mobile.sale.order')
-        soObj = self.pool.get('sale.order')
-        solObj = self.pool.get('sale.order.line')
-        invObj = self.pool.get("sale.advance.payment.inv")
-        invoiceObj = self.pool.get('account.invoice')
-        voucherObj = self.pool.get('account.voucher')
-        voucherLineObj = self.pool.get('account.voucher.line')
-        stockPickingObj = self.pool.get('stock.picking')
-        stockDetailObj = self.pool.get('stock.transfer_details')
-        soResult = {}
-        solResult = {}
-        accountVResult = {}
-        foc = False
-        price_unit = 0.0
-        soId = so_state = iv_state = default_code = pricelist_id = sale_team_id = analytic_id = invoice_id = journal_id = accountId = voucherId = stockViewResult = wizResult = detailObj = None
-        solist = []
-        invlist = []
-        vlist = []
-        invFlag = False
-        product_name = ''
-        if ids:
-            try:
-                # default price list need in sale order form
-                cr.execute("""select id from product_pricelist where type = 'sale' """)
-                data = cr.fetchall()
-                if data:
-                    pricelist_id = data[0][0]
     
-                cr.execute("select TI.sale_team_id from  mobile_sale_order msol,tablets_information TI where msol.tablet_id=TI.id and msol.id=%s", (ids[0],))
-                sale_team_id = cr.fetchone()
-                if sale_team_id:
-                    sale_team_id = sale_team_id[0]
-                cr.execute("select cc.analytic_account_id from crm_case_section cc,mobile_sale_order mso where mso.sale_team=cc.id and mso.id=%s", (ids[0],))
-                analytic_id = cr.fetchone()
-                if analytic_id:
-                    analytic_id = analytic_id[0]
+    def create_exchange_product(self, cursor, user, vals, context=None):
+        print 'vals',vals
+        try : 
+            product_trans_obj=self.pool.get('product.transactions')
+            product_trans_line_obj=self.pool.get('product.transactions.line')
+            str ="{"+vals+"}"
+            str = str.replace(":''",":'")#change Order_id
+            str = str.replace("'',","',")#null
+            str = str.replace(":',",":'',")#due to order_id
+            str = str.replace(":'}", ":''}")
+            str = str.replace("}{", "}|{")
+            
+            new_arr = str.split('|')
+            result = []
+            for data in new_arr:
+                x = ast.literal_eval(data)
+                result.append(x)
+            product_trans=[]
+            product_trans_line = []
+            for r in result:
+                print "length", len(r)
+                if len(r)>=13:
+                    product_trans_line.append(r)                   
                 else:
-                    analytic_id = False
+                    product_trans.append(r)
+            
+            if product_trans:
+                for pt in product_trans:
+#                     print 'Sale Man Id',so['user_id']
+#                     print 'Sale Void', so['void_flag']
+#                     cursor.execute('select id From res_users where partner_id  = %s ',(so['user_id'],))
+#                     data = cursor.fetchall()
+#                     if data:
+#                         saleManId = data[0][0]
+#                     else:
+#                         saleManId = None
+                    mso_result={
+                        'transaction_id':pt['transaction_id'],
+                        'customer_id':pt['customer_id'],
+                        'customer_code':pt['customer_code'] ,
+                        'team_id':pt['team_id'],
+                        'date':pt['date'],
+                        'exchange_type':pt['exchange_type'],
+                        'void_flag':pt['void_flag'],
+                        'location_id':pt['location_id'],                  
+                    }
+                    s_order_id = product_trans_obj.create(cursor, user, mso_result, context=context)
+                    
+                    for ptl in product_trans_line:
+#                         if ptl['so_name'] == so['name']:
+#                                 cursor.execute('select id From product_product where product_tmpl_id  = %s ',(sol['product_id'],))
+#                                 data = cursor.fetchall()
+#                                 if data:
+#                                     productId = data[0][0]
+#                                 else:
+#                                     productId = None
+                                mso_line_res={                                                            
+                                  'transaction_id':s_order_id,
+                                  'product_id':ptl['product_id'],
+                                  'product_qty':ptl['product_qty'],   
+                                  'so_No':ptl['so_No'],   
+                                  'trans_type':ptl['trans_type'],
+                                  'transaction_name':ptl['transaction_name'],
+                                  'note':ptl['note'],
+                                  'exp_date':ptl['exp_date'],
+                                  'batchno':ptl['batchno'],
+                                }
+                                product_trans_line_obj.create(cursor, user, mso_line_res, context=context)
+            print 'True'
+            return True       
+        except Exception, e:
+            print 'False'
+            return False     
     
-                for ms_ids in msoObj.browse(cr, uid, ids[0], context=context):
-                    if ms_ids:
-                        if ms_ids.void_flag == 'voided':  # they work while payment type not 'cash' and 'credit'
-                            so_state = 'cancel'
-                        elif ms_ids.void_flag == 'none':
-                            so_state = 'draft'
-                        soResult = {
-                                              'date_order':ms_ids.date,
-                           'partner_id':ms_ids.partner_id.id,
-                           'amount_untaxed':ms_ids.amount_total ,
-                           'partner_invoice_id':ms_ids.partner_id.id,
-                           'user_id':ms_ids.user_id.id,
-                           'date_confirm':ms_ids.date,
-                           'amount_total':ms_ids.amount_total,
-                           'order_policy':'manual',
-                           'company_id':1,
-                           'payment_term':ms_ids.payment_term.id,
-                            'state':so_state,
-                            'pricelist_id':pricelist_id,
-                            'picking_policy':'direct',
-                            'warehouse_id':ms_ids.warehouse_id.id,
-                            'project_id':analytic_id,
-                            'partner_shipping_id':ms_ids.partner_id.id,
-                            # 'shipped':'f',
-                            'tb_ref_no':ms_ids.name,
-                            'sale_plan_name':ms_ids.sale_plan_name,
-                            'payment_type':ms_ids.type,
-                            'section_id':sale_team_id,
-                            'due_date':ms_ids.due_date,
-                            'so_latitude':ms_ids.mso_latitude,
-                            'so_longitude':ms_ids.mso_longitude,
-                            # 'total_dis':additional_discount,
-                            'deduct_amt':ms_ids.deduction_amount,
-                            'delivery_remark':ms_ids.delivery_remark,
-                            'sale_plan_day_id':ms_ids.sale_plan_day_id.id,
-                            'sale_plan_trip_id':ms_ids.sale_plan_trip_id.id,
-                            'customer_code':ms_ids.customer_code 
-                                            }
-                        soId = soObj.create(cr, uid, soResult, context=context)
-                        if soId and ms_ids.order_line:
-                            for line_id in ms_ids.order_line:
-                                if line_id:
-                                    if line_id.product_id:
-                                        if line_id.product_id:
-                                            cr.execute("""select default_code from product_product where product_tmpl_id = %s""", (line_id.product_id.id,))
-                                            data = cr.fetchall()
-                                            if data:
-                                                default_code = data[0][0]
-                                            if default_code:
-                                                product_name = '[' + default_code + ']' + line_id.product_id.name
-                                            else:
-                                                product_name = line_id.product_id.name
-                                            # FOC with price_unit or foc true, false
-                                        if line_id.price_unit == 0.0 or line_id.foc:
-                                            foc = True
-                                            product_name = 'FOC'
-                                            price_unit = 0.0
-                                        else:
-                                            foc = False
-                                            price_unit = line_id.price_unit
-                                    solResult = {
-                                                 'order_id':soId,
-                                                  'product_id':line_id.product_id.id,
-                                                  'name':product_name,
-                                                  'price_unit':price_unit,
-                                                  'product_uom':1,
-                                                  'product_uom_qty':line_id.product_uos_qty,
-                                                  'discount':line_id.discount,
-                                                  'discount_amt':float(line_id.discount) * (float(line_id.price_unit * line_id.product_uos_qty)) / 100,
-                                                  'company_id':1,  # company_id,
-                                                  'state':'draft',
-                                                  'net_total':line_id.sub_total,
-                                                  'sale_foc':foc
-                                               }
-                                    
-                                    solObj.create(cr, uid, solResult, context=context)
-                    if ms_ids and  so_state != 'cancel':
-                        if ms_ids.type:
-                            solist.append(soId)
-                            # type > cash and delivery_remark > delivered
-                            if ms_ids.type == 'cash' and ms_ids.delivery_remark == 'delivered':
-                                # SO Confirm 
-                                soObj.action_button_confirm(cr, uid, solist, context=context)
-                                # Create Invoice
-                                invoice_id = self.create_invoices(cr, uid, solist, context=context)
-                                if invoice_id:
-                                    invlist = []
-                                    invlist.append(invoice_id)
-                                    # call the api function
-                                    # invObj contain => account.invoice(1,) like that
-                                    invObj = invoiceObj.browse(cr, uid, invoice_id, context=context)
-                                    invObj.action_date_assign()
-                                    invObj.action_move_create()
-                                    invObj.action_number()
-                                    # validate invoice
-                                    invObj.invoice_validate()
-                                    
-                                    # register Payment
-                                    # calling the register payment pop-up
-                                    invoiceObj.invoice_pay_customer(cr, uid, invlist, context=context)
-                                    cr.execute('select id from account_journal where type=%s', ('cash',))
-                                    data = cr.fetchall()
-                                    if data:
-                                        journal_id = data[0]
-                                    cr.execute('select id from account_account where lower(name)=%s and active= %s', ('cash', True,))
-                                    data = cr.fetchall()
-                                    if data:
-                                        accountId = data[0]
-                                    if journal_id and accountId:
-                                        accountVResult = {
-                                                        'partner_id':invObj.partner_id.id,
-                                                        'amount':invObj.amount_total,
-                                                        'journal_id':journal_id,
-                                                        'date':invObj.date_invoice,
-                                                        'period_id':invObj.period_id.id,
-                                                        'account_id':accountId,
-                                                        'pre_line':True,
-                                                        'type':'receipt'
-                                                        }
-                                        # create register payment voucher
-                                        voucherId = voucherObj.create(cr, uid, accountVResult, context=context)
-                                        
-                                    if voucherId:
-                                        vlist = []
-                                        vlist.append(voucherId)
-                                        # get the voucher lines
-                                        vlresult = voucherObj.recompute_voucher_lines(cr, uid, vlist, invObj.partner_id.id, journal_id, invObj.amount_total, 120, 'receipt', invObj.date_invoice, context=None)
-                                        if vlresult:
-                                            result = vlresult['value']['line_cr_ids'][0]
-                                            result['voucher_id'] = voucherId
-                                            # create the voucher lines
-                                            voucherLineObj.create(cr, uid, result, context=context)
-                                        # invoice register payment done
-                                        voucherObj.button_proforma_voucher(cr, uid, vlist , context=context)
-                                        # invoice paid status is true
-                                        invFlag = True
-                                # clicking the delivery order view button
-                                stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)    
-                                if stockViewResult:
-                                    # stockViewResult is form result
-                                    # stocking id =>stockViewResult['res_id']
-                                    # click force_assign
-                                    stockPickingObj.force_assign(cr, uid, stockViewResult['res_id'], context=context)
-                                    # transfer
-                                    # call the transfer wizard
-                                    # change list
-                                    pickList = []
-                                    pickList.append(stockViewResult['res_id'])
-                                    wizResult = stockPickingObj.do_enter_transfer_details(cr, uid, pickList, context=context)
-                                    # pop up wizard form => wizResult
-                                    detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
-                                    if detailObj:
-                                        detailObj.do_detailed_transfer()
-                            # type > credit and delivery_remark > delivered
-                            elif ms_ids.type == 'credit' and ms_ids.delivery_remark == 'delivered':
-                                # so Confirm
-                                soObj.action_button_confirm(cr, uid, solist, context=context)
-                                # invoice create at draft state
-                                invoice_id = self.create_invoices(cr, uid, solist, context=context)
-                                # clicking the delivery order view button
-                                stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)    
-                                if stockViewResult:
-                                    # stockViewResult is form result
-                                    # stocking id =>stockViewResult['res_id']
-                                    # click force_assign
-                                    stockPickingObj.force_assign(cr, uid, stockViewResult['res_id'], context=context)
-                                    # transfer
-                                    # call the transfer wizard
-                                    # change list
-                                    pickList = []
-                                    pickList.append(stockViewResult['res_id'])
-                                    wizResult = stockPickingObj.do_enter_transfer_details(cr, uid, pickList, context=context)
-                                    # pop up wizard form => wizResult
-                                    detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
-                                    if detailObj:
-                                        detailObj.do_detailed_transfer()
-                            # type > consignment , advanced and delivery_remark > partial , none
-            except Exception, e:
-                print 'Error %s' % e
-            self.write(cr, uid, ids[0], {'m_status':'done'}, context=context)
-            if invFlag == True:
-                invoiceObj.write(cr, uid, invlist[0], {'state':'paid'}, context=context)
-        return True   
-    def create_invoices(self, cr, uid, ids, context=None):
-        """ create invoices for the active sales orders """
-        sale_obj = self.pool.get('sale.order')
-        sale_ids = ids
-        if sale_ids:
-            # create the final invoices of the active sales orders
-            res = sale_obj.manual_invoice(cr, uid, sale_ids, context)
-            if context.get('open_invoices', False):
-                return res
-            return res['res_id']
+    def create_visit(self, cursor, user, vals, context=None):
+        print 'vals',vals
+        customer_visit_obj=self.pool.get('customer.visit')
+        str ="{"+vals+"}"
+#             str = str.replace(":''",":'")#change Order_id
+        str = str.replace("'',","',")#null
+        str = str.replace(":',",":'',")#due to order_id
+        str = str.replace("}{", "}|{")
+        str = str.replace(":'}{", ":''}")
+        new_arr = str.split('|')
+        result = []
+        for data in new_arr:
+            x = ast.literal_eval(data)
+            result.append(x)
+        customer_visit=[]
+        for r in result:
+            print "length", len(r)
+            customer_visit.append(r)  
+        if customer_visit:
+            for vs in customer_visit:
+                visit_result={
+                    'customer_code':vs['customer_code'],
+                    'customer_id':vs['customer_id'],                        
+                    'sale_plan_day_id':vs['sale_plan_day_id'],
+                    'sale_plan_trip_id':vs['sale_plan_trip_id'] ,
+                    'sale_plan_name':vs['sale_plan_name'],
+                    'sale_team':vs['sale_team'],
+                    'sale_team_id':vs['sale_team_id'],
+                    'user_id':vs['user_id'],
+                    'date':vs['date'],
+                    'user_id':vs['visit_reason'],
+                    'tablet_id':vs['tablet_id'],
+                    'other_reason':vs['other_reason'],
+                    'visit_reason':vs['visit_reason'],
+                    'latitude':vs['latitude'],
+                    'longitude':vs['longitude'],                        
+                }
+                customer_visit_obj.create(cursor, user, visit_result, context=context)
+        return True
     def geo_location(self, cr, uid, ids, context=None):
         result = {
                  'name'     : 'Go to Report',
@@ -510,30 +277,162 @@ class mobile_sale_order(osv.osv):
         data = self.browse(cr, uid, ids)[0]
         latitude = data.mso_latitude
         longitude = data.mso_longitude
-        result['url'] = 'https://www.google.com/maps/@' + str(latitude) + ',' + str(longitude) + ',18z'
+        print 'latitude',latitude
+        print 'longitude',longitude
+        print 'https://www.google.com/maps/@'+ str(latitude) + ',' + str(longitude)+',18z'
+        result['url']='https://www.google.com/maps/@'+ str(latitude) + ',' + str(longitude)+',18z'
              
         return result
   #  def action_convert_so(self, cr, uid, ids, context=None):
   #      for saleorder in self.browse(cr, uid, ids, context=context):            
    #         cr.execute('SELECT import_data_from_mobile_to_server(%s,%s)', (saleorder['id'], saleorder['name']))
   #          cr.execute("update mobile_sale_order set m_status='done' where id = %s and name = %s ", (saleorder['id'], saleorder['name'],))
+    def action_convert_so(self, cr, uid, ids, context=None):
+        #for saleorder in self.browse(cr, uid, ids, context=context):  
+        mobile_sale_order_obj=self.pool.get('mobile.sale.order')
+        mobile_sale_order_line_obj=self.pool.get('mobile.sale.order.line')
 
-    
+        sale_order_obj=self.pool.get('sale.order')
+        sale_order_line_obj=self.pool.get('sale.order.line')
 
 
-    # KZO
+ 
+        if ids:
+            so_value = mobile_sale_order_obj.browse(cr,uid,ids[0],context=context)             
+            reference=so_value.name
+            s_id=so_value.id
+            customer_code=so_value.customer_code#char
+            sale_plan_day_id=so_value.sale_plan_day_id.id#integer
+            sale_plan_trip_id=so_value.sale_plan_trip_id.id#integer
+            paid=so_value.paid#boolean
+            warehouse_id=so_value.warehouse_id.id#integer
+            tablet_id=so_value.tablet_id.id#integer
+            delivery_remark=so_value.delivery_remark#char
+            location_id=so_value.location_id.id
+            deduction_amount=so_value.deduction_amount#double_precision
+            user_id=so_value.user_id.id#integer
+            paid_amount=so_value.paid_amount#double_precision
+            partner_id=so_value.partner_id.id#integer
+            sale_plan_name=so_value.sale_plan_name#char
+            note=so_value.note#text
+            additional_discount=so_value.additional_discount#double_precision
+            amount_total=so_value.amount_total#double_precision
+            type=so_value.type#char
+            m_status=so_value.m_status#char
+            void_flag=so_value.void_flag#char
+            sale_team=so_value.sale_team.id#integer
+            date=so_value.date#date
+            due_date=so_value.due_date#date
+            payment_term=so_value.payment_term.id#integer
+            mso_longitude=so_value.mso_longitude#double_precision 
+            mso_latitude=so_value.mso_latitude#double_precision 
+            cr.execute("select id from product_pricelist where type = 'sale'")
+            price_list_id=cr.fetchone()[0]
+            cr.execute("select TI.sale_team_id from  mobile_sale_order msol,tablets_information TI where msol.tablet_id=TI.id and msol.id=%s",(s_id,))
+            sale_team_id=cr.fetchone()
+            if sale_team_id:
+                sale_team_id=sale_team_id[0]
+            else:
+                sale_team_id='',
+            #print 'data',partner_id
+            cr.execute("select cc.analytic_account_id from crm_case_section cc,mobile_sale_order mso where mso.sale_team=cc.id and mso.id=%s",(s_id,))
+            analytic_id=cr.fetchone()
+            if analytic_id:
+                analytic_id=analytic_id[0]
+            else:
+                analytic_id=False
+            if void_flag=='voided':
+                state='cancel'
+            elif void_flag=='none':
+                state='draft'
+            so_result={
+                       'date_order':date,
+                       'partner_id':partner_id,
+                       'amount_untaxed':amount_total ,
+                       'partner_invoice_id':partner_id,
+                       'user_id':user_id,
+                       'date_confirm':date,
+                       'amount_total':amount_total,
+                       'order_policy':'manual',
+                       'company_id':1,
+                       'payment_term':payment_term,
+                       'state':state,
+                        'pricelist_id':price_list_id,
+                        'picking_policy':'direct',
+                        'warehouse_id':warehouse_id,
+                        'project_id':analytic_id,
+                        'partner_shipping_id':partner_id,
+                        #'shipped':'f',
+                        'tb_ref_no':reference,
+                        'sale_plan_name':sale_plan_name,
+                        'payment_type':type,
+                        'section_id':sale_team_id,
+                        'due_date':due_date,
+                        'so_latitude':mso_latitude,
+                        'so_longitude':mso_longitude,
+                        #'total_dis':additional_discount,
+                        'deduct_amt':deduction_amount,    
+                        'delivery_remark':delivery_remark,
+                        'sale_plan_day_id':sale_plan_day_id,
+                        'sale_plan_trip_id':sale_plan_trip_id,
+                        'customer_code':customer_code    
+                       }
+            s_order_id = sale_order_obj.create(cr, uid, so_result, context=context)
+            order_line_ids = mobile_sale_order_line_obj.search(cr, uid, [('order_id', 'in', ids)], context=context) 
+             
+            for line in mobile_sale_order_line_obj.browse(cr, uid, order_line_ids, context=context):
+                #print 'line',line
+                #print 'line.product_id.id',line.product_id
+                cr.execute('select default_code,name_template from product_product where id = %s',(line.product_id.id,))
+                #product_tmpl_id=cr.fetchone()[0]
+                #print 'product_tmpl_id',product_tmpl_id
+                #cr.execute('select default_code,name from product_template where id=%s',(product_tmpl_id,))
+                result_data=cr.fetchone()
+                product_code = result_data[0]
+                print 'Product_code',product_code
+                products =result_data[1]
+                print 'Product',products
+                products_name='['+product_code+'] '+products
+                print 's_order_id',s_order_id,line.product_id.id,line.price_unit
+                if line.price_unit ==0.0:
+                    foc=True
+                    products_name='FOC'
+                else:
+                    foc=False
+                    
+                so_line_res={                                                            
+                                      'order_id':s_order_id,
+                                      'product_id':line.product_id.id,
+                                      'name':products_name,
+                                      'price_unit':line.price_unit,   
+                                      'product_uom':1,      
+                                      'product_uom_qty':line.product_uos_qty,   
+                                      'discount':line.discount,
+                                      'discount_amt':float(line.discount) *(float(line.price_unit*line.product_uos_qty)) / 100,
+                                      'company_id':1,#company_id,
+                                      'state':'draft',
+                                      'net_total':line.sub_total,
+                                      'sale_foc':foc,
+                    
+                                    
+                             }
+                print 'so_line_res',so_line_res
+                sale_order_line_obj.create(cr, uid, so_line_res, context=context)
+
+        cr.execute("update mobile_sale_order set m_status='done' where id = %s and name = %s ", (s_id, reference,))
+    #kzo Edit
     def get_products_by_sale_team(self, cr, uid, section_id , context=None, **kwargs):
-            cr.execute('''select  pp.product_tmpl_id,pt.list_price , pt.description,pt.categ_id,pc.name as categ_name,pp.default_code, 
-                             pt.name,substring(replace(cast(pt.image_small as text),'/',''),1,5) as image_small
-                            from crm_case_section_product_product_rel crm_real ,
-                            crm_case_section ccs ,product_template pt, product_product pp , product_category pc
-                            where pp.id = crm_real.product_product_id
-                            and pt.id = pp.product_tmpl_id
-                            and ccs.id = crm_real.crm_case_section_id
-                            and pc.id = pt.categ_id           
-                            and ccs.id = %s ''', (section_id,))
-            datas = cr.fetchall()
-            return datas
+        cr.execute('''select  pp.product_tmpl_id,pt.list_price , pt.description,pt.categ_id,pc.name as categ_name,pp.default_code, 
+                         pt.name,substring(replace(cast(pt.image_small as text),'/',''),1,5) as image_small
+                        from crm_case_section_product_product_rel crm_real ,
+                        crm_case_section ccs ,product_template pt, product_product pp , product_category pc
+                        where pp.id = crm_real.product_product_id
+                        and pt.id = pp.product_tmpl_id
+                        and ccs.id = crm_real.crm_case_section_id
+                        and pc.id = pt.categ_id           
+                        and ccs.id = %s ''', (section_id,))
+        datas = cr.fetchall()
+        return datas
     
     def get_salePlanDays_by_sale_team(self, cr, uid, section_id , context=None, **kwargs):
         cr.execute('''select id,name,date,sale_team from sale_plan_day where sale_team=%s ''', (section_id,))
@@ -557,7 +456,7 @@ class mobile_sale_order(osv.osv):
         return datas
     # get promotion datas from database
     
-    def get_promos_datas(self, cr, uid , section_id , context=None, **kwargs):
+    def get_promos_datas(self, cr, uid ,section_id , context=None, **kwargs):
         cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,
                         logic ,expected_logic_result ,special, special1, special2, special3 
                         from promos_rules pr where pr.active = true and main_group in 
@@ -581,7 +480,7 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()
         cr.execute
         return datas
-    def get_promos_cond_datas(self, cr, uid , section_id , context=None, **kwargs):
+    def get_promos_cond_datas(self, cr, uid , section_id ,context=None, **kwargs):
         cr.execute('''select cond.id,cond.promotion,cond.sequence as cond_seq,
                             cond.attribute as cond_attr,cond.comparator as cond_comparator,
                             cond.value as comp_value
@@ -596,50 +495,50 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()
         cr.execute
         return datas
-    def get_promos_rule_partner_datas(self, cr, uid , section_id , context=None, **kwargs):
+    def get_promos_rule_partner_datas(self, cr, uid ,section_id , context=None, **kwargs):
         cr.execute('''select category_id,rule_id from rule_partner_cat_rel''')
         datas = cr.fetchall()
         cr.execute
         return datas
-    def get_promos_category_datas(self, cr, uid , section_id , context=None, **kwargs):
+    def get_promos_category_datas(self, cr, uid ,section_id , context=None, **kwargs):
         cr.execute('''select id,name from res_partner_category''')
         datas = cr.fetchall()
         cr.execute
         return datas
-    # get Mobile Sale Order Datas
-    def get_mobile_so_datas(self, cr, uid, todayDateNormal, saleTeamId, saleorderList, context=None, **kwargs):
+    #get Mobile Sale Order Datas
+    def get_mobile_so_datas(self, cr, uid, todayDateNormal,saleTeamId,saleorderList, context=None, **kwargs):
         saleOrderName = ', '.join(saleorderList) 
-        print "sale", str(tuple(saleorderList))
+        print "sale",str(tuple(saleorderList))
         saleorder = str(tuple(saleorderList))
-        mobile_sale_order_obj = self.pool.get('mobile.sale.order')
+        mobile_sale_order_obj =self.pool.get('mobile.sale.order')
         list_val = None
         list_val = mobile_sale_order_obj.search(cr, uid, [('due_date', '>', todayDateNormal), ('sale_team', '=', saleTeamId), ('name', 'not in', saleorderList), ('type', '=', 'credit')])
-        print 'list_val', list_val
+        print 'list_val',list_val
         list = []
         if list_val:
             for val in list_val:
-                cr.execute('select id,void_flag,name,create_date,date,partner_id,customer_code,sale_plan_trip_id,sale_plan_day_id,user_id,amount_total,type,delivery_remark,additional_discount,deduction_amount,paid_amount,paid,tablet_id,warehouse_id,location_id,sale_team,due_date,payment_term,mso_latitude,mso_longitude from mobile_sale_order where id=%s', (val,))
+                cr.execute('select id,void_flag,name,create_date,date,partner_id,customer_code,sale_plan_trip_id,sale_plan_day_id,user_id,amount_total,type,delivery_remark,additional_discount,deduction_amount,paid_amount,paid,tablet_id,warehouse_id,location_id,sale_team,due_date,payment_term,mso_latitude,mso_longitude from mobile_sale_order where id=%s and type = %s',(val,'credit',))
                 result = cr.fetchall()
                 list.append(result)
-                print' list', list
+                print' list',list
         return list
-    # get Mobile Sale Order Line Datas
-    def get_mobile_soline_datas(self, cr, uid, todayDateNormal, so_ids, context=None, **kwargs):
+    #get Mobile Sale Order Line Datas
+    def get_mobile_soline_datas(self, cr, uid, todayDateNormal,so_ids,context=None, **kwargs):
         print 'So_ids', so_ids
         order_ids = so_ids
 #         order_ids = map(int, so_ids)
 #         print 'Map Order Id',order_ids
-        mobile_so_line_obj = self.pool.get('mobile.sale.order.line')
+        mobile_so_line_obj =self.pool.get('mobile.sale.order.line')
         list_val = None
-        list_val = mobile_so_line_obj.search(cr, uid, [('create_date', '>', todayDateNormal), ('order_id', 'in', order_ids)])
-        print 'list_val', list_val
+        list_val = mobile_so_line_obj.search(cr,uid,[('create_date','>',todayDateNormal),('order_id','in',order_ids)])
+        print 'list_val',list_val
         list = []
         if list_val:
             for val in list_val:
-                cr.execute('select id,product_id,product_uos_qty,price_unit,discount,sub_total,order_id from mobile_sale_order_line where id=%s', (val,))
+                cr.execute('select id,product_id,product_uos_qty,price_unit,discount,sub_total,order_id from mobile_sale_order_line where id=%s',(val,))
                 result = cr.fetchall()
                 list.append(result)
-                print' list', list
+                print' list',list
         return list
 #         cr.execute("select id,product_id,product_uos_qty,price_unit,discount,sub_total,order_id from mobile_sale_order_line where create_date > %s and order_id in(%s)",(todayDateNormal,order_ids,))
 # #                             where due_date > %s''',(todayDateNormal,))
@@ -648,14 +547,14 @@ class mobile_sale_order(osv.osv):
 #         return datas
     
     # get pricelsit datas
-    def get_pricelist_datas(self, cr, uid , section_id, context=None, **kwargs):
+    def get_pricelist_datas(self, cr, uid ,section_id, context=None, **kwargs):
         cr.execute('''select id,name,type,active from product_pricelist where active = 't' and main_group_id in (select product_maingroup_id 
                         from crm_case_section_product_maingroup_rel mg,crm_case_section cs 
                         where cs.id = mg.crm_case_section_id and cs.id = %s) or main_group_id is null''', (section_id,))
         datas = cr.fetchall()
         cr.execute
         return datas
-    def get_pricelist_version_datas(self, cr, uid, section_id , context=None, **kwargs):
+    def get_pricelist_version_datas(self, cr, uid,section_id , context=None, **kwargs):
         cr.execute('''select pv.id,date_end,date_start,pv.active,pv.name,pv.pricelist_id 
                         from product_pricelist_version pv, product_pricelist pp where pv.pricelist_id = pp.id 
                         and (pp.main_group_id in (select product_maingroup_id 
@@ -664,7 +563,7 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()
         cr.execute
         return datas
-    def get_pricelist_item_datas(self, cr, uid, section_id , context=None, **kwargs):
+    def get_pricelist_item_datas(self, cr, uid,section_id , context=None, **kwargs):
         cr.execute('''select pi.id,pi.price_discount,pi.sequence,pi.product_tmpl_id,pi.name,pi.base_pricelist_id,
                     pi.product_id,pi.base,pi.price_version_id,pi.min_quantity,
                     pi.categ_id,pi.price_surcharge from product_pricelist_item pi, product_pricelist_version pv, product_pricelist pp where pv.pricelist_id = pp.id 
@@ -684,18 +583,17 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()
         cr.execute
         return datas
-    # KZO
-    # Get Res Partner and Res Partner Category res_partner_res_partner_category_rel
+    #Get Res Partner and Res Partner Category res_partner_res_partner_category_rel
     def get_res_partner_category_datas(self, cr, uid , context=None, **kwargs):
-            cr.execute('''
-            select a.category_id, a.partner_id ,b.name
-            from res_partner_res_partner_category_rel a , res_partner_category b
-            where a.category_id = b.id
-            ''')
-            datas = cr.fetchall()
-            return datas
+        cr.execute('''
+        select a.category_id, a.partner_id ,b.name
+        from res_partner_res_partner_category_rel a , res_partner_category b
+        where a.category_id = b.id
+        ''')
+        datas = cr.fetchall()
+        return datas
     
-    def get_sale_team_members_datas(self, cr, uid , member_id, saleteam_id, context=None, **kwargs):
+    def get_sale_team_members_datas(self, cr, uid ,member_id,saleteam_id, context=None, **kwargs):
         cr.execute('''select u.id as id,u.active as active,u.login as login,u.password as password,u.partner_id as partner_id,p.name as name from res_users u, res_partner p
                    where u.partner_id = p.id and u.id in(select member_id from crm_case_section cr, sale_member_rel sm where sm.section_id = cr.id and cr.id =%s)''', (saleteam_id,)) 
         datas = cr.fetchall()
@@ -706,7 +604,7 @@ class mobile_sale_order(osv.osv):
                     from crm_case_section cr, sale_member_rel sm,crm_case_section_product_product_rel pr where sm.section_id = cr.id and cr.id=pr.crm_case_section_id  
                     and sm.member_id =%s 
                     and cr.id = %s
-            ''', (section_id, saleTeamId,))
+            ''', (section_id,saleTeamId,))
         datas = cr.fetchall()
         cr.execute
         return datas
@@ -722,7 +620,7 @@ class mobile_sale_order(osv.osv):
             select p.id,p.date,p.sale_team,p.name,p.principal from sale_plan_day p
             join  crm_case_section c on p.sale_team=c.id
             where p.sale_team=%s
-            ''', (section_id,))
+            ''', (section_id, ))
         datas = cr.fetchall()
         cr.execute      
         return datas    
@@ -732,13 +630,13 @@ class mobile_sale_order(osv.osv):
             select p.id,p.date,p.sale_team,p.name,p.principal from sale_plan_trip p
             join  crm_case_section c on p.sale_team=c.id
             where p.sale_team=%s
-            ''', (section_id,))
+            ''', (section_id, ))
         datas = cr.fetchall()
         cr.execute
       
         return datas
         
-        # kzo
+        #kzo
     def stock_picking_type(self, cr, uid , context=None, **kwargs):
         cr.execute('''select id,code from stock_picking_type''')            
         datas = cr.fetchall()        
@@ -759,7 +657,7 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()
         return datas
     
-    def get_company_datas(self, cr, uid , context=None):        
+    def get_company_datas(self, cr, uid ,context=None):        
         cr.execute('''select id,name from res_company''')
         datas = cr.fetchall()        
         return datas
@@ -829,15 +727,15 @@ class mso_promotion_line(osv.osv):
               'to_date':fields.datetime('To Date')
               }
     
-    def onchange_promo_id(self, cr, uid, ids, pro_id, context=None):
-            result = {}
-            promo_pool = self.pool.get('promos.rules')
-            datas = promo_pool.read(cr, uid, pro_id, ['from_date', 'to_date'], context=context)
-    
-            if datas:
-                result.update({'from_date':datas['from_date']})
-                result.update({'to_date':datas['to_date']})
-            return {'value':result}
+def onchange_promo_id(self, cr, uid, ids, pro_id, context=None):
+        result = {}
+        promo_pool = self.pool.get('promos.rules')
+        datas = promo_pool.read(cr, uid, pro_id, ['from_date', 'to_date'], context=context)
+
+        if datas:
+            result.update({'from_date':datas['from_date']})
+            result.update({'to_date':datas['to_date']})
+        return {'value':result}
             
 mso_promotion_line()
 
