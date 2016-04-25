@@ -173,8 +173,8 @@ class stock_move_import(osv.osv):
         stock_line_obj = self.pool.get('stock.import.line')
         data = self.browse(cr, uid, ids)[0]
         company_id = data.company_id.id
-        product_list = from_location = to_location = date_expected = None
-
+        from_location = to_location = date_expected = None
+        product_list = {}
         data = self.browse(cr, uid, ids)[0]
         import_file = data.file
         import_filename = data.filename
