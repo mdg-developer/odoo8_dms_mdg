@@ -62,6 +62,46 @@ class mobile_sale_order(osv.osv):
         'm_status' : 'draft',
        
     } 
+	
+	def create_visit(self, cursor, user, vals, context=None):
+        print 'vals',vals
+        customer_visit_obj=self.pool.get('customer.visit')
+        str ="{"+vals+"}"
+#             str = str.replace(":''",":'")#change Order_id
+        str = str.replace("'',","',")#null
+        str = str.replace(":',",":'',")#due to order_id
+        str = str.replace("}{", "}|{")
+        str = str.replace(":'}{", ":''}")
+        new_arr = str.split('|')
+        result = []
+        for data in new_arr:
+            x = ast.literal_eval(data)
+            result.append(x)
+        customer_visit=[]
+        for r in result:
+            print "length", len(r)
+            customer_visit.append(r)  
+        if customer_visit:
+            for vs in customer_visit:
+                visit_result={
+                    'customer_code':vs['customer_code'],
+                    'customer_id':vs['customer_id'],                        
+                    'sale_plan_day_id':vs['sale_plan_day_id'],
+                    'sale_plan_trip_id':vs['sale_plan_trip_id'] ,
+                    'sale_plan_name':vs['sale_plan_name'],
+                    'sale_team':vs['sale_team'],
+                    'sale_team_id':vs['sale_team_id'],
+                    'user_id':vs['user_id'],
+                    'date':vs['date'],
+                    'user_id':vs['visit_reason'],
+                    'tablet_id':vs['tablet_id'],
+                    'other_reason':vs['other_reason'],
+                    'visit_reason':vs['visit_reason'],
+                    'latitude':vs['latitude'],
+                    'longitude':vs['longitude'],                        
+                }
+                customer_visit_obj.create(cursor, user, visit_result, context=context)
+        return True
     
     def create_massive(self, cursor, user, vals, context=None):
         print 'vals',vals
@@ -574,7 +614,7 @@ class mobile_sale_order(osv.osv):
         saleorder = str(tuple(saleorderList))
         mobile_sale_order_obj = self.pool.get('mobile.sale.order')
         list_val = None
-        list_val = mobile_sale_order_obj.search(cr, uid, [('due_date', '>', todayDateNormal), ('sale_team', '=', saleTeamId), ('name', 'not in', saleorderList)])
+        list_val = mobile_sale_order_obj.search(cr, uid, [('due_date', '>', todayDateNormal), ('sale_team', '=', saleTeamId), ('name', 'not in', saleorderList), ('type', '=', 'credit')])
         print 'list_val', list_val
         list = []
         if list_val:
