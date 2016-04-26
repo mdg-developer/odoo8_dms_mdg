@@ -14,6 +14,13 @@
 			<field name="model">customer.visit</field>
 			<field name="arch" type="xml">
 				<search string="Search Customer Visit">
+					<filter string="Customer Code" name="customer_code"/>
+					<filter string="Sale Plan Day" name="sale_plan_day_id"/>
+					<filter string="Sale Plan Trip" name="sale_plan_trip_id"/>
+					<filter string="Tablet" name="tablet_id"/>
+					<filter string="Sale Team" name="sale_team_id"/>
+					<filter string="Date" name="date"/>
+					<filter string="Reason" name="visit_reason"/>				
 					<group expand="0" string="Group By">
 						<filter name="customer_code" string="Customer Code" domain="[]"
 							context="{'group_by':'customer_code'}" />
@@ -27,6 +34,8 @@
 							context="{'group_by':'sale_team_id'}" />
 						<filter name="date" string="Date" domain="[]"
 							context="{'group_by':'date'}" />
+						<filter name="visit_reason" string="Reason" domain="[]"
+							context="{'group_by':'visit_reason'}" />
 					</group>
 				</search>
 			</field>
@@ -109,6 +118,7 @@
 					<field name="customer_id" />
 					<field name="customer_code" />
 					<field name="sale_plan_day_id" />
+					<field name="sale_plan_trip_id" />
 					<field name="tablet_id" />
 					<field name="sale_team_id" />
 					<field name="visit_reason" />
