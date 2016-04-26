@@ -105,7 +105,7 @@ class stock_move_import(osv.osv):
         if data.picking_type:
             picking_type = data.picking_type
         line_ids = stock_line_obj.search(cr, uid, [('line_id', '=', data.id)])
-        move_val={}
+        move_val = {}
         if line_ids:
             for id in line_ids:
                 data = stock_line_obj.browse(cr, uid, id, context=context)
@@ -143,6 +143,7 @@ class stock_move_import(osv.osv):
                           'name':'Import',
                           'product_id':data.product_id.id,
                           'product_uom_qty':data.product_uom_qty,
+                          'product_uos_qty':data.product_uom_qty,
                           'product_uom':data.product_uom.id,
                           'selection':'none',
                           'priority':'1',
@@ -283,7 +284,7 @@ class stock_move_import(osv.osv):
         else:
             for aml in amls:
                 product_id = uom_id = uom_ids = None
-                product_list = product_name = uom_name = total_qty = from_location_id = to_location_id = transfer_date = tg_no = None
+                product_name = uom_name = total_qty = from_location_id = to_location_id = transfer_date = tg_no = None
                 quantity = 0.0
                 move_val = {}
                 p_id = c_id = None
@@ -322,7 +323,6 @@ class stock_move_import(osv.osv):
                     if from_location_id:
                         product_list = self.get_product_from_inventory(cr, uid, from_location_id, context=context)
                 if product_list:
-                    
                     product_name = product_name.strip()
                     uom_name = uom_name.strip()
                 if aml['quantity']:
