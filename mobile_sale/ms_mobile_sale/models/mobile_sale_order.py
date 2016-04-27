@@ -286,7 +286,6 @@ class mobile_sale_order(osv.osv):
     # MMK   
     def action_convert_so(self, cr, uid, ids, context=None):
         msoObj = self.pool.get('mobile.sale.order')
-        print 'MMK'
         soObj = self.pool.get('sale.order')
         solObj = self.pool.get('sale.order.line')
         invObj = self.pool.get("sale.advance.payment.inv")
@@ -429,11 +428,11 @@ class mobile_sale_order(osv.osv):
                                     data = cr.fetchall()
                                     if data:
                                         journal_id = data[0]
-                                    cr.execute('select id from account_account where lower(name)=%s and active= %s', ('cash', True,))
+                                    cr.execute('select id from account_account where lower(name)=%s and active= %s', ('cash', True,))#which account shall I choose. It is needed.
                                     data = cr.fetchall()
                                     if data:
                                         accountId = data[0]
-                                    if journal_id and accountId:
+                                    if journal_id and accountId:#cash journal and cash account. If there no journal id or no account id, account invoice is not make payment.
                                         accountVResult = {
                                                         'partner_id':invObj.partner_id.id,
                                                         'amount':invObj.amount_total,
