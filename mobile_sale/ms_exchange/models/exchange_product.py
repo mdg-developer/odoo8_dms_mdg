@@ -11,11 +11,11 @@ class exchange_product(osv.osv):
                 'customer_id':fields.many2one('res.partner', 'Customer Name'),
                 'customer_code':fields.char('Customer Code'),
                 'team_id'  : fields.many2one('crm.case.section', 'Sale Team'),
-                'date':fields.date('Date'),                
-                'exchange_type':fields.selection([('exchange', 'Exchange'),('color_change', 'Color Change'),('sale_return', 'Sale Return'),], 'Type'),
+                'date':fields.date('Date'),
+              'exchange_type':fields.selection([('Exchange', 'Exchange'), ('Color Change', 'Color Change'), ('Sale Return', 'Sale Return'), ], 'Type'),
                 'item_line': fields.one2many('product.transactions.line', 'transaction_id', 'Items Lines', copy=True),
-                'void_flag':fields.selection([('none', 'Unvoid'),('voided', 'Voided')], 'Void Status'),
-                'location_id'  : fields.many2one('stock.location', 'Location',required=True),
+                'void_flag':fields.selection([('none', 'Unvoid'), ('voided', 'Voided')], 'Void Status'),
+                'location_id'  : fields.many2one('stock.location', 'Location', required=True),
                 'e_status':fields.char('Status'),
     }
     
@@ -23,12 +23,12 @@ class exchange_product(osv.osv):
                  'e_status' : 'draft',
                  }
     
-    def onchange_customer_id(self,cr,uid,ids,customer_id,context=None):
+    def onchange_customer_id(self, cr, uid, ids, customer_id, context=None):
         
-        result={}
-        res_partner=self.pool.get('res.partner')
-        datas= res_partner.read(cr,uid,customer_id,['customer_code'],context=context)
-        print 'datas',datas
+        result = {}
+        res_partner = self.pool.get('res.partner')
+        datas = res_partner.read(cr, uid, customer_id, ['customer_code'], context=context)
+        print 'datas', datas
         if datas:
             result.update({'customer_code':datas['customer_code']})            
         return {'value':result} 
@@ -132,15 +132,15 @@ class exchange_product_line_item(osv.osv):
     _description = "Exchange Product"
 
     _columns = {
-                'transaction_id': fields.many2one('product.transactions', 'Form,'),                
+                'transaction_id': fields.many2one('product.transactions', 'Form,'),
                 'product_id':fields.many2one('product.product', 'Product'),
                 'product_qty':fields.integer('Qty'),
                 'so_No':fields.char('SO Reference'),
-                'trans_type':fields.selection([('in', 'In'),('out', 'Out')], 'Type',required=True),
+                'trans_type':fields.selection([('In', 'In'), ('Out', 'Out')], 'Type', required=True),
                 'transaction_name':fields.char('Transaction Name'),
-                'note':fields.char('Note'),                
+                'note':fields.char('Note'),
                 'exp_date':fields.date('Expired Date'),
-                'batchno':fields.char('Batch No'),                  
+                'batchno':fields.char('Batch No'),
                 }
     
 exchange_product_line_item()

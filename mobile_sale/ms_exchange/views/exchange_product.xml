@@ -91,7 +91,7 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" ref="view_exchange_product_tree" />
-			<field name="domain">['|',('exchange_type','=','exchange'),('exchange_type','=','color_change')]
+			<field name="domain">['|',('exchange_type','=','Exchange'),('exchange_type','=','Color Change')]
 			</field>
 			<field name="help" type="html">
 				<p class="oe_view_nocontent_create">
@@ -127,7 +127,7 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" ref="view_sale_return_tree" />
-			<field name="domain">[('exchange_type','=','sale_return')]</field>
+			<field name="domain">[('exchange_type','=','Sale Return')]</field>
 			<field name="help" type="html">
 				<p class="oe_view_nocontent_create">
 					Click to create new Sale return Product.
