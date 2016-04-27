@@ -23,8 +23,8 @@ ATTRIBUTES = [
     # ('prod_unit_price', 'Product UnitPrice combination'),
     ('prod_sub_total', 'Product SubTotal combination'),
     ('promo_already_exit', 'Promotion Already Applied'),
-     ('cat_qty', 'Product Category Quantity combination'),
-  
+    ('cat_qty', 'Product Category Quantity combination'),
+    ('foc_any_product', 'FOC Any Products'),
 ]
 
 COMPARATORS = [
@@ -60,7 +60,7 @@ ACTION_TYPES = [
      ('prod_multi_uom_get_x', _('Buy Multi UOM get X free')),
     ('fix_qty_on_product_code', _('FOC Products on Qty')),
     ('prod_foc_smallest_unitprice', _('FOC Products on smallest Unitprice')),
-   
+    ('foc_any_product', _('FOC Any Products')),   	 
 ]
 
 
@@ -816,6 +816,18 @@ class PromotionsRulesConditionsExprs(osv.Model):
                              'value':"'category_code':0.00"
                              }
                     }
+            
+            #Case 10
+        if attribute in [
+                         'foc_any_product',
+                        
+                         ]:
+            return {
+                    'value':{
+                                'value':"['product_code','product_code2']|0.00"
+                             }
+                    }
+            
         return {}
     _columns = {
         'sequence':fields.integer('Sequence'),
@@ -1344,9 +1356,16 @@ class PromotionsRulesActions(osv.Model):
                               'product_code':"'product_code_x1':'product_code_x2':'product_code_x3'",
                               'arguments':"0.00",
                               }
+                   }          
+		 #kzo
+        if action_type in ['foc_any_product', ] :
+            return{
+                   'value' : {
+                              'product_code':"'product_code_x1':'product_code_x2':'product_code_x3'",
+                              'arguments':"0.00",
+                              }
                    }
-            
-           
+        		   
         # Finally if nothing works
         return {}
     
