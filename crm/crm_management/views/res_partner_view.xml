@@ -150,31 +150,13 @@
 			<field name="model">res.partner</field>
 			<field name="inherit_id" ref="base.view_res_partner_filter" />
 			<field name="arch" type="xml">
-				<xpath expr="//field[@name='name']" position="before">
-					<filter string="Active Customer" name="active" domain="[('active','=',1)]"/>
-					<filter string="Pending Customer" name="mobile_customer" domain="[('mobile_customer','=',1)]"/>
-					<filter string="Idle Customer" name="idle" domain="[('idle','!=',False)]"/>
-					<filter string="Delete Customer" name="active" domain="[('active','=',0)]"/>
-				</xpath>	
-				<xpath expr="//group/filter[@string='Salesperson']" position="before">
-					<filter name="name" string="Name" domain="[]"
-						context="{'group_by':'name'}" />
-					<filter name="customer_code" string="Code" domain="[]"
-						context="{'group_by':'customer_code'}" />
-					<filter name="section_id" string="Sale Team" domain="[]"
-						context="{'group_by':'section_id'}" />
-				</xpath>			
 				<xpath expr="//group/filter[@string='Country']" position="after">
 					<filter name="township" string="Township" domain="[]"
 						context="{'group_by':'township'}" />
 					<filter name="city" string="City" domain="[]"
 						context="{'group_by':'city'}" />
 					<filter name="state_id" string="State" domain="[]"
-						context="{'group_by':'state_id'}" />		
-					<filter name="sales_channel" string="Sale Channels" domain="[]"
-						context="{'group_by':'sales_channel'}" />
-					<filter name="branch_id" string="Branch " domain="[]"
-						context="{'group_by':'branch_id'}" />
+						context="{'group_by':'state_id'}" />
 					<filter name="demarcation_id" string="Demarcation" domain="[]"
 						context="{'group_by':'demarcation_id'}" />
 				</xpath>
