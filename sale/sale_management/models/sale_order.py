@@ -16,7 +16,51 @@ import openerp.addons.decimal_precision as dp
 
 class sale_order(osv.osv):
     _inherit = "sale.order"
-         
+       
+    def _invoiced(self, cursor, user, ids, name, arg, context=None):
+        res = {}
+        for sale in self.browse(cursor, user, ids, context=context):
+            res[sale.id] = True
+            invoice_existence = False
+            for invoice in sale.invoice_ids:
+                if invoice.state!='cancel':
+                    invoice_existence = True
+                    if invoice.state != 'paid':
+                        res[sale.id] = False
+                        break
+            if not invoice_existence or sale.state == 'manual':
+                res[sale.id] = False
+        return res
+     
+    def _invoiced_search(self, cursor, user, obj, name, args, context=None):
+        if not len(args):
+            return []
+        clause = ''
+        sale_clause = ''
+        no_invoiced = False
+        for arg in args:
+            if (arg[1] == '=' and arg[2]) or (arg[1] == '!=' and not arg[2]):
+                clause += 'AND inv.state = \'paid\''
+            else:
+                clause += 'AND inv.state != \'cancel\' AND sale.state != \'cancel\'  AND inv.state <> \'paid\'  AND rel.order_id = sale.id '
+                sale_clause = ',  sale_order AS sale '
+                no_invoiced = True
+ 
+        cursor.execute('SELECT rel.order_id ' \
+                'FROM sale_order_invoice_rel AS rel, account_invoice AS inv '+ sale_clause + \
+                'WHERE rel.invoice_id = inv.id ' + clause)
+        res = cursor.fetchall()
+        if no_invoiced:
+            cursor.execute('SELECT sale.id ' \
+                    'FROM sale_order AS sale ' \
+                    'WHERE sale.id NOT IN ' \
+                        '(SELECT rel.order_id ' \
+                        'FROM sale_order_invoice_rel AS rel) and sale.state != \'cancel\'')
+            res.extend(cursor.fetchall())
+        if not res:
+            return [('id', '=', 0)]
+        return [('id', 'in', [x[0] for x in res])]
+      
     _columns = {
                'tb_ref_no':fields.char('Order Reference'),
                'payment_type':fields.selection([
@@ -37,7 +81,9 @@ class sale_order(osv.osv):
                'sale_plan_name':fields.char('Sale Plan Name'),
                'sale_plan_day_id':fields.many2one('sale.plan.day', 'Sale Plan Day'),
                'sale_plan_trip_id':fields.many2one('sale.plan.trip', 'Sale Plan Trip'),
-               'validity_date':fields.date(string='Expiration Date', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),                   
+               'validity_date':fields.date(string='Expiration Date', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
+               'invoiced': fields.function(_invoiced, string='Paid',
+                fnct_search=_invoiced_search, type='boolean', help="It indicates that an invoice has been paid.",store=True),                           
                }
     
     def onchange_partner_id(self, cr, uid, ids, part, context=None):
