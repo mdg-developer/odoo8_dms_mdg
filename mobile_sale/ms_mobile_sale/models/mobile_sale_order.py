@@ -98,6 +98,15 @@ class mobile_sale_order(osv.osv):
                         saleManId = data[0][0]
                     else:
                         saleManId = None
+					
+					cursor.execute('select id From outlettype_outlettype where name  = %s ', (so['outlet_type'],))
+                    data = cursor.fetchall()
+                    print 'outlet type data', data
+                    if data:
+                        outlet_type = data[0][0]
+                    else:
+                        outlet_type = None
+					
                     mso_result = {
                         'customer_code':so['customer_code'],
                         'sale_plan_day_id':so['sale_plan_day_id'],
@@ -125,7 +134,8 @@ class mobile_sale_order(osv.osv):
                         'due_date':so['due_date'],
                         'payment_term':so['payment_term'],
                         'mso_longitude':so['mso_longitude'],
-                        'mso_latitude':so['mso_latitude']
+                        'mso_latitude':so['mso_latitude'],
+						'outlet_type':outlet_type
                     }
                     s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
                     print "Create Sale Order", so['name']
