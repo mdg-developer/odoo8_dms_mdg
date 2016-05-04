@@ -618,12 +618,14 @@ where id=1]]></xml-property>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select *,(select count(msl.id) from mobile_sale_order_line msl where msl.order_id=ms_id) as no_of_distribution,(stocking_qty*stocking_unit_price)*-1 as amount,get_msol_seq(ms_id,msl_id) as so_propo_dis
-from (select ms.id as ms_id,msl.id as msl_id,ms.name,Cast(ms.customer_code || ' ' || rp.name as character varying ) as customer_code,ms.date::date,ms.due_date,msl.discount,msl.product_uos_qty,pp.name_template as product_name,term.name as payment_term,msl.price_unit,uom.name as uom,pt.description,rp.comment as internal_note,ms.name as invoice,'1518-YGN'::character varying as receivable_account,msl.product_uos_qty as stocking_qty,msl.price_unit as stocking_unit_price,
+from (select ms.id as ms_id,msl.id as msl_id,ms.name,Cast(ms.customer_code || ' ' || rp.name as character varying ) as customer_code,ms.date::date,ms.due_date,msl.discount,msl.product_uos_qty,
+Cast(crm.name || '-' || pp.name_template as character varying) as product_name,term.name as payment_term,msl.price_unit,uom.name as uom,pt.description,rp.comment as internal_note,ms.name as invoice,'1518-YGN'::character varying as receivable_account,msl.product_uos_qty as stocking_qty,msl.price_unit as stocking_unit_price,
 res.partner_id as partner_id,rp.name as ship_to_name,Cast(address || ',' || rc.name || ',' || rcs.name || ',' || city.name || ',' || town.name as character varying ) as ship_address,'Vehicle'::character varying as ship_via,'1518-YGN'::character varying as gl_account,1 as tax_type
 from mobile_sale_order ms
 left join mobile_sale_order_line msl on ms.id=msl.order_id
 left join product_uom uom on uom.id=msl.uom_id
 left join account_payment_term term on ms.payment_term=term.id
+left join crm_case_section crm on ms.sale_team=crm.id
 left join product_product pp on msl.product_id=pp.id
 left join product_template pt on pp.product_tmpl_id=pt.id
 left join res_partner rp on ms.partner_id=rp.id
