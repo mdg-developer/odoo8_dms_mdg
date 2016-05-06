@@ -98,15 +98,15 @@ class mobile_sale_order(osv.osv):
                         saleManId = data[0][0]
                     else:
                         saleManId = None
-					
-					cursor.execute('select id From outlettype_outlettype where name  = %s ', (so['outlet_type'],))
+                    
+                    cursor.execute('select id From outlettype_outlettype where name  = %s ', (so['outlet_type'],))
                     data = cursor.fetchall()
                     print 'outlet type data', data
                     if data:
                         outlet_type = data[0][0]
                     else:
                         outlet_type = None
-					
+
                     mso_result = {
                         'customer_code':so['customer_code'],
                         'sale_plan_day_id':so['sale_plan_day_id'],
