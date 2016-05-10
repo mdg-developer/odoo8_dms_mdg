@@ -23,8 +23,7 @@ ATTRIBUTES = [
     # ('prod_unit_price', 'Product UnitPrice combination'),
     ('prod_sub_total', 'Product SubTotal combination'),
     ('promo_already_exit', 'Promotion Already Applied'),
-    ('cat_qty', 'Product Category Quantity combination'),
-    ('foc_any_product', 'FOC Any Products'),
+    ('cat_qty', 'Product Category Quantity combination'),  
 ]
 
 COMPARATORS = [
@@ -815,18 +814,7 @@ class PromotionsRulesConditionsExprs(osv.Model):
                     'value':{
                              'value':"'category_code':0.00"
                              }
-                    }
-            
-            #Case 10
-        if attribute in [
-                         'foc_any_product',
-                        
-                         ]:
-            return {
-                    'value':{
-                                'value':"['product_code','product_code2']|0.00"
-                             }
-                    }
+                    }                   
             
         return {}
     _columns = {

@@ -109,7 +109,7 @@ class pre_sale_order(osv.osv):
                                   'product_id':productId,
                                   'price_unit':sol['price_unit'],
                                   'product_uos_qty':sol['product_uos_qty'],
-#                                   'discount':sol['discount'],
+                                  'discount':sol['discount'],
                                   'sub_total':sol['sub_total'],
                                 }
                                 mobile_sale_order_line_obj.create(cursor, user, mso_line_res, context=context) 

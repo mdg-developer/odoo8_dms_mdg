@@ -28,8 +28,8 @@ class mobile_stock_delivery(osv.osv):
     
     def product_qty_in_stock(self, cr, uid, warehouse_id , context=None, **kwargs):
             cr.execute("""
-                select product_id,qty_on_hand + qty as qty_on_hand,main_group from (
-                select sm.product_id  ,sum(sm.product_uos_qty) as qty_on_hand ,0 as qty, pt.main_group
+                select product_id,qty_on_hand + qty as qty_on_hand,main_group,name_template from (
+                select sm.product_id  ,sum(sm.product_uos_qty) as qty_on_hand ,0 as qty, pt.main_group, pp.name_template
                                       from stock_move sm , stock_picking sp , stock_picking_type spt,product_template pt, product_product pp
                                       where sm.picking_id = sp.id
                           and sm.state = 'done'                     
@@ -40,7 +40,7 @@ class mobile_stock_delivery(osv.osv):
                           and sm.create_date::date = now()::date
                           and sm.product_id = pp.id
                           and pp.product_tmpl_id = pt.id
-                          group by product_id, pt.main_group)A
+                          group by product_id, pt.main_group, pp.name_template)A
                 """, (warehouse_id,))
     #         cr.execute("""
     #                   select product_id,qty_on_hand + qty as qty_on_hand from (
