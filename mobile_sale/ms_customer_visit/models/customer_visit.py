@@ -32,11 +32,11 @@ class customer_visit(osv.osv):
                  ('other_reason', 'Other Reasons')
             ], 'Reason'),
                 'other_reason':fields.text('Remark'),
-        'm_status':fields.selection([('pending', 'Pending'),('approved', 'Approved'),
-                                                      ('reject', 'Reject')], string='Status'),        
+        'm_status':fields.selection([('pending', 'Pending'), ('approved', 'Approved'),
+                                                      ('reject', 'Reject')], string='Status'),
     }
     _defaults = {        
-        'm_status' : 'pending',       
+        'm_status' : 'pending',
     } 
     # image: all image fields are base64 encoded and PIL-supported
     image = openerp.fields.Binary("Image", attachment=True,
@@ -123,6 +123,16 @@ class customer_visit(osv.osv):
         for rec in self:
             rec.image = tools.image_resize_image_big(rec.image_small)
             
+#     def main_val(self,cr,uid,ids,context=None):
+#      if context is None:
+#          context = {}
+    # your logic will set over  hear
+    
+    # def method_name(self):
+     #   print 'coming method name'
+     #   view_id = self.env.ref('modul_name._id_of_form_view').id
+     #   context = self._context.copy()
+
 # image1
     @api.depends('image1')
     def _compute_images1(self):
@@ -242,10 +252,6 @@ class customer_visit(osv.osv):
             image = tools.image_colorize(image)
 
         return tools.image_resize_image_big(image.encode('base64'))
-    
-    _order = 'id desc'
-    _defaults = {
-               
-    }  
+
          
 customer_visit()
