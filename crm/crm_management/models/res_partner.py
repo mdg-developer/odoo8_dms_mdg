@@ -63,7 +63,8 @@ class res_partner(osv.osv):
             largeday_number = cr.fetchall()
             if largeday_number:
                 largeday = largeday_number[0][0]    
-                cr.execute("""select DATE_PART('day',CURRENT_TIMESTAMP- max(date_order)) from sale_order where partner_id= %s """, (ids[0],))
+                cr.execute("""select DATE_PART('day',CURRENT_TIMESTAMP- max(date_order)) from sale_order where partner_id= %s GROUP BY partner_id
+                HAVING COUNT(partner_id) > 1""", (ids[0],))
                 order_day_number = cr.fetchall()
                 print 'order_day_number>>>',order_day_number            
                 if order_day_number:
@@ -72,13 +73,14 @@ class res_partner(osv.osv):
                     print 'largeday>>>>>',largeday
                     print day <= order_day
                     print largeday >= order_day
-                    if day <= order_day and largeday >= order_day:
+                    if day <= order_day and largeday > order_day:
                         str_day = str(day) + ' days'                 
                         print 'condition>>>>>>>>>>'
                         cr.execute("""update res_partner set pending=%s where id=%s""",(str_day,ids[0],))
                     else:
-                        str_day = ''
-                        cr.execute("""update res_partner set pending=%s where id=%s""",(str_day,ids[0],))
+                        #str_day = ''
+                        str_day = None                         
+                        cr.execute("""update res_partner set pending=NULL where id=%s""",(ids[0],))
                     print 'update>>pending',  str_day                     
                     for partner in self.browse(cr, uid, ids, context):
                         print 'str_day>>>',str_day                            
@@ -103,8 +105,9 @@ class res_partner(osv.osv):
                     str_day = str(largeday) + ' days'                   
                     cr.execute("""update res_partner set idle=%s where id=%s""",(str_day,ids[0],))
                 else:
-                    str_day = '' 
-                    cr.execute("""update res_partner set idle=%s where id=%s""",(str_day,ids[0],))
+                    #str_day = ''
+                    str_day = None 
+                    cr.execute("""update res_partner set idle=NULL where id=%s""",(ids[0],))
                 print 'update>>idle',  str_day                      
                 for partner in self.browse(cr, uid, ids, context):
                     print 'str_day>>>',str_day                            
@@ -162,8 +165,9 @@ class res_partner(osv.osv):
                 #'avg_sale_order_ids': fields.one2many('sale.order','partner_id','Sales Order'),
     } 
     _defaults = {
-        'is_company': True,          
-        
+        'is_company': True,
+        'pending' : None,          
+        'idle' : None,
     }
     _sql_constraints = [        
         ('customer_code_uniq', 'unique (customer_code)', 'Customer code must be unique !'),
