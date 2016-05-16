@@ -27,6 +27,7 @@
 					<xpath expr="//field[@name='function']" position="before">
 						<field name="temp_customer" />
 					</xpath>
+					
 					<xpath expr="//field[@name='title']" position="replace">
 
 					</xpath>
@@ -46,6 +47,7 @@
                         attrs="{'invisible': [('customer', '=', False)]}"
                         icon="fa-flag">
                         <field string="2 Invoie in" name="pending_customer" widget="statinfo"/>
+                        
                     </button>
                     <button class="oe_inline oe_stat_button" type="action" name="%(sale.act_res_partner_2_sale_order)d" 
                         attrs="{'invisible': [('customer', '=', False)]}"
@@ -71,7 +73,7 @@
 						<page name='sales_purchases' string="Sales &amp; Purchases">
                             <group>
                                 <group>
-                                    <field name="user_id" string="Saleman Name" attrs="{'invisible':[('supplier','!=',False)]}"
+                                    <field name="user_id" 
                                         context="{'default_groups_ref': ['base.group_partner_manager']}"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                 </group>
@@ -101,10 +103,10 @@
 					<xpath expr="//notebook" position="after">
 						<widget type="gmap_marker" lat="partner_latitude" lng="partner_longitude" />
 					</xpath>
-					<!-- <xpath expr="//field[@name='user_id']" position="replace">
+					<xpath expr="//field[@name='user_id']" position="replace">
 						<field name="user_id" string="Saleman Name"
 							context="{'default_groups_ref': ['base.group_partner_manager']}" />
-					</xpath> -->
+					</xpath>
 				</data>
 						
 			</field>
@@ -150,45 +152,34 @@
 			<field name="model">res.partner</field>
 			<field name="inherit_id" ref="base.view_res_partner_filter" />
 			<field name="arch" type="xml">
-				<xpath expr="//field[@name='name']" position="before">
-					<filter string="Active Customer" name="active" domain="[('active','=',1)]"/>
-					<filter string="Pending Customer" name="mobile_customer" domain="[('mobile_customer','=',1)]"/>
-					<filter string="Idle Customer" name="idle" domain="[('idle','!=',False)]"/>
-					<filter string="Delete Customer" name="active" domain="[('active','=',0)]"/>
-				</xpath>	
-				<xpath expr="//group/filter[@string='Salesperson']" position="before">
-					<filter name="name" string="Name" domain="[]"
-						context="{'group_by':'name'}" />
-					<filter name="customer_code" string="Code" domain="[]"
-						context="{'group_by':'customer_code'}" />
-					<filter name="section_id" string="Sale Team" domain="[]"
-						context="{'group_by':'section_id'}" />
-				</xpath>			
 				<xpath expr="//group/filter[@string='Country']" position="after">
 					<filter name="township" string="Township" domain="[]"
 						context="{'group_by':'township'}" />
 					<filter name="city" string="City" domain="[]"
 						context="{'group_by':'city'}" />
 					<filter name="state_id" string="State" domain="[]"
-						context="{'group_by':'state_id'}" />		
-					<filter name="sales_channel" string="Sale Channels" domain="[]"
-						context="{'group_by':'sales_channel'}" />
-					<filter name="branch_id" string="Branch " domain="[]"
-						context="{'group_by':'branch_id'}" />
+						context="{'group_by':'state_id'}" />
 					<filter name="demarcation_id" string="Demarcation" domain="[]"
 						context="{'group_by':'demarcation_id'}" />
 				</xpath>
 			</field>
 		</record>
 		
-		<record id="inherit_res_partner_opt_out_search" model="ir.ui.view">
-			<field name="name">Customer Filter</field>
+		<!-- Customer Code View -->
+		<record id="inherit_res_partner_kanban_view" model="ir.ui.view">
+			<field name="name">view.res.partner.kanban.view</field>
 			<field name="model">res.partner</field>
-			<field name="inherit_id" ref="email_template.res_partner_opt_out_search" />
+			<field name="inherit_id" ref="base.res_partner_kanban_view" />
 			<field name="arch" type="xml">
-				<xpath expr="//filter[@name='not_opt_out']" position="replace">
-										
-				</xpath>
+			
+			<xpath expr="//field[@name='display_name']" position="after">
+				<field name="customer_code" />
+			</xpath>
+			<xpath expr="//div[@class='oe_kanban_partner_links']" position="inside" >
+			     <li t-if="record.customer_code.raw_value"><field name="customer_code"/></li>			
+			</xpath>
+			
+				
 			</field>
 		</record>
 	</data>
