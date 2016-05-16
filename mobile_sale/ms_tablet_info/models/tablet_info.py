@@ -14,11 +14,23 @@ class tablet_information(osv.osv):
                 'sale_team_id':fields.many2one('crm.case.section', 'Sale Team', required=True),
                 'storage_day': fields.integer('Data Storage', size=4, required=True, help="Help"),
                 'hotline': fields.char('Hotline'),
+				'device_id': fields.char('Device ID'),
     }
     _defaults = {
                
     }  
     
+	def check_device_id(self, cr, uid, device_id , context=None, **kwargs):    
+        try:
+            cr.execute('''
+            select name,device_id from tablets_information where device_id = %s
+            ''', (str(device_id),))
+            datas = cr.fetchall()            
+            return datas
+        except Exception, e:
+            print 'False check device Id Error >>>>',e
+            return False
+			
     def name_get(self, cr, user, ids, context=None):
         if context is None:
             context = {}
