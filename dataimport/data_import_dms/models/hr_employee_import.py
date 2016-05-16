@@ -226,12 +226,12 @@ class employee(osv.osv):
                     if ln[contact_i] == None:
                         import_vals['Contact No'] = ''
                     else:
-                        import_vals['Contact No'] = ln[contact_i].strip()
+                        import_vals['Contact No'] = ln[contact_i]
                     
                     if  ln[address_i] ==None:
                         import_vals['Address'] = ''
                     else:
-                        import_vals['Address'] = ln[address_i].strip()
+                        import_vals['Address'] = ln[address_i]
                     if ln[remarks_i] == None:
                         import_vals['Remarks'] = ''
                     else:
