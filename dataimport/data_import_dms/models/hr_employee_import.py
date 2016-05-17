@@ -123,6 +123,7 @@ class employee(osv.osv):
                             gender_i = i
                         elif header_field == 'Employee No':
                             employee_no_i = i
+                            
                         elif header_field == 'Father Name':
                             father_name_i = i
                         elif header_field == 'Date of Birth':
@@ -165,6 +166,7 @@ class employee(osv.osv):
                         
                 #process data lines   
             else:
+              
                 if ln and ln[0] and ln[0][0] not in ['#','']:
                     
                     import_vals = {}
@@ -177,7 +179,7 @@ class employee(osv.osv):
                     if ln[employee_no_i]==None:
                         import_vals['Employee No'] = ''
                     else:
-                        import_vals['Employee No'] = ln[employee_no_i].strip()
+                        import_vals['Employee No'] = ln[employee_no_i]
                     if ln[father_name_i]==None:
                         import_vals['Father Name'] = ''
                     else:
