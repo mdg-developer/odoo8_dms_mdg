@@ -52,7 +52,7 @@
 		</record>
 
 			<menuitem action="data_import_dms.action_employee_import"
-			id="menu_data_import_sale_plan" parent="menu_data_import_config"
+			id="menu_data_import_employee_plan" parent="menu_data_import_config"
 			sequence="19" />
 		
 	</data>
