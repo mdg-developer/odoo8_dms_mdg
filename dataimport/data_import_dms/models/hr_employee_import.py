@@ -170,48 +170,76 @@ class employee(osv.osv):
                 if ln and ln[0] and ln[0][0] not in ['#','']:
                     
                     import_vals = {}
-                                                                                                                                                                                                                                                
-                    import_vals['Name'] =  ln[name_i].strip()
+                    if isinstance(ln[name_i], int) or isinstance(ln[name_i], float):
+                            import_vals['Name']   = ln[name_i]
+                    else:
+                            import_vals['Name']  = ln[name_i].strip()                                                                                                                                                                                                                           
+                          
                     if ln[gender_i]==None:
                         import_vals['Gender'] = ''
                     else:
                         import_vals['Gender'] = ln[gender_i].strip().lower()
+                        
                     if ln[employee_no_i]==None:
                         import_vals['Employee No'] = ''
                     else:
-                        import_vals['Employee No'] = ln[employee_no_i]
+                        if isinstance(ln[employee_no_i], int) or isinstance(ln[employee_no_i], float):
+                            import_vals['Employee No']  = ln[employee_no_i]
+                        else:
+                            import_vals['Employee No']  = ln[employee_no_i].strip()
+            
                     if ln[father_name_i]==None:
                         import_vals['Father Name'] = ''
                     else:
-                        import_vals['Father Name'] = ln[father_name_i].strip()
+                        if isinstance(ln[father_name_i], int) or isinstance(ln[father_name_i], float):
+                            import_vals['Father Name'] = ln[father_name_i]
+                        else:
+                            import_vals['Father Name'] = ln[father_name_i].strip()
+
                     if ln[date_of_birth_i]==None:
                         import_vals['Date of Birth'] = ''
                     else:
                         import_vals['Date of Birth'] = ln[date_of_birth_i]
+                        
                     if ln[nrc_no_i]==None:
                         import_vals['NRC No'] = ''
                     else:
-                        import_vals['NRC No'] = ln[nrc_no_i].strip()
+                        if isinstance(ln[nrc_no_i], int) or isinstance(ln[nrc_no_i], float):
+                            import_vals['NRC No'] = ln[nrc_no_i]
+                        else:
+                            import_vals['NRC No'] = ln[nrc_no_i].strip()
+                      
                     if ln[level_i] == None:
                         import_vals['Level'] = ''
                     else:
                         import_vals['Level'] = ln[level_i]
+                        
                     if ln[dept_i]== None:
                         import_vals['Department'] =''
                     else:
-                        import_vals['Department'] = ln[dept_i].strip()
+                        if isinstance(ln[dept_i], int) or isinstance(ln[dept_i], float):
+                            import_vals['Department'] = ln[dept_i]
+                        else:
+                            import_vals['Department']= ln[dept_i].strip()
+                      
                     if ln[position_i]  == None:
                         import_vals['Position']  = ''
                     else:
-                        import_vals['Position']  = ln[position_i].strip()
+                        if isinstance(ln[position_i], int) or isinstance(ln[position_i], float):
+                            import_vals['Position']  = ln[position_i]
+                        else:
+                            import_vals['Position'] = ln[position_i].strip()
+                        
                     if ln[joining_date_i] == None:
                         import_vals['Joining Date'] = ''
                     else:
                         import_vals['Joining Date'] = ln[joining_date_i]
+                        
                     if ln[probition_date_i] == None:
                         import_vals['Probition Completed Date'] =''
                     else:
                         import_vals['Probition Completed Date'] = ln[probition_date_i]
+                        
                     if ln[education_i] ==None:
                         import_vals['Education'] =''
                     else:
@@ -220,11 +248,19 @@ class employee(osv.osv):
                     if ln[nationality_i] ==None:
                         import_vals['Nationality'] = ''
                     else:
-                        import_vals['Nationality'] = ln[nationality_i].strip()
+                        if isinstance(ln[nationality_i], int) or isinstance(ln[nationality_i], float):
+                            import_vals['Nationality']  = ln[nationality_i]
+                        else:
+                            import_vals['Nationality']= ln[nationality_i].strip()
+                     
                     if ln[religion_i] ==None:
                         import_vals['Religion'] = ''
                     else:
-                        import_vals['Religion'] = ln[religion_i].strip()
+                        if isinstance(ln[religion_i], int) or isinstance(ln[religion_i], float):
+                            import_vals['Religion']   = ln[religion_i]
+                        else:
+                            import_vals['Religion'] = ln[religion_i].strip()
+                        
                     if ln[contact_i] == None:
                         import_vals['Contact No'] = ''
                     else:
@@ -246,7 +282,11 @@ class employee(osv.osv):
                     if ln[passport_i]==None:
                         import_vals['Passport No'] = ''
                     else:
-                        import_vals['Passport No'] = ln[passport_i].strip()
+                        if isinstance(ln[passport_i], int) or isinstance(ln[passport_i], float):
+                            import_vals['Passport No']   = ln[passport_i]
+                        else:
+                            import_vals['Passport No'] = ln[passport_i].strip()
+                       
                     amls.append(import_vals)
        
         if err_log:
