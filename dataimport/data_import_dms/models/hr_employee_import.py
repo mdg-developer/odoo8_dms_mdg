@@ -92,7 +92,7 @@ class employee(osv.osv):
         amls = []
 
         for ln in excel_rows:
-
+         
             if not ln or ln and ln[0] and ln[0][0] in ['', '#']:
                 continue
             
@@ -112,6 +112,7 @@ class employee(osv.osv):
                             column_cnt = cnt + 1
                             break
                     for i in range(column_cnt):
+                  
                         # header fields
                         header_field = ln[i].strip()
                         if header_field not in header_fields:
@@ -159,7 +160,7 @@ class employee(osv.osv):
                             
                         
                         
-                                               
+                                          
                     for f in [(name_i,'Name') ,(gender_i,'Gender' ),( employee_no_i,'Employee No'),(passport_i,'Passport No'),(father_name_i,'Father Name'),(date_of_birth_i,'Date of Birth'),(nrc_no_i,'NRC No'),(level_i,'Level'),(dept_i,'Department'),(position_i,'Position'),(joining_date_i,'Joining Date'),(probition_date_i,'Probition Completed Date'),(education_i,'Education'),(nationality_i,'Nationality'),(religion_i,'Religion'),(contact_i,'Contact No'),(address_i,'Address'),(remarks_i,'Remarks'),(salary_i,'Salary')]:
                         if not isinstance(f[0],int):
                             err_log += '\n'+ _("Invalid Excel file, Header '%s' is missing !") % f[1]
@@ -168,7 +169,7 @@ class employee(osv.osv):
             else:
               
                 if ln and ln[0] and ln[0][0] not in ['#','']:
-                    
+                   
                     import_vals = {}
                     if isinstance(ln[name_i], int) or isinstance(ln[name_i], float):
                             import_vals['Name']   = ln[name_i]
@@ -294,6 +295,7 @@ class employee(osv.osv):
             self.write(cr, uid, ids[0], {'state': 'failed'})
         else:
             for aml in amls:
+               
                 con_id = name_id = gender_id = employee_no_id = father_name_id = date_of_birth_id = nrc_no_id = level_id = dept_id = position_id = joining_date = probition_date = education_id = nationality_id = religion = contact = address_id =remarks  = salary = None
                 date_end = join_date =datetime.today().date()
                 per_date = None
@@ -326,7 +328,8 @@ class employee(osv.osv):
                 if aml['Employee No']=='': # Like a fingerprint_idd
                     employee_no=''
                 else:
-                    employee_no=int(aml['Employee No'])
+                    employee_no=str(aml['Employee No']).strip()
+                    employee_no = employee_no.replace('.0', '')
                 
 
                 if name:
