@@ -489,7 +489,7 @@ class employee(osv.osv):
                         remarks='active'#default     
                                  
                 if employee_no=='':
-                    break
+                    continue
                 else:
                     employee_ids =  hr_employee_obj.search(cr,uid,[
                                                                    ('fingerprint_id','=',employee_no)
