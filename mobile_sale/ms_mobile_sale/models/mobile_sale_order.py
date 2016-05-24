@@ -758,7 +758,8 @@ class mobile_sale_order(osv.osv):
     
     def tablet_info(self, cr, uid, tabetId, context=None, **kwargs):    
         cr.execute('''
-            select id as tablet_id,date,create_uid,name,note,mac_address,model,type,storage_day,hotline,sale_team_id 
+            select id as tablet_id,date,create_uid,name,note,mac_address,model,type,storage_day
+			,hotline,sale_team_id,notification_time
             from tablets_information 
             where name = %s
             ''', (tabetId,))
