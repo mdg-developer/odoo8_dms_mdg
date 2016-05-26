@@ -235,17 +235,35 @@ class product(osv.osv):
         else:
             for aml in amls:
                 try:
-                    principal_id = iv_ids = s_ids = r_ids = a_ids = uom_id = description = product_name = category_id = product_id = division_id = group_id = main_group_id = fields_id = costing_method = inventory_valuation = flt = til = tol = None
+                    cat_ids = uom_ids = principal_id = iv_ids = s_ids = r_ids = a_ids = uom_id = description = product_name = category_id = product_id = division_id = group_id = main_group_id = fields_id = costing_method = inventory_valuation = flt = til = tol = None
                     value = {}
-                    cat_name = str(aml['category'])
-                    uom_name = str(aml['uom'])
-                    division_name = str(aml['division'])
-                    group_name = str(aml['group'])
-                    main_group_name = str(aml['main_group'])
-                    default_code = str(aml['default_code'])
-                    principal = str(aml['principal'])
-                    bar_code = str(aml['bar_code'])
-                    product_type = aml['product_type'].lower()
+                    cat_name = uom_name = division_name = group_name = main_group_name = default_code = principal = bar_code = product_type = None
+                    if aml['category']:
+                        cat_name = str(aml['category']).strip()
+                    
+                    if aml['uom']:
+                        uom_name = str(aml['uom']).strip()
+                        
+                    if aml['division']:
+                        division_name = str(aml['division']).strip()
+                        
+                    if aml['group']:
+                        group_name = str(aml['group']).strip()
+                        
+                    if aml['main_group']:
+                        main_group_name = str(aml['main_group']).strip()
+                        
+                    if aml['default_code']:
+                        default_code = str(aml['default_code']).strip()
+                        
+                    if aml['principal']:
+                        principal = str(aml['principal']).strip()
+                        
+                    if aml['bar_code']:
+                        bar_code = str(aml['bar_code']).strip()
+                        
+                    if aml['product_type']:
+                        product_type = str(aml['product_type']).strip()
                     
                     if principal:
                         principal = principal.strip()
@@ -257,58 +275,78 @@ class product(osv.osv):
                             principal_id = data[0][0]
                         else:
                             principal_id = principal_obj.create(cr, uid, principal_val, context=context)
+                            
                     if bar_code:
                         bar_code = bar_code.strip()
                         bar_code = bar_code.replace('.0', '')
+                        
                     if default_code:
                         default_code = default_code.strip()
                         default_code = default_code.replace('.0', '')
+                        
                     if main_group_name:
                         main_group_name = main_group_name.strip()
+                        
                     if group_name:
                         group_name = group_name.strip()
+                        
                     if division_name:
                         division_name = division_name.strip()
+                        
                     if uom_name:
                         uom_name = uom_name.strip()
+                        
                     if cat_name:
                         cat_name = cat_name.strip()   
+                        
                     if aml['name']:
                         product_name = aml['name'].replace(',', ' ')
+                        
                     if aml['description']:
                         description = aml['description'].replace(',', ' ')
+                        
                     if aml['costing_method']:
                         costing_method = str(aml['costing_method']).strip()
                     else:
                         costing_method = None
-                    print ' costing_method', costing_method
+                        
+                    
                     if aml['cost_price']:
                         cost_price = float(aml['cost_price'])
                     else:
                         cost_price = 0.0
-                    print ' cost_price', cost_price
+                    
                     if aml['inventory_valuation']:
                         inventory_valuation = str(aml['inventory_valuation']).strip()
                     else:
                         inventory_valuation = None
-                    print ' inventory_valuation', inventory_valuation
+                        
+                    
                     if aml['full_lots_traceability']:
                         full_lots_traceability = str(aml['full_lots_traceability']).strip()
                     else:
                         full_lots_traceability = None
-                    print ' full_lots_traceability', full_lots_traceability
+                        
+                    
                     if aml['track_incoming_lots']:
                         track_incoming_lots = str(aml['track_incoming_lots']).strip()
                     else:
                         track_incoming_lots = None
-                    print ' track_incoming_lots', track_incoming_lots
+                        
+                    
                     if aml['track_outgoing_lots']:
                         track_outgoing_lots = str(aml['track_outgoing_lots']).strip()
                     else:
                         track_outgoing_lots = None
-                    print ' track_outgoing_lots', track_outgoing_lots
+                        
+                    
                     if uom_name:
-                        uom_ids = uom_obj.search(cr, uid, [('name', '=', uom_name)])
+                        
+                        cr.execute("""select id from product_uom where lower(name) = %s """ , (uom_name.lower(),))
+                        data = cr.fetchall()
+                        if data: 
+                            uom_ids = data[0][0]
+                            
                         if not uom_ids:
                             uom_value = {
                                       'name':uom_name,
@@ -319,53 +357,68 @@ class product(osv.osv):
                                       }
                             uom_id = uom_obj.create(cr, uid, uom_value, context)
                         else:
-                            uom_id = uom_ids[0]                    
+                            uom_id = uom_ids            
                     # Right to Here#
                     if cat_name:
-                        cat_ids = category_obj.search(cr, uid, [('name', '=', cat_name)])
+                        
+                        cr.execute("""select id from product_category where lower(name) = %s """, (cat_name.lower(),))
+                        data = cr.fetchall()
+                        if data:
+                            cat_ids = data[0][0]
+                            
                         if not cat_ids:
                             cat_value = {
                                        'name':cat_name,
                                        'type':'normal',
                                        'parent_id':parent_cat_id
                                        }
-                            print 'category ', cat_value
                             category_id = category_obj.create(cr, uid, cat_value, context)    
-                            print ' category_id', category_id
                         else:
-                            category_id = cat_ids[0]             
+                            category_id = cat_ids       
+                            
                     if division_name:
-                        division_ids = product_division_obj.search(cr, uid, [('name', '=', division_name)])
+                        
+                        cr.execute("""select id from product_division where lower(name)= %s """, (division_name.lower(),))
+                        data = cr.fetchall()
+                        if data:
+                            division_ids = data[0][0]
                         if not division_ids:
                             division_value = {
                                       'name':division_name,
                                       }
                             division_id = product_division_obj.create(cr, uid, division_value, context)
                         else:
-                            division_id = division_ids[0]                 
-                    print ' division_id', division_id
-                    print 'group name', group_name
+                            division_id = division_ids                
+                            
                     if group_name:
-                        group_ids = product_group_obj.search(cr, uid, [('name', '=', group_name)])
+                        
+                        cr.execute(""" select id from product_group where  lower(name) = %s """ , (group_name.lower(),))
+                        data = cr.fetchall()
+                        if data:
+                            group_ids = data[0][0]
                         if not group_ids:
                             group_value = {
                                        'name':group_name,
                                        }
                             group_id = product_group_obj.create(cr, uid, group_value, context)
                         else:
-                            group_id = group_ids[0]                   
-                    print ' group_id', group_id
-                    print 'main group', main_group_name
+                            group_id = group_ids      
+                                    
+                    
                     if main_group_name:
-                        main_group_ids = product_maingroup_obj.search(cr, uid, [('name', '=', main_group_name)])
+                        
+                        cr.execute("""select id from product_maingroup where lower(name) = %s """, (main_group_name.lower(),))
+                        data = cr.fetchall()
+                        if data:
+                            main_group_ids = data[0][0]
+                            
                         if not main_group_ids:
                             maingroup_value = {
                                        'name':main_group_name,
                                        }
                             main_group_id = product_maingroup_obj.create(cr, uid, maingroup_value, context)
                         else:
-                            main_group_id = main_group_ids[0]            
-                    print ' main_group_id', main_group_id
+                            main_group_id = main_group_ids   
     
                         
                     if product_type:
@@ -378,26 +431,24 @@ class product(osv.osv):
                         elif product_type == 'service':
                             value = {
                                    'type':'service'}       
-                    print ' product_type', product_type
                         
                     if full_lots_traceability:
                         if full_lots_traceability.lower() == 'true' or full_lots_traceability.lower() == '1':
                             flt = True
                         elif full_lots_traceability.lower() == 'false' or full_lots_traceability.lower() == '0':
                             flt = False
-                    print ' full_lots_traceability', flt
+                    
                     if track_incoming_lots:
                         if track_incoming_lots.lower() == 'true' or track_incoming_lots.lower() == '1':
                             til = True
                         elif track_incoming_lots.lower() == 'false' or track_incoming_lots.lower() == '0':
                             til = False
-                    print ' track_incoming_lots', til
+                    
                     if track_outgoing_lots:
                         if track_outgoing_lots.lower() == 'true' or track_outgoing_lots.lower() == '1':
                             tol = True
                         elif track_outgoing_lots.lower() == 'false' or track_outgoing_lots.lower() == '0':
                             tol = False
-                    print ' track_outgoing_lots', tol
                         
                     value = {
                              'uom_id':uom_id,
@@ -417,26 +468,26 @@ class product(osv.osv):
                              'track_outgoing':tol,
                              'product_principal_ids':principal_id
                              }
-                    print 'value >>>', value
+                    
                     product_ids = product_template_obj.search(cr, uid, [('default_code', '=', default_code)
                                                                      ])
-                    print 'product id s>>>>>', product_ids
                     if not product_ids:
                         product_id = product_template_obj.create(cr, uid, value, context=context)
                     else:
                         product_id = product_template_obj.write(cr, uid, product_ids[0], value)
                         product_id = product_ids[0]
                     
-                    print 'product id s>>>>>', product_ids
                     res_id = 'product.template,'
                     res_id += str(product_id)
                     con = None
+                    
                     if product_id:
                         if uom_id:
                             cr.execute('select product_template_id from product_template_product_uom_rel where product_template_id = %s and product_uom_id = %s', (product_id, uom_id,))
                             con = cr.fetchall()
                             if len(con) <= 0:
                                 cr.execute('insert into product_template_product_uom_rel(product_template_id,product_uom_id) values(%s,%s)', (product_id, uom_id,))
+                                
                         if costing_method:  # may be standard price, may be real price, may be average price
                             if costing_method.lower() == 'standard price':
                                 fields_id = ir_model_fields_obj.search(cr, uid, [('name', '=', 'standard_price'), ('model', '=', 'product.template')])
@@ -468,6 +519,7 @@ class product(osv.osv):
                                     else:
                                         ir_property_obj.write(cr, uid, s_ids[0], res, context=context)
                                 fields_id = ir_model_fields_obj.search(cr, uid, [('name', '=', 'cost_method'), ('model', '=', 'product.template')])
+                                
                                 if fields_id:
                                     res = {'name':'cost_method',
                                            'value_text':'real',
@@ -480,6 +532,7 @@ class product(osv.osv):
                                         ir_property_obj.create(cr, uid, res, context)
                                     else:
                                         ir_property_obj.write(cr, uid, r_ids[0], res, context=context)     
+                                        
                             elif costing_method.lower() == 'average price':
                                 fields_id = ir_model_fields_obj.search(cr, uid, [('name', '=', 'standard_price'), ('model', '=', 'product.template')])
                                 if fields_id:
@@ -494,6 +547,7 @@ class product(osv.osv):
                                         ir_property_obj.create(cr, uid, res, context)
                                     else:
                                         ir_property_obj.write(cr, uid, s_ids[0], res)
+                                        
                                 fields_id = ir_model_fields_obj.search(cr, uid, [('name', '=', 'cost_method'), ('model', '=', 'product.template')])
                                 if fields_id:
                                     res = {'name':'cost_method',
@@ -502,7 +556,9 @@ class product(osv.osv):
                                            'fields_id':fields_id[0],
                                            'res_id':res_id
                                          , 'company_id':company_id}
+                                    
                                     a_ids = ir_property_obj.search(cr, uid, ['&', ('res_id', '=', res_id), ('name', '=', 'cost_method'), ('fields_id', '=', fields_id[0]), ('value_text', '=', 'average')])
+                                    
                                     if not a_ids:
                                         ir_property_obj.create(cr, uid, res, context)
                                     else:
@@ -523,6 +579,7 @@ class product(osv.osv):
                                         ir_property_obj.create(cr, uid, res, context)
                                     else:
                                         ir_property_obj.write(cr, uid, iv_ids[0], res, context=context)     
+                                        
                             else:
                                 fields_id = ir_model_fields_obj.search(cr, uid, ['&', ('name', '=', 'valuation'), ('model', '=', 'product.template')])
                                 iv_ids = ir_property_obj.search(cr, uid, ['&', ('res_id', '=', res_id), ('name', '=', 'valuation'), ('fields_id', '=', fields_id[0]), ('value_text', '=', 'real_time')])
