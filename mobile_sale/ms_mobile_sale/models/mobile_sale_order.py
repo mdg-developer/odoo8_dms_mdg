@@ -90,14 +90,14 @@ class mobile_sale_order(osv.osv):
             
             if sale_order:
                 for so in sale_order:
-                    print 'Sale Man Id', so['user_id']
-                    print 'Sale Void', so['void_flag']
-                    cursor.execute('select id From res_users where partner_id  = %s ', (so['user_id'],))
-                    data = cursor.fetchall()
-                    if data:
-                        saleManId = data[0][0]
-                    else:
-                        saleManId = None
+                   # print 'Sale Man Id', so['user_id']
+                   # print 'Sale Void', so['void_flag']
+                   # cursor.execute('select id From res_users where partner_id  = %s ', (so['user_id'],))
+                   # data = cursor.fetchall()
+                    #if data:
+                    #    saleManId = data[0][0]
+                  #  else:
+                     #   saleManId = None
                     
                     cursor.execute('select id From outlettype_outlettype where name  = %s ', (so['outlet_type'],))
                     data = cursor.fetchall()
@@ -722,7 +722,7 @@ class mobile_sale_order(osv.osv):
 #         cr.execute('''            
 #             select p.id,p.date,p.sale_team,p.name,p.main_group from sale_plan_day p
 #             join  crm_case_section c on p.sale_team=c.id
-#             where p.sale_team=%s
+#             where p.sale_team=%s and p.active = true
 #             ''', (section_id, ))        
         cr.execute('''            
             select p.id,p.date,p.sale_team,p.name,p.principal from sale_plan_day p
@@ -737,7 +737,7 @@ class mobile_sale_order(osv.osv):
         cr.execute('''            
             select p.id,p.date,p.sale_team,p.name,p.principal from sale_plan_trip p
             join  crm_case_section c on p.sale_team=c.id
-            where p.sale_team=%s
+            where p.sale_team=%s and p.active = true
             ''', (section_id,))
         datas = cr.fetchall()
         cr.execute
