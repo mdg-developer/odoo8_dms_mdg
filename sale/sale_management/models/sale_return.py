@@ -47,7 +47,7 @@ class sales_return(osv.osv):
                 'qty' : fields.function(get_qty,string='Qty', readonly=True, store=True,type='integer'),
                 'amount' : fields.function(get_total, string='Amount', readonly=True, store=True),
                 'notes':fields.text('Notes'),
-                'user_id': fields.many2one('res.users', 'Saleman Name', help='The internal user that is in charge of communicating with this contact if any.'),
+                'user_id': fields.many2one('res.users', 'Salesman Name', help='The internal user that is in charge of communicating with this contact if any.'),
                 'return_line' : fields.one2many('sales.return.line', 'return_id', string='Sale Return Line', copy=True)                
                 }
 sales_return()

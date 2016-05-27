@@ -163,7 +163,7 @@
 							context="{'group_by':'tablet_id'}" />
 						<filter name="date" string="Order Date" domain="[]"
 							context="{'group_by':'date'}" />
-						<filter name="user_id" string="Saleman" domain="[]"
+						<filter name="user_id" string="Salesman" domain="[]"
 							context="{'group_by':'user_id'}" />
 						<filter name="sale_team" string="SaleTeam" domain="[]"
 							context="{'group_by':'sale_team'}" />

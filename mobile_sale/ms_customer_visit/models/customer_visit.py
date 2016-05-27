@@ -16,7 +16,7 @@ class customer_visit(osv.osv):
     _columns = {       
         'customer_id':fields.many2one('res.partner', 'Customer', domain="[('customer','=',True)]"),
         'customer_code':fields.char('Customer Code'),
-        'user_id':fields.many2one('res.users', 'Saleman Name'),
+        'user_id':fields.many2one('res.users', 'Salesman Name'),
         'sale_plan_day_id':fields.many2one('sale.plan.day', 'Sale Plan Day'),
         'sale_plan_trip_id':fields.many2one('sale.plan.trip', 'Sale Plan Trip'),
         'tablet_id':fields.many2one('tablets.information', 'Tablet ID'),

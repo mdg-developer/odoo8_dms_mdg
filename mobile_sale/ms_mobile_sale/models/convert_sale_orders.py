@@ -8,7 +8,7 @@ class convert_sale_orders(osv.osv):
         'partner_id':fields.many2one('res.partner', 'Customer'),
         'customer_code':fields.char('Customer Code'),
         'sale_plan_name':fields.char('Sale Plan Name'),
-        'user_id':fields.many2one('res.users', 'Saleman Name'),
+        'user_id':fields.many2one('res.users', 'Salesman Name'),
         'mso_latitude':fields.float('Geo Latitude'),
         'mso_longitude':fields.float('Geo Longitude'),
         'amount_total':fields.float('Total Amount'),

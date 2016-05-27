@@ -12,7 +12,7 @@ class mobile_sale_order(osv.osv):
         'partner_id':fields.many2one('res.partner', 'Customer'),
         'customer_code':fields.char('Customer Code'),
         'outlet_type':fields.many2one('outlettype.outlettype', 'Outlet Type'),
-        'user_id':fields.many2one('res.users', 'Saleman Name'),
+        'user_id':fields.many2one('res.users', 'Salesman Name'),
         'sale_plan_name':fields.char('Sale Plan Name'),
         'mso_latitude':fields.float('Geo Latitude'),
         'mso_longitude':fields.float('Geo Longitude'),

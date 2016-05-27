@@ -204,7 +204,7 @@
 
 
 		<record id="action_moble_sale_order" model="ir.actions.act_window">
-			<field name="name">Mobile Sale Orders</field>
+			<field name="name">Direct Sale Orders</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">mobile.sale.order</field>
 

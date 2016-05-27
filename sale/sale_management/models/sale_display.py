@@ -16,7 +16,7 @@ class mobile_sale_display(osv.osv):
         'description':fields.text('Description'),
         'sub_group':fields.many2one('product.group', 'Sub Group'),
         'display_line':fields.one2many('sales.display.line', 'display_ids', string='Sale Display Line', copy=True),
-        'user_id': fields.many2one('res.users', 'Saleman Name', help='The internal user that is in charge of communicating with this contact if any.'),        
+        'user_id': fields.many2one('res.users', 'Salesman Name', help='The internal user that is in charge of communicating with this contact if any.'),        
   }
 mobile_sale_display()
 
