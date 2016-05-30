@@ -537,7 +537,7 @@ class partner(osv.osv):
                     else:
                         partner_obj.write(cr, uid, partner_id, value)
                 else:
-                    error_log += str(customer_code) + ' | '
-                print 'this is error log >>> ', error_log
+                    error_log += ' ' + str(customer_code) + '\n'
+                
             self.write(cr, uid, ids[0], {'state': 'completed', 'note':error_log})
         print amls
