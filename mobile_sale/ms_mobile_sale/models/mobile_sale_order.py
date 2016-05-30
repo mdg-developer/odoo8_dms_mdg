@@ -682,15 +682,32 @@ class mobile_sale_order(osv.osv):
         cr.execute
         return datas
     
-    def get_product_uoms(self, cr, uid , context=None, **kwargs):
-        cr.execute('''
-                    select distinct pu.id as uom_id,pu.name as uom_name ,1/pu.factor as ratio,pur.product_template_id as  product_template_id
-                from product_uom pu , product_template_product_uom_rel pur , product_template pt,product_product pp
+   # def get_product_uoms(self, cr, uid , context=None, **kwargs):
+    #    cr.execute('''
+     #               select distinct pu.id as uom_id,pu.name as uom_name ,1/pu.factor as ratio,pur.product_template_id as  product_template_id
+      #          from product_uom pu , product_template_product_uom_rel pur , product_template pt,product_product pp
+       #         where pt.id = pur.product_template_id
+        #        and pu.id = pur.product_uom_id''')
+        #datas = cr.fetchall()
+        #cr.execute
+        #return datas
+    def get_product_uoms(self, cr, uid , saleteam_id, context=None, **kwargs):
+        cr.execute('''     
+                select distinct uom_id,uom_name,ratio,product_template_id from(
+                select  pu.id as uom_id,pu.name as uom_name ,1/pu.factor as ratio,
+                pur.product_template_id as  product_template_id
+                from product_uom pu , product_template_product_uom_rel pur , product_template pt,
+                product_product pp,
+                crm_case_section_product_product_rel crm
                 where pt.id = pur.product_template_id
-                and pu.id = pur.product_uom_id''')
+                and crm.product_product_id = pp.id
+                and pu.id = pur.product_uom_id
+                and crm.crm_case_section_id = %s
+                )A''' , (saleteam_id,))
         datas = cr.fetchall()
         cr.execute
         return datas
+
     # Get Res Partner and Res Partner Category res_partner_res_partner_category_rel
     def get_res_partner_category_datas(self, cr, uid , context=None, **kwargs):
         cr.execute('''
@@ -727,7 +744,7 @@ class mobile_sale_order(osv.osv):
         cr.execute('''            
             select p.id,p.date,p.sale_team,p.name,p.principal from sale_plan_day p
             join  crm_case_section c on p.sale_team=c.id
-            where p.sale_team=%s
+            where p.sale_team=%s and p.active = true
             ''', (section_id,))
         datas = cr.fetchall()
         cr.execute      
