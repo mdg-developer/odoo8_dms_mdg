@@ -8,8 +8,7 @@ from datetime import datetime,timedelta
 from dateutil.relativedelta import relativedelta
 import base64
 import logging
-from Image import NONE
-from _mysql import NULL
+
 _logger = logging.getLogger(__name__)
 header_fields = ['Name','Passport No','Gender','Employee No','Father Name','Date of Birth', 'NRC No', 'Level', 'Department',
     'Position', 'Joining Date', 'Probition Completed Date','Education'
