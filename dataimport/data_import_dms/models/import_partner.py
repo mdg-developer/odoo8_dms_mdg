@@ -239,43 +239,94 @@ class partner(osv.osv):
             self.write(cr, uid, ids[0], {'note': err_log})
             self.write(cr, uid, ids[0], {'state': 'error'})
         else:
+            error_log = ''
             for aml in amls:
-                title_id = country_id = sale_channel_ids = township_ids = temp_id = demarcation_id = class_id = township_id = customize_id = sale_channel_id = branch_ids = city_id = sale_channel_idcity_id = shop_id = state_ids = shop_ids = state_id = partner_id = demarcation_ids = class_ids = township_id = partner_ids = None
+                title_id = branch_id = country_id = sale_channel_ids = township_ids = temp_id = demarcation_id = class_id = township_id = customize_id = sale_channel_id = branch_ids = city_id = sale_channel_idcity_id = shop_id = state_ids = shop_ids = state_id = partner_id = demarcation_ids = class_ids = township_id = partner_ids = None
                 value = []
+                website = job_position = old_code = email = fax = title = region = postal_code = class_name = customer_code = shop_name = shop_type = address = street = territory = township = None
+                village = phone = brand = contact = city = sale_channel = branch_code = demarcation = ka_tha = display = class_val = None
                 
-                website = str(aml['website'])
-                print 'website', website
-                job_position = str(aml['job position'])
-                print 'job_position', job_position
-                old_code = str(aml['old code'])
-                print 'old_code ', old_code
-                email = str(aml['email'])
-                print 'email ', email
-                fax = str(aml['fax'])
-                print 'fax', fax
                 
-                title = str(aml['title'])
-                region = str(aml['region'])
-                postal_code = str(aml['postal code'])
-                class_name = str(aml['class'])
-                customer_code = str(aml['outlet id code'])  # #in this case i check the customer id with the customer_code not to be duplicated.i make that there's not contained customer_code ,I fill this blank with customer name + count++
-                shop_name = str(aml['outlet name'])
-                shop_type = str(aml['outlet type'])
-                address = str(aml['address'])
-                street = str(aml['ward'])
-                territory = str(aml['district'])
-                township = str(aml['township'])
-                village = str(aml['village/ village group'])
-                phone = str(aml['telephone'])
-                brand = str(aml['selling brand'])
-                contact = str(aml['contact person'])
-                city = str(aml['city/town'])
-                sale_channel = str(aml['sale channel'])
-                branch_code = str(aml['branch code'])
-                demarcation = str(aml['demarcation code'])
-                ka_tha = str(aml['ka_tha'])
-                display = str(aml['display'])
-                class_val = str(aml['class'])
+                if aml['website']:
+                    website = str(aml['website'])
+                
+                if aml['job position']:
+                    job_position = str(aml['job position'])
+                
+                if aml['old code']:
+                    old_code = str(aml['old code'])
+                    
+                if aml['email']:
+                    email = str(aml['email'])
+                    
+                if aml['fax']:
+                    fax = str(aml['fax'])
+                
+                if aml['title']:
+                    title = str(aml['title'])
+                    
+                if aml['region']:
+                    region = str(aml['region'])
+                
+                if aml['postal code']:
+                    postal_code = str(aml['postal code'])
+                    
+                if aml['class']:
+                    class_name = str(aml['class'])
+                    
+                if aml['outlet id code']:
+                    customer_code = str(aml['outlet id code'])  # #in this case i check the customer id with the customer_code not to be duplicated.i make that there's not contained customer_code ,I fill this blank with customer name + count++
+
+                if aml['outlet name']:
+                    shop_name = str(aml['outlet name'])
+                
+                if aml['outlet type']:
+                    shop_type = str(aml['outlet type'])
+                    
+                if  aml['address']:
+                    address = str(aml['address'])
+                    
+                if aml['ward']:
+                    street = str(aml['ward'])
+                    
+                if aml['district']:
+                    territory = str(aml['district'])
+                    
+                if aml['township']:
+                    township = str(aml['township'])
+                    
+                if aml['village/ village group']:
+                    village = str(aml['village/ village group'])
+                    
+                if aml['telephone']:
+                    phone = str(aml['telephone'])
+                    
+                if aml['selling brand']:
+                    brand = str(aml['selling brand'])
+                    
+                if aml['contact person']:
+                    contact = str(aml['contact person'])
+                    
+                if aml['city/town']:
+                    city = str(aml['city/town'])
+                    
+                if aml['sale channel']:
+                    sale_channel = str(aml['sale channel'])
+                    
+                if aml['branch code']:
+                    branch_code = str(aml['branch code'])
+                    
+                if aml['demarcation code']:
+                    demarcation = str(aml['demarcation code'])
+                    
+                if aml['ka_tha']:
+                    ka_tha = str(aml['ka_tha'])
+                    
+                if aml['display']:
+                    display = str(aml['display'])
+                
+                if aml['class']:
+                    class_val = str(aml['class'])
                 
                 if website:
                     website = website.strip()
@@ -302,13 +353,15 @@ class partner(osv.osv):
                         title_id = data[0][0]
                     else:
                         title_id = title_obj.create(cr, uid, title_rel, context=context)
-                if not country_id:
+                        
+                if not country_id:  # no need to create or update country
                     cr.execute("""select id from res_country where lower(name) like %s""", ('myanmar',))
                     data = cr.fetchall()
                     if data:
                         country_id = data[0][0]
                     else:
                         country_id = None
+                        
                 if display:
                     display = display.strip()
                 if ka_tha:
@@ -316,16 +369,14 @@ class partner(osv.osv):
                 if branch_code:
                     branch_code = branch_code.strip()
                     branch_code = branch_code.replace('.0', '')
-                if city:
+                    
+                if city:  # no need to create or update city
                     city = city.strip()
                     cr.execute("""select id from res_city where lower(name) like %s """, (city.lower(),))
                     data = cr.fetchall()
-                    city_val = {'name':city, 'code':city.upper()}
                     if data:
                         city_id = data[0][0]
-                        city_obj.write(cr, uid, city_id, city_val, context=context)
-                    else:
-                        city_id = city_obj.create(cr, uid, city_val, context=context)
+                        
                 if contact:
                     contact = contact.strip()
                 if brand:
@@ -333,35 +384,41 @@ class partner(osv.osv):
                 if phone:
                     phone = phone.strip()
                     phone = phone.replace('.0', '')
+                    
                 if village:
                     village = village.strip()
-                if township:
+                    
+                if township:  # no need to update or create township
                     township = township.strip()
-                    cr.execute("""select id from res_township where lower(name) like %s""", (township.lower(),))
+                    cr.execute("""select id from res_township where lower(name) = %s""", (township.lower(),))
                     data = cr.fetchall()
-                    township_val = {'name':township, 'code':township.upper(), 'city':city_id}
+                    
                     if data:
                         township_id = data[0][0]
-                        township_obj.write(cr, uid, township_id, township_val, context=context)
-                    else:
-                        township_ids = township_obj.create(cr, uid, township_val, context=context)
-                        township_id = township_ids
+                        
                 if territory:
                     territory = territory.strip()
+                    
                 if street:
                     street = street.strip()
+                    
                 if address:
                     address = address.strip()
+                    
                 if shop_name:
                     shop_name = shop_name.strip()
                     shop_name = shop_name.replace('.0', '')
+                    
                 if customer_code:
                     customer_code = customer_code.strip()
+                    
                 if class_name:
                     class_name = class_name.strip()
+                    
                 if postal_code:
                     postal_code = postal_code.strip()
-                if class_val:
+                    
+                if class_val:  # no need to update
                     class_val = class_val.strip()
                     cr.execute("""select id from sale_class where lower(name) like %s""", (class_val.lower(),))
                     data = cr.fetchall()
@@ -371,10 +428,9 @@ class partner(osv.osv):
                     if not class_id:
                         class_ids = class_obj.create(cr, uid, class_res, context)
                     else:
-                        class_obj.write(cr, uid, class_id, class_res)
                         class_ids = class_id
                         
-                if demarcation:
+                if demarcation:  # no need to update
                     demarcation = demarcation.strip()
                     cr.execute("""select id from sale_demarcation where lower(name) like %s""", (demarcation.lower(),))
                     data = cr.fetchall()
@@ -384,59 +440,60 @@ class partner(osv.osv):
                     if not demarcation_id:
                         demarcation_ids = demarcation_obj.create(cr, uid, demarcation_res, context)
                     else:
-                        demarcation_obj.write(cr, uid, demarcation_id, demarcation_res)
                         demarcation_ids = demarcation_id
                         
-                if len(sale_channel) > 0:
-                    sale_channel = sale_channel.strip()
-                    cr.execute("""select id from sale_channel where lower(name) like %s""", (sale_channel.lower(),))
-                    data = cr.fetchall()
-                    if data:
-                        sale_channel_id = data[0][0]
-                    sale_channel = {
-                                      'name':sale_channel, 'code':sale_channel.upper()}
-                    if not sale_channel_id :
+                if sale_channel:
+                    if len(sale_channel) > 0:  # no need to update
+                        sale_channel = sale_channel.strip()
+                        cr.execute("""select id from sale_channel where lower(name) like %s""", (sale_channel.lower(),))
+                        data = cr.fetchall()
+                        if data:
+                            sale_channel_id = data[0][0]
+                        sale_channel = {
+                                          'name':sale_channel, 'code':sale_channel.upper()}
+                        if not sale_channel_id :
+                            sale_channel_ids = sale_channel_obj.create(cr, uid, sale_channel, context)
+                        else:
+                           
+                            sale_channel_ids = sale_channel_id
                         
-                        sale_channel_ids = sale_channel_obj.create(cr, uid, sale_channel, context)
-                    else:
-                        sale_channel_obj.write(cr, uid, sale_channel_id, sale_channel)
-                        sale_channel_ids = sale_channel_id
-                if region:
+                if region:  # no need to update or create
                     region = region.strip()
                     cr.execute("""select id from res_country_state where lower(name) like %s""", (region.lower(),))
                     data = cr.fetchall()
-                    state_res = {
-                               'name':region,
-                               'code':region,
-                               'country_id':country_id}
                     if data:
                         state_ids = data[0][0]
-                        state_obj.write(cr, uid, state_id, state_res, context=context)
-                    else:
-                        state_ids = state_obj.create(cr, uid, state_res, context)
-                if branch_code:
+                        
+                if branch_code:  # no need to update
+                    
                     branch_code = branch_code.strip()
-                    branch_id = branch_obj.search(cr, uid, [('name', '=', branch_code)])
-                    branch_res = {'name':branch_code, 'branch_code':branch_code}
+                    cr.execute("""select id from sale_branch where lower(branch_code) = %s """ , (branch_code.lower(),))
+                    data = cr.fetchall()
+                    if data:
+                        branch_id = data[0][0]
+                        
+                    branch_res = {'branch_code':branch_code, 'name':branch_code}
                     if not branch_id:
                         branch_ids = branch_obj.create(cr, uid, branch_res, context)
                     else:
-                        branch_obj.write(cr, uid, branch_id[0], branch_res)
-                        branch_ids = branch_id[0]
-                if len(shop_type) > 0:
-                    shop_type = shop_type.strip()
-                    shop_id = outlet_obj.search(cr, uid, [('name', '=', shop_type)])
-                    shop_res = {
-                                  'name':shop_type}
-                    if not shop_id:
-
-                        shop_ids = outlet_obj.create(cr, uid, shop_res, context)
-                    else:
-                        shop_ids = outlet_obj.write(cr, uid, shop_id[0], shop_res)
-                        shop_ids = shop_id[0]
+                        branch_ids = branch_id
                         
                         
-                
+                if shop_type:        
+                    if len(shop_type) > 0:  # no need to update
+                        shop_type = shop_type.strip()
+                        cr.execute("""select id from outlettype_outlettype where lower(name) = %s """, (shop_type.lower(),))
+                        data = cr.fetchall()
+                        if data:
+                            shop_id = data[0][0]
+                        shop_res = {
+                                      'name':shop_type}
+                        if not shop_id:
+    
+                            shop_ids = outlet_obj.create(cr, uid, shop_res, context)
+                        else:
+                            shop_ids = shop_id
+                        
                 value = {
                        'customer_code':customer_code,
                        'shop_name':shop_name,
@@ -479,5 +536,8 @@ class partner(osv.osv):
                         partner_obj.create(cr, uid, value, context)
                     else:
                         partner_obj.write(cr, uid, partner_id, value)
-            self.write(cr, uid, ids[0], {'state': 'completed'})
+                else:
+                    error_log += str(customer_code) + ' | '
+                print 'this is error log >>> ', error_log
+            self.write(cr, uid, ids[0], {'state': 'completed', 'note':error_log})
         print amls
