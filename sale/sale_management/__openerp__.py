@@ -41,7 +41,9 @@ Sale Management
         'views/sale_team_view.xml',
         'views/sale_order_view.xml',
         'views/sale_return_view.xml',
-        'views/sale_display_view.xml'
+        'views/sale_display_view.xml',
+		'views/report_saleorder.xml',
+         'views/report_invoice.xml'
 
     ],
     'installable': True,
