@@ -174,7 +174,7 @@
 			<field name="name">Customer Visit Tree</field>
 			<field name="model">customer.visit</field>
 			<field name="arch" type="xml">
-				<tree string="Customer Visit">
+				<tree default_order="date desc"  string="Customer Visit">
 					<field name="date" />
 					<field name="customer_id" />
 					<field name="customer_code" />
