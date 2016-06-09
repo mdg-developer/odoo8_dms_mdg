@@ -59,7 +59,8 @@ ACTION_TYPES = [
      ('prod_multi_uom_get_x', _('Buy Multi UOM get X free')),
     ('fix_qty_on_product_code', _('FOC Products on Qty')),
     ('prod_foc_smallest_unitprice', _('FOC Products on smallest Unitprice')),
-    ('foc_any_product', _('FOC Any Products')),   	 
+    ('foc_any_product', _('FOC Any Products')),
+	('prod_fix_amt_disc_subtotal', _('Product Fix Amount on Sub Total')),
 ]
 
 
@@ -1353,7 +1354,14 @@ class PromotionsRulesActions(osv.Model):
                               'arguments':"0.00",
                               }
                    }
-        		   
+        
+		if action_type in ['prod_fix_amt_disc_subtotal', ] :
+            return{
+                   'value' : {
+                              'product_code':"'product_code'",
+                              'arguments':"1",
+                              }
+                   }		
         # Finally if nothing works
         return {}
     
