@@ -126,7 +126,8 @@ class pre_sale_order(osv.osv):
         saleOrderObj = self.pool.get('sale.order')
         saleOrderLineObj = self.pool.get('sale.order.line')
         
-        so_id = pricelist_id = None
+        so_id = pricelist_id = sale_foc = productName = None
+        priceUnit = 0.0
         saleOrderResult = {}
         detailResult = {}
         if ids:
@@ -160,11 +161,22 @@ class pre_sale_order(osv.osv):
                     if so_id and preObj_ids.order_line:
                         for line_id in preObj_ids.order_line:
                             if line_id:
+                                
+                                if line_id.foc == True:
+                                    sale_foc = line_id.foc
+                                    priceUnit = 0
+                                    productName = 'FOC'
+                                else:
+                                    sale_foc = line_id.foc
+                                    priceUnit = line_id.price_unit
+                                    productName = line_id.product_id.name
+                                    
                                 detailResult = {'order_id':so_id,
                                                         'product_id':line_id.product_id.id,
-                                                        'name':line_id.product_id.name,
+                                                        'name':productName,
                                                         'product_uom_qty':line_id.product_uos_qty,
-                                                        'price_unit':line_id.price_unit,
+                                                        'sale_foc':sale_foc,
+                                                        'price_unit':priceUnit,
                                                         }   
                                 saleOrderLineObj.create(cr, uid, detailResult, context=context)
    
