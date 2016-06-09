@@ -38,6 +38,8 @@
     """,
     'data': [
         'views/rule_view.xml',
+	 'views/sale_view.xml',
+
         #odoo8 need to include  sale_view
                 ],
     'installable': True,

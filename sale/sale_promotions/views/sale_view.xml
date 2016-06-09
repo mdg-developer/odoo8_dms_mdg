@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record model="ir.ui.view" id="view_sale_promo_form">
+	
+        <!--<record model="ir.ui.view" id="view_sale_promo_form">
             <field name="name">sale.order.promo.form</field>
             <field name="model">sale.order</field>
             <field name="type">form</field>
@@ -11,7 +12,9 @@
                     <field name='coupon_code' attrs="{'readonly':[('state','!=','draft')]}" />
                 </xpath>
             </field>
-        </record>
+        </record> -->
+		
+		
 		<record model="ir.ui.view" id="view_sale_promo_form2">
             <field name="name">sale.order.promo.form2</field>
             <field name="model">sale.order</field>
