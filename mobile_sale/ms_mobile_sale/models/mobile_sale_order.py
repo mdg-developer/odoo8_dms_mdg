@@ -804,11 +804,11 @@ class mobile_sale_order(osv.osv):
     
     def check_account(self, cr, uid, login, pwd, sale_team_id, context=None, **kwargs):
         cr.execute('''
-            select c.name as TabletName,D.userid,D.login,D.password from(
+            select c.name as TabletName,D.userid,D.login,D.login_password from(
             select name,sale_team_id from tablets_information
             )C inner join(
-            select A.userid,A.login,A.password,B.id as saleTeamId from(
-            select id as userid,login,password from res_users
+            select A.userid,A.login,A.login_password,B.id as saleTeamId from(
+            select id as userid,login,login_password from res_users
             )A inner join(
             select DISTINCT cr.id as id,cr.complete_name,cr.warehouse_id,cr.name,sm.member_id,cr.code,cr.location_id
                     from crm_case_section cr, sale_member_rel sm,crm_case_section_product_product_rel pr
@@ -817,7 +817,7 @@ class mobile_sale_order(osv.osv):
             )D on c.sale_team_id = D.saleTeamId
             where c.name = %s
             and D.login= %s
-            and d.password = %s
+            and d.login_password = crypt(%s, login_password)
             ''', (sale_team_id, login, pwd,))
         datas = cr.fetchall()            
         return datas  
