@@ -147,11 +147,18 @@ class mobile_sale_order(osv.osv):
                                     productId = data[0][0]
                                 else:
                                     productId = None
+								
+                                if sol['price_unit'] == '0':
+                                    foc_val = True
+                                else:
+                                    foc_val = False
+
                                 mso_line_res = {                                                            
                                   'order_id':s_order_id,
                                   'product_id':productId,
                                   'price_unit':sol['price_unit'],
                                   'product_uos_qty':sol['product_uos_qty'],
+							      'foc': foc_val,
                                   'discount':sol['discount'],
                                   'sub_total':sol['sub_total'],
                                 }
