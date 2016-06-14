@@ -1,4 +1,6 @@
 from openerp.osv import fields, osv
+from openerp.osv import orm
+from openerp import _
 from datetime import datetime
 import ast
 
@@ -94,7 +96,7 @@ class mobile_sale_order(osv.osv):
                    # print 'Sale Void', so['void_flag']
                    # cursor.execute('select id From res_users where partner_id  = %s ', (so['user_id'],))
                    # data = cursor.fetchall()
-                    #if data:
+                    # if data:
                     #    saleManId = data[0][0]
                   #  else:
                      #   saleManId = None
@@ -160,6 +162,7 @@ class mobile_sale_order(osv.osv):
                                   'product_uos_qty':sol['product_uos_qty'],
 							      'foc': foc_val,
                                   'discount':sol['discount'],
+                                  'discount_amt':sol['discount_amt'],
                                   'sub_total':sol['sub_total'],
                                 }
                                 mobile_sale_order_line_obj.create(cursor, user, mso_line_res, context=context) 
@@ -409,7 +412,7 @@ class mobile_sale_order(osv.osv):
                                                   'product_uom':1,
                                                   'product_uom_qty':line_id.product_uos_qty,
                                                   'discount':line_id.discount,
-                                                  'discount_amt':float(line_id.discount) * (float(line_id.price_unit * line_id.product_uos_qty)) / 100,
+                                                  'discount_amt':line_id.discount_amt,
                                                   'company_id':1,  # company_id,
                                                   'state':'draft',
                                                   'net_total':line_id.sub_total,
@@ -445,11 +448,11 @@ class mobile_sale_order(osv.osv):
                                     data = cr.fetchall()
                                     if data:
                                         journal_id = data[0]
-                                    cr.execute('select id from account_account where lower(name)=%s and active= %s', ('cash', True,))#which account shall I choose. It is needed.
+                                    cr.execute('select id from account_account where lower(name)=%s and active= %s', ('cash', True,))  # which account shall I choose. It is needed.
                                     data = cr.fetchall()
                                     if data:
                                         accountId = data[0]
-                                    if journal_id and accountId:#cash journal and cash account. If there no journal id or no account id, account invoice is not make payment.
+                                    if journal_id and accountId:  # cash journal and cash account. If there no journal id or no account id, account invoice is not make payment.
                                         accountVResult = {
                                                         'partner_id':invObj.partner_id.id,
                                                         'amount':invObj.amount_total,
@@ -519,7 +522,7 @@ class mobile_sale_order(osv.osv):
                                         detailObj.do_detailed_transfer()
                             # type > consignment , advanced and delivery_remark > partial , none
             except Exception, e:
-                print 'Error %s' % e
+                raise orm.except_orm(_('Error :'), _("Error Occured while Convert Mobile Sale Order! \n [ %s ]") % (e))
             self.write(cr, uid, ids[0], {'m_status':'done'}, context=context)
             if invFlag == True:
                 invoiceObj.write(cr, uid, invlist[0], {'state':'paid'}, context=context)
@@ -695,9 +698,9 @@ class mobile_sale_order(osv.osv):
       #          from product_uom pu , product_template_product_uom_rel pur , product_template pt,product_product pp
        #         where pt.id = pur.product_template_id
         #        and pu.id = pur.product_uom_id''')
-        #datas = cr.fetchall()
-        #cr.execute
-        #return datas
+        # datas = cr.fetchall()
+        # cr.execute
+        # return datas
     def get_product_uoms(self, cr, uid , saleteam_id, context=None, **kwargs):
         cr.execute('''     
                 select distinct uom_id,uom_name,ratio,product_template_id from(
@@ -835,6 +838,7 @@ class mobile_sale_order_line(osv.osv):
         'uom_id':fields.many2one('product.uom', 'UOM'),
         'price_unit':fields.float('Unit Price'),
         'discount':fields.float('Discount (%)'),
+        'discount_amt':fields.float('Discount (Amt)'),
         'order_id': fields.many2one('mobile.sale.order', 'Sale Order'),
         'sub_total':fields.float('Sub Total'),
         'foc':fields.boolean('FOC'),

@@ -1,4 +1,6 @@
 from openerp.osv import fields, osv
+from openerp.osv import orm
+from openerp import _
 from datetime import datetime
 import ast
 
@@ -115,6 +117,7 @@ class pre_sale_order(osv.osv):
 								  'foc':foc_val,
                                   'product_uos_qty':sol['product_uos_qty'],
                                   'discount':sol['discount'],
+                                  'discount_amt':sol['discount_amt'],
                                   'sub_total':sol['sub_total'],
                                 }
                                 mobile_sale_order_line_obj.create(cursor, user, mso_line_res, context=context) 
@@ -180,13 +183,15 @@ class pre_sale_order(osv.osv):
                                                         'product_id':line_id.product_id.id,
                                                         'name':productName,
                                                         'product_uom_qty':line_id.product_uos_qty,
+                                                        'discount':line_id.discount,
+                                                        'discount_amt':line_id.discount_amt,
                                                         'sale_foc':sale_foc,
                                                         'price_unit':priceUnit,
                                                         }   
                                 saleOrderLineObj.create(cr, uid, detailResult, context=context)
    
             except Exception, e:
-                print 'ERROR ,%s', e
+                raise orm.except_orm(_('Error :'), _("Error Occured while Convert Mobile Sale Order! \n [ %s ]") % (e))
             self.write(cr, uid, ids[0], {'m_status':'done'}, context=context)                        
         return True
 pre_sale_order()
@@ -201,6 +206,7 @@ class pre_sale_order_line(osv.osv):
         'uom_id':fields.many2one('product.uom', 'UOM'),
         'price_unit':fields.float('Unit Price'),
         'discount':fields.float('Discount (%)'),
+        'discount_amt':fields.float('Discount (Amt)'),
         'order_id': fields.many2one('pre.sale.order', 'Sale Order'),
         'sub_total':fields.float('Sub Total'),
         'foc':fields.boolean('FOC'),

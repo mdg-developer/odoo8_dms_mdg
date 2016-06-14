@@ -59,6 +59,7 @@
 												<field name="product_uos_qty" />
 												<field name="price_unit" />
 												<field name="discount" />
+												<field name="discount_amt" />
 												<field name="foc" />
 												<field name="sub_total" />
 											</group>
@@ -73,6 +74,7 @@
 										<field name="product_uos_qty" />
 										<field name="price_unit" />
 										<field name="discount" />
+										<field name="discount_amt" />
 										<field name="foc" />
 										<field name="sub_total" />
 									</tree>
