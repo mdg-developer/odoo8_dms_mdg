@@ -33,6 +33,7 @@ class pre_sale_order(osv.osv):
         'warehouse_id' : fields.many2one('stock.warehouse', 'Warehouse'),
         'sale_team':fields.many2one('crm.case.section', 'Sale Team'),
         'location_id'  : fields.many2one('stock.location', 'Location'),
+        'deduction_amount':fields.float('Deduction Amount'),
         'm_status':fields.selection([('draft', 'Draft'),
                                                       ('done', 'Complete')], string='Status'),
      'promos_line_ids':fields.one2many('pre.promotion.line', 'promo_line_id', 'Promotion Lines')                
@@ -161,6 +162,7 @@ class pre_sale_order(osv.osv):
                                                         'so_longitude':preObj_ids.mso_longitude,
                                                         'user_id':preObj_ids.user_id.id,
                                                         'section_id':preObj_ids.sale_team.id,
+                                                        'deduct_amt':preObj_ids.deduction_amount,
 #                                                         'client_order_ref':preObj_ids.tablet_id.name,
                                                         'state':'draft',
                                                         'pricelist_id':pricelist_id
@@ -189,11 +191,51 @@ class pre_sale_order(osv.osv):
                                                         'price_unit':priceUnit,
                                                         }   
                                 saleOrderLineObj.create(cr, uid, detailResult, context=context)
-   
+                    if so_id:
+                        saleOrderObj.button_dummy(cr, uid, [so_id], context=context)
             except Exception, e:
                 raise orm.except_orm(_('Error :'), _("Error Occured while Convert Mobile Sale Order! \n [ %s ]") % (e))
             self.write(cr, uid, ids[0], {'m_status':'done'}, context=context)                        
         return True
+    
+# Create Sync for promotion line by kzo
+    def create_promotion_line(self, cursor, user, vals, context=None):
+        
+        try : 
+            mso_promotion_line_obj = self.pool.get('pre.promotion.line')
+            str = "{" + vals + "}"
+                
+            str = str.replace("'',", "',")  # null
+            str = str.replace(":',", ":'',")  # due to order_id
+            str = str.replace("}{", "}|{")
+            new_arr = str.split('|')
+            result = []
+            for data in new_arr:
+                x = ast.literal_eval(data)
+                result.append(x)
+            promo_line = []
+            for r in result:                
+                promo_line.append(r)  
+            if promo_line:
+                for pro_line in promo_line:
+                
+                    cursor.execute('select id From pre_sale_order where name  = %s ', (pro_line['promo_line_id'],))
+                    data = cursor.fetchall()
+                    if data:
+                        saleOrder_Id = data[0][0]
+                    else:
+                        saleOrder_Id = None
+                                    
+                    promo_line_result = {
+                        'promo_line_id':saleOrder_Id,
+                        'pro_id':pro_line['pro_id'],
+                        'from_date':pro_line['from_date'],
+                        'to_date':pro_line['to_date'] ,
+                }
+                    mso_promotion_line_obj.create(cursor, user, promo_line_result, context=context)
+            return True
+        except Exception, e:
+            return False
 pre_sale_order()
 class pre_sale_order_line(osv.osv):
     

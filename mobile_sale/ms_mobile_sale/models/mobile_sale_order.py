@@ -420,6 +420,8 @@ class mobile_sale_order(osv.osv):
                                                }
                                     
                                     solObj.create(cr, uid, solResult, context=context)
+                                    if soId:
+                                        soObj.button_dummy(cr, uid, [soId], context=context)  # update the SO
                     if ms_ids and  so_state != 'cancel':
                         if ms_ids.type:
                             solist.append(soId)
@@ -825,6 +827,44 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()            
         return datas  
        
+ # Create Sync for promotion line by kzo
+    def create_promotion_line(self, cursor, user, vals, context=None):
+        
+        try : 
+            mso_promotion_line_obj = self.pool.get('mso.promotion.line')
+            str = "{" + vals + "}"
+                
+            str = str.replace("'',", "',")  # null
+            str = str.replace(":',", ":'',")  # due to order_id
+            str = str.replace("}{", "}|{")
+            new_arr = str.split('|')
+            result = []
+            for data in new_arr:
+                x = ast.literal_eval(data)
+                result.append(x)
+            promo_line = []
+            for r in result:                
+                promo_line.append(r)  
+            if promo_line:
+                for pro_line in promo_line:
+                
+                    cursor.execute('select id From mobile_sale_order where name  = %s ', (pro_line['promo_line_id'],))
+                    data = cursor.fetchall()
+                    if data:
+                        saleOrder_Id = data[0][0]
+                    else:
+                        saleOrder_Id = None
+                                    
+                    promo_line_result = {
+                        'promo_line_id':saleOrder_Id,
+                        'pro_id':pro_line['pro_id'],
+                        'from_date':pro_line['from_date'],
+                        'to_date':pro_line['to_date'] ,
+                }
+                mso_promotion_line_obj.create(cursor, user, promo_line_result, context=context)
+            return True
+        except Exception, e:
+            return False
 mobile_sale_order()
 
 class mobile_sale_order_line(osv.osv):
@@ -864,15 +904,15 @@ class mso_promotion_line(osv.osv):
               'to_date':fields.datetime('To Date')
               }
     
-def onchange_promo_id(self, cr, uid, ids, pro_id, context=None):
-        result = {}
-        promo_pool = self.pool.get('promos.rules')
-        datas = promo_pool.read(cr, uid, pro_id, ['from_date', 'to_date'], context=context)
-
-        if datas:
-            result.update({'from_date':datas['from_date']})
-            result.update({'to_date':datas['to_date']})
-        return {'value':result}
+    def onchange_promo_id(self, cr, uid, ids, pro_id, context=None):
+            result = {}
+            promo_pool = self.pool.get('promos.rules')
+            datas = promo_pool.read(cr, uid, pro_id, ['from_date', 'to_date'], context=context)
+    
+            if datas:
+                result.update({'from_date':datas['from_date']})
+                result.update({'to_date':datas['to_date']})
+            return {'value':result}
             
 mso_promotion_line()
 
