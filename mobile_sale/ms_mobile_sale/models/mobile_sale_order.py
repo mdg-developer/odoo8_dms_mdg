@@ -860,8 +860,8 @@ class mobile_sale_order(osv.osv):
                         'pro_id':pro_line['pro_id'],
                         'from_date':pro_line['from_date'],
                         'to_date':pro_line['to_date'] ,
-                }
-                mso_promotion_line_obj.create(cursor, user, promo_line_result, context=context)
+                        }
+                    mso_promotion_line_obj.create(cursor, user, promo_line_result, context=context)
             return True
         except Exception, e:
             return False
