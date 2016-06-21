@@ -199,8 +199,8 @@
 					<field name="amount_total" />
 					<!-- <field name="type" /> -->
 					<field name="delivery_remark" />
+					<field name="deduction_amount" />
 					<!-- <field name="additional_discount" /> -->
-					<!-- <field name="deduction_amount" /> -->
 					<!-- <field name="paid_amount" /> -->
 					<!-- <field name="paid" /> -->
 					<field name="m_status" />
