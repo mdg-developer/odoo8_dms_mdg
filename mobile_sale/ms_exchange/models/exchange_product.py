@@ -7,7 +7,7 @@ class exchange_product(osv.osv):
     _description = "Exchange Product"
 
     _columns = {
-                'transaction_id':fields.char('Id'),
+                'transaction_id':fields.char('ID'),
                 'customer_id':fields.many2one('res.partner', 'Customer Name'),
                 'customer_code':fields.char('Customer Code'),
                 'team_id'  : fields.many2one('crm.case.section', 'Sale Team'),
