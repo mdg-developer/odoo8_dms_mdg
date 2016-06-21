@@ -871,11 +871,15 @@ class mobile_sale_order_line(osv.osv):
     
     _name = "mobile.sale.order.line"
     _description = "Mobile Sales Order"
-
+    def _get_uom_from_product(self, cr, uid, ids, field_name, arg, context=None):
+        result = {}
+        for rec in self.browse(cr, uid, ids, context=context):
+            result[rec.id] = rec.product_id.uom_id
+        return result    
     _columns = {
         'product_id':fields.many2one('product.product', 'Products'),
         'product_uos_qty':fields.float('Quantity'),
-        'uom_id':fields.many2one('product.uom', 'UOM'),
+        'uom_id':fields.function(_get_uom_from_product, type='many2one', relation='product.uom', string='UOM'),
         'price_unit':fields.float('Unit Price'),
         'discount':fields.float('Discount (%)'),
         'discount_amt':fields.float('Discount (Amt)'),
@@ -921,9 +925,15 @@ class mobile_product_yet_to_deliver_line(osv.osv):
     _name = "products.to.deliver"
     _description = "Product Yet To Deliver"
 
+    def _get_uom_from_product(self, cr, uid, ids, field_name, arg, context=None):
+        result = {}
+        for rec in self.browse(cr, uid, ids, context=context):
+            result[rec.id] = rec.product_id.uom_id
+        return result       
+                           
     _columns = {
         'product_id':fields.many2one('product.product', 'Products'),
-        'uom':fields.many2one('product.uom', 'UOM'),
+        'uom':fields.function(_get_uom_from_product, type='many2one', relation='product.uom', string='UOM'),
         'product_qty':fields.float('Quantity'),
         'product_qty_to_deliver':fields.float('Quantity To Deliver'),
         'sale_order_id': fields.many2one('mobile.sale.order', 'Sale Order'),

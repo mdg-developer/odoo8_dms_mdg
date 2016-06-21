@@ -26,7 +26,7 @@ class pre_sale_order(osv.osv):
         'date':fields.datetime('Date'),
         'note':fields.text('Note'),
         'order_line': fields.one2many('pre.sale.order.line', 'order_id', 'Order Lines', copy=True),
-        'delivery_order_line': fields.one2many('products.to.deliver', 'sale_order_id', 'Delivery Order Lines', copy=True),
+        'delivery_order_line': fields.one2many('pre.products.to.deliver', 'sale_order_id', 'Delivery Order Lines', copy=True),
         'tablet_id':fields.many2one('tablets.information', 'Tablet ID'),
         'sale_plan_day_id':fields.many2one('sale.plan.day', 'Sale Plan Day'),
         'sale_plan_trip_id':fields.many2one('sale.plan.trip', 'Sale Plan Trip'),
@@ -241,11 +241,17 @@ class pre_sale_order_line(osv.osv):
     
     _name = "pre.sale.order.line"
     _description = "Mobile Sales Order"
-
+    
+    def _get_uom_from_product(self, cr, uid, ids, field_name, arg, context=None):
+        result = {}
+        for rec in self.browse(cr, uid, ids, context=context):
+            result[rec.id] = rec.product_id.uom_id
+        return result       
+    
     _columns = {
         'product_id':fields.many2one('product.product', 'Products'),
         'product_uos_qty':fields.float('Quantity'),
-        'uom_id':fields.many2one('product.uom', 'UOM'),
+        'uom_id':fields.function(_get_uom_from_product, type='many2one', relation='product.uom', string='UOM'),
         'price_unit':fields.float('Unit Price'),
         'discount':fields.float('Discount (%)'),
         'discount_amt':fields.float('Discount (Amt)'),
@@ -278,3 +284,25 @@ class pre_promotion_line(osv.osv):
             return {'value':result}
             
 pre_promotion_line()
+
+
+class pre_product_yet_to_deliver_line(osv.osv):
+    
+    _name = "pre.products.to.deliver"
+    _description = "Product Yet To Deliver"
+
+    def _get_uom_from_product(self, cr, uid, ids, field_name, arg, context=None):
+        result = {}
+        for rec in self.browse(cr, uid, ids, context=context):
+            result[rec.id] = rec.product_id.uom_id
+        return result       
+                           
+    _columns = {
+        'product_id':fields.many2one('product.product', 'Products'),
+        'uom':fields.function(_get_uom_from_product, type='many2one', relation='product.uom', string='UOM'),
+        'product_qty':fields.float('Quantity'),
+        'product_qty_to_deliver':fields.float('Quantity To Deliver'),
+        'sale_order_id': fields.many2one('pre.sale.order', 'Sale Order'),
+                }
+    
+pre_product_yet_to_deliver_line()
