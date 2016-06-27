@@ -31,13 +31,14 @@ Mobile Sales
 """,
     'author': 'Seventh Computing',
     'website': 'http://www.7thcomputing.com',
-    'depends': ['base', 'crm', 'address_management_system', 'stock', 'sale', 'ms_customer_visit', 'ms_sale_plan_setting', 'ms_tablet_info', 'web_gmaps'
+    'depends': ['base', 'crm', 'address_management_system', 'stock', 'sale', 'sale_management', 'ms_customer_visit', 'ms_sale_plan_setting', 'ms_tablet_info', 'web_gmaps'
     ],
     'data': ['views/pre_sale_order_view.xml',
              'views/stock_delivery_view.xml',
              'views/convert_sale_orders_view.xml',
              'views/mobile_sale_order_view.xml',
              'views/convert_stock_delivery_view.xml',
+             'views/account_invioce_inherit.xml',
              'reports/qweb_view.xml',
              'reports/report_pre_sale.xml',
              'reports/report_mobile_sale.xml'

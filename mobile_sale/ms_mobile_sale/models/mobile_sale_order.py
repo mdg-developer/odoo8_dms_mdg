@@ -3,7 +3,8 @@ from openerp.osv import orm
 from openerp import _
 from datetime import datetime
 import ast
-
+import time
+DEFAULT_SERVER_DATE_FORMAT = "%Y-%m-%d"
 class mobile_sale_order(osv.osv):
     
     _name = "mobile.sale.order"
@@ -536,6 +537,7 @@ class mobile_sale_order(osv.osv):
         sale_ids = ids
         if sale_ids:
             # create the final invoices of the active sales orders
+            print 'YOOOOOOOOOOOOO'
             res = sale_obj.manual_invoice(cr, uid, sale_ids, context)
             if context.get('open_invoices', False):
                 return res
@@ -940,3 +942,102 @@ class mobile_product_yet_to_deliver_line(osv.osv):
                 }
 mobile_product_yet_to_deliver_line()
 
+class account_invoice(osv.osv):
+    _inherit = "account.invoice"
+  
+    _columns = {
+             'payment_type': fields.char('Payment Type', size=64, readonly=True),
+               }
+account_invoice()    
+ 
+class sale_order(osv.osv):
+    _inherit = "sale.order" 
+    
+    def _make_invoice(self, cr, uid, order, lines, context=None):
+        
+        inv_obj = self.pool.get('account.invoice')
+        obj_invoice_line = self.pool.get('account.invoice.line')
+        
+        if context is None:
+            context = {}
+        invoiced_sale_line_ids = self.pool.get('sale.order.line').search(cr, uid, [('order_id', '=', order.id), ('invoiced', '=', True)], context=context)
+        from_line_invoice_ids = []
+        for invoiced_sale_line_id in self.pool.get('sale.order.line').browse(cr, uid, invoiced_sale_line_ids, context=context):
+            for invoice_line_id in invoiced_sale_line_id.invoice_lines:
+                if invoice_line_id.invoice_id.id not in from_line_invoice_ids:
+                    from_line_invoice_ids.append(invoice_line_id.invoice_id.id)
+        for preinv in order.invoice_ids:
+            if preinv.state not in ('cancel',) and preinv.id not in from_line_invoice_ids:
+                for preline in preinv.invoice_line:
+                    inv_line_id = obj_invoice_line.copy(cr, uid, preline.id, {'invoice_id': False, 'price_unit': -preline.price_unit})
+                    lines.append(inv_line_id)
+        inv = self.prepare_invoice(cr, uid, order, lines, context=context)
+        #inv = self.prepare_invoice(cr, uid, order, lines, context=context)
+        
+        inv_id = inv_obj.create(cr, uid, inv, context=context)
+        data = inv_obj.onchange_payment_term_date_invoice(cr, uid, [inv_id], inv['payment_term'], time.strftime(DEFAULT_SERVER_DATE_FORMAT))
+        if data.get('value', False):
+            inv_obj.write(cr, uid, [inv_id], data['value'], context=context)
+        inv_obj.button_compute(cr, uid, [inv_id])
+        #self.message_post(cr, uid, [order.id], body=_("test created"), context=context)
+        #inv_obj.message_post(cr, uid, [inv_id], body=_("test created"), context=context)
+                
+        
+        if order.payment_type == 'credit':
+            self.send_message_or_not(cr, uid, order.partner_invoice_id.credit_limit, order.amount_total, inv_id, context)
+                
+            #self.send_message_or_not(cr, uid, order.partner_invoice_id.credit_limit, order.amount_total, inv_id, order.id, context)
+        return inv_id
+    def send_message_or_not(self,cr,uid,credit_limit,total_amt,invoice_id,context=None):
+        inv_obj = self.pool.get('account.invoice')
+        
+        if credit_limit < total_amt and credit_limit > 0:
+            inv_obj.message_post(cr, uid, [invoice_id], body=_("Total amount exceed the credit limit"), context=context)  
+
+        return True        
+    def prepare_invoice(self, cr, uid, order, lines, context=None):
+        """Prepare the dict of values to create the new invoice for a
+           sales order. This method may be overridden to implement custom
+           invoice generation (making sure to call super() to establish
+           a clean extension chain).
+    
+           :param browse_record order: sale.order record to invoice
+           :param list(int) line: list of invoice line IDs that must be
+                                  attached to the invoice
+           :return: dict of value to create() the invoice
+        """
+        
+        if context is None:
+            context = {}
+        journal_id = self.pool['account.invoice'].default_get(cr, uid, ['journal_id'], context=context)['journal_id']
+        if not journal_id:
+            raise osv.except_osv(_('Error!'),
+                _('Please define sales journal for this company: "%s" (id:%d).') % (order.company_id.name, order.company_id.id))
+        payment_type = None
+        if order.payment_type == 'credit':
+            payment_type = 'Credit'    
+        invoice_vals = {
+            'name': order.client_order_ref or '',
+            'origin': order.name,
+            'type': 'out_invoice',
+            'reference': order.client_order_ref or order.name,
+            'account_id': order.partner_invoice_id.property_account_receivable.id,
+            'partner_id': order.partner_invoice_id.id,
+            'journal_id': journal_id,
+            'invoice_line': [(6, 0, lines)],
+            'currency_id': order.pricelist_id.currency_id.id,
+            'comment': order.note,
+            'payment_term': order.payment_term and order.payment_term.id or False,
+            'fiscal_position': order.fiscal_position.id or order.partner_invoice_id.property_account_position.id,
+            'date_invoice': context.get('date_invoice', False),
+            'company_id': order.company_id.id,
+            'user_id': order.user_id and order.user_id.id or False,
+            'section_id' : order.section_id.id,
+            'payment_type': payment_type,
+        }
+        
+        # Care for deprecated _inv_get() hook - FIXME: to be removed after 6.1
+        invoice_vals.update(self._inv_get(cr, uid, order, context=context))
+        return invoice_vals           
+sale_order()
+    
