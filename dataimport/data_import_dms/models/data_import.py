@@ -235,7 +235,7 @@ class product(osv.osv):
         else:
             for aml in amls:
                 try:
-                    cat_ids = uom_ids = principal_id = iv_ids = s_ids = r_ids = a_ids = uom_id = description = product_name = category_id = product_id = division_id = group_id = main_group_id = fields_id = costing_method = inventory_valuation = flt = til = tol = None
+                    main_group_ids = group_ids = division_ids = cat_ids = uom_ids = principal_id = iv_ids = s_ids = r_ids = a_ids = uom_id = description = product_name = category_id = product_id = division_id = group_id = main_group_id = fields_id = costing_method = inventory_valuation = flt = til = tol = None
                     value = {}
                     cat_name = uom_name = division_name = group_name = main_group_name = default_code = principal = bar_code = product_type = None
                     if aml['category']:
