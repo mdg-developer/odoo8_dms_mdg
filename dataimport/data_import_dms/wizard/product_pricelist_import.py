@@ -194,9 +194,16 @@ class product_pricelist_import(osv.osv):
                         temp = self.pool.get('product.template').read(cr,uid,product_tmpl_id,['list_price'])
                         if temp:
                             product_price = temp['list_price']
+                        
                         if discount_amount:
-                            new_price = (product_price * (1+0.0))+discount_amount
-                        pricelist_item_obj.create(cr,uid,{'name':name,'price_version_id':version_id,'product_id':product_id,'categ_id':category_id,'min_quantity':min_qty,'base':price_type,'base_pricelist_id':None,'price_surcharge':discount_amount,'new_price':new_price},context=context)
+                            new_price = (product_price * (1 + 0.0)) + discount_amount
+                            pricelist_res_discount = {'name':name, 'price_version_id':version_id, 'product_id':product_id, 'categ_id':category_id, 'min_quantity':min_qty, 'base':price_type, 'base_pricelist_id':None, 'price_surcharge':discount_amount, 'new_price':new_price}
+                            pricelist_item_obj.create(cr,uid,pricelist_res_discount,context=context)
+                        
+                        if discount_amount == 0:
+                            new_price = (product_price * (1 + 0.0)) + discount_amount
+                            pricelist_res_nodiscount = {'name':name, 'price_version_id':version_id, 'product_id':product_id, 'categ_id':category_id, 'min_quantity':min_qty, 'base':price_type, 'base_pricelist_id':None, 'price_surcharge':product_price, 'new_price':new_price}
+                            pricelist_item_obj.create(cr, uid, pricelist_res_nodiscount, context=context)
                         
             except Exception,e:
                 raise osv.except_osv(_('Warning!'),_('Something wrong with this %s .')%(e))    
