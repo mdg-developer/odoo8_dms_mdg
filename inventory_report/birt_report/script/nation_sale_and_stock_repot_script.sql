@@ -86,11 +86,11 @@ ALTER FUNCTION get_git_bywarehouse(integer, integer, date)
 
 -------------------------------------------------------------------------------------------------------------------------------
 
--- Function: national_sale_stock_report(integer, date, date, character varying, character varying, character varying, character varying, integer, character varying)
+-- Function: national_sale_stock_report(integer, date, date, integer)
 
--- DROP FUNCTION national_sale_stock_report(integer, date, date, character varying, character varying, character varying, character varying, integer, character varying);
+-- DROP FUNCTION national_sale_stock_report(integer, date, date, integer);
 
-CREATE OR REPLACE FUNCTION national_sale_stock_report(IN category_id integer, IN from_date date, IN to_date date, IN from_month character varying, IN to_month character varying, IN from_year character varying, IN to_year character varying, IN warehouse_id integer, IN branch_code character varying)
+CREATE OR REPLACE FUNCTION national_sale_stock_report(IN category_id integer, IN from_date date, IN to_date date, IN warehouse_id integer)
   RETURNS TABLE(product_id integer, warehouseid integer, stockid character varying, product character varying, pracking character varying, qty numeric, price_unit numeric, amt numeric, category character varying, branch character varying, git numeric, bal numeric) AS
 $BODY$
     DECLARE
@@ -107,44 +107,18 @@ $BODY$
 		    --t_date = to_date;
 		    
 		    
-		    IF from_year IS NOT NULL AND to_year IS NOT NULL THEN
-		        --f_date = from_year || '-01-01';
-		        --to_date = to_year || '-12-31';
-		        RAISE NOTICE ' YEAR B(%)', f_date;
-		        RAISE NOTICE ' YEAR B(%)', t_date;
-		        select to_date(from_year || '-01-01', 'YYYY MM DD') into f_date;
-		        select to_date(from_year || '-12-31', 'YYYY MM DD') into t_date;
-		        RAISE NOTICE ' YEAR (%)', f_date;
-		        RAISE NOTICE ' YEAR (%)', to_date;
-		    END IF;
-
-		    IF from_month IS NOT NULL AND to_month IS NOT NULL THEN
-			--f_date = from_month || '-01';
-			--to_date = to_month || '-01';
-			RAISE NOTICE ' MONTH B(%)', f_date;
-		        RAISE NOTICE ' MONTH B(%)', t_date;			
-			select date_trunc('month', to_date(from_month || '-01', 'YYYY MM DD')::timestamp)::date into f_date;
-		        SELECT (date_trunc('MONTH',to_date(to_month || '-01', 'YYYY MM DD')::timestamp) + INTERVAL '1 MONTH - 1 day')::date into t_date;
-		        RAISE NOTICE ' MONTH (%)', f_date;
-		        RAISE NOTICE ' MONTH (%)', to_date;
-		    END IF;		                					
-		    
-		    
 		    IF from_date IS NOT NULL AND to_date IS NOT NULL THEN  
 			f_date = from_date;
 			t_date = to_date; 
-			RAISE NOTICE ' date (%)', f_date;
-		        RAISE NOTICE ' date (%)', t_date;                       
-	            END IF;
-	            
-		    sql := sql || ' get_git(d.product_id,''' || f_date || ''') as git,get_git_bywarehouse(d.product_id,h.warehouse_id,''' || t_date || ''') as bal
+			sql := sql || ' get_git(d.product_id,''' || f_date || ''') as git,get_git_bywarehouse(d.product_id,h.warehouse_id,''' || t_date || ''') as bal
 				from sale_order h,sale_order_line d,product_template t,product_product p,product_uom u,product_category c,stock_warehouse w
-				where h.id = d.order_id and h.warehouse_id=w.id and d.product_id = p.id and d.product_uom=u.id and p.product_tmpl_id=t.id and t.categ_id = c.id';
-		    RAISE NOTICE ' SQL 1 (%)', sql;	
+				where h.id = d.order_id and h.warehouse_id=w.id and d.product_id = p.id and d.product_uom=u.id and p.product_tmpl_id=t.id and t.categ_id = c.id';			                     
+	            END IF;		   
 		    
 		    IF f_date IS NOT NULL AND t_date IS NOT NULL THEN
 			sql := sql || ' and h.date_order::date between ''' || f_date || ''' and ''' || t_date || ''' ';
-	            END IF;		
+	            END IF;	
+	            	
 		    IF category_id IS NOT NULL THEN
 			sql := sql || ' and t.categ_id = ''' || category_id || ''' ';
 		    END IF;
@@ -165,5 +139,5 @@ $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100
   ROWS 1000;
-ALTER FUNCTION national_sale_stock_report(integer, date, date, character varying, character varying, character varying, character varying, integer, character varying)
+ALTER FUNCTION national_sale_stock_report(integer, date, date, integer)
   OWNER TO openerp;
