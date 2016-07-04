@@ -3,7 +3,7 @@
 	<data>
 		<!-- Parent Menu -->
 		<menuitem name="Mobile Sales" id="base.menu_mobile_sale"
-			groups="base.group_sale_salesman,base.group_sale_manager" sequence="5" />
+			groups="base.group_sale_salesman,base.group_sale_manager" sequence="11" />
 
 		<!-- Child Menus -->
 		<menuitem name="Sale Target Settings" id="base.menu_mobile_sale_sale_target_menu"
@@ -142,6 +142,6 @@
 		</record>
 
 		<menuitem id="menu_sale_target_menu" parent="base.menu_mobile_sale_sale_target_menu"
-			action="action_sale_target" sequence="1" />
+			action="action_sale_target" sequence="2" />
 	</data>
 </openerp>

@@ -227,6 +227,6 @@
 		</record>
 
 		<menuitem id="menu_pre_sale_order_menu" parent="base.menu_mobile_sale_menu"
-			action="action_pre_sale_order" sequence="2" />
+			action="action_pre_sale_order" sequence="3" />
 	</data>
 </openerp>

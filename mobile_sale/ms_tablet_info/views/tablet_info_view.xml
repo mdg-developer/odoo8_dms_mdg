@@ -3,11 +3,15 @@
 	<data>
 		<!-- Parent Menu -->
 		<menuitem name="Mobile Sales" id="base.menu_mobile_sale"
-			groups="base.group_sale_salesman,base.group_sale_manager" sequence="5" />
+			groups="base.group_sale_salesman,base.group_sale_manager" sequence="11" />
 
 
-		<menuitem name="Tablet Infromations" id="base.menu_mobile_sale_tablet_info_menu"
-			sequence="3" parent="base.menu_mobile_sale" />
+		<!-- <menuitem name="Tablet Infromations" id="base.menu_mobile_sale_tablet_info_menu"
+			sequence="3" parent="base.menu_mobile_sale" /> -->
+			
+		<menuitem name="Setting" id="base.menu_mobile_sale_sale_target_menu"
+			sequence="4" parent="base.menu_mobile_sale" />
+			
 		<!-- Filter -->
 		<record id="view_tablet_info_filter" model="ir.ui.view">
 			<field name="name">Tablet Info Filter</field>
@@ -92,7 +96,7 @@
 		</record>
 
 		<!-- menu item -->
-		<menuitem id="menu_tablet_information" parent="base.menu_mobile_sale_tablet_info_menu"
-			name="Tablet Information" action="action_tablet_information" />
+		<menuitem id="menu_tablet_information" parent="base.menu_mobile_sale_sale_target_menu"
+			name="Tablet Information" action="action_tablet_information" sequence="1"/>
 	</data>
 </openerp>

@@ -4,7 +4,7 @@
 
 		<!-- Parent Menu -->
 		<menuitem name="Mobile Sales" id="base.menu_mobile_sale"
-			groups="base.group_sale_salesman,base.group_sale_manager" sequence="5" />
+			groups="base.group_sale_salesman,base.group_sale_manager" sequence="11" />
 
 		<!-- Child Menus -->
 		<menuitem name="Sale Report" id="base.menu_mobile_sale_report_menu"
@@ -74,6 +74,6 @@
 		
 		
 		<menuitem id='action_report_url_id' action="menu_sale_report_action" parent="base.menu_mobile_sale_report_menu" sequence="50"/>
-
+		
 	</data>
 </openerp>

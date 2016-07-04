@@ -60,5 +60,6 @@
 		<menuitem action="data_import_dms.action_sale_plan_import"
 			id="menu_data_import_sale_plan" parent="menu_data_import_config"
 			sequence="18" />
+		
 	</data>
 </openerp>
