@@ -37,6 +37,7 @@ class sale_report(osv.osv):
         'sale_plan_trip_id':fields.many2one('sale.plan.trip', 'Sale Plan Trip'),
         'warehouse_id' : fields.many2one('stock.warehouse', 'Warehouse'),
         'location_id'  : fields.many2one('stock.location', 'Location'),
+        'sale_team'  : fields.many2one('crm.case.section', 'Sale Team'),
         'm_status':fields.char('Status'),
      'product_uos_qty': fields.float('Qty', readonly=True),
      'unit_price': fields.float('Unit_price', readonly=True),
@@ -75,7 +76,8 @@ class sale_report(osv.osv):
                      s.sale_plan_day_id,
                      s.sale_plan_trip_id,
                      t.main_group,
-                    r.customer_code
+                    r.customer_code,
+                    s.sale_team
         """
         return select_str
 
@@ -87,6 +89,7 @@ class sale_report(osv.osv):
                             left join product_template t on (p.product_tmpl_id=t.id)
                             left join res_partner r on (s.partner_id = r.id)
                             left join sale_channel sc on (r.sales_channel = sc.id)
+                            left join crm_case_section cs on (cs.id =s.sale_team)
                              
         """
         return from_str
@@ -117,7 +120,8 @@ class sale_report(osv.osv):
                     sc.id,
                     t.main_group,
                     r.customer_code,
-                    s.void_flag
+                    s.void_flag,
+                    s.sale_team
                     having  s.void_flag='none'
                     
         """

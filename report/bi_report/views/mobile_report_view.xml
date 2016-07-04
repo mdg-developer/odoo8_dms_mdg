@@ -20,13 +20,23 @@
 			<field name="user_id" eval="False" />
 			<field name="context">{'group_by': ['date:month', 'user_id']}</field>
 		</record>
+		
 		<record id="filter_mobile_sale_report_salesteam" model="ir.filters">
 			<field name="name">By Salesteam</field>
 			<field name="model_id">mobile.sale.report</field>
 			<field name="domain">[]</field>
 			<field name="user_id" eval="False" />
+			<field name="context">{'group_by': ['date:month', 'sale_team']}</field>
+		</record>
+		
+		<record id="filter_mobile_sale_report_tablet" model="ir.filters">
+			<field name="name">By Tablet</field>
+			<field name="model_id">mobile.sale.report</field>
+			<field name="domain">[]</field>
+			<field name="user_id" eval="False" />
 			<field name="context">{'group_by': ['date:month', 'tablet_id']}</field>
 		</record>
+		
 		<record id="filter_mobile_sale_report_product" model="ir.filters">
 			<field name="name">By Product</field>
 			<field name="model_id">mobile.sale.report</field>
@@ -52,6 +62,7 @@
 					<field name="product_id" />
 					<field name="user_id" />
 					<field name="customer_code" />
+					<field name="sale_team"/>
 					<group expand="0" string="Extended Filters">
 						<field name="categ_id" />
 					</group>
@@ -70,6 +81,9 @@
 
 						<filter string="Order Date" icon="terp-go-today" context="{'group_by':'date'}"
 							help="Ordered date of the mobile sales order" />
+						
+			           <filter string="Sale Team" icon="terp-stock_symbol-selection"
+							name="saleteam" context="{'group_by':'sale_team'}" />
 					</group>
 				</search>
 			</field>
