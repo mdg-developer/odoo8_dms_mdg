@@ -198,6 +198,6 @@
 		</record>
 
 		<menuitem id="menu_visit_partner_form" parent="base.menu_mobile_sale_menu"
-			action="action_visit_partner_form1" sequence="6" />
+			action="action_visit_partner_form1" sequence="4" />
 	</data>
 </openerp>

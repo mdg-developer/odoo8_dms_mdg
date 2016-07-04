@@ -71,7 +71,7 @@
 		</record>
 
 		<record id="action_mobile_ar_collection" model="ir.actions.act_window">
-			<field name="name">AR Collections</field>
+			<field name="name">AR Collection</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">mobile.ar.collection</field>
 			<field name="view_type">form</field>
@@ -89,7 +89,7 @@
 			sequence="2" parent="base.menu_mobile_sale" />
 			
 		<menuitem action="action_mobile_ar_collection" id="menu_mobile_ar_collection"
-			parent="ar_collection_menu" sequence="7"/>
+			parent="ar_collection_menu" sequence="1"/>
 			
 	</data>
 </openerp>

@@ -116,7 +116,7 @@
 		</record>
 
 		<menuitem action="action_stock_delivery" id="menu_stock_delivery"
-			name="Stock Delivery" parent="base.menu_mobile_sale_menu" sequence="5" />
+			name="Stock Delivery" parent="base.menu_mobile_sale_menu" sequence="8" />
 
 
 

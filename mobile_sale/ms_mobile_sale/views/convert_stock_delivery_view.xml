@@ -65,7 +65,7 @@
 
 		<!-- menu item -->
 		<menuitem id="menu_convert_stock_deliver" parent="base.menu_mobile_sale_menu"
-			action="action_convert_sd_data_tree" sequence="5" />
+			action="action_convert_sd_data_tree" sequence="9" />
 
 
 	</data>
