@@ -16,8 +16,7 @@ class account_creditnote(osv.osv):
                 'terms_and_conditions': fields.char('Terms and Conditions'),
                 'm_status':fields.selection([('new', 'New'), ('issued', 'Issued'),
                                                       ('used', 'Used')], string='Status',default='new'),
-                'type':fields.selection([('new', 'New'), ('issued', 'Issued'),
-                                                      ('used', 'Used')], string='Type' ,default='new'),
+                'type':fields.selection({('cash', 'Cash Rebate'), ('stock', 'Stock Rebate')}, string='Type' , required=True),
                 'amount': fields.float('Amount'),
                 
                 }
