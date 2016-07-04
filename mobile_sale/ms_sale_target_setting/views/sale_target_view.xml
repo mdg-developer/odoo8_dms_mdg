@@ -65,8 +65,10 @@
 								<field name="date" />
 								<field name="schedule" />
 								<field name="week"
-									attrs="{'invisible': ['|', ('schedule','=','daily')]}" />
-
+									attrs="{'invisible': ['|', ('schedule','=','daily')]}" />								
+								<field name="month" />
+								<field name="half_year" />															
+								<field name="year" attrs="{'required':[('half_year','=',True)]}"/>								
 							</group>
 							<group>
 								<separator string="Category Target" />
