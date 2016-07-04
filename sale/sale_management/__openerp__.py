@@ -46,6 +46,7 @@ Sale Management
          'views/report_invoice.xml',
 		'views/sales_retal_view.xml',
 		'views/sales_denomation_view.xml',
+		'views/sale_approvel_view.xml',
     ],
     'installable': True,
     'auto_install': False,
