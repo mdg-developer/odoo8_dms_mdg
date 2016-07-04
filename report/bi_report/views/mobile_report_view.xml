@@ -14,7 +14,7 @@
 
 		<!-- Custom reports (aka filters) -->
 		<record id="filter_mobile_sale_report_salespersons" model="ir.filters">
-			<field name="name">By Salespersons</field>
+			<field name="name">By Salesman Name</field>
 			<field name="model_id">mobile.sale.report</field>
 			<field name="domain">[]</field>
 			<field name="user_id" eval="False" />
@@ -56,7 +56,7 @@
 						<field name="categ_id" />
 					</group>
 					<group expand="1" string="Group By">
-						<filter string="Salesperson" icon="terp-personal" name="User"
+						<filter string="Salesman Name" icon="terp-personal" name="User"
 							context="{'group_by':'user_id'}" />
 						<filter string="Tablet" context="{'group_by':'tablet_id'}"
 							groups="base.group_multi_salesteams" />
