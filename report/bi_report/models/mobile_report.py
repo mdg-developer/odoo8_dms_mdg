@@ -116,7 +116,9 @@ class sale_report(osv.osv):
                     s.deduction_amount,
                     sc.id,
                     t.main_group,
-                    r.customer_code
+                    r.customer_code,
+                    s.void_flag
+                    having  s.void_flag='none'
                     
         """
         return group_by_str
