@@ -22,12 +22,17 @@ class sale_target(osv.osv):
                             ('weekly', 'Weekly')
                         ], 'Schedule Type'),
                         'product_target_line': fields.one2many('sale.target.line', 'target_id', 'Product Targets Lines', copy=True),
-                         'category_target_line': fields.one2many('sale.target.line', 'target_id', 'Category Targets Lines', copy=True),
-                         'category_id':fields.many2one('product.category', 'Category'),
-                         'categ_target_qty':fields.integer('Category Target Qty'),
-                         'categ_target_amt':fields.float('Category Target Amount'),
-                         'total_shop_to_visit':fields.integer('Shops To Visit'),
-
+                        'category_target_line': fields.one2many('sale.target.line', 'target_id', 'Category Targets Lines', copy=True),
+                        'category_id':fields.many2one('product.category', 'Category'),
+                        'categ_target_qty':fields.integer('Category Target Qty'),
+                        'categ_target_amt':fields.float('Category Target Amount'),
+                        'total_shop_to_visit':fields.integer('Shops To Visit'),
+                        'month': fields.selection([('jan', 'January'),('feb', 'February'),('march', 'March'),('apr', 'April'),
+                                                   ('may', 'May'),('june', 'June'),('july', 'July'),('aug', 'August'),
+                                                   ('sept', 'September'),('oct', 'October'),('nov', 'November'),('dec', 'December')                            
+                        ], 'Month'),
+                        'year':fields.integer('Yearly'),
+                        'half_year':fields.boolean('Half Year'),
                 }
     
     def on_change_day_name(self, cr, uid, ids, day_name, context=None):
