@@ -43,8 +43,8 @@ Sale Management
         'views/sale_return_view.xml',
         'views/sale_display_view.xml',
 		'views/report_saleorder.xml',
-         'views/report_invoice.xml'
-
+         'views/report_invoice.xml',
+		'views/sales_retal_view.xml'
     ],
     'installable': True,
     'auto_install': False,

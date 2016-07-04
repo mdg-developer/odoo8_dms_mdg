@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- === Sales rental Form === -->
+
+		<record id="view_sales_rental_form" model="ir.ui.view">
+			<field name="name">sales.rental.form</field>
+			<field name="model">sales.rental</field>
+			<field name="arch" type="xml">
+				<form string="Sales Rental" version="7.0">
+					<sheet>
+						<group>
+							<group>
+								<field name="partner_id" domain="[('customer','=',True)]" />
+								<field name="address" />
+								<field name="name" />
+								<field name="company_id" invisible="1" />
+							</group>
+							<group>
+								<field name="date" />
+							</group>
+						</group>
+						<group>
+							<group>
+								<label for="month" string="Retal Month" />
+								<div>
+									<field name="month" class="oe_inline" />
+									-
+									<field name="unit" class="oe_inline" />
+								</div>
+								<field name="monthy_amt" />
+								<field name="total_amt" />
+							</group>
+							<group>
+								<field name="image"  widget='image' class="oe_avatar"/>
+							</group>
+
+						</group>
+						<notebook>
+							<page string="Location">
+									<field name="latitude" />
+									<field name="longitude" />
+								<widget type="gmap_marker" lat="latitude" lng="longitude"
+									description="field_descriptions" />
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+			<record id="view_sales_rental_filter" model="ir.ui.view">
+				<field name="name">Send rental Filter</field>
+				<field name="model">sales.rental</field>
+				<field name="arch" type="xml">
+					<search string="Search Sales Rental">
+						<group expand="0" string="Group By...">
+							<filter string="Customer" icon="terp-partner" domain="[]"
+								context="{'group_by':'partner_id'}" />
+						</group>
+					</search>
+				</field>
+			</record>
+
+			<record model="ir.ui.view" id="view_sales_rental_tree">
+				<field name="name">sales.rental.tree</field>
+				<field name="model">sales.rental</field>
+				<field name="arch" type="xml">
+					<tree string="Sales Rental">
+						<field name="date" />
+						<field name="partner_id" />
+						<field name="name" />
+						<field name="month" />
+						<field name="monthy_amt" />
+						<field name="total_amt" />
+					</tree>
+				</field>
+			</record>
+
+			<record id="action_sales_rental_view" model="ir.actions.act_window">
+				<field name="name">Sales Rental</field>
+				<field name="type">ir.actions.act_window</field>
+				<field name="res_model">sales.rental</field>
+				<field name="view_type">form</field>
+				<field name="view_mode">tree,form</field>
+				<field name="view_id" eval="view_sales_rental_tree" />
+				<field name="search_view_id" ref="view_sales_rental_filter" />
+				<field name="help" type="html">
+					<p class="oe_view_nocontent_create">
+						Click to create new mobile sale rental
+					</p>
+				</field>
+			</record>
+
+			<menuitem id="sales_rental" action="action_sales_rental_view"
+				parent="base.menu_sales" name="Sales Rental" sequence="12" />
+	</data>
+</openerp>
+	    
+	    
+	    
