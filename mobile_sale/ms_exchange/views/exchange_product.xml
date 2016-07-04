@@ -104,7 +104,7 @@
 
 		<!--============ Sale Return ============== -->
 		<!-- tree -->
-		<!--<record id="view_sale_return_tree" model="ir.ui.view">
+		<record id="view_sale_return_tree" model="ir.ui.view">
 			<field name="name">Sale Return</field>
 			<field name="model">product.transactions</field>
 			<field name="arch" type="xml">
@@ -117,10 +117,10 @@
 					<field name="e_status" />
 				</tree>
 			</field>
-		</record>-->
+		</record>
 
 		<!-- action form -->
-		<!--<record id="action_sale_return" model="ir.actions.act_window">
+		<record id="action_sale_return" model="ir.actions.act_window">
 			<field name="name">Sale Return</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">product.transactions</field>
@@ -133,13 +133,13 @@
 					Click to create new Sale return Product.
 				</p>
 			</field>
-		</record>-->
+		</record>
 		<!-- menu item -->
 		<menuitem id="menu_exchange_product" parent="base.menu_mobile_sale_menu"
 			name="Exchange Product" action="action_exchange_product" sequence="5" />
 		<!-- Sale Return Menu Item -->
-		<!--<menuitem id="menu_sale_return" parent="base.menu_mobile_sale_menu"
-			name="Sale Return Product" action="action_sale_return" sequence="11" />-->
+		<menuitem id="menu_sale_return" parent="base.menu_sales"
+			name="Sale Return" action="action_sale_return" sequence="13" />
 	</data>
 </openerp>
 	    

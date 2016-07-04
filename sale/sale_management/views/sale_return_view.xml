@@ -83,8 +83,8 @@
 			<field name="view_id" eval="view_sales_return_tree" />
 		</record>
 
-		<menuitem id="sales_return" action="action_sales_return_view"
-			parent="base.menu_sales" name="Sales Return"  sequence="12"/>
+		<!--<menuitem id="sales_return" action="action_sales_return_view"
+			parent="base.menu_sales" name="Sales Return"  sequence="12"/>-->
 
 	</data>
 </openerp>
