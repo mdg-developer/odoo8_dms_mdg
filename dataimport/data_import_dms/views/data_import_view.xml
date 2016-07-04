@@ -184,7 +184,7 @@
 		<menuitem action="data_import_dms.action_partner_import" id="menu_data_import_partner"
 			parent="menu_data_import_config" sequence="16" />
 		<menuitem action="data_import_dms.action_mobile_so_import"
-			id="menu_data_import_mobile_so" parent="menu_data_import_config"
-			sequence="17" />
+			id="menu_data_import_mobile_so" parent="base.menu_sales"
+			sequence="14" />
 	</data>
 </openerp>
