@@ -12,7 +12,7 @@ class branch_setup(osv.osv):
                     'branch_code': fields.char('Branch Code', required=True),    
                     'address': fields.text('Address'),  
                     'active': fields.boolean('Active')  ,
-                    'res_company_id' : fields.many2one('res.company', 'company')            
+                    'res_company_id' : fields.many2one('res.company', 'Company')            
                 }
     _sql_constraints = [('Branch_code_uniq', 'unique(branch_code)',
                                      'Branch Code should not be same to others!')]
