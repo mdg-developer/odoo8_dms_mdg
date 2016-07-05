@@ -68,7 +68,7 @@
 		</record>
 		
 		<menuitem action="action_creditnote" id="menu_creditnote"
-			parent="ms_mobile_sale_credit.ar_collection_menu" sequence="2"/>
+			parent="account.menu_finance_receivables" sequence="100"/>
 			
 	</data>
 </openerp>
