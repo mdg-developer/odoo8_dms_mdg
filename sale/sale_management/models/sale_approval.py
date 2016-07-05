@@ -26,8 +26,24 @@ class sale_approval(osv.osv):
         return self.write(cr, uid, ids, {'state': 'finance_approve'}, context=context)
     
     def action_button_finance(self, cr, uid, ids, context=None):
-        
-        return self.write(cr, uid, ids, {'state': 'done'}, context=context)    
+        res = {}
+        credits_obj = self.pool.get('account.creditnote')        
+        approval=self.browse(cr, uid, ids, context=context)
+        credit_data={
+                        'so_no': approval.ref_no,
+                        'customer_id':approval.partner_id.id,
+                        'sale_team_id':approval.sale_team_id.id,
+                        'user_id':approval.user_id.id,                        
+                        'type':approval.type,
+                        'description':approval.name,
+                        'create_date':approval.date,
+                        'used_date':approval.validate_date,            
+                        'm_status':'new',            
+                        'amount':approval.credit_amt,                                                                                          
+                         }
+        credit_id = credits_obj.create(cr, uid, credit_data, context=context)         
+        print ' credit_data',credit_data
+        return self.write(cr, uid, ids, {'state': 'done','credit_note':credit_id}, context=context)    
 
     def action_cancel(self, cr, uid, ids, context=None):
         
@@ -42,11 +58,9 @@ class sale_approval(osv.osv):
                 ('finance_approve', 'Finance Approved'),
                 ('done', 'Done'),
                 ('cancel', 'Cancelled'),
-
             ], 'Status', readonly=True, copy=False, select=True),
-        'date':fields.date('Date'),
-        'validate_date':fields.date('Validate Date'),
-        'credit_date':fields.date('Date'),
+        'date':fields.date('Create Date'),
+        'validate_date':fields.date('Delivery Date'),
         'sale_team_id':fields.many2one('crm.case.section', 'Sales Team' , required=True),
         'user_id':fields.many2one('res.users', 'Salesman Name'  , required=True),
         'partner_id':fields.many2one('res.partner', 'Customer'  , required=True),  # 
@@ -54,7 +68,7 @@ class sale_approval(osv.osv):
         'credit_amt':fields.float('Credit Note Amount'  , required=True),
         'type':fields.selection({('cash', 'Cash Rebate'), ('stock', 'Stock Rebate')}, string='Type' , required=True),
         'ref_no':fields.char('Ref Number'  , required=True),
-        'credit_note':fields.char('Credit Note' , required=True),
+        'credit_note':fields.many2one('account.creditnote','Credit Note' ,readonly=True),
        'approval_line':fields.one2many('sales.approval.line', 'approval_ids', string='Sale Approval Line', copy=True , required=True),
         'description':fields.text('Terms and Conditions'),
         'note':fields.text('Note'),
@@ -62,7 +76,7 @@ class sale_approval(osv.osv):
   }
     _defaults = {
         'date': fields.datetime.now,
-        'company_id': _get_default_company,
+        'company_id':_get_default_company,
         'state': 'draft',
         }   
 sale_approval()        

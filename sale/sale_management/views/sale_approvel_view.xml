@@ -16,33 +16,31 @@
                         <button name="action_cancel"  states="sumit,manager_approve,finance_approve"  type="object" string="Cancel" groups="base.group_user" class="oe_highlight" />                       
                         <field name="state"  widget="statusbar" statusbar_visible="draft,sumit,manager_approve,finance_approve,done,cancel"  statusbar_colors='{"cancel":"red","draft":"blue"}'/>
                 </header>				    
-					<sheet>
+					<sheet >
 						<group>
 							<group>
-								<field name="date" />
-								<field name="sale_team_id" />
-								<field name="user_id" domain="[('default_section_id', '=',sale_team_id)]" />
-								<field name="partner_id"  domain="[('customer','=',True),('user_id', '=',user_id)]" />
-								<field name="name" />
+								<field name="date" attrs="{'readonly':[('state','=','done')]}"/>
+								<field name="sale_team_id" attrs="{'readonly':[('state','=','done')]}"/>
+								<field name="user_id" domain="[('default_section_id', '=',sale_team_id)]" attrs="{'readonly':[('state','=','done')]}"/>
+								<field name="partner_id"  domain="[('customer','=',True),('user_id', '=',user_id)]" attrs="{'readonly':[('state','=','done')]}"/>
+								<field name="name" attrs="{'readonly':[('state','=','done')]}"/>
 								<field name="company_id"  invisible="1"/>								
 							</group>
 							<group>
-								<field name="validate_date" />
-								<field name="type" />
-								<field name="ref_no" />
-								<field name="credit_note" />
+								<field name="validate_date" attrs="{'readonly':[('state','=','done')]}"/>
+								<field name="type" attrs="{'readonly':[('state','=','done')]}"/>
+								<field name="ref_no" attrs="{'readonly':[('state','=','done')]}" placeholder="SO00001" />
+								<field name="credit_note" attrs="{'readonly':[('state','=','done')]}"/>
 							</group>
 						</group>
 						<group>
 							<group>
-								<field name="credit_amt" />
+								<field name="credit_amt" attrs="{'readonly':[('state','=','done')]}"/>
 							</group>
-							<group>
-								<field name="credit_date" />
-							</group>
+						
 						</group>
 						<notebook>
-							<page string="Product">
+							<page string="Product" attrs="{'readonly':[('state','=','done')]}">
 								<field name="approval_line">
 									<form string="Multi Product">
 										<group>
@@ -115,7 +113,7 @@
 		</record>
 
 		<record id="action_sales_approval_view" model="ir.actions.act_window">
-			<field name="name">Sales Approval Request To Approve</field>
+			<field name="name">Sales Approval Request</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">sales.approval</field>
 			<field name="view_type">form</field>

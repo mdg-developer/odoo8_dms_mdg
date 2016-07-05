@@ -47,6 +47,8 @@ Sale Management
 		'views/sales_retal_view.xml',
 		'views/sales_denomation_view.xml',
 		'views/sale_approvel_view.xml',
+		'views/code_sequence.xml'
+
     ],
     'installable': True,
     'auto_install': False,

@@ -18,7 +18,7 @@ class sale_denomination(osv.osv):
         'sale_team_id':fields.many2one('crm.case.section', 'Sales Team' , required=True),
         'user_id':fields.many2one('res.users', 'Salesman Name'  , required=True, select=True, track_visibility='onchange'),
         'tablet_id':fields.char('Tablet ID'),
-        'name':fields.char('Txn'),
+        'name':fields.char('Txn' ,readonly=True),
         'invoice_count':fields.integer('Invoiced' , required=True),        
        'denomination_product_line':fields.one2many('sales.denomination.product.line', 'denomination_product_ids', string='Sale denomination Product Line', copy=True , required=True),
        'denomination_note_line':fields.one2many('sales.denomination.note.line', 'denomination_note_ids', string='Sale denomination Product Line', copy=True , required=True),       
@@ -55,6 +55,11 @@ class sale_denomination(osv.osv):
                                         } 
         return value      
 
+    def create(self, cursor, user, vals, context=None):
+        credit_no = self.pool.get('ir.sequence').get(cursor, user,
+            'sales.denomination') or '/'
+        vals['name'] = credit_no
+        return super(sale_denomination, self).create(cursor, user, vals, context=context)    
 sale_denomination()        
 
 class sale_denomination_product_line(osv.osv):    
