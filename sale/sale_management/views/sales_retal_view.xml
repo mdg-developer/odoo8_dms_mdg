@@ -92,7 +92,7 @@
 			</record>
 
 			<menuitem id="sales_rental" action="action_sales_rental_view"
-				parent="base.menu_sales" name="Sales Rental" sequence="12" />
+				parent="base.menu_sales" name="Customer Sales Rental" sequence="12" />
 	</data>
 </openerp>
 	    
