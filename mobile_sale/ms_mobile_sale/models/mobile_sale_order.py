@@ -867,6 +867,81 @@ class mobile_sale_order(osv.osv):
             return True
         except Exception, e:
             return False
+    def create_dsr_notes(self, cursor, user, vals, context=None):
+        print 'vals',vals
+        try : 
+            history_obj=self.pool.get('sales.denomination')
+            notes_line_obj=self.pool.get('sales.denomination.note.line')
+            deno_product_obj= self.pool.get('sales.denomination.product.line')
+            
+            str ="{"+vals+"}"
+            str = str.replace(":''",":'")
+            str = str.replace("'',","',")
+            str = str.replace(":',",":'',")
+            str = str.replace(":'}", ":''}")
+            str = str.replace("}{", "}|{")
+            
+            new_arr = str.split('|')
+            result = []
+            for data in new_arr:
+                x = ast.literal_eval(data)
+                result.append(x)
+           
+            history = []
+            notes_line = []
+            
+            for r in result:
+                print "length", len(r)
+                if len(r)>=7:
+                    history.append(r)                   
+                else:
+                    notes_line.append(r)
+            
+            if history:
+                for pt in history:
+                    deno_result={
+                        'invoice_count':pt['invoice_count'],
+                        'sale_team_id':pt['sale_team_id'],
+                        'company_id':pt['company_id'] ,
+                        'note':pt['note'],
+                        'date':pt['date'],
+                        'tablet_id':pt['tablet_id'],
+                        'user_id':pt['user_id'],
+                    }
+                    deno_id = history_obj.create(cursor, user, deno_result, context=context)
+                    
+                    for ptl in notes_line:
+                                note_line_res={                                                            
+                                  'denomination_note_ids':deno_id,
+                                  'note_qty':ptl['note_qty'],
+                                  'notes':ptl['notes'],                     
+                                }
+                                notes_line_obj.create(cursor, user, note_line_res, context=context)
+                    
+                        
+                de_date= pt['date']
+                user_id = pt['user_id']
+                mobile_sale_obj = self.pool.get('mobile.sale.order')        
+                mobile_sale_order_obj = self.pool.get('mobile.sale.order.line')
+                cursor.execute("select id from mobile_sale_order where due_date=%s and user_id=%s and void_flag != 'voided'",(de_date,user_id))
+                mobile_ids = cursor.fetchall()
+                if  mobile_ids:
+                    line_ids = mobile_sale_order_obj.search(cursor, user,[('order_id', 'in',mobile_ids)], context=context)                        
+                    order_line_ids = mobile_sale_order_obj.browse(cursor, user, line_ids, context=context)                  
+                    cursor.execute('select product_id,sum(product_uos_qty),sum(sub_total) from mobile_sale_order_line where id in %s group by product_id',(tuple(order_line_ids.ids),))
+                    order_line=cursor.fetchall()
+                    for data in order_line:
+                        data_id={'product_id':data[0],
+                                          'product_uom_qty':data[1],
+                                          'denomination_product_ids':deno_id,
+                                          'amount':data[2]}
+                        deno_product_obj.create(cursor, user, data_id, context=context)
+            print 'True'
+            return True       
+        except Exception, e:
+            print 'False'
+            return False
+    
 mobile_sale_order()
 
 class mobile_sale_order_line(osv.osv):
