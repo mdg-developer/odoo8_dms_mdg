@@ -941,7 +941,50 @@ class mobile_sale_order(osv.osv):
         except Exception, e:
             print 'False'
             return False
-    
+			
+    def create_ar_collection(self, cursor, user, vals, context=None):
+
+        ar_obj = self.pool.get('mobile.ar.collection')
+        str = "{" + vals + "}"
+        str = str.replace("'',", "',")  # null
+        str = str.replace(":',", ":'',")  # due to order_id
+        str = str.replace("}{", "}|{")
+        str = str.replace(":'}{", ":''}")
+        new_arr = str.split('|')
+        result = []
+        for data in new_arr:
+            x = ast.literal_eval(data)
+            result.append(x)
+        ar_collection = []
+        for r in result:
+            print "length", len(r)
+            ar_collection.append(r)  
+        if ar_collection:
+            for ar in ar_collection:            
+                cursor.execute('select id From res_partner where customer_code = %s ',(ar['customer_code'],))
+                data = cursor.fetchall()
+                if data:
+                    partner_id = data[0][0]
+                else:
+                    partner_id = None
+                
+                ar_result = {
+                    'customer_code':ar['customer_code'],
+                    'partner_id':partner_id,
+                    'credit_limit':ar['credit_limit'],
+                    'date':ar['date'] ,                    
+                    'tablet_id':ar['tablet_id'],
+                    'void_flag':ar['void_flag'],
+                    'payment_amount':ar['payment_amount'],                
+                    'so_amount':ar['so_amount'],
+                    'balance':ar['balance'],
+                    'ref_no':ar['ref_no'],
+                    'so_ref':ar['so_ref'],
+                    'sale_team_id':ar['sale_team_id'],                
+                }
+                ar_obj.create(cursor, user, ar_result, context=context)
+        return True
+	
 mobile_sale_order()
 
 class mobile_sale_order_line(osv.osv):
