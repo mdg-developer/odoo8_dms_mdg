@@ -7,7 +7,7 @@
 			<field name="name">sales.rental.form</field>
 			<field name="model">sales.rental</field>
 			<field name="arch" type="xml">
-				<form string="Sales Rental" version="7.0">
+				<form string="Asset to Customer" version="7.0">
 					<sheet>
 						<group>
 							<group>
@@ -49,7 +49,7 @@
 			</field>
 		</record>
 			<record id="view_sales_rental_filter" model="ir.ui.view">
-				<field name="name">Send rental Filter</field>
+				<field name="name">Asset to Customer Filter</field>
 				<field name="model">sales.rental</field>
 				<field name="arch" type="xml">
 					<search string="Search Sales Rental">
@@ -77,7 +77,7 @@
 			</record>
 
 			<record id="action_sales_rental_view" model="ir.actions.act_window">
-				<field name="name">Sales Rental</field>
+				<field name="name">Asset To Customer</field>
 				<field name="type">ir.actions.act_window</field>
 				<field name="res_model">sales.rental</field>
 				<field name="view_type">form</field>
@@ -92,9 +92,6 @@
 			</record>
 
 			<menuitem id="sales_rental" action="action_sales_rental_view"
-				parent="base.menu_sales" name="Customer Sales Rental" sequence="12" />
+				parent="base.menu_sales" name="Asset To Customer" sequence="12" />
 	</data>
-</openerp>
-	    
-	    
-	    
+</openerp>	    
