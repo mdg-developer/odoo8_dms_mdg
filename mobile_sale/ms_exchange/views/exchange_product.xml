@@ -140,6 +140,7 @@
 		<!-- Sale Return Menu Item -->
 		<menuitem id="menu_sale_return" parent="base.menu_sales"
 			name="Sale Return" action="action_sale_return" sequence="13" />
+		
 	</data>
 </openerp>
 	    

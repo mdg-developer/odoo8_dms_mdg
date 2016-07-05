@@ -85,8 +85,8 @@
 			</field>
 		</record>
 		
-		<menuitem name="AR Collection" id="ar_collection_menu"
-			sequence="2" parent="base.menu_mobile_sale" />
+		<menuitem name="Payment" id="ar_collection_menu"
+			parent="base.menu_mobile_sale" sequence="2"/>
 			
 		<menuitem action="action_mobile_ar_collection" id="menu_mobile_ar_collection"
 			parent="ar_collection_menu" sequence="1"/>
