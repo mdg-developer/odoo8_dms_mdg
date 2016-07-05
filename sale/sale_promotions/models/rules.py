@@ -23,7 +23,7 @@ ATTRIBUTES = [
     # ('prod_unit_price', 'Product UnitPrice combination'),
     ('prod_sub_total', 'Product SubTotal combination'),
     ('promo_already_exit', 'Promotion Already Applied'),
-    ('cat_qty', 'Product Category Quantity combination'),  
+    ('cat_qty', 'Product Category Quantity combination'),
 ]
 
 COMPARATORS = [
@@ -122,7 +122,7 @@ class PromotionsRules(osv.Model):
         'special3':fields.boolean('Special 3'),
         'stop_further':fields.boolean('Stop Checks',
                               help="Stops further promotions being checked"),
-        #'main_group': fields.many2one('product_product.maingroup','Main Group'),
+        # 'main_group': fields.many2one('product_product.maingroup','Main Group'),
         'partner_categories':fields.many2many(
                   'res.partner.category',
                   'rule_partner_cat_rel',
@@ -134,7 +134,7 @@ class PromotionsRules(osv.Model):
         'coupon_code':fields.char('Coupon Code', size=20),
         'uses_per_coupon':fields.integer('Uses per Coupon'),
         'uses_per_partner':fields.integer('Uses per Partner'),
-        'coupon_used':fields.integer('Number of Coupon Uses',  required=True),
+        'coupon_used':fields.integer('Number of Coupon Uses', required=True),
         
         'from_date':fields.datetime('From Date'),
         'to_date':fields.datetime('To Date'),
@@ -157,7 +157,7 @@ class PromotionsRules(osv.Model):
                     'promotion',
                     string="Actions"
                         ),
-        'main_group':fields.many2one('product.maingroup','Main Group'), 
+        'main_group':fields.many2one('product.maingroup', 'Main Group'),
     }
     _defaults = {
         'logic':lambda * a:'and',
@@ -179,7 +179,9 @@ class PromotionsRules(osv.Model):
             
         
     def check_primary_conditions(self, cursor, user,
-                                  promotion_rule, order, context):
+                                  promotion_rule, order, expression, context):
+        
+        print 'PROMOTION RULES >>>> ', promotion_rule
         """
         Checks the conditions for 
             Coupon Code
@@ -235,7 +237,7 @@ class PromotionsRules(osv.Model):
         if date_order >= from_date and date_order <= to_date:
             
             # for total amount for condition expression
-            cursor.execute("select attribute,value,comparator from promos_rules_conditions_exps where promotion=%s", (promotion_rule.id,))
+            cursor.execute("select attribute,value,comparator from promos_rules_conditions_exps where id=%s", (expression.id,))
             datas = cursor.fetchone()
             print "datas", datas
 
@@ -285,38 +287,38 @@ class PromotionsRules(osv.Model):
                             return True  
             # Check attribute is product_product category           
             elif attribute == 'product_cat':
-                svalue= eval(value)
+                svalue = eval(value)
                 if comparator == 'in' or comparator == '==':
                     for order_line in order.order_line:
-                        print "order_line.product_id.id" ,order_line.product_id.id       
+                        print "order_line.product_id.id" , order_line.product_id.id       
                         
                        
                         product_obj = self.pool.get('product_product.product_product').search(cursor, user, [('id', '=', order_line.product_id.id)], context=context)
                         product_lst = self.pool.get('product_product.product_product').search(cursor, user, [('id', '=', product_obj[0])], context=context)
                         prod_obj = self.pool.get('product_product.product_product').browse(cursor, user, product_lst[0], context)
-                        #print "product_lst.product_tmpl_id.id",prod_obj.product_tmpl_id.id
-                        product_template_lst = self.pool.get('product_product.template').search(cursor, user, [('id', '=',prod_obj.product_tmpl_id.id)], context=context)
+                        # print "product_lst.product_tmpl_id.id",prod_obj.product_tmpl_id.id
+                        product_template_lst = self.pool.get('product_product.template').search(cursor, user, [('id', '=', prod_obj.product_tmpl_id.id)], context=context)
                         tmpl_obj = self.pool.get('product_product.template').browse(cursor, user, product_template_lst[0], context)
-                        #print "tmpl_obj.categ_id.id",tmpl_obj.categ_id.id
+                        # print "tmpl_obj.categ_id.id",tmpl_obj.categ_id.id
                         
                         product_categ_lst = self.pool.get('product_product.category').search(cursor, user, [('id', '=', tmpl_obj.categ_id.id)], context=context)
                         categ_obj = self.pool.get('product_product.category').browse(cursor, user, product_categ_lst[0], context)
-                        cat_name=categ_obj.name
-                        category_name1= str(cat_name)
-                        cat_value1= str(svalue)
-                        category_name=category_name1.strip() 
-                        cat_value=cat_value1.strip() 
-                        print"category_name--",type(category_name)
-                        print"cat_value--",type(cat_value)
-                        print"category_str-length-",category_name.__len__()
-                        print"cat_str-length-",cat_value.__len__()
-                        print"category_",category_name
-                        print"cat_str",cat_value
-                        print category_name==cat_value
+                        cat_name = categ_obj.name
+                        category_name1 = str(cat_name)
+                        cat_value1 = str(svalue)
+                        category_name = category_name1.strip() 
+                        cat_value = cat_value1.strip() 
+                        print"category_name--", type(category_name)
+                        print"cat_value--", type(cat_value)
+                        print"category_str-length-", category_name.__len__()
+                        print"cat_str-length-", cat_value.__len__()
+                        print"category_", category_name
+                        print"cat_str", cat_value
+                        print category_name == cat_value
                        
-                        if category_name==cat_value:
+                        if category_name == cat_value:
                             
-                            print "Same category",category_name
+                            print "Same category", category_name
                             return True  
             # Check attribute is product_product quantity  
             elif attribute == 'prod_qty':
@@ -332,6 +334,7 @@ class PromotionsRules(osv.Model):
                         print "order_line.product_uom_qty", order_line.product_uom_qty
                         
                         if comparator == '==':
+                            print 'EQUAL'
                             if order_line.product_uom_qty == product_qty:
                                 return True
                              
@@ -345,6 +348,7 @@ class PromotionsRules(osv.Model):
                             if order_line.product_uom_qty < product_qty:
                                 return True
                         elif comparator == '>=':
+                            print 'GREATER THAN OF EQUAL'
                             if order_line.product_uom_qty >= product_qty:
                                 return True
                         elif comparator == '<=':    
@@ -369,26 +373,26 @@ class PromotionsRules(osv.Model):
                         product_obj = self.pool.get('product_product.product_product').search(cursor, user, [('id', '=', order_line.product_id.id)], context=context)
                         product_lst = self.pool.get('product_product.product_product').search(cursor, user, [('id', '=', product_obj[0])], context=context)
                         prod_obj = self.pool.get('product_product.product_product').browse(cursor, user, product_lst[0], context)
-                        #print "product_lst.product_tmpl_id.id",prod_obj.product_tmpl_id.id
-                        product_template_lst = self.pool.get('product_product.template').search(cursor, user, [('id', '=',prod_obj.product_tmpl_id.id)], context=context)
+                        # print "product_lst.product_tmpl_id.id",prod_obj.product_tmpl_id.id
+                        product_template_lst = self.pool.get('product_product.template').search(cursor, user, [('id', '=', prod_obj.product_tmpl_id.id)], context=context)
                         tmpl_obj = self.pool.get('product_product.template').browse(cursor, user, product_template_lst[0], context)
-                        #print "tmpl_obj.categ_id.id",tmpl_obj.categ_id.id
+                        # print "tmpl_obj.categ_id.id",tmpl_obj.categ_id.id
                         
                         product_categ_lst = self.pool.get('product_product.category').search(cursor, user, [('id', '=', tmpl_obj.categ_id.id)], context=context)
                         categ_obj = self.pool.get('product_product.category').browse(cursor, user, product_categ_lst[0], context)
-                        cat_name=categ_obj.name
-                        category_name1= str(cat_name)
-                        cat_value1= str(category_code)
-                        category_name=category_name1.strip() 
-                        cat_value=cat_value1.strip() 
-                        print"category_name--",type(category_name)
-                        print"cat_value--",type(cat_value)
-                        print"category_str-length-",category_name.__len__()
-                        print"cat_str-length-",cat_value.__len__()
-                        print"category_",category_name
-                        print"cat_str",cat_value
-                        print category_name==cat_value
-                        if category_name==cat_value:
+                        cat_name = categ_obj.name
+                        category_name1 = str(cat_name)
+                        cat_value1 = str(category_code)
+                        category_name = category_name1.strip() 
+                        cat_value = cat_value1.strip() 
+                        print"category_name--", type(category_name)
+                        print"cat_value--", type(cat_value)
+                        print"category_str-length-", category_name.__len__()
+                        print"cat_str-length-", cat_value.__len__()
+                        print"category_", category_name
+                        print"cat_str", cat_value
+                        print category_name == cat_value
+                        if category_name == cat_value:
                             print "order_line.product_uom_qty", order_line.product_uom_qty
                             if comparator == '==':
                                 if order_line.product_uom_qty == product_qty:
@@ -551,51 +555,72 @@ class PromotionsRules(osv.Model):
 #                 return False
        
             # Now to the rules checking
-        expected_result = eval(promotion_rule.expected_logic_result) #True,False
-        logic = promotion_rule.logic #All ,Any
-       
+        expected_result = eval(promotion_rule.expected_logic_result)  # True,False
+        logic = promotion_rule.logic  # All ,Any
+        # MMK
+        condition = False
             # Evaluate each expression
-        for expression in promotion_rule.expressions:
+
+#                     result = expression_obj.evaluate(cursor, user,
+#                                               expression, order, context)
+                    # For and logic, any False is completely false
+                    # MMK
+#                     if (result == expected_result) and (logic == 'and'):
+#                         return True
+        if (logic == 'and' and expected_result == True):
+            for expression in promotion_rule.expressions:
+                print 'expression >>> ', expression.value
 #                 result = 'Execution Failed'
 #            
 #             
 #                 try:
-                    result = self.check_primary_conditions(
-                                            cursor, user,
-                                            promotion_rule, order,
-                                            context)
-#                     result = expression_obj.evaluate(cursor, user,
-#                                               expression, order, context)
+                result = self.check_primary_conditions(
+                                        cursor, user,
+                                        promotion_rule, order, expression,
+                                        context)
 #                
-                    print "output condition result------------------------", result
-                    # For and logic, any False is completely false
-                    if (not (result == expected_result)) and (logic == 'and'):
-                        return False
+                print "output condition result------------------------", result
+                print' expected result >>>> ', expected_result
+                
+                if result == True:
+                    condition = result
+                else:
+                    condition = result
+                    break
+            if condition == True:
+                return True
+            else:
+                return False
+                        
+                        # OLD
+#                     if (not (result == expected_result)) and (logic == 'and'):
+#                         return False
                     # For OR logic any True is completely True
-                    if (result == expected_result) and (logic == 'or'):
-                        return True
+                    # OLD
+#                     if (result == expected_result) and (logic == 'or'):
+#                         return True
                     # For AND logic all True is completely True
 #                     if (result == expected_result) and (logic == 'and'):
 #                         return True
                     # If stop_further is given, then execution stops  if the
                     # condition was satisfied
-                    if (result == expected_result) and expression.stop_further:
-                        return True
+#                     if (result == expected_result) and expression.stop_further:
+#                         return True
 #                 except Exception,e:
 #                         LOGGER.debug('Error %s', e)
-                        return False
-                        print "Codes is in exception................................................."
-#                raise osv.except_osv("Expression Error", e)
-        
-#                 finally:
-                    if DEBUG:
-                        LOGGER.debug('Promotions %s evaluated to %s', expression.serialised_expr, result)
+#                         return False
+#                         print "Codes is in exception................................................."
+# #                raise osv.except_osv("Expression Error", e)
+#         
+# #                 finally:
+#                     if DEBUG:
+#                         LOGGER.debug('Promotions %s evaluated to %s', expression.serialised_expr, result)
 #                         if logic == 'and':
 #                             # If control comes here for and logic, then all conditions were 
 #                             # satisfied
 #                             return True
         # if control comes here for OR logic, none were satisfied
-        return False
+#         return False
         
     def execute_actions(self, cursor, user, promotion_rule,
                             order_id, context):
@@ -638,7 +663,7 @@ class PromotionsRules(osv.Model):
         so_promotion_obj = self.pool.get('so.promotion.line')
         promo_line_id = pro_id = None
         # flag=True
-        #cursor.execute('update sale_order set promo_state=True where id = %s', (order_id,))
+        # cursor.execute('update sale_order set promo_state=True where id = %s', (order_id,))
         order = self.pool.get('sale.order').browse(cursor, user,
                                                    order_id, context=context)
         print "order----", order
@@ -651,8 +676,12 @@ class PromotionsRules(osv.Model):
             result = self.evaluate(cursor, user,
                                    promotion_rule, order,
                                    context)
+            
+            # MMK
+            # Apply Promotions Here
             print "result------------------------------" , result          
-               
+            # And so yin result ka true phit ya mal
+            # OR so yin result ka false phit ya mal   
             if result:
 #                 try:
                     # #in this case ,I add promotion id to the promotion line :)MMK
@@ -902,7 +931,7 @@ class PromotionsRulesConditionsExprs(osv.Model):
 #                             )        
         # Mismatch 4:
         if attribute in [
-                         #'prods_qty',
+                         # 'prods_qty',
                          'prod_qty',
                          'prod_unit_price',
                          'prod_sub_total',
@@ -935,25 +964,25 @@ class PromotionsRulesConditionsExprs(osv.Model):
                 raise Exception(
                         "Value for computed subtotal combination is invalid\n"
                         "Eg for right format is `['code1,code2',..]|120.50`")
-        #Mismatch 6:        
+        # Mismatch 6:        
         if attribute in [
                          'prods_multi_uom_qty',
                         ]:
             try:
-                svalue=value.split(':')
-                codes=svalue[0]
-                quantity=svalue[1]
-                pcodes=codes.split("|") 
-                product_codes=pcodes[0]
-                uom_qtys=pcodes[1]
+                svalue = value.split(':')
+                codes = svalue[0]
+                quantity = svalue[1]
+                pcodes = codes.split("|") 
+                product_codes = pcodes[0]
+                uom_qtys = pcodes[1]
                 product_code = product_codes.split(";")
-                uom_qty=uom_qtys.split(";")
+                uom_qty = uom_qtys.split(";")
  
                 for product in product_code:
-                    if not(type(eval(product))==str):
+                    if not(type(eval(product)) == str):
                         raise
                 for qty in uom_qty:
-                    if not(type(eval(qty))in [int,long,float]):
+                    if not(type(eval(qty))in [int, long, float]):
                         raise     
 
                 if not (type(eval(quantity)) in [int, long, float]):
@@ -964,22 +993,22 @@ class PromotionsRulesConditionsExprs(osv.Model):
                         "Eg for right format is `'DC-0006';'DC-0001';'DC-0003'|24;60;60:5`" % attribute)  
    
    
-        #Mismatch 7:
+        # Mismatch 7:
         if attribute in [
                          'prods_qty',
    
                          ]:
             try:
-                #divide product_product code and quatity
+                # divide product_product code and quatity
                 product_codes, quantity = value.split("|")
-                #divide product_product code one by one
+                # divide product_product code one by one
                 product = product_codes.split(";")
                 for product_code in product:
-                    print "product_code",product_code
-                    #Check product_product code is string
-                    if not (type(eval(product_code)) == str ):
+                    print "product_code", product_code
+                    # Check product_product code is string
+                    if not (type(eval(product_code)) == str):
                         raise
-                #Check quantity is integer,float,long    
+                # Check quantity is integer,float,long    
                 if not type(eval(quantity) in [int, long, float]):
                     raise
             except:
@@ -1016,7 +1045,7 @@ class PromotionsRulesConditionsExprs(osv.Model):
                                        comparator)    
         if attribute in [ 
                       
-                         #'prods_qty',
+                         # 'prods_qty',
                          'prod_qty',
                          'prod_unit_price',
                          'prod_sub_total',
@@ -1039,9 +1068,9 @@ class PromotionsRulesConditionsExprs(osv.Model):
                          
                          ]:
             product_codes, quantity = value.split("|")
-            print "product_product codes in serialize",product_codes
-            product_code=product_codes.split(";")
-            #print "product_product codes in serialize",product_code
+            print "product_product codes in serialize", product_codes
+            product_code = product_codes.split(";")
+            # print "product_product codes in serialize",product_code
             return '(%s in products) and (%s["%s"] %s %s)' % (
                                                            product_code,
                                                            attribute,
@@ -1075,14 +1104,14 @@ class PromotionsRulesConditionsExprs(osv.Model):
                          'prods_multi_uom_qty',
                           
                          ]:
-            svalue=value.split(':')
-            codes=svalue[0]
-            quantity=svalue[1]
-            pcodes=codes.split("|") 
-            product_codes=pcodes[0]
-            uom_qtys=pcodes[1]
+            svalue = value.split(':')
+            codes = svalue[0]
+            quantity = svalue[1]
+            pcodes = codes.split("|") 
+            product_codes = pcodes[0]
+            uom_qtys = pcodes[1]
             product_code = product_codes.split(";")
-            uom_qty=uom_qtys.split(";")
+            uom_qty = uom_qtys.split(";")
             return '(%s in products) and (%s in qtys) and (%s["%s"]["%s"] %s %s)' % (
                                                            product_code,
                                                            uom_qty,
@@ -1346,7 +1375,7 @@ class PromotionsRulesActions(osv.Model):
                               'arguments':"0.00",
                               }
                    }          
-		 #kzo
+		 # kzo
         if action_type in ['foc_any_product', ] :
             return{
                    'value' : {
@@ -1432,14 +1461,17 @@ class PromotionsRulesActions(osv.Model):
         @param context: Context(no direct use).
         """
         orderline_ids = []
+        order_obj = self.pool.get('sale.order')
         order_line_obj = self.pool.get('sale.order.line')
         for order_line in order.order_line:
             print "order_line.product_id.default_code", order_line.product_id.default_code
             print "eval(action.product_code)", eval(action.product_code)
             if order_line.product_id.default_code == eval(action.product_code):
                 print "order line id", order_line.id
+                discount_amt = 0.0
                 orderline_ids.append(order_line.id)
-                return order_line_obj.write(cursor,
+                # MMK
+                order_line_obj.write(cursor,
                                      user,
                                     orderline_ids,
                                      {
@@ -1447,6 +1479,21 @@ class PromotionsRulesActions(osv.Model):
                                       },
                                      context
                                      )
+                if order_line.price_unit:
+                    discount_amt = float(order_line.discount) * (float(order_line.price_unit * order_line.product_uom_qty)) / 100
+                    order_line_obj.write(cursor,
+                                         user,
+                                        orderline_ids,
+                                         {
+                                          'discount_amt':discount_amt,
+                                          },
+                                         context
+                                         )
+                for a in range(0, 7):
+                    print 'update...'
+                    order_obj.button_dummy(cursor, user, [order.id], context=context) 
+                    order_obj._amount_all_wrapper(cursor, user, order.id, ['amount_untaxed', 'total_dis', 'amount_tax', 'amount_total'], None, context=context)
+        return True
     
     def action_prod_disc_fix(self, cursor, user,
                               action, order, context=None):
@@ -1458,30 +1505,39 @@ class PromotionsRulesActions(osv.Model):
         @param order: sale order
         @param context: Context(no direct use).
         """
+        print 'Fixed Amount on Product'
         orderline_ids = []
         order_line_obj = self.pool.get('sale.order.line')
-        product_obj = self.pool.get('product_product.product_product')
+        product_obj = self.pool.get('product.product')
         line_name = '%s on %s' % (action.promotion.name,
                                      eval(action.product_code))
         product_id = product_obj.search(cursor, user,
                        [('default_code', '=', eval(action.product_code))],
                        context=context)
+        print 'Product Code is >>>> ', product_id
         if not product_id:
             raise Exception("No product_product with the product_product code")
         if len(product_id) > 1:
             raise Exception("Many products with same code")
         product = product_obj.browse(cursor, user, product_id[0], context)
+        print' product OBJ >>> ', product
         for order_line in order.order_line:
             if order_line.product_id.default_code == eval(action.product_code):
                 orderline_ids.append(order_line.id)
-        return order_line_obj.write(cursor,
-                                     user,
-                                     orderline_ids,
-                                     {
-                                      'price_unit':order_line.price_unit - eval(action.arguments),
-                                      },
-                                     context
-                                     )
+                # MMK
+            
+                order_line_obj.write(cursor,
+                                                     user,
+                                                     orderline_ids,
+                                                     {
+                #                                       'price_unit':order_line.price_unit - eval(action.arguments),
+                                                    # MMK #multiply the product qty with product discount amt [example: fixed amount for product is 10=> 10*product_uom_qty=subtotal
+                                                    'discount_amt':eval(action.arguments) * order_line.product_uom_qty,
+                                                      },
+                                                     context
+                                                     )
+        return True
+
      
     def action_disc_perc_on_grand_total(self, cursor, user,
                                action, order, context=None):
@@ -1592,7 +1648,7 @@ class PromotionsRulesActions(osv.Model):
         @param context: Context(no direct use).
         """
         order_line_obj = self.pool.get('sale.order.line')
-        product_obj = self.pool.get('product_product.product_product')
+        product_obj = self.pool.get('product.product')
         product_x = product_obj.browse(cursor, user, product_id[0])
         return order_line_obj.create(cursor, user, {
                              'order_id':order.id,
@@ -1649,24 +1705,24 @@ class PromotionsRulesActions(osv.Model):
             product_obj1 = self.pool.get('product_product.product_product').search(cursor, user, [('id', '=', order_line.product_id.id)], context=context)
             product_lst = self.pool.get('product_product.product_product').search(cursor, user, [('id', '=', product_obj1[0])], context=context)
             prod_obj = self.pool.get('product_product.product_product').browse(cursor, user, product_lst[0], context)
-            print "product_lst.product_tmpl_id.id",prod_obj.product_tmpl_id.id
+            print "product_lst.product_tmpl_id.id", prod_obj.product_tmpl_id.id
                         
-            product_template_lst = self.pool.get('product_product.template').search(cursor, user, [('id', '=',prod_obj.product_tmpl_id.id)], context=context)
+            product_template_lst = self.pool.get('product_product.template').search(cursor, user, [('id', '=', prod_obj.product_tmpl_id.id)], context=context)
             tmpl_obj = self.pool.get('product_product.template').browse(cursor, user, product_template_lst[0], context)
                         
-            print "tmpl_obj.categ_id.id",tmpl_obj.categ_id.id
+            print "tmpl_obj.categ_id.id", tmpl_obj.categ_id.id
                         
             product_categ_lst = self.pool.get('product_product.category').search(cursor, user, [('id', '=', tmpl_obj.categ_id.id)], context=context)
             categ_obj = self.pool.get('product_product.category').browse(cursor, user, product_categ_lst[0], context)
-            cat_name=categ_obj.name
-            category_name1= str(cat_name)
-            cat_value_x= str(product_x_cat)
-            cat_value_y= str(product_y_cat)
-            category_name=category_name1.strip() 
-            cat_value_x=cat_value_x.strip() 
-            cat_value_y=cat_value_y.strip() 
-            print "category_name",category_name
-            print "cat_value",cat_value_x
+            cat_name = categ_obj.name
+            category_name1 = str(cat_name)
+            cat_value_x = str(product_x_cat)
+            cat_value_y = str(product_y_cat)
+            category_name = category_name1.strip() 
+            cat_value_x = cat_value_x.strip() 
+            cat_value_y = cat_value_y.strip() 
+            print "category_name", category_name
+            print "cat_value", cat_value_x
             print category_name == cat_value_x
             if category_name == cat_value_x:
                 # check sale category is same with category in promotions x value
@@ -1718,8 +1774,8 @@ class PromotionsRulesActions(osv.Model):
                                     [('default_code', '=', product_y_code)], context=context)
         qty_x, qty_y = [eval(arg) \
                                 for arg in action.arguments.split(":")]
-        print "product_cat",product_cat
-        print "product_y_code",product_y_code
+        print "product_cat", product_cat
+        print "product_y_code", product_y_code
         # Build a dictionary of product_code to quantity 
         for order_line in order.order_line:
             
@@ -1733,22 +1789,22 @@ class PromotionsRulesActions(osv.Model):
             product_obj1 = self.pool.get('product_product.product_product').search(cursor, user, [('id', '=', order_line.product_id.id)], context=context)
             product_lst = self.pool.get('product_product.product_product').search(cursor, user, [('id', '=', product_obj1[0])], context=context)
             prod_obj = self.pool.get('product_product.product_product').browse(cursor, user, product_lst[0], context)
-            print "product_lst.product_tmpl_id.id",prod_obj.product_tmpl_id.id
+            print "product_lst.product_tmpl_id.id", prod_obj.product_tmpl_id.id
                         
-            product_template_lst = self.pool.get('product_product.template').search(cursor, user, [('id', '=',prod_obj.product_tmpl_id.id)], context=context)
+            product_template_lst = self.pool.get('product_product.template').search(cursor, user, [('id', '=', prod_obj.product_tmpl_id.id)], context=context)
             tmpl_obj = self.pool.get('product_product.template').browse(cursor, user, product_template_lst[0], context)
                         
-            print "tmpl_obj.categ_id.id",tmpl_obj.categ_id.id
+            print "tmpl_obj.categ_id.id", tmpl_obj.categ_id.id
                         
             product_categ_lst = self.pool.get('product_product.category').search(cursor, user, [('id', '=', tmpl_obj.categ_id.id)], context=context)
             categ_obj = self.pool.get('product_product.category').browse(cursor, user, product_categ_lst[0], context)
-            cat_name=categ_obj.name
-            category_name1= str(cat_name)
-            cat_value1= str(product_cat)
-            category_name=category_name1.strip() 
-            cat_value=cat_value1.strip() 
-            print "category_name",category_name
-            print "cat_value",cat_value
+            cat_name = categ_obj.name
+            category_name1 = str(cat_name)
+            cat_value1 = str(product_cat)
+            category_name = category_name1.strip() 
+            cat_value = cat_value1.strip() 
+            print "category_name", category_name
+            print "cat_value", cat_value
             print category_name == cat_value
             if category_name == cat_value:
                 
@@ -1875,7 +1931,7 @@ class PromotionsRulesActions(osv.Model):
                 another. This might cause the function to get slow and 
                 hamper the coding standards.
         """
-        product_obj = self.pool.get('product_product.product_product')
+        product_obj = self.pool.get('product.product')
         # Get Product
         product_x_code = eval(action.product_code)
         product_id_for_x1_code = product_obj.search(cursor, user,
@@ -2081,10 +2137,10 @@ class PromotionsRulesActions(osv.Model):
               
         for order_line in order.order_line:        
                 if order_line.product_id:
-                    #print "order_line.product_id", order_line.product_id
+                    # print "order_line.product_id", order_line.product_id
                     for product_code in product_codes:
                         print eval(product_code)
-                        if order_line.product_id.default_code ==  eval(product_code):    
+                        if order_line.product_id.default_code == eval(product_code):    
                             qty += order_line.product_uom_qty
                             print "qty", qty
                             print "qty_x", qty_x
@@ -2146,25 +2202,25 @@ class PromotionsRulesActions(osv.Model):
             product_obj = self.pool.get('product_product.product_product').search(cursor, user, [('id', '=', order_line.product_id.id)], context=context)
             product_lst = self.pool.get('product_product.product_product').search(cursor, user, [('id', '=', product_obj[0])], context=context)
             prod_obj = self.pool.get('product_product.product_product').browse(cursor, user, product_lst[0], context)
-            #print "product_lst.product_tmpl_id.id",prod_obj.product_tmpl_id.id
-            product_template_lst = self.pool.get('product_product.template').search(cursor, user, [('id', '=',prod_obj.product_tmpl_id.id)], context=context)
+            # print "product_lst.product_tmpl_id.id",prod_obj.product_tmpl_id.id
+            product_template_lst = self.pool.get('product_product.template').search(cursor, user, [('id', '=', prod_obj.product_tmpl_id.id)], context=context)
             tmpl_obj = self.pool.get('product_product.template').browse(cursor, user, product_template_lst[0], context)
-            #print "tmpl_obj.categ_id.id",tmpl_obj.categ_id.id
+            # print "tmpl_obj.categ_id.id",tmpl_obj.categ_id.id
             product_categ_lst = self.pool.get('product_product.category').search(cursor, user, [('id', '=', tmpl_obj.categ_id.id)], context=context)
             categ_obj = self.pool.get('product_product.category').browse(cursor, user, product_categ_lst[0], context)
-            cat_name=categ_obj.name
-            category_name1= str(cat_name)
-            cat_value1= str(eval(action.product_code))
-            category_name=category_name1.strip() 
-            cat_value=cat_value1.strip() 
-            print"category_name--",type(category_name)
-            print"cat_value--",type(cat_value)
-            print"category_str-length-",category_name.__len__()
-            print"cat_str-length-",cat_value.__len__()
-            print"category_",category_name
-            print"cat_str",cat_value
-            print category_name==cat_value
-            if category_name==cat_value:
+            cat_name = categ_obj.name
+            category_name1 = str(cat_name)
+            cat_value1 = str(eval(action.product_code))
+            category_name = category_name1.strip() 
+            cat_value = cat_value1.strip() 
+            print"category_name--", type(category_name)
+            print"cat_value--", type(cat_value)
+            print"category_str-length-", category_name.__len__()
+            print"cat_str-length-", cat_value.__len__()
+            print"category_", category_name
+            print"cat_str", cat_value
+            print category_name == cat_value
+            if category_name == cat_value:
                 orderline_ids.append(order_line.id)
                 print 'orderline_ids ', orderline_ids  
         print 'order_line.id ', order_line.id     
@@ -2219,6 +2275,8 @@ class PromotionsRulesActions(osv.Model):
 #         self.clear_existing_promotion_lines(cursor, user, order, context)
         action = self.browse(cursor, user, action_id, context)
         method_name = 'action_' + action.action_type
+        print 'action >>> ', action
+        print 'method >>> ', method_name
         return getattr(self, method_name).__call__(cursor, user, action,
                                                    order, context)
         

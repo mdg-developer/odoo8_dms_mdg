@@ -28,9 +28,9 @@ class SaleOrder(osv.osv):
     '''
     _inherit = 'sale.order'
     
-  #  _columns = {
-   #     'coupon_code':fields.char('Promo Coupon Code', size=20),
-   # }
+    _columns = {
+        'coupon_code':fields.char('Promo Coupon Code', size=20),
+    }
     
     def apply_promotions(self, cursor, user, ids, context=None):
         """
@@ -40,27 +40,12 @@ class SaleOrder(osv.osv):
         @param ids: ID of current record.
         @param context: Context(no direct use).
         """
-       # promotions_obj = self.pool.get('promos.rules')
-    #    for order_id in ids:
-        #    promotions_obj.apply_promotions(cursor, user, 
-                 #                           order_id, context=None)
+        promotions_obj = self.pool.get('promos.rules')
+        for order_id in ids:
+            promotions_obj.apply_promotions(cursor, user,
+                                            order_id, context=None)
             
         return True
             
 SaleOrder()
 
-# 
-# class SaleOrderLine(osv.osv):
-#     '''
-#     Sale Order Line
-#     '''
-#     _inherit = "sale.order.line"
-#     
-#     _columns = {
-#         'promotion_line':fields.boolean(
-#                 "Promotion Line",
-#                 help="Indicates if the line was created by promotions"
-#                                         )
-#     }
-# SaleOrderLine()
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
