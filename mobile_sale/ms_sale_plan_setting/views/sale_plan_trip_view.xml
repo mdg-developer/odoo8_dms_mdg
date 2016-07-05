@@ -100,7 +100,7 @@
 		</record>
 
 		<menuitem id="config_sale_plan_for_trips"
-			parent="menu_mobile_sale_saleplan_setting_menu" name="Sale Plans For Trips"
-			action="action_sale_plan_for_trip_view" sequence="2" />
+			parent="base.menu_mobile_sale_sale_target_menu" name="Sale Plans For Trips"
+			action="action_sale_plan_for_trip_view" sequence="4" />
 	</data>
 </openerp>
