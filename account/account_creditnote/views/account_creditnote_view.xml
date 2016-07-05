@@ -13,12 +13,12 @@
 					<sheet>
 						<group>
 							<group>
-								<field name="creditnote_no" />
-								<field name="so_no" />
-								<field name="ref_no" />
+								<field name="name" />
+								<field name="so_no"  placeholder="SO00001" />
+<!-- 								<field name="ref_no" placeholder="A00001" /> -->
 								<field name="customer_id" />
 								<field name="sale_team_id" />
-								<field name="user_id" />
+								<field name="user_id"  domain="[('default_section_id', '=',sale_team_id)]" />
 								<field name="type" />
 								<field name="description" />
 								<field name="terms_and_conditions" />
@@ -28,7 +28,6 @@
 								<field name="create_date" />
 								<field name="issued_date" />
 								<field name="used_date" />
-								<field name="expired_date" />
 								<field name="m_status" />
 							</group>							
 						</group>
@@ -42,7 +41,7 @@
 			<field name="model">account.creditnote</field>
 			<field name="arch" type="xml">
 				<tree string="Credit Note Tree">
-					<field name="creditnote_no" />
+					<field name="name" />
 					<field name="amount" />
 					<field name="customer_id" />
 					<field name="user_id" />
@@ -68,7 +67,7 @@
 		</record>
 		
 		<menuitem action="action_creditnote" id="menu_creditnote"
-			parent="ms_mobile_sale_credit.ar_collection_menu" sequence="2"/>
+			parent="account.menu_finance_receivables" sequence="100"/>
 			
 	</data>
 </openerp>

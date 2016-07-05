@@ -35,7 +35,9 @@ Account Credit Note
     'depends': ['base','account'
     ],
     'data': [
-       'views/account_creditnote_view.xml'
+       'views/account_creditnote_view.xml',
+       'views/code_sequence.xml'
+       
     ],
     'installable': True,
     'auto_install': False,
