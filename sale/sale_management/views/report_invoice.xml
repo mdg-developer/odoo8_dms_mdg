@@ -1,153 +1,283 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-<data>
-<template id="report_invoice_document" inherit_id="account.report_invoice_document">
-  <xpath expr="//t[@t-call='report.external_layout']" position="replace" >
-    <t t-call="report.external_layout">
-        <div class="page">
-            <div class="row">
-                <div class="col-xs-5 col-xs-offset-7">
-                    <address t-field="o.partner_id"
-                        t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' />
-                    <span t-field="o.partner_id.vat"/>
-                </div>
-            </div>
+	<data>
+		<template id="report_invoice_document" inherit_id="account.report_invoice_document">
+			<xpath expr="//t[@t-call='report.external_layout']" position="replace">
 
-            <h2>
-                <span t-if="o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')">Invoice</span>
-                <span t-if="o.type == 'out_invoice' and o.state == 'proforma2'">PRO-FORMA</span>
-                <span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
-                <span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
-                <span t-if="o.type == 'out_refund'">Refund</span>
-                <span t-if="o.type == 'in_refund'">Supplier Refund</span>
-                <span t-if="o.type == 'in_invoice'">Supplier Invoice</span>
-                <span t-field="o.number"/>
-            </h2>
+				<t t-call="sale_management.custom_layout">
+					<div class="page" style="font-size:25px;">
+						<div class="row">
+							<div align='center' style="font-size:60px;">INVOICE
+							</div>
+						</div>
+						<table>
+							<tr>
+								<td>
+									<div t-field="o.company_id.partner_id"
+										t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' />
+									<div t-field="o.company_id.phone" />
+								</td>
+								<td style="padding-left: 20em">
+									<b>Customer address:</b>
+									<address t-field="o.partner_id"
+										t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' />
+									<span t-field="o.partner_id.vat"
+										t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' />
+									<div t-field="o.partner_id.phone" style="margin-top:-18px;" />
+								</td>
+							</tr>
+						</table>
+						<br />
+						<table>
+							<tr>
+								<td style="font-size:50px;">
+									<span
+										t-if="o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')">Invoice No - </span>
+									<span t-if="o.type == 'out_invoice' and o.state == 'proforma2'">PRO-FORMA</span>
+									<span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
+									<span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
+									<span t-if="o.type == 'out_refund'">Refund</span>
+									<span t-if="o.type == 'in_refund'">Supplier Refund</span>
+									<span t-if="o.type == 'in_invoice'">Supplier Invoice</span>
+									<span t-field="o.number" />
+								</td>
+								<td style="padding-left: 15em">
+									<b>Branch Code:</b>
+									<span t-field="o.partner_id.branch_id.branch_code" />
+								</td>
+							</tr>
 
-            <div class="row mt32 mb32">
-                <div class="col-xs-2" t-if="o.name">
-                    <strong>Description:</strong>
-                    <p t-field="o.name"/>
-                </div>
-                <div class="col-xs-2" t-if="o.date_invoice">
-                    <strong>Invoice Date:</strong>
-                    <p t-field="o.date_invoice"/>
-                </div>
-                <div class="col-xs-2" t-if="o.origin">
-                    <strong>Source:</strong>
-                    <p t-field="o.origin"/>
-                </div>
-                <div class="col-xs-2" t-if="o.partner_id.ref">
-                    <strong>Customer Code:</strong>
-                    <p t-field="o.partner_id.ref"/>
-                </div>
-                <div class="col-xs-2" t-if="o.reference">
-                    <strong>Reference:</strong>
-                    <p t-field="o.reference"/>
-                </div>
-            </div>
+						</table>
+						<br />
+						<table class='table' style='border:solid;border-color:white;'>
+							<tr style='border:solid;border-color:white;'>
+								<td>
+									<b>Your Reference</b>
+									<br />
+									<span t-field="o.sale_order_id.tb_ref_no" />
+								</td>
+								<td>
+									<b>Sales Teams</b>
+									<br />
+									<span t-field="o.section_id.name" />
+								</td>
+								<td>
+									<b>Salesman</b>
+									<br />
+									<span t-field="o.user_id.name" />
+								</td>
+								<td>
+									<b>Order Date</b>
+									<br />
+									<span t-field="o.sale_order_id.date_order" />
+								</td>
+								<td>
+									<b>Invoice Date</b>
+									<br />
+									<span t-field="o.date_invoice" />
+								</td>
+							</tr>
 
-            <table class="table table-condensed">
-                <thead>
-                    <tr>
-                        <th>Description</th>
-                        <th>Quantity</th>
-                        <th class="text-right">Unit Price</th>
-                        <th class="text-right" groups="sale.group_discount_per_so_line">Discount (%)</th>
-                        <th class="text-right">Taxes</th>
-                        <th class="text-right">Amount</th>
-                    </tr>
-                </thead>
-                <tbody class="invoice_tbody">
-                    <tr t-foreach="o.invoice_line" t-as="l">
-                        <td><span t-field="l.name"/></td>
-                        <td>
-                            <span t-field="l.quantity"/>
-                            <span t-field="l.uos_id"  groups="product.group_uom"/>
-                        </td>
-                        <td class="text-right">
-                            <span t-field="l.price_unit"/>
-                        </td>
-                        <td class="text-right" groups="sale.group_discount_per_so_line"><span t-field="l.discount"/></td>
-                        <td class="text-right">
-                            <span t-esc="', '.join(map(lambda x: x.name, l.invoice_line_tax_id))"/>
-                        </td>
-                        <td class="text-right">
-                            <span t-field="l.price_subtotal" 
-                                t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+							<tr style='border:solid;border-color:white;'>
+								<td>
+									<b>Customer Code</b>
+									<br />
+									<span t-field="o.partner_id.customer_code" />
+								</td>
+								<td>
+									<b>Source</b>
+									<br />
+									<span t-field="o.origin" />
+								</td>
+								<td>
+									<b>Delivery Remark</b>
+									<br />
+									<span t-field="o.sale_order_id.delivery_remark" />
+								</td>
+								<td>
+									<b>Payment Type</b>
+									<br />
+									<span t-field="o.sale_order_id.payment_type" />
+								</td>
+								<td>
+									<b>Due Date</b>
+									<br />
+									<span t-field="o.date_due" />
+								</td>
+							</tr>
+						</table>
 
-            <div class="row">
-                <div class="col-xs-4 pull-right">
-                    <table class="table table-condensed">
-<!--                         <tr class="border-black"> -->
-<!--                             <td><strong>Total Without Taxes</strong></td> -->
-<!--                             <td class="text-right"> -->
-<!--                                 <span t-field="o.amount_untaxed" t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/> -->
-<!--                             </td> -->
-<!--                         </tr> -->
-<!--                         <tr> -->
-<!--                             <td>Taxes</td> -->
-<!--                             <td class="text-right"> -->
-<!--                                 <span t-field="o.amount_tax" t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/> -->
-<!--                             </td> -->
-<!--                         </tr> -->
-                        <tr class="border-black">
-                            <td><strong>Total</strong></td>
-                            <td class="text-right">
-                                 <span t-field="o.amount_total" t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
+						<table class="table" style="border:solid;border-color:#ffffff;">
+							<tr>
+								<td></td>
+								<td align="right">
+									<strong>
+										Amount in (
+										<span t-field="o.currency_id.name" />
+										)
+									</strong>
+								</td>
+							</tr>
+						</table>
+						<table class="table" style="border:1px solid;">
+							<thead>
+								<tr style="background-color:#0052cc;color:#ffffff;" height="10px;">
+									<th class="text-center" style="border:1px solid;border-color:black;">Description
+									</th>
+									<th class="text-center" style="border:1px solid;border-color:black;">Quantity</th>
+									<th class="text-center" style="border:1px solid;border-color:black;">Unit Price</th>
+									<th class="text-center" style="border:1px solid;border-color:black;">Total Price</th>
+									<th style="border:1px solid;border-color:black;" class="text-center"
+										groups="sale.group_discount_per_so_line">Disc.(%)</th>
+									<th class="text-center" style="border:1px solid;border-color:black;">Disc.(Amt)</th>
+									<th class="text-center" style="border:1px solid;border-color:black;">FOC</th>
+									<th class="text-center" style="border:1px solid;border-color:black;">Line Total</th>
+								</tr>
+							</thead>
+							<tbody class="invoice_tbody">
+								<tr t-foreach="o.invoice_line" t-as="l">
+									<td style="border:1px solid;border-color:black;">
+										<span t-field="l.name" />
+									</td>
+									<td style="border:1px solid;border-color:black;">
+										<span t-field="l.quantity" />
+										<span t-field="l.uos_id" groups="product.group_uom" />
+									</td>
+									<td class="text-right" style="border:1px solid;border-color:black;">
+										<span t-field="l.price_unit" />
+									</td>
+									<td class="text-right" style="border:1px solid;border-color:black;">
+										<span t-set="total_price" t-value="l.quantity*l.price_unit" />
+										<span t-esc="total_price" />
+									</td>
+									<td class="text-right" groups="sale.group_discount_per_so_line"
+										style="border:1px solid;border-color:black;">
+										<span t-field="l.discount" />
+									</td>
+									<td class="text-right" style="border:1px solid;border-color:black;">
+										<span t-field="l.discount_amt" />
+									</td>
+									<td class="text-center" style="border:1px solid;border-color:black;">
+										<t t-if="l.foc==True">
+											&#10003; </t>
+									</td>
+									<td class="text-right" style="border:1px solid;border-color:black;">
+										<span t-field="l.price_subtotal"
+											t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}' />
+									</td>
+								</tr>
+							</tbody>
+						</table>
 
-            <div class="row" t-if="o.tax_line">
-                <div class="col-xs-6">
-                    <table class="table table-condensed">
-                        <thead>
-                            <tr>
-                                <th>Tax</th>
-                                <th class="text-right">Base</th>
-                                <th class="text-right">Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr t-foreach="o.tax_line" t-as="t">
-                                <td><span t-field="t.name"/></td>
-                                <td class="text-right">
-                                    <span t-field="t.base"
-                                        t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
-                                </td>
-                                <td class="text-right">
-                                    <span t-field="t.amount"
-                                        t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+						<div class="row">
+							<div class="col-xs-8 pull-left" style="padding-top: 1cm;">
 
-            <p t-if="o.comment">
-                <strong>Comment:</strong>
-                <span t-field="o.comment"/>
-            </p>
-            <p t-if="o.payment_term.note">
-                <strong>Payment Term:</strong>
-                <span t-field="o.payment_term.note"/>
-            </p>
-            <p t-if="o.fiscal_position.note">
-                <strong>Fiscal Position Remark:</strong>
-                <span t-field="o.fiscal_position.note"/>
-            </p>
-        </div>
-    </t>
-    </xpath>
-</template>
+								<table class="table" style='border:solid;border-color:white;'>
+									<tr>
+										<td style="text-align:center;">
+											For questions concerning this invoice, please
+											contact Hot
+											Line :
+											+951400533,
+											Fax: +951 400912,
+											info@mdgmyanmar.com
+										</td>
+									</tr>
+									<tr>
+										<td style="text-align:center;border:solid;border-color:white;">
+											<b> THANK YOU</b>
+										</td>
+									</tr>
+								</table>
 
-</data>
+							</div>
+							<div class="col-xs-4 pull-right">
+								<table class="table">
+									<tr>
+										<td style="border-top-color:white;padding-bottom: 5mm;">
+											Sub Total
+										</td>
+										<td class="text-right" style="border-top-color:white;padding-bottom: 5mm;">
+											<span t-field="o.amount_untaxed"
+												t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}' />
+										</td>
+									</tr>
+									<tr class="border-black">
+										<td style="padding-top: 5mm;padding-bottom: 5mm;">
+											Total Discount Amount
+										</td>
+										<td class="text-right" style="padding-top: 5mm;padding-bottom: 5mm;">
+											<span t-field="o.discount_total"
+												t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}' />
+										</td>
+									</tr>
+									<tr class="border-black">
+										<td style="padding-top: 5mm;padding-bottom: 5mm;">
+											Deduction Amount
+										</td>
+										<td class="text-right" style="padding-top: 5mm;padding-bottom: 5mm;">
+											<span t-field="o.deduct_amt"
+												t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}' />
+										</td>
+									</tr>
+									<tr class="border-black">
+										<td style="padding-top: 5mm;padding-bottom: 5mm;">
+											<strong>Grand Total</strong>
+										</td>
+										<td class="text-right" style="padding-top: 5mm;padding-bottom: 5mm;">
+											<span t-field="o.amount_total"
+												t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}' />
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+
+						<div class="row" t-if="o.tax_line">
+							<div class="col-xs-6">
+								<table class="table table-condensed">
+									<thead>
+										<tr>
+											<th>Tax</th>
+											<th class="text-right">Base</th>
+											<th class="text-right">Amount</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr t-foreach="o.tax_line" t-as="t">
+											<td>
+												<span t-field="t.name" />
+											</td>
+											<td class="text-right">
+												<span t-field="t.base"
+													t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}' />
+											</td>
+											<td class="text-right">
+												<span t-field="t.amount"
+													t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}' />
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+
+						<p t-if="o.comment">
+							<strong>Comment:</strong>
+							<span t-field="o.comment" />
+						</p>
+						<p t-if="o.payment_term.note">
+							<strong>Payment Term:</strong>
+							<span t-field="o.payment_term.note" />
+						</p>
+						<p t-if="o.fiscal_position.note">
+							<strong>Fiscal Position Remark:</strong>
+							<span t-field="o.fiscal_position.note" />
+						</p>
+					</div>
+				</t>
+			</xpath>
+		</template>
+
+	</data>
 </openerp>

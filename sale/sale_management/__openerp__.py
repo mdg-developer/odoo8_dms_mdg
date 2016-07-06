@@ -32,24 +32,23 @@ Sale Management
 """,
     'author': 'Seventh Computing Developer Group',
     'website': 'http://www.7thcomputing.com',
-    'depends': ['base','crm','sale','crm_sale_channel','crm_demarcation','account','account_accountant',
-                'stock','sale_stock','crm_management','ms_sale_plan_setting'
+    'depends': ['base', 'crm', 'sale', 'crm_sale_channel', 'crm_demarcation', 'account', 'account_accountant',
+                'stock', 'sale_stock', 'crm_management', 'ms_sale_plan_setting'
     ],
     'data': [
 
        # 'views/product_product_view.xml',
+       'views/custom_layouts.xml',
+        'views/report_saleorder.xml',
+         'views/report_invoice.xml',
         'views/sale_team_view.xml',
         'views/sale_order_view.xml',
         'views/sale_return_view.xml',
         'views/sale_display_view.xml',
-		'views/report_saleorder.xml',
-         'views/report_invoice.xml',
 		'views/sales_retal_view.xml',
 		'views/sales_denomation_view.xml',
 		'views/sale_approvel_view.xml',
-		'views/code_sequence.xml',
-		'views/sale_promotion_monthly_view.xml'
-
+        'views/account_invoice_view.xml',
     ],
     'installable': True,
     'auto_install': False,
