@@ -9,8 +9,14 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//field[@name='company_id']" position="after">
-                          <label for="branch_id" string="Branches"/>
+                        <label for="branch_id" string="Branches"/>
                         <field name="branch_id"/>
+                    </xpath>
+                    <xpath expr="//page[@string='Preferences']" position="after">
+                    	<page string="Analytic Account">
+                    		<separator string="Analytic Account"/>
+                        	<field name="analytic_ids"/>
+                    	</page>
                     </xpath>
                 </data>
             </field>
