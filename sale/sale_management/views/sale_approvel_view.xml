@@ -59,7 +59,7 @@
 									</tree>
 								</field>
 
-								<field name="description" class="oe_inline" placeholder="Remark..." />
+								<field name="description" class="oe_inline" placeholder="Terms and Conditions..." />
 								<field name="note" class="oe_inline" placeholder="Note..." />
 
 							</page>
