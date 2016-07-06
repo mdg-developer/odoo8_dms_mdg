@@ -53,7 +53,7 @@ class sale_approval(osv.osv):
             'company_id':fields.many2one('res.company', 'Company'),
             'state': fields.selection([
                 ('draft', 'New'),
-                ('sumit', 'Sumit To Manager'),
+                ('sumit', 'Submit To Manager'),
                 ('manager_approve', 'Manager Approved'),
                 ('finance_approve', 'Finance Approved'),
                 ('done', 'Done'),

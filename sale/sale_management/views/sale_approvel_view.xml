@@ -10,7 +10,7 @@
 				<form string="Sales Approval" version="7.0">
 					<header>
                         <button name="action_button_confirm" states="draft"  string="Confirm" type="object"  groups="base.group_user"/>
-                        <button name="action_button_sumit" states="sumit" string="Sumit To Manager" class="oe_highlight" type="object" groups="base.group_user"/>
+                        <button name="action_button_sumit" states="sumit" string="Submit To Manager" class="oe_highlight" type="object" groups="base.group_user"/>
                         <button name="action_button_manager" states="manager_approve" string="Manager Approve"  type="object" groups="base.group_user" class="oe_highlight" />                        
                        <button name="action_button_finance" states="finance_approve" string="Finance Approve"  type="object" groups="base.group_user" class="oe_highlight" />
                         <button name="action_cancel"  states="sumit,manager_approve,finance_approve"  type="object" string="Cancel" groups="base.group_user" class="oe_highlight" />                       
