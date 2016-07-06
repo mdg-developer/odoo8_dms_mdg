@@ -980,7 +980,8 @@ class mobile_sale_order(osv.osv):
                     'balance':ar['balance'],
                     'ref_no':ar['ref_no'],
                     'so_ref':ar['so_ref'],
-                    'sale_team_id':ar['sale_team_id'],                
+                    'sale_team_id':ar['sale_team_id'],
+					'user_id':ar['user_id'],
                 }
                 ar_obj.create(cursor, user, ar_result, context=context)
         return True
