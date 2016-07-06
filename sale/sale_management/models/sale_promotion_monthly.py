@@ -31,7 +31,7 @@ class sale_promotion(osv.osv):
 
   }
     _defaults = {
-        'approved_date': fields.datetime.now,
+        'create_date': fields.datetime.now,
         'state': 'draft',
         }
     
