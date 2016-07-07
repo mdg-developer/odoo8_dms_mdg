@@ -3,14 +3,13 @@
 	<data>
 		<!-- Parent Menu -->
 		<menuitem name="Mobile Sales" id="base.menu_mobile_sale"
-			groups="base.group_sale_salesman,base.group_sale_manager" sequence="11" />
+			groups="base.group_sale_salesman,base.group_sale_manager" sequence="11"/>
 
-		<!-- <menuitem name="Synchronous Log" id="menu_mobile_sale_syn_log_menu"
+<!-- 		<menuitem name="Synchronous Log" id="menu_mobile_sale_syn_log_menu"
 			sequence="7" parent="base.menu_mobile_sale" /> -->
 			
-		<menuitem name="Setting" id="base.menu_mobile_sale_sale_target_menu"
+			<menuitem name="Setting" id="base.menu_mobile_sale_sale_target_menu"
 			sequence="4" parent="base.menu_mobile_sale" />
-			
 		<!-- Filter -->
 		<record id="view_sale_target_filter" model="ir.ui.view">
 			<field name="name">Sync Log Filter</field>
@@ -87,6 +86,7 @@
 		</record>
 
 
-	 <menuitem id="menu_syn_log_menu" parent="base.menu_mobile_sale_sale_target_menu"
+		<menuitem id="menu_syn_log_menu" parent="base.menu_mobile_sale_sale_target_menu"
 			action="action_mobile_sale_syn_log" sequence="6" />
+	</data>
 </openerp>
