@@ -49,6 +49,7 @@ Sale Management
 		'views/sales_denomation_view.xml',
 		'views/sale_approvel_view.xml',
         'views/account_invoice_view.xml',
+        'views/sale_promotion_monthly_view.xml'
     ],
     'installable': True,
     'auto_install': False,
