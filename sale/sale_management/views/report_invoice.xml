@@ -4,52 +4,69 @@
 		<template id="report_invoice_document" inherit_id="account.report_invoice_document">
 			<xpath expr="//t[@t-call='report.external_layout']" position="replace">
 
-				<t t-call="sale_management.custom_layout">
-					<div class="page" style="font-size:25px;">
-						<div class="row">
-							<div align='center' style="font-size:60px;">INVOICE
+				<t t-call="sale_management.invoice_custom_layout">
+					<div class="page" style="font-size:10pt;">
+						<div class="row" style="padding-top:-2s0pt;">
+							<div class="col-xs-8 pull-left">
+								<table class="table" style='border:solid;border-color:white;'>
+									<tr>
+										<td style="margin-top:-10pt;">
+											<div t-field="o.company_id.partner_id"
+												t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' />
+											<div t-field="o.company_id.phone" />
+										</td>
+									</tr>
+								</table>
+							</div>
+							<div class="col-xs-4 pull-right">
+								<table class="table" style='border:solid;border-color:white;'>
+									<tr>
+										<td style="margin-top:-10pt;">
+											<b>Customer address:</b>
+											<address t-field="o.partner_id"
+												t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' />
+											<span t-field="o.partner_id.vat"
+												t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' />
+											<div style="margin-top:-15pt;" t-field="o.partner_id.phone" />
+										</td>
+									</tr>
+								</table>
+
 							</div>
 						</div>
-						<table>
-							<tr>
-								<td>
-									<div t-field="o.company_id.partner_id"
-										t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' />
-									<div t-field="o.company_id.phone" />
-								</td>
-								<td style="padding-left: 20em">
-									<b>Customer address:</b>
-									<address t-field="o.partner_id"
-										t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' />
-									<span t-field="o.partner_id.vat"
-										t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' />
-									<div t-field="o.partner_id.phone" style="margin-top:-18px;" />
-								</td>
-							</tr>
-						</table>
-						<br />
-						<table>
-							<tr>
-								<td style="font-size:50px;">
-									<span
-										t-if="o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')">Invoice No - </span>
-									<span t-if="o.type == 'out_invoice' and o.state == 'proforma2'">PRO-FORMA</span>
-									<span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
-									<span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
-									<span t-if="o.type == 'out_refund'">Refund</span>
-									<span t-if="o.type == 'in_refund'">Supplier Refund</span>
-									<span t-if="o.type == 'in_invoice'">Supplier Invoice</span>
-									<span t-field="o.number" />
-								</td>
-								<td style="padding-left: 15em">
-									<b>Branch Code:</b>
-									<span t-field="o.partner_id.branch_id.branch_code" />
-								</td>
-							</tr>
+						<div class="row">
+							<div class="col-xs-8 pull-left" style="margin-top:-20pt;">
+								<table class="table" style='border:solid;border-color:white;'>
+									<tr style="margin-top:-30pt;border:solid;border-color:white;">
+										<td style="font-size:20pt;" colspan="4">
+											<span
+												t-if="o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')">Invoice No - </span>
+											<span t-if="o.type == 'out_invoice' and o.state == 'proforma2'">PRO-FORMA</span>
+											<span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
+											<span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
+											<span t-if="o.type == 'out_refund'">Refund</span>
+											<span t-if="o.type == 'in_refund'">Supplier Refund</span>
+											<span t-if="o.type == 'in_invoice'">Supplier Invoice</span>
+											<span t-field="o.number" />
+										</td>
+									</tr>
+								</table>
+							</div>
+							<div class="col-xs-4 pull-right" style="margin-top:-20pt;">
+								<table class="table" style='border:solid;border-color:white;'>
+									<tr style="margin-top:-30pt;border:solid;border-color:white;">
+										<td style="padding-top:10pt;">
+											<b>Branch Code:</b>
+											<span t-field="o.partner_id.branch_id.branch_code" />
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
 
-						</table>
-						<br />
-						<table class='table' style='border:solid;border-color:white;'>
+
+						<table class="table"
+							style='border:solid;border-color:white;margin-top:-20pt;'>
 							<tr style='border:solid;border-color:white;'>
 								<td>
 									<b>Your Reference</b>
@@ -107,7 +124,8 @@
 							</tr>
 						</table>
 
-						<table class="table" style="border:solid;border-color:#ffffff;">
+						<table class="table"
+							style="border:solid;border-color:#ffffff;margin-bottom:-1pt;margin-top:-20pt;">
 							<tr>
 								<td></td>
 								<td align="right">
@@ -119,51 +137,58 @@
 								</td>
 							</tr>
 						</table>
-						<table class="table" style="border:1px solid;">
+						<table class="table table-condensed" style="border:1pt solid;">
 							<thead>
-								<tr style="background-color:#0052cc;color:#ffffff;" height="10px;">
-									<th class="text-center" style="border:1px solid;border-color:black;">Description
+								<tr style="background-color:#0052cc;color:#ffffff;" height="10pt;">
+									<th class="text-center" style="border:1pt solid;border-color:black;">Description
 									</th>
-									<th class="text-center" style="border:1px solid;border-color:black;">Quantity</th>
-									<th class="text-center" style="border:1px solid;border-color:black;">Unit Price</th>
-									<th class="text-center" style="border:1px solid;border-color:black;">Total Price</th>
-									<th style="border:1px solid;border-color:black;" class="text-center"
+									<th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Unit Price</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Total Price</th>
+									<th style="border:1pt solid;border-color:black;" class="text-center"
 										groups="sale.group_discount_per_so_line">Disc.(%)</th>
-									<th class="text-center" style="border:1px solid;border-color:black;">Disc.(Amt)</th>
-									<th class="text-center" style="border:1px solid;border-color:black;">FOC</th>
-									<th class="text-center" style="border:1px solid;border-color:black;">Line Total</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Disc.(Amt)</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">FOC</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Line Total</th>
 								</tr>
 							</thead>
 							<tbody class="invoice_tbody">
 								<tr t-foreach="o.invoice_line" t-as="l">
-									<td style="border:1px solid;border-color:black;">
-										<span t-field="l.name" />
+									<td style="border:1pt solid;border-color:black;">
+										<span t-field="l.product_id.name" />
+										<t t-if="l.foc==True">
+											(FOC)
+										</t>
 									</td>
-									<td style="border:1px solid;border-color:black;">
+									<td style="border:1pt solid;border-color:black;">
 										<span t-field="l.quantity" />
 										<span t-field="l.uos_id" groups="product.group_uom" />
 									</td>
-									<td class="text-right" style="border:1px solid;border-color:black;">
+									<td class="text-right" style="border:1pt solid;border-color:black;">
 										<span t-field="l.price_unit" />
 									</td>
-									<td class="text-right" style="border:1px solid;border-color:black;">
-										<span t-set="total_price" t-value="l.quantity*l.price_unit" />
-										<span t-esc="total_price" />
+									<td class="text-right" style="border:1pt solid;border-color:black;">
+										<span t-field="l.net_total" />
 									</td>
 									<td class="text-right" groups="sale.group_discount_per_so_line"
-										style="border:1px solid;border-color:black;">
+										style="border:1pt solid;border-color:black;">
 										<span t-field="l.discount" />
 									</td>
-									<td class="text-right" style="border:1px solid;border-color:black;">
+									<td class="text-right" style="border:1pt solid;border-color:black;">
 										<span t-field="l.discount_amt" />
 									</td>
-									<td class="text-center" style="border:1px solid;border-color:black;">
+									<td class="text-center" style="border:1pt solid;border-color:black;">
 										<t t-if="l.foc==True">
 											&#10003; </t>
 									</td>
-									<td class="text-right" style="border:1px solid;border-color:black;">
-										<span t-field="l.price_subtotal"
-											t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}' />
+									<td class="text-right" style="border:1pt solid;border-color:black;">
+										<t t-if="l.foc==True">
+											0.00
+										</t>
+
+										<t t-if="l.foc==False">
+											<span t-field="l.price_subtotal" />
+										</t>
 									</td>
 								</tr>
 							</tbody>
@@ -194,39 +219,35 @@
 							<div class="col-xs-4 pull-right">
 								<table class="table">
 									<tr>
-										<td style="border-top-color:white;padding-bottom: 5mm;">
+										<td style="border-top-color:white;padding-bottom: 2mm;">
 											Sub Total
 										</td>
-										<td class="text-right" style="border-top-color:white;padding-bottom: 5mm;">
-											<span t-field="o.amount_untaxed"
-												t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}' />
+										<td class="text-right" style="border-top-color:white;padding-bottom: 2mm;">
+											<span t-field="o.amount_untaxed" />
 										</td>
 									</tr>
 									<tr class="border-black">
-										<td style="padding-top: 5mm;padding-bottom: 5mm;">
+										<td style="padding-top: 2mm;padding-bottom: 2mm;">
 											Total Discount Amount
 										</td>
-										<td class="text-right" style="padding-top: 5mm;padding-bottom: 5mm;">
-											<span t-field="o.discount_total"
-												t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}' />
+										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
+											<span t-field="o.discount_total" />
 										</td>
 									</tr>
 									<tr class="border-black">
-										<td style="padding-top: 5mm;padding-bottom: 5mm;">
+										<td style="padding-top: 2mm;padding-bottom: 2mm;">
 											Deduction Amount
 										</td>
-										<td class="text-right" style="padding-top: 5mm;padding-bottom: 5mm;">
-											<span t-field="o.deduct_amt"
-												t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}' />
+										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
+											<span t-field="o.deduct_amt" />
 										</td>
 									</tr>
 									<tr class="border-black">
-										<td style="padding-top: 5mm;padding-bottom: 5mm;">
+										<td style="padding-top: 2mm;padding-bottom: 2mm;">
 											<strong>Grand Total</strong>
 										</td>
-										<td class="text-right" style="padding-top: 5mm;padding-bottom: 5mm;">
-											<span t-field="o.amount_total"
-												t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}' />
+										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
+											<span t-field="o.amount_total" />
 										</td>
 									</tr>
 								</table>
@@ -249,12 +270,10 @@
 												<span t-field="t.name" />
 											</td>
 											<td class="text-right">
-												<span t-field="t.base"
-													t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}' />
+												<span t-field="t.base" />
 											</td>
 											<td class="text-right">
-												<span t-field="t.amount"
-													t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}' />
+												<span t-field="t.amount" />
 											</td>
 										</tr>
 									</tbody>
