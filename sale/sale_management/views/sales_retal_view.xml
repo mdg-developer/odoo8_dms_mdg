@@ -22,6 +22,8 @@
 						</group>
 						<group>
 							<group>
+								<field name="from_date" />
+
 								<label for="month" string="Retal Month" />
 								<div>
 									<field name="month" class="oe_inline" />
@@ -32,6 +34,7 @@
 								<field name="total_amt" />
 							</group>
 							<group>
+								<field name="to_date" />
 								<field name="image"  widget='image' class="oe_avatar"/>
 							</group>
 
