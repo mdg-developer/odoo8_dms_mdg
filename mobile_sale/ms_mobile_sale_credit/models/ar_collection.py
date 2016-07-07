@@ -5,9 +5,11 @@ class mobile_ar_collection(osv.osv):
     _description = "AR Collections"
     _columns = {
                 'name': fields.char('Customer'),
+				'partner_id':fields.many2one('res.partner','Customer'),
                 'date': fields.date('Invoice Date'),
                 'so_ref': fields.char('Sale Order No'),
                 'sale_team_id':fields.many2one('crm.case.section', 'Sale Team'),
+				'user_id':fields.many2one("res.users", "Salesman Name"),
                 'tablet_id':fields.many2one('tablets.information', 'Tablet Name'),
                 'balance': fields.float('Balance'),
                 'ref_no': fields.char('Invoice No'),
