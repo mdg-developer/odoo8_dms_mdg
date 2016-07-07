@@ -987,7 +987,7 @@ class mobile_sale_order(osv.osv):
         return True
 	
 	def create_sale_rental(self, cursor, user, vals, context=None):
-        try:
+         try:
             rental_obj = self.pool.get('sales.rental')
             str = "{" + vals + "}"
             str = str.replace("'',", "',")  # null
@@ -1030,7 +1030,7 @@ class mobile_sale_order(osv.osv):
                     }
                     rental_obj.create(cursor, user, rental_result, context=context)
             return True
-        except Exception, e:
+         except Exception, e:
             print 'False'
             return False
 	
@@ -1207,4 +1207,3 @@ class sale_order(osv.osv):
         invoice_vals.update(self._inv_get(cr, uid, order, context=context))
         return invoice_vals           
 sale_order()
-    
