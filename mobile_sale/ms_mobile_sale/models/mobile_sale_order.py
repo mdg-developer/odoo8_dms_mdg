@@ -986,6 +986,54 @@ class mobile_sale_order(osv.osv):
                 ar_obj.create(cursor, user, ar_result, context=context)
         return True
 	
+	def create_sale_rental(self, cursor, user, vals, context=None):
+        try:
+            rental_obj = self.pool.get('sales.rental')
+            str = "{" + vals + "}"
+            str = str.replace("'',", "',")  # null
+            str = str.replace(":',", ":'',")  # due to order_id
+            str = str.replace("}{", "}|{")
+            str = str.replace(":'}{", ":''}")
+            new_arr = str.split('|')
+            result = []
+            for data in new_arr:
+                x = ast.literal_eval(data)
+                result.append(x)
+            rental_collection = []
+            for r in result:
+                rental_collection.append(r)  
+            if rental_collection:
+                for ar in rental_collection:            
+                    cursor.execute('select id From res_partner where customer_code = %s ',(ar['partner_id'],))
+                    data = cursor.fetchall()
+                    if data:
+                        partner_id = data[0][0]
+                    else:
+                        partner_id = None
+                    
+                    rental_result = {
+                    
+                        'partner_id':partner_id,
+                        'from_date':ar['from_date'],
+                        'date':ar['date'] ,                    
+                        'to_date':ar['to_date'],
+                        'image':ar['image'],
+                        'company_id':ar['company_id'],                
+                        'monthy_amt':ar['monthy_amt'],
+                        'month':'Month',
+                        'latitude':ar['latitude'],
+                        'longitude':ar['longitude'],
+                        'address':ar['address'],
+                        'month':ar['month'],
+                        'name':ar['name'],
+                        'total_amt':ar['total_amt'],
+                    }
+                    rental_obj.create(cursor, user, rental_result, context=context)
+            return True
+        except Exception, e:
+            print 'False'
+            return False
+	
 mobile_sale_order()
 
 class mobile_sale_order_line(osv.osv):
