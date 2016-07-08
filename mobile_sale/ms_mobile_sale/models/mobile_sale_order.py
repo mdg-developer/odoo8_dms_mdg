@@ -1094,7 +1094,6 @@ class sale_order(osv.osv):
     _inherit = "sale.order" 
     
     def _make_invoice(self, cr, uid, order, lines, context=None):
-        
         inv_obj = self.pool.get('account.invoice')
         obj_invoice_line = self.pool.get('account.invoice.line')
         
@@ -1111,7 +1110,7 @@ class sale_order(osv.osv):
                 for preline in preinv.invoice_line:
                     inv_line_id = obj_invoice_line.copy(cr, uid, preline.id, {'invoice_id': False, 'price_unit':-preline.price_unit})
                     lines.append(inv_line_id)
-        inv = self.prepare_invoice(cr, uid, order, lines, context=context)
+        inv = self._prepare_invoice(cr, uid, order, lines, context=context)
         # inv = self.prepare_invoice(cr, uid, order, lines, context=context)
         
         inv_id = inv_obj.create(cr, uid, inv, context=context)
@@ -1135,7 +1134,7 @@ class sale_order(osv.osv):
             inv_obj.message_post(cr, uid, [invoice_id], body=_("Total amount exceed the credit limit"), context=context)  
 
         return True        
-    def prepare_invoice(self, cr, uid, order, lines, context=None):
+    def _prepare_invoice(self, cr, uid, order, lines, context=None):
         """Prepare the dict of values to create the new invoice for a
            sales order. This method may be overridden to implement custom
            invoice generation (making sure to call super() to establish
@@ -1149,7 +1148,9 @@ class sale_order(osv.osv):
         
         if context is None:
             context = {}
-        journal_id = self.pool['account.invoice'].default_get(cr, uid, ['journal_id'], context=context)['journal_id']
+        journal_ids = self.pool['account.invoice'].default_get(cr, uid, ['journal_id'], context=context)['journal_id']
+        if journal_ids:
+            journal_id = journal_ids[0]
         if not journal_id:
             raise osv.except_osv(_('Error!'),
                 _('Please define sales journal for this company: "%s" (id:%d).') % (order.company_id.name, order.company_id.id))
@@ -1163,7 +1164,7 @@ class sale_order(osv.osv):
             'reference': order.client_order_ref or order.name,
             'account_id': order.partner_invoice_id.property_account_receivable.id,
             'partner_id': order.partner_invoice_id.id,
-            'journal_id': journal_id,
+            'journal_id': journal_ids,
             'invoice_line': [(6, 0, lines)],
             'currency_id': order.pricelist_id.currency_id.id,
             'comment': order.note,
