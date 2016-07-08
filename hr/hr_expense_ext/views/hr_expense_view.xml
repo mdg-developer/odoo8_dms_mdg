@@ -43,6 +43,9 @@
 						<field name="notify_manager"/>
 					</field>
 					
+					<xpath expr="//sheet/group/group/field[@name='user_valid']" position="replace">
+					</xpath>
+					
 					<field name="company_id" position="after">
 						<field name="branch_id"/>
 					</field>
