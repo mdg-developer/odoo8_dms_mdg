@@ -6,6 +6,7 @@ import ast
 import time
 import openerp.addons.decimal_precision as dp
 import webbrowser
+import subprocess
 
 class cashier_approval(osv.osv):
     
@@ -136,6 +137,7 @@ class cashier_approval(osv.osv):
       'ar_line': fields.one2many('cashier.approval.ar.line', 'cashier_id', 'Cashier Approval Form'),
       'credit_line': fields.one2many('cashier.approval.credit.line', 'cashier_id', 'Cashier Approval Form'),
       'denomination_line': fields.one2many('cashier.denomination.line', 'cashier_id', 'Cashier Approval Form'),
+      'denomination_product_line': fields.one2many('cashier.denomination.product.line', 'cashier_id', 'Cashier Approval Form'),
       'cash_sub_total': fields.function(_amount_cash, digits_compute=dp.get_precision('Account'), string='SubTotal',
             store={
                 'cashier.approval': (lambda self, cr, uid, ids, c={}: ids, ['cashier_line'], 10),
@@ -181,8 +183,13 @@ class cashier_approval(osv.osv):
     def set_to_draft(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'draft'}, context=context)
         return True 
-    
+    def generate_report(self, cr, uid, ids, context=None):
+        url = "http://localhost:8080/birt/frameset?__report=daily_sale_report.rptdesign"
+        #url = "http://10.0.1.30:8080/birt/frameset?__report=daily_sale_report.rptdesign"
+        webbrowser.open(url)        
+        #webbrowser.open_new_tab(url,new=2)
     def cashier_approve(self, cr, uid, ids, context=None):
+        
         self.write(cr, uid, ids, {'state':'done'}, context=context)
         return True   
     
@@ -224,7 +231,8 @@ class cashier_approval(osv.osv):
                     result[details.id] = inv_id
             self.generte_ar(cr, uid, ids, context=context)
             self.generte_cr(cr, uid, ids, context=context) 
-            self.generate_denomination(cr, uid, ids, context=context)        
+            self.generate_denomination(cr, uid, ids, context=context)   
+            self.generate_denomination_product(cr, uid, ids, context=context)     
         return result
     def generte_ar(self, cr, uid, ids, context=None):
         print 'generte_ar'
@@ -328,13 +336,13 @@ class cashier_approval(osv.osv):
                 print 'to_date>>', to_date
                 cr.execute("""select n.notes,sum(n.note_qty) from sales_denomination d,sales_denomination_note_line n
                 where d.id = n.denomination_note_ids and d.sale_team_id=%s and d.user_id=%s and date::date >=%s and date::date<=%s
-                group by n.notes
+                group by n.notes order by n.notes::numeric desc
                 """, (team_id,user_id, frm_date, to_date,))
             else:
                 print 'date>>', frm_date
                 cr.execute("""select n.notes,sum(n.note_qty) from sales_denomination d,sales_denomination_note_line n
                 where d.id = n.denomination_note_ids and d.sale_team_id=%s and d.user_id=%s and date::date=%s 
-                group by n.notes
+                group by n.notes order by n.notes::numeric desc
                 """, (team_id,user_id, frm_date,))
             vals = cr.fetchall()           
         notes = [{'notes':10000, 'note_qty':False}, {'notes':5000, 'note_qty':False}, {'notes':1000, 'note_qty':False}, {'notes':500, 'note_qty':False}, {'notes':100, 'note_qty':False}, {'notes':50, 'note_qty':False}, {'notes':10, 'note_qty':False}]
@@ -342,6 +350,7 @@ class cashier_approval(osv.osv):
             print ':val[1]>>', val
             data_id = {'notes':val[0],
                     'note_qty': val[1],
+                    #'denomination_id':val[2],
                     'cashier_id':ids[0],
                     }
             print 'data_id>>>deno', data_id
@@ -351,6 +360,52 @@ class cashier_approval(osv.osv):
                 result[details.id] = inv_id
             self._amount_denomination_all(cr, uid, ids, ['denomination_sub_total'], None, context)
         return result
+    
+    def generate_denomination_product(self, cr, uid, ids, context=None):
+        print 'generte_deno_pr'
+        cr.execute("""delete from cashier_denomination_product_line where cashier_id=%s""", (ids[0],))
+        result = {}
+        invoice_line_data = []
+        cashier_approval_obj = self.pool.get('cashier.approval')
+        invoice_line_obj = self.pool.get('cashier.denomination.product.line') 
+        datas = cashier_approval_obj.read(cr, uid, ids, ['date', 'to_date', 'user_id', 'sale_team_id'], context=None)
+        print 'datas>>>generte_deno_pr', datas,
+        frm_date = to_date = user_id = None            
+        if datas:
+            for data in datas:
+                frm_date = data['date']
+                to_date = data['to_date']
+                user_id = data['user_id'][0]
+                team_id = data['sale_team_id'][0]
+            if to_date:
+                print 'to_date>>', to_date
+                cr.execute("""select n.product_id,sum(n.product_uom_qty),sum(n.product_uom_qty*n.amount) from sales_denomination d,sales_denomination_product_line n
+                where d.id = n.denomination_product_ids and d.sale_team_id=%s and d.user_id=%s and date::date >=%s and date::date<=%s
+                group by n.product_id
+                """, (team_id,user_id, frm_date, to_date,))
+            else:
+                print 'date>>', frm_date
+                cr.execute("""select n.product_id,sum(n.product_uom_qty),sum(n.product_uom_qty*n.amount) from sales_denomination d,sales_denomination_product_line n
+                where d.id = n.denomination_product_ids and d.sale_team_id=%s and d.user_id=%s and date::date =%s 
+                group by n.product_id
+                """, (team_id,user_id, frm_date,))
+            vals = cr.fetchall()           
+        
+        for val in vals:
+            print ':val[1]>>', val
+            data_id = {'product_id':val[0],
+                    'product_uom_qty': val[1],
+                    'amount': val[2],
+                    'cashier_id':ids[0],
+                    }
+            print 'data_id>>>deno', data_id
+            inv_id = invoice_line_obj.create(cr, uid, data_id, context=context)
+            for details in self.browse(cr, uid, ids, context=context):
+                
+                result[details.id] = inv_id
+            
+        return result
+    
     def create(self, cr, uid, vals, context=None):
         print 'vals>>>create', vals
         new_id = super(cashier_approval, self).create(cr, uid, vals, context=context)
@@ -419,5 +474,17 @@ class cashier_denomination_line(osv.osv):
               #'notes':fields.char('Notes', required=True),
               'notes':fields.float('Notes', required=True),
               'note_qty':fields.integer('Qty', required=True),
+              #'denomination_id': fields.many2one('sales.denomination','Sale Denomination'),
               }
-cashier_denomination_line()    
+cashier_denomination_line() 
+
+class cashier_denomination_product_line(osv.osv):
+    _name = 'cashier.denomination.product.line'
+    _columns = {              
+              'cashier_id':fields.many2one('cashier.approval', 'Cashier Approval', required=True),
+              #'notes':fields.char('Notes', required=True),
+              'product_id':fields.many2one('product.product', 'Product', required=True),
+              'product_uom_qty':fields.integer('Quantity', required=True),
+              'amount':fields.float('Amount',required=True),   
+              }
+cashier_denomination_product_line()       

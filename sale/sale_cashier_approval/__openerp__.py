@@ -39,8 +39,8 @@ Sale Management
        # 'views/product_product_view.xml',
        
          'views/cashier_approval_view.xml',
-         #'views/qweb_view.xml',
-         #'views/report_cashier_approval.xml',
+        'views/qweb_view.xml',
+        'views/report_cashier_approval.xml',
 
     ],
     'installable': True,

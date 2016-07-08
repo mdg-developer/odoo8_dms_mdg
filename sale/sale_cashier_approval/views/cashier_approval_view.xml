@@ -10,6 +10,8 @@
 			<field name="arch" type="xml">
 				<form string="Cashier Approval" version="7.0">
 					<header>
+						<!-- <button name="generate_report" string="Generate Daily Summary Report" type="object"
+							class="oe_highlight"  /> -->
 						<button name="confirm_" string="Confirm" type="object"
 							class="oe_highlight" attrs="{'invisible':[('state','not in',('draft'))]}" />
 						<button name="cashier_approve" string="Cashier Approve" type="object"
@@ -32,14 +34,15 @@
 								</group>
 							</group>
 							<group>
-							<button name="action_generate" string="Show" attrs="{'invisible':[('state','in',('done'))]}"
-							type="object" class="oe_highlight" groups="base.group_user"
-							></button>
+								<button name="action_generate" string="Show" attrs="{'invisible':[('state','in',('done'))]}"
+								type="object" class="oe_highlight" groups="base.group_user"
+								></button>
 							</group>
 							</group>
 								<notebook>
 								 <page string="Invoice">
-                                      <field name="cashier_line" >                                          
+								 	
+                                      <field name="cashier_line">                                          
  											<form string="Invoice Lines">
                                                 
                                                 <field name="invoice_id"/>
@@ -65,40 +68,15 @@
                                       </field>
                                       <group col="3">
                                        <group></group>
-                                       <group></group>
+                                       	
+                                       <group/>
                                        <group>
 	                                      	<label string="SubTotal" class="oe_inline"/>
-	                                      	<field name="cash_sub_total" nolabel="1" class="oe_inline"></field>
+	                                      	<field name="cash_sub_total" nolabel="1" class="oe_inline"/>
                                       	</group>
                                       </group>
-                                                                            
-                                      </page>
-                                      <page string="Denomination">                                      	
-										<field name="denomination_line">
-											<form string="Denomination Lines">                                                
-                                                <field name="notes"/>
-	                                            <field name="note_qty"/>	                                            
-                                            </form>      
-											<tree string="Denomination Lines" editable="bottom">
-												<field name="notes"/>
-	                                            <field name="note_qty"/>
-											</tree>
-										</field>										
-									    <group col="3">
-	                                       <group></group>
-	                                       <group></group>
-	                                       <group>
-		                                      	<label string="SubTotal" class="oe_inline"/>
-		                                      	<field name="denomination_sub_total" nolabel="1" class="oe_inline"></field>
-	                                      	</group>
-	                                      </group>  
-									</page>
-                                      
-								</notebook>
-								
-								<notebook>
-								 <page string="AR Collection">
-                                      <field name="ar_line" >                                          
+                                      	    <group><label for="ar_line" string="AR Collection" /></group>	
+                                            <field name="ar_line">                                          
  											<form string="AR Lines">
                                                 
                                                 <field name="invoice_id"/>
@@ -124,21 +102,17 @@
                                       </field>
                                       <group col="3">
                                        <group></group>
-                                       <group></group>
+                                       <group/>
                                        <group>
 	                                      	<label string="SubTotal" class="oe_inline"/>
-	                                      	<field name="ar_sub_total" nolabel="1" class="oe_inline"></field>
+	                                      	<field name="ar_sub_total" nolabel="1" class="oe_inline"/>
                                       	</group>
-                                      </group>                                      
-                                      </page>
-								</notebook>
-								
-								<notebook>
-								 <page string="Credit Note">
-                                      <field name="credit_line" >                                          
+                                      </group>     
+										<group><label for="credit_line" string="Credit Note" /></group>
+   										<field name="credit_line">                                          
  											<form string="Credit Lines">
                                                 
-                                                <field name="credit_id"></field>
+                                                <field name="credit_id"/>
                                                 <field name="invoice_id"/>
 	                                            <field name="date"/>
 	                                            <field name="partner_id"/>	                                            
@@ -148,7 +122,7 @@
 	                                            
                                             </form>                                           
                                             <tree string="Invoice Lines" editable="bottom">
-                                                <field name="credit_id"></field>
+                                                <field name="credit_id"/>
                                                 <field name="invoice_id"/>
 	                                            <field name="date"/>
 	                                            <field name="partner_id"/>	                                            
@@ -160,14 +134,14 @@
                                       </field> 
                                       
                                       <group col="3">
-                                       <group></group>
-                                       <group></group>
+                                       <group/>
+                                       <group/>
                                        <group>
 	                                      	<label string="SubTotal" class="oe_inline"/>
-	                                      	<field name="cr_sub_total" nolabel="1" class="oe_inline"></field>
+	                                      	<field name="cr_sub_total" nolabel="1" class="oe_inline"/>
 	                                      	<label string="Total Net" class="oe_inline"/>
 	                                      	
-	                                      	<field name="total" nolabel="1" class="oe_inline"></field>
+	                                      	<field name="total" nolabel="1" class="oe_inline"/>
 			                                <div class="oe_subtotal_footer_separator oe_inline">                                	
 				                                   <!--  <label for="total"/> -->
 				                                    <button name="button_dummy" string="(update)" type="object" class="oe_edit_only oe_link"/>
@@ -176,8 +150,31 @@
                                       	</group>
                                       	
                                       </group> 
-                                                                        
+                                                                                                               
                                       </page>
+                                      <page string="Denomination">                                      	
+										<field name="denomination_line">
+											<form string="Denomination Lines">                                                
+                                                <field name="notes"/>
+	                                            <field name="note_qty"/>	                                            
+                                            </form>      
+											<tree string="Denomination Lines" editable="bottom">
+												<field name="notes"/>
+	                                            <field name="note_qty"/>
+											</tree>
+										</field>										
+									    <group col="3">
+	                                       <group/>
+	                                       <group/>
+	                                       <group>
+		                                      	<label string="SubTotal" class="oe_inline"/>
+		                                      	<field name="denomination_sub_total" nolabel="1" class="oe_inline"/>
+	                                      	</group>
+	                                      </group>  
+
+ 
+									</page>
+                                      
 								</notebook>
 					</sheet>
 				</form>
@@ -207,7 +204,7 @@
 		</record>
 
 		<menuitem id="cashier_approval" action="action_cashier_approval_view"
-			parent="base.menu_sales" name="Cashier Approval"  sequence="15"/>
+			parent="base.menu_sales" name="Cashier Approval"  sequence="13"/>
 
 	</data>
 </openerp>
