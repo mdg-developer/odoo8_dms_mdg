@@ -356,7 +356,10 @@ class sale_order(osv.osv):
             [('type', '=', 'sale'), ('company_id', '=', order.company_id.id)],
             limit=1)
         if journal_ids:
-            journal_ids = journal_ids[0]
+            try:
+                journal_ids = journal_ids[0]
+            except Exception, e:
+                journal_ids = journal_ids
         if not journal_ids:
             raise osv.except_osv(_('Error!'),
                 _('Please define sales journal for this company: "%s" (id:%d).') % (order.company_id.name, order.company_id.id))

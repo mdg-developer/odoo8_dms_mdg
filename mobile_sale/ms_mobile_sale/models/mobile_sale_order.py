@@ -1150,8 +1150,12 @@ class sale_order(osv.osv):
             context = {}
         journal_ids = self.pool['account.invoice'].default_get(cr, uid, ['journal_id'], context=context)['journal_id']
         if journal_ids:
-            journal_id = journal_ids[0]
-        if not journal_id:
+            try:
+                journal_ids = journal_ids[0]
+            except Exception,e:
+                journal_ids = journal_ids
+                
+        if not journal_ids:
             raise osv.except_osv(_('Error!'),
                 _('Please define sales journal for this company: "%s" (id:%d).') % (order.company_id.name, order.company_id.id))
         payment_type = None
