@@ -34,25 +34,26 @@ class sale_denomination(osv.osv):
         value={}
         note =[{'notes':10000,'note_qty':False},{'notes':5000,'note_qty':False},{'notes':1000,'note_qty':False},{'notes':500,'note_qty':False},{'notes':100,'note_qty':False},{'notes':50,'note_qty':False},{'notes':10,'note_qty':False}]
         order_line_data=[]
-        date = datetime.strptime(date,'%Y-%m-%d %H:%M:%S')        
-        de_date=date.date()
-        mobile_sale_obj = self.pool.get('mobile.sale.order')        
-        mobile_sale_order_obj = self.pool.get('mobile.sale.order.line') 
-        mobile_ids = mobile_sale_obj.search(cr, uid,[('due_date', '=',de_date), ('void_flag', '!=', 'voided'),('user_id','=',user_id)], context=context)
-        if  mobile_ids:
-            line_ids = mobile_sale_order_obj.search(cr, uid,[('order_id', 'in',mobile_ids)], context=context)                        
-            order_line_ids = mobile_sale_order_obj.browse(cr, uid, line_ids, context=context)                  
-            cr.execute('select product_id,sum(product_uos_qty),sum(sub_total) from mobile_sale_order_line where id in %s group by product_id',(tuple(order_line_ids.ids),))
-            order_line=cr.fetchall()
-            for data in order_line:
-                data_id={'product_id':data[0],
-                                  'product_uom_qty':data[1],
-                                  'amount':data[2]}
-                order_line_data.append(data_id)
-            value['value'] = {
-                                        'denomination_product_line': order_line_data ,
-                                        'denomination_note_line':note,
-                                        } 
+        if date:
+            date = datetime.strptime(date,'%Y-%m-%d %H:%M:%S')
+            de_date=date.date()
+            mobile_sale_obj = self.pool.get('mobile.sale.order')        
+            mobile_sale_order_obj = self.pool.get('mobile.sale.order.line') 
+            mobile_ids = mobile_sale_obj.search(cr, uid,[('due_date', '=',de_date), ('void_flag', '!=', 'voided'),('user_id','=',user_id)], context=context)
+            if  mobile_ids:
+                line_ids = mobile_sale_order_obj.search(cr, uid,[('order_id', 'in',mobile_ids)], context=context)                        
+                order_line_ids = mobile_sale_order_obj.browse(cr, uid, line_ids, context=context)                  
+                cr.execute('select product_id,sum(product_uos_qty),sum(sub_total) from mobile_sale_order_line where id in %s group by product_id',(tuple(order_line_ids.ids),))
+                order_line=cr.fetchall()
+                for data in order_line:
+                    data_id={'product_id':data[0],
+                                      'product_uom_qty':data[1],
+                                      'amount':data[2]}
+                    order_line_data.append(data_id)
+                value['value'] = {
+                                            'denomination_product_line': order_line_data ,
+                                            'denomination_note_line':note,
+                                            } 
         return value      
 
     def create(self, cursor, user, vals, context=None):
