@@ -1,4 +1,4 @@
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv
 
 class sale_target(osv.osv):
     
@@ -7,10 +7,10 @@ class sale_target(osv.osv):
 
     _columns = {
                   
-                    'name':fields.char('Name'),
+                    'name':fields.char('Name', required=True),
                     'outlet_target':fields.integer('New Outlet Target'),
                      'day_name':fields.many2one('sale.plan.day', 'Day Name'),
-                    'date':fields.date('Creation Date'),
+                    'date':fields.date('Creation Date', required=True),
                     'sale_team':fields.many2one('crm.case.section', 'Sale Team'),
                     'note':fields.text('Notes'),
                      'week':fields.many2one('setting.week', 'Week'),
@@ -27,9 +27,9 @@ class sale_target(osv.osv):
                         'categ_target_qty':fields.integer('Category Target Qty'),
                         'categ_target_amt':fields.float('Category Target Amount'),
                         'total_shop_to_visit':fields.integer('Shops To Visit'),
-                        'month': fields.selection([('jan', 'January'),('feb', 'February'),('march', 'March'),('apr', 'April'),
-                                                   ('may', 'May'),('june', 'June'),('july', 'July'),('aug', 'August'),
-                                                   ('sept', 'September'),('oct', 'October'),('nov', 'November'),('dec', 'December')                            
+                        'month': fields.selection([('jan', 'January'), ('feb', 'February'), ('march', 'March'), ('apr', 'April'),
+                                                   ('may', 'May'), ('june', 'June'), ('july', 'July'), ('aug', 'August'),
+                                                   ('sept', 'September'), ('oct', 'October'), ('nov', 'November'), ('dec', 'December')                            
                         ], 'Month'),
                         'year':fields.integer('Yearly'),
                         'half_year':fields.boolean('Half Year'),
