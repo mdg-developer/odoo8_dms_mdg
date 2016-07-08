@@ -1007,6 +1007,210 @@ class mobile_sale_order(osv.osv):
             return True
         except Exception, e:
             return False
+    
+    def create_dsr_notes(self, cursor, user, vals, context=None):
+        print 'vals',vals
+        try : 
+            history_obj=self.pool.get('sales.denomination')
+            notes_line_obj=self.pool.get('sales.denomination.note.line')
+            deno_product_obj= self.pool.get('sales.denomination.product.line')
+            
+            str ="{"+vals+"}"
+            str = str.replace(":''",":'")
+            str = str.replace("'',","',")
+            str = str.replace(":',",":'',")
+            str = str.replace(":'}", ":''}")
+            str = str.replace("}{", "}|{")
+            
+            new_arr = str.split('|')
+            result = []
+            for data in new_arr:
+                x = ast.literal_eval(data)
+                result.append(x)
+           
+            history = []
+            notes_line = []
+            
+            for r in result:
+                print "length", len(r)
+                if len(r)>=7:
+                    history.append(r)                   
+                else:
+                    notes_line.append(r)
+            
+            if history:
+                for pt in history:
+                    deno_result={
+                        'invoice_count':pt['invoice_count'],
+                        'sale_team_id':pt['sale_team_id'],
+                        'company_id':pt['company_id'] ,
+                        'note':pt['note'],
+                        'date':pt['date'],
+                        'tablet_id':pt['tablet_id'],
+                        'user_id':pt['user_id'],
+                    }
+                    deno_id = history_obj.create(cursor, user, deno_result, context=context)
+                    
+                    for ptl in notes_line:
+                                note_line_res={                                                            
+                                  'denomination_note_ids':deno_id,
+                                  'note_qty':ptl['note_qty'],
+                                  'notes':ptl['notes'],                     
+                                }
+                                notes_line_obj.create(cursor, user, note_line_res, context=context)
+                    
+                        
+                de_date= pt['date']
+                user_id = pt['user_id']
+                mobile_sale_obj = self.pool.get('mobile.sale.order')        
+                mobile_sale_order_obj = self.pool.get('mobile.sale.order.line')
+                cursor.execute("select id from mobile_sale_order where due_date=%s and user_id=%s and void_flag != 'voided'",(de_date,user_id))
+                mobile_ids = cursor.fetchall()
+                if  mobile_ids:
+                    line_ids = mobile_sale_order_obj.search(cursor, user,[('order_id', 'in',mobile_ids)], context=context)                        
+                    order_line_ids = mobile_sale_order_obj.browse(cursor, user, line_ids, context=context)                  
+                    cursor.execute('select product_id,sum(product_uos_qty),sum(sub_total) from mobile_sale_order_line where id in %s group by product_id',(tuple(order_line_ids.ids),))
+                    order_line=cursor.fetchall()
+                    for data in order_line:
+                        data_id={'product_id':data[0],
+                                          'product_uom_qty':data[1],
+                                          'denomination_product_ids':deno_id,
+                                          'amount':data[2]}
+                        deno_product_obj.create(cursor, user, data_id, context=context)
+            print 'True'
+            return True       
+        except Exception, e:
+            print 'False'
+            return False
+            
+    def create_ar_collection(self, cursor, user, vals, context=None):
+
+        ar_obj = self.pool.get('mobile.ar.collection')
+        str = "{" + vals + "}"
+        str = str.replace("'',", "',")  # null
+        str = str.replace(":',", ":'',")  # due to order_id
+        str = str.replace("}{", "}|{")
+        str = str.replace(":'}{", ":''}")
+        new_arr = str.split('|')
+        result = []
+        for data in new_arr:
+            x = ast.literal_eval(data)
+            result.append(x)
+        ar_collection = []
+        for r in result:
+            print "length", len(r)
+            ar_collection.append(r)  
+        if ar_collection:
+            for ar in ar_collection:            
+                cursor.execute('select id From res_partner where customer_code = %s ',(ar['customer_code'],))
+                data = cursor.fetchall()
+                if data:
+                    partner_id = data[0][0]
+                else:
+                    partner_id = None
+                
+                ar_result = {
+                    'customer_code':ar['customer_code'],
+                    'partner_id':partner_id,
+                    'credit_limit':ar['credit_limit'],
+                    'date':ar['date'] ,                    
+                    'tablet_id':ar['tablet_id'],
+                    'void_flag':ar['void_flag'],
+                    'payment_amount':ar['payment_amount'],                
+                    'so_amount':ar['so_amount'],
+                    'balance':ar['balance'],
+                    'ref_no':ar['ref_no'],
+                    'so_ref':ar['so_ref'],
+                    'sale_team_id':ar['sale_team_id'],
+                    'user_id':ar['user_id'],
+                }
+                ar_obj.create(cursor, user, ar_result, context=context)
+        return True
+    
+    def create_sale_rental(self, cursor, user, vals, context=None):
+         try:
+            rental_obj = self.pool.get('sales.rental')
+            str = "{" + vals + "}"
+            str = str.replace("'',", "',")  # null
+            str = str.replace(":',", ":'',")  # due to order_id
+            str = str.replace("}{", "}|{")
+            str = str.replace(":'}{", ":''}")
+            new_arr = str.split('|')
+            result = []
+            for data in new_arr:
+                x = ast.literal_eval(data)
+                result.append(x)
+            rental_collection = []
+            for r in result:
+                rental_collection.append(r)  
+            if rental_collection:
+                for ar in rental_collection:            
+                    cursor.execute('select id From res_partner where customer_code = %s ',(ar['partner_id'],))
+                    data = cursor.fetchall()
+                    if data:
+                        partner_id = data[0][0]
+                    else:
+                        partner_id = None
+                    
+                    rental_result = {
+                    
+                        'partner_id':partner_id,
+                        'from_date':ar['from_date'],
+                        'date':ar['date'] ,                    
+                        'to_date':ar['to_date'],
+                        'image':ar['image'],
+                        'company_id':ar['company_id'],                
+                        'monthy_amt':ar['monthy_amt'],
+                        'month':'month',
+                        'latitude':ar['latitude'],
+                        'longitude':ar['longitude'],
+                        'address':ar['address'],
+                        'month':ar['month'],
+                        'name':ar['name'],
+                        'total_amt':ar['total_amt'],
+                    }
+                    rental_obj.create(cursor, user, rental_result, context=context)
+            return True
+         except Exception, e:
+            print 'False'
+            return False
+    def get_credit_notes(self, cr, uid, sale_team_id , context=None, **kwargs):
+        cr.execute('''            
+                  select ac.id,ac.description,ac.name,ac.used_date,
+                    ac.issued_date,ac.terms_and_conditions,ac.amount,ac.so_no,
+                    ac.m_status,ac.customer_id,ac.type,ac.sale_team_id,res.name,res.customer_code,ac.ref_no
+                 from account_creditnote ac,res_partner res
+                   where ac.customer_id = res.id
+                   and ac.m_status = 'new'
+                   and  ac.sale_team_id = %s
+         ''', (sale_team_id,))
+        datas = cr.fetchall()
+        cr.execute
+        return datas
+    
+    def udpate_credit_notes_issue_status(self, cr, uid, sale_team_id , context=None, **kwargs):
+        try:
+            cr.execute('''update account_creditnote set m_Status='issued' where
+                        sale_team_id = %s and m_status ='new'
+             ''', (sale_team_id,))
+            return True
+        except Exception, e:
+            return False
+        
+    def udpate_credit_notes_used_status(self, cr, uid, sale_team_id ,usedList, context=None, **kwargs):
+        try:
+            crnote = tuple(usedList)
+            note_order_obj = self.pool.get('account.creditnote')
+            list_val = None
+            list_val = note_order_obj.search(cr,uid, [('sale_team_id', '=', sale_team_id), ('m_status', '=', 'issued'),('name','in', usedList)])            
+            print'credit id', list_val
+            for note_id in list_val:
+                print'Note id', note_id
+                cr.execute("""update account_creditnote set m_status ='used' where id = %s""",(note_id,))
+            return True
+        except Exception, e:
+            return False
+    
 mobile_sale_order()
 
 class mobile_sale_order_line(osv.osv):
