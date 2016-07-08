@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_cashier_approval_document">
+    <t t-call="report.external_layout">
+        <div class="page">
+            <div class="oe_structure"/>
+            <!-- <div class="row">
+                <div class="col-xs-6">
+                    <strong t-if="o.partner_shipping_id == o.partner_invoice_id">Invoice and shipping address:</strong>
+                    <strong t-if="o.partner_shipping_id != o.partner_invoice_id">Invoice address:</strong>
+                    <div t-field="o.partner_invoice_id" 
+                        t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
+                    <p t-if="o.partner_id.vat">VAT: <span t-field="o.partner_id.vat"/></p>
+                    <div t-if="o.partner_shipping_id != o.partner_invoice_id" class="mt8">
+                        <strong>Shipping address:</strong>
+                        <div t-field="o.partner_shipping_id" 
+                            t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
+                        <p t-if="o.partner_id.vat">VAT: <span t-field="o.partner_id.vat"/></p>
+                    </div>                        
+                </div>
+                <div class="col-xs-5 col-xs-offset-1">
+                    <div t-field="o.partner_id"
+                        t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' />
+                </div>
+            </div> -->			
+           
+
+            <div class="row mt32 mb32" id="informations">
+                <div t-if="o.date" class="col-xs-3">
+                    <strong>From Date:</strong>
+                    <p t-field="o.date"/>
+                </div>
+                <div t-if="o.to_date" class="col-xs-3">
+                    <strong>To Date:</strong>
+                    <p t-field="o.to_date"/>
+                </div>
+                <div t-if="o.sale_team_id" class="col-xs-3">
+                    <strong>Sales Team:</strong>
+                    <p t-field="o.sale_team_id"/>
+                </div>
+                <div t-if="o.user_id.name" class="col-xs-3">
+                    <strong>Salesman:</strong>
+                    <p t-field="o.user_id.name"/>
+                </div>                
+            </div>
+            
+                      
+            
+			<table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>Product</th>                        
+                        <th class="text-right">Qty</th>
+                        <th class="text-right">Amount</th>
+                        <!-- <th class="text-right">Unit Price</th> -->
+                        
+                    </tr>
+               </thead>
+               <tbody class="product_tbody">
+                    <tr t-foreach="o.denomination_product_line" t-as="p">
+                        <td>
+                           <span t-field="p.product_id"/>
+                        </td>
+                        
+                         <td class="text-right">
+                            <span t-field="p.product_uom_qty"/>
+                            
+                        </td>
+                        
+                        <td class="text-right">
+                            <span t-field="p.amount"/>
+                            
+                        </td>
+                        
+                    </tr>
+                </tbody>
+            </table>
+            
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>Note</th>                        
+                        <th class="text-right">Note Qty</th>
+                        <!-- <th class="text-right">Unit Price</th> -->
+                        
+                    </tr>
+               </thead>
+               <tbody class="sale_tbody">
+                    <tr t-foreach="o.denomination_line" t-as="l">
+                        <td>
+                           <span t-field="l.notes"/>
+                        </td>
+                        
+                        <td class="text-right">
+                            <span t-field="l.note_qty"/>
+                            
+                        </td>
+                        
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="row">
+                <div class="col-xs-4 pull-right">
+                    <table class="table table-condensed">
+                        <tr class="border-black">
+                            <td><strong>Total</strong></td>
+                            <td class="text-right">
+                                <span t-field="o.total"
+                                    />
+                            </td>
+                        </tr>
+                        <tr class="border-black">
+                            <td>AR Total</td>
+                            <td class="text-right">
+                                <span t-field="o.ar_sub_total"
+                                    />
+                            </td>
+                        </tr>
+                        <tr class="border-black">
+                            <td><strong>Credit Total</strong></td>
+                            <td class="text-right">
+                                <span t-field="o.cr_sub_total"
+                                    />
+                            </td>
+                        </tr>
+                        <tr class="border-black">
+                            <td><strong>Denomination Total</strong></td>
+                            <td class="text-right">
+                                <span t-field="o.denomination_sub_total"
+                                    />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+           <!--  <p t-field="o.note" />
+            <p t-if="o.payment_term.note">
+                <strong>Payment Term:</strong>
+                <span t-field="o.payment_term.note"/>
+            </p>
+            <div class="oe_structure"/> -->
+        </div>
+    </t>
+</template>
+
+<template id="report_cashier_approval">
+    <t t-call="report.html_container">
+        <t t-foreach="doc_ids" t-as="doc_id">
+            
+           <t t-raw="translate_doc(doc_id, doc_model, 'user_id.name', 'sale_cashier_approval.report_cashier_approval_document')" />
+        </t>
+    </t>
+</template>
+</data>
+</openerp>
