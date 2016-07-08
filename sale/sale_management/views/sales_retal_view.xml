@@ -80,7 +80,7 @@
 			</record>
 
 			<record id="action_sales_rental_view" model="ir.actions.act_window">
-				<field name="name">Asset To Customer</field>
+				<field name="name">Sale Rental</field>
 				<field name="type">ir.actions.act_window</field>
 				<field name="res_model">sales.rental</field>
 				<field name="view_type">form</field>
@@ -95,6 +95,6 @@
 			</record>
 
 			<menuitem id="sales_rental" action="action_sales_rental_view"
-				parent="base.menu_sales" name="Asset To Customer" sequence="12" />
+				parent="base.menu_sales" name="Sale Rental" sequence="12" />
 	</data>
 </openerp>	    
