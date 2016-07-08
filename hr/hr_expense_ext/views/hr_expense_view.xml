@@ -36,10 +36,10 @@
 					</xpath>                 
 					
 					<field name="name" position="replace">
-						<field name="note" placeholder="Notes..."/>
+						<field name="manager_note" placeholder="Notes..."/>
 					</field>
 					
-					<field name="note" position="before">
+					<field name="manager_note" position="before">
 						<field name="notify_manager"/>
 					</field>
 					

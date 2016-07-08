@@ -32,7 +32,7 @@ class hr_expense_expense(osv.osv):
     _rec_name="employee_id"
     _columns = {
         'notify_manager': fields.many2one('hr.employee', "Notify Manager", required=True),
-        'note': fields.text('Notes'),
+        'manager_note': fields.text('Notes'),
         'branch_id': fields.many2one('branch', 'Branch'),
         'type':fields.selection([('expenses', 'Expenses'), ('advance', 'Advance'), ('claim', 'Claim')], 'Type'),
         'state': fields.selection([
