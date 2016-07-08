@@ -144,11 +144,11 @@
 		<menuitem id="sales" parent="base.menu_base_config"
 		name="Sales" sequence="1" 	 />
 		
-		<!-- <menuitem id="promos" parent="sales"
-		action="act_promotion_rules" sequence="1" 	 /> -->
+		 <menuitem id="promos" parent="sales"
+		action="act_promotion_rules" sequence="1" 	 /> 
 		
-		<menuitem id="promos" parent="sale_management.promotions"
-		action="act_promotion_rules" sequence="1" 	 />
+		<!--<menuitem id="promos" parent="sale_management.promotions"
+		action="act_promotion_rules" sequence="1" 	 />-->
 
 		<record model="ir.ui.view" id="view_promotion_cond_expr_form">
 			<field name="name">promos.rules.conditions.exps.form</field>
