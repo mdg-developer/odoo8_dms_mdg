@@ -31,6 +31,7 @@ class hr_expense_expense(osv.osv):
     _inherit = "hr.expense.expense"
     _rec_name="employee_id"
     _columns = {
+        'name': fields.char('Description', required=False, readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'notify_manager': fields.many2one('hr.employee', "Notify Manager", required=True),
         'manager_note': fields.text('Notes'),
         'branch_id': fields.many2one('branch', 'Branch'),
