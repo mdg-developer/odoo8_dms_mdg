@@ -38,6 +38,7 @@ Sale Management
     'data': [
 
        # 'views/product_product_view.xml',
+       'views/code_sequence.xml',
        'views/invoice_custom_layouts.xml',
        'views/sale_custom_layouts.xml',
         'views/report_saleorder.xml',
