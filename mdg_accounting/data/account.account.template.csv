@@ -1,0 +1,371 @@
+id,code,name,parent_id:id,type,user_type:id,reconcile
+0,0,"MDG Co., Ltd",,view,account_type_view,FALSE
+1,1,ASSETS,0,view,account_type_view,FALSE
+2,2,LIABILITIES,0,view,account_type_view,FALSE
+3,3,EQUITY,0,view,account_type_view,FALSE
+4,4,REVENUE,0,view,account_type_view,FALSE
+5,5, COST OF GOODS SOLD,0,view,account_type_view,FALSE
+6,6,SELLING AND ADMINISTRATION EXPENSES,0,view,account_type_view,FALSE
+1000,1000,Fixed Assets,1,view,account_type_view,FALSE
+10000,10000,Cost of Land,1000,other,account_type_fixed_assets,TRUE
+10010,10010,Building,1000,view,account_type_view,FALSE
+10011,10011,Cost of Building,10010,other,account_type_fixed_assets,TRUE
+10012,10012,Accum Dep: for Building,10010,other,account_type_fixed_assets,TRUE
+10020,10020,Vehicles,1000,view,account_type_view,FALSE
+10021,10021,Cost of Vehicles,10020,other,account_type_fixed_assets,TRUE
+10022,10022,Accum Dep: for Vehicles,10020,other,account_type_fixed_assets,TRUE
+10030,10030,Tools & Accessories,1000,view,account_type_view,FALSE
+10031,10031,Cost of Tools & Accessories,10030,other,account_type_fixed_assets,TRUE
+10032,10032,Accum Dep: for Tools & Accesso,10030,other,account_type_fixed_assets,TRUE
+10040,10040,Furnitures & Fittings,1000,view,account_type_view,FALSE
+10041,10041,Costs of Furnitures & Fittings,10040,other,account_type_fixed_assets,TRUE
+10042,10042,Accum Dep: for Furnitures & Fi,10040,other,account_type_fixed_assets,TRUE
+10050,10050,Office Equipments,1000,view,account_type_view,FALSE
+10051,10051,Costs of Office Equipments,10050,other,account_type_fixed_assets,TRUE
+10052,10052,Accum Dep: for Costs of Office,10050,other,account_type_fixed_assets,TRUE
+10060,10060,Computer &  Accessori,1000,view,account_type_view,FALSE
+10061,10061,Costs of Computer &  Accessori,10060,other,account_type_fixed_assets,TRUE
+10062,10062,Accum Dep: for Computer &  Acc,10060,other,account_type_fixed_assets,TRUE
+10070,10070,Printers,1000,view,account_type_view,FALSE
+10071,10071,Costs of Printers,10070,other,account_type_fixed_assets,TRUE
+10072,10072,Accum Dep: for Printers,10070,other,account_type_fixed_assets,TRUE
+10080,10080,Copier,1000,view,account_type_view,FALSE
+10081,10081,Costs of Copier,10080,other,account_type_fixed_assets,TRUE
+10082,10082,Accum Dep: for Copier,10080,other,account_type_fixed_assets,TRUE
+10090,10090,Air Con,1000,view,account_type_view,FALSE
+10091,10091,Costs of Air Con,10090,other,account_type_fixed_assets,TRUE
+10092,10092,Accum Dep: for Air Con,10090,other,account_type_fixed_assets,TRUE
+10110,10110,Generators & Motors,1000,view,account_type_view,FALSE
+10111,10111,Costs of Generators & Motors,10110,other,account_type_fixed_assets,TRUE
+10112,10112,Accum Dep: for Generators & Mo,10110,other,account_type_fixed_assets,TRUE
+10120,10120,Water Pump,1000,view,account_type_view,FALSE
+10121,10121,Costs of Water Pump,10120,other,account_type_fixed_assets,TRUE
+10122,10122,Accum Dep: for Water Pump,10120,other,account_type_fixed_assets,TRUE
+10130,10130,Safe Box,1000,view,account_type_view,FALSE
+10131,10131,Costs of Safe Box,10130,other,account_type_fixed_assets,TRUE
+10132,10132,Accum Dep: for Safe Box,10130,other,account_type_fixed_assets,TRUE
+10140,10140,"Phone, Fax, & Accesso",1000,view,account_type_view,FALSE
+10141,10141,"Costs of Phone, Fax, & Accesso",10140,other,account_type_fixed_assets,TRUE
+10142,10142,"Accum Dep: for Phone, Fax, & A",10140,other,account_type_fixed_assets,TRUE
+10150,10150,Renovation,1000,view,account_type_view,FALSE
+10151,10151,Costs of Renovation,10150,other,account_type_fixed_assets,TRUE
+10152,10152,Accum Dep: for Renovation,10150,other,account_type_fixed_assets,TRUE
+10160,10160,Warehouse Accessories,1000,view,account_type_view,FALSE
+10161,10161,Costs of Warehouse Accessories,10160,other,account_type_fixed_assets,TRUE
+10162,10162,Accum Dep: for Warehouse Acces,10160,other,account_type_fixed_assets,TRUE
+10170,10170,Software System,1000,view,account_type_view,FALSE
+10171,10171,Costs of Software System,10170,other,account_type_fixed_assets,TRUE
+10172,10172,Accum Dep: for Software System,10170,other,account_type_fixed_assets,TRUE
+10180,10180,Disposal of Fixed Assets,1000,other,account_type_fixed_assets,TRUE
+11000,11000,Current Assets,1,view,account_type_view,FALSE
+11100,11100,Cash,11000,view,account_type_view,FALSE
+11101,11101,Cash In Hand (Kyat),11100,liquidity,account_type_current_assets,TRUE
+11102,11102,Cash In Hand (USD-$),11100,liquidity,account_type_current_assets,TRUE
+11103,11103,Cash In Hand (SGD),11100,liquidity,account_type_current_assets,TRUE
+11104,11104,Cash In Transit,11100,liquidity,account_type_current_assets,TRUE
+11200,11200,Bank,11000,view,account_type_view,FALSE
+11201,11201,KBZ Bank Curret (TMW),11200,liquidity,account_type_current_assets,TRUE
+11202,11202,KBZ Bank-Current (Mingalar Zay,11200,liquidity,account_type_current_assets,TRUE
+11203,11203,KBZ Bank (Kamaryut),11200,liquidity,account_type_current_assets,TRUE
+11204,11204,YOMA Bank (Mingalar Zay),11200,liquidity,account_type_current_assets,TRUE
+11205,11205,YOMA Bank (Myaynigone),11200,liquidity,account_type_current_assets,TRUE
+11206,11206,GTBP Bank (Shwe Baho),11200,liquidity,account_type_current_assets,TRUE
+11207,11207,CB Bank (Mingalar Zay),11200,liquidity,account_type_current_assets,TRUE
+11208,11208,AYWD Bank (Ywarma Gwae),11200,liquidity,account_type_current_assets,TRUE
+11209,11209,AYWD Bank (Bo Aung Kyaw) Savin,11200,liquidity,account_type_current_assets,TRUE
+11210,11210,Myanmar Apex Bank-Saving (Ming,11200,liquidity,account_type_current_assets,TRUE
+11211,11211,United Amara Bank (TGG),11200,liquidity,account_type_current_assets,TRUE
+11212,11212,KBZ Bank-Saving (Mingalar Zay),11200,liquidity,account_type_current_assets,TRUE
+11213,11213,Myanmar Apex Bank- Current (Mi,11200,liquidity,account_type_current_assets,TRUE
+11214,11214,AYWD BANK (Bo Aung Kyaw) Curre,11200,liquidity,account_type_current_assets,TRUE
+11215,11215,AYWD BANK - Saving ( BYN),11200,liquidity,account_type_current_assets,TRUE
+11216,11216,AYWD BANK - Current ( BYN),11200,liquidity,account_type_current_assets,TRUE
+11217,11217,AYWD(MGLZ)Saving- Fine Wine,11200,liquidity,account_type_current_assets,TRUE
+11218,11218,KBZ(TMWE)SMG(Current),11200,liquidity,account_type_current_assets,TRUE
+11219,11219,Apex(MGLZ)Fine Wine Distributi,11200,liquidity,account_type_current_assets,TRUE
+11220,11220,Myanmar Citizens Bank(Curr AC),11200,liquidity,account_type_current_assets,TRUE
+11221,11221,AYWD BANK(MGLZ)Saving-Katana,11200,liquidity,account_type_current_assets,TRUE
+11222,11222,Apex(MGLZ) (Saving) Fine Wine,11200,liquidity,account_type_current_assets,TRUE
+11223,11223,Myanmar Apex Bank-Current(TP),11200,liquidity,account_type_current_assets,TRUE
+11224,11224,AYWD(MGLZ)Current,11200,liquidity,account_type_current_assets,TRUE
+11225,11225,Yoma (Byn),11200,liquidity,account_type_current_assets,TRUE
+11226,11226,Myanmar Apex-Saving(MGZ)Mobile,11200,liquidity,account_type_current_assets,TRUE
+11227,11227,MyanmarApex-Current(MGZ)Mobile,11200,liquidity,account_type_current_assets,TRUE
+11228,11228,Myanmar Apex-USD(MGZ)Mobile,11200,liquidity,account_type_current_assets,TRUE
+11229,11229,Apex(MGLZ) (Current)MDG Group,11200,liquidity,account_type_current_assets,TRUE
+11230,11230,Apex(MGLZ) (Saving)MDG Group,11200,liquidity,account_type_current_assets,TRUE
+11231,11231,MICB Bank - MDG,11200,liquidity,account_type_current_assets,TRUE
+11232,11232,MFTB Bank - ML,11200,liquidity,account_type_current_assets,TRUE
+11233,11233,MFTB Bank - MLT,11200,liquidity,account_type_current_assets,TRUE
+11234,11234,MFTB Bank - NDN,11200,liquidity,account_type_current_assets,TRUE
+11235,11235,MFTB Bank - SS,11200,liquidity,account_type_current_assets,TRUE
+11236,11236,MFTB Bank - MBC,11200,liquidity,account_type_current_assets,TRUE
+11237,11237,MFTB Bank - Transview,11200,liquidity,account_type_current_assets,TRUE
+11238,11238,MFTB Bank-MDG,11200,liquidity,account_type_current_assets,TRUE
+11239,11239,MFTB Bank-Fine Wine,11200,liquidity,account_type_current_assets,TRUE
+11240,11240,Myanmar Apex(Thein Phyu)-USD-$,11200,liquidity,account_type_current_assets,TRUE
+11241,11241,AYWD(MGZ) Saving-MDG Mobile,11200,liquidity,account_type_current_assets,TRUE
+11242,11242,AYWD(MGZ) Current -MDG Mobile,11200,liquidity,account_type_current_assets,TRUE
+11243,11243,CB(MGZ) Current -MDG Mobile,11200,liquidity,account_type_current_assets,TRUE
+11244,11244,CB(MGZ) Saving -MDG Mobile,11200,liquidity,account_type_current_assets,TRUE
+11245,11245,KBZ-US$-06010906004285101,11200,liquidity,account_type_current_assets,TRUE
+11246,11246,AYWD-US$-8001103030264357,11200,liquidity,account_type_current_assets,TRUE
+11247,11247,CB(HO)-US$-0010101200410977,11200,liquidity,account_type_current_assets,TRUE
+11248,11248,YOMA(HO)-US$-6661211900000532,11200,liquidity,account_type_current_assets,TRUE
+11249,11249,CB(MGLZ) Current-MDG Group,11200,liquidity,account_type_current_assets,TRUE
+11250,11250,CB(MGLZ) Saving-MDG Group,11200,liquidity,account_type_current_assets,TRUE
+11251,11251,YOMA(MGLZ) (Current)MDG Group,11200,liquidity,account_type_current_assets,TRUE
+11252,11252,YOMA(MGLZ) (Saving)MDG Group,11200,liquidity,account_type_current_assets,TRUE
+11253,11253,KBZ(MGLZ) (Saving)MDG Group,11200,liquidity,account_type_current_assets,TRUE
+11254,11254,KBZ(MGLZ) (Current)MDG Group,11200,liquidity,account_type_current_assets,TRUE
+11255,11255,APEX(MGLZ) (Smart Saving)MDG,11200,liquidity,account_type_current_assets,TRUE
+11256,11256,AYWD(MGLZ) (Saving)MDG Group,11200,liquidity,account_type_current_assets,TRUE
+11257,11257,AYWD(MGLZ) (Current)MDG Group,11200,liquidity,account_type_current_assets,TRUE
+11258,11258,APEX(MGLZ)(Saving)In Haus,11200,liquidity,account_type_current_assets,TRUE
+11259,11259,APEX(MGLZ) (Current)In Haus,11200,liquidity,account_type_current_assets,TRUE
+11260,11260,CB(HO)-0010100500013088-Curren,11200,liquidity,account_type_current_assets,TRUE
+11261,11261,CB(HO)-0010600300001805-Saving,11200,liquidity,account_type_current_assets,TRUE
+11262,11262,YOMA(MGZ)CallDepo-025275002197,11200,liquidity,account_type_current_assets,TRUE
+11263,11263,APEX(TMW)-0610153015004442029,11200,liquidity,account_type_current_assets,TRUE
+11264,11264,APEX(TMW)-0610123015004442018,11200,liquidity,account_type_current_assets,TRUE
+11265,11265,YOMA(MGZ)LoanAC025175004714,11200,liquidity,account_type_current_assets,TRUE
+11300,11300,Accounts Receivable,11000,view,account_type_view,FALSE
+11301,11301,Account Receivable-SD-MBC,11300,other,account_type_current_assets,TRUE
+11302,11302,Account Receivable-N ,11300,other,account_type_current_assets,TRUE
+11303,11303,Account Receivable-Pocari,11300,other,account_type_current_assets,TRUE
+11304,11304,Prov for Bad & Doubtful Debts,11300,other,account_type_current_assets,TRUE
+11305,11305,Other Receivable,11300,other,account_type_current_assets,TRUE
+11400,11400,Other Current Assets,11000,view,account_type_view,FALSE
+11410,11410,Advanced ,11400,view,account_type_view,FALSE
+11411,11411,Advanced Income Tax,11410,other,account_type_current_assets,TRUE
+11412,11412,Advanced Commercial Tax,11410,other,account_type_current_assets,TRUE
+11420,11420,Customs Clearance charges,11400,other,account_type_current_assets,TRUE
+11421,11421,Yangon Current,11400,other,account_type_current_assets,TRUE
+11422,11422,Mandalay Current,11400,other,account_type_current_assets,TRUE
+11423,11423,Receivable for Staff Uniform,11400,other,account_type_current_assets,TRUE
+11424,11424,Rec;Staff Compensate & Penalty,11400,other,account_type_current_assets,TRUE
+11430,11430,Prepaid ,11400,view,account_type_view,FALSE
+11431,11431,Prepaid Telephone Charges,11430,other,account_type_current_assets,TRUE
+11432,11432,Prepaid Rental Charges,11430,other,account_type_current_assets,TRUE
+11433,11433,Prepaid Insurance & Fire Premi,11430,other,account_type_current_assets,TRUE
+11434,11434,Prepaid Others,11430,other,account_type_current_assets,TRUE
+11440,11440,Staff Advance,11400,view,account_type_view,FALSE
+11441,11441,Staff Advance (Other),11440,other,account_type_current_assets,TRUE
+11442,11442,Staff Advance (Trip),11440,other,account_type_current_assets,TRUE
+11443,11443,Staff Advance (Travelling),11440,other,account_type_current_assets,TRUE
+11500,11500,Inventory,11000,view,account_type_view,FALSE
+11501,11501,Inventory-Fuel,11500,other,account_type_current_assets,TRUE
+11502,11502,Inventory-MBC,11500,other,account_type_current_assets,TRUE
+11503,11503,Inventory-FOC (MBC),11500,other,account_type_current_assets,TRUE
+11504,11504,Inventory-N ,11500,other,account_type_current_assets,TRUE
+11505,11505,Inventory-Pocari,11500,other,account_type_current_assets,TRUE
+11506,11506,Goods In Transit,11500,other,account_type_current_assets,TRUE
+11425,11425,MBC Current,11400,other,account_type_current_assets,TRUE
+11600,11600,Other Receivable,11000,view,account_type_view,FALSE
+11601,11601,Transview Current,11600,other,account_type_current_assets,TRUE
+11602,11602,DK 35 Current,11600,other,account_type_current_assets,TRUE
+11603,11603,Tennis Federation Current,11600,other,account_type_current_assets,TRUE
+11604,11604,Vinyl Printing Current,11600,other,account_type_current_assets,TRUE
+11605,11605,Fine Y Current,11600,other,account_type_current_assets,TRUE
+11606,11606,MD Current,11600,other,account_type_current_assets,TRUE
+11607,11607,Katana Restaurant Current,11600,other,account_type_current_assets,TRUE
+11608,11608,MDG Mobile Current,11600,other,account_type_current_assets,TRUE
+11609,11609,the in haus Current,11600,other,account_type_current_assets,TRUE
+11610,11610,Myanmar GR Current,11600,other,account_type_current_assets,TRUE
+11611,11611,Best Oil Current,11600,other,account_type_current_assets,TRUE
+11612,11612,Jump Digital Marketing Current,11600,other,account_type_current_assets,TRUE
+11426,11426,Air Soda Current,11400,other,account_type_current_assets,TRUE
+11427,11427,Azims Current,11400,other,account_type_current_assets,TRUE
+11428,11428,Nestle Current,11400,other,account_type_current_assets,TRUE
+11429,11429,Pocari Sweat Current,11400,other,account_type_current_assets,TRUE
+11430,11430,Nescafe' Machine Current,11400,other,account_type_current_assets,TRUE
+20000,20000,Current Liabilities,2,view,account_type_view,FALSE
+20100,20100,Accounts Payable,20000,view,account_type_view,FALSE
+20101,20101,Accounts Payable,20100,payable,account_type_payable,TRUE
+20102,20102,Accounts Payable-MBC,20100,payable,account_type_payable,TRUE
+20103,20103,Accounts Payable-N,20100,payable,account_type_payable,TRUE
+20104,20104,Accounts Payable-Pocari,20100,payable,account_type_payable,TRUE
+20105,20105,Account Payable-Transfer,20100,payable,account_type_payable,TRUE
+20106,20106,Payable to Others,20100,payable,account_type_payable,TRUE
+20200,20200,Other Current Liabilities,20000,view,account_type_view,FALSE
+20201,20201,Advance Received (Sales),20200,other,account_type_current_liabilities,TRUE
+20202,20202,Deposits for Dealers,20200,other,account_type_current_liabilities,TRUE
+20210,20210,Provision,20200,view,account_type_view,FALSE
+20211,20211,Provision for Income Tax,20210,other,account_type_current_liabilities,TRUE
+20212,20212,Provision for Commercial Tax,20210,other,account_type_current_liabilities,TRUE
+20220,20220,Accrued,20200,view,account_type_view,FALSE
+20221,20221,Accrued Telephone Bill,20220,other,account_type_current_liabilities,TRUE
+20222,20222,Accrued Electricity Bill,20220,other,account_type_current_liabilities,TRUE
+20223,20223,Accrued Internet Bill,20220,other,account_type_current_liabilities,TRUE
+20224,20224,Accrued Others,20220,other,account_type_current_liabilities,TRUE
+21000,21000,Long Term Liabilities,2,view,account_type_view,FALSE
+21010,21010,Loan (Bank Loan & Other),21000,other,account_type_current_liabilities,TRUE
+30000,30000,Capital,3,other,account_type_equity,FALSE
+31000,31000,Retained  Earnings,3,other,account_type_equity,FALSE
+40000,40000,Sales,4,view,account_type_view,FALSE
+40001,40001,Sales-MBC-CS,40000,other,account_type_income,FALSE
+40002,40002,Sales-MBC-CR,40000,other,account_type_income,FALSE
+40003,40003,Sales-N-CS ,40000,other,account_type_income,FALSE
+40004,40004,Sales-N-CR ,40000,other,account_type_income,FALSE
+40005,40005,Sales-Pocari-CS ,40000,other,account_type_income,FALSE
+40006,40006,Sales-Pocari-CR ,40000,other,account_type_income,FALSE
+40007,40007,Sales Discounts-MBC,40000,other,account_type_expense,FALSE
+40008,40008,Sales Discounts-N,40000,other,account_type_expense,FALSE
+40009,40009,Sales Discounts-Pocari,40000,other,account_type_expense,FALSE
+40010,40010,Sales Returns-MBC,40000,other,account_type_expense,FALSE
+40011,40011,Sales Returns-N,40000,other,account_type_expense,FALSE
+40012,40012,Sales Returns-Pocari,40000,other,account_type_expense,FALSE
+41000,41000,Promotion Income,4,other,account_type_income,FALSE
+42000,42000,Other Income,4,other,account_type_income,FALSE
+50000,50000,Cost of Sales,5,other,account_type_expense,FALSE
+50001,50001,Cost of Sales-MBC,5,other,account_type_expense,FALSE
+50002,50002,Cost Of Sales-N ,5,other,account_type_expense,FALSE
+50003,50003,Cost Of Sales-Pocari ,5,other,account_type_expense,FALSE
+60000,60000,Administration Expenses,6,view,account_type_view,FALSE
+60100,60100,Staff Expenes,60000,view,account_type_view,FALSE
+60101,60101,Salaries,60100,other,account_type_expense,FALSE
+60102,60102,Meal Allowance,60100,other,account_type_expense,FALSE
+60103,60103,Staff Commission,60100,other,account_type_expense,FALSE
+60104,60104,Long Service Bonus,60100,other,account_type_expense,FALSE
+60105,60105,Education Allowance,60100,other,account_type_expense,FALSE
+60106,60106,Transportation Allowance,60100,other,account_type_expense,FALSE
+60107,60107,Driving Allowance,60100,other,account_type_expense,FALSE
+60108,60108,Other Allowance,60100,other,account_type_expense,FALSE
+60109,60109,Wages,60100,other,account_type_expense,FALSE
+60110,60110,OT Expense,60100,other,account_type_expense,FALSE
+60111,60111,Birthday Allowance,60100,other,account_type_expense,FALSE
+60112,60112,Maternity Allowance,60100,other,account_type_expense,FALSE
+60113,60113,Funeral Subsidiary,60100,other,account_type_expense,FALSE
+60114,60114,Training Fees,60100,other,account_type_expense,FALSE
+60115,60115,Wedding Present (Staff),60100,other,account_type_expense,FALSE
+60116,60116,Gift & Present (Staff),60100,other,account_type_expense,FALSE
+60117,60117,Medical Charges,60100,other,account_type_expense,FALSE
+60118,60118,Staff Welfare,60100,other,account_type_expense,FALSE
+60119,60119,Special Meal Allowance (Staff),60100,other,account_type_expense,FALSE
+60120,60120,Entertainment (Staff),60100,other,account_type_expense,FALSE
+60121,60121,Employee of the Month,60100,other,account_type_expense,FALSE
+60122,60122,Ten Years Service Award,60100,other,account_type_expense,FALSE
+60123,60123,SSB Contribution,60100,other,account_type_expense,FALSE
+60124,60124,Staff Uniform,60100,other,account_type_expense,FALSE
+60125,60125,Staff Party Expense,60100,other,account_type_expense,FALSE
+60200,60200,Office Expenses,60000,view,account_type_view,FALSE
+60201,60201,Purified Water,60200,other,account_type_expense,FALSE
+60202,60202,Fax-mail Expense,60200,other,account_type_expense,FALSE
+60203,60203,IT Expense,60200,other,account_type_expense,FALSE
+60204,60204,Copying Expense,60200,other,account_type_expense,FALSE
+60205,60205,Printing Expense,60200,other,account_type_expense,FALSE
+60206,60206,Stationery Expense,60200,other,account_type_expense,FALSE
+60207,60207,Postage,60200,other,account_type_expense,FALSE
+60208,60208,"Newspaper,Journal & Magazine",60200,other,account_type_expense,FALSE
+60209,60209,Security Expense,60200,other,account_type_expense,FALSE
+60210,60210,General Expense (Admin),60200,other,account_type_expense,FALSE
+60211,60211,Cleaning Expense,60200,other,account_type_expense,FALSE
+60212,60212,Transport Charges,60200,other,account_type_expense,FALSE
+60213,60213,CDC Home Tax,60200,other,account_type_expense,FALSE
+60214,60214,Electricity Bill,60200,other,account_type_expense,FALSE
+60215,60215,Phone Bill,60200,other,account_type_expense,FALSE
+60216,60216,External Phone Call,60200,other,account_type_expense,FALSE
+60217,60217,Internet Bill,60200,other,account_type_expense,FALSE
+60218,60218,Water Tax,60200,other,account_type_expense,FALSE
+60219,60219,Land Tax,60200,other,account_type_expense,FALSE
+60220,60220,YCDC Garbage Tax,60200,other,account_type_expense,FALSE
+60300,60300,Other Expenses,60000,view,account_type_view,FALSE
+60301,60301,Gift & Present (Others),60300,other,account_type_expense,FALSE
+60302,60302,Entertainment (Others),60300,other,account_type_expense,FALSE
+60303,60303,External Audit Fees,60300,other,account_type_expense,FALSE
+60304,60304,Company Licence Renewal Expense,60300,other,account_type_expense,FALSE
+60305,60305,Bonus Trip Expense,60300,other,account_type_expense,FALSE
+60306,60306,Consultant Fees,60300,other,account_type_expense,FALSE
+60307,60307,External Loan Interest,60300,other,account_type_expense,FALSE
+60308,60308,Recruitment Expenses,60300,other,account_type_expense,FALSE
+60309,60309,Fire Insurance Expenses,60300,other,account_type_expense,FALSE
+60310,60310,Donation,60300,other,account_type_expense,FALSE
+60311,60311,Seasonal & Trade Donation Expense,60300,other,account_type_expense,FALSE
+60400,60400,Rental,60000,view,account_type_view,FALSE
+60401,60401,Office Rental Chares,60400,other,account_type_expense,FALSE
+60402,60402,Phone Rental Charges,60400,other,account_type_expense,FALSE
+60403,60403,Vehicles Rental Charges,60400,other,account_type_expense,FALSE
+60404,60404,Warehouse Rental Charges,60400,other,account_type_expense,FALSE
+60500,60500,R&M,60000,view,account_type_view,FALSE
+60501,60501,Building R&M,60500,other,account_type_expense,FALSE
+60502,60502,WH Accessories R&M,60500,other,account_type_expense,FALSE
+60503,60503,Landscaping/Road,60500,other,account_type_expense,FALSE
+60504,60504,Renovation,60500,other,account_type_expense,FALSE
+60505,60505,Office Fur & Fitting R&M,60500,other,account_type_expense,FALSE
+60506,60506,"Computer,Printer & AccR&M",60500,other,account_type_expense,FALSE
+60507,60507,Office Equipment R&M,60500,other,account_type_expense,FALSE
+60508,60508,Electronic Acc R&M,60500,other,account_type_expense,FALSE
+60509,60509,Aicon R&M,60500,other,account_type_expense,FALSE
+60510,60510,Generator R&M,60500,other,account_type_expense,FALSE
+60511,60511,Water Motor/Pump R&M,60500,other,account_type_expense,FALSE
+60600,60600,Vehicle Expenes,60000,view,account_type_view,FALSE
+60601,60601,Car Repair,60600,other,account_type_expense,FALSE
+60602,60602,Car Maintenance,60600,other,account_type_expense,FALSE
+60603,60603,Cycle Repair,60600,other,account_type_expense,FALSE
+60604,60604,Cycle maintenance,60600,other,account_type_expense,FALSE
+60605,60605,Vehicles Accessories (Store),60600,other,account_type_expense,FALSE
+60606,60606,Car Licence Renewal,60600,other,account_type_expense,FALSE
+60607,60607,Car Operation Licence Renewal,60600,other,account_type_expense,FALSE
+60608,60608,Purchase Tax,60600,other,account_type_expense,FALSE
+60609,60609,Running Tax,60600,other,account_type_expense,FALSE
+60610,60610,Vehicle Pass Permit,60600,other,account_type_expense,FALSE
+60611,60611,Fine & Other,60600,other,account_type_expense,FALSE
+60612,60612,Petrol,60600,other,account_type_expense,FALSE
+60613,60613,Diesel,60600,other,account_type_expense,FALSE
+60614,60614,Fuel & Lubricant,60600,other,account_type_expense,FALSE
+61000,61000,Selling & Distribution Expense,6,view,account_type_view,FALSE
+61001,61001,Bank Charges,61000,other,account_type_expense,FALSE
+50004,50004,Freight In-N,5,other,account_type_expense,FALSE
+50005,50005,Freight In-MBC,5,other,account_type_expense,FALSE
+50006,50006,Freight In-Pocari,5,other,account_type_expense,FALSE
+50007,50007,Labour In-N,5,other,account_type_expense,FALSE
+50008,50008,Labour In-MBC,5,other,account_type_expense,FALSE
+50009,50009,Labour In-Pocari,5,other,account_type_expense,FALSE
+61002,61002,Short Trip Expense,61000,other,account_type_expense,FALSE
+61003,61003,Long Trip Expense,61000,other,account_type_expense,FALSE
+61004,61004,Loyalty Expense,61000,other,account_type_expense,FALSE
+61005,61005,WS Commission (Customer),61000,other,account_type_expense,FALSE
+61006,61006,Dealer Commission & Expense,61000,other,account_type_expense,FALSE
+61007,61007,Depot Commission & Expense,61000,other,account_type_expense,FALSE
+61008,61008,Sales Refund (Product),61000,other,account_type_expense,FALSE
+61009,61009,Lucky Draw Program,61000,other,account_type_expense,FALSE
+61010,61010,Sales & Promotion Expense,61000,other,account_type_expense,FALSE
+61011,61011,Promotion Program,61000,other,account_type_expense,FALSE
+61012,61012,Area Dealer Expenses ,61000,other,account_type_expense,FALSE
+61013,61013,Incentive & comission,61000,other,account_type_expense,FALSE
+61014,61014,Bonus Commission,61000,other,account_type_expense,FALSE
+61015,61015,Best Team Prize,61000,other,account_type_expense,FALSE
+61016,61016,Travelling Expense,61000,other,account_type_expense,FALSE
+61017,61017,Road & Bridge,61000,other,account_type_expense,FALSE
+61018,61018,City Entrance,61000,other,account_type_expense,FALSE
+61019,61019,Wheel Tax,61000,other,account_type_expense,FALSE
+61020,61020,Car Parking Fees,61000,other,account_type_expense,FALSE
+61021,61021,Case Expense,61000,other,account_type_expense,FALSE
+61022,61022,PG Booth Expense,61000,other,account_type_expense,FALSE
+61023,61023,Traditional Event Expense,61000,other,account_type_expense,FALSE
+61024,61024,Export & Import Expense,61000,other,account_type_expense,FALSE
+61025,61025,FDA Expense,61000,other,account_type_expense,FALSE
+61026,61026,Tape,61000,other,account_type_expense,FALSE
+61027,61027,Gun & Gun Pin,61000,other,account_type_expense,FALSE
+61028,61028,General Expense,61000,other,account_type_expense,FALSE
+61029,61029,MKT & Advertising Expense (MDG),61000,other,account_type_expense,FALSE
+61030,61030,Stock Write Off,61000,other,account_type_expense,FALSE
+61031,61031,Cash write Off,61000,other,account_type_expense,FALSE
+61032,61032,Stock Adjustment AC,61000,other,account_type_expense,FALSE
+61033,61033,Bad Debts (Debtors),61000,other,account_type_expense,FALSE
+61034,61034,Income Tax,61000,other,account_type_expense,FALSE
+61035,61035,Commercial Tax,61000,other,account_type_expense,FALSE
+61036,61036,BOD Expense,61000,other,account_type_expense,FALSE
+61037,61037,Sampling Expense (Product),61000,other,account_type_expense,FALSE
+61038,61038,Present (Product),61000,other,account_type_expense,FALSE
+61039,61039,Promotion (Product),61000,other,account_type_expense,FALSE
+61040,61040,Lucky Draw (Product),61000,other,account_type_expense,FALSE
+62000,62000,Exp For Dep; Of Fixed Assets,6,other,account_type_expense,FALSE
+62100,62100,Loss On Disposal,6,other,account_type_expense,FALSE
+62200,62200,Assets Under One Year,6,view,account_type_view,FALSE
+62201,62201,Tools & Accessories,62200,other,account_type_expense,FALSE
+62202,62202,Furniture & Fitting,62200,other,account_type_expense,FALSE
+62203,62203,Office Equipment,62200,other,account_type_expense,FALSE
+62204,62204,Computer & Computer Accessorie,62200,other,account_type_expense,FALSE
+62205,62205,"Phone, Fax & Accessories",62200,other,account_type_expense,FALSE
+62206,62206,Electric Equipment,62200,other,account_type_expense,FALSE

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		
+		<!-- =============== Credit Note Form ============ -->
+
+		<record id="view_creditnote_form" model="ir.ui.view">
+			<field name="name">Credit Note Form</field>
+			<field name="model">account.creditnote</field>
+			<field eval="25" name="priority" />
+			<field name="arch" type="xml">
+				<form string="Credit Note Sheet" version="7.0">
+					<sheet>
+						<group>
+							<group>
+								<field name="name" />
+								<field name="so_no"  placeholder="SO00001" />
+<!-- 								<field name="ref_no" placeholder="A00001" /> -->
+								<field name="customer_id" />
+								<field name="sale_team_id" />
+								<field name="user_id"  domain="[('default_section_id', '=',sale_team_id)]" />
+								<field name="type" />
+								<field name="description" />
+								<field name="terms_and_conditions" />
+								<field name="amount" />								
+							</group>
+							<group>
+								<field name="create_date" />
+								<field name="issued_date" />
+								<field name="used_date" />
+								<field name="m_status" />
+							</group>							
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="view_creditnote_tree" model="ir.ui.view">
+			<field name="name">Credit Note Tree</field>
+			<field name="model">account.creditnote</field>
+			<field name="arch" type="xml">
+				<tree string="Credit Note Tree">
+					<field name="name" />
+					<field name="amount" />
+					<field name="customer_id" />
+					<field name="user_id" />
+					<field name="sale_team_id" />
+					<field name="issued_date" />
+					<field name="used_date" />
+					<field name="m_status" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="action_creditnote" model="ir.actions.act_window">
+			<field name="name">Credit Note</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">account.creditnote</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create new Credit Note .
+				</p>
+			</field>
+		</record>
+		
+		<menuitem action="action_creditnote" id="menu_creditnote"
+			parent="account.menu_finance_receivables" sequence="100"/>
+			
+	</data>
+</openerp>

@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+<openerp>
+	<data>
+    <record id="product_pricelist_import_view" model="ir.ui.view">
+      <field name="name">product.pricelist.import.form</field>
+      <field name="model">product.pricelist.import</field>
+      <field name="arch" type="xml">
+        <form string="Product Import" version="7.0">
+        <header>
+        <button name="product_import" string="Import" type="object" class="oe_highlight" />
+        </header>
+          <group col="4">
+            <separator string="Select your file :" colspan="4"/>
+            <field name="file" filename="import_fname"/>
+            	<field name="import_fname" invisible="1" class="oe_inline oe_right"/>
+            <newline/>
+            <field name="note" colspan="4"/>
+          </group>
+        </form>
+      </field>
+    </record>
+
+    
+  </data> 
+</openerp>
