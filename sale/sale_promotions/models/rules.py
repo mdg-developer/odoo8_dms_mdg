@@ -1802,9 +1802,12 @@ class PromotionsRulesActions(osv.Model):
                 
                 qtys += order_line.product_uom_qty
                 # Total number of free units of y to give
-                tot_free_y = int((qtys / qty_x) * qty_y)
+            tot_free_y = int((qtys / qty_x) * qty_y)
+            if tot_free_y > 0:
                 return self.create_y_line(cursor, user, action,
-                                           order, tot_free_y, product_x2_code_id, context)
+                                       order, tot_free_y, product_x2_code_id, context)
+            else:
+                return False
         
  
         
