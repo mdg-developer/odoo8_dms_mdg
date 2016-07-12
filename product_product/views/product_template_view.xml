@@ -60,7 +60,7 @@
 					<field name="barcode_no" />
 				</xpath>
 
-				<xpath expr="//field[@name='default_code']" position="replace">
+				<xpath expr="//field[@name='default_code']" position="after">
 					<field name="uom_ratio" />
 				</xpath>
 
