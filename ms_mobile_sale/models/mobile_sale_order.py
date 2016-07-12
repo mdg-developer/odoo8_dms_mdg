@@ -1,6 +1,5 @@
 from openerp.osv import fields, osv
 from openerp.osv import orm
-from openerp import _
 from datetime import datetime
 import ast
 import time
@@ -138,7 +137,7 @@ class mobile_sale_order(osv.osv):
                         'payment_term':so['payment_term'],
                         'mso_longitude':so['mso_longitude'],
                         'mso_latitude':so['mso_latitude'],
-						'outlet_type':outlet_type
+                        'outlet_type':outlet_type
                     }
                     s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
                     print "Create Sale Order", so['name']
@@ -150,7 +149,7 @@ class mobile_sale_order(osv.osv):
                                     productId = data[0][0]
                                 else:
                                     productId = None
-								
+                                
                                 if sol['price_unit'] == '0':
                                     foc_val = True
                                 else:
@@ -161,7 +160,7 @@ class mobile_sale_order(osv.osv):
                                   'product_id':productId,
                                   'price_unit':sol['price_unit'],
                                   'product_uos_qty':sol['product_uos_qty'],
-							      'foc': foc_val,
+                                  'foc': foc_val,
                                   'discount':sol['discount'],
                                   'discount_amt':sol['discount_amt'],
                                   'sub_total':sol['sub_total'],
@@ -930,7 +929,7 @@ class mobile_sale_order(osv.osv):
     def tablet_info(self, cr, uid, tabetId, context=None, **kwargs):    
         cr.execute('''
             select id as tablet_id,date,create_uid,name,note,mac_address,model,type,storage_day
-			,hotline,sale_team_id,notification_time
+            ,hotline,sale_team_id,notification_time
             from tablets_information 
             where name = %s
             ''', (tabetId,))
@@ -1211,11 +1210,11 @@ class mobile_sale_order(osv.osv):
         except Exception, e:
             return False
     
-	def get_branch_datas(self, cr, uid , context=None):        
+    def get_branch_datas(self, cr, uid , context=None):        
         cr.execute('''select id,name,branch_code from res_branch where active = true''')
         datas = cr.fetchall()        
         return datas
-	
+    
 mobile_sale_order()
 
 class mobile_sale_order_line(osv.osv):
@@ -1394,4 +1393,3 @@ class sale_order(osv.osv):
         invoice_vals.update(self._inv_get(cr, uid, order, context=context))
         return invoice_vals           
 sale_order()
-    
