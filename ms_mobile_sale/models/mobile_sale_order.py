@@ -685,7 +685,7 @@ class mobile_sale_order(osv.osv):
     # kzo Edit
     def get_products_by_sale_team(self, cr, uid, section_id , context=None, **kwargs):
         cr.execute('''select  pp.product_tmpl_id,pt.list_price , pt.description,pt.categ_id,pc.name as categ_name,pp.default_code, 
-                         pt.name,substring(replace(cast(pt.image_small as text),'/',''),1,5) as image_small,pt.main_group
+                         pt.name,substring(replace(cast(pt.image_small as text),'/',''),1,5) as image_small,pt.main_group,pt.uom_ratio
                         from crm_case_section_product_product_rel crm_real ,
                         crm_case_section ccs ,product_template pt, product_product pp , product_category pc
                         where pp.id = crm_real.product_product_id
@@ -944,7 +944,7 @@ class mobile_sale_order(osv.osv):
     
     def get_res_users(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('''
-            select id,active,login,password,partner_id from res_users where id = %s
+            select id,active,login,password,partner_id,branch_id from res_users where id = %s
             ''', (sale_team_id,))
         datas = cr.fetchall()        
         return datas
@@ -1211,6 +1211,11 @@ class mobile_sale_order(osv.osv):
         except Exception, e:
             return False
     
+	def get_branch_datas(self, cr, uid , context=None):        
+        cr.execute('''select id,name,branch_code from res_branch where active = true''')
+        datas = cr.fetchall()        
+        return datas
+	
 mobile_sale_order()
 
 class mobile_sale_order_line(osv.osv):
