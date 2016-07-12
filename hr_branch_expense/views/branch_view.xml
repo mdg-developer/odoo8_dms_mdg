@@ -5,7 +5,7 @@
 
 		<record id="view_branch_form_new" model="ir.ui.view">
 			<field name="name">Branches</field>
-			<field name="model">res.branch</field>
+			<field name="model">branch</field>
 			<field name="arch" type="xml">
 				<form string="Branch Setup" version="7.0">
 					<sheet>
@@ -34,7 +34,7 @@
 
 		<record model="ir.ui.view" id="view_branch_tree_new">
 			<field name="name">Branches</field>
-			<field name="model">res.branch</field>
+			<field name="model">branch</field>
 			<field name="arch" type="xml">
 				<tree string="Branch">
 					<field name="branch_code" />
@@ -49,7 +49,7 @@
 		<record id="action_branch_view_new" model="ir.actions.act_window">
 			<field name="name">Branches</field>
 			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">res.branch</field>
+			<field name="res_model">branch</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" eval="view_branch_tree_new" />

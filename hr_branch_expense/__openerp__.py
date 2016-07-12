@@ -21,9 +21,9 @@
 ##############################################################################
 
 {
-    'name': 'HR Branch',
+    'name': 'HR Branch Expense',
     'version': '1.0',
-    'category': 'HR',
+    'category': 'Setting',
     'sequence': 30,
     'summary': 'Setting Branches',
     'description': """
@@ -32,7 +32,7 @@ Setting Branch
 """,
     'author': 'Seventh Computing',
     'website': 'http://www.7thcomputing.com',
-    'depends': ['base','hr',
+    'depends': ['base','hr'
     ],
     'data': [
        'views/branch_view.xml',
