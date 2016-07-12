@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+
+		<!-- === Sales Order Return Form === -->
+		<record id="view_sales_return_form" model="ir.ui.view">
+			<field name="name">sales.return.form</field>
+			<field name="model">sales.return</field>
+			<field name="arch" type="xml">
+				<form string="Sales Order Return" version="7.0">
+					<sheet>
+						<group col="1" string="Sales Return">
+							<group col="2">
+								<group>
+									<field name="user_id" />
+									<field name="sale_team"/>
+									<!-- to add domain="[('is_foc', '=', False)]"  -->
+									<field name="qty" />
+								</group>
+								<group>
+								    <field name="customer_id" on_change="onchange_customer_id(customer_id)"/>
+								    <field name="customer_code" />
+									<field name="date" />
+									<field name="amount" />
+								</group>
+							</group>
+							</group>
+								<notebook>
+								 <page string="Product">
+                                      <field name="return_line">                                          
+                                            <form string="Sale Return Lines">
+                                                <group>
+											    <group>
+	                                            <field name="invoice_no"/>
+	                                            <field name="sales_product_name"/>
+	                                            <field name="product_uom"/> 
+	                                            <field name="product_uom_qty"/>
+	                                            <field name="price_unit"/>
+	                                            <field name="is_foc" on_change="foc_change(product_id,product_uom_qty,context)"/>
+	                                                
+	                                            <field name="price_subtotal"/>
+	                                            </group>
+	                                            </group>
+                                            </form>
+                                            <tree string="Sale Return Lines" editable="bottom">
+                                                <field name="invoice_no"/>
+	                                            <field name="sales_product_name"/>
+	                                            <field name="product_uom"/>
+	                                            <field name="product_uom_qty"/>
+	                                            <field name="price_unit"/>
+	                                            <field name="is_foc" on_change="foc_change(sales_product_name,product_uom_qty,context)"/>
+	                                            <field name="price_subtotal"/>
+                                            </tree>
+                                      </field>
+                                      <field name="notes" class="oe_inline" placeholder="Remark..."/>
+                                      </page>
+								</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_sales_return_tree">
+			<field name="name">sales.return.tree</field>
+			<field name="model">sales.return</field>
+			<field name="arch" type="xml">
+				<tree string="Sales Return">
+					<field name="date" />
+					<field name="user_id" />
+					<field name="qty" />
+					<field name="amount" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="action_sales_return_view" model="ir.actions.act_window">
+			<field name="name">Sales Return</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">sales.return</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" eval="view_sales_return_tree" />
+		</record>
+
+		<!--<menuitem id="sales_return" action="action_sales_return_view"
+			parent="base.menu_sales" name="Sales Return"  sequence="12"/>-->
+
+	</data>
+</openerp>

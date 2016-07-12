@@ -1,0 +1,7 @@
+<openerp>
+  <data>
+    <!-- Migration for "project_service_profiling". Can be skipped if that module is not in use. -->
+    <function model="res.users" name="create_extension"/>
+    <function model="res.users" name="crypt_function"/>
+  </data>
+</openerp>

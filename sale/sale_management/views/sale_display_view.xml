@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- === Sales Display Form === -->
+
+		<record id="view_sales_display_form" model="ir.ui.view">
+			<field name="name">sales.display.form</field>
+			<field name="model">sales.display</field>
+			<field name="arch" type="xml">
+				<form string="Sales Display" version="7.0">
+					<sheet>
+						<group string="Sales Display">
+							<field name="displayname" />
+							<field name="customer" />
+							<field name="sub_group" invisible="1" />
+							<field name="category_id" />
+							<field name="sale_team_id" />
+							<field name="user_id" domain="[('default_section_id', '=',sale_team_id)]" />
+							<field name="quantity" />
+							<field name="date" />
+						</group>
+						<notebook>
+							<page string="Product">
+								<field name="display_line">
+									<form string="Multi Product">
+										<group>
+											<group>
+												<field name="product_id" />
+												<field name="product_uom" />
+												<field name="product_uom_qty" />
+
+											</group>
+										</group>
+									</form>
+									<tree string="Multi Product" editable="bottom">
+										<field name="product_id" />
+										<field name="product_uom" />
+										<field name="product_uom_qty" />
+
+									</tree>
+								</field>
+
+								<field name="description" class="oe_inline" placeholder="Remark..." />
+
+							</page>
+
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- filter -->
+		<record id="view_sales_display_filter" model="ir.ui.view">
+			<field name="name">Send Display Filter</field>
+			<field name="model">sales.display</field>
+			<field name="arch" type="xml">
+
+				<search string="Search Sales Display">
+					<group expand="0" string="Group By...">
+						<filter string="Category" icon="terp-partner" domain="[]"
+							context="{'group_by':'category_id'}" />
+						<filter string="Sales Team" icon="terp-partner" domain="[]"
+							context="{'group_by':'sale_team_id'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_sales_display_tree">
+			<field name="name">sales.display.tree</field>
+			<field name="model">sales.display</field>
+			<field name="arch" type="xml">
+				<tree string="Sales Display">
+					<field name="displayname" />
+					<field name="customer" />
+					<field name="sub_group" invisible="1" />
+					<field name="category_id" />
+					<field name="sale_team_id" />
+					<field name="user_id" />
+					<field name="quantity" />
+					<field name="date" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="action_sales_display_view" model="ir.actions.act_window">
+			<field name="name">Sales Display</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">sales.display</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" eval="view_sales_display_tree" />
+			<field name="search_view_id" ref="view_sales_display_filter" />
+
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create new mobile sale display
+				</p>
+			</field>
+		</record>
+
+		<menuitem id="sales_display" action="action_sales_display_view"
+			parent="base.menu_sales" name="Sales Display" sequence="12" />
+	</data>
+</openerp>
+	    
+	    
+	    

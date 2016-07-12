@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+<!-- 		<menuitem id="menu_address" name="Address Configuration" -->
+<!-- 			parent='base.menu_custom' /> -->
+		<menuitem id="menu_address" name="Address Configuration"
+			parent='base.menu_config' />	
+
+		<record id="view_partner_form_inherit_ext" model="ir.ui.view">
+			<field name="name">view.partner.form.inherit.ext</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="base.view_partner_form" />
+			<field name="arch" type="xml">		   
+			    
+			    <xpath expr="//field[@name='country_id']" position="replace" >
+		
+			    </xpath>
+			    
+			     <xpath expr="//field[@name='state_id']" position="before" >			    	
+			        <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+			    </xpath>
+			    
+			    <xpath expr="//field[@name='state_id']" position="replace" >
+	               
+	            </xpath>
+	            
+	            <xpath expr="//field[@name='country_id']" position="after" >
+					<field name="state_id"  class="o_address_state" placeholder="Division/State" domain="[('country_id', '=', country_id) ]" style="width: 100%%"/>
+			    </xpath>	            
+	            			   	  			 
+			    <xpath expr="//field[@name='city']" position="replace" >
+			     
+			    </xpath>			    
+			    			   	  			 
+			    <xpath expr="//field[@name='state_id']" position="after" >
+			     <field name="city" class="o_address_city" placeholder="City" domain="[('state_id', '=', state_id) ]" style="width: 100%%"/>
+			    </xpath>
+			    
+	            <xpath expr="//field[@name='zip']" position="replace" >
+		
+			    </xpath>
+			    
+			    <xpath expr="//field[@name='city']" position="after" >
+			    	 <field name="township" class="o_address_state" placeholder="Township" domain="[('city', '=', city)]" style="width: 66%%"/>
+			       <field name="zip" class="o_address_city" placeholder="ZIP" style="width: 30%%"/>
+			    </xpath>
+			    
+   	            <xpath expr="//field[@name='street']" position="replace" >
+		
+			    </xpath>
+			    
+			    <xpath expr="//field[@name='zip']" position="after" >
+	               <field name="street" placeholder="Street..." class="o_address_street"/>                            
+	            </xpath>
+	            
+			    <xpath expr="//field[@name='street2']" position="replace" >
+		
+			    </xpath>
+			    			    
+	            <xpath expr="//field[@name='street']" position="after" >
+	               <field name="street2" placeholder="Street 2..." class="o_address_street"/>                            
+	            </xpath>		  
+
+			</field>
+		</record>        
+	</data>
+</openerp>

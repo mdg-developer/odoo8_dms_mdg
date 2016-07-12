@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<!-- Parent Menu -->
+		<menuitem name="Mobile Sales" id="base.menu_mobile_sale"
+			groups="base.group_sale_salesman,base.group_sale_manager" sequence="11" />
+
+		<!-- Child Menus -->
+		<menuitem name="Mobile Sales" id="base.menu_mobile_sale_menu"
+			sequence="1" parent="base.menu_mobile_sale" />
+
+		<!-- =============== Mobile Sale Order ============ -->
+
+		<record id="view_mobile_sale_order_form" model="ir.ui.view">
+			<field name="name">Mobile Sale Order Form</field>
+			<field name="model">mobile.sale.order</field>
+			<field eval="25" name="priority" />
+			<field name="arch" type="xml">
+				<form string="Mobile Sale Order" version="7.0">
+					<header>
+						<button name="action_convert_so" string="Convert Sale Order"
+							type="object" class="oe_highlight" groups="base.group_user"
+							attrs="{'invisible':[('m_status', '=', 'done')]}"></button>
+						<field name="m_status" widget="statusbar" statusbar_visible="draft,done"
+							statusbar_colors='{"draft":"red","done":"blue"}' />
+					</header>
+					<sheet>
+						<group>
+							<group>
+
+								<field name="name" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="partner_id" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="customer_code" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="outlet_type" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="user_id" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="sale_team" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="warehouse_id" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="location_id" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="sale_plan_name" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="sale_plan_day_id" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="sale_plan_trip_id" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="mso_latitude" digits="(14,15)"
+									attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="mso_longitude" digits="(14,15)"
+									attrs="{'readonly':[('m_status','=','done')]}" />
+
+							</group>
+							<group>
+								<field name="date" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="due_date" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="payment_term" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="type" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="tablet_id" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="delivery_remark" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="amount_total" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="additional_discount" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="deduction_amount" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="net_amount" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="paid_amount" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="change_amount" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="remaining_amount" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="paid" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="void_flag" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="balance" attrs="{'readonly':[('m_status','=','done')]}" />
+							</group>
+						</group>
+
+						<notebook>
+							<page string="Order Lines">
+								<field name="order_line" attrs="{'readonly':[('m_status','=','done')]}">
+									<form string="Mobile Sales Order Lines" version="7.0">
+
+										<group>
+											<group>
+												<field name="product_id" />
+												<field name="uom_id" />
+												<field name="product_uos_qty" />
+												<field name="price_unit" />
+												<field name="discount" />
+												<field name="discount_amt" />
+												<field name="sub_total" />
+												<field name="foc" />
+											</group>
+
+										</group>
+
+									</form>
+									<tree string="Sales Order Lines" editable="bottom"
+										attrs="{'readonly':[('m_status','=','done')]}">
+
+										<field name="product_id" />
+										<field name="uom_id" />
+										<field name="product_uos_qty" />
+										<field name="price_unit" />
+										<field name="discount" />
+										<field name="discount_amt" />
+										<field name="sub_total" />
+										<field name="foc" />
+
+									</tree>
+								</field>
+
+								<field name="note" class="oe_inline" placeholder="Terms and conditions..."
+									attrs="{'readonly':[('m_status','=','done')]}" />
+
+							</page>
+
+							<page string="Delivery Lines">
+								<field name="delivery_order_line" attrs="{'readonly':[('m_status','=','done')]}">
+									<form string="Mobile Delivery Order Lines" version="7.0">
+
+										<group>
+											<group>
+												<field name="product_id" />
+												<field name="uom" />
+												<field name="product_qty" />
+												<field name="product_qty_to_deliver" />
+
+											</group>
+
+										</group>
+
+									</form>
+									<tree string="Mobile Delivery Order Lines" editable="bottom"
+										attrs="{'readonly':[('m_status','=','done')]}">
+
+										<field name="product_id" />
+										<field name="uom" />
+										<field name="product_qty" />
+										<field name="product_qty_to_deliver" />
+
+									</tree>
+								</field>
+
+								<field name="note" class="oe_inline" placeholder="Terms and conditions..."
+									attrs="{'readonly':[('m_status','=','done')]}" />
+
+							</page>
+
+							<page string="Promotion Lines">
+								<field name="promos_line_ids" attrs="{'readonly':[('m_status','=','done')]}">
+									<form string="Promotion Lines" version="7.0">
+
+										<group>
+											<group>
+												<field name="pro_id" on_change='onchange_promo_id(pro_id)' />
+												<field name="from_date" />
+												<field name="to_date" />
+
+											</group>
+
+										</group>
+
+									</form>
+									<tree string="Promotion Lines" editable="bottom"
+										attrs="{'readonly':[('m_status','=','done')]}">
+
+										<field name="pro_id" on_change='onchange_promo_id(pro_id)' />
+										<field name="from_date" />
+										<field name="to_date" />
+
+									</tree>
+								</field>
+
+							</page>
+
+
+
+						</notebook>
+
+						<widget type="gmap_marker" lat="mso_latitude" lng="mso_longitude"
+							description="field_descriptions" />
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+
+
+
+		<record id="view_mobile_sale_order_tree" model="ir.ui.view">
+			<field name="name">Mobile Sale Order Tree</field>
+			<field name="model">mobile.sale.order</field>
+			<field name="arch" type="xml">
+				<tree string="Sale Order">
+					<field name="name" />
+					<field name="partner_id" />
+					<field name="customer_code" />
+					<field name="sale_plan_day_id" />
+					<field name="user_id" />
+					<field name="sale_team" />
+					<field name="amount_total" />
+					<field name="type" />
+					<field name="delivery_remark" />
+					<field name="additional_discount" />
+					<field name="deduction_amount" />
+					<field name="paid_amount" />
+					<field name="paid" />
+					<field name="m_status" />
+					<field name="date" />
+					<field name="void_flag" />
+				</tree>
+			</field>
+		</record>
+
+
+		<record id="action_moble_sale_order" model="ir.actions.act_window">
+			<field name="name">Direct Sale Orders</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">mobile.sale.order</field>
+
+			<field name="view_id" ref="view_mobile_sale_order_tree" />
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form,calendar,graph</field>
+
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create new mobile sale order.
+				</p>
+			</field>
+		</record>
+
+
+		<menuitem id="menu_mobile_sale_order" parent="base.menu_mobile_sale_menu"
+			action="action_moble_sale_order" sequence="1" />
+
+	</data>
+</openerp>

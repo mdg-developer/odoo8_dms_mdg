@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<template id="report_saleorder_document" inherit_id="sale.report_saleorder_document">
+			<xpath expr="//t[@t-call='report.external_layout']" position="replace">
+				<t t-call="sale_management.sale_custom_layout">
+					<div class="page">
+						<div class="row" style="padding-top:-2s0pt;">
+							<div class="col-xs-8 pull-left">
+								<table class="table" style='border:solid;border-color:white;'>
+									<tr>
+										<td style="margin-top:-10pt;">
+											<div t-field="o.company_id.partner_id"
+												t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' />
+											<div t-field="o.company_id.phone" />
+										</td>
+									</tr>
+								</table>
+							</div>
+							<div class="col-xs-4 pull-right">
+								<table class="table" style='border:solid;border-color:white;'>
+									<tr>
+										<td style="margin-top:-10pt;">
+											<b>Customer address:</b>
+											<div t-field="o.partner_id"
+												t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' />
+										</td>
+									</tr>
+								</table>
+
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-8 pull-left" style="margin-top:-20pt;">
+								<table class="table" style='border:solid;border-color:white;'>
+									<tr style="margin-top:-30pt;border:solid;border-color:white;">
+										<td style="font-size:20pt;" colspan="4">
+											<span t-if="o.state not in ['draft','sent']">Order No </span>
+											<span t-if="o.state in ['draft','sent']">Quotation No </span>
+											<span t-field="o.name" />
+										</td>
+									</tr>
+								</table>
+							</div>
+							<div class="col-xs-4 pull-right" style="margin-top:-20pt;">
+								<table class="table" style='border:solid;border-color:white;'>
+									<tr style="margin-top:-30pt;border:solid;border-color:white;">
+										<td style="padding-top:10pt;">
+											<b>Branch Code:</b>
+											<span t-field="o.partner_id.branch_id.branch_code" />
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+
+
+
+						<table class="table"
+							style='border:solid;border-color:white;margin-top:-20pt;'>
+							<tr style='border:solid;border-color:white;'>
+								<td>
+									<b>Your Reference</b>
+									<br />
+									<span t-field="o.tb_ref_no" />
+								</td>
+								<td>
+									<b>Sales Teams</b>
+									<br />
+									<span t-field="o.section_id.name" />
+								</td>
+								<td>
+									<b>Salesman</b>
+									<br />
+									<span t-field="o.user_id.name" />
+								</td>
+								<td>
+									<b>Order Date</b>
+									<br />
+									<span t-field="o.date_order" />
+								</td>
+								<td>
+									<b>Payment Term:</b>
+									<br />
+									<span t-field="o.payment_term.note" />
+								</td>
+							</tr>
+
+							<tr style='border:solid;border-color:white;'>
+								<td>
+									<b>Customer Code</b>
+									<br />
+									<span t-field="o.partner_id.customer_code" />
+								</td>
+								<td>
+									<b>Source</b>
+									<br />
+									<span t-field="o.name" />
+								</td>
+								<td>
+									<b>Delivery Remark</b>
+									<br />
+									<span t-field="o.delivery_remark" />
+								</td>
+								<td>
+									<b>Payment Type</b>
+									<br />
+									<span t-field="o.payment_type" />
+								</td>
+								<td>
+									<b>Due Date</b>
+									<br />
+									<span t-field="o.due_date" />
+								</td>
+							</tr>
+						</table>
+
+						<table class="table"
+							style="border:solid;border-color:#ffffff;margin-bottom:-1pt;margin-top:-20pt;">
+							<tr>
+								<td></td>
+								<td align="right">
+									<strong>
+										Amount in (
+										<span t-field="o.currency_id.name" />
+										)
+									</strong>
+								</td>
+							</tr>
+						</table>
+
+						<table class="table table-condensed" style="border:1pt solid;">
+							<thead>
+								<tr style="background-color:#0052cc;color:#ffffff;" height="10pt;">
+									<th class="text-center" style="border:1pt solid;border-color:black;">Description
+									</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Unit Price</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Total Price</th>
+									<th style="border:1pt solid;border-color:black;" class="text-center"
+										groups="sale.group_discount_per_so_line">Disc.(%)</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Disc.(Amt)</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">FOC</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Line Total</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr t-foreach="o.order_line" t-as="l">
+									<td style="border:1pt solid;border-color:black;">
+										<span t-field="l.product_id.name" />
+										<t t-if="l.sale_foc==True">
+											(FOC)
+										</t>
+									</td>
+									<td style="border:1pt solid;border-color:black;">
+										<span t-field="l.product_uom_qty" />
+										<span t-field="l.product_uom" groups="product.group_uom" />
+									</td>
+									<td class="text-right" style="border:1pt solid;border-color:black;">
+										<span t-field="l.price_unit" />
+									</td>
+									<td class="text-right" style="border:1pt solid;border-color:black;">
+										<span t-field="l.price_subtotal" />
+									</td>
+									<td class="text-right" groups="sale.group_discount_per_so_line"
+										style="border:1pt solid;border-color:black;">
+										<span t-field="l.discount" />
+									</td>
+									<td class="text-right" style="border:1pt solid;border-color:black;">
+										<span t-field="l.discount_amt" />
+									</td>
+									<td class="text-center" style="border:1pt solid;border-color:black;">
+										<t t-if="l.sale_foc==True">
+											&#10003; </t>
+									</td>
+									<td class="text-right" style="border:1pt solid;border-color:black;">
+										<t t-if="l.sale_foc==True">
+											0.00
+										</t>
+
+										<t t-if="l.sale_foc==False">
+											<span t-field="l.net_total" />
+										</t>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+
+						<div class="row">
+							<div class="col-xs-8 pull-left" style="padding-top: 1cm;">
+
+								<table class="table" style='border:solid;border-color:white;'>
+									<tr>
+										<td style="text-align:center;">
+											For questions concerning this invoice, please
+											contact Hot
+											Line :
+											+951400533,
+											Fax: +951 400912,
+											info@mdgmyanmar.com
+										</td>
+									</tr>
+									<tr>
+										<td style="text-align:center;border:solid;border-color:white;">
+											<b> THANK YOU</b>
+										</td>
+									</tr>
+								</table>
+
+							</div>
+							<div class="col-xs-4 pull-right">
+								<table class="table">
+									<tr>
+										<td style="border-top-color:white;padding-bottom: 2mm;">
+											Sub Total
+										</td>
+										<td class="text-right" style="border-top-color:white;padding-bottom: 2mm;">
+											<span t-field="o.amount_untaxed" />
+										</td>
+									</tr>
+									<tr class="border-black">
+										<td style="padding-top: 2mm;padding-bottom: 2mm;">
+											Total Discount Amount
+										</td>
+										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
+											<span t-field="o.total_dis" />
+										</td>
+									</tr>
+									<tr class="border-black">
+										<td style="padding-top: 2mm;padding-bottom: 2mm;">
+											Deduction Amount
+										</td>
+										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
+											<span t-field="o.deduct_amt" />
+										</td>
+									</tr>
+									<tr class="border-black">
+										<td style="padding-top: 2mm;padding-bottom: 2mm;">
+											<strong>Grand Total</strong>
+										</td>
+										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
+											<span t-field="o.amount_total" />
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+
+					</div>
+
+				</t>
+			</xpath>
+
+		</template>
+
+		<!-- <template id="report_saleorder"> -->
+		<!-- <t t-call="report.html_container"> -->
+		<!-- <t t-foreach="doc_ids" t-as="doc_id"> -->
+		<!-- <t -->
+		<!-- t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', 'sale.report_saleorder_document')" 
+			/> -->
+		<!-- </t> -->
+		<!-- </t> -->
+		<!-- </template> -->
+	</data>
+</openerp>
