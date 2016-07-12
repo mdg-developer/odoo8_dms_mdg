@@ -139,6 +139,8 @@ class PromotionsRules(osv.Model):
         'from_date':fields.datetime('From Date'),
         'to_date':fields.datetime('To Date'),
         'sequence':fields.integer('Sequence'),
+        'sale_channel_id':fields.many2one('sale.channel','Sale Channel'),
+        'branch_id':fields.many2one('res.branch','Branch', required = False),
         'logic':fields.selection([
                             ('and', 'All'),
                             ('or', 'Any'),
@@ -1437,22 +1439,21 @@ class PromotionsRulesActions(osv.Model):
                                  context=context)
         return True
  
-       
+    # MMK I'm just fix a little missing code
     def action_fix_amt_on_grand_total(self, cursor, user,
                                action, order, context=None):
-
+        LOGGER.info("Fix amount on Grand Total")
         order_obj = self.pool.get('sale.order')
-        print "total amount", order.amount_total
-        print "parameter", eval(action.arguments)
         order.discount_total = eval(action.arguments)
       
  
         if action.action_type == 'fix_amt_on_grand_total':
-            return order_obj.write(cursor, user, order.id,
+            order_obj.write(cursor, user, order.id,
                                          {
-                                          'discount_total':eval(action.arguments),
+                                          'deduct_amt':eval(action.arguments),
                                           }, context)
-        
+            order_obj.button_dummy(cursor, user, [order.id], context)
+        return True
     # MMK I'm just fix a little missing code  
     def action_prod_disc_perc(self, cursor, user,
                                action, order, context=None):
@@ -1464,6 +1465,7 @@ class PromotionsRulesActions(osv.Model):
         @param order: sale order
         @param context: Context(no direct use).
         """
+        LOGGER.info("Discount % on Product")
         orderline_ids = []
         order_obj = self.pool.get('sale.order')
         order_line_obj = self.pool.get('sale.order.line')
@@ -1481,6 +1483,7 @@ class PromotionsRulesActions(osv.Model):
                                       },
                                      context
                                      )
+        order_obj.button_dummy(cursor, user, [order.id], context)
         return True
     
     def action_prod_disc_fix(self, cursor, user,
@@ -1529,14 +1532,20 @@ class PromotionsRulesActions(osv.Model):
     def action_disc_perc_on_grand_total(self, cursor, user,
                                action, order, context=None):
 
+        LOGGER.info("Discount % on Grand Total")
         order_obj = self.pool.get('sale.order')
         if action.action_type == 'disc_perc_on_grand_total':
             discount_amt = 0
             discount_amt = (order.amount_untaxed * eval(action.arguments)) / 100
-            cursor.execute(""" update sale_order set total_dis=%s where id = %s """, (discount_amt, order.id,))
+#             cursor.execute(""" update sale_order set total_dis=%s, deduct_amt=%s where id = %s """, (discount_amt, discount_amt, order.id,))
+            order_obj.write(cursor, user, order.id,
+                                         {
+                                          'total_dis':discount_amt,
+                                          'deduct_amt':discount_amt,
+                                          }, context)
+            order_obj.button_dummy(cursor, user, [order.id], context)  # update the SO fields
         return True
             
-  
 
     def action_cart_disc_perc(self, cursor, user,
                                action, order, context=None):
@@ -1635,20 +1644,22 @@ class PromotionsRulesActions(osv.Model):
         """ 
             Buy X get Y free
         """
-        order_line_obj = self.pool.get('sale.order.line')
-        product_obj = self.pool.get('product.product')
-        product_y = product_obj.browse(cursor, user, product_id[0])
-        return order_line_obj.create(cursor, user, {
-                             'order_id':order.id,
-                             'product_id':product_y.id,
-                             'name':'[%s]%s (%s)' % (
-                                         product_y.default_code,
-                                         product_y.name,
-                                         action.promotion.name),
-                              'price_unit':0.00, 'promotion_line':True,
-                              'product_uom_qty':quantity,
-                              'product_uom':product_y.uom_id.id
-                              }, context)
+        if product_id:
+            order_line_obj = self.pool.get('sale.order.line')
+            product_obj = self.pool.get('product.product')
+            product_y = product_obj.browse(cursor, user, product_id[0])
+            return order_line_obj.create(cursor, user, {
+                                 'order_id':order.id,
+                                 'product_id':product_y.id,
+                                 'name':'[%s]%s (%s)' % (
+                                             product_y.default_code,
+                                             product_y.name,
+                                             action.promotion.name),
+                                  'price_unit':0.00, 'promotion_line':True,
+                                  'product_uom_qty':quantity,
+                                  'sale_foc':True,
+                                  'product_uom':product_y.uom_id.id
+                                  }, context)
     
     def create_x_line(self, cursor, user, action,
                        order, quantity, product_id, context=None):
@@ -1682,7 +1693,7 @@ class PromotionsRulesActions(osv.Model):
     def action_buy_cat_get_x_cat(self, cursor, user,
                              action, order, context=None):
         """
-        'Buy Category X get Category free:[Only for integers]'
+        'Buy Category get X Category free:[Only for integers]'
         @param cursor: Database Cursor
         @param user: ID of User
         @param action: Action to be taken on sale order
@@ -1694,14 +1705,16 @@ class PromotionsRulesActions(osv.Model):
                 another. This might cause the function to get slow and 
                 hamper the coding standards.
         """
-        LOGGER.info('Buy Category X get Category free')
+        LOGGER.info('Buy Category get X Category free')
         product_obj = self.pool.get('product.product')
+        order_line_obj = self.pool.get('sale.order.line')
         # Get Product
         product_x_cat, product_y_cat = [eval(code) \
                                 for code in action.product_code.split(":")]
         qtys = tot_free_y = 0
         qty_x, qty_y = [eval(arg) \
                                 for arg in action.arguments.split(":")]
+        existing_id = None
         # Build a dictionary of product_code to quantity 
         for order_line in order.order_line:
             category_name = order_line.product_id.categ_id.name
@@ -1713,18 +1726,23 @@ class PromotionsRulesActions(osv.Model):
             if category_name == cat_value_x:
                 # check sale category is same with category in promotions x value
                 if category_name == cat_value_y:
+                    
                     # to add sale product_product code for promotion
                     product_code = order_line.product_id.default_code
-                    # to add quantity from sale order for qty promotions
-                    qtys += order_line.product_uom_qty
-                    # to add code id for product_product code for promo
-                    product_x2_code_id = product_obj.search(cursor, user,
-                                    [('default_code', '=', product_code)], context=context)
-                    # Total number of free units of y to give
-                    tot_free_y = int((qtys / qty_x) * qty_y)
+                    existing_id = order_line_obj.search(cursor, user, [('product_id.default_code', '=', product_code), ('price_unit', '=', 0), ('order_id', '=', order.id)], context)
+                    if existing_id:
+                        order_line_obj.unlink(cursor, user, existing_id, context)
+                    else:
+                        # to add quantity from sale order for qty promotions
+                        qtys += order_line.product_uom_qty
+                        # to add code id for product_product code for promo
+                        product_x2_code_id = product_obj.search(cursor, user,
+                                        [('default_code', '=', product_code)], context=context)
+                        # Total number of free units of y to give
+                        tot_free_y = int((qtys / qty_x) * qty_y)
                     
         if tot_free_y:
-            LOGGER.info("Total Qty : %s ", tot_free_y)
+            LOGGER.info("FOC : %s ", tot_free_y)
             # return next line if promotion exists
             self.create_y_line(cursor, user, action,
                                order, tot_free_y, product_x2_code_id, context)
@@ -1763,32 +1781,30 @@ class PromotionsRulesActions(osv.Model):
                                 for arg in action.arguments.split(":")]
         LOGGER.info("""Product Category >>> %s""", product_cat)
         LOGGER.info("""Free Y Code >>> %s """, product_y_code)
-        # Build a dictionary of product_code to quantity 
-        for order_line in order.order_line:
-            
-#             product1_obj = self.pool.get('product_product.product_product').search(cursor, user, [('id', '=', order_line.product_id.id)], context=context)
-#             product_template_lst = self.pool.get('product_product.template').search(cursor, user, [('id', '=', product1_obj[0])], context=context)
-#             tmpl_obj = self.pool.get('product_product.template').browse(cursor, user, product_template_lst[0], context)
-#             print tmpl_obj.categ_id
-#             product_categ_lst = self.pool.get('product_product.category').search(cursor, user, [('id', '=', tmpl_obj.categ_id.id)], context=context)
-#             categ_obj = self.pool.get('product_product.category').browse(cursor, user, product_categ_lst[0], context) 
-#             print "Category Name", product_cat
-
-            cat_name = order_line.product_id.categ_id.name
-            category_name1 = str(cat_name)
-            cat_value1 = str(product_cat)
-            category_name = category_name1.strip() 
-            cat_value = cat_value1.strip() 
-            LOGGER.info("""Product Category >>> %s""", category_name)
-            LOGGER.info("""Action Product Category >>> %s""", cat_value)
-            if category_name == cat_value:
+        existing_id = None
+        if product_y_code:
+            existing_id = order_line_obj.search(cursor, user, [('order_id', '=', order.id), ('product_id.default_code', '=', product_y_code), ('price_unit', '=', 0)], context)
+            if existing_id:
+                order_line_obj.unlink(cursor, user, existing_id, context)
+            # Build a dictionary of product_code to quantity 
+            for order_line in order.order_line:
                 
-                qtys += order_line.product_uom_qty
-                # Total number of free units of y to give
-            tot_free_y = int((qtys / qty_x) * qty_y)
-        if tot_free_y > 0:
-            self.create_y_line(cursor, user, action,
-                                   order, tot_free_y, product_x2_code_id, context)
+                cat_name = order_line.product_id.categ_id.name
+                category_name1 = str(cat_name)
+                cat_value1 = str(product_cat)
+                category_name = category_name1.strip() 
+                cat_value = cat_value1.strip() 
+                LOGGER.info("""Product Category >>> %s""", category_name)
+                LOGGER.info("""Action Product Category >>> %s""", cat_value)
+                if category_name == cat_value:
+                    
+                    qtys += order_line.product_uom_qty
+                    # Total number of free units of y to give
+                tot_free_y = int((qtys / qty_x) * qty_y)
+            if tot_free_y > 0:
+                LOGGER.info("FOC : %s ", tot_free_y)
+                self.create_y_line(cursor, user, action,
+                                       order, tot_free_y, product_x2_code_id, context)
         return True
         
  
@@ -1809,7 +1825,7 @@ class PromotionsRulesActions(osv.Model):
                 another. This might cause the function to get slow and 
                 hamper the coding standards.
         """
-        
+        LOGGER.info('Buy X get Y free')
         order_line_obj = self.pool.get('sale.order.line')
         product_obj = self.pool.get('product.product')
         qtys = 0
@@ -1823,74 +1839,75 @@ class PromotionsRulesActions(osv.Model):
                                     [('default_code', '=', product_y_code)], context=context)
         qty_x, qty_y = [eval(arg) \
                                 for arg in action.arguments.split(":")]
-        # Build a dictionary of product_code to quantity 
-        for order_line in order.order_line:
-            if order_line.product_id.id == product_x_code_id[0]:
-                #                 product_code = order_line.product_id.default_code
-                #                 prod_qty[product_code] = prod_qty.get(
-                #                                         product_code, 0.00
-                #                                                 ) + order_line.product_uom_qty
-                    qtys += order_line.product_uom_qty       
-        # Total number of free units of y to give
-        tot_free_y = int((qtys / qty_x) * qty_y)
-        # If y is already in the cart discount it?
-        qty_y_in_cart = prod_qty.get(product_y_code, 0)
-        existing_order_line_ids = order_line_obj.search(cursor, user,
-                                           [
-                                ('order_id', '=', order.id),
-                                ('product_id.default_code',
-                                            '=', product_y_code)
-                                            ],
-                                           context=context
+        if product_x_code_id:
+            # Build a dictionary of product_code to quantity 
+            for order_line in order.order_line:
+                if order_line.product_id.id == product_x_code_id[0]:
+                    #                 product_code = order_line.product_id.default_code
+                    #                 prod_qty[product_code] = prod_qty.get(
+                    #                                         product_code, 0.00
+                    #                                                 ) + order_line.product_uom_qty
+                        qtys += order_line.product_uom_qty       
+            # Total number of free units of y to give
+            tot_free_y = int((qtys / qty_x) * qty_y)
+            # If y is already in the cart discount it?
+            qty_y_in_cart = prod_qty.get(product_y_code, 0)
+            existing_order_line_ids = order_line_obj.search(cursor, user,
+                                               [
+                                    ('order_id', '=', order.id),
+                                    ('product_id.default_code',
+                                                '=', product_y_code), ('price_unit', '=', 0)
+                                                ],
+                                               context=context
+                                                    )
+            if existing_order_line_ids:
+                update_order_line = order_line_obj.browse(cursor, user,
+                                                existing_order_line_ids[0],
+                                                context)
+                # Update that line
+                # The replace is required because on secondary update 
+                # the name may be repeated
+                if tot_free_y:
+                    line_name = "%s (%s)" % (
+                                            update_order_line.name.replace(
+                                                '(%s)' % action.promotion.name,
+                                                                    ''),
+                                            action.promotion.name
+                                                    )
+                    if qty_y_in_cart <= tot_free_y:
+                            # Quantity in cart is less then increase to total free
+                        order_line_obj.write(cursor, user, update_order_line.id,
+                                             {
+                                             
+                                              'product_uom_qty': tot_free_y,
+                                              'discount': 100,
+                                              }, context)
+                            
+                    else:
+                            # If the order has come for 5 and only 3 are free
+                            # then convert paid order to 2 units and rest free
+                        order_line_obj.write(cursor, user, update_order_line.id,
+                                             {
+                                        'product_uom_qty': qty_y_in_cart - tot_free_y,
+                                              }, context)
+                        self.create_y_line(cursor, user, action,
+                                                order,
+                                                tot_free_y,
+                                                product_x2_code_id,
+                                                context
                                                 )
-        if existing_order_line_ids:
-            update_order_line = order_line_obj.browse(cursor, user,
-                                            existing_order_line_ids[0],
-                                            context)
-            # Update that line
-            # The replace is required because on secondary update 
-            # the name may be repeated
-            if tot_free_y:
-                line_name = "%s (%s)" % (
-                                        update_order_line.name.replace(
-                                            '(%s)' % action.promotion.name,
-                                                                ''),
-                                        action.promotion.name
-                                                )
-                if qty_y_in_cart <= tot_free_y:
-                        # Quantity in cart is less then increase to total free
-                    order_line_obj.write(cursor, user, update_order_line.id,
-                                         {
-                                         
-                                          'product_uom_qty': tot_free_y,
-                                          'discount': 100,
-                                          }, context)
-                        
-                else:
-                        # If the order has come for 5 and only 3 are free
-                        # then convert paid order to 2 units and rest free
-                    order_line_obj.write(cursor, user, update_order_line.id,
-                                         {
-                                    'product_uom_qty': qty_y_in_cart - tot_free_y,
-                                          }, context)
-                    self.create_y_line(cursor, user, action,
-                                            order,
-                                            tot_free_y,
-                                            product_x2_code_id,
-                                            context
-                                            )
-                    # delete the other lines
-                existing_order_line_ids.remove(existing_order_line_ids[0])
-                if existing_order_line_ids:
-                    order_line_obj.unlink(cursor, user,
-                                          existing_order_line_ids, context)
-                return True
-        else:
-            # Dont create line if quantity is not there
-            if not tot_free_y:
-                return True
-            return self.create_y_line(cursor, user, action,
-                                       order, tot_free_y, product_x2_code_id, context)
+                        # delete the other lines
+                    existing_order_line_ids.remove(existing_order_line_ids[0])  # remove the existing foc line
+                    if existing_order_line_ids:
+                        order_line_obj.unlink(cursor, user,
+                                              existing_order_line_ids, context)
+                    return True
+            else:
+                # Dont create line if quantity is not there
+                if not tot_free_y:
+                    return True
+                return self.create_y_line(cursor, user, action,
+                                           order, tot_free_y, product_x2_code_id, context)
             
     # for buy x get x
     # MMK I'm just fix a little missing code
@@ -1979,6 +1996,7 @@ class PromotionsRulesActions(osv.Model):
         """
         LOGGER.info('Buy X get X free')
         product_obj = self.pool.get('product.product')
+        order_line_obj = self.pool.get('sale.order.line')
         # Get Product
         # prod_qty = {}
         qtys = free_qty = 0
@@ -1992,20 +2010,24 @@ class PromotionsRulesActions(osv.Model):
         # get Quantity
         qty_x, qty_y = [eval(arg) \
                                 for arg in action.arguments.split(":")]
-        # Build a dictionary of product_code to quantity 
-        for order_line in order.order_line:
-            LOGGER.info('Order Line Product Code : ', order_line.product_id.id)
-            LOGGER.info('Conditional Product Code : ', product_id_for_x1_code[0])
-            if order_line.product_id.id == product_id_for_x1_code[0]:
-                # To add qty from sale order line
-                qtys += order_line.product_uom_qty
-                # Calculate for free qty
-                free_qty = ((qtys / qty_x) * qty_y)                               
-                # return next line for promotion
-        LOGGER.info("Total Qty : %s ", free_qty)
-        if free_qty >= 1:
-            self.create_x_line(cursor, user, action,
-                               order, free_qty, product_id_for_x2_code, context)
+        existing_id = None
+        if product_id_for_x2_code:
+            existing_id = order_line_obj.search(cursor, user, [('order_id', '=', order.id), ('product_id', '=', product_id_for_x2_code[0]), ('price_unit', '=', 0)], context)
+            if existing_id:
+                order_line_obj.unlink(cursor, user, existing_id, context)
+            # Build a dictionary of product_code to quantity 
+            for order_line in order.order_line:
+                LOGGER.info('Order Line Product Code : ', order_line.product_id.id)
+                LOGGER.info('Conditional Product Code : ', product_id_for_x1_code[0])
+                if order_line.product_id.id == product_id_for_x1_code[0]:
+                    # To add qty from sale order line
+                    qtys += order_line.product_uom_qty
+                    # Calculate for free qty
+                    free_qty = int((qtys / qty_x) * qty_y)                               
+            LOGGER.info("FOC : %s ", free_qty)
+            if free_qty >= 1:
+                self.create_x_line(cursor, user, action,
+                                   order, free_qty, product_id_for_x2_code, context)
         return True
     # prod_multi_uom_get_x
     # MMK I'm just fix a little missing code
@@ -2142,6 +2164,8 @@ class PromotionsRulesActions(osv.Model):
                              action, order, context=None):
         LOGGER.info("Buy Multi Products get X free")
         product_obj = self.pool.get('product.product')
+        order_line_obj = self.pool.get('sale.order.line')
+        
         product_codes = self.tsplit(action.product_code, (':', ';'))
         LOGGER.info("Action Product Codes : %s ", product_codes)
         qty = free_qty = 0
@@ -2153,14 +2177,16 @@ class PromotionsRulesActions(osv.Model):
         qty_x, qty_y = [eval(arg) \
                                             for arg in action.arguments.split(":")]
         
-              
+        existing_id = None
+        LOGGER.info("Product Code : %s ", product_x2_code_id[0])
+        existing_id = order_line_obj.search(cursor, user, [('order_id', '=', order.id), ('product_id', '=', product_x2_code_id[0]), ('price_unit', '=', 0)], context)
+        if existing_id:
+            order_line_obj.unlink(cursor, user, existing_id, context)
         for order_line in order.order_line:        
-                if order_line.product_id:
                     # print "order_line.product_id", order_line.product_id
-                    for product_code in product_codes:
-                        print eval(product_code)
-                        if order_line.product_id.default_code == eval(product_code):    
-                            qty += order_line.product_uom_qty
+            for product_code in product_codes:
+                if order_line.product_id.default_code == eval(product_code):    
+                    qty += order_line.product_uom_qty
         if qty >= qty_x:
             free_qty = int((qty / qty_x) * qty_y)
             LOGGER.info("Free Quantity : %s ", free_qty)
