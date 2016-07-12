@@ -86,7 +86,7 @@
 		</record>
 
 		<record id="action_sales_promotion_view" model="ir.actions.act_window">
-			<field name="name">Request</field>
+			<field name="name">Monthly Allocation Request</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">sales.promotion</field>
 			<field name="view_type">form</field>
@@ -103,7 +103,7 @@
 		</record>
 
 		<record id="action_sales_promotion_view1" model="ir.actions.act_window">
-			<field name="name">Approve</field>
+			<field name="name">Monthly Allocation Approve</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">sales.promotion</field>
 			<field name="view_type">form</field>
