@@ -62,7 +62,7 @@ class sale_promotion_line(osv.osv):
                 ('Mar', 'March'),
                 ('Apr', 'April'),
                 ('May', 'May'),
-                ('June','June'),
+                ('June', 'June'),
                 ('Jul', 'July'),
                 ('Aug', 'August'),
                 ('Sep', 'September'),
@@ -72,11 +72,12 @@ class sale_promotion_line(osv.osv):
 
             ], 'Month', copy=False, select=True),
                 'channel_id':fields.many2one('sale.channel' , string='Channel'),
+                'quantity':fields.float('Quantity'),
                 'promo_qty':fields.integer('Promotion Qty'),
                 'allowed_amt':fields.float('Allowed Amount'),
-                'cus_class':fields.float('Customer Class'),
+                'cus_class':fields.many2one('sale.class', 'Customer Class'),
                 'num_cus':fields.integer('No Of Customer'),
                 'reward_amt':fields.float('Reward Amount'),
-                'reward_percentage': fields.float('Reward (%)',  help='For example, enter 50.0 to apply a percentage of 50%'),
+                'reward_percentage': fields.float('Reward (%)', help='For example, enter 50.0 to apply a percentage of 50%'),
                 }
 sale_promotion_line()    
