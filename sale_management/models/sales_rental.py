@@ -47,11 +47,8 @@ class sale_rental(osv.osv):
        'from_date':fields.date('From Date'),
         'to_date':fields.date('To Date'),
         'partner_id':fields.many2one('res.partner', 'Customer'  , required=True),  # 
-        'name':fields.text('Description'),
+        'name':fields.char('Name'),
         'address':fields.text('Address'),
-        'month':fields.integer('Rental Month'),
-        'unit':fields.selection({('day','Days'),('week','Weeks'),('month','Months'),('year','Years')},string='Unit'),
-        'monthy_amt':fields.float('Monthly Cost'  , required=True),
         'total_amt':fields.float('Total Amount'  , required=True),
         'image': fields.binary("Location Photo"),
         'latitude':fields.float('Geo Latitude'),

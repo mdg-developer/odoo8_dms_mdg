@@ -3,7 +3,7 @@ import sale_team
 import sale_order
 import sale_return
 import sale_display
-import sales_retal
+import sales_rental
 import sales_denomation
 import sale_approval
 import account_invoice
