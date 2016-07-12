@@ -24,7 +24,6 @@ ATTRIBUTES = [
     ('prod_sub_total', 'Product SubTotal combination'),
     ('promo_already_exit', 'Promotion Already Applied'),
     ('cat_qty', 'Product Category Quantity combination'),
-    ('sale_channel','Sale Channel Code')
 ]
 
 COMPARATORS = [
@@ -140,7 +139,8 @@ class PromotionsRules(osv.Model):
         'from_date':fields.datetime('From Date'),
         'to_date':fields.datetime('To Date'),
         'sequence':fields.integer('Sequence'),
-        'branch_id':fields.many2one('res.branch','Branch', required = False),
+        'sale_channel_id':fields.many2one('sale.channel', 'Sale Channel'),
+        'branch_id':fields.many2one('res.branch', 'Branch', required=False),
         'logic':fields.selection([
                             ('and', 'All'),
                             ('or', 'Any'),
@@ -362,13 +362,11 @@ class PromotionsRules(osv.Model):
                         return True
             # Check attribute is product_product category quantity  
             elif attribute == 'cat_qty':
+                tota_qty = 0.0
                 svalue = value.split(":")
-                print svalue[0]
-                print svalue[1]
                 category_code = eval(svalue[0])
-                print "product_product code for prod_qty", category_code
                 product_qty = eval(svalue[1])
-                print "product_product qty for prod_qty", product_qty
+                
                 for order_line in order.order_line:  
 #                     product_obj = self.pool.get('product_product.product_product').search(cursor, user, [('id', '=', order_line.product_id.id)], context=context)
 #                     product_template_lst = self.pool.get('product_product.template').search(cursor, user, [('id', '=', product_obj[0])], context=context)
@@ -376,48 +374,33 @@ class PromotionsRules(osv.Model):
 #                     print tmpl_obj.categ_id
 #                     product_categ_lst = self.pool.get('product_product.category').search(cursor, user, [('id', '=', tmpl_obj.categ_id.id)], context=context)
 #                     categ_obj = self.pool.get('product_product.category').browse(cursor, user, product_categ_lst[0], context)
-                        product_obj = self.pool.get('product_product.product_product').search(cursor, user, [('id', '=', order_line.product_id.id)], context=context)
-                        product_lst = self.pool.get('product_product.product_product').search(cursor, user, [('id', '=', product_obj[0])], context=context)
-                        prod_obj = self.pool.get('product_product.product_product').browse(cursor, user, product_lst[0], context)
-                        # print "product_lst.product_tmpl_id.id",prod_obj.product_tmpl_id.id
-                        product_template_lst = self.pool.get('product_product.template').search(cursor, user, [('id', '=', prod_obj.product_tmpl_id.id)], context=context)
-                        tmpl_obj = self.pool.get('product_product.template').browse(cursor, user, product_template_lst[0], context)
-                        # print "tmpl_obj.categ_id.id",tmpl_obj.categ_id.id
                         
-                        product_categ_lst = self.pool.get('product_product.category').search(cursor, user, [('id', '=', tmpl_obj.categ_id.id)], context=context)
-                        categ_obj = self.pool.get('product_product.category').browse(cursor, user, product_categ_lst[0], context)
-                        cat_name = categ_obj.name
+                        cat_name = order_line.product_id.categ_id.name
                         category_name1 = str(cat_name)
                         cat_value1 = str(category_code)
                         category_name = category_name1.strip() 
                         cat_value = cat_value1.strip() 
-                        print"category_name--", type(category_name)
-                        print"cat_value--", type(cat_value)
-                        print"category_str-length-", category_name.__len__()
-                        print"cat_str-length-", cat_value.__len__()
-                        print"category_", category_name
-                        print"cat_str", cat_value
-                        print category_name == cat_value
+                        
                         if category_name == cat_value:
-                            print "order_line.product_uom_qty", order_line.product_uom_qty
-                            if comparator == '==':
-                                if order_line.product_uom_qty == product_qty:
-                                    return True
-                            elif comparator == '!=':    
-                                if order_line.product_uom_qty != product_qty:
-                                    return True
-                            elif comparator == '>':
-                                if order_line.product_uom_qty > product_qty:
-                                    return True
-                            elif comparator == '<':    
-                                if order_line.product_uom_qty < product_qty:
-                                    return True
-                            elif comparator == '>=':
-                                if order_line.product_uom_qty >= product_qty:
-                                    return True
-                            elif comparator == '<=':    
-                                if order_line.product_uom_qty <= product_qty:
-                                    return True                
+                            tota_qty += order_line.product_uom_qty
+                if comparator == '==':
+                    if tota_qty == product_qty:
+                        return True
+                elif comparator == '!=':    
+                    if tota_qty != product_qty:
+                        return True
+                elif comparator == '>':
+                    if tota_qty > product_qty:
+                        return True
+                elif comparator == '<':    
+                    if tota_qty < product_qty:
+                        return True
+                elif comparator == '>=':
+                    if tota_qty >= product_qty:
+                        return True
+                elif comparator == '<=':    
+                    if tota_qty <= product_qty:
+                        return True                
             # Check attribute is sub total amount                
             elif attribute == 'prod_sub_total':   
                 svalue = value.split(":")
@@ -1928,17 +1911,22 @@ class PromotionsRulesActions(osv.Model):
         """
         LOGGER.info("FOC Products on Qty")
         product_obj = self.pool.get('product.product')
+        order_line_obj = self.pool.get('sale.order.line')
         # Get Product
         product_x_code = eval(action.product_code)
         product_id_for_x1_code = product_obj.search(cursor, user,
                                 [('default_code', '=', product_x_code)], context=context)
-        # get Quantity
-        qty_x = eval(action.arguments)
-        # Build a dictionary of product_code to quantity 
-#         for order_line in order.order_line:
-#             if order_line.product_id.id:
-        return self.create_x_line(cursor, user, action,
-                               order, qty_x, product_id_for_x1_code, context)       
+        existing_id = None
+        if product_id_for_x1_code:
+            existing_id = order_line_obj.search(cursor, user, [('order_id', '=', order.id), ('product_id', '=', product_id_for_x1_code[0]), ('price_unit', '=', 0)], context)
+            if existing_id:
+                order_line_obj.unlink(cursor, user, existing_id, context)
+            # get Quantity
+            qty_x = eval(action.arguments)
+            LOGGER.info("FOC : %s ", qty_x)
+            self.create_x_line(cursor, user, action,
+                                   order, qty_x, product_id_for_x1_code, context)       
+        return True
   
             
             
@@ -1960,23 +1948,29 @@ class PromotionsRulesActions(osv.Model):
         """
         LOGGER.info("FOC Any Products")
         product_obj = self.pool.get('product.product')
+        order_line_obj =self.pool.get('sale.order.line')
         # Get Product
         product_codes_str = action.product_code  # there contained array list of product code
         product_codes_list = product_codes_str.split(':')
         product_x_code = None
+        existing_id = None
         try:
             product_x_code = eval(product_codes_list[0])  # eval()remove the double quotes and single quotes
         except Exception, e:
             product_x_code = None
         product_id_for_x1_code = product_obj.search(cursor, user,
                                 [('default_code', '=', product_x_code)], context=context)
+        
+        if product_id_for_x1_code:
+            existing_id=order_line_obj.search(cursor,user,[('order_id','=',order.id),('product_id','=',product_id_for_x1_code[0]),('price_unit','=',0)],context)
+            if existing_id:
+                order_line_obj.unlink(cursor,user,existing_id,context)
         # get Quantity
-        qty_x = eval(action.arguments)
-        # Build a dictionary of product_code to quantity 
-#         for order_line in order.order_line:
-#             if order_line.product_id.id:
-        return self.create_x_line(cursor, user, action,
-                               order, qty_x, product_id_for_x1_code, context)       
+            qty_x = eval(action.arguments)
+            LOGGER.info("FOC : %s ",qty_x)
+            self.create_x_line(cursor, user, action,
+                                   order, qty_x, product_id_for_x1_code, context)     
+        return True  
         
     # MMK I'm just fix a little missing code
     def action_prod_x_get_x(self, cursor, user,
