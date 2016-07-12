@@ -23,10 +23,17 @@ from openerp import api
 from openerp.osv import osv, fields
 import uuid
 import time
-import product
 import datetime
 
 import openerp.addons.decimal_precision as dp
+
+SPLIT_METHOD = [
+    ('equal', 'Equal'),
+    ('by_quantity', 'By Quantity'),
+    ('by_current_cost_price', 'By Current Cost Price'),
+    ('by_weight', 'By Weight'),
+    ('by_volume', 'By Volume'),
+]
 
 class landed_cost_template(osv.osv):
     _name = "landed.cost.template"
@@ -48,7 +55,7 @@ class landed_cost_line(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'price_unit': fields.float('Cost', required=True, digits_compute= dp.get_precision('Product Price')),
         'account_id': fields.many2one('account.account', 'Account', domain=[('type', '<>', 'view'), ('type', '<>', 'closed')]),
-        'split_method': fields.selection(product.SPLIT_METHOD, string='Split Method'),
+        'split_method': fields.selection(SPLIT_METHOD, string='Split Method'),
     
     }
 
