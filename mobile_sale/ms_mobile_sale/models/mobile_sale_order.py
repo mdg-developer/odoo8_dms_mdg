@@ -944,7 +944,7 @@ class mobile_sale_order(osv.osv):
     
     def get_res_users(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('''
-            select id,active,login,password,partner_id from res_users where id = %s
+            select id,active,login,password,partner_id,branch_id from res_users where id = %s
             ''', (sale_team_id,))
         datas = cr.fetchall()        
         return datas
@@ -1212,7 +1212,7 @@ class mobile_sale_order(osv.osv):
             return False
     
 	def get_branch_datas(self, cr, uid , context=None):        
-        cr.execute('''select id,name,branch_code from sale_branch''')
+        cr.execute('''select id,name,branch_code from res_branch where active = true''')
         datas = cr.fetchall()        
         return datas
 	
