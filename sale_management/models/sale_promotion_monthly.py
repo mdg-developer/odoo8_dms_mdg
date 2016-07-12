@@ -81,3 +81,27 @@ class sale_promotion_line(osv.osv):
                 'reward_percentage': fields.float('Reward (%)', help='For example, enter 50.0 to apply a percentage of 50%'),
                 }
 sale_promotion_line()    
+
+class sale_monthly_promotion(osv.osv):
+    _name = "sale.monthly.promotion"
+    _description = 'Monthly Promotion'
+    
+    _columns = {
+                            'name':fields.char('Description'),
+                            'date':fields.date('Create Date'),
+                            'from_date':fields.date('From Date'),
+                            'to_date':fields.date('To Date'),
+                            'product_id':fields.many2one('product.product', string='Product'),
+                            'product_categ_id':fields.many2one('product.category', string='Product Category'),
+                            'sale_channel_id':fields.many2many('sale.channel', 'sale_monthly_promo_rel', 'sale_promo_id', 'sale_channel_id', string='Sale Channel'),
+                            'branch_id':fields.many2one('res.branch', string='Branch'),
+                            'product_uom_id':fields.many2one('product.uom', string='Product uom'),
+                            'sale_qty':fields.float(string='Sale Quantity'),
+                            'rebate_percentage':fields.float(string='Rebate Percentage'),
+                            'foc_qty':fields.float('FOC Quantity'),
+                            'foc_product_id':fields.float('FOC Product'),
+                            'rebate_amount':fields.float('Rebate Amount'),
+                            'remark':fields.text('Remark')
+                        }
+    
+sale_monthly_promotion()
