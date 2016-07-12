@@ -139,7 +139,7 @@ class PromotionsRules(osv.Model):
         'from_date':fields.datetime('From Date'),
         'to_date':fields.datetime('To Date'),
         'sequence':fields.integer('Sequence'),
-        'sale_channel_id':fields.many2one('sale.channel', 'Sale Channel'),
+        'sale_channel_id':fields.many2many('sale.channel', 'promo_sale_channel_rel', 'promo_id', 'sale_channel_id', string='Sale Channel'),
         'branch_id':fields.many2one('res.branch', 'Branch', required=False),
         'logic':fields.selection([
                             ('and', 'All'),
@@ -1948,7 +1948,7 @@ class PromotionsRulesActions(osv.Model):
         """
         LOGGER.info("FOC Any Products")
         product_obj = self.pool.get('product.product')
-        order_line_obj =self.pool.get('sale.order.line')
+        order_line_obj = self.pool.get('sale.order.line')
         # Get Product
         product_codes_str = action.product_code  # there contained array list of product code
         product_codes_list = product_codes_str.split(':')
@@ -1962,12 +1962,12 @@ class PromotionsRulesActions(osv.Model):
                                 [('default_code', '=', product_x_code)], context=context)
         
         if product_id_for_x1_code:
-            existing_id=order_line_obj.search(cursor,user,[('order_id','=',order.id),('product_id','=',product_id_for_x1_code[0]),('price_unit','=',0)],context)
+            existing_id = order_line_obj.search(cursor, user, [('order_id', '=', order.id), ('product_id', '=', product_id_for_x1_code[0]), ('price_unit', '=', 0)], context)
             if existing_id:
-                order_line_obj.unlink(cursor,user,existing_id,context)
+                order_line_obj.unlink(cursor, user, existing_id, context)
         # get Quantity
             qty_x = eval(action.arguments)
-            LOGGER.info("FOC : %s ",qty_x)
+            LOGGER.info("FOC : %s ", qty_x)
             self.create_x_line(cursor, user, action,
                                    order, qty_x, product_id_for_x1_code, context)     
         return True  
