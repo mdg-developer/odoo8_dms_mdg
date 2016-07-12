@@ -20,7 +20,6 @@
 							<field name="special2" colspan="2" select="1" />
 							<field name="special3" colspan="2" select="1" />
 							<field name="main_group" colspan="2" select="1" />
-							<field name="sale_channel_id" colspan="2" />
 							<field name="branch_id" colspan="2" />
 						</group>
 
@@ -129,8 +128,6 @@
 							context="{'group_by':'main_group'}" />
 						<filter name="branch_id" string="Branch" domain="[]"
 							context="{'group_by':'branch_id'}" />
-						<filter name="sale_channel_id" string="Sale Channel"
-							domain="[]" context="{'group_by':'sale_channel_id'}" />
 
 					</group>
 				</search>
@@ -142,7 +139,7 @@
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">promos.rules</field>
 			<field name="src_model">promos.rules</field>
-			<field name="context">{'search_default_main_group':1,'search_default_branch_id':1,'search_default_sale_channel_id':1}
+			<field name="context">{'search_default_main_group':1,'search_default_branch_id':1}
 			</field>
 			<field name="search_view_id" ref="view_sale_pomo_maingroup_filter" />
 			<field name="view_type">form</field>

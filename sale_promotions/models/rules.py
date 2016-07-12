@@ -24,6 +24,7 @@ ATTRIBUTES = [
     ('prod_sub_total', 'Product SubTotal combination'),
     ('promo_already_exit', 'Promotion Already Applied'),
     ('cat_qty', 'Product Category Quantity combination'),
+    ('sale_channel','Sale Channel Code')
 ]
 
 COMPARATORS = [
@@ -139,7 +140,6 @@ class PromotionsRules(osv.Model):
         'from_date':fields.datetime('From Date'),
         'to_date':fields.datetime('To Date'),
         'sequence':fields.integer('Sequence'),
-        'sale_channel_id':fields.many2one('sale.channel','Sale Channel'),
         'branch_id':fields.many2one('res.branch','Branch', required = False),
         'logic':fields.selection([
                             ('and', 'All'),
