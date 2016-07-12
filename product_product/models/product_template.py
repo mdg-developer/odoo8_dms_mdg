@@ -40,14 +40,14 @@ class product_template(osv.osv):
         return res
     
     _columns = {
-                #copy from product.py of odoo9
-                #'default_code': fields.char('Product Code'),
-                #new column add
+                # copy from product.py of odoo9
+                # 'default_code': fields.char('Product Code'),
+                # new column add
                 'product_principal_ids':fields.many2one('product.principal', 'Product Principal'),
                 #################
                            
                  
-                 #copy from panasonic_producty.py of "panansonic_modulue"
+                 # copy from panasonic_producty.py of "panansonic_modulue"
                 
                 'uom_lines':fields.many2many('product.uom'),
                 'barcode_no':fields.char('Barcode'),
@@ -67,7 +67,8 @@ class product_template(osv.osv):
                  "stored in the Stock Location of the Warehouse of this Shop, "
                  "or any of its children.\n"
                  "Otherwise, this includes goods stored in any Stock Location "
-                 "with 'internal' type."  ),
+                 "with 'internal' type."),
+                'uom_ratio':fields.char('UOM Ratio')
                 }
      
     _defaults = {
