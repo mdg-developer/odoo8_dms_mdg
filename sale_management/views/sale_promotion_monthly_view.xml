@@ -139,12 +139,13 @@
 					<sheet>
 						<group>
 							<group>
+								<field name="code" />
 								<field name="name" />
 								<field name="product_id" />
 								<field name="product_categ_id" />
 								<field name="sale_channel_id" widget="many2many_tags" />
 								<field name="sale_qty" />
-								<field name="rebate_percentage" />
+								<field name="product_uom_id" />
 							</group>
 
 							<group>
@@ -152,18 +153,22 @@
 								<field name="from_date" />
 								<field name="to_date" />
 								<field name="branch_id" />
-								<field name="product_uom_id" />
+								
 							</group>
 						</group>
 
 						<group>
+						    <group>
+								<field name="foc_product_id" />
+						        <field name="foc_qty" />
+						    </group>
 							<group>
-								<field name="foc_qty" />
+							    <field name="rebate_percentage" />
 								<field name="rebate_amount" />
-								<field name="remark" colspan="2" />
+								
 							</group>
 							<group>
-								<field name="foc_product_id" />
+								<field name="remark" colspan="2" />
 							</group>
 						</group>
 					</sheet>

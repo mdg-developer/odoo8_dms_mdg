@@ -1,5 +1,6 @@
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
+from shapely.coords import required
 
 class sale_promotion(osv.osv):
     
@@ -87,19 +88,20 @@ class sale_monthly_promotion(osv.osv):
     _description = 'Monthly Promotion'
     
     _columns = {
-                            'name':fields.char('Description'),
-                            'date':fields.date('Create Date'),
-                            'from_date':fields.date('From Date'),
-                            'to_date':fields.date('To Date'),
+                            'code':fields.char('Code', required=True),
+                            'name':fields.char('Description', required=True),
+                            'date':fields.date('Date', required=True),
+                            'from_date':fields.date('Promotion Start Date', required=True),
+                            'to_date':fields.date('Promotion End Date', required=True),
                             'product_id':fields.many2one('product.product', string='Product'),
                             'product_categ_id':fields.many2one('product.category', string='Product Category'),
-                            'sale_channel_id':fields.many2many('sale.channel', 'sale_monthly_promo_rel', 'sale_promo_id', 'sale_channel_id', string='Sale Channel'),
+                            'sale_channel_id':fields.many2many('sale.channel', 'sale_monthly_promo_rel', 'sale_promo_id', 'sale_channel_id', string='Sales Channels'),
                             'branch_id':fields.many2one('res.branch', string='Branch'),
-                            'product_uom_id':fields.many2one('product.uom', string='Product uom'),
-                            'sale_qty':fields.float(string='Sale Quantity'),
+                            'product_uom_id':fields.many2one('product.uom', string='Sale UOM'),
+                            'sale_qty':fields.float(string='Sales Qty'),
                             'rebate_percentage':fields.float(string='Rebate Percentage'),
                             'foc_qty':fields.float('FOC Quantity'),
-                            'foc_product_id':fields.float('FOC Product'),
+                            'foc_product_id':fields.many2one('product.product', string='FOC To Give Product'),
                             'rebate_amount':fields.float('Rebate Amount'),
                             'remark':fields.text('Remark')
                         }
