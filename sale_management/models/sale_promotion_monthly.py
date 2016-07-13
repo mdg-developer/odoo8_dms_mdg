@@ -1,6 +1,5 @@
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
-from shapely.coords import required
 
 class sale_promotion(osv.osv):
     
