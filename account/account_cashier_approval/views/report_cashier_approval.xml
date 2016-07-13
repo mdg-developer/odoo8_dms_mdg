@@ -150,7 +150,7 @@
     <t t-call="report.html_container">
         <t t-foreach="doc_ids" t-as="doc_id">
             
-           <t t-raw="translate_doc(doc_id, doc_model, 'user_id.name', 'sale_cashier_approval.report_cashier_approval_document')" />
+           <t t-raw="translate_doc(doc_id, doc_model, 'user_id.name', 'account_cashier_approval.report_cashier_approval_document')" />
         </t>
     </t>
 </template>

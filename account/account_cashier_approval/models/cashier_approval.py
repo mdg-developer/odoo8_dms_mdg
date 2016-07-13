@@ -189,8 +189,70 @@ class cashier_approval(osv.osv):
         webbrowser.open(url)        
         #webbrowser.open_new_tab(url,new=2)
     def cashier_approve(self, cr, uid, ids, context=None):
-        
-        self.write(cr, uid, ids, {'state':'done'}, context=context)
+        voucherObj = self.pool.get('account.voucher')
+        voucherLineObj = self.pool.get('account.voucher.line')
+        mobilearObj = self.pool.get('mobile.ar.collection')
+        datas = self.read(cr, uid, ids, ['date', 'to_date', 'user_id', 'sale_team_id'], context=None)
+        print 'datas>>>generte_ar', datas,
+        frm_date = to_date = user_id = None
+            
+        if datas:
+            for data in datas:
+                frm_date = data['date']
+                to_date = data['to_date']
+                user_id = data['user_id'][0]
+                team_id = data['sale_team_id'][0]
+               
+            if to_date:
+                print 'to_date>>', to_date
+                cr.execute("""select so_ref,id from mobile_ar_collection where state='pending' and user_id=%s and sale_team_id=%s and date >= %s and date <= %s
+                """, (user_id, team_id, frm_date, to_date,))
+            else:
+                print 'date>>', frm_date
+                cr.execute("""select so_ref,id from mobile_ar_collection where state='pending' and user_id=%s and sale_team_id=%s and date = %s 
+                """, (user_id, team_id, frm_date,))
+            vals = cr.fetchall()
+            print 'vals>>>so_ref', vals[0] 
+            
+            for val in vals:
+                cr.execute('select id from account_journal where type=%s', ('cash',))
+                data = cr.fetchall()
+                if data:
+                    journal_id = data[0] 
+                cr.execute("""select a.journal_id,a.origin,a.partner_id,a.date_invoice,a.period_id,a.account_id,a.amount_total from account_invoice as a,sale_order as s
+                            where a.origin=s.name and s.tb_ref_no = %s""",(val[0],))
+                account_data = cr.fetchall()
+                print 'account_data',account_data,val[0]
+                for acc_data in account_data:    
+                #if journal_id and accountId:  # cash journal and cash account. If there no journal id or no account id, account invoice is not make payment.
+                    accountVResult = {
+                                        'partner_id':acc_data[2],
+                                        'amount':acc_data[6],
+                                        'journal_id':journal_id,#acc_data[0],
+                                        'date':acc_data[3],
+                                        'period_id':acc_data[4],
+                                        'account_id':acc_data[5],
+                                        'pre_line':True,
+                                        'type':'receipt'
+                                        }
+                        # create register payment voucher
+                    voucherId = voucherObj.create(cr, uid, accountVResult, context=context)
+                    print 'voucherId>>>',voucherId     
+                    if voucherId:
+                        vlist = []
+                        vlist.append(voucherId)
+                        # get the voucher lines
+                        vlresult = voucherObj.recompute_voucher_lines(cr, uid, vlist, acc_data[2], acc_data[0], acc_data[6], 120, 'receipt', acc_data[3], context=None)
+                        if vlresult:
+                            result = vlresult['value']['line_cr_ids'][0]
+                            result['voucher_id'] = voucherId
+                            # create the voucher lines
+                            voucherLineObj.create(cr, uid, result, context=context)
+                            print 'voucherLineObj>>>',voucherLineObj
+                            mobilearObj.write(cr,uid,val[1],{'state':'done'},context=context)
+#                 # invoice register payment done
+#                 #voucherObj.button_proforma_voucher(cr, uid, vlist , context=context)
+        #self.write(cr, uid, ids, {'state':'done'}, context=context)
         return True   
     
     def action_generate(self, cr, uid, ids, context=None):
@@ -254,12 +316,22 @@ class cashier_approval(osv.osv):
                 team_id = data['sale_team_id'][0]
             if to_date:
                 print 'to_date>>', to_date
-                cr.execute("""select date,ref_no,partner_id,so_amount from mobile_ar_collection where user_id=%s and sale_team_id=%s and date >= %s and date <= %s
+                cr.execute("""select m.date,a.number,m.partner_id,m.so_amount
+                            from account_invoice as a,sale_order as s,mobile_ar_collection as m
+                            where a.origin=s.name and s.tb_ref_no=m.so_ref and 
+                            m.state='pending' and m.user_id=%s and m.sale_team_id=%s and m.date >= %s and m.date <= %s
                 """, (user_id, team_id, frm_date, to_date,))
+#                 cr.execute("""select date,ref_no,partner_id,so_amount from mobile_ar_collection where state='pending' and user_id=%s and sale_team_id=%s and date >= %s and date <= %s
+#                 """, (user_id, team_id, frm_date, to_date,))
             else:
                 print 'date>>', frm_date
-                cr.execute("""select date,ref_no,partner_id,so_amount from mobile_ar_collection where user_id=%s and sale_team_id=%s and date = %s 
+                cr.execute("""select m.date,a.number,m.partner_id,m.so_amount
+                            from account_invoice as a,sale_order as s,mobile_ar_collection as m
+                            where a.origin=s.name and s.tb_ref_no=m.so_ref and
+                            m.state='pending' and m.user_id=%s and m.sale_team_id=%s and m.date = %s  
                 """, (user_id, team_id, frm_date,))
+#                 cr.execute("""select date,ref_no,partner_id,so_amount from mobile_ar_collection where state='pending' and user_id=%s and sale_team_id=%s and date = %s 
+#                 """, (user_id, team_id, frm_date,))
             vals = cr.fetchall()
             print 'vals>>>generte_ar', vals 
             for val in vals:

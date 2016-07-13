@@ -192,7 +192,9 @@
 				</tree>
 			</field>
 		</record>
+		
 
+			
 		<record id="action_cashier_approval_view" model="ir.actions.act_window">
 			<field name="name">Cashier Approval</field>
 			<field name="type">ir.actions.act_window</field>
@@ -201,8 +203,8 @@
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" eval="view_cashier_approval_tree" />
 		</record>
-
-		<menuitem id="cashier_approval" action="action_cashier_approval_view"
+		
+		<menuitem id="menu_cashier_approval" action="action_cashier_approval_view"
 			parent="account.menu_finance_bank_and_cash" name="Cashier Approval"  sequence="13"/>
 
 	</data>
