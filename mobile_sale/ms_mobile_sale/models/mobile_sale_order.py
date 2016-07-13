@@ -1,6 +1,5 @@
 from openerp.osv import fields, osv
 from openerp.osv import orm
-from openerp import _
 from datetime import datetime
 import ast
 import time
@@ -138,7 +137,7 @@ class mobile_sale_order(osv.osv):
                         'payment_term':so['payment_term'],
                         'mso_longitude':so['mso_longitude'],
                         'mso_latitude':so['mso_latitude'],
-						'outlet_type':outlet_type
+                        'outlet_type':outlet_type
                     }
                     s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
                     print "Create Sale Order", so['name']
@@ -150,7 +149,7 @@ class mobile_sale_order(osv.osv):
                                     productId = data[0][0]
                                 else:
                                     productId = None
-								
+                                
                                 if sol['price_unit'] == '0':
                                     foc_val = True
                                 else:
@@ -161,7 +160,7 @@ class mobile_sale_order(osv.osv):
                                   'product_id':productId,
                                   'price_unit':sol['price_unit'],
                                   'product_uos_qty':sol['product_uos_qty'],
-							      'foc': foc_val,
+                                  'foc': foc_val,
                                   'discount':sol['discount'],
                                   'discount_amt':sol['discount_amt'],
                                   'sub_total':sol['sub_total'],
@@ -718,18 +717,19 @@ class mobile_sale_order(osv.osv):
         return datas
     # get promotion datas from database
     
-    def get_promos_datas(self, cr, uid , section_id , context=None, **kwargs):
+    def get_promos_datas(self, cr, uid , section_id , branch_id, context=None, **kwargs):
         cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,
-                        logic ,expected_logic_result ,special, special1, special2, special3 
+                        logic ,expected_logic_result ,special, special1, special2, special3 ,branch_id 
                         from promos_rules pr where pr.active = true and main_group in 
                         (select product_maingroup_id 
                         from crm_case_section_product_maingroup_rel mg,crm_case_section cs 
                         where cs.id = mg.crm_case_section_id and cs.id = %s)
-                        ''', (section_id,))
+                        and pr.branch_id = %s                        
+                        ''', (section_id,branch_id,))
         datas = cr.fetchall()
         cr.execute
         return datas
-    def get_promos_act_datas(self, cr, uid , section_id , context=None, **kwargs):
+    def get_promos_act_datas(self, cr, uid , section_id , branch_id, context=None, **kwargs):
         cr.execute('''select act.id,act.promotion,act.sequence as act_seq ,act.arguments,act.action_type,act.product_code
                             from promos_rules r ,promos_rules_actions act
                             where r.id = act.promotion
@@ -738,11 +738,12 @@ class mobile_sale_order(osv.osv):
                             (select product_maingroup_id 
                             from crm_case_section_product_maingroup_rel mg,crm_case_section cs 
                             where cs.id = mg.crm_case_section_id and cs.id = %s)
-                    ''', (section_id,))
+                            and r.branch_id = %s
+                    ''', (section_id,branch_id,))
         datas = cr.fetchall()
         cr.execute
         return datas
-    def get_promos_cond_datas(self, cr, uid , section_id , context=None, **kwargs):
+    def get_promos_cond_datas(self, cr, uid , section_id ,branch_id, context=None, **kwargs):
         cr.execute('''select cond.id,cond.promotion,cond.sequence as cond_seq,
                             cond.attribute as cond_attr,cond.comparator as cond_comparator,
                             cond.value as comp_value
@@ -753,7 +754,8 @@ class mobile_sale_order(osv.osv):
                             (select product_maingroup_id 
                             from crm_case_section_product_maingroup_rel mg,crm_case_section cs 
                             where cs.id = mg.crm_case_section_id and cs.id = %s)
-                    ''', (section_id,))
+                            and r.branch_id = %s
+                    ''', (section_id,branch_id,))
         datas = cr.fetchall()
         cr.execute
         return datas
@@ -930,7 +932,7 @@ class mobile_sale_order(osv.osv):
     def tablet_info(self, cr, uid, tabetId, context=None, **kwargs):    
         cr.execute('''
             select id as tablet_id,date,create_uid,name,note,mac_address,model,type,storage_day
-			,hotline,sale_team_id,notification_time
+            ,hotline,sale_team_id,notification_time
             from tablets_information 
             where name = %s
             ''', (tabetId,))
@@ -1211,11 +1213,40 @@ class mobile_sale_order(osv.osv):
         except Exception, e:
             return False
     
-	def get_branch_datas(self, cr, uid , context=None):        
+    def get_branch_datas(self, cr, uid , context=None):        
         cr.execute('''select id,name,branch_code from res_branch where active = true''')
         datas = cr.fetchall()        
         return datas
-	
+    
+    def get_sale_channel(self, cr, uid , context=None):        
+        cr.execute('''select id,name from sale_channel''')
+        datas = cr.fetchall()        
+        return datas
+        
+    def get_promo_sale_channel(self, cr, uid , context=None):        
+        cr.execute('''select promo_id,sale_channel_id from promo_sale_channel_rel''')
+        datas = cr.fetchall()        
+        return datas
+    
+    def get_product_qty_in_hand(self, cr, uid, warehouse_id , context=None, **kwargs):
+        cr.execute("""
+               select product_id,qty_on_hand + qty as qty_on_hand,main_group,name_template from (
+                select sm.product_id  ,sum(sm.product_uos_qty) as qty_on_hand ,0 as qty, pt.main_group, pp.name_template
+                                      from stock_move sm , stock_picking sp , stock_picking_type spt,product_template pt, product_product pp
+                                      where sm.picking_id = sp.id
+                          and sm.state = 'done'                     
+                          and spt.id = sm.picking_type_id
+                          and sp.picking_type_id = sm.picking_type_id
+                          and spt.code = 'internal'
+                          and sm.location_dest_id = %s
+                          and sm.date::date = now()::date
+                          and sm.product_id = pp.id
+                          and pp.product_tmpl_id = pt.id
+                          group by product_id, pt.main_group, pp.name_template)A
+                """, (warehouse_id,))
+        datas = cr.fetchall()
+        return datas
+                
 mobile_sale_order()
 
 class mobile_sale_order_line(osv.osv):
@@ -1394,4 +1425,3 @@ class sale_order(osv.osv):
         invoice_vals.update(self._inv_get(cr, uid, order, context=context))
         return invoice_vals           
 sale_order()
-    
