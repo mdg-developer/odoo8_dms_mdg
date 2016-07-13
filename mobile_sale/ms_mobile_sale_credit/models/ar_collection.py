@@ -19,8 +19,10 @@ class mobile_ar_collection(osv.osv):
                 'payment_amount':fields.float('Payment'),
                 'so_amount':fields.float('Sale Order Amount'),
                 'credit_limit':fields.float('Credit Limit'),
+                'state':fields.selection([('pending', 'Confirmed'), ('done', 'Done')], 'Status',readonly=True),
     }
     _defaults = {
+                 'state' : 'pending',
                
     }
     def get_ar_collections_datas(self, cr, uid, todayDateNormal, creditPaymentList, saleOrderNoList, context=None, **kwargs):
