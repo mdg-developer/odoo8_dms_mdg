@@ -11,6 +11,10 @@
             <property name="fileName">report/fair_deal_library.rptlibrary</property>
             <property name="namespace">fair_deal_library</property>
         </structure>
+        <structure>
+            <property name="fileName">inventory_report/birt_report/inventory_report_library.rptlibrary</property>
+            <property name="namespace">inventory_report_library</property>
+        </structure>
     </list-property>
     <template-parameter-definitions>
         <template-parameter-definition name="NewTemplateParameterDefinition" id="14">
@@ -27,27 +31,10 @@ Follow the instructions in the cheat sheet to set up the data to display.</text-
         </template-parameter-definition>
     </template-parameter-definitions>
     <parameters>
-        <scalar-parameter name="from_date" id="21" extends="fair_deal_library.from_date">
-            <text-property name="promptText">From Date</text-property>
-            <property name="valueType">static</property>
-            <property name="isRequired">true</property>
-            <property name="dataType">date</property>
-            <property name="distinct">true</property>
-            <list-property name="selectionList"/>
-            <property name="paramType">simple</property>
-            <property name="concealValue">false</property>
-            <property name="controlType">text-box</property>
-            <structure name="format">
-                <property name="category">Unformatted</property>
-            </structure>
-        </scalar-parameter>
-        <scalar-parameter name="to_date" id="22" extends="fair_deal_library.to_date">
-            <property name="isRequired">true</property>
-            <property name="dataType">date</property>
-            <property name="concealValue">false</property>
-            <property name="controlType">text-box</property>
-        </scalar-parameter>
-        <scalar-parameter name="category" id="23">
+        <scalar-parameter name="from_date" id="187" extends="inventory_report_library.from_date"/>
+        <scalar-parameter name="to_date" id="188" extends="inventory_report_library.to_date"/>
+        <scalar-parameter name="category" id="189">
+            <text-property name="promptText">Category</text-property>
             <property name="valueType">dynamic</property>
             <property name="isRequired">false</property>
             <property name="dataSetName">category</property>
@@ -64,7 +51,8 @@ Follow the instructions in the cheat sheet to set up the data to display.</text-
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
-        <scalar-parameter name="warehouse" id="24">
+        <scalar-parameter name="warehouse" id="190">
+            <text-property name="promptText">Warehouse</text-property>
             <property name="valueType">dynamic</property>
             <property name="isRequired">false</property>
             <property name="dataSetName">warehouse</property>
@@ -83,19 +71,15 @@ Follow the instructions in the cheat sheet to set up the data to display.</text-
         </scalar-parameter>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="18"
- extends="fair_deal_library.Data Source">
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="183"
+ extends="inventory_report_library.Data Source">
             <property name="odaDriverClass">org.postgresql.Driver</property>
-            <property name="odaURL">jdbc:postgresql://localhost:5432/MDG_1</property>
+            <property name="odaURL">jdbc:postgresql://localhost:5432/MDG</property>
             <property name="odaUser">openerp</property>
             <encrypted-property name="odaPassword" encryptionID="base64">b3BlbnBncHdk</encrypted-property>
         </oda-data-source>
     </data-sources>
     <data-sets>
-        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="category" id="19"
- extends="fair_deal_library.category"/>
-        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="warehouse" id="20"
- extends="fair_deal_library.warehouse"/>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.SPSelectDataSet" name="sale_and_stock" id="26">
             <list-property name="parameters">
                 <structure>
@@ -346,8 +330,12 @@ Follow the instructions in the cheat sheet to set up the data to display.</text-
   </DataSetParameters>
 </model:DesignValues>]]></xml-property>
         </oda-data-set>
-        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="company" id="177"
- extends="fair_deal_library.company"/>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="category" id="184"
+ extends="inventory_report_library.category"/>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="company" id="185"
+ extends="inventory_report_library.company"/>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="warehouse" id="186"
+ extends="inventory_report_library.warehouse"/>
     </data-sets>
     <cubes>
         <tabular-cube name="sale_and_stock" id="27">
@@ -594,12 +582,6 @@ Follow the instructions in the cheat sheet to set up the data to display.</text-
                                         <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
                                     </structure>
                                     <property name="textAlign">right</property>
-                                    <list-property name="visibility">
-                                        <structure>
-                                            <property name="format">all</property>
-                                            <expression name="valueExpr" type="javascript">true</expression>
-                                        </structure>
-                                    </list-property>
                                     <property name="resultSetColumn">qty_Category/category_Branch/branch_1</property>
                                 </data>
                             </property>
@@ -613,12 +595,6 @@ Follow the instructions in the cheat sheet to set up the data to display.</text-
                                         <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
                                     </structure>
                                     <property name="textAlign">right</property>
-                                    <list-property name="visibility">
-                                        <structure>
-                                            <property name="format">all</property>
-                                            <expression name="valueExpr" type="javascript">true</expression>
-                                        </structure>
-                                    </list-property>
                                     <property name="resultSetColumn">qty_Branch/branch</property>
                                 </data>
                             </property>
@@ -816,12 +792,6 @@ Follow the instructions in the cheat sheet to set up the data to display.</text-
                                         <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
                                     </structure>
                                     <property name="textAlign">right</property>
-                                    <list-property name="visibility">
-                                        <structure>
-                                            <property name="format">all</property>
-                                            <expression name="valueExpr" type="javascript">true</expression>
-                                        </structure>
-                                    </list-property>
                                     <property name="resultSetColumn">bal_Category/category_Branch/branch_1</property>
                                 </data>
                             </property>
@@ -835,12 +805,6 @@ Follow the instructions in the cheat sheet to set up the data to display.</text-
                                         <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
                                     </structure>
                                     <property name="textAlign">right</property>
-                                    <list-property name="visibility">
-                                        <structure>
-                                            <property name="format">all</property>
-                                            <expression name="valueExpr" type="javascript">true</expression>
-                                        </structure>
-                                    </list-property>
                                     <property name="resultSetColumn">bal_Branch/branch</property>
                                 </data>
                             </property>
@@ -1074,8 +1038,8 @@ Follow the instructions in the cheat sheet to set up the data to display.</text-
                 </extended-item>
                 <extended-item extensionName="CrosstabCell" id="66">
                     <property name="content">
-                        <label id="68">
-                            <text-property name="text">Pracking</text-property>
+                        <label id="191">
+                            <text-property name="text">Packing</text-property>
                         </label>
                     </property>
                     <property name="backgroundColor">gray</property>
