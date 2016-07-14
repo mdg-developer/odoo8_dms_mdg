@@ -132,6 +132,8 @@
 						<table class="table table-condensed" style="border:1pt solid;">
 							<thead>
 								<tr style="background-color:#0052cc;color:#ffffff;" height="10pt;">
+									<th class="text-center" style="border:1pt solid;border-color:black;">No
+									</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Description
 									</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th>
@@ -141,11 +143,14 @@
 										groups="sale.group_discount_per_so_line">Disc.(%)</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Disc.(Amt)</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">FOC</th>
-									<th class="text-center" style="border:1pt solid;border-color:black;">Line Total</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Total</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr t-foreach="o.order_line" t-as="l">
+									<td style="border:1pt solid;border-color:black;" align="center">
+										<t t-esc="l_index+1" />
+									</td>
 									<td style="border:1pt solid;border-color:black;">
 										<span t-field="l.product_id.name" />
 										<t t-if="l.sale_foc==True">
@@ -189,6 +194,93 @@
 						<div class="row">
 							<div class="col-xs-8 pull-left" style="padding-top: 1cm;">
 
+
+							</div>
+							<div class="col-xs-4 pull-right">
+								<table class="table">
+									<tr>
+										<td style="border-top-color:white;padding-bottom: 2mm;">
+											Sub Total
+										</td>
+										<td class="text-right" style="border-top-color:white;padding-bottom: 2mm;">
+											<span t-field="o.amount_untaxed" />
+										</td>
+									</tr>
+									<tr class="border-black">
+										<td style="padding-top: 2mm;padding-bottom: 2mm;">
+											Total Discount
+										</td>
+										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
+											<span t-field="o.total_dis" />
+										</td>
+									</tr>
+									<tr class="border-black">
+										<td style="padding-top: 2mm;padding-bottom: 2mm;">
+											Deduction
+										</td>
+										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
+											<span t-field="o.deduct_amt" />
+										</td>
+									</tr>
+									<tr class="border-black">
+										<td style="padding-top: 2mm;padding-bottom: 2mm;">
+											<strong>Net</strong>
+										</td>
+										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
+											<span t-field="o.amount_total" />
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+
+
+						<div class="row" style="padding-top:-2s0pt;margin-top:150pt;">
+							<div class="col-xs-4 pull-left">
+								<table class="table" style='border:solid;border-color:white;'>
+									<tr style='border:solid;border-color:white;'>
+										<td style="margin-top:-10pt;" align="center">
+											<span>
+												Cash Paid By
+											</span>
+										</td>
+									</tr>
+									<tr style='border:solid;border-color:white;'>
+										<td style="margin-top:-10pt;" align="center">
+											<span>
+												(Customer Name)
+											</span>
+										</td>
+									</tr>
+								</table>
+							</div>
+
+							<div class="col-xs-4 pull-left">
+							</div>
+							<div class="col-xs-4 pull-right">
+								<table class="table" style='border:solid;border-color:white;'>
+									<tr style='border:solid;border-color:white;'>
+										<td style="margin-top:-10pt;" align="center">
+											<span>
+												Cash Received By
+											</span>
+										</td>
+									</tr>
+									<tr style='border:solid;border-color:white;'>
+										<td style="margin-top:-10pt;" align="center">
+											<span>
+												(Salesman Name)
+											</span>
+										</td>
+									</tr>
+								</table>
+
+							</div>
+						</div>
+
+						<div class="row" style="padding-top:-2s0pt;margin-top:20pt;">
+							<div class="col-xs-8 pull-left">
+
 								<table class="table" style='border:solid;border-color:white;'>
 									<tr>
 										<td style="text-align:center;">
@@ -206,46 +298,12 @@
 										</td>
 									</tr>
 								</table>
-
 							</div>
 							<div class="col-xs-4 pull-right">
-								<table class="table">
-									<tr>
-										<td style="border-top-color:white;padding-bottom: 2mm;">
-											Sub Total
-										</td>
-										<td class="text-right" style="border-top-color:white;padding-bottom: 2mm;">
-											<span t-field="o.amount_untaxed" />
-										</td>
-									</tr>
-									<tr class="border-black">
-										<td style="padding-top: 2mm;padding-bottom: 2mm;">
-											Total Discount Amount
-										</td>
-										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
-											<span t-field="o.total_dis" />
-										</td>
-									</tr>
-									<tr class="border-black">
-										<td style="padding-top: 2mm;padding-bottom: 2mm;">
-											Deduction Amount
-										</td>
-										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
-											<span t-field="o.deduct_amt" />
-										</td>
-									</tr>
-									<tr class="border-black">
-										<td style="padding-top: 2mm;padding-bottom: 2mm;">
-											<strong>Grand Total</strong>
-										</td>
-										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
-											<span t-field="o.amount_total" />
-										</td>
-									</tr>
-								</table>
+
+
 							</div>
 						</div>
-
 					</div>
 
 				</t>
@@ -253,14 +311,5 @@
 
 		</template>
 
-		<!-- <template id="report_saleorder"> -->
-		<!-- <t t-call="report.html_container"> -->
-		<!-- <t t-foreach="doc_ids" t-as="doc_id"> -->
-		<!-- <t -->
-		<!-- t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', 'sale.report_saleorder_document')" 
-			/> -->
-		<!-- </t> -->
-		<!-- </t> -->
-		<!-- </template> -->
 	</data>
 </openerp>
