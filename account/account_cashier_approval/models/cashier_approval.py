@@ -164,7 +164,7 @@ class cashier_approval(osv.osv):
             multi='sums', help="The credit total amount."),         
        'total': fields.function(_amount_total_all, digits_compute=dp.get_precision('Account'), string='Total Net',
             multi='sums', help="The credit total amount.", store=True,),
-        'state':fields.selection([('draft', 'Draft'), ('pending', 'Confirmed'), ('done', 'Approved')], 'Status'),        
+        'state':fields.selection([('draft', 'Draft'), ('pending', 'Confirmed')], 'Status'),        
                                                                
     }
     _order = 'id desc'
@@ -534,6 +534,8 @@ class cashier_approval_credit_line(osv.osv):
         'date':fields.date('Date'),
         # 'partner_id':fields.one2many('res.partner','id','Customer'),        
         'partner_id':fields.many2one('res.partner', 'Customer', ondelete='cascade'),
+        'account_id':fields.many2one('account.account', 'Account', ondelete='cascade'),
+        'journal_id':fields.many2one('account.journal', 'Journal', ondelete='cascade'),
         'amount':fields.float('Amount'),
     }       
         

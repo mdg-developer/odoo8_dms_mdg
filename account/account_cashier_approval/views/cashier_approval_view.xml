@@ -13,8 +13,8 @@
 							class="oe_highlight"  /> -->
 						<button name="confirm_" string="Confirm" type="object"
 							class="oe_highlight" attrs="{'invisible':[('state','not in',('draft'))]}" />
-						<button name="cashier_approve" string="Cashier Approve" type="object"
-							class="oe_highlight" attrs="{'invisible':[('state','not in',('pending'))]}" />
+						<!-- <button name="cashier_approve" string="Cashier Approve" type="object"
+							class="oe_highlight" attrs="{'invisible':[('state','not in',('pending'))]}" /> -->
 						<button name="set_to_draft" string="Set to draft" type="object"
 							class="oe_highlight" attrs="{'invisible':[('state','in',('done','draft'))]}" />	
 						<field name="state" widget="statusbar" statusbar_visible="draft,pending,done" />
@@ -33,7 +33,7 @@
 								</group>
 							</group>
 							<group>
-								<button name="action_generate" string="Show" attrs="{'invisible':[('state','in',('done'))]}"
+								<button name="action_generate" string="Show" attrs="{'invisible':[('state','in',('pending'))]}"
 								type="object" class="oe_highlight" groups="base.group_user"
 								></button>
 							</group>
