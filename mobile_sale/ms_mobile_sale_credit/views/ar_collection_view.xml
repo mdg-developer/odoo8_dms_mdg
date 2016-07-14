@@ -27,7 +27,7 @@
 								<field name="balance" />
 								<field name="payment_amount" />
 								<field name="credit_limit" />
-								<field name="state" />
+								<!-- <field name="state" /> -->
 							</group>							
 						</group>
 					</sheet>
