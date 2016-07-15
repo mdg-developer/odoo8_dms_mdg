@@ -7,8 +7,8 @@
     <property name="imageDPI">96</property>
     <list-property name="libraries">
         <structure>
-            <property name="fileName">birt_report/general_library.rptlibrary</property>
-            <property name="namespace">general_library</property>
+            <property name="fileName">birt_report/report_library.rptlibrary</property>
+            <property name="namespace">report_library</property>
         </structure>
     </list-property>
     <parameters>
@@ -40,56 +40,53 @@
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
-        <scalar-parameter name="sale_team" id="159">
+        <scalar-parameter name="sale_team" id="267">
             <property name="valueType">dynamic</property>
-            <property name="isRequired">true</property>
             <property name="dataSetName">Sale_Team</property>
             <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
             <expression name="labelExpr" type="javascript">dataSetRow["code"]</expression>
+            <expression name="sortByColumn">dataSetRow["code"]</expression>
+            <property name="sortDirection">asc</property>
             <property name="dataType">integer</property>
             <property name="distinct">true</property>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
             <property name="controlType">list-box</property>
             <property name="mustMatch">true</property>
-            <property name="fixedOrder">true</property>
+            <property name="fixedOrder">false</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
-        <scalar-parameter name="sale_man" id="160">
+        <scalar-parameter name="sale_man" id="268">
             <property name="valueType">dynamic</property>
-            <property name="isRequired">true</property>
             <property name="dataSetName">Saleman</property>
             <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
             <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
+            <expression name="sortByColumn">dataSetRow["name"]</expression>
+            <property name="sortDirection">asc</property>
             <property name="dataType">integer</property>
             <property name="distinct">true</property>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
             <property name="controlType">list-box</property>
             <property name="mustMatch">true</property>
-            <property name="fixedOrder">true</property>
+            <property name="fixedOrder">false</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="163"
- extends="general_library.Data Source">
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="262"
+ extends="report_library.Data Source">
             <property name="odaDriverClass">org.postgresql.Driver</property>
             <property name="odaURL">jdbc:postgresql://localhost:5432/MDG</property>
             <property name="odaUser">openerp</property>
             <encrypted-property name="odaPassword" encryptionID="base64">b3BlbnBncHdk</encrypted-property>
-            <property name="odaJndiName">java:comp/env/jdbc/ReportDB</property>
         </oda-data-source>
     </data-sources>
     <data-sets>
-        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="Sale_Team" id="157"
- extends="general_library.Sale_Team"/>
-        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="Saleman" id="158"
- extends="general_library.Saleman"/>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="sale_product" id="164">
             <list-property name="columnHints">
                 <structure>
@@ -198,7 +195,7 @@
             </list-property>
             <xml-property name="queryText"><![CDATA[select pp.name_template as product,sum(p.product_uom_qty) qty,sum(p.amount) as amount from cashier_approval c,sales_denomination d,sales_denomination_product_line p,product_product pp
 where c.user_id=d.user_id and c.sale_team_id=d.sale_team_id and d.id=p.denomination_product_ids and p.product_id=pp.id
-and c.date=? and c.to_date=? and c.user_id=? and c.sale_team_id=? 
+and c.date>=? and c.to_date<=? and c.user_id=? and c.sale_team_id=? 
 group by pp.name_template]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
@@ -404,7 +401,7 @@ group by pp.name_template]]></xml-property>
                     <structure>
                         <property name="position">2</property>
                         <property name="name">qty</property>
-                        <property name="dataType">integer</property>
+                        <property name="dataType">decimal</property>
                     </structure>
                 </list-property>
             </structure>
@@ -421,12 +418,13 @@ group by pp.name_template]]></xml-property>
                     <property name="position">2</property>
                     <property name="name">qty</property>
                     <property name="nativeName">qty</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">-5</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select d.notes,d.note_qty as qty from cashier_approval c,cashier_denomination_line d
- where c.id=d.cashier_id and c.date=? and c.to_date=? and c.user_id=? and c.sale_team_id=? ]]></xml-property>
+            <xml-property name="queryText"><![CDATA[select d.notes,sum(d.note_qty) as qty from cashier_approval c,cashier_denomination_line d
+ where c.id=d.cashier_id and c.date>=? and c.to_date<=? and c.user_id=? and c.sale_team_id=? 
+ group by d.notes]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -649,7 +647,7 @@ group by pp.name_template]]></xml-property>
                     <property name="nativeDataType">2</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select total,cash_sub_total,cr_sub_total from cashier_approval where date=? and to_date=? and user_id=? and sale_team_id=? ]]></xml-property>
+            <xml-property name="queryText"><![CDATA[select sum(total)total,sum(cash_sub_total)cash_sub_total,sum(cr_sub_total)cr_sub_total from cashier_approval where date>=? and to_date<=? and user_id=? and sale_team_id=? ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -778,6 +776,209 @@ group by pp.name_template]]></xml-property>
             <design:label>cr_sub_total</design:label>
             <design:formattingHints>
               <design:displaySize>131089</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="Sale_Team" id="265">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">id</text-property>
+                    <text-property name="heading">id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">code</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">code</text-property>
+                    <text-property name="heading">code</text-property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">code</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">id</property>
+                    <property name="nativeName">id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">code</property>
+                    <property name="nativeName">code</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select id,code from crm_case_section order by code]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>id</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>id</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>id</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>code</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>8</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>code</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>code</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="Saleman" id="266">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">id</text-property>
+                    <text-property name="heading">id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">name</text-property>
+                    <text-property name="heading">name</text-property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">id</property>
+                    <property name="nativeName">id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">name</property>
+                    <property name="nativeName">name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select u.id,p.name from res_users u,res_partner p
+where u.partner_id=p.id order by p.name]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>id</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>id</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>id</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>name</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>2147483647</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>name</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>name</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
             </design:formattingHints>
           </design:usageHints>
         </design:resultColumnDefinitions>
@@ -957,7 +1158,7 @@ group by pp.name_template]]></xml-property>
             </row>
         </grid>
         <grid id="58">
-            <property name="height">2.1458333333333335in</property>
+            <property name="height">4.166666666666667in</property>
             <property name="width">7.947916666666667in</property>
             <column id="59">
                 <property name="width">3.8645833333333335in</property>
@@ -969,7 +1170,7 @@ group by pp.name_template]]></xml-property>
                 <property name="width">3.8645833333333335in</property>
             </column>
             <row id="61">
-                <property name="height">2.1458333333333335in</property>
+                <property name="height">4.166666666666667in</property>
                 <cell id="62">
                     <table id="193">
                         <property name="dataSet">sale_product</property>
@@ -998,7 +1199,7 @@ group by pp.name_template]]></xml-property>
                         <column id="214"/>
                         <header>
                             <row id="194">
-                                <property name="height">0.3958333333333333in</property>
+                                <property name="height">0.3333333333333333in</property>
                                 <cell id="195">
                                     <property name="backgroundColor">gray</property>
                                     <property name="borderBottomStyle">solid</property>
@@ -1201,6 +1402,7 @@ group by pp.name_template]]></xml-property>
                                 </cell>
                             </row>
                             <row id="219">
+                                <property name="height">0.375in</property>
                                 <cell id="220"/>
                                 <cell id="221">
                                     <property name="borderBottomStyle">solid</property>
@@ -1278,14 +1480,17 @@ group by pp.name_template]]></xml-property>
                         <column id="192"/>
                         <header>
                             <row id="178">
-                                <property name="height">0.3645833333333333in</property>
+                                <property name="height">0.3333333333333333in</property>
                                 <cell id="179">
                                     <property name="backgroundColor">gray</property>
-                                    <property name="borderBottomStyle">none</property>
-                                    <property name="borderLeftStyle">none</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
                                     <property name="borderRightStyle">solid</property>
                                     <property name="borderRightWidth">thin</property>
-                                    <property name="borderTopStyle">none</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
                                     <label id="180">
                                         <property name="fontWeight">bold</property>
                                         <text-property name="text">Notes</text-property>
@@ -1293,10 +1498,14 @@ group by pp.name_template]]></xml-property>
                                 </cell>
                                 <cell id="181">
                                     <property name="backgroundColor">gray</property>
-                                    <property name="borderBottomStyle">none</property>
-                                    <property name="borderLeftStyle">none</property>
-                                    <property name="borderRightStyle">none</property>
-                                    <property name="borderTopStyle">none</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
                                     <label id="182">
                                         <property name="fontWeight">bold</property>
                                         <text-property name="text">Qty</text-property>
@@ -1306,7 +1515,7 @@ group by pp.name_template]]></xml-property>
                         </header>
                         <detail>
                             <row id="183">
-                                <property name="height">0.2916666666666667in</property>
+                                <property name="height">0.3020833333333333in</property>
                                 <cell id="184">
                                     <property name="borderBottomStyle">solid</property>
                                     <property name="borderBottomWidth">thin</property>
