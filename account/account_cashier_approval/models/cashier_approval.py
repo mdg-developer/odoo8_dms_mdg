@@ -319,7 +319,7 @@ class cashier_approval(osv.osv):
                 cr.execute("""select m.date,a.number,m.partner_id,m.so_amount
                             from account_invoice as a,sale_order as s,mobile_ar_collection as m
                             where a.origin=s.name and s.tb_ref_no=m.so_ref and 
-                            m.state='pending' and m.user_id=%s and m.sale_team_id=%s and m.date >= %s and m.date <= %s
+                            m.user_id=%s and m.sale_team_id=%s and m.date >= %s and m.date <= %s
                 """, (user_id, team_id, frm_date, to_date,))
 #                 cr.execute("""select date,ref_no,partner_id,so_amount from mobile_ar_collection where state='pending' and user_id=%s and sale_team_id=%s and date >= %s and date <= %s
 #                 """, (user_id, team_id, frm_date, to_date,))
@@ -328,7 +328,7 @@ class cashier_approval(osv.osv):
                 cr.execute("""select m.date,a.number,m.partner_id,m.so_amount
                             from account_invoice as a,sale_order as s,mobile_ar_collection as m
                             where a.origin=s.name and s.tb_ref_no=m.so_ref and
-                            m.state='pending' and m.user_id=%s and m.sale_team_id=%s and m.date = %s  
+                            m.user_id=%s and m.sale_team_id=%s and m.date = %s  
                 """, (user_id, team_id, frm_date,))
 #                 cr.execute("""select date,ref_no,partner_id,so_amount from mobile_ar_collection where state='pending' and user_id=%s and sale_team_id=%s and date = %s 
 #                 """, (user_id, team_id, frm_date,))
