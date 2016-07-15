@@ -378,7 +378,9 @@ class sale_order(osv.osv):
             'currency_id': order.pricelist_id.currency_id.id,
             'comment': order.note,
             'payment_term': order.payment_term and order.payment_term.id or False,
-            'fiscal_position': order.fiscal_position.id or order.partner_invoice_id.property_account_position.id,
+            'payment_type': order.payment_type or False,
+           
+		   'fiscal_position': order.fiscal_position.id or order.partner_invoice_id.property_account_position.id,
             'date_invoice': context.get('date_invoice', False),
             'company_id': order.company_id.id,
             'user_id': order.user_id and order.user_id.id or False,
