@@ -11,11 +11,13 @@
 				</xpath>
 				<xpath expr="//button[@name='invoice_open']" position="replace">
 					<button name="finance_approve" states="draft" string="Finance Validate"
-						class="oe_highlight" type="object" groups="base.group_user"
+						class="oe_highlight" type="object" groups="account.group_account_manager"
 						sequence="3" />
 					<button name="invoice_open" states="fm_approve" string="Cashier Validate"
-						class="oe_highlight" groups="base.group_user" sequence="3" />
-					<button name="invoice_cancel" states="draft,proforma2,open,fm_approve"
+						class="oe_highlight"
+						groups="account_voucher_approval.group_account_cashier,account.group_account_manager"
+						sequence="3" />
+					<button  name="invoice_cancel"  states="draft,proforma2,fm_approve,open"
 						string="Cancel Invoice" groups="base.group_no_one" />
 				</xpath>
 				<xpath expr="//field[@name='state']" position="replace">
@@ -31,10 +33,27 @@
 						domain="[('company_id', '=', company_id),('type','not in',['view', 'consolidation'])]"
 						name="account_id" groups="account.group_account_user" />
 				</xpath>
-
-
 			</field>
 		</record>
+
+		<record id="inheirt_view_account_invoice_filter" model="ir.ui.view">
+			<field name="name">account.invoice.select</field>
+			<field name="model">account.invoice</field>
+			<field name="inherit_id" ref="account.view_account_invoice_filter" />
+			<field name="arch" type="xml">
+					<xpath expr="//search/filter[@name='draft']" position="after">
+						<filter name="finance_approve" string="Finance Approved"
+							domain="[('state','=','fm_approve')]" />
+						<filter name="cashier_approve" string="Cashier Approved"
+							domain="[('state','=','open')]" />
+					</xpath>
+					<xpath expr="//search/group/filter[@string='Status']"
+						position="after">
+						<filter string="Payment Type" context="{'group_by':'payment_type'}" />
+					</xpath>
+			</field>
+		</record>
+
 	</data>
 </openerp>
 						

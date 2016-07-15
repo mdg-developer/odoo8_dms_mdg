@@ -63,7 +63,9 @@
 						<field name="group" colspan="3" nolabel="1" />
 					</div>					
 				</xpath>
-				
+				<xpath expr="//field[@name='property_stock_account_output']" position="after">
+					<field name="analytic_account_id"/>								
+				</xpath>				
 				<xpath expr="//field[@name='ean13']" position="replace">
 					<field name="barcode_no"/>								
 				</xpath>

@@ -69,6 +69,8 @@ class product_template(osv.osv):
                  "Otherwise, this includes goods stored in any Stock Location "
                  "with 'internal' type."),
                 'uom_ratio':fields.char('UOM Ratio')
+                'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', ondelete="cascade"),
+				
                 }
      
     _defaults = {
@@ -79,3 +81,11 @@ class product_template(osv.osv):
                     ]
      
 product_template()
+class product_product(osv.osv):
+    _inherit = "product.product"
+    _description = "Product"
+    _columns = {   
+        
+        'analytic_account_id': fields.related('product_tmpl_id', 'analytic_account_id', type='many2one', relation='account.analytic.account', string="Analytic Account", readonly="1",
+                                              store=True),
+                }
