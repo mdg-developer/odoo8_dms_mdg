@@ -49,16 +49,20 @@ outlet_type()
 class res_partner(osv.osv):
 
     _inherit = 'res.partner'
-    
+    def _get_default_pricelist(self, cr, uid, ids, field_name, arg, context=None):
+        result = {}
+        for rec in self.browse(cr, uid, ids, context=context):
+            result[rec.id] = rec.property_product_pricelist.id
+        return result    
     def _sale_order_count_pending(self, cr, uid, ids, field_name, arg, context=None):
-        res ={} 
-        print 'Pending>>>',  ids    
+        res = {} 
+        print 'Pending>>>', ids    
         cr.execute("""select day from sale_order_configuration where customer_type='pending customer' order by id desc limit 1 """)
         day_number = cr.fetchall()
-        print 'day_number>>>',day_number
+        print 'day_number>>>', day_number
         if day_number:
             day = day_number[0][0]
-            print 'day>>>',day
+            print 'day>>>', day
             cr.execute("""select day from sale_order_configuration where customer_type='idle customer' order by id desc limit 1 """)
             largeday_number = cr.fetchall()
             if largeday_number:
@@ -66,57 +70,57 @@ class res_partner(osv.osv):
                 cr.execute("""select DATE_PART('day',CURRENT_TIMESTAMP- max(date_order)) from sale_order where partner_id= %s GROUP BY partner_id
                 HAVING COUNT(partner_id) > 1""", (ids[0],))
                 order_day_number = cr.fetchall()
-                print 'order_day_number>>>',order_day_number            
+                print 'order_day_number>>>', order_day_number            
                 if order_day_number:
                     order_day = order_day_number[0][0] 
-                    print 'order_day>>>',order_day
-                    print 'largeday>>>>>',largeday
+                    print 'order_day>>>', order_day
+                    print 'largeday>>>>>', largeday
                     print day <= order_day
                     print largeday >= order_day
                     if day <= order_day and largeday > order_day:
                         str_day = str(day) + ' days'                 
                         print 'condition>>>>>>>>>>'
-                        cr.execute("""update res_partner set pending=%s where id=%s""",(str_day,ids[0],))
+                        cr.execute("""update res_partner set pending=%s where id=%s""", (str_day, ids[0],))
                     else:
-                        #str_day = ''
+                        # str_day = ''
                         str_day = None                         
-                        cr.execute("""update res_partner set pending=NULL where id=%s""",(ids[0],))
-                    print 'update>>pending',  str_day                     
+                        cr.execute("""update res_partner set pending=NULL where id=%s""", (ids[0],))
+                    print 'update>>pending', str_day                     
                     for partner in self.browse(cr, uid, ids, context):
-                        print 'str_day>>>',str_day                            
+                        print 'str_day>>>', str_day                            
                         res[partner.id] = str_day
                         
         return res
     def _sale_order_count_idle(self, cr, uid, ids, field_name, arg, context=None):
-        res ={} 
-        print 'Idel>>>',  ids       
+        res = {} 
+        print 'Idel>>>', ids       
         cr.execute("""select day from sale_order_configuration where customer_type='idle customer' order by id desc limit 1 """)
         largeday_number = cr.fetchall()
         if largeday_number:
             largeday = largeday_number[0][0]    
             cr.execute("""select DATE_PART('day',CURRENT_TIMESTAMP- max(date_order)) from sale_order where partner_id= %s """, (ids[0],))
             order_day_number = cr.fetchall()
-            print 'order_day_number>>>',order_day_number            
+            print 'order_day_number>>>', order_day_number            
             if order_day_number:
                 order_day = order_day_number[0][0] 
-                print 'order_day>>>',order_day
+                print 'order_day>>>', order_day
                     
                 if largeday <= order_day:
                     str_day = str(largeday) + ' days'                   
-                    cr.execute("""update res_partner set idle=%s where id=%s""",(str_day,ids[0],))
+                    cr.execute("""update res_partner set idle=%s where id=%s""", (str_day, ids[0],))
                 else:
-                    #str_day = ''
+                    # str_day = ''
                     str_day = None 
-                    cr.execute("""update res_partner set idle=NULL where id=%s""",(ids[0],))
-                print 'update>>idle',  str_day                      
+                    cr.execute("""update res_partner set idle=NULL where id=%s""", (ids[0],))
+                print 'update>>idle', str_day                      
                 for partner in self.browse(cr, uid, ids, context):
-                    print 'str_day>>>',str_day                            
+                    print 'str_day>>>', str_day                            
                     res[partner.id] = str_day
                         
         return res  
     def _sale_order_count_week(self, cr, uid, ids, field_name, arg, context=None):
         
-        res ={} 
+        res = {} 
                
         cr.execute("""select DATE_PART('day',max(date_order)- min(date_order)) from sale_order where partner_id= %s """, (ids[0],))
         day_number = cr.fetchall()
@@ -131,7 +135,7 @@ class res_partner(osv.osv):
                 
                 
                 if day > 6.0:
-                    week_num= day / 7
+                    week_num = day / 7
                     
                 else:
                     week_num = 1                   
@@ -140,7 +144,7 @@ class res_partner(osv.osv):
                     if so_count > 0:
                         for partner in self.browse(cr, uid, ids, context):
                             
-                            res[partner.id] = round(so_count / week_num,2)
+                            res[partner.id] = round(so_count / week_num, 2)
                         
         return res                               
     _columns = {  
@@ -151,22 +155,23 @@ class res_partner(osv.osv):
                 'old_code': fields.char('Old Code'),
                 'sales_channel':fields.many2one('sale.channel', 'Sale Channels'),
                 'address':fields.char('Address'),
-                'branch_id':fields.many2one('res.branch', 'Branch'),
+                'branch_id':fields.many2one('sale.branch', 'Branch'),
                 'demarcation_id': fields.many2one('sale.demarcation', 'Demarcation'),
                 'mobile_customer': fields.boolean('Pending Customer', help="Check this box if this contact is a mobile customer. If it's not checked, purchase people will not see it when encoding a purchase order."),
-                #'sale_order_count_by_week': fields.function(sale_order_count_by_week, string='# of Sales Order by week', type='integer'),
+                # 'sale_order_count_by_week': fields.function(sale_order_count_by_week, string='# of Sales Order by week', type='integer'),
 #                 'pending_customer': fields.function(_sale_order_count_pending, string='Customer Type', type='char',readonly=True, store=True),               
 #                 'idle_customer': fields.function(_sale_order_count_idle, string='Idle Customer', type='char',readonly=True, store=True),
-                'pending': fields.char('Pending Customer',required=False),
-                'idle': fields.char('Idle Customer',required=False),
-                'pending_customer': fields.function(_sale_order_count_pending, string='Customer Type Function', type='char'),               
+                'pending': fields.char('Pending Customer', required=False),
+                'idle': fields.char('Idle Customer', required=False),
+                'pending_customer': fields.function(_sale_order_count_pending, string='Customer Type Function', type='char'),
                 'idle_customer': fields.function(_sale_order_count_idle, string='Idle Customer Function', type='char'),
                 'unit': fields.char('Unit', required=False),
-                #'avg_sale_order_ids': fields.one2many('sale.order','partner_id','Sales Order'),
+                # 'avg_sale_order_ids': fields.one2many('sale.order','partner_id','Sales Order'),
+                'pricelist_id':fields.function(_get_default_pricelist, type='many2one', relation='product.pricelist', string='Price List', store=True),
     } 
     _defaults = {
         'is_company': True,
-        'pending' : None,          
+        'pending' : None,
         'idle' : None,
     }
     _sql_constraints = [        
@@ -256,16 +261,14 @@ class res_partner(osv.osv):
                      A.phone,A.township,A.mobile,A.email,A.company_id,A.customer, 
                      A.customer_code,A.mobile_customer,A.shop_name ,
                      A.address,A.territory,A.village,A.branch_code,
-                     A.zip,A.state_name,A.partner_latitude,A.partner_longitude,A.sale_plan_day_id,A.image_medium,A.credit_limit
-                     ,A.credit_allow,A.branch_id,A.sales_channel  from (
+                     A.zip,A.state_name,A.partner_latitude,A.partner_longitude,A.sale_plan_day_id,A.image_medium,A.credit_limit,A.credit_allow  from (
 
                      select RP.id,RP.name,'' as image,RP.is_company,RPS.sale_plan_day_id,
                      '' as image_small,RP.street,RP.street2,RC.name as city,RP.website,
                      RP.phone,RT.name as township,RP.mobile,RP.email,RP.company_id,RP.customer, 
                      RP.customer_code,RP.mobile_customer,OT.name as shop_name,RP.address,RP.territory,
                      RP.village,RP.branch_code,RP.zip ,RP.partner_latitude,RP.partner_longitude,RS.name as state_name,
-                     substring(replace(cast(RP.image_medium as text),'/',''),1,5) as image_medium,RP.credit_limit,RP.credit_allow,
-                     RP.branch_id,RP.sales_channel
+                     substring(replace(cast(RP.image_medium as text),'/',''),1,5) as image_medium,RP.credit_limit,RP.credit_allow
                      from sale_plan_day SPD ,outlettype_outlettype OT,
                                             res_partner_sale_plan_day_rel RPS , res_partner RP ,res_country_state RS, res_city RC,res_township RT
                                             where SPD.id = RPS.sale_plan_day_id 
@@ -290,16 +293,14 @@ class res_partner(osv.osv):
                      A.phone,A.township,A.mobile,A.email,A.company_id,A.customer, 
                      A.customer_code,A.mobile_customer,A.shop_name ,
                      A.address,A.territory,A.village,A.branch_code,
-                     A.zip,A.state_name,A.partner_latitude,A.partner_longitude,A.sale_plan_trip_id,A.image_medium,A.credit_limit,A.credit_allow
-                     ,A.branch_id,A.sales_channel
-                     from (
+                     A.zip,A.state_name,A.partner_latitude,A.partner_longitude,A.sale_plan_trip_id,A.image_medium,A.credit_limit,A.credit_allow   from (
+
                      select RP.id,RP.name,'' as image,RP.is_company,
                      '' as image_small,RP.street,RP.street2,RC.name as city,RP.website,
                      RP.phone,RT.name as township,RP.mobile,RP.email,RP.company_id,RP.customer, 
                      RP.customer_code,RP.mobile_customer,OT.name as shop_name ,RP.address,RP.territory ,RPT.sale_plan_trip_id,
                      RP.village,RP.branch_code,RP.zip ,RP.partner_latitude,RP.partner_longitude,RS.name as state_name
                       ,substring(replace(cast(RP.image_medium as text),'/',''),1,5) as image_medium ,RP.credit_limit,RP.credit_allow
-                      ,RP.branch_id,RP.sales_channel
                      from sale_plan_trip SPT , res_partner_sale_plan_trip_rel RPT , res_partner RP ,res_country_state RS ,
                      res_city RC, res_township RT,outlettype_outlettype OT      
                      where SPT.id = RPT.sale_plan_trip_id 
