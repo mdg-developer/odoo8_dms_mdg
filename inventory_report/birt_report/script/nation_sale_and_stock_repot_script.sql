@@ -120,7 +120,8 @@ $BODY$
 	            END IF;	
 	            	
 		    IF category_id IS NOT NULL THEN
-			sql := sql || ' and t.categ_id = ''' || category_id || ''' ';
+			sql := sql || ' and (c.id = ''' || category_id || ''' or c.parent_id =''' || category_id ||''') ';
+			--sql := sql || ' and t.categ_id = ''' || category_id || ''' ';
 		    END IF;
 		    
 		    IF warehouse_id IS NOT NULL THEN
