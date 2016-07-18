@@ -92,7 +92,9 @@
 					<field name="sale_plan_day_id" />
 					<field name="sale_plan_trip_id" />
 				</xpath>
-
+				<xpath expr="//tree[@string='Sales Order Lines']/field[@name='price_unit']" position="after">
+					<field name="analytic_account_id"/>
+				</xpath>
 			</field>
 		</record>
 
