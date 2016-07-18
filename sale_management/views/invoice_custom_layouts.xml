@@ -69,7 +69,7 @@
 		<template id="invoice_custom_layout_footer">
 			<div class="footer">
 				<div class="text-center" style="border-top: 1pt solid black;font-size:10pt;">
-					<ul t-if="not company.custom_footer" class="list-inline">
+				<!-- 	<ul t-if="not company.custom_footer" class="list-inline">
 						<li t-if="company.phone">
 							Phone:
 							<span t-field="company.phone" />
@@ -96,7 +96,7 @@
 
 					<t t-if="company.custom_footer">
 						<span t-raw="company.rml_footer" />
-					</t>
+					</t> -->
 
 					<ul class="list-inline">
 						<li>Page:</li>
