@@ -78,13 +78,8 @@
         </scalar-parameter>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="262"
- extends="report_library.Data Source">
-            <property name="odaDriverClass">org.postgresql.Driver</property>
-            <property name="odaURL">jdbc:postgresql://localhost:5432/MDG</property>
-            <property name="odaUser">openerp</property>
-            <encrypted-property name="odaPassword" encryptionID="base64">b3BlbnBncHdk</encrypted-property>
-        </oda-data-source>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="269"
+ extends="report_library.Data Source"/>
     </data-sources>
     <data-sets>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="sale_product" id="164">
@@ -194,7 +189,7 @@
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select pp.name_template as product,sum(p.product_uom_qty) qty,sum(p.amount) as amount from cashier_approval c,sales_denomination d,sales_denomination_product_line p,product_product pp
-where c.user_id=d.user_id and c.sale_team_id=d.sale_team_id and d.id=p.denomination_product_ids and p.product_id=pp.id
+where c.user_id=d.user_id and c.sale_team_id=d.sale_team_id and d.id=p.denomination_product_ids and p.product_id=pp.id and c.date=d.date::date
 and c.date>=? and c.to_date<=? and c.user_id=? and c.sale_team_id=? 
 group by pp.name_template]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
