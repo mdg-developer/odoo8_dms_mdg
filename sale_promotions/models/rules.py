@@ -1858,7 +1858,7 @@ class PromotionsRulesActions(osv.Model):
         final_code = product_codes[len(product_codes) - 1]
         product_x2_code_id = product_obj.search(cursor, user,
                                      [('default_code', '=', eval(final_code))], context=context)         
-        product_codes.remove(final_code)
+#         product_codes.remove(final_code)
         # To add promotion uom quantity to product_product qtys array
         x = int(len(product_codes) - 1)
         y = int(len(product_codes) / 2)
@@ -1969,7 +1969,7 @@ class PromotionsRulesActions(osv.Model):
         final_code = product_codes[len(product_codes) - 1]
         product_x2_code_id = product_obj.search(cursor, user,
                                     [('default_code', '=', eval(final_code))], context=context)
-        product_codes.remove(final_code)
+#         product_codes.remove(final_code)
 
         qty_x, qty_y = [eval(arg) \
                                             for arg in action.arguments.split(":")]
