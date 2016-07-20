@@ -554,6 +554,7 @@ class sale_order_line(osv.osv):
                        'title': _('Configuration Error!'),
                        'message' : warning_msgs
                     }
-        result['analytic_account_id'] =product_obj.analytic_account_id.id
+        
+        result['analytic_account_id'] =product_obj.product_tmpl_id.analytic_account_id.id
         
         return {'value': result, 'domain': domain, 'warning': warning}
