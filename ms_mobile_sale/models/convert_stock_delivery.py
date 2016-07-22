@@ -28,19 +28,15 @@ class mobile_stock_delivery(osv.osv):
     
     def product_qty_in_stock(self, cr, uid, warehouse_id , context=None, **kwargs):
             cr.execute("""
-                select product_id,qty_on_hand + qty as qty_on_hand,main_group,name_template from (
-                select sm.product_id  ,sum(sm.product_uos_qty) as qty_on_hand ,0 as qty, pt.main_group, pp.name_template
-                                      from stock_move sm , stock_picking sp , stock_picking_type spt,product_template pt, product_product pp
-                                      where sm.picking_id = sp.id
-                          and sm.state = 'done'                     
-                          and spt.id = sm.picking_type_id
-                          and sp.picking_type_id = sm.picking_type_id
-                          and spt.code = 'internal'
-                          and sm.location_dest_id = %s
-                          and sm.create_date::date = now()::date
-                          and sm.product_id = pp.id
-                          and pp.product_tmpl_id = pt.id
-                          group by product_id, pt.main_group, pp.name_template)A
+select product.id as product_id,sum(qty) as qty_on_hand,product_temp.main_group as main_group,product.name_template as name_template 
+from 
+stock_quant quant, product_product product,
+product_template product_temp
+where quant.location_id = %s
+and quant.product_id = product.id
+and product.product_tmpl_id = product_temp.id
+and product.active = true
+ group by quant.product_id, main_group,name_template,product.id  order by name_template
                 """, (warehouse_id,))
     #         cr.execute("""
     #                   select product_id,qty_on_hand + qty as qty_on_hand from (
