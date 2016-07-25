@@ -1234,7 +1234,7 @@ class mobile_sale_order(osv.osv):
         return datas    
     
 	def get_product_qty_in_hand(self, cr, uid, warehouse_id , context=None, **kwargs):
-        cr.execute("""
+         cr.execute("""
                select product_id,qty_on_hand + qty as qty_on_hand,main_group,name_template from (
                 select sm.product_id  ,sum(sm.product_uos_qty) as qty_on_hand ,0 as qty, pt.main_group, pp.name_template
                                       from stock_move sm , stock_picking sp , stock_picking_type spt,product_template pt, product_product pp

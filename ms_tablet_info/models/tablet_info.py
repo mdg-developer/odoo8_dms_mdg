@@ -9,6 +9,7 @@ class tablet_information(osv.osv):
                 'type': fields.char('Type', required=True),
                 'model': fields.char('Model', required=True),
                 'mac_address': fields.char('Tablet ID', required=True),
+                'token':fields.char("FCM Token", readonly=True),
                 'date': fields.date('Date', required=True),
                 'note': fields.text('Description'),
                 'sale_team_id':fields.many2one('crm.case.section', 'Sale Team', required=True),
