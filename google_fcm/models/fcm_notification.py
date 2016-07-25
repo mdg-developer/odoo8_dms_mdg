@@ -58,6 +58,7 @@ class fcm_notification(osv.osv):
                 #result=push_service.notify_topic_subscribers(topic_name=sale_team.name, message_body=message, message_title= msg_title, tag=msg_tag)
                 
             result = push_service.notify_multiple_devices(registration_ids=registration_ids,  message_body=message, message_title= msg_title, tag=msg_tag)
+            print "registiration:", registration_ids
             print result;
             self.write(cr, uid, ids, {'state': 'send'}, context=context)
         except Exception, e:
