@@ -1231,10 +1231,10 @@ class mobile_sale_order(osv.osv):
     def get_promo_sale_channel(self, cr, uid , context=None):        
         cr.execute('''select promo_id,sale_channel_id from promo_sale_channel_rel''')
         datas = cr.fetchall()        
-        return datas
+        return datas    
     
-    def get_product_qty_in_hand(self, cr, uid, warehouse_id , context=None, **kwargs):
-        cr.execute("""
+	def get_product_qty_in_hand(self, cr, uid, warehouse_id , context=None, **kwargs):
+         cr.execute("""
                select product_id,qty_on_hand + qty as qty_on_hand,main_group,name_template from (
                 select sm.product_id  ,sum(sm.product_uos_qty) as qty_on_hand ,0 as qty, pt.main_group, pp.name_template
                                       from stock_move sm , stock_picking sp , stock_picking_type spt,product_template pt, product_product pp
@@ -1243,6 +1243,7 @@ class mobile_sale_order(osv.osv):
                           and spt.id = sm.picking_type_id
                           and sp.picking_type_id = sm.picking_type_id
                           and spt.code = 'internal'
+                          and pp.active = true
                           and sm.location_dest_id = %s
                           and sm.date::date = now()::date
                           and sm.product_id = pp.id
@@ -1251,7 +1252,7 @@ class mobile_sale_order(osv.osv):
                 """, (warehouse_id,))
         datas = cr.fetchall()
         return datas
-                
+	
 mobile_sale_order()
 
 class mobile_sale_order_line(osv.osv):

@@ -23,6 +23,7 @@ class stock_delivery(osv.osv):
     
     def product_qty_in_stock(self, cr, uid, warehouse_id , context=None, **kwargs):
         cr.execute("""
+<<<<<<< HEAD
                     select product_temp.id as product_id,sum(qty) as qty_on_hand,product_temp.main_group as main_group,product.name_template as name_template 
 from 
 stock_quant quant, product_product product,
@@ -34,6 +35,17 @@ and product.active = true
  group by quant.product_id, main_group,name_template,product_temp.id  order by name_template
 
                                 """, (warehouse_id,))
+=======
+                    select product_temp.id as product_id,sum(qty) as qty_on_hand,product_temp.main_group as main_group,
+					product.name_template as name_template ,product_temp.list_price as price 
+					from stock_quant quant, product_product product,product_template product_temp
+					where quant.location_id = %s
+					and quant.product_id = product.id
+					and product.product_tmpl_id = product_temp.id
+					and product.active = true
+					group by quant.product_id, main_group,name_template,product_temp.id  order by name_template
+                    """, (warehouse_id,))
+>>>>>>> 6a59616fd6c1f256537cbd64a7db82b003884bf3
         datas = cr.fetchall()
         return datas
     

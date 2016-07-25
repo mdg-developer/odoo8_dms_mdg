@@ -67,6 +67,7 @@
 							</group>
 							<group>
 								<field name="mac_address" />
+								<field name="token" />
 								<field name="date" />
 								<field name="storage_day" />
 								<field name="hotline" />

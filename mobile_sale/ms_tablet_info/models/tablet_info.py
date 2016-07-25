@@ -11,6 +11,7 @@ class tablet_information(osv.osv):
                 'mac_address': fields.char('Tablet ID', required=True),
                 'date': fields.date('Date', required=True),
                 'note': fields.text('Description'),
+                'token':fields.char("FCM Token"),
                 'sale_team_id':fields.many2one('crm.case.section', 'Sale Team', required=True),
                 'storage_day': fields.integer('Data Storage', size=4, required=True, help="Help"),
                 'hotline': fields.char('Hotline'),
@@ -30,6 +31,9 @@ class tablet_information(osv.osv):
         except Exception, e:
             print 'False check device Id Error >>>>',e
             return False
+     
+    def updateTabletToken(self,cr,uid,deviceid,tokenId,context=None):
+       
             
     def name_get(self, cr, user, ids, context=None):
         if context is None:
