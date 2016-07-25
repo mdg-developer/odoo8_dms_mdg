@@ -43,7 +43,6 @@
 					<field name="name" />
 					<field name="model" />
 					<field name="mac_address" />
-					<field name="token" />
 					<field name="sale_team_id" />
 					<field name="date" />
 					<field name="hotline" />

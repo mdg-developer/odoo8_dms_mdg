@@ -14,7 +14,8 @@ class fcm_notification(osv.osv):
         'sales_team_id': fields.many2many('crm.case.section', string='Sales Team'),  # table name is crm_case_section_fcm_notification_rel
         'state': fields.selection([
             ('draft', 'Not Send'),
-            ('send', 'Send')         
+            ('send', 'Send'),        
+            ('failed', 'Failed'),       
         ], 'State', readonly=True),
     }
     
@@ -45,18 +46,21 @@ class fcm_notification(osv.osv):
             data = cr.fetchall()
             if data:
                 result = data
-        for data in result:
-            registration_ids=[]
-            sale_team = crm_obj.browse(cr, uid, data, context)
-            tablet_ids = tablet_obj.search(cr,uid,[('sale_team_id','=',sale_team.id)])
-            for tablet_id in tablet_ids:
-                tablet_data = tablet_obj.browse(cr,uid,tablet_id,context)
-                if tablet_data.token:
-                    registration_ids.append(tablet_data.token);
-            #result=push_service.notify_topic_subscribers(topic_name=sale_team.name, message_body=message, message_title= msg_title, tag=msg_tag)
-            push_service.notify_multiple_devices(registration_ids=registration_ids,  message_body=message, message_title= msg_title, tag=msg_tag)
-            print result;
-        self.write(cr, uid, ids, {'state': 'send'}, context=context)
+        try:
+            for data in result:
+                registration_ids=[]
+                sale_team = crm_obj.browse(cr, uid, data, context)
+                tablet_ids = tablet_obj.search(cr,uid,[('sale_team_id','=',sale_team.id)])
+                for tablet_id in tablet_ids:
+                    tablet_data = tablet_obj.browse(cr,uid,tablet_id,context)
+                    if tablet_data.token:
+                        registration_ids.append(tablet_data.token);
+                #result=push_service.notify_topic_subscribers(topic_name=sale_team.name, message_body=message, message_title= msg_title, tag=msg_tag)
+                result = push_service.notify_multiple_devices(registration_ids=registration_ids,  message_body=message, message_title= msg_title, tag=msg_tag)
+                print result;
+            self.write(cr, uid, ids, {'state': 'send'}, context=context)
+        except Exception, e:
+            self.write(cr, uid, ids, {'state': 'failed'},context=context)
         return True   
     
 fcm_notification()   
