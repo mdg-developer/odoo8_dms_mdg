@@ -203,14 +203,6 @@ class mobile_sale_order(osv.osv):
             
             if product_trans:
                 for pt in product_trans:
-#                     print 'Sale Man Id',so['user_id']
-#                     print 'Sale Void', so['void_flag']
-#                     cursor.execute('select id From res_users where partner_id  = %s ',(so['user_id'],))
-#                     data = cursor.fetchall()
-#                     if data:
-#                         saleManId = data[0][0]
-#                     else:
-#                         saleManId = None
                     mso_result = {
                         'transaction_id':pt['transaction_id'],
                         'customer_id':pt['customer_id'],
@@ -247,7 +239,6 @@ class mobile_sale_order(osv.osv):
         print 'vals', vals
         customer_visit_obj = self.pool.get('customer.visit')
         str = "{" + vals + "}"
-#             str = str.replace(":''",":'")#change Order_id
         str = str.replace("'',", "',")  # null
         str = str.replace(":',", ":'',")  # due to order_id
         str = str.replace("}{", "}|{")
@@ -263,9 +254,16 @@ class mobile_sale_order(osv.osv):
             customer_visit.append(r)  
         if customer_visit:
             for vs in customer_visit:
+                
+                cursor.execute('select id From res_partner where customer_code  = %s ', (vs['customer_code'],))
+                data = cursor.fetchall()
+                if data:
+                    partner_id = data[0][0]
+                else:
+                    partner_id = None
                 visit_result = {
                     'customer_code':vs['customer_code'],
-                    'customer_id':vs['customer_id'],
+                    'customer_id':partner_id,
                     'sale_plan_day_id':vs['sale_plan_day_id'],
                     'sale_plan_trip_id':vs['sale_plan_trip_id'] ,
                     'sale_plan_name':vs['sale_plan_name'],
@@ -279,6 +277,7 @@ class mobile_sale_order(osv.osv):
                     'visit_reason':vs['visit_reason'],
                     'latitude':vs['latitude'],
                     'longitude':vs['longitude'],
+                    'image':vs['image'],
                 }
                 customer_visit_obj.create(cursor, user, visit_result, context=context)
         return True
@@ -1130,7 +1129,7 @@ class mobile_sale_order(osv.osv):
         return True
     
     def create_sale_rental(self, cursor, user, vals, context=None):
-         try:
+        try:
             rental_obj = self.pool.get('sales.rental')
             str = "{" + vals + "}"
             str = str.replace("'',", "',")  # null
@@ -1173,7 +1172,7 @@ class mobile_sale_order(osv.osv):
                     }
                     rental_obj.create(cursor, user, rental_result, context=context)
             return True
-         except Exception, e:
+        except Exception, e:
             print 'False'
             return False
     def get_credit_notes(self, cr, uid, sale_team_id , context=None, **kwargs):
@@ -1223,30 +1222,22 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()        
         return datas
         
-    def get_promo_sale_channel(self, cr, uid , context=None):        
-        cr.execute('''select promo_id,sale_channel_id from promo_sale_channel_rel''')
+    def get_payment_term(self, cr, uid , context=None):        
+        cr.execute('''select id,name from account_payment_term where active = true''')
         datas = cr.fetchall()        
         return datas
     
-    def get_product_qty_in_hand(self, cr, uid, warehouse_id , context=None, **kwargs):
-        cr.execute("""
-               select product_id,qty_on_hand + qty as qty_on_hand,main_group,name_template from (
-                select sm.product_id  ,sum(sm.product_uos_qty) as qty_on_hand ,0 as qty, pt.main_group, pp.name_template
-                                      from stock_move sm , stock_picking sp , stock_picking_type spt,product_template pt, product_product pp
-                                      where sm.picking_id = sp.id
-                          and sm.state = 'done'                     
-                          and spt.id = sm.picking_type_id
-                          and sp.picking_type_id = sm.picking_type_id
-                          and spt.code = 'internal'
-                          and sm.location_dest_id = %s
-                          and sm.date::date = now()::date
-                          and sm.product_id = pp.id
-                          and pp.product_tmpl_id = pt.id
-                          group by product_id, pt.main_group, pp.name_template)A
-                """, (warehouse_id,))
+    def get_promo_sale_channel(self, cr, uid , context=None):        
+        cr.execute('''select promo_id,sale_channel_id from promo_sale_channel_rel''')
         datas = cr.fetchall()
         return datas
-                
+    
+    def get_sale_team_channel(self, cr, uid, sale_team_id , context=None, **kwargs):    
+        cr.execute("""select sale_team_id,sale_channel_id from sale_team_channel_rel
+                        where sale_team_id = %s """, (sale_team_id,))                
+        datas =cr.fetchall()
+        return datas
+        
 mobile_sale_order()
 
 class mobile_sale_order_line(osv.osv):
