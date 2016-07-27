@@ -271,22 +271,24 @@ class PromotionsRules(osv.Model):
             elif attribute == 'product_product':
                 svalue = eval(value)
                 if comparator == 'in' or comparator == '==':
-                    for order_line in order.order_line:        
-                        if order_line.product_id.default_code == svalue:
-                            return True  
+                    for order_line in order.order_line:    
+                        if order_line.sale_foc==False:    
+                            if order_line.product_id.default_code == svalue:
+                                return True  
             # Check attribute is product_product category           
             elif attribute == 'product_cat':
                 svalue = eval(value)
                 if comparator == 'in' or comparator == '==':
                     for order_line in order.order_line:
-                        cat_name = order_line.product_id.categ_id.name
-                        category_name1 = str(cat_name)
-                        cat_value1 = str(svalue)
-                        category_name = category_name1.strip() 
-                        cat_value = cat_value1.strip() 
-                       
-                        if category_name == cat_value:
-                            return True  
+                        if order_line.sale_foc==False:
+                            cat_name = order_line.product_id.categ_id.name
+                            category_name1 = str(cat_name)
+                            cat_value1 = str(svalue)
+                            category_name = category_name1.strip() 
+                            cat_value = cat_value1.strip() 
+                           
+                            if category_name == cat_value:
+                                return True  
             # Check attribute is product_product quantity  
             # MMK
             elif attribute == 'prod_qty':
@@ -297,8 +299,9 @@ class PromotionsRules(osv.Model):
                 LOGGER.info("Condition Qty : %s ", product_qty)
                 con_qty = 0
                 for order_line in order.order_line:   
-                    if order_line.product_id.default_code == product_code:
-                        con_qty += order_line.product_uom_qty
+                    if order_line.sale_foc == False:
+                        if order_line.product_id.default_code == product_code:
+                            con_qty += order_line.product_uom_qty
                 LOGGER.info("Order Line qty : %s ", con_qty)
                 if comparator == '==':
                     if con_qty == product_qty:
@@ -339,9 +342,9 @@ class PromotionsRules(osv.Model):
                         cat_value1 = str(category_code)
                         category_name = category_name1.strip() 
                         cat_value = cat_value1.strip() 
-                        
-                        if category_name == cat_value:
-                            tota_qty += order_line.product_uom_qty
+                        if order_line.sale_foc == False:
+                            if category_name == cat_value:
+                                tota_qty += order_line.product_uom_qty
                 if comparator == '==':
                     if tota_qty == product_qty:
                         return True
@@ -366,8 +369,9 @@ class PromotionsRules(osv.Model):
                 product_code = eval(svalue[0])
                 sub_total = eval(svalue[1])
                 for order_line in order.order_line:   
-                    if order_line.product_id.default_code == product_code:
-                        order_subtotal = (order_line.product_uom_qty * order_line.price_unit)
+                    if order_line.sale_foc == False:
+                        if order_line.product_id.default_code == product_code:
+                            order_subtotal = (order_line.product_uom_qty * order_line.price_unit)
                         
                         if comparator == '==':
                             if order_subtotal == sub_total:
@@ -398,10 +402,10 @@ class PromotionsRules(osv.Model):
                 product_qty = eval(svalue[1])
                 qtys = 0.0
                 for order_line in order.order_line:  
-                    for p_code in product_code: 
-                        
-                        if order_line.product_id.default_code == eval(p_code):
-                            qtys += order_line.product_uom_qty
+                    if order_line.sale_foc == False:
+                        for p_code in product_code: 
+                            if order_line.product_id.default_code == eval(p_code):
+                                qtys += order_line.product_uom_qty
  
                 if comparator == '==':
                     if qtys == product_qty:
@@ -433,12 +437,13 @@ class PromotionsRules(osv.Model):
                 uom_qty = uom_qtys.split(";")
                 qtys = 0.0
                 for order_line in order.order_line:  
-                    for p_code in product_code: 
-                        if order_line.product_id.default_code == eval(p_code):
-                            LOGGER.info("Product Code is Same")
-                            product_id_index = product_code.index(p_code)
-                            product_qty = uom_qty[product_id_index]
-                            qtys += int(order_line.product_uom_qty / int(product_qty))
+                    if order_line.sale_foc == False:
+                        for p_code in product_code: 
+                            if order_line.product_id.default_code == eval(p_code):
+                                LOGGER.info("Product Code is Same")
+                                product_id_index = product_code.index(p_code)
+                                product_qty = uom_qty[product_id_index]
+                                qtys += int(order_line.product_uom_qty / int(product_qty))
                 LOGGER.info("Total Quantity >>> %s ", qtys)
                 if comparator == '==':
                     if qtys == quantity:
@@ -1186,7 +1191,7 @@ class PromotionsRulesActions(osv.Model):
                               'arguments':"0.00",
                               }
                    }          
-#kzo
+# kzo
         if action_type in ['foc_any_product', ] :
             return{
                    'value' : {
