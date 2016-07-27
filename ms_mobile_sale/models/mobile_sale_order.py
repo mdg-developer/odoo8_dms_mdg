@@ -1234,12 +1234,12 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()        
         return datas    
     
-	def get_sale_team_channel(self, cr, uid, sale_team_id , context=None, **kwargs):    
+    def get_sale_team_channel(self, cr, uid, sale_team_id , context=None, **kwargs):    
         cr.execute("""select sale_team_id,sale_channel_id from sale_team_channel_rel
                         where sale_team_id = %s """, (sale_team_id,))                
         datas =cr.fetchall()
         return datas
-	
+
 mobile_sale_order()
 
 class mobile_sale_order_line(osv.osv):
