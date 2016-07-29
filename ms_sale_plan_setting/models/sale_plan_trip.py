@@ -4,7 +4,7 @@ class sale_plan_for_trip_setup(osv.osv):
     _name = 'sale.plan.trip'
     _columns = {
                 'sale_team':fields.many2one('crm.case.section', 'Sale Team', required=True),
-                'principal':fields.many2one('product.principal', 'Principal', required=True),
+                'principal':fields.many2one('product.principal', 'Principal'),
                  'day_customer_ids':fields.many2many('res.partner', 'res_partner_sale_plan_trip_rel', id1='sale_plan_trip_id', id2='partner_id', string='Day Customer'),
                  'trip_customer_ids':fields.many2many('res.partner', 'res_partner_sale_plan_trip_rel', id1='sale_plan_trip_id', id2='partner_id', string='Trip Customer'),
                 'date':fields.date('Date', required=True),
