@@ -1,3 +1,4 @@
 2015-05-26 Nway Thazin aung (Change the customer Import Header fields)
 2016-03-09 MMK (Change the product import)
 2016-03-10 MMK (Change the customer import)
+2016-07-29 MMK (Change the sale plan import for trip and day)
