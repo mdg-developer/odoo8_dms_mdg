@@ -1354,8 +1354,7 @@ class PromotionsRulesActions(osv.Model):
                               'arguments':"0.00",
                               }
                    }
-        
-		if action_type in ['prod_fix_amt_disc_subtotal', ] :
+        if action_type in ['prod_fix_amt_disc_subtotal', ] :
             return{
                    'value' : {
                               'product_code':"'product_code'",
