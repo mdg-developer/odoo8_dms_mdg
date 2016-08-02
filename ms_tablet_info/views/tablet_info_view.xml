@@ -66,6 +66,7 @@
 
 							</group>
 							<group>
+							    <field name="token" />
 								<field name="mac_address" />
 								<field name="date" />
 								<field name="storage_day" />
