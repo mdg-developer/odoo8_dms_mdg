@@ -684,15 +684,29 @@ class mobile_sale_order(osv.osv):
             return res['res_id']
     # kzo Edit
     def get_products_by_sale_team(self, cr, uid, section_id , context=None, **kwargs):
-        cr.execute('''select  pp.product_tmpl_id,pt.list_price , pt.description,pt.categ_id,pc.name as categ_name,pp.default_code, 
-                         pt.name,substring(replace(cast(pt.image_small as text),'/',''),1,5) as image_small,pt.main_group,pt.uom_ratio
+        cr.execute('''
+with product_qty as (
+select product_temp.id as product_id,sum(qty) as qty_on_hand,location_id
+from  stock_quant quant, product_product product, product_template product_temp where
+						 quant.product_id = product.id
+						and product.product_tmpl_id = product_temp.id
+						and product.active = true
+						 group by product_temp.id, location_id  
+						 )
+select  distinct pp.product_tmpl_id,pt.list_price , pt.description,pt.categ_id,pc.name as categ_name,pp.default_code, 
+                         pt.name,substring(replace(cast(pt.image_small as text),'/',''),1,5) as image_small,pt.main_group,pt.uom_ratio, pqty.qty_on_hand 
                         from crm_case_section_product_product_rel crm_real ,
-                        crm_case_section ccs ,product_template pt, product_product pp , product_category pc
+                        crm_case_section ccs ,product_template pt, product_product pp , 
+                        product_category pc, product_qty pqty
                         where pp.id = crm_real.product_product_id
                         and pt.id = pp.product_tmpl_id
                         and ccs.id = crm_real.crm_case_section_id
-                        and pc.id = pt.categ_id           
-                        and ccs.id = %s ''', (section_id,))
+                        and pc.id = pt.categ_id   
+                        and pp.product_tmpl_id = pqty.product_id  
+                        and ccs.location_id = pqty.location_id 
+                         and ccs.id = %s 
+			 and pqty.qty_on_hand>0
+                         order by description''', (section_id,))
         datas = cr.fetchall()
         return datas
     
