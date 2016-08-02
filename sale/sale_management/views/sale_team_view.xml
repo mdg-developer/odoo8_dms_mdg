@@ -37,8 +37,8 @@
 				</field>
 				<field name="location_id" position="after">
 					<field name="analytic_account_id" />
-
 					<field name="van_id" />
+    				<field name="sale_channel_id" widget="many2many_tags"/>
 				</field>
 
 

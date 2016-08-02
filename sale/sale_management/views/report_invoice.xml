@@ -127,7 +127,12 @@
 						<table class="table"
 							style="border:solid;border-color:#ffffff;margin-bottom:-1pt;margin-top:-20pt;">
 							<tr>
-								<td></td>
+								<td align="left">
+									<t t-if="o.payment_term.note">
+										<strong>Payment Term:</strong>
+										<span t-field="o.payment_term.note" />
+									</t>
+								</td>
 								<td align="right">
 									<strong>
 										Amount in (
@@ -140,6 +145,8 @@
 						<table class="table table-condensed" style="border:1pt solid;">
 							<thead>
 								<tr style="background-color:#0052cc;color:#ffffff;" height="10pt;">
+									<th class="text-center" style="border:1pt solid;border-color:black;">No
+									</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Description
 									</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th>
@@ -149,18 +156,21 @@
 										groups="sale.group_discount_per_so_line">Disc.(%)</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Disc.(Amt)</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">FOC</th>
-									<th class="text-center" style="border:1pt solid;border-color:black;">Line Total</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Total</th>
 								</tr>
 							</thead>
 							<tbody class="invoice_tbody">
 								<tr t-foreach="o.invoice_line" t-as="l">
+									<td style="border:1pt solid;border-color:black;" align="center">
+										<t t-esc="l_index+1" />
+									</td>
 									<td style="border:1pt solid;border-color:black;">
 										<span t-field="l.product_id.name" />
 										<t t-if="l.foc==True">
 											(FOC)
 										</t>
 									</td>
-									<td style="border:1pt solid;border-color:black;">
+									<td style="border:1pt solid;border-color:black;" align="right">
 										<span t-field="l.quantity" />
 										<span t-field="l.uos_id" groups="product.group_uom" />
 									</td>
@@ -196,25 +206,30 @@
 
 						<div class="row">
 							<div class="col-xs-8 pull-left" style="padding-top: 1cm;">
-
-								<table class="table" style='border:solid;border-color:white;'>
-									<tr>
-										<td style="text-align:center;">
-											For questions concerning this invoice, please
-											contact Hot
-											Line :
-											+951400533,
-											Fax: +951 400912,
-											info@mdgmyanmar.com
-										</td>
-									</tr>
-									<tr>
-										<td style="text-align:center;border:solid;border-color:white;">
-											<b> THANK YOU</b>
-										</td>
-									</tr>
-								</table>
-
+								<t t-if="o.tax_line">
+									<table class="table table-condensed">
+										<thead>
+											<tr>
+												<th>Tax</th>
+												<th class="text-right">Base</th>
+												<th class="text-right">Amount</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr t-foreach="o.tax_line" t-as="t">
+												<td>
+													<span t-field="t.name" />
+												</td>
+												<td class="text-right">
+													<span t-field="t.base" />
+												</td>
+												<td class="text-right">
+													<span t-field="t.amount" />
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</t>
 							</div>
 							<div class="col-xs-4 pull-right">
 								<table class="table">
@@ -228,7 +243,7 @@
 									</tr>
 									<tr class="border-black">
 										<td style="padding-top: 2mm;padding-bottom: 2mm;">
-											Total Discount Amount
+											Total Discount
 										</td>
 										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
 											<span t-field="o.discount_total" />
@@ -244,7 +259,7 @@
 									</tr>
 									<tr class="border-black">
 										<td style="padding-top: 2mm;padding-bottom: 2mm;">
-											<strong>Grand Total</strong>
+											<strong>Net Amount</strong>
 										</td>
 										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
 											<span t-field="o.amount_total" />
@@ -254,30 +269,46 @@
 							</div>
 						</div>
 
-						<div class="row" t-if="o.tax_line">
-							<div class="col-xs-6">
-								<table class="table table-condensed">
-									<thead>
-										<tr>
-											<th>Tax</th>
-											<th class="text-right">Base</th>
-											<th class="text-right">Amount</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr t-foreach="o.tax_line" t-as="t">
-											<td>
-												<span t-field="t.name" />
-											</td>
-											<td class="text-right">
-												<span t-field="t.base" />
-											</td>
-											<td class="text-right">
-												<span t-field="t.amount" />
-											</td>
-										</tr>
-									</tbody>
+
+
+						<div class="row" style="padding-top:-2s0pt;">
+							<div class="col-xs-4 pull-left">
+								<table class="table" style='border:solid;border-color:white;'>
+									<tr style='border:solid;border-color:white;'>
+										<td style="margin-top:-10pt;" align="center">
+											<span>
+												Cash Paid By
+											</span>
+										</td>
+									</tr>
+									<tr style='border:solid;border-color:white;'>
+										<td style="margin-top:-10pt;" align="center">
+											<span>
+												(Customer Name)
+											</span>
+										</td>
+									</tr>
 								</table>
+							</div>
+
+							<div class="col-xs-3 pull-left">
+								<table class="table" style='border:solid;border-color:white;'>
+									<tr style='border:solid;border-color:white;'>
+										<td style="margin-top:-10pt;" align="center">
+											<span>
+												Cash Received By
+											</span>
+										</td>
+									</tr>
+									<tr style='border:solid;border-color:white;'>
+										<td style="margin-top:-10pt;" align="center">
+											<span>
+												(Salesman Name)
+											</span>
+										</td>
+									</tr>
+								</table>
+
 							</div>
 						</div>
 
@@ -285,14 +316,37 @@
 							<strong>Comment:</strong>
 							<span t-field="o.comment" />
 						</p>
-						<p t-if="o.payment_term.note">
-							<strong>Payment Term:</strong>
-							<span t-field="o.payment_term.note" />
-						</p>
 						<p t-if="o.fiscal_position.note">
 							<strong>Fiscal Position Remark:</strong>
 							<span t-field="o.fiscal_position.note" />
 						</p>
+						<div class="row" style="padding-top:-2s0pt;margin-top:20pt;">
+							<div class="col-xs-12">
+
+								<table class="table" style='border:solid;border-color:white;'>
+									<tr>
+										<td style="text-align:center;">
+											For questions concerning this invoice, please
+											contact Hot
+											Line
+											:
+											01 400533,
+											Fax: 01 400912,
+											info@mdgmyanmar.com
+										</td>
+									</tr>
+									<tr>
+										<td style="text-align:center;border:solid;border-color:white;">
+											<b> THANK YOU</b>
+										</td>
+									</tr>
+								</table>
+							</div>
+							<div class="col-xs-4 pull-right">
+
+
+							</div>
+						</div>
 					</div>
 				</t>
 			</xpath>

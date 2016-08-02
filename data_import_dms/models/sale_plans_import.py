@@ -202,13 +202,14 @@ class sale_plans_import(osv.osv):
                             
                         if aml['main_group']:
                             main_group = str(aml['main_group']).strip()
-                            if main_group:
-                                cr.execute('select id from product_maingroup where lower(name) like %s', (main_group.lower(),))
-                                main_group_ids = cr.fetchall()
-                                if main_group_ids:
-                                    main_group_id = main_group_ids[0]
-                                else:
-                                    main_group_id = maingroup_obj.create(cr, uid, {'name':main_group}, context=context)
+                            cr.execute('select id from product_maingroup where lower(name) like %s', (main_group.lower(),))
+                            main_group_ids = cr.fetchall()
+                            if main_group_ids:
+                                main_group_id = main_group_ids[0]
+                            else:
+                                main_group_id = maingroup_obj.create(cr, uid, {'name':main_group}, context=context)
+                        else:
+                            main_group_id = maingroup_obj.create(cr, uid, {'name':main_group}, context=context)
     
                         if aml['branch']:
                             branch = str(aml['branch']).strip()
@@ -261,15 +262,14 @@ class sale_plans_import(osv.osv):
                         print 'sale_team_id>>>', sale_team_id
                         print 'date_data>>>', date_data
                         print 'principal_id>>>', principal_id
-#                         if day_plan and sale_team_id and date_data and principal_id:
-                        if day_plan and sale_team_id and date_data:
-                            cr.execute('select id from sale_plan_day where lower(name) like %s and sale_team= %s and date::date =%s and active=True', (day_plan.lower(), sale_team_id, date_data,))
+                        if day_plan and sale_team_id and date_data and principal_id:
+                            cr.execute('select id from sale_plan_day where lower(name) like %s and sale_team= %s and date::date =%s ', (day_plan.lower(), sale_team_id, date_data,))
                             result = cr.fetchall()
                             if not result:
                                 plan_id = sale_plan_day_obj.create(cr, uid, {'name': day_plan,
                                                                                             'sale_team':sale_team_id,
                                                                                             'date':date_data,
-#                                                                                             'principal':principal_id,
+                                                                                            'principal':principal_id,
                                                                                             'active':True}, context=context)
                                 if plan_id:
                                     # customer link
@@ -282,7 +282,6 @@ class sale_plans_import(osv.osv):
                                         if customer_id:
                                             cr.execute("insert into res_partner_sale_plan_day_rel(sale_plan_day_id,partner_id) values(%s,%s)", (plan_id, customer_id,))
                                     # main group link
-                                    print 'main group is >>>> ', main_group_id
                                     cr.execute("""select product_maingroup_id from product_maingroup_sale_plan_day_rel where sale_plan_day_id=%s""", (plan_id,))
                                     data = cr.fetchall()
                                     if data and main_group_id:
@@ -354,7 +353,7 @@ class sale_plans_import(osv.osv):
                     if x in header_fields:
                         con_ls.append(x)
                         head_count = head_count + 1
-                if head_count < 3:
+                if head_count < 5:
                     head_count = 0
                     con_ls = []
                 else:
@@ -503,15 +502,14 @@ class sale_plans_import(osv.osv):
                                         except Exception, e:
                                             raise orm.except_orm(_('Error :'), _("Error while processing Excel Columns. \n\nPlease check your Date!"))
                     
-#                     if day_plan and sale_team_id and date_data and principal_id:
-                    if day_plan and sale_team_id and date_data:
-                        cr.execute('select id from sale_plan_trip where lower(name) like %s and sale_team= %s and date::date =%s and active=True ', (day_plan.lower(), sale_team_id, date_data,))
+                    if day_plan and sale_team_id and date_data and principal_id:
+                        cr.execute('select id from sale_plan_trip where lower(name) like %s and sale_team= %s and date::date =%s ', (day_plan.lower(), sale_team_id, date_data,))
                         result = cr.fetchall()
                         if not result:
                             plan_id = sale_plan_day_obj.create(cr, uid, {'name': day_plan,
                                                                                         'sale_team':sale_team_id,
                                                                                         'date':date_data,
-#                                                                                         'principal':principal_id,
+                                                                                        'principal':principal_id,
                                                                                         'active':True}, context=context)
                             if plan_id:
                                 cr.execute("select partner_id from res_partner_sale_plan_trip_rel where sale_plan_trip_id =%s ", (plan_id,))
