@@ -21,10 +21,10 @@ openerp.web_gmaps = function (instance) {
             else {
            	 this.on_ready();
             } 
-           var self = this;
-           self.on("change:effective_readonly", self, function() {
-               self.marker.setDraggable(self.get("effective_readonly") ? false : true);
-           });
+//           var self = this;
+//           self.on("change:effective_readonly", self, function() {
+//               self.marker.setDraggable(self.get("effective_readonly") ? false : true);
+//           });
         },
 
         on_ready: function(){
