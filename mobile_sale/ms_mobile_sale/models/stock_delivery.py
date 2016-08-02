@@ -30,6 +30,7 @@ class stock_delivery(osv.osv):
 					and quant.product_id = product.id
 					and product.product_tmpl_id = product_temp.id
 					and product.active = true
+					and qty > 0  
 					group by quant.product_id, main_group,name_template,product_temp.id  order by name_template
                     """, (warehouse_id,))
 

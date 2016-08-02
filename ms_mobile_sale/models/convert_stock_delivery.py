@@ -35,7 +35,8 @@ class mobile_stock_delivery(osv.osv):
 						and quant.product_id = product.id
 						and product.product_tmpl_id = product_temp.id
 						and product.active = true
-						 group by quant.product_id, main_group,name_template,product_temp.id  order by name_template
+						and qty > 0 
+						group by quant.product_id, main_group,name_template,product_temp.id  order by name_template
 """, (warehouse_id,))
     #         cr.execute("""
     #                   select product_id,qty_on_hand + qty as qty_on_hand from (
