@@ -79,6 +79,14 @@ class pre_sale_order(osv.osv):
                         saleManId = data[0][0]
                     else:
                         saleManId = None
+					
+					cursor.execute('select id From res_partner where customer_code  = %s ', (so['customer_code'],))
+                    data = cursor.fetchall()                
+                    if data:
+                        partner_id = data[0][0]
+                    else:
+                        partner_id = None
+						
                     mso_result = {
                         'customer_code':so['customer_code'],
                         'paid': True,
@@ -88,7 +96,7 @@ class pre_sale_order(osv.osv):
                         'location_id':so['location_id'],
                         'user_id':so['user_id'],
                         'name':so['name'],
-                        'partner_id':so['partner_id'],
+                        'partner_id':partner_id,
                         'sale_plan_name':so['sale_plan_day_name'],
                         'amount_total':so['amount_total'],
                         'sale_team':so['sale_team'],

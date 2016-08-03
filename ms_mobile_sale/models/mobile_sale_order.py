@@ -93,14 +93,12 @@ class mobile_sale_order(osv.osv):
             
             if sale_order:
                 for so in sale_order:
-                   # print 'Sale Man Id', so['user_id']
-                   # print 'Sale Void', so['void_flag']
-                   # cursor.execute('select id From res_users where partner_id  = %s ', (so['user_id'],))
-                   # data = cursor.fetchall()
-                    # if data:
-                    #    saleManId = data[0][0]
-                  #  else:
-                     #   saleManId = None
+                    cursor.execute('select id From res_partner where customer_code  = %s ', (so['customer_code'],))
+                    data = cursor.fetchall()                
+                    if data:
+                        partner_id = data[0][0]
+                    else:
+                        partner_id = None
                     
                     cursor.execute('select id From outlettype_outlettype where name  = %s ', (so['outlet_type'],))
                     data = cursor.fetchall()
@@ -123,7 +121,7 @@ class mobile_sale_order(osv.osv):
                         'user_id':so['user_id'],
                         'name':so['name'],
                         'paid_amount':so['paid_amount'],
-                        'partner_id':so['partner_id'],
+                        'partner_id': partner_id,
                         'sale_plan_name':so['sale_plan_day_name'],
                         'additional_discount':so['additional_discount'],
                         'amount_total':so['amount_total'],
@@ -684,12 +682,15 @@ class mobile_sale_order(osv.osv):
             return res['res_id']
     # kzo Edit
     def get_products_by_sale_team(self, cr, uid, section_id , context=None, **kwargs):
-        cr.execute('''select  pp.product_tmpl_id,pt.list_price , pt.description,pt.categ_id,pc.name as categ_name,pp.default_code, 
-                         pt.name,substring(replace(cast(pt.image_small as text),'/',''),1,5) as image_small,pt.main_group,pt.uom_ratio
+        cr.execute('''select  pp.id,pt.list_price , coalesce(pt.description, ' ') as description,pt.categ_id,pc.name as categ_name,pp.default_code, 
+                         pt.name,substring(replace(cast(pt.image_small as text),'/',''),1,5) as image_small,pt.main_group,pt.uom_ratio,
+                         pp.product_tmpl_id
                         from crm_case_section_product_product_rel crm_real ,
                         crm_case_section ccs ,product_template pt, product_product pp , product_category pc
                         where pp.id = crm_real.product_product_id
                         and pt.id = pp.product_tmpl_id
+                        and pt.active = true
+                        and pp.active = true
                         and ccs.id = crm_real.crm_case_section_id
                         and pc.id = pt.categ_id           
                         and ccs.id = %s ''', (section_id,))

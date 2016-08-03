@@ -28,49 +28,19 @@ class mobile_stock_delivery(osv.osv):
     
     def product_qty_in_stock(self, cr, uid, warehouse_id , context=None, **kwargs):
             cr.execute("""
-						select product_temp.id as product_id,sum(qty) as qty_on_hand,product_temp.main_group as main_group,
-						product.name_template as name_template,product_temp.list_price as price 
-						from  stock_quant quant, product_product product, product_template product_temp
-						where quant.location_id = %s
-						and quant.product_id = product.id
-						and product.product_tmpl_id = product_temp.id
-						and product.active = true
-						and qty > 0 
-						group by quant.product_id, main_group,name_template,product_temp.id  order by name_template
-""", (warehouse_id,))
-    #         cr.execute("""
-    #                   select product_id,qty_on_hand + qty as qty_on_hand from (
-    #             select sm.product_id  ,sum(sm.product_uos_qty) as qty_on_hand ,0 as qty
-    #                                   from stock_move sm , stock_picking sp , stock_picking_type spt
-    #                                   where sm.picking_id = sp.id
-    #                       and sm.state = 'done'
-    #                       and sm.origin is null
-    #                       and sp.origin is null
-    #                       and spt.id = sm.picking_type_id
-    #                       and sp.picking_type_id = sm.picking_type_id
-    #                       and spt.code = 'internal'
-    #                       and sm.location_dest_id = %s
-    #                       and sm.create_date::date = now()::date
-    #                       group by product_id
-    # 
-    #             union All
-    #               select sm.product_id,0 as qty,-sum(sm.product_uos_qty) as qty_on_hand 
-    #                         from stock_move sm , stock_picking sp , stock_picking_type spt
-    #                         where sm.picking_id = sp.id
-    #                         and sm.state = 'done'
-    #                         and sm.origin is null
-    #                         and sp.origin is null
-    #                         and spt.id = sm.picking_type_id
-    #                         and sp.picking_type_id = sm.picking_type_id
-    #                         and spt.code = 'internal'
-    #                         and sm.location_id = %s
-    #                         and sm.create_date::date = now()::date
-    #                         group by product_id
-    #                        )
-    #                 A
-    #             """, (warehouse_id, warehouse_id,))
-            datas = cr.fetchall()
-            print 'datas',datas
+            select product_id,qty_on_hand,main_group,name_template,price from
+              (    
+                select product.id as product_id,sum(qty) as qty_on_hand,product_temp.main_group as main_group,
+                         product.name_template as name_template,product_temp.list_price as price 
+                         from  stock_quant quant, product_product product, product_template product_temp
+                         where quant.location_id = %s
+                         and quant.product_id = product.id
+                         and product.product_tmpl_id = product_temp.id
+                         and product.active = true            
+                         group by quant.product_id, main_group,name_template,product.id,price
+            )A where qty_on_hand > 0  order by name_template
+            """, (warehouse_id,))   
+            datas = cr.fetchall()        
             return datas
 	
     def stock_delivery_line(self, cr, uid, pick_id , context=None, **kwargs):
