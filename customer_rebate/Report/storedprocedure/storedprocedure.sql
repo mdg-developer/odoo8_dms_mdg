@@ -21,7 +21,7 @@ declare
 			and sol.product_id=pp.id
 			and pp.product_tmpl_id=pt.id
 			and pt.uom_id=uom.id
-			and so.state in ('progress','manual')
+			and so.state in ('progress','manual','done')
 			and (date_order+'6 hour'::interval+'30 minutes'::interval)::date between param_from_date and param_to_date
 
 		LOOP				
