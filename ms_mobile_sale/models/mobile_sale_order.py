@@ -142,7 +142,7 @@ class mobile_sale_order(osv.osv):
                     print "Create Sale Order", so['name']
                     for sol in sale_order_line:
                         if sol['so_name'] == so['name']:
-                                cursor.execute('select id From product_product where product_tmpl_id  = %s ', (sol['product_id'],))
+                                cursor.execute('select id From product_product where id  = %s ', (sol['product_id'],))
                                 data = cursor.fetchall()
                                 if data:
                                     productId = data[0][0]
