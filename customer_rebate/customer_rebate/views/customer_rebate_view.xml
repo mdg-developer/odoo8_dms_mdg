@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record model="ir.ui.view" id="view_customer_rebate_tree">
+			<field name="name">customer.rebate.tree</field>
+			<field name="model">customer.rebate</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Customer Rebate">
+					<field name="partner_id" />
+					<field name="product_id" />
+					<field name="date" />
+					<field name="year" />
+					<field name="qty" />
+					<field name="amt" />
+					<field name="code" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_customer_rebate_form">
+			<field name="name">customer.rebate.form</field>
+			<field name="model">customer.rebate</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Customer Rebate">
+					<sheet>
+						<group>
+							<group>
+								<field name="partner_id" />
+								<field name="product_id" />
+								<field name="qty" />
+								<field name="amt" />
+							</group>
+
+							<group>
+								<field name="date" />
+								<field name="code" />
+								<field name="remark" />
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="action_customer_rebate_form" model="ir.actions.act_window">
+			<field name="name">Customer Rebate</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">customer.rebate</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form,tree</field>
+			<field name="view_id" ref="view_customer_rebate_tree" />
+		</record>
+	</data>
+</openerp>
