@@ -176,7 +176,9 @@ class res_partner(osv.osv):
                 # 'avg_sale_order_ids': fields.one2many('sale.order','partner_id','Sales Order'),
                 'pricelist_id':fields.function(_get_default_pricelist, type='many2one', relation='product.pricelist', string='Price List', store=True),
                 'payment_term_id':fields.function(_get_default_payment_term_id, type='many2one', relation='account.payment.term', string='Payment Term', store=True),
-    } 
+                 'asset_ids': fields.one2many('res.partner.asset', 'partner_id', 'Asset'),
+
+ } 
     _defaults = {
         'is_company': True,
         'pending' : None,
@@ -352,3 +354,28 @@ class res_partner(osv.osv):
                     self.write(cr, uid, ids, {'customer_code':code}, context=context)
             return True
 res_partner()
+class res_partner_asset(osv.Model):
+
+    _description = 'Partner Tags'
+    _name = 'res.partner.asset'
+    _columns = {
+                        'partner_id': fields.many2one('res.partner', 'Partner', select=True, ondelete='cascade'),
+                        'name':fields.char('Asset Name'),
+                        'date':fields.date('Date'),
+                        'type':fields.selection ([('rent', 'Rent'), ('give', 'Giving')],
+                                                    'Type', required=True, default='rent'),
+                        'asset_type':fields.many2one('asset.type','Asset Type'),
+                       'qty':fields.integer('Qty'),
+                        'image': fields.binary("Image"),
+  }
+    _defaults = {
+        'date': fields.datetime.now,
+                    }
+    
+class asset_type(osv.Model):
+
+    _description = 'Asset Type'
+    _name = 'asset.type'
+    _columns = {
+                'name':fields.char('Asset Type Name'),
+                }

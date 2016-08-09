@@ -32,7 +32,7 @@ class sale_denomination(osv.osv):
     
     def on_change_date(self, cr, uid, ids, date,user_id,context=None):
         value={}
-        note =[{'notes':10000,'note_qty':False},{'notes':5000,'note_qty':False},{'notes':1000,'note_qty':False},{'notes':500,'note_qty':False},{'notes':100,'note_qty':False},{'notes':50,'note_qty':False},{'notes':10,'note_qty':False}]
+        note =[{'notes':10000,'note_qty':False},{'notes':5000,'note_qty':False},{'notes':1000,'note_qty':False},{'notes':500,'note_qty':False},{'notes':100,'note_qty':False},{'notes':50,'note_qty':False},{'notes':10,'note_qty':False},{'notes':5,'note_qty':False},{'notes':1,'note_qty':False}]
         order_line_data=[]
         if date:
             date = datetime.strptime(date,'%Y-%m-%d %H:%M:%S')

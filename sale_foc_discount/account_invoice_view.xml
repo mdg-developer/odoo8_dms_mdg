@@ -10,10 +10,21 @@
 			<field name="arch" type="xml">
 				<xpath
 					expr="//form/sheet/notebook/page/field/tree/field[@name='discount']"
-					position="after">
+					position="replace">
 					<field name="net_total" />
-					<field name="discount_amt" />
-					<field name="foc" />
+				    					
+					<field string="Discount(%)" name="discount"
+						groups="sale.group_discount_per_so_line"
+						on_change="onchange_discount_percent(discount,quantity, price_unit)" />
+				</xpath>
+				<xpath
+					expr="//form/sheet/notebook/page/field/tree/field[@name='discount']"
+					position="after">
+
+					<field name="discount_amt" groups="sale.group_discount_per_so_line" />
+										
+					<field name="foc" groups="sale.group_discount_per_so_line"  on_change="foc_change(product_id,quantity,context)"/>
+					
 				</xpath>
 			</field>
 		</record>
