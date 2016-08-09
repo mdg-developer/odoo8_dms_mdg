@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.4.2.v201410272105 Build &lt;4.4.2.v20150217-1805></property>
     <property name="units">in</property>
     <property name="iconFile">/templates/crosstab.gif</property>
     <property name="cheatSheet">org.eclipse.birt.report.designer.ui.cheatsheet.crosstab</property>
@@ -8,11 +8,7 @@
     <property name="imageDPI">96</property>
     <list-property name="libraries">
         <structure>
-            <property name="fileName">report/fair_deal_library.rptlibrary</property>
-            <property name="namespace">fair_deal_library</property>
-        </structure>
-        <structure>
-            <property name="fileName">inventory_report/birt_report/inventory_report_library.rptlibrary</property>
+            <property name="fileName">birt_report/inventory_report_library.rptlibrary</property>
             <property name="namespace">inventory_report_library</property>
         </structure>
     </list-property>
@@ -75,13 +71,8 @@ Follow the instructions in the cheat sheet to set up the data to display.</text-
         </scalar-parameter>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="183"
- extends="inventory_report_library.Data Source">
-            <property name="odaDriverClass">org.postgresql.Driver</property>
-            <property name="odaURL">jdbc:postgresql://localhost:5432/MDG</property>
-            <property name="odaUser">openerp</property>
-            <encrypted-property name="odaPassword" encryptionID="base64">b3BlbnBncHdk</encrypted-property>
-        </oda-data-source>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="192"
+ extends="inventory_report_library.Data Source"/>
     </data-sources>
     <data-sets>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.SPSelectDataSet" name="sale_and_stock" id="26">
