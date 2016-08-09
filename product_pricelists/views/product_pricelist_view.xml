@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+
+		<!-- product pricelist form -->
+		<record model="ir.ui.view" id="view_product_pricelist_maingroup_form">
+			<field name="name">Product Pricelist Form</field>
+			<field name="model">product.pricelist</field>
+			<field name="inherit_id" ref="product.product_pricelist_view" />
+			<field name="arch" type="xml">
+				<xpath expr="//form/h1" position="after">
+					<group>
+						<group>
+							<field name="main_group_id" string="Main Group"/>
+						</group>
+					</group>
+				</xpath>
+			</field>
+		</record>
+
+		<record id="product_pricelist_maingroup_view_tree" model="ir.ui.view">
+			<field name="name">product.pricelist.tree.maingroup</field>
+			<field name="model">product.pricelist</field>
+			<field name="inherit_id" ref="product.product_pricelist_view_tree" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='name']" position="after">
+					<field name="main_group_id" />
+				</xpath>
+			</field>
+		</record>
+	</data>
+</openerp>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record model="ir.ui.view" id="view_res_township_tree">
+			<field name="name">res.township.tree</field>
+			<field name="model">res.township</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Township">
+					<field name="name" />
+					<field name="code"/>
+					<field name="city" />
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_res_township_form">
+			<field name="name">res.township.form</field>
+			<field name="model">res.township</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Township">
+					<group>
+						<group>
+							<field name="name" />
+						</group>
+						<group>
+							<field name="code"/>
+						</group>						
+						<group>
+							<field name="city" options='{"no_open": True}'/>
+						</group>
+					</group>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="open_view_res_township_form">
+			<field name="name">Township</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">res.township</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_res_township_tree"/>
+		</record>
+
+		<menuitem id="menu_township" name="Township" parent="address_management_system.menu_address" action="open_view_res_township_form"
+			sequence="4" />
+	</data>
+</openerp>

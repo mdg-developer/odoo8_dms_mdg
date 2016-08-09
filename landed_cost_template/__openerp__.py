@@ -1,12 +1,12 @@
 {
     'name': 'Landed-cost Tempate',
-    'category': 'warehouse',
+    'category': 'LANDED COST TEMPLATE',
     'author': 'seventh computing',
     'summary': 'Send Professional Landed-cost',
     'website': 'http://www.7thcomputing.com',
     'version': '1.0',
     'description': """
-OpenERP Sale Quote Roller
+OpenERP LANDED COST UPGRADE
 =========================
 
         """,

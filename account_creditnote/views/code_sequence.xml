@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="creditnote_code_sequence" model="ir.sequence.type">
+			<field name="name">Creditnote Sequence</field>
+			<field name="code">creditnote.code</field>
+		</record>
+
+		<record id="creditnote_code_seq" model="ir.sequence">
+			<field name="name">Creditnote Code Sequence</field>
+			<field name="code">creditnote.code</field>
+			<field name="company_id" eval="False" />
+			<field name="prefix">CR</field>
+			<field name="padding">6</field>
+		</record>
+
+	</data>
+</openerp>
