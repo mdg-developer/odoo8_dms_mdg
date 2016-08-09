@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record model="ir.ui.view" id="view_customer_rebate_generate_form">
+			<field name="name">customer.rebate.generate.form</field>
+			<field name="model">customer.rebate.generate</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Customer Rebate" >
+						<group>
+							<group>
+								<field name="from_date" />
+								<field name="year" />
+							</group>
+							
+							<group>
+								<field name="to_date" />
+							</group>
+							
+							<footer>
+                        		<button string="Generate Rebate" name="action_generate" type="object" class="oe_highlight"/>
+                       			 or
+                        		<button string="Cancel" class="oe_link" special="cancel"/>
+                    		</footer>
+						</group>
+				</form>
+			</field>
+		</record>
+		
+		<record id="act_customer_rebate_generate" model="ir.actions.act_window">
+			<field name="name">Customer Rebate Generate</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">customer.rebate.generate</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_customer_rebate_generate_form"/>
+			<field name="target">new</field>
+		</record>
+		
+		<menuitem id="customer_rebate" parent="account.menu_finance_receivables" action="act_customer_rebate_generate" name ="Customer Rebate" sequence="101" icon="STOCK_INDENT"/>
+ 
+	</data>
+</openerp>
