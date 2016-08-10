@@ -180,6 +180,8 @@
 							domain="[]" context="{'group_by':'sale_plan_trip_id'}" />
 						<filter name="sale_plan_day_id" string="Sale Plan Days"
 							domain="[]" context="{'group_by':'sale_plan_day_id'}" />
+					<filter name="partner_id" string="Customer"
+							domain="[]" context="{'group_by':'partner_id'}" />									
 					</group>
 				</search>
 			</field>
@@ -210,6 +212,27 @@
 			</field>
 		</record>
 
+        <record id="view_pre_sale_order_calendar" model="ir.ui.view">
+            <field name="name">pre.sale.order.calendar</field>
+            <field name="model">pre.sale.order</field>
+            <field name="arch" type="xml">
+                <calendar string="Pre Sales Orders" color="m_status"  date_start="date">
+                    <field name="partner_id"/>
+                    <field name="amount_total"/>
+                </calendar>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_pre_sale_order_graph">
+            <field name="name">pre.sale.order.graph</field>
+            <field name="model">pre.sale.order</field>
+            <field name="arch" type="xml">
+                <graph string="Pre Sales Orders" type="bar">
+                    <field name="partner_id"  type="row"/>
+                    <field name="amount_total" type="measure"/>
+                </graph>
+            </field>
+        </record>
+        		
 		<record id="action_pre_sale_order" model="ir.actions.act_window">
 			<field name="name">Pre Sale Orders</field>
 			<field name="type">ir.actions.act_window</field>
