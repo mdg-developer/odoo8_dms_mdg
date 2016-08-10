@@ -36,7 +36,8 @@
     """,
     'data': [
         'views/mobile_report_view.xml',
- 
+         'views/customer_visit_report_view.xml'
+
                 ],
     'installable': True,
     'auto_install': False,
