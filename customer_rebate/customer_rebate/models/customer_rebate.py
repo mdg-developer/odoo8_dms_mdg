@@ -35,7 +35,7 @@ class customer_rebate_generate(osv.Model):
     }
     
     def action_generate(self, cr, uid, ids, context=None):
-        
+               
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
         sale_order_obj = self.pool.get('sale.order')
@@ -64,12 +64,16 @@ class customer_rebate_generate(osv.Model):
             print 'month_year_result >>> ', month_year_result
             
             cr.execute("""select customer_id,qty,rebate_amount,promotion,product_id,rebate_date,state from customer_rebate_report(%s,%s)""", (from_date, to_date,))
-            rebate_result = cr.fetchall()           
+            rebate_result = cr.fetchall()  
+            print 'rebate_result date',rebate_result       
             if rebate_result:                
                 for val in rebate_result:
-                    cr.execute("""select * from customer_rebate where date=%s""", (val[5],))
+                    print 'val[5]',val[5]
+                    cr.execute("""select * from customer_rebate where partner_id=%s and qty=%s and amt=%s and code=%s
+                                and product_id=%s and date=%s and state=%s""", (val[0],val[1],val[2],val[3],val[4],val[5],val[6],))
                     rebate_data = cr.fetchall();
-                    if not rebate_data:
+                    print 'rebate_data',rebate_data
+                    if not rebate_data:                   
                     # cr.execute("""select id from product_product where name_template=%s""",(val[4],))
                     # product_id=cr.fetchall()
                         data_id = {'partner_id':val[0],
@@ -85,10 +89,19 @@ class customer_rebate_generate(osv.Model):
                     
                         result[details.id] = inv_id
                 
-            result = mod_obj.get_object_reference(cr, uid, 'customer_rebate', 'action_customer_rebate_form')
+            cust_rebate_list=[]
+            cr.execute("""select id from customer_rebate where date between %s and %s""", (from_date,to_date,))
+            cust_rebate_data=cr.fetchall()
+            print 'cust_rebate_data',cust_rebate_data
+            for data in cust_rebate_data:
+                for rebate_id in data:
+                    print 'rebate_id',rebate_id
+                    cust_rebate_list.append(rebate_id)
+                    print 'cust_rebate_list',cust_rebate_list
+            result = mod_obj.get_object_reference(cr, uid, 'customer_rebate', 'action_customer_rebate_form')          
             id = result and result[1] or False
             result = act_obj.read(cr, uid, [id], context=context)[0]
-            # result['domain'] = str([('id', 'in', orders_created)])
+            result['domain'] = str([('id', 'in',cust_rebate_list)])
             print 'Result >>>>' , result
-            cr.execute("""delete from customer_rebate_generate where id=%s""", (ids[0],))
+#             cr.execute("""delete from customer_rebate_generate where id=%s""", (ids[0],))
         return result
