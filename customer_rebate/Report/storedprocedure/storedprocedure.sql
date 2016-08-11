@@ -1,9 +1,11 @@
 -- Function: customer_rebate_report(date, date)
-
+--select * from customer_rebate_report('2016-01-01','2016-12-31')
 -- DROP FUNCTION customer_rebate_report(date, date);
 
+-- select *from customer_rebate
+
 CREATE OR REPLACE FUNCTION customer_rebate_report(IN param_from_date date, IN param_to_date date)
-  RETURNS TABLE(id bigint, customer_id integer, customer_name character varying, product_name character varying, qty integer, rebate_amount numeric, promotion character varying, product_id integer, state character varying, rebate_date date) AS
+  RETURNS TABLE(id bigint, customer_id integer, customer_name character varying, product_name character varying, qty integer, rebate_amount numeric, promotion character varying, product_id integer, state character varying, rebate_date date,section_id integer,user_id integer,name character varying,date_order date) AS
 $BODY$
 declare 
 	so_data record ;
@@ -14,7 +16,7 @@ declare
 		DELETE FROM rebate_temp;
 		
 		FOR so_data IN
-			select (date_order+'6 hour'::interval+'30 minutes'::interval)::date as sale_order_date,so.state,so.name as so_name,res.id as customer_id,res.name as customer_name,pp.id as product_id,pp.name_template as product_name,product_uos_qty,uom.name as uom
+			select (date_order+'6 hour'::interval+'30 minutes'::interval)::date as sale_order_date,so.state,so.name,so.section_id,so.user_id  as saleman_name,res.id as customer_id,res.name as customer_name,pp.id as product_id,pp.name_template as product_name,product_uos_qty,uom.name as uom
 			from sale_order so,res_partner res,sale_order_line sol,product_product pp,product_template pt,product_uom uom
 			where so.partner_id=res.id
 			and sol.order_id=so.id
@@ -22,7 +24,7 @@ declare
 			and pp.product_tmpl_id=pt.id
 			and pt.uom_id=uom.id
 			and so.state in ('progress','manual','done')
-			and (date_order+'6 hour'::interval+'30 minutes'::interval)::date between param_from_date and param_to_date
+			and (so.date_order+'6 hour'::interval+'30 minutes'::interval)::date between param_from_date and param_to_date
 
 		LOOP				
 			FOR rebate_data IN	 
@@ -38,32 +40,32 @@ declare
 					IF rebate_data.comparator= '==' THEN						
 						IF so_data.product_uos_qty = rebate_data.sale_qty THEN
 							amount=so_data.product_uos_qty*rebate_data.rebate_amount;							
-							insert into rebate_temp(promotion,rebate_date,product_id,state,customer_id,customer_name,product_name,qty,rebate_amount) values (rebate_data.promotion,rebate_data.date,so_data.product_id,so_data.state,so_data.customer_id,so_data.customer_name,so_data.product_name,so_data.product_uos_qty,amount);	
+							insert into rebate_temp(promotion,rebate_date,product_id,state,customer_id,customer_name,product_name,qty,rebate_amount,section_id,user_id,name,date_order) values (rebate_data.promotion,rebate_data.date,so_data.product_id,so_data.state,so_data.customer_id,so_data.customer_name,so_data.product_name,so_data.product_uos_qty,amount,so_data.section_id,so_data.saleman_name,so_data.name,so_data.sale_order_date);	
 						END IF;	
 					ELSEIF rebate_data.comparator= '!=' THEN
 						IF so_data.product_uos_qty != rebate_data.sale_qty THEN
 							amount=so_data.product_uos_qty*rebate_data.rebate_amount;							
-							insert into rebate_temp(promotion,rebate_date,product_id,state,customer_id,customer_name,product_name,qty,rebate_amount) values (rebate_data.promotion,rebate_data.date,so_data.product_id,so_data.state,so_data.customer_id,so_data.customer_name,so_data.product_name,so_data.product_uos_qty,amount);	
+							insert into rebate_temp(promotion,rebate_date,product_id,state,customer_id,customer_name,product_name,qty,rebate_amount,section_id,user_id,name,date_order) values (rebate_data.promotion,rebate_data.date,so_data.product_id,so_data.state,so_data.customer_id,so_data.customer_name,so_data.product_name,so_data.product_uos_qty,amount,so_data.section_id,so_data.saleman_name,so_data.name,so_data.sale_order_date);	
 						END IF;						
 					ELSEIF rebate_data.comparator= '<' THEN
 						IF so_data.product_uos_qty < rebate_data.sale_qty THEN
 							amount=so_data.product_uos_qty*rebate_data.rebate_amount;							
-							insert into rebate_temp(promotion,rebate_date,product_id,state,customer_id,customer_name,product_name,qty,rebate_amount) values (rebate_data.promotion,rebate_data.date,so_data.product_id,so_data.state,so_data.customer_id,so_data.customer_name,so_data.product_name,so_data.product_uos_qty,amount);	
+							insert into rebate_temp(promotion,rebate_date,product_id,state,customer_id,customer_name,product_name,qty,rebate_amount,section_id,user_id,name,date_order) values (rebate_data.promotion,rebate_data.date,so_data.product_id,so_data.state,so_data.customer_id,so_data.customer_name,so_data.product_name,so_data.product_uos_qty,amount,so_data.section_id,so_data.saleman_name,so_data.name,so_data.sale_order_date);	
 						END IF;	
 					ELSEIF rebate_data.comparator= '<=' THEN
 						IF so_data.product_uos_qty <= rebate_data.sale_qty THEN
 							amount=so_data.product_uos_qty*rebate_data.rebate_amount;							
-							insert into rebate_temp(promotion,rebate_date,product_id,state,customer_id,customer_name,product_name,qty,rebate_amount) values (rebate_data.promotion,rebate_data.date,so_data.product_id,so_data.state,so_data.customer_id,so_data.customer_name,so_data.product_name,so_data.product_uos_qty,amount);	
+							insert into rebate_temp(promotion,rebate_date,product_id,state,customer_id,customer_name,product_name,qty,rebate_amount,section_id,user_id,name,date_order) values (rebate_data.promotion,rebate_data.date,so_data.product_id,so_data.state,so_data.customer_id,so_data.customer_name,so_data.product_name,so_data.product_uos_qty,amount,so_data.section_id,so_data.saleman_name,so_data.name,so_data.sale_order_date);	
 						END IF;	
 					ELSEIF rebate_data.comparator= '>' THEN
 						IF so_data.product_uos_qty > rebate_data.sale_qty THEN
 							amount=so_data.product_uos_qty*rebate_data.rebate_amount;							
-							insert into rebate_temp(promotion,rebate_date,product_id,state,customer_id,customer_name,product_name,qty,rebate_amount) values (rebate_data.promotion,rebate_data.date,so_data.product_id,so_data.state,so_data.customer_id,so_data.customer_name,so_data.product_name,so_data.product_uos_qty,amount);	
+							insert into rebate_temp(promotion,rebate_date,product_id,state,customer_id,customer_name,product_name,qty,rebate_amount,section_id,user_id,name,date_order) values (rebate_data.promotion,rebate_data.date,so_data.product_id,so_data.state,so_data.customer_id,so_data.customer_name,so_data.product_name,so_data.product_uos_qty,amount,so_data.section_id,so_data.saleman_name,so_data.name,so_data.sale_order_date);	
 						END IF;	
 					ELSEIF rebate_data.comparator= '>=' THEN
 						IF so_data.product_uos_qty >= rebate_data.sale_qty THEN
 							amount=so_data.product_uos_qty*rebate_data.rebate_amount;							
-							insert into rebate_temp(promotion,rebate_date,product_id,state,customer_id,customer_name,product_name,qty,rebate_amount) values (rebate_data.promotion,rebate_data.date,so_data.product_id,so_data.state,so_data.customer_id,so_data.customer_name,so_data.product_name,so_data.product_uos_qty,amount);	
+							insert into rebate_temp(promotion,rebate_date,product_id,state,customer_id,customer_name,product_name,qty,rebate_amount,section_id,user_id,name,date_order) values (rebate_data.promotion,rebate_data.date,so_data.product_id,so_data.state,so_data.customer_id,so_data.customer_name,so_data.product_name,so_data.product_uos_qty,amount,so_data.section_id,so_data.saleman_name,so_data.name,so_data.sale_order_date);	
 						END IF;	
 					END IF;
 				END IF;
@@ -71,32 +73,32 @@ declare
 					IF rebate_data.comparator= '==' THEN						
 						IF so_data.product_uos_qty = rebate_data.sale_qty THEN
 							amount=so_data.product_uos_qty*115*rebate_data.rebate_amount;							
-							insert into rebate_temp(promotion,rebate_date,product_id,state,customer_id,customer_name,product_name,qty,rebate_amount) values (rebate_data.promotion,rebate_data.date,so_data.product_id,so_data.state,so_data.customer_id,so_data.customer_name,so_data.product_name,so_data.product_uos_qty,amount);	
+							insert into rebate_temp(promotion,rebate_date,product_id,state,customer_id,customer_name,product_name,qty,rebate_amount,section_id,user_id,name,date_order) values (rebate_data.promotion,rebate_data.date,so_data.product_id,so_data.state,so_data.customer_id,so_data.customer_name,so_data.product_name,so_data.product_uos_qty,amount,so_data.section_id,so_data.saleman_name,so_data.name,so_data.sale_order_date);	
 						END IF;	
 					ELSEIF rebate_data.comparator= '!=' THEN
 						IF so_data.product_uos_qty != rebate_data.sale_qty THEN
 							amount=so_data.product_uos_qty*115*rebate_data.rebate_amount;							
-							insert into rebate_temp(promotion,rebate_date,product_id,state,customer_id,customer_name,product_name,qty,rebate_amount) values (rebate_data.promotion,rebate_data.date,so_data.product_id,so_data.state,so_data.customer_id,so_data.customer_name,so_data.product_name,so_data.product_uos_qty,amount);	
+							insert into rebate_temp(promotion,rebate_date,product_id,state,customer_id,customer_name,product_name,qty,rebate_amount,section_id,user_id,name,date_order) values (rebate_data.promotion,rebate_data.date,so_data.product_id,so_data.state,so_data.customer_id,so_data.customer_name,so_data.product_name,so_data.product_uos_qty,amount,so_data.section_id,so_data.saleman_name,so_data.name,so_data.sale_order_date);	
 						END IF;						
 					ELSEIF rebate_data.comparator= '<' THEN
 						IF so_data.product_uos_qty < rebate_data.sale_qty THEN
 							amount=so_data.product_uos_qty*115*rebate_data.rebate_amount;							
-							insert into rebate_temp(promotion,rebate_date,product_id,state,customer_id,customer_name,product_name,qty,rebate_amount) values (rebate_data.promotion,rebate_data.date,so_data.product_id,so_data.state,so_data.customer_id,so_data.customer_name,so_data.product_name,so_data.product_uos_qty,amount);	
+							insert into rebate_temp(promotion,rebate_date,product_id,state,customer_id,customer_name,product_name,qty,rebate_amount,section_id,user_id,name,date_order) values (rebate_data.promotion,rebate_data.date,so_data.product_id,so_data.state,so_data.customer_id,so_data.customer_name,so_data.product_name,so_data.product_uos_qty,amount,so_data.section_id,so_data.saleman_name,so_data.name,so_data.sale_order_date);	
 						END IF;	
 					ELSEIF rebate_data.comparator= '<=' THEN
 						IF so_data.product_uos_qty <= rebate_data.sale_qty THEN
 							amount=so_data.product_uos_qty*115*rebate_data.rebate_amount;							
-							insert into rebate_temp(promotion,rebate_date,product_id,state,customer_id,customer_name,product_name,qty,rebate_amount) values (rebate_data.promotion,rebate_data.date,so_data.product_id,so_data.state,so_data.customer_id,so_data.customer_name,so_data.product_name,so_data.product_uos_qty,amount);	
+							insert into rebate_temp(promotion,rebate_date,product_id,state,customer_id,customer_name,product_name,qty,rebate_amount,section_id,user_id,name,date_order) values (rebate_data.promotion,rebate_data.date,so_data.product_id,so_data.state,so_data.customer_id,so_data.customer_name,so_data.product_name,so_data.product_uos_qty,amount,so_data.section_id,so_data.saleman_name,so_data.name,so_data.sale_order_date);	
 						END IF;	
 					ELSEIF rebate_data.comparator= '>' THEN
 						IF so_data.product_uos_qty > rebate_data.sale_qty THEN
 							amount=so_data.product_uos_qty*115*rebate_data.rebate_amount;							
-							insert into rebate_temp(promotion,rebate_date,product_id,state,customer_id,customer_name,product_name,qty,rebate_amount) values (rebate_data.promotion,rebate_data.date,so_data.product_id,so_data.state,so_data.customer_id,so_data.customer_name,so_data.product_name,so_data.product_uos_qty,amount);	
+							insert into rebate_temp(promotion,rebate_date,product_id,state,customer_id,customer_name,product_name,qty,rebate_amount,section_id,user_id,name,date_order) values (rebate_data.promotion,rebate_data.date,so_data.product_id,so_data.state,so_data.customer_id,so_data.customer_name,so_data.product_name,so_data.product_uos_qty,amount,so_data.section_id,so_data.saleman_name,so_data.name,so_data.sale_order_date);	
 						END IF;	
 					ELSEIF rebate_data.comparator= '>=' THEN
 						IF so_data.product_uos_qty >= rebate_data.sale_qty THEN
 							amount=so_data.product_uos_qty*115*rebate_data.rebate_amount;							
-							insert into rebate_temp(promotion,rebate_date,product_id,state,customer_id,customer_name,product_name,qty,rebate_amount) values (rebate_data.promotion,rebate_data.date,so_data.product_id,so_data.state,so_data.customer_id,so_data.customer_name,so_data.product_name,so_data.product_uos_qty,amount);	
+							insert into rebate_temp(promotion,rebate_date,product_id,state,customer_id,customer_name,product_name,qty,rebate_amount,section_id,user_id,name,date_order) values (rebate_data.promotion,rebate_data.date,so_data.product_id,so_data.state,so_data.customer_id,so_data.customer_name,so_data.product_name,so_data.product_uos_qty,amount,so_data.section_id,so_data.saleman_name,so_data.name,so_data.sale_order_date);	
 						END IF;	
 					END IF;
 				END IF;
@@ -113,7 +115,7 @@ $BODY$
   
 -- Table: rebate_temp
 
--- DROP TABLE rebate_temp;
+DROP TABLE rebate_temp;
 
 CREATE TABLE rebate_temp
 (
@@ -125,7 +127,12 @@ CREATE TABLE rebate_temp
   promotion character varying,
   product_id integer,
   state character varying,
-  rebate_date date
+  rebate_date date,
+  section_id integer,
+  user_id integer,
+  name character varying,
+  date_order date
+	
 )
 WITH (
   OIDS=FALSE
