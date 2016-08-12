@@ -18,6 +18,10 @@ class customer_rebate(osv.Model):
          'year':fields.char('Year'),
          'product_id':fields.many2one('product.product', string='Product' , required=True),
          'state':fields.selection([('progress', 'Pending'), ('manual', 'Pending') , ('done' , 'Invoiced')], 'Status'),
+         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
+         'user_id':fields.many2one('res.users', 'Saleman Name'),
+         'name': fields.char('Sale Order'),
+         'date_order': fields.date('Date'),
          
     }
     
@@ -63,14 +67,14 @@ class customer_rebate_generate(osv.Model):
                         month_year_result.append(month_year)
             print 'month_year_result >>> ', month_year_result
             
-            cr.execute("""select customer_id,qty,rebate_amount,promotion,product_id,rebate_date,state from customer_rebate_report(%s,%s)""", (from_date, to_date,))
+            cr.execute("""select customer_id,qty,rebate_amount,promotion,product_id,rebate_date,state,section_id,user_id,name,date_order from customer_rebate_report(%s,%s)""", (from_date, to_date,))
             rebate_result = cr.fetchall()  
             print 'rebate_result date',rebate_result       
             if rebate_result:                
                 for val in rebate_result:
                     print 'val[5]',val[5]
                     cr.execute("""select * from customer_rebate where partner_id=%s and qty=%s and amt=%s and code=%s
-                                and product_id=%s and date=%s and state=%s""", (val[0],val[1],val[2],val[3],val[4],val[5],val[6],))
+                                and product_id=%s and date=%s and state=%s and section_id=%s and user_id=%s and name=%s and date_order=%s""", (val[0],val[1],val[2],val[3],val[4],val[5],val[6],val[7],val[8],val[9],val[10]))
                     rebate_data = cr.fetchall();
                     print 'rebate_data',rebate_data
                     if not rebate_data:                   
@@ -83,6 +87,10 @@ class customer_rebate_generate(osv.Model):
                             'product_id':val[4],
                             'date':val[5],
                             'state':val[6],
+                            'section_id':val[7],
+                            'user_id':val[8],
+                            'name':val[9],
+                            'date_order':val[10],
                             'year':year, }                            
                         inv_id = rebate_obj.create(cr, uid, data_id, context=context)
                     for details in self.browse(cr, uid, ids, context=context):
@@ -103,5 +111,5 @@ class customer_rebate_generate(osv.Model):
             result = act_obj.read(cr, uid, [id], context=context)[0]
             result['domain'] = str([('id', 'in',cust_rebate_list)])
             print 'Result >>>>' , result
-#             cr.execute("""delete from customer_rebate_generate where id=%s""", (ids[0],))
+            cr.execute("""delete from customer_rebate_generate where id=%s""", (ids[0],))
         return result

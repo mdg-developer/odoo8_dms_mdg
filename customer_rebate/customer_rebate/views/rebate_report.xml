@@ -6,8 +6,8 @@
             string="Template"
             model="customer.rebate" 
             report_type="qweb-pdf"
-            file="customer_rebate.report_rebate_document" 
-            name="customer_rebate.report_rebate_document" 
+            file="customer_rebate.report_rebate_template" 
+            name="customer_rebate.report_rebate_template" 
         />
     </data>
 </openerp>
