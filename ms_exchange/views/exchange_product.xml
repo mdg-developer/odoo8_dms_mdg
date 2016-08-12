@@ -59,6 +59,7 @@
 												<field name="so_No" />
 												<field name="product_id" />
 												<field name="product_qty" />
+												<field name="amount" />
 												<field name="batchno" />
 												<field name="exp_date" />
 												<field name="trans_type" />
@@ -70,6 +71,7 @@
 										<field name="so_No" />
 										<field name="product_id" />
 										<field name="product_qty" />
+										<field name="amount" />
 										<field name="batchno" />
 										<field name="exp_date" />
 										<field name="trans_type" />
