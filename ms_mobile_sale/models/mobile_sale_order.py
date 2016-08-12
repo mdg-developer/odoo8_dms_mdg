@@ -832,7 +832,8 @@ class mobile_sale_order(osv.osv):
     def get_pricelist_item_datas(self, cr, uid, section_id , context=None, **kwargs):
         cr.execute('''select pi.id,pi.price_discount,pi.sequence,pi.product_tmpl_id,pi.name,pi.base_pricelist_id,
                     pi.product_id,pi.base,pi.price_version_id,pi.min_quantity,
-                    pi.categ_id,pi.price_surcharge from product_pricelist_item pi, product_pricelist_version pv, product_pricelist pp where pv.pricelist_id = pp.id 
+                    pi.categ_id,pi.price_surcharge ,pi.product_uom_id
+					from product_pricelist_item pi, product_pricelist_version pv, product_pricelist pp where pv.pricelist_id = pp.id 
                     and pv.id = pi.price_version_id and (pp.main_group_id in (select product_maingroup_id 
                     from crm_case_section_product_maingroup_rel mg,crm_case_section cs 
                     where cs.id = mg.crm_case_section_id and cs.id = %s) or pp.main_group_id is null)''', (section_id,))
@@ -1240,6 +1241,12 @@ class mobile_sale_order(osv.osv):
                         where sale_team_id = %s """, (sale_team_id,))                
         datas =cr.fetchall()
         return datas
+		
+    def get_uom(self, cr, uid, context=None, **kwargs):    
+        cr.execute("""select id,name,floor(1/factor) as ratio from product_uom where active = true""")
+        datas =cr.fetchall()
+        print 'Product UOM', datas
+        return datas		
 
 mobile_sale_order()
 
@@ -1257,8 +1264,8 @@ class mobile_sale_order_line(osv.osv):
     _columns = {
         'product_id':fields.many2one('product.product', 'Products'),
         'product_uos_qty':fields.float('Quantity'),
-        'uom_id':fields.many2one('product.uom', 'UOM', readonly=False),
-#         'uom_id':fields.function(_get_uom_from_product, type='many2one', relation='product.uom', string='UOM'),
+#         'uom_id':fields.many2one('product.uom', 'UOM', readonly=False),
+        'uom_id':fields.function(_get_uom_from_product, type='many2one', relation='product.uom', string='UOM'),
         'price_unit':fields.float('Unit Price'),
         'discount':fields.float('Discount (%)'),
         'discount_amt':fields.float('Discount (Amt)'),
