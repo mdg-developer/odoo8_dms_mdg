@@ -141,6 +141,7 @@ class exchange_product_line_item(osv.osv):
                 'note':fields.char('Note'),
                 'exp_date':fields.date('Expired Date'),
                 'batchno':fields.char('Batch No'),
+                'amount':fields.float('Amount'),
                 }
     
 exchange_product_line_item()
