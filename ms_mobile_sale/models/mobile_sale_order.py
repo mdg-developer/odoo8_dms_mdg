@@ -980,7 +980,6 @@ class mobile_sale_order(osv.osv):
         try : 
             mso_promotion_line_obj = self.pool.get('mso.promotion.line')
             str = "{" + vals + "}"
-                
             str = str.replace("'',", "',")  # null
             str = str.replace(":',", ":'',")  # due to order_id
             str = str.replace("}{", "}|{")
@@ -1053,9 +1052,14 @@ class mobile_sale_order(osv.osv):
                         'date':pt['date'],
                         'tablet_id':pt['tablet_id'],
                         'user_id':pt['user_id'],
+                        'total_amount':pt['total_amount'][0],
+                        'denomination_note_line':False,
                     }
+                    print'Deno Reu', deno_result
+                    total_amount=pt['total_amount'],
+
                     deno_id = history_obj.create(cursor, user, deno_result, context=context)
-                    
+                    print'deno_id', deno_id
                     for ptl in notes_line:
                                 note_line_res = {                                                            
                                   'denomination_note_ids':deno_id,
@@ -1082,12 +1086,14 @@ class mobile_sale_order(osv.osv):
                                           'denomination_product_ids':deno_id,
                                           'amount':data[2]}
                         deno_product_obj.create(cursor, user, data_id, context=context)
+
+                        
             print 'True'
             return True       
         except Exception, e:
             print 'False'
             return False
-            
+        
     def create_ar_collection(self, cursor, user, vals, context=None):
 
         ar_obj = self.pool.get('mobile.ar.collection')

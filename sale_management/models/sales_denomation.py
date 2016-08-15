@@ -21,9 +21,9 @@ class sale_denomination(osv.osv):
         'name':fields.char('Txn' ,readonly=True),
         'invoice_count':fields.integer('Invoiced' , required=True),        
        'denomination_product_line':fields.one2many('sales.denomination.product.line', 'denomination_product_ids', string='Sale denomination Product Line', copy=True , required=True),
-       'denomination_note_line':fields.one2many('sales.denomination.note.line', 'denomination_note_ids', string='Sale denomination Product Line', copy=True , required=True),       
+       'denomination_note_line':fields.one2many('sales.denomination.note.line', 'denomination_note_ids', string='Sale denomination Product Line', copy=True),       
         'note':fields.text('Note'),
-  
+      'total_amount':fields.float('Total Amount'),
   }
     _defaults = {
         'date': fields.datetime.now,
@@ -60,7 +60,17 @@ class sale_denomination(osv.osv):
         credit_no = self.pool.get('ir.sequence').get(cursor, user,
             'sales.denomination') or '/'
         vals['name'] = credit_no
+        total_amount=False
+        denomination_note_line=vals['denomination_note_line']
+        print 'denomination_note_line',denomination_note_line
+        if denomination_note_line:
+            for data in denomination_note_line:
+                note=data[2]['notes']
+                qty=data[2]['note_qty']
+                total_amount+=(int(note)*int(qty))
+        vals['total_amount'] = total_amount        
         return super(sale_denomination, self).create(cursor, user, vals, context=context)    
+
 sale_denomination()        
 
 class sale_denomination_product_line(osv.osv):    
