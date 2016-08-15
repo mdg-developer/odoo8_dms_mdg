@@ -16,7 +16,7 @@ declare
 		DELETE FROM rebate_temp;
 		
 		FOR so_data IN
-			select (date_order+'6 hour'::interval+'30 minutes'::interval)::date as sale_order_date,so.state,so.name,so.section_id,so.user_id  as saleman_name,res.id as customer_id,res.name as customer_name,pp.id as product_id,pp.name_template as product_name,product_uos_qty,uom.name as uom
+			select (so.date_order+'6 hour'::interval+'30 minutes'::interval)::date as sale_order_date,so.state,so.name,so.section_id,so.user_id  as saleman_name,res.id as customer_id,res.name as customer_name,pp.id as product_id,pp.name_template as product_name,product_uos_qty,uom.name as uom
 			from sale_order so,res_partner res,sale_order_line sol,product_product pp,product_template pt,product_uom uom
 			where so.partner_id=res.id
 			and sol.order_id=so.id
@@ -115,7 +115,7 @@ $BODY$
   
 -- Table: rebate_temp
 
-DROP TABLE rebate_temp;
+-- DROP TABLE rebate_temp;
 
 CREATE TABLE rebate_temp
 (
