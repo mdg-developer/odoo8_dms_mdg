@@ -1,7 +1,7 @@
 from openerp.osv import fields, osv
 from openerp.osv import orm
-from openerp import _
 from datetime import datetime
+from openerp.tools.translate import _
 import ast
 import time
 DEFAULT_SERVER_DATE_FORMAT = "%Y-%m-%d"
@@ -93,14 +93,12 @@ class mobile_sale_order(osv.osv):
             
             if sale_order:
                 for so in sale_order:
-                   # print 'Sale Man Id', so['user_id']
-                   # print 'Sale Void', so['void_flag']
-                   # cursor.execute('select id From res_users where partner_id  = %s ', (so['user_id'],))
-                   # data = cursor.fetchall()
-                    # if data:
-                    #    saleManId = data[0][0]
-                  #  else:
-                     #   saleManId = None
+                    cursor.execute('select id From res_partner where customer_code  = %s ', (so['customer_code'],))
+                    data = cursor.fetchall()                
+                    if data:
+                        partner_id = data[0][0]
+                    else:
+                        partner_id = None
                     
                     cursor.execute('select id From outlettype_outlettype where name  = %s ', (so['outlet_type'],))
                     data = cursor.fetchall()
@@ -123,7 +121,7 @@ class mobile_sale_order(osv.osv):
                         'user_id':so['user_id'],
                         'name':so['name'],
                         'paid_amount':so['paid_amount'],
-                        'partner_id':so['partner_id'],
+                        'partner_id': partner_id,
                         'sale_plan_name':so['sale_plan_day_name'],
                         'additional_discount':so['additional_discount'],
                         'amount_total':so['amount_total'],
@@ -138,19 +136,19 @@ class mobile_sale_order(osv.osv):
                         'payment_term':so['payment_term'],
                         'mso_longitude':so['mso_longitude'],
                         'mso_latitude':so['mso_latitude'],
-						'outlet_type':outlet_type
+                        'outlet_type':outlet_type
                     }
                     s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
                     print "Create Sale Order", so['name']
                     for sol in sale_order_line:
                         if sol['so_name'] == so['name']:
-                                cursor.execute('select id From product_product where product_tmpl_id  = %s ', (sol['product_id'],))
+                                cursor.execute('select id From product_product where id  = %s ', (sol['product_id'],))
                                 data = cursor.fetchall()
                                 if data:
                                     productId = data[0][0]
                                 else:
                                     productId = None
-								
+                                
                                 if sol['price_unit'] == '0':
                                     foc_val = True
                                 else:
@@ -161,7 +159,7 @@ class mobile_sale_order(osv.osv):
                                   'product_id':productId,
                                   'price_unit':sol['price_unit'],
                                   'product_uos_qty':sol['product_uos_qty'],
-							      'foc': foc_val,
+                                  'foc': foc_val,
                                   'discount':sol['discount'],
                                   'discount_amt':sol['discount_amt'],
                                   'sub_total':sol['sub_total'],
@@ -327,345 +325,345 @@ class mobile_sale_order(osv.osv):
         invFlag = False
         product_name = ''
         if ids:
-            try:
-                # default price list need in sale order form
-                cr.execute("""select id from product_pricelist where type = 'sale' """)
-                data = cr.fetchall()
-                if data:
-                    pricelist_id = data[0][0]
-    
-                cr.execute("select TI.sale_team_id from  mobile_sale_order msol,tablets_information TI where msol.tablet_id=TI.id and msol.id=%s", (ids[0],))
-                sale_team_id = cr.fetchone()
-                if sale_team_id:
-                    sale_team_id = sale_team_id[0]
-                cr.execute("select cc.analytic_account_id from crm_case_section cc,mobile_sale_order mso where mso.sale_team=cc.id and mso.id=%s", (ids[0],))
-                analytic_id = cr.fetchone()
-                if analytic_id:
+            # default price list need in sale order form
+            cr.execute("""select id from product_pricelist where type = 'sale' """)
+            data = cr.fetchall()
+            if data:
+                pricelist_id = data[0][0]
+# old query version 
+#                 cr.execute("select TI.sale_team_id from  mobile_sale_order msol,tablets_information TI where msol.tablet_id=TI.id and msol.id=%s", (ids[0],))
+#                 sale_team_id = cr.fetchone()
+            sale_team_obj = self.browse(cr, uid, ids, context)
+            sale_team_id = sale_team_obj.sale_team.id
+            cr.execute("select cc.analytic_account_id from crm_case_section cc,mobile_sale_order mso where mso.sale_team=cc.id and mso.id=%s", (ids[0],))
+            analytic_id = cr.fetchone()
+            if analytic_id:
+                try:
+                    analytic_id = analytic_id[0][0]
+                except Exception, e:
                     analytic_id = analytic_id[0]
-                else:
-                    analytic_id = False
-    
-                for ms_ids in msoObj.browse(cr, uid, ids[0], context=context):
-                    if ms_ids:
-                        if ms_ids.void_flag == 'voided':  # they work while payment type not 'cash' and 'credit'
-                            so_state = 'cancel'
-                        elif ms_ids.void_flag == 'none':
-                            so_state = 'draft'
-                        soResult = {
-                                              'date_order':ms_ids.date,
-                           'partner_id':ms_ids.partner_id.id,
-                           'amount_untaxed':ms_ids.amount_total ,
-                           'partner_invoice_id':ms_ids.partner_id.id,
-                           'user_id':ms_ids.user_id.id,
-                           'date_confirm':ms_ids.date,
-                           'amount_total':ms_ids.amount_total,
-                           'order_policy':'manual',
-                           'company_id':1,
-                           'payment_term':ms_ids.payment_term.id,
-                            'state':so_state,
-                            'pricelist_id':pricelist_id,
-                            'picking_policy':'direct',
-                            'warehouse_id':ms_ids.warehouse_id.id,
-                            'project_id':analytic_id,
-                            'partner_shipping_id':ms_ids.partner_id.id,
-                            # 'shipped':'f',
-                            'tb_ref_no':ms_ids.name,
-                            'sale_plan_name':ms_ids.sale_plan_name,
-                            'payment_type':ms_ids.type,
-                            'section_id':sale_team_id,
-                            'due_date':ms_ids.due_date,
-                            'so_latitude':ms_ids.mso_latitude,
-                            'so_longitude':ms_ids.mso_longitude,
-                            # 'total_dis':additional_discount,
-                            'deduct_amt':ms_ids.deduction_amount,
-                            'delivery_remark':ms_ids.delivery_remark,
-                            'sale_plan_day_id':ms_ids.sale_plan_day_id.id,
-                            'sale_plan_trip_id':ms_ids.sale_plan_trip_id.id,
-                            'customer_code':ms_ids.customer_code 
-                                            }
-                        soId = soObj.create(cr, uid, soResult, context=context)
-                        if soId and ms_ids.order_line:
-                            for line_id in ms_ids.order_line:
-                                if line_id:
-                                    if line_id.product_id:
-                                        if line_id.product_id:
-                                            cr.execute("""select default_code from product_product where product_tmpl_id = %s""", (line_id.product_id.id,))
-                                            data = cr.fetchall()
-                                            if data:
-                                                default_code = data[0][0]
-                                            if default_code:
-                                                product_name = '[' + default_code + ']' + line_id.product_id.name
-                                            else:
-                                                product_name = line_id.product_id.name
-                                            # FOC with price_unit or foc true, false
-                                        if line_id.price_unit == 0.0 or line_id.foc:
-                                            foc = True
-                                            product_name = 'FOC'
-                                            price_unit = 0.0
-                                        else:
-                                            foc = False
-                                            price_unit = line_id.price_unit
-                                    solResult = {
-                                                 'order_id':soId,
-                                                  'product_id':line_id.product_id.id,
-                                                  'name':product_name,
-                                                  'price_unit':price_unit,
-                                                  'product_uom':1,
-                                                  'product_uom_qty':line_id.product_uos_qty,
-                                                  'discount':line_id.discount,
-                                                  'discount_amt':line_id.discount_amt,
-                                                  'company_id':1,  # company_id,
-                                                  'state':'draft',
-                                                  'net_total':line_id.sub_total,
-                                                  'sale_foc':foc
-                                               }
-                                    
-                                    solObj.create(cr, uid, solResult, context=context)
-                                    if soId:
-                                        soObj.button_dummy(cr, uid, [soId], context=context)  # update the SO
-                                        
-                    if ms_ids and  so_state != 'cancel':
-                        if ms_ids.type:
-                            solist.append(soId)
-                            # type > cash and delivery_remark > delivered
-                            if ms_ids.type == 'cash' and ms_ids.delivery_remark == 'delivered':  # Payment Type=>Cash and Delivery Remark=>Delivered
-                                # SO Confirm 
-                                soObj.action_button_confirm(cr, uid, solist, context=context)
-                                # Create Invoice
-                                invoice_id = self.create_invoices(cr, uid, solist, context=context)
-                                invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
-                                if invoice_id and ms_ids.paid == True:
-                                    invlist = []
-                                    invlist.append(invoice_id)
-                                    # call the api function
-                                    # invObj contain => account.invoice(1,) like that
-                                    invObj = invoiceObj.browse(cr, uid, invoice_id, context=context)
-                                    invObj.action_date_assign()
-                                    invObj.action_move_create()
-                                    invObj.action_number()
-                                    # validate invoice
-                                    invObj.invoice_validate()
-                                    
-                                    # register Payment
-                                    # calling the register payment pop-up
-                                    invoiceObj.invoice_pay_customer(cr, uid, invlist, context=context)
-                                    cr.execute('select id from account_journal where type=%s', ('cash',))
-                                    data = cr.fetchall()
-                                    if data:
-                                        journal_id = data[0]
-                                    cr.execute('select id from account_account where lower(name)=%s and active= %s', ('cash', True,))  # which account shall I choose. It is needed.
-                                    data = cr.fetchall()
-                                    if data:
-                                        accountId = data[0]
-                                    if journal_id and accountId:  # cash journal and cash account. If there no journal id or no account id, account invoice is not make payment.
-                                        accountVResult = {
-                                                        'partner_id':invObj.partner_id.id,
-                                                        'amount':invObj.amount_total,
-                                                        'journal_id':journal_id,
-                                                        'date':invObj.date_invoice,
-                                                        'period_id':invObj.period_id.id,
-                                                        'account_id':accountId,
-                                                        'pre_line':True,
-                                                        'type':'receipt'
-                                                        }
-                                        # create register payment voucher
-                                        voucherId = voucherObj.create(cr, uid, accountVResult, context=context)
-                                        
-                                    if voucherId:
-                                        vlist = []
-                                        vlist.append(voucherId)
-                                        # get the voucher lines
-                                        vlresult = voucherObj.recompute_voucher_lines(cr, uid, vlist, invObj.partner_id.id, journal_id, invObj.amount_total, 120, 'receipt', invObj.date_invoice, context=None)
-                                        if vlresult:
-                                            result = vlresult['value']['line_cr_ids'][0]
-                                            result['voucher_id'] = voucherId
-                                            # create the voucher lines
-                                            voucherLineObj.create(cr, uid, result, context=context)
-                                        # invoice register payment done
-                                        voucherObj.button_proforma_voucher(cr, uid, vlist , context=context)
-                                        # invoice paid status is true
-                                        invFlag = True
-                                # clicking the delivery order view button
-                                stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)    
-                                if stockViewResult:
-                                    # stockViewResult is form result
-                                    # stocking id =>stockViewResult['res_id']
-                                    # click force_assign
-                                    stockPickingObj.force_assign(cr, uid, stockViewResult['res_id'], context=context)
-                                    # transfer
-                                    # call the transfer wizard
-                                    # change list
-                                    pickList = []
-                                    pickList.append(stockViewResult['res_id'])
-                                    wizResult = stockPickingObj.do_enter_transfer_details(cr, uid, pickList, context=context)
-                                    # pop up wizard form => wizResult
-                                    detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
-                                    if detailObj:
-                                        detailObj.do_detailed_transfer()
-                                        
-                            if ms_ids.type == 'cash' and ms_ids.delivery_remark == 'none':  # Payment Type=>Cash and Delivery Remark=>None
-                                # SO Confirm 
-                                soObj.action_button_confirm(cr, uid, solist, context=context)
-                                # Create Invoice
-                                invoice_id = self.create_invoices(cr, uid, solist, context=context)
-                                invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
-                                if invoice_id and ms_ids.paid == True:
-                                    invlist = []
-                                    invlist.append(invoice_id)
-                                    # call the api function
-                                    # invObj contain => account.invoice(1,) like that
-                                    invObj = invoiceObj.browse(cr, uid, invoice_id, context=context)
-                                    invObj.action_date_assign()
-                                    invObj.action_move_create()
-                                    invObj.action_number()
-                                    # validate invoice
-                                    invObj.invoice_validate()
-                                    
-                                    # register Payment
-                                    # calling the register payment pop-up
-                                    invoiceObj.invoice_pay_customer(cr, uid, invlist, context=context)
-                                    cr.execute('select id from account_journal where type=%s', ('cash',))
-                                    data = cr.fetchall()
-                                    if data:
-                                        journal_id = data[0]
-                                    cr.execute('select id from account_account where lower(name)=%s and active= %s', ('cash', True,))  # which account shall I choose. It is needed.
-                                    data = cr.fetchall()
-                                    if data:
-                                        accountId = data[0]
-                                    if journal_id and accountId:  # cash journal and cash account. If there no journal id or no account id, account invoice is not make payment.
-                                        accountVResult = {
-                                                        'partner_id':invObj.partner_id.id,
-                                                        'amount':invObj.amount_total,
-                                                        'journal_id':journal_id,
-                                                        'date':invObj.date_invoice,
-                                                        'period_id':invObj.period_id.id,
-                                                        'account_id':accountId,
-                                                        'pre_line':True,
-                                                        'type':'receipt'
-                                                        }
-                                        # create register payment voucher
-                                        voucherId = voucherObj.create(cr, uid, accountVResult, context=context)
-                                        
-                                    if voucherId:
-                                        vlist = []
-                                        vlist.append(voucherId)
-                                        # get the voucher lines
-                                        vlresult = voucherObj.recompute_voucher_lines(cr, uid, vlist, invObj.partner_id.id, journal_id, invObj.amount_total, 120, 'receipt', invObj.date_invoice, context=None)
-                                        if vlresult:
-                                            result = vlresult['value']['line_cr_ids'][0]
-                                            result['voucher_id'] = voucherId
-                                            # create the voucher lines
-                                            voucherLineObj.create(cr, uid, result, context=context)
-                                        # invoice register payment done
-                                        voucherObj.button_proforma_voucher(cr, uid, vlist , context=context)
-                                        # invoice paid status is true
-                                        invFlag = True
-                                # clicking the delivery order view button
-                                soObj.action_view_delivery(cr, uid, solist, context=context)  # create the delivery with draft state
-                                        
-                            if ms_ids.type == 'cash' and ms_ids.delivery_remark == 'partial':  # Payment Type=>Cash and Delivery Remark=>None
-                                # SO Confirm 
-                                soObj.action_button_confirm(cr, uid, solist, context=context)
-                                # Create Invoice
-                                invoice_id = self.create_invoices(cr, uid, solist, context=context)
-                                invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
-                                if invoice_id and ms_ids.paid == True:
-                                    invlist = []
-                                    invlist.append(invoice_id)
-                                    # call the api function
-                                    # invObj contain => account.invoice(1,) like that
-                                    invObj = invoiceObj.browse(cr, uid, invoice_id, context=context)
-                                    invObj.action_date_assign()
-                                    invObj.action_move_create()
-                                    invObj.action_number()
-                                    # validate invoice
-                                    invObj.invoice_validate()
-                                    
-                                    # register Payment
-                                    # calling the register payment pop-up
-                                    invoiceObj.invoice_pay_customer(cr, uid, invlist, context=context)
-                                    cr.execute('select id from account_journal where type=%s', ('cash',))
-                                    data = cr.fetchall()
-                                    if data:
-                                        journal_id = data[0]
-                                    cr.execute('select id from account_account where lower(name)=%s and active= %s and type=%s ', ('cash', True, 'liquidity',))  # which account shall I choose. It is needed.
-                                    data = cr.fetchall()
-                                    if data:
-                                        accountId = data[0]
-                                    if journal_id and accountId:  # cash journal and cash account. If there no journal id or no account id, account invoice is not make payment.
-                                        accountVResult = {
-                                                        'partner_id':invObj.partner_id.id,
-                                                        'amount':invObj.amount_total,
-                                                        'journal_id':journal_id,
-                                                        'date':invObj.date_invoice,
-                                                        'period_id':invObj.period_id.id,
-                                                        'account_id':accountId,
-                                                        'pre_line':True,
-                                                        'type':'receipt'
-                                                        }
-                                        # create register payment voucher
-                                        voucherId = voucherObj.create(cr, uid, accountVResult, context=context)
-                                        
-                                    if voucherId:
-                                        vlist = []
-                                        vlist.append(voucherId)
-                                        # get the voucher lines
-                                        vlresult = voucherObj.recompute_voucher_lines(cr, uid, vlist, invObj.partner_id.id, journal_id, invObj.amount_total, 120, 'receipt', invObj.date_invoice, context=None)
-                                        if vlresult:
-                                            result = vlresult['value']['line_cr_ids'][0]
-                                            result['voucher_id'] = voucherId
-                                            # create the voucher lines
-                                            voucherLineObj.create(cr, uid, result, context=context)
-                                        # invoice register payment done
-                                        voucherObj.button_proforma_voucher(cr, uid, vlist , context=context)
-                                        # invoice paid status is true
-                                        invFlag = True
-                                # clicking the delivery order view button
-                                soObj.action_view_delivery(cr, uid, solist, context=context)  # create the delivery with draft state
-                                
-                            if ms_ids.type == 'credit' and ms_ids.delivery_remark == 'delivered':  # Payment Type=>Credit and Delivery Remark=>Delivered
-                                # so Confirm
-                                soObj.action_button_confirm(cr, uid, solist, context=context)
-                                # invoice create at draft state
-                                invoice_id = self.create_invoices(cr, uid, solist, context=context)
-                                invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
-                                # clicking the delivery order view button
-                                stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)    
-                                if stockViewResult:
-                                    # stockViewResult is form result
-                                    # stocking id =>stockViewResult['res_id']
-                                    # click force_assign
-                                    stockPickingObj.force_assign(cr, uid, stockViewResult['res_id'], context=context)
-                                    # transfer
-                                    # call the transfer wizard
-                                    # change list
-                                    pickList = []
-                                    pickList.append(stockViewResult['res_id'])
-                                    wizResult = stockPickingObj.do_enter_transfer_details(cr, uid, pickList, context=context)
-                                    # pop up wizard form => wizResult
-                                    detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
-                                    if detailObj:
-                                        detailObj.do_detailed_transfer()
+            else:
+                analytic_id = False
 
-                            if ms_ids.type == 'credit' and ms_ids.delivery_remark == 'none':  # Payment Type=>Credit and Delivery Remark=>None
-                                # so Confirm
-                                soObj.action_button_confirm(cr, uid, solist, context=context)
-                                # invoice create at draft state
-                                invoice_id = self.create_invoices(cr, uid, solist, context=context)
-                                invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
-                                # clicking the delivery order view button
-                                stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)  # create delivery order with draft state
+            for ms_ids in msoObj.browse(cr, uid, ids[0], context=context):
+                if ms_ids:
+                    if ms_ids.void_flag == 'voided':  # they work while payment type not 'cash' and 'credit'
+                        so_state = 'cancel'
+                    elif ms_ids.void_flag == 'none':
+                        so_state = 'draft'
+                    soResult = {
+                                          'date_order':ms_ids.date,
+                                           'partner_id':ms_ids.partner_id.id,
+                                           'amount_untaxed':ms_ids.amount_total ,
+                                           'partner_invoice_id':ms_ids.partner_id.id,
+                                           'user_id':ms_ids.user_id.id,
+                                           'date_confirm':ms_ids.date,
+                                           'amount_total':ms_ids.amount_total,
+                                           'order_policy':'manual',
+                                           'company_id':1,
+                                           'payment_term':ms_ids.payment_term.id,
+                                            'state':so_state,
+                                            'pricelist_id':pricelist_id,
+                                            'picking_policy':'direct',
+                                            'warehouse_id':ms_ids.warehouse_id.id,
+                                            'project_id':analytic_id,
+                                            'partner_shipping_id':ms_ids.partner_id.id,
+                                            # 'shipped':'f',
+                                            'tb_ref_no':ms_ids.name,
+                                            'sale_plan_name':ms_ids.sale_plan_name,
+                                            'payment_type':ms_ids.type,
+                                            'section_id':sale_team_id,
+                                            'due_date':ms_ids.due_date,
+                                            'so_latitude':ms_ids.mso_latitude,
+                                            'so_longitude':ms_ids.mso_longitude,
+                                            # 'total_dis':additional_discount,
+                                            'deduct_amt':ms_ids.deduction_amount,
+                                            'delivery_remark':ms_ids.delivery_remark,
+                                            'sale_plan_day_id':ms_ids.sale_plan_day_id.id,
+                                            'sale_plan_trip_id':ms_ids.sale_plan_trip_id.id,
+                                            'customer_code':ms_ids.customer_code 
+                                        }
+                    soId = soObj.create(cr, uid, soResult, context=context)
+                    if soId and ms_ids.order_line:
+                        for line_id in ms_ids.order_line:
+                            if line_id:
+                                if line_id.product_id:
+                                    if line_id.product_id:
+                                        cr.execute("""select default_code from product_product where product_tmpl_id = %s""", (line_id.product_id.id,))
+                                        data = cr.fetchall()
+                                        if data:
+                                            default_code = data[0][0]
+                                        if default_code:
+                                            product_name = '[' + default_code + ']' + line_id.product_id.name
+                                        else:
+                                            product_name = line_id.product_id.name
+                                        # FOC with price_unit or foc true, false
+                                    if line_id.price_unit == 0.0 or line_id.foc:
+                                        foc = True
+                                        product_name = 'FOC'
+                                        price_unit = 0.0
+                                    else:
+                                        foc = False
+                                        price_unit = line_id.price_unit
+                                solResult = {
+                                             'order_id':soId,
+                                              'product_id':line_id.product_id.id,
+                                              'name':product_name,
+                                              'price_unit':price_unit,
+                                              'product_uom':1,
+                                              'product_uom_qty':line_id.product_uos_qty,
+                                              'discount':line_id.discount,
+                                              'discount_amt':line_id.discount_amt,
+                                              'company_id':1,  # company_id,
+                                              'state':'draft',
+                                              'net_total':line_id.sub_total,
+                                              'sale_foc':foc
+                                           }
                                 
-                            if ms_ids.type == 'credit' and ms_ids.delivery_remark == 'partial':  # Payment Type=>Credit and Delivery Remark=>Partial
-                                # so Confirm
-                                soObj.action_button_confirm(cr, uid, solist, context=context)
-                                # invoice create at draft state
-                                invoice_id = self.create_invoices(cr, uid, solist, context=context)
-                                invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
-                                # clicking the delivery order view button
-                                stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)  # create delivery order with draft state
-            except Exception, e:
-                raise orm.except_orm(_('Error :'), _("Error Occured while Convert Mobile Sale Order! \n [ %s ]") % (e))
+                                solObj.create(cr, uid, solResult, context=context)
+                                if soId:
+                                    soObj.button_dummy(cr, uid, [soId], context=context)  # update the SO
+                                    
+                if ms_ids and  so_state != 'cancel':
+                    if ms_ids.type:
+                        solist.append(soId)
+                        # type > cash and delivery_remark > delivered
+                        if ms_ids.type == 'cash' and ms_ids.delivery_remark == 'delivered':  # Payment Type=>Cash and Delivery Remark=>Delivered
+                            # SO Confirm 
+                            soObj.action_button_confirm(cr, uid, solist, context=context)
+                            # Create Invoice
+                            invoice_id = self.create_invoices(cr, uid, solist, context=context)
+                            invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
+                            if invoice_id and ms_ids.paid == True:
+                                invlist = []
+                                invlist.append(invoice_id)
+                                # call the api function
+                                # invObj contain => account.invoice(1,) like that
+                                invObj = invoiceObj.browse(cr, uid, invoice_id, context=context)
+                                invObj.action_date_assign()
+                                invObj.action_move_create()
+                                invObj.action_number()
+                                # validate invoice
+                                invObj.invoice_validate()
+                                
+                                # register Payment
+                                # calling the register payment pop-up
+                                invoiceObj.invoice_pay_customer(cr, uid, invlist, context=context)
+                                cr.execute('select id from account_journal where type=%s', ('cash',))
+                                data = cr.fetchall()
+                                if data:
+                                    journal_id = data[0]
+                                cr.execute('select id from account_account where lower(name)=%s and active= %s', ('cash', True,))  # which account shall I choose. It is needed.
+                                data = cr.fetchall()
+                                if data:
+                                    accountId = data[0]
+                                if journal_id and accountId:  # cash journal and cash account. If there no journal id or no account id, account invoice is not make payment.
+                                    accountVResult = {
+                                                    'partner_id':invObj.partner_id.id,
+                                                    'amount':invObj.amount_total,
+                                                    'journal_id':journal_id,
+                                                    'date':invObj.date_invoice,
+                                                    'period_id':invObj.period_id.id,
+                                                    'account_id':accountId,
+                                                    'pre_line':True,
+                                                    'type':'receipt'
+                                                    }
+                                    # create register payment voucher
+                                    voucherId = voucherObj.create(cr, uid, accountVResult, context=context)
+                                    
+                                if voucherId:
+                                    vlist = []
+                                    vlist.append(voucherId)
+                                    # get the voucher lines
+                                    vlresult = voucherObj.recompute_voucher_lines(cr, uid, vlist, invObj.partner_id.id, journal_id, invObj.amount_total, 120, 'receipt', invObj.date_invoice, context=None)
+                                    if vlresult:
+                                        result = vlresult['value']['line_cr_ids'][0]
+                                        result['voucher_id'] = voucherId
+                                        # create the voucher lines
+                                        voucherLineObj.create(cr, uid, result, context=context)
+                                    # invoice register payment done
+                                    voucherObj.button_proforma_voucher(cr, uid, vlist , context=context)
+                                    # invoice paid status is true
+                                    invFlag = True
+                            # clicking the delivery order view button
+                            stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)    
+                            if stockViewResult:
+                                # stockViewResult is form result
+                                # stocking id =>stockViewResult['res_id']
+                                # click force_assign
+                                stockPickingObj.force_assign(cr, uid, stockViewResult['res_id'], context=context)
+                                # transfer
+                                # call the transfer wizard
+                                # change list
+                                pickList = []
+                                pickList.append(stockViewResult['res_id'])
+                                wizResult = stockPickingObj.do_enter_transfer_details(cr, uid, pickList, context=context)
+                                # pop up wizard form => wizResult
+                                detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
+                                if detailObj:
+                                    detailObj.do_detailed_transfer()
+                                    
+                        if ms_ids.type == 'cash' and ms_ids.delivery_remark == 'none':  # Payment Type=>Cash and Delivery Remark=>None
+                            # SO Confirm 
+                            soObj.action_button_confirm(cr, uid, solist, context=context)
+                            # Create Invoice
+                            invoice_id = self.create_invoices(cr, uid, solist, context=context)
+                            invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
+                            if invoice_id and ms_ids.paid == True:
+                                invlist = []
+                                invlist.append(invoice_id)
+                                # call the api function
+                                # invObj contain => account.invoice(1,) like that
+                                invObj = invoiceObj.browse(cr, uid, invoice_id, context=context)
+                                invObj.action_date_assign()
+                                invObj.action_move_create()
+                                invObj.action_number()
+                                # validate invoice
+                                invObj.invoice_validate()
+                                
+                                # register Payment
+                                # calling the register payment pop-up
+                                invoiceObj.invoice_pay_customer(cr, uid, invlist, context=context)
+                                cr.execute('select id from account_journal where type=%s', ('cash',))
+                                data = cr.fetchall()
+                                if data:
+                                    journal_id = data[0]
+                                cr.execute('select id from account_account where lower(name)=%s and active= %s', ('cash', True,))  # which account shall I choose. It is needed.
+                                data = cr.fetchall()
+                                if data:
+                                    accountId = data[0]
+                                if journal_id and accountId:  # cash journal and cash account. If there no journal id or no account id, account invoice is not make payment.
+                                    accountVResult = {
+                                                    'partner_id':invObj.partner_id.id,
+                                                    'amount':invObj.amount_total,
+                                                    'journal_id':journal_id,
+                                                    'date':invObj.date_invoice,
+                                                    'period_id':invObj.period_id.id,
+                                                    'account_id':accountId,
+                                                    'pre_line':True,
+                                                    'type':'receipt'
+                                                    }
+                                    # create register payment voucher
+                                    voucherId = voucherObj.create(cr, uid, accountVResult, context=context)
+                                    
+                                if voucherId:
+                                    vlist = []
+                                    vlist.append(voucherId)
+                                    # get the voucher lines
+                                    vlresult = voucherObj.recompute_voucher_lines(cr, uid, vlist, invObj.partner_id.id, journal_id, invObj.amount_total, 120, 'receipt', invObj.date_invoice, context=None)
+                                    if vlresult:
+                                        result = vlresult['value']['line_cr_ids'][0]
+                                        result['voucher_id'] = voucherId
+                                        # create the voucher lines
+                                        voucherLineObj.create(cr, uid, result, context=context)
+                                    # invoice register payment done
+                                    voucherObj.button_proforma_voucher(cr, uid, vlist , context=context)
+                                    # invoice paid status is true
+                                    invFlag = True
+                            # clicking the delivery order view button
+                            soObj.action_view_delivery(cr, uid, solist, context=context)  # create the delivery with draft state
+                                    
+                        if ms_ids.type == 'cash' and ms_ids.delivery_remark == 'partial':  # Payment Type=>Cash and Delivery Remark=>None
+                            # SO Confirm 
+                            soObj.action_button_confirm(cr, uid, solist, context=context)
+                            # Create Invoice
+                            invoice_id = self.create_invoices(cr, uid, solist, context=context)
+                            invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
+                            if invoice_id and ms_ids.paid == True:
+                                invlist = []
+                                invlist.append(invoice_id)
+                                # call the api function
+                                # invObj contain => account.invoice(1,) like that
+                                invObj = invoiceObj.browse(cr, uid, invoice_id, context=context)
+                                invObj.action_date_assign()
+                                invObj.action_move_create()
+                                invObj.action_number()
+                                # validate invoice
+                                invObj.invoice_validate()
+                                
+                                # register Payment
+                                # calling the register payment pop-up
+                                invoiceObj.invoice_pay_customer(cr, uid, invlist, context=context)
+                                cr.execute('select id from account_journal where type=%s', ('cash',))
+                                data = cr.fetchall()
+                                if data:
+                                    journal_id = data[0]
+                                cr.execute('select id from account_account where lower(name)=%s and active= %s and type=%s ', ('cash', True, 'liquidity',))  # which account shall I choose. It is needed.
+                                data = cr.fetchall()
+                                if data:
+                                    accountId = data[0]
+                                if journal_id and accountId:  # cash journal and cash account. If there no journal id or no account id, account invoice is not make payment.
+                                    accountVResult = {
+                                                    'partner_id':invObj.partner_id.id,
+                                                    'amount':invObj.amount_total,
+                                                    'journal_id':journal_id,
+                                                    'date':invObj.date_invoice,
+                                                    'period_id':invObj.period_id.id,
+                                                    'account_id':accountId,
+                                                    'pre_line':True,
+                                                    'type':'receipt'
+                                                    }
+                                    # create register payment voucher
+                                    voucherId = voucherObj.create(cr, uid, accountVResult, context=context)
+                                    
+                                if voucherId:
+                                    vlist = []
+                                    vlist.append(voucherId)
+                                    # get the voucher lines
+                                    vlresult = voucherObj.recompute_voucher_lines(cr, uid, vlist, invObj.partner_id.id, journal_id, invObj.amount_total, 120, 'receipt', invObj.date_invoice, context=None)
+                                    if vlresult:
+                                        result = vlresult['value']['line_cr_ids'][0]
+                                        result['voucher_id'] = voucherId
+                                        # create the voucher lines
+                                        voucherLineObj.create(cr, uid, result, context=context)
+                                    # invoice register payment done
+                                    voucherObj.button_proforma_voucher(cr, uid, vlist , context=context)
+                                    # invoice paid status is true
+                                    invFlag = True
+                            # clicking the delivery order view button
+                            soObj.action_view_delivery(cr, uid, solist, context=context)  # create the delivery with draft state
+                            
+                        if ms_ids.type == 'credit' and ms_ids.delivery_remark == 'delivered':  # Payment Type=>Credit and Delivery Remark=>Delivered
+                            # so Confirm
+                            soObj.action_button_confirm(cr, uid, solist, context=context)
+                            # invoice create at draft state
+                            invoice_id = self.create_invoices(cr, uid, solist, context=context)
+                            invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
+                            # clicking the delivery order view button
+                            stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)    
+                            if stockViewResult:
+                                # stockViewResult is form result
+                                # stocking id =>stockViewResult['res_id']
+                                # click force_assign
+                                stockPickingObj.force_assign(cr, uid, stockViewResult['res_id'], context=context)
+                                # transfer
+                                # call the transfer wizard
+                                # change list
+                                pickList = []
+                                pickList.append(stockViewResult['res_id'])
+                                wizResult = stockPickingObj.do_enter_transfer_details(cr, uid, pickList, context=context)
+                                # pop up wizard form => wizResult
+                                detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
+                                if detailObj:
+                                    detailObj.do_detailed_transfer()
+
+                        if ms_ids.type == 'credit' and ms_ids.delivery_remark == 'none':  # Payment Type=>Credit and Delivery Remark=>None
+                            # so Confirm
+                            soObj.action_button_confirm(cr, uid, solist, context=context)
+                            # invoice create at draft state
+                            invoice_id = self.create_invoices(cr, uid, solist, context=context)
+                            invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
+                            # clicking the delivery order view button
+                            stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)  # create delivery order with draft state
+                            
+                        if ms_ids.type == 'credit' and ms_ids.delivery_remark == 'partial':  # Payment Type=>Credit and Delivery Remark=>Partial
+                            # so Confirm
+                            soObj.action_button_confirm(cr, uid, solist, context=context)
+                            # invoice create at draft state
+                            invoice_id = self.create_invoices(cr, uid, solist, context=context)
+                            invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
+                            # clicking the delivery order view button
+                            stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)  # create delivery order with draft state
             self.write(cr, uid, ids[0], {'m_status':'done'}, context=context)
             if invFlag == True:
                 invoiceObj.write(cr, uid, invlist[0], {'state':'paid'}, context=context)
@@ -684,12 +682,15 @@ class mobile_sale_order(osv.osv):
             return res['res_id']
     # kzo Edit
     def get_products_by_sale_team(self, cr, uid, section_id , context=None, **kwargs):
-        cr.execute('''select  pp.product_tmpl_id,pt.list_price , pt.description,pt.categ_id,pc.name as categ_name,pp.default_code, 
-                         pt.name,substring(replace(cast(pt.image_small as text),'/',''),1,5) as image_small,pt.main_group,pt.uom_ratio
+        cr.execute('''select  pp.id,pt.list_price , coalesce(pt.description, ' ') as description,pt.categ_id,pc.name as categ_name,pp.default_code, 
+                         pt.name,substring(replace(cast(pt.image_small as text),'/',''),1,5) as image_small,pt.main_group,pt.uom_ratio,
+                         pp.product_tmpl_id
                         from crm_case_section_product_product_rel crm_real ,
                         crm_case_section ccs ,product_template pt, product_product pp , product_category pc
                         where pp.id = crm_real.product_product_id
                         and pt.id = pp.product_tmpl_id
+                        and pt.active = true
+                        and pp.active = true
                         and ccs.id = crm_real.crm_case_section_id
                         and pc.id = pt.categ_id           
                         and ccs.id = %s ''', (section_id,))
@@ -718,18 +719,19 @@ class mobile_sale_order(osv.osv):
         return datas
     # get promotion datas from database
     
-    def get_promos_datas(self, cr, uid , section_id , context=None, **kwargs):
+    def get_promos_datas(self, cr, uid , section_id , branch_id, context=None, **kwargs):
         cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,
-                        logic ,expected_logic_result ,special, special1, special2, special3 
+                        logic ,expected_logic_result ,special, special1, special2, special3 ,branch_id 
                         from promos_rules pr where pr.active = true and main_group in 
                         (select product_maingroup_id 
                         from crm_case_section_product_maingroup_rel mg,crm_case_section cs 
                         where cs.id = mg.crm_case_section_id and cs.id = %s)
-                        ''', (section_id,))
+                        and pr.branch_id = %s                        
+                        ''', (section_id, branch_id,))
         datas = cr.fetchall()
         cr.execute
         return datas
-    def get_promos_act_datas(self, cr, uid , section_id , context=None, **kwargs):
+    def get_promos_act_datas(self, cr, uid , section_id , branch_id, context=None, **kwargs):
         cr.execute('''select act.id,act.promotion,act.sequence as act_seq ,act.arguments,act.action_type,act.product_code
                             from promos_rules r ,promos_rules_actions act
                             where r.id = act.promotion
@@ -738,11 +740,12 @@ class mobile_sale_order(osv.osv):
                             (select product_maingroup_id 
                             from crm_case_section_product_maingroup_rel mg,crm_case_section cs 
                             where cs.id = mg.crm_case_section_id and cs.id = %s)
-                    ''', (section_id,))
+                            and r.branch_id = %s
+                    ''', (section_id, branch_id,))
         datas = cr.fetchall()
         cr.execute
         return datas
-    def get_promos_cond_datas(self, cr, uid , section_id , context=None, **kwargs):
+    def get_promos_cond_datas(self, cr, uid , section_id , branch_id, context=None, **kwargs):
         cr.execute('''select cond.id,cond.promotion,cond.sequence as cond_seq,
                             cond.attribute as cond_attr,cond.comparator as cond_comparator,
                             cond.value as comp_value
@@ -753,7 +756,8 @@ class mobile_sale_order(osv.osv):
                             (select product_maingroup_id 
                             from crm_case_section_product_maingroup_rel mg,crm_case_section cs 
                             where cs.id = mg.crm_case_section_id and cs.id = %s)
-                    ''', (section_id,))
+                            and r.branch_id = %s
+                    ''', (section_id, branch_id,))
         datas = cr.fetchall()
         cr.execute
         return datas
@@ -828,7 +832,8 @@ class mobile_sale_order(osv.osv):
     def get_pricelist_item_datas(self, cr, uid, section_id , context=None, **kwargs):
         cr.execute('''select pi.id,pi.price_discount,pi.sequence,pi.product_tmpl_id,pi.name,pi.base_pricelist_id,
                     pi.product_id,pi.base,pi.price_version_id,pi.min_quantity,
-                    pi.categ_id,pi.price_surcharge from product_pricelist_item pi, product_pricelist_version pv, product_pricelist pp where pv.pricelist_id = pp.id 
+                    pi.categ_id,pi.price_surcharge ,pi.product_uom_id
+					from product_pricelist_item pi, product_pricelist_version pv, product_pricelist pp where pv.pricelist_id = pp.id 
                     and pv.id = pi.price_version_id and (pp.main_group_id in (select product_maingroup_id 
                     from crm_case_section_product_maingroup_rel mg,crm_case_section cs 
                     where cs.id = mg.crm_case_section_id and cs.id = %s) or pp.main_group_id is null)''', (section_id,))
@@ -930,7 +935,7 @@ class mobile_sale_order(osv.osv):
     def tablet_info(self, cr, uid, tabetId, context=None, **kwargs):    
         cr.execute('''
             select id as tablet_id,date,create_uid,name,note,mac_address,model,type,storage_day
-			,hotline,sale_team_id,notification_time
+            ,hotline,sale_team_id,notification_time
             from tablets_information 
             where name = %s
             ''', (tabetId,))
@@ -975,7 +980,6 @@ class mobile_sale_order(osv.osv):
         try : 
             mso_promotion_line_obj = self.pool.get('mso.promotion.line')
             str = "{" + vals + "}"
-                
             str = str.replace("'',", "',")  # null
             str = str.replace(":',", ":'',")  # due to order_id
             str = str.replace("}{", "}|{")
@@ -1048,9 +1052,14 @@ class mobile_sale_order(osv.osv):
                         'date':pt['date'],
                         'tablet_id':pt['tablet_id'],
                         'user_id':pt['user_id'],
+                        'total_amount':pt['total_amount'][0],
+                        'denomination_note_line':False,
                     }
+                    print'Deno Reu', deno_result
+                    total_amount=pt['total_amount'],
+
                     deno_id = history_obj.create(cursor, user, deno_result, context=context)
-                    
+                    print'deno_id', deno_id
                     for ptl in notes_line:
                                 note_line_res = {                                                            
                                   'denomination_note_ids':deno_id,
@@ -1077,12 +1086,14 @@ class mobile_sale_order(osv.osv):
                                           'denomination_product_ids':deno_id,
                                           'amount':data[2]}
                         deno_product_obj.create(cursor, user, data_id, context=context)
+
+                        
             print 'True'
             return True       
         except Exception, e:
             print 'False'
             return False
-            
+        
     def create_ar_collection(self, cursor, user, vals, context=None):
 
         ar_obj = self.pool.get('mobile.ar.collection')
@@ -1215,6 +1226,33 @@ class mobile_sale_order(osv.osv):
         cr.execute('''select id,name,branch_code from res_branch where active = true''')
         datas = cr.fetchall()        
         return datas
+    
+    def get_sale_channel(self, cr, uid , context=None):        
+        cr.execute('''select id,name from sale_channel''')
+        datas = cr.fetchall()        
+        return datas
+        
+    def get_payment_term(self, cr, uid , context=None):        
+        cr.execute('''select id,name from account_payment_term where active = true''')
+        datas = cr.fetchall()        
+        return datas
+    
+    def get_promo_sale_channel(self, cr, uid , context=None):        
+        cr.execute('''select promo_id,sale_channel_id from promo_sale_channel_rel''')
+        datas = cr.fetchall()        
+        return datas    
+    
+    def get_sale_team_channel(self, cr, uid, sale_team_id , context=None, **kwargs):    
+        cr.execute("""select sale_team_id,sale_channel_id from sale_team_channel_rel
+                        where sale_team_id = %s """, (sale_team_id,))                
+        datas =cr.fetchall()
+        return datas
+		
+    def get_uom(self, cr, uid, context=None, **kwargs):    
+        cr.execute("""select id,name,floor(1/factor) as ratio from product_uom where active = true""")
+        datas =cr.fetchall()
+        print 'Product UOM', datas
+        return datas		
 
 mobile_sale_order()
 
@@ -1222,14 +1260,17 @@ class mobile_sale_order_line(osv.osv):
     
     _name = "mobile.sale.order.line"
     _description = "Mobile Sales Order"
+    
     def _get_uom_from_product(self, cr, uid, ids, field_name, arg, context=None):
         result = {}
         for rec in self.browse(cr, uid, ids, context=context):
             result[rec.id] = rec.product_id.uom_id
         return result    
+    
     _columns = {
         'product_id':fields.many2one('product.product', 'Products'),
         'product_uos_qty':fields.float('Quantity'),
+#         'uom_id':fields.many2one('product.uom', 'UOM', readonly=False),
         'uom_id':fields.function(_get_uom_from_product, type='many2one', relation='product.uom', string='UOM'),
         'price_unit':fields.float('Unit Price'),
         'discount':fields.float('Discount (%)'),
@@ -1301,37 +1342,6 @@ account_invoice()
  
 class sale_order(osv.osv):
     _inherit = "sale.order" 
-    
-    def create(self, cr, uid, vals, context=None):
-        year = str(datetime.today().year)
-        if context is None:
-            context = {}
-        if vals.get('name', '/') == '/':
-            count = 0
-            cr.execute("select name from sale_order order by id desc limit 1;")
-            data = cr.fetchone()
-            if data:
-                try:
-                    val = data[0].split('/')
-                    count = int(val[2]) + 1
-                except :
-                    count = 1
-            else:
-                count = 1
-            cr.execute("select padding from ir_sequence where code ='sale.order'")
-            padding = cr.fetchone()[0]
-        #  vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'sale.order') or '/'
-            vals['name'] = 'SO/%s' % year + '/%%0%sd' % padding % count
-        if vals.get('partner_id') and any(f not in vals for f in ['partner_invoice_id', 'partner_shipping_id', 'pricelist_id', 'fiscal_position']):
-            defaults = self.onchange_partner_id(cr, uid, [], vals['partner_id'], context=context)['value']
-            if not vals.get('fiscal_position') and vals.get('partner_shipping_id'):
-                delivery_onchange = self.onchange_delivery_id(cr, uid, [], vals.get('company_id'), None, vals['partner_id'], vals.get('partner_shipping_id'), context=context)
-                defaults.update(delivery_onchange['value'])
-            vals = dict(defaults, **vals)
-        ctx = dict(context or {}, mail_create_nolog=True)
-        new_id = super(sale_order, self).create(cr, uid, vals, context=ctx)
-        self.message_post(cr, uid, [new_id], body=_("Quotation created"), context=ctx)
-        return new_id   
     
     def _make_invoice(self, cr, uid, order, lines, context=None):
         inv_obj = self.pool.get('account.invoice')
@@ -1425,4 +1435,3 @@ class sale_order(osv.osv):
         invoice_vals.update(self._inv_get(cr, uid, order, context=context))
         return invoice_vals           
 sale_order()
-    

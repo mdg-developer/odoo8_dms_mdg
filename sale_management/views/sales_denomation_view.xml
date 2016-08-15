@@ -13,9 +13,8 @@
 							<group>
 								<field name="name" />
 								<field name="sale_team_id" />
-								<field name="user_id"
-									domain="[('default_section_id', '=',sale_team_id)]" />
-								<field name="date"  on_change="on_change_date(date,user_id)"/>																
+								<field name="user_id" domain="[('default_section_id', '=',sale_team_id)]" />
+								<field name="date" on_change="on_change_date(date,user_id)" />
 								<field name="company_id" invisible="1" />
 							</group>
 							<group>
@@ -64,8 +63,14 @@
 								</field>
 							</page>
 						</notebook>
-						<field name="note" class="oe_inline" placeholder="Note..." />
-
+						<group>
+							<group>
+								<field name="note" class="oe_inline" placeholder="Note..." />
+							</group>
+							<group>
+								<field name="total_amount" />
+							</group>
+						</group>
 					</sheet>
 
 				</form>
@@ -93,10 +98,10 @@
 			<field name="model">sales.denomination</field>
 			<field name="arch" type="xml">
 				<tree string="Sales Denomination">
-								<field name="name" />
-								<field name="date" />
-								<field name="sale_team_id" />
-								<field name="user_id"/>
+					<field name="name" />
+					<field name="date" />
+					<field name="sale_team_id" />
+					<field name="user_id" />
 				</tree>
 			</field>
 		</record>
