@@ -23,11 +23,11 @@
 {
     'name': 'Sale Cashier Approval',
     'version': '1.0',
-    'category': 'Sale',
+    'category': 'Account',
     'sequence': 30,
-    'summary': 'Sale',
+    'summary': 'Account',
     'description': """
-Sale Management
+Sale Cashier Approval
 
 """,
     'author': 'Seventh Computing Developer Group',
