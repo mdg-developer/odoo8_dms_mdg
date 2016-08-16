@@ -814,12 +814,14 @@ class mobile_sale_order(osv.osv):
     
     # get pricelsit datas
     def get_pricelist_datas(self, cr, uid , section_id, context=None, **kwargs):
-        cr.execute('''select id,name,type,active from product_pricelist where active = 't' and main_group_id in (select product_maingroup_id 
+        cr.execute('''select id,name,type,active from product_pricelist where main_group_id in (select product_maingroup_id 
                         from crm_case_section_product_maingroup_rel mg,crm_case_section cs 
-                        where cs.id = mg.crm_case_section_id and cs.id = %s) or main_group_id is null''', (section_id,))
+                        where cs.id = mg.crm_case_section_id and cs.id = %s) 
+                        or main_group_id is null and active = 'true' ''', (section_id,))
         datas = cr.fetchall()
         cr.execute
         return datas
+
     def get_pricelist_version_datas(self, cr, uid, section_id , context=None, **kwargs):
         cr.execute('''select pv.id,date_end,date_start,pv.active,pv.name,pv.pricelist_id 
                         from product_pricelist_version pv, product_pricelist pp where pv.pricelist_id = pp.id 
