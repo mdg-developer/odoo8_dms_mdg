@@ -843,27 +843,35 @@ class mobile_sale_order(osv.osv):
         cr.execute
         return datas
     
-   # def get_product_uoms(self, cr, uid , context=None, **kwargs):
-    #    cr.execute('''
-     #               select distinct pu.id as uom_id,pu.name as uom_name ,1/pu.factor as ratio,pur.product_template_id as  product_template_id
-      #          from product_uom pu , product_template_product_uom_rel pur , product_template pt,product_product pp
-       #         where pt.id = pur.product_template_id
-        #        and pu.id = pur.product_uom_id''')
-        # datas = cr.fetchall()
-        # cr.execute
-        # return datas
+#     def get_product_uoms(self, cr, uid , saleteam_id, context=None, **kwargs):
+#         cr.execute('''     
+#                 select distinct uom_id,uom_name,ratio,product_template_id,product_id from(
+#                 select  pu.id as uom_id,pu.name as uom_name ,1/pu.factor as ratio,
+#                 pur.product_template_id as  product_template_id,pp.id as product_id
+#                 from product_uom pu , product_template_product_uom_rel pur , product_template pt,
+#                 product_product pp,
+#                 crm_case_section_product_product_rel crm
+#                 where pt.id = pur.product_template_id
+#                 and crm.product_product_id = pp.id
+#                 and pu.id = pur.product_uom_id
+#                 and crm.crm_case_section_id = %s
+#                 )A''' , (saleteam_id,))
+#         datas = cr.fetchall()
+#         cr.execute
+#         return datas
+
     def get_product_uoms(self, cr, uid , saleteam_id, context=None, **kwargs):
-        cr.execute('''     
-                select distinct uom_id,uom_name,ratio,product_template_id from(
+        cr.execute('''
+                select distinct uom_id,uom_name,ratio,template_id,product_id from(
                 select  pu.id as uom_id,pu.name as uom_name ,1/pu.factor as ratio,
-                pur.product_template_id as  product_template_id
-                from product_uom pu , product_template_product_uom_rel pur , product_template pt,
+                pur.product_template_id as template_id,pp.id as product_id
+                from product_uom pu , product_template_product_uom_rel pur ,
                 product_product pp,
                 crm_case_section_product_product_rel crm
-                where pt.id = pur.product_template_id
+                where pp.product_tmpl_id = pur.product_template_id
                 and crm.product_product_id = pp.id
                 and pu.id = pur.product_uom_id
-                and crm.crm_case_section_id = %s
+                and crm.crm_case_section_id = %s            
                 )A''' , (saleteam_id,))
         datas = cr.fetchall()
         cr.execute
