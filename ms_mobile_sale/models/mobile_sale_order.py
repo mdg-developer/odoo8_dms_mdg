@@ -4,6 +4,7 @@ from datetime import datetime
 from openerp.tools.translate import _
 import ast
 import time
+
 DEFAULT_SERVER_DATE_FORMAT = "%Y-%m-%d"
 class mobile_sale_order(osv.osv):
     
@@ -243,45 +244,52 @@ class mobile_sale_order(osv.osv):
             return False     
     
     def create_visit(self, cursor, user, vals, context=None):
-        print 'vals', vals
-        customer_visit_obj = self.pool.get('customer.visit')
-        str = "{" + vals + "}"
-#             str = str.replace(":''",":'")#change Order_id
-        str = str.replace("'',", "',")  # null
-        str = str.replace(":',", ":'',")  # due to order_id
-        str = str.replace("}{", "}|{")
-        str = str.replace(":'}{", ":''}")
-        new_arr = str.split('|')
-        result = []
-        for data in new_arr:
-            x = ast.literal_eval(data)
-            result.append(x)
-        customer_visit = []
-        for r in result:
-            print "length", len(r)
-            customer_visit.append(r)  
-        if customer_visit:
-            for vs in customer_visit:
-                visit_result = {
-                    'customer_code':vs['customer_code'],
-                    'customer_id':vs['customer_id'],
-                    'sale_plan_day_id':vs['sale_plan_day_id'],
-                    'sale_plan_trip_id':vs['sale_plan_trip_id'] ,
-                    'sale_plan_name':vs['sale_plan_name'],
-                    'sale_team':vs['sale_team'],
-                    'sale_team_id':vs['sale_team_id'],
-                    'user_id':vs['user_id'],
-                    'date':vs['date'],
-                    'user_id':vs['visit_reason'],
-                    'tablet_id':vs['tablet_id'],
-                    'other_reason':vs['other_reason'],
-                    'visit_reason':vs['visit_reason'],
-                    'latitude':vs['latitude'],
-                    'longitude':vs['longitude'],
-                }
-                customer_visit_obj.create(cursor, user, visit_result, context=context)
-        return True
-    
+        
+        try:
+            print 'vals', vals
+            customer_visit_obj = self.pool.get('customer.visit')
+            str = "{" + vals + "}"    
+            str = str.replace("'',", "',")  # null
+            str = str.replace(":',", ":'',")  # due to order_id
+            str = str.replace("}{", "}|{")
+            str = str.replace(":'}{", ":''}")
+            new_arr = str.split('|')
+            result = []
+            for data in new_arr:            
+                x = ast.literal_eval(data)                
+                result.append(x)
+            customer_visit = []
+            for r in result:                
+                customer_visit.append(r)  
+            if customer_visit:
+                for vs in customer_visit:
+                    visit_result = {
+                        'customer_code':vs['customer_code'],
+                        'customer_id':vs['customer_id'],
+                        'sale_plan_day_id':vs['sale_plan_day_id'],
+                        'sale_plan_trip_id':vs['sale_plan_trip_id'] ,
+                        'sale_plan_name':vs['sale_plan_name'],
+                        'sale_team':vs['sale_team'],
+                        'sale_team_id':vs['sale_team_id'],
+                        'user_id':vs['user_id'],
+                        'date':vs['date'],                        
+                        'tablet_id':vs['tablet_id'],
+                        'other_reason':vs['other_reason'],
+                        'visit_reason':vs['visit_reason'],
+                        'latitude':vs['latitude'],
+                        'longitude':vs['longitude'],
+                        'image':vs['image'],
+                        'image1':vs['image1'],
+                        'image2':vs['image2'],
+                        'image3':vs['image3'],
+                        'image4':vs['image4'],
+                    }
+                    customer_visit_obj.create(cursor, user, visit_result, context=context)
+            return True
+        except Exception, e:
+            print e            
+            return False
+                
     def geo_location(self, cr, uid, ids, context=None):
         result = {
                  'name'     : 'Go to Report',

@@ -60,6 +60,7 @@ ACTION_TYPES = [
     ('prod_foc_smallest_unitprice', _('FOC Products on smallest Unitprice')),
     ('foc_any_product', _('FOC Any Products')),
 	('prod_fix_amt_disc_subtotal', _('Product Fix Amount on Sub Total')),
+    ('prod_dis_double', _('Product Double Discount')),
 ]
 
 
@@ -1200,8 +1201,15 @@ class PromotionsRulesActions(osv.Model):
                               'product_code':"'product_code'",
                               'arguments':"1",
                               }
-                   }		
-        # Finally if nothing works
+                   }
+        if action_type in ['prod_dis_double', ] :
+            return{
+                   'value' : {
+                              'product_code':"'product_code'",
+                              'arguments':"1",
+                              }
+                   }    	
+        # Finally if nothing works prod_dis_double
         return {}
     
     _columns = {
