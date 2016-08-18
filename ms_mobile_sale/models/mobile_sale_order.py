@@ -255,11 +255,12 @@ class mobile_sale_order(osv.osv):
             str = str.replace(":'}{", ":''}")
             new_arr = str.split('|')
             result = []
-            for data in new_arr:            
-                x = ast.literal_eval(data)                
+            for data in new_arr:
+                x = ast.literal_eval(data)
                 result.append(x)
             customer_visit = []
-            for r in result:                
+            for r in result:
+                print "length", len(r)
                 customer_visit.append(r)  
             if customer_visit:
                 for vs in customer_visit:
@@ -286,8 +287,7 @@ class mobile_sale_order(osv.osv):
                     }
                     customer_visit_obj.create(cursor, user, visit_result, context=context)
             return True
-        except Exception, e:
-            print e            
+        except Exception, e:            
             return False
                 
     def geo_location(self, cr, uid, ids, context=None):
@@ -360,7 +360,7 @@ class mobile_sale_order(osv.osv):
                     elif ms_ids.void_flag == 'none':
                         so_state = 'draft'
                     soResult = {
-                                          'date_order':ms_ids.date,
+                                        'date_order':ms_ids.date,
                                            'partner_id':ms_ids.partner_id.id,
                                            'amount_untaxed':ms_ids.amount_total ,
                                            'partner_invoice_id':ms_ids.partner_id.id,
@@ -418,16 +418,15 @@ class mobile_sale_order(osv.osv):
                                               'product_id':line_id.product_id.id,
                                               'name':product_name,
                                               'price_unit':price_unit,
-                                              'product_uom':1,
+                                              'product_uom':line_id.uom_id.id,
                                               'product_uom_qty':line_id.product_uos_qty,
                                               'discount':line_id.discount,
                                               'discount_amt':line_id.discount_amt,
                                               'company_id':1,  # company_id,
                                               'state':'draft',
                                               'net_total':line_id.sub_total,
-                                              'sale_foc':foc
+                                              'sale_foc':foc,
                                            }
-                                
                                 solObj.create(cr, uid, solResult, context=context)
                                 if soId:
                                     soObj.button_dummy(cr, uid, [soId], context=context)  # update the SO
@@ -437,8 +436,10 @@ class mobile_sale_order(osv.osv):
                         solist.append(soId)
                         # type > cash and delivery_remark > delivered
                         if ms_ids.type == 'cash' and ms_ids.delivery_remark == 'delivered':  # Payment Type=>Cash and Delivery Remark=>Delivered
+                            print 'solist',solist
                             # SO Confirm 
                             soObj.action_button_confirm(cr, uid, solist, context=context)
+                            #print 'so_OBJ',soObj
                             # Create Invoice
                             invoice_id = self.create_invoices(cr, uid, solist, context=context)
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
