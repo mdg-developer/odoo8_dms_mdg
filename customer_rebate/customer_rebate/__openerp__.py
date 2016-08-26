@@ -26,15 +26,15 @@
     'author': 'seventh computing',
     'website': 'http://www.7thcomputing.com',
     'category' : 'Sales',
-    'depends' : ["base","sale","sale_promotions","account","product","hr_branch"],
+    'depends' : ["base","sale","sale_promotions","account","product","hr_branch","crm" ,"crm_management"],
     'data': [
         'views/customer_rebate_config_view.xml',
         'views/customer_rebate_view.xml',
         'views/customer_rebate_generate_view.xml',
         'views/rebate_report.xml',
         'views/report_rebate_template.xml',
-        'views/rebate_custom_layouts.xml'
-
+        'views/rebate_custom_layouts.xml',
+        'views/bonus_plan_view.xml',
                 ],
     'installable': True,
     'auto_install': False,
