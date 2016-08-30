@@ -44,7 +44,7 @@ class mobile_sale_order(osv.osv):
                 ('voided', 'Voided'),
                 ('none', 'Unvoid')
             ], 'Void'),
-      'date':fields.datetime('Date'),
+        'date':fields.datetime('Date'),
         'note':fields.text('Note'),
         'order_line': fields.one2many('mobile.sale.order.line', 'order_id', 'Order Lines', copy=True),
         'delivery_order_line': fields.one2many('products.to.deliver', 'sale_order_id', 'Delivery Order Lines', copy=True),
@@ -1018,7 +1018,7 @@ class mobile_sale_order(osv.osv):
                         saleOrder_Id = data[0][0]
                     else:
                         saleOrder_Id = None
-                                    
+                    
                     promo_line_result = {
                         'promo_line_id':saleOrder_Id,
                         'pro_id':pro_line['pro_id'],
@@ -1062,6 +1062,7 @@ class mobile_sale_order(osv.osv):
             
             if history:
                 for pt in history:
+                    total_amount=float(pt['total_amount'])
                     deno_result = {
                         'invoice_count':pt['invoice_count'],
                         'sale_team_id':pt['sale_team_id'],
@@ -1069,14 +1070,12 @@ class mobile_sale_order(osv.osv):
                         'note':pt['note'],
                         'date':pt['date'],
                         'tablet_id':pt['tablet_id'],
-                        'user_id':pt['user_id'],
-                        'total_amount':pt['total_amount'][0],
+                        'user_id':pt['user_id'],                        
                         'denomination_note_line':False,
                     }
-                    print'Deno Reu', deno_result
-                    total_amount=pt['total_amount'],
-
+                                        
                     deno_id = history_obj.create(cursor, user, deno_result, context=context)
+                    cursor.execute('''update sales_denomination set total_amount = %s where id = %s''',(total_amount, deno_id,) )
                     print'deno_id', deno_id
                     for ptl in notes_line:
                                 note_line_res = {                                                            
@@ -1265,13 +1264,26 @@ class mobile_sale_order(osv.osv):
                         where sale_team_id = %s """, (sale_team_id,))                
         datas =cr.fetchall()
         return datas
-		
+    
     def get_uom(self, cr, uid, context=None, **kwargs):    
         cr.execute("""select id,name,floor(1/factor) as ratio from product_uom where active = true""")
         datas =cr.fetchall()
         print 'Product UOM', datas
-        return datas		
-
+        return datas
+    
+    def get_asset_type(self, cr, uid, context=None, **kwargs):    
+        cr.execute("""select id,name from asset_type""")
+        datas =cr.fetchall()        
+        return datas
+    
+    def get_assets(self, cr, uid, context=None, **kwargs):    
+        cr.execute("""select A.id,A.name,A.partner_id,substring(encode(image::bytea, 'hex'),1,5) as image
+                    ,A.qty,A.date,B.name,A.type 
+                    from res_partner_asset A, asset_type B
+                    where A.asset_type = B.id""")
+        datas =cr.fetchall()
+        return datas
+    
 mobile_sale_order()
 
 class mobile_sale_order_line(osv.osv):
@@ -1288,8 +1300,8 @@ class mobile_sale_order_line(osv.osv):
     _columns = {
         'product_id':fields.many2one('product.product', 'Products'),
         'product_uos_qty':fields.float('Quantity'),
-#         'uom_id':fields.many2one('product.uom', 'UOM', readonly=False),
-        'uom_id':fields.function(_get_uom_from_product, type='many2one', relation='product.uom', string='UOM'),
+         'uom_id':fields.many2one('product.uom', 'UOM', readonly=False),
+#        'uom_id':fields.function(_get_uom_from_product, type='many2one', relation='product.uom', string='UOM'),
         'price_unit':fields.float('Unit Price'),
         'discount':fields.float('Discount (%)'),
         'discount_amt':fields.float('Discount (Amt)'),
