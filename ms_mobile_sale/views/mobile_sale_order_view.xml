@@ -40,6 +40,7 @@
 								<field name="sale_plan_name" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="sale_plan_day_id" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="sale_plan_trip_id" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="pricelist_id" />
 								<field name="mso_latitude" digits="(14,15)"
 									attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="mso_longitude" digits="(14,15)"
@@ -62,7 +63,7 @@
 								<field name="remaining_amount" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="paid" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="void_flag" attrs="{'readonly':[('m_status','=','done')]}" />
-								<field name="balance" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="balance" attrs="{'readonly':[('m_status','=','done')]}" />								
 							</group>
 						</group>
 
