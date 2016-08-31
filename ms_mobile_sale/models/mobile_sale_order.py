@@ -58,7 +58,8 @@ class mobile_sale_order(osv.osv):
                                                       ('done', 'Complete')], string='Status'),
         'due_date':fields.date('Due Date'),
         'payment_term': fields.many2one('account.payment.term', 'Payment Term'),
-       'promos_line_ids':fields.one2many('mso.promotion.line', 'promo_line_id', 'Promotion Lines')                
+       'promos_line_ids':fields.one2many('mso.promotion.line', 'promo_line_id', 'Promotion Lines'),
+       'pricelist_id': fields.many2one('product.pricelist', 'Price List',select=True, ondelete='cascade')           
     }
     _order = 'id desc'
     _defaults = {
@@ -137,7 +138,8 @@ class mobile_sale_order(osv.osv):
                         'payment_term':so['payment_term'],
                         'mso_longitude':so['mso_longitude'],
                         'mso_latitude':so['mso_latitude'],
-                        'outlet_type':outlet_type
+                        'outlet_type':outlet_type,
+                        'pricelist_id':so['pricelist_id']
                     }
                     s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
                     print "Create Sale Order", so['name']
@@ -164,6 +166,7 @@ class mobile_sale_order(osv.osv):
                                   'discount':sol['discount'],
                                   'discount_amt':sol['discount_amt'],
                                   'sub_total':sol['sub_total'],
+                                  'uom_id':sol['uom_id']
                                 }
                                 mobile_sale_order_line_obj.create(cursor, user, mso_line_res, context=context) 
                                 print 'Create Order line', sol['so_name']                     
