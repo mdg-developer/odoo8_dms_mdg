@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+
+		<!-- ============================== Content Form ============================== -->
+
+		<record id="good_issue_note_form" model="ir.ui.view">
+			<field name="name">Good Issue Note Form</field>
+			<field name="model">good.issue.note</field>
+			<field name="arch" type="xml">
+				<form string="Good Issue Note Form">
+					<header>
+						<button name="confirm" string="Confirm" class="oe_highlight"
+							type="object" states="draft" />
+						<button name="approve" string="Approve" class="oe_highlight"
+							type="object" states="confirm" groups="stock.group_stock_manager" />
+						<button name="cancel" string="Cancel" class="oe_highlight"
+							type="object" states="confirm" groups="stock.group_stock_manager" />
+						<field name="state" widget="statusbar" />
+					</header>
+					<sheet>
+						<!-- <h1> -->
+						<!-- <label string="(GIN)Ref;No." /> -->
+						<!-- <field name="name" class="oe_inline" readonly="1" /> -->
+						<!-- </h1> -->
+						<group>
+							<group>
+								<field name="name" />
+								<field name="to_location_id" attrs="{'readonly':[('state','=','approve')]}" />
+								<field name="from_location_id" attrs="{'readonly':[('state','=','approve')]}" />
+
+
+							</group>
+							<group>
+								<field name="request_id"  />
+								<field name="issue_date" attrs="{'readonly':[('state','=','approve')]}" />
+								<field name="vehicle_no" attrs="{'readonly':[('state','=','approve')]}" />
+							</group>
+						</group>
+						<group>
+							<notebook>
+								<page string="Stock List">
+									<field name="p_line" attrs="{'readonly':[('state','=','approve')]}">
+										<tree string="Good Issue Note Line" editable="bottom">
+											<field name="product_id" on_change="on_change_product_id(product_id)" />
+											<field name="issue_quantity" />
+											<field name="product_uom" />
+											<field name="uom_ratio" />
+											<field name="batch_no" />
+											<field name="expiry_date" />
+											<field name="remark" />
+										</tree>
+									</field>
+								</page>
+							</notebook>
+
+						</group>
+
+					</sheet>
+					<div class="oe_chatter">
+						<field name="message_follower_ids" widget="mail_followers"
+							groups="base.group_user" />
+						<field name="message_ids" widget="mail_thread" />
+					</div>
+				</form>
+			</field>
+		</record>
+
+		<!-- ============================== Content Tree ============================== -->
+		<record id="good_issue_note_tree" model="ir.ui.view">
+			<field name="name">good_issue_note_tree</field>
+			<field name="model">good.issue.note</field>
+			<field name="arch" type="xml">
+				<tree string="Contents">
+					<field name="name" />
+					<field name="request_id" />
+					<field name="to_location_id" />
+					<field name="from_location_id" />
+					<field name="issue_date" />
+					<field name="vehicle_no" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Stock Requisition -->
+		<record id="action_good_issue_note" model="ir.actions.act_window">
+			<field name="name">Good Issue Note</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">good.issue.note</field>
+			<field name="context">{}</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="good_issue_note_tree"></field>
+			<field name="domain">[]
+			</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to Register Good Issue Note .
+				</p>
+			</field>
+		</record>
+
+
+		<menuitem action='action_good_issue_note'  id="menu_action_good_issue_note"
+			parent="stock.menu_stock_warehouse_mgmt" groups="stock.group_stock_manager" />
+
+	</data>
+</openerp>
