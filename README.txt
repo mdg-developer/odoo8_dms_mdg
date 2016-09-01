@@ -1,5 +1,6 @@
 Create Date by 2016-03-08 
 Repository name odoo8_dms 
+Version 2.9.6 for Tablet Sale V2.9.6
 
 —————————————————————————————————————————————————————————————————————————————————
 account
@@ -44,30 +45,47 @@ hr
 
 mobile_sale
 ````````````
-*ms_customer_visit*ms_exchange*ms_mobile_sale*ms_mobile_sale_credit*ms_password*ms_purchase*ms_report*ms_sale_plan_setting*ms_sale_report_url*ms_sale_target_setting*ms_tablet_info*ms_tablet_sync_log*notification_service
+*ms_customer_visit
+*ms_exchange
+*ms_mobile_sale
+*ms_mobile_sale_credit
+*ms_password
+*ms_purchase
+*ms_report
+*ms_sale_plan_setting
+*ms_sale_report_url
+*ms_sale_target_setting
+*ms_tablet_info
+*ms_tablet_sync_log
+*notification_service
 
 —————————————————————————————————————————————————————————————————————————————————
 
 product
 ````````
-*product_pricelists*product_product
+*product_pricelists
+*product_product
 
 —————————————————————————————————————————————————————————————————————————————————
 
 report
 ```````
-*bi_report*birt_report
+*bi_report
+*birt_report
 
 —————————————————————————————————————————————————————————————————————————————————
 
 sale
 `````
-*sale_foc_discount*sale_management*sale_promotions
+*sale_foc_discount
+*sale_management
+*sale_promotions
 
 —————————————————————————————————————————————————————————————————————————————————
 
 web
 ````
-*web_gmaps*web_printscreen_zb
+*web_gmaps
+*web_printscreen_zb
 
 —————————————————————————————————————————————————————————————————————————————————
