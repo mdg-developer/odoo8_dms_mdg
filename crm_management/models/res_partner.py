@@ -3,7 +3,6 @@ try:
 except ImportError:
     import json  # noqa
 import urllib
-
 from openerp.osv import fields, osv
 from openerp import tools
 from openerp.tools.translate import _
@@ -98,6 +97,7 @@ class res_partner(osv.osv):
                         res[partner.id] = str_day
                         
         return res
+    
     def _sale_order_count_idle(self, cr, uid, ids, field_name, arg, context=None):
         res = {} 
         print 'Idel>>>', ids       
@@ -153,7 +153,8 @@ class res_partner(osv.osv):
                             
                             res[partner.id] = round(so_count / week_num, 2)
                         
-        return res                               
+        return res           
+
     _columns = {  
                 'customer_code':fields.char('Code', required=False),
                 'outlet_type': fields.many2one('outlettype.outlettype', 'Outlet Type', required=True),
@@ -177,7 +178,16 @@ class res_partner(osv.osv):
                 'pricelist_id':fields.function(_get_default_pricelist, type='many2one', relation='product.pricelist', string='Price List', store=True),
                 'payment_term_id':fields.function(_get_default_payment_term_id, type='many2one', relation='account.payment.term', string='Payment Term', store=True),
                  'asset_ids': fields.one2many('res.partner.asset', 'partner_id', 'Asset'),
-
+        'image_one': fields.binary("Image",
+            help="This field holds the image used as avatar for this contact, limited to 1024x1024px"),
+        'image_two': fields.binary("Image",
+            help="This field holds the image used as avatar for this contact, limited to 1024x1024px"),
+        'image_three': fields.binary("Image",
+            help="This field holds the image used as avatar for this contact, limited to 1024x1024px"),
+        'image_four': fields.binary("Image",
+            help="This field holds the image used as avatar for this contact, limited to 1024x1024px"),
+        'image_five': fields.binary("Image",
+            help="This field holds the image used as avatar for this contact, limited to 1024x1024px"),                                                
  } 
     _defaults = {
         'is_company': True,
