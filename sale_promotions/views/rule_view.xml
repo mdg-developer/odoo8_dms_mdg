@@ -7,6 +7,13 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Promotions" version="7.0">
+				<header>
+						<button name="approve" string="Approve" class="oe_highlight"
+							type="object" states="draft" groups="base.group_sale_manager" />
+						<button name="publish" string="Publish" class="oe_highlight"
+							type="object" states="approve" groups="base.group_sale_manager" />
+						<field name="state" widget="statusbar" />
+					</header>
 					<sheet>
 						<h1>
 							<field name="name" placeholder="Promotion Name" />
