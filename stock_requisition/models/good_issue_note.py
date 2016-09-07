@@ -27,6 +27,11 @@ class good_issue_note(osv.osv):
             'good_issue_note.mt_note_approve': lambda self, cr, uid, obj, ctx=None: obj.state in ['approve']
         },
     }    
+    def _get_default_company(self, cr, uid, context=None):
+        company_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
+        if not company_id:
+            raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
+        return company_id   
     
     _columns = {
         'name': fields.char('(GIN)Ref;No.', readonly=True),
@@ -50,10 +55,11 @@ class good_issue_note(osv.osv):
                but waiting for the scheduler to run on the order date.", select=True),
         'p_line':fields.one2many('good.issue.note.line', 'line_id', 'Product Lines',
                               copy=True),
+                'company_id':fields.many2one('res.company', 'Company'),
 }
     _defaults = {
         'state' : 'draft',
-       
+         'company_id': _get_default_company,
     }     
     def create(self, cursor, user, vals, context=None):
         id_code = self.pool.get('ir.sequence').get(cursor, user,
@@ -83,6 +89,9 @@ class good_issue_note(osv.osv):
             price_rec = cr.fetchone()
             if price_rec: 
                 picking_type_id = price_rec[0] 
+            else:
+                raise osv.except_osv(_('Warning'),
+                                     _('Picking Type has not for this transition'))
             picking_id = picking_obj.create(cr, uid, {'partner_id': partner_id,
                                           'date': issue_date,
                                           'origin':origin,

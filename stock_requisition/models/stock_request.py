@@ -23,15 +23,19 @@ class stock_requisition(osv.osv):
     _order = "id desc"    
     _track = {
         'state': {
-            'stock_requisition.mt_requisition_confirm': lambda self, cr, uid, obj, ctx=None: obj.state in ['confirm'],
-            'stock_requisition.mt_requisition_approve': lambda self, cr, uid, obj, ctx=None: obj.state in ['approve']
+            'stock_requisition.mt_requisition_confirm': lambda self, cr, uid, obj, ctx = None: obj.state in ['confirm'],
+            'stock_requisition.mt_requisition_approve': lambda self, cr, uid, obj, ctx = None: obj.state in ['approve']
         },
     }    
-    
+    def _get_default_company(self, cr, uid, context=None):
+        company_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
+        if not company_id:
+            raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
+        return company_id     
     _columns = {
         'name': fields.char('(REI)Ref;No.', readonly=True),
-        'from_location_id':fields.many2one('stock.location', 'Request From', required=True),
-        'to_location_id':fields.many2one('stock.location', 'Request To', required=True),
+        'from_location_id':fields.many2one('stock.location', 'Request From'),
+        'to_location_id':fields.many2one('stock.location', 'Request To'),
         'so_no' : fields.char('Sales Order/Inv Ref;No.'),
         'issue_to':fields.many2one('res.users', "Issue To"),
         'request_by':fields.many2one('res.users', "Request By"),
@@ -49,10 +53,13 @@ class stock_requisition(osv.osv):
                but waiting for the scheduler to run on the order date.", select=True),
         'p_line':fields.one2many('stock.requisition.line', 'line_id', 'Product Lines',
                               copy=True),
+                'company_id':fields.many2one('res.company', 'Company'),
+
 }
     _defaults = {
         'state' : 'draft',
-       
+         'company_id': _get_default_company,
+
     }     
     def create(self, cursor, user, vals, context=None):
         id_code = self.pool.get('ir.sequence').get(cursor, user,
@@ -71,9 +78,9 @@ class stock_requisition(osv.osv):
         good_obj = self.pool.get('good.issue.note')
         good_line_obj = self.pool.get('good.issue.note.line')
 
-        req_value= req_lines ={}
+        req_value = req_lines = {}
         if ids:
-            req_value = requisition_obj.browse(cr,uid,ids[0],context=context)
+            req_value = requisition_obj.browse(cr, uid, ids[0], context=context)
             request_id = req_value.id
 
             issue_date = req_value.issue_date
@@ -86,11 +93,11 @@ class stock_requisition(osv.osv):
                                           'request_id':request_id,
                                           'to_location_id':from_location_id,
                                           'from_location_id':to_location_id}, context=context)
-            req_line_id = product_line_obj.search(cr,uid,[('line_id','=',ids[0])],context=context)
+            req_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
             if good_id and req_line_id:
                 
                 for id in req_line_id:
-                    req_line_value = product_line_obj.browse(cr,uid,id,context=context)
+                    req_line_value = product_line_obj.browse(cr, uid, id, context=context)
                     product_id = req_line_value.product_id.id
                     product_uom = req_line_value.product_uom.id
                     uom_ratio = req_line_value.uom_ratio
@@ -119,8 +126,8 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
         return {'value': values}
         
     _columns = {                
-        'line_id':fields.many2one('stock.requisition', 'Line',ondelete='cascade', select=True),
-        'product_id': fields.many2one('product.product', 'Product',required=True),
+        'line_id':fields.many2one('stock.requisition', 'Line', ondelete='cascade', select=True),
+        'product_id': fields.many2one('product.product', 'Product', required=True),
         'req_quantity' : fields.float(string='Qty', digits=(16, 0)),
         'product_uom': fields.many2one('product.uom', 'UOM', required=True),
                 'uom_ratio':fields.char('Packing Unit'),

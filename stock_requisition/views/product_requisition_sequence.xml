@@ -25,5 +25,18 @@
             <field name="prefix">GIN/%(year)s</field>
             <field name="padding">5</field>
         </record>
+        
+       <record id="stock_return_sequence" model="ir.sequence.type">
+            <field name="name">Stock Return Note Sequence</field>
+            <field name="code">stock.return.code</field>
+        </record>
+
+        <record id="stock_return_seq" model="ir.sequence">
+            <field name="name">Stock Return Note Sequence</field>
+            <field name="code">stock.return.code</field>
+            <field name="prefix">SRN/%(year)s</field>
+            <field name="padding">5</field>
+        </record>
+        
     </data>
 </openerp>
