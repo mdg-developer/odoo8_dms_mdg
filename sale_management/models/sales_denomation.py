@@ -21,9 +21,12 @@ class sale_denomination(osv.osv):
         'name':fields.char('Txn' ,readonly=True),
         'invoice_count':fields.integer('Invoiced' , required=True),        
        'denomination_product_line':fields.one2many('sales.denomination.product.line', 'denomination_product_ids', string='Sale denomination Product Line', copy=True , required=True),
-       'denomination_note_line':fields.one2many('sales.denomination.note.line', 'denomination_note_ids', string='Sale denomination Product Line', copy=True),       
+       'denomination_note_line':fields.one2many('sales.denomination.note.line', 'denomination_note_ids', string='Sale denomination Product Line', copy=True , required=True),       
         'note':fields.text('Note'),
-      'total_amount':fields.float('Total Amount'),
+      'total_amount':fields.float('Denomination Total'),
+      'product_amount':fields.float('Invoice Total'),
+      'diff_amount':fields.float('Difference'),
+
   }
     _defaults = {
         'date': fields.datetime.now,
@@ -32,7 +35,7 @@ class sale_denomination(osv.osv):
     
     def on_change_date(self, cr, uid, ids, date,user_id,context=None):
         value={}
-        note =[{'notes':10000,'note_qty':False},{'notes':5000,'note_qty':False},{'notes':1000,'note_qty':False},{'notes':500,'note_qty':False},{'notes':100,'note_qty':False},{'notes':50,'note_qty':False},{'notes':10,'note_qty':False},{'notes':5,'note_qty':False},{'notes':1,'note_qty':False}]
+        note =[{'notes':10000,'note_qty':False},{'notes':5000,'note_qty':False},{'notes':1000,'note_qty':False},{'notes':500,'note_qty':False},{'notes':100,'note_qty':False},{'notes':50,'note_qty':False},{'notes':10,'note_qty':False},{'notes':1,'note_qty':False}]
         order_line_data=[]
         if date:
             date = datetime.strptime(date,'%Y-%m-%d %H:%M:%S')
@@ -61,33 +64,54 @@ class sale_denomination(osv.osv):
             'sales.denomination') or '/'
         vals['name'] = credit_no
         total_amount=False
+        deno_amount=False
         denomination_note_line=vals['denomination_note_line']
-        print 'denomination_note_line',denomination_note_line
+        denomination_product_line=vals['denomination_product_line']
+        if denomination_product_line:
+            
+            for p_data in denomination_product_line:
+                amount=p_data[2]['amount']
+                deno_amount+=amount
+        vals['product_amount'] = deno_amount
         if denomination_note_line:
             for data in denomination_note_line:
                 note=data[2]['notes']
                 qty=data[2]['note_qty']
                 total_amount+=(int(note)*int(qty))
-        vals['total_amount'] = total_amount        
+        vals['total_amount'] = total_amount
+        vals['diff_amount'] = total_amount-deno_amount
+           
         return super(sale_denomination, self).create(cursor, user, vals, context=context)    
-
-sale_denomination()        
+sale_denomination()               
 
 class sale_denomination_product_line(osv.osv):    
     _name = 'sales.denomination.product.line'
     _columns = {
                 'denomination_product_ids': fields.many2one('sales.denomination', 'Sales denomination'),
                 'product_id':fields.many2one('product.product', 'Product', required=True),
-                'product_uom_qty':fields.integer('Quantity', required=True),
-                'amount':fields.float('Amount',required=True),                
+                'product_uom_qty':fields.integer('QTY', required=True),
+                'amount':fields.float('Amount',required=True, digits_compute= dp.get_precision('Product Price')),                
                 }
 sale_denomination_product_line()    
 
 class sale_denomination_note_line(osv.osv):    
     _name = 'sales.denomination.note.line'
+    
+    def on_change_note_qty(self, cr, uid, ids, notes, note_qty, context=None):
+        values = {}
+        if notes and note_qty:
+            values = {
+                'amount':float(notes) *note_qty,
+            }
+        return {'value': values}   
+    
     _columns = {
                 'denomination_note_ids': fields.many2one('sales.denomination', 'Sales Denomination'),
                 'notes':fields.char('Notes', required=True),
                 'note_qty':fields.integer('Qty', required=True),
+                'amount':fields.float('Total', digits_compute= dp.get_precision('Product Price')),                
                 }
+    _defaults = {
+        'amount': 0.0,
+        }   
 sale_denomination_note_line()    

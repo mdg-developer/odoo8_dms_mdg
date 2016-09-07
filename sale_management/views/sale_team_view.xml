@@ -24,8 +24,9 @@
 			<field name="arch" type="xml">
 				<field name="code" position="replace">
 					<field name="code" />
-				</field>			    
+				</field>
 				<field name="code" position="after">
+					<field name="delivery_team_id" />
 					<field name="region" />
 				</field>
 				<field name="region" position="after">
@@ -38,11 +39,14 @@
 				<field name="location_id" position="after">
 					<field name="analytic_account_id" />
 					<field name="van_id" />
-    				<field name="sale_channel_id" widget="many2many_tags"/>
+					<field name="sale_channel_id" widget="many2many_tags" />
+					<field name="date" />
+					<field name="total_invoice" />
+
 				</field>
 
 
-				 <page string="Team Members" position="after">
+				<page string="Team Members" position="after">
 					<page string="Products">
 						<separator string="Products" />
 						<field name="product_ids" widget="many2many_list">
@@ -64,8 +68,8 @@
 							</kanban>
 						</field>
 					</page>
-					<!-- 					Add adding demarcation -->
-					
+					<!-- Add adding demarcation -->
+
 					<page string="Demarcations">
 						<separator string="Demarcations" />
 						<field name="demarcation_ids" widget="many2many_list">
@@ -86,12 +90,12 @@
 								</templates>
 							</kanban>
 						</field>
-					</page>					
+					</page>
 
 
-					
-					
-<!-- 					Add Product Main Group -->
+
+
+					<!-- Add Product Main Group -->
 					<page string="Product Main Group">
 						<separator string="Main Group" />
 						<field name="main_group_id" widget="many2many_list">
@@ -112,15 +116,141 @@
 								</templates>
 							</kanban>
 						</field>
-					</page>					
+					</page>
 				</page>
-
-				
-
 
 			</field>
 		</record>
+		<record id="crm_case_section_salesteams_view_kanban_inherit"
+			model="ir.ui.view">
+			<field name="name">crm.case.section.kanban</field>
+			<field name="model">crm.case.section</field>
+			<field name="inherit_id" ref="sale.crm_case_section_salesteams_view_kanban" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//field[@name='name']" position="after">
+						<field name="total_invoice" />
+					</xpath>
+					<xpath expr="//div[@class='oe_items_list']" position="replace">
+						<div class="oe_items_list">
+							<div class="oe_salesteams_quotations" t-if="record.use_quotations.raw_value">
+								<a name="total_invoice" type="action">Achievement</a>
+								<a name="total_invoice" type="action">
+									<field name="total_invoice">
+									</field>
+								</a>
+							</div>
+							<div class="oe_salesteams_quotations" t-if="record.use_quotations.raw_value">
+								<a name="total_sku" type="action">Target</a>
+								<a name="total_sku" type="action">
+									<field name="total_sku">
+									</field>
+								</a>
+							</div>
+							<div class="oe_salesteams_quotations" t-if="record.use_quotations.raw_value">
+								<a name="total_sku_inv" type="action">Achievement %</a>
+								<a name="total_sku_inv" type="action">
+									<field name="total_sku_inv">
+									</field>
+								</a>
+							</div>
+						</div>
 
+						<div class="oe_items_list">
+							<div class="oe_salesteams_quotations" t-if="record.use_quotations.raw_value">
+								<a name="total_rout_plan" type="action">Plan    </a>
+								<a name="total_rout_plan" type="action">
+									<field name="total_rout_plan">
+									</field>
+								</a>
+							</div>
+							<div class="oe_salesteams_quotations" t-if="record.use_quotations.raw_value">
+								<a name="total_customer_visit" type="action">Coverage</a>
+								<a name="total_customer_visit" type="action">
+									<field name="total_customer_visit">
+									</field>
+								</a>
+							</div>
+							<div class="oe_salesteams_quotations" t-if="record.use_quotations.raw_value">
+								<a name="total_pre_sale" type="action">Effective</a>
+								<a name="total_pre_sale" type="action">
+									<field name="total_pre_sale">
+									</field>
+								</a>
+							</div>
+						</div>
+
+						<div class="oe_items_list">
+							<div class="oe_salesteams_quotations" t-if="record.use_quotations.raw_value">
+								<a name="sale_value" type="action">Sales</a>
+								<a name="sale_value" type="action">
+									<field name="sale_value">
+									</field>
+								</a>
+							</div>
+							<div class="oe_salesteams_quotations" t-if="record.use_quotations.raw_value">
+								<a name="sale_total_month" type="action">Daily Average</a>
+								<a name="sale_total_month" type="action">
+									<field name="sale_total_month">
+									</field>
+								</a>
+							</div>
+							<div class="oe_salesteams_quotations" t-if="record.use_quotations.raw_value">
+								<a name="sale_confirm_today" type="action">Invoice</a>
+								<a name="sale_confirm_today" type="action">
+									<field name="sale_confirm_today">
+									</field>
+								</a>
+							</div>
+							<div class="oe_salesteams_quotations" t-if="record.use_quotations.raw_value">
+								<a name="sale_work_day" type="action">Daily Average</a>
+								<a name="sale_work_day" type="action">
+									<field name="sale_work_day">
+									</field>
+								</a>
+							</div>
+							<div class="oe_salesteams_quotations" t-if="record.use_quotations.raw_value">
+								<a name="sku_invoice" type="action">SKU/Invoice</a>
+								<a name="sku_invoice" type="action">
+									<field name="sku_invoice">
+									</field>
+								</a>
+							</div>
+							<div class="oe_salesteams_quotations" t-if="record.use_quotations.raw_value">
+								<a name="product_invoice" type="action">Daily Average</a>
+								<a name="product_invoice" type="action">
+									<field name="product_invoice">
+									</field>
+								</a>
+							</div>
+							<div class="oe_salesteams_quotations" t-if="record.use_quotations.raw_value">
+								<a name="credit_sale" type="action">Credit</a>
+								<a name="credit_sale" type="action">
+									<field name="credit_sale">
+									</field>
+								</a>
+							</div>
+
+						</div>
+					</xpath>
+
+
+				</data>
+			</field>
+		</record>
+
+		<record id="crm_case_section_salesteams_view_kanban_crm" model="ir.ui.view">
+			<field name="name">crm.case.section.kanban</field>
+			<field name="model">crm.case.section</field>
+			<field name="inherit_id" ref="crm.crm_case_section_salesteams_view_kanban" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//div[@class='oe_items_list']" position="replace">
+					</xpath>
+
+				</data>
+			</field>
+		</record>
 	</data>
 </openerp>
 		

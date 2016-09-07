@@ -31,15 +31,14 @@
 											<group>
 												<field name="product_id" />
 												<field name="product_uom_qty" />
-												<field name="amount" />
-
+												<field name="amount" sum="Invoice Total" />
 											</group>
 										</group>
 									</form>
 									<tree string="Multi Product" editable="bottom">
 										<field name="product_id" />
 										<field name="product_uom_qty" />
-										<field name="amount" />
+										<field name="amount" sum="Invoice Total" />
 									</tree>
 								</field>
 							</page>
@@ -52,13 +51,16 @@
 										<group>
 											<group>
 												<field name="notes" />
-												<field name="note_qty" />
+												<field name="note_qty" style="text-align: center" on_change="on_change_note_qty(notes,note_qty)" />
+												<field name="amount" />
 											</group>
 										</group>
 									</form>
 									<tree string="Notes" editable="bottom">
 										<field name="notes" />
-										<field name="note_qty" />
+										<field name="note_qty" style="text-align: center"  on_change="on_change_note_qty(notes,note_qty)" />
+										<field name="amount"  />
+
 									</tree>
 								</field>
 							</page>
@@ -69,6 +71,8 @@
 							</group>
 							<group>
 								<field name="total_amount" />
+								<field name="product_amount" />
+								<field name="diff_amount" />
 							</group>
 						</group>
 					</sheet>
@@ -102,6 +106,9 @@
 					<field name="date" />
 					<field name="sale_team_id" />
 					<field name="user_id" />
+					<field name="total_amount" />
+					<field name="product_amount" />
+					<field name="diff_amount" />
 				</tree>
 			</field>
 		</record>

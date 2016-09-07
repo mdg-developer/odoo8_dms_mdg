@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- === Sales target Form === -->
+
+		<record id="view_sales_target_form" model="ir.ui.view">
+			<field name="name">sales.target.form</field>
+			<field name="model">sales.target</field>
+			<field name="arch" type="xml">
+				<form string="Sales Target" version="7.0">
+					<sheet>
+						<group>
+							<group>
+								<field name="sale_team_id" on_change="on_change_sale_team_id(sale_team_id)" />
+								<field name="date" />
+								<field name="branch_id" />
+							</group>
+							<group>
+								<field name="name" />
+								<field name="month" />
+								<field name="year" class="oe_inline" />
+							</group>
+						</group>
+
+						<notebook>
+							<page string="Product">
+								<field name="target_line">
+									<form string="Multi Product">
+										<group>
+											<group>
+												<field name="product_id" on_change="on_change_product_id(product_id)" />
+												<field name="product_uom" />
+												<field name="product_uom_qty"
+													on_change="on_change_product_uom_qty(product_id,product_uom_qty)" />
+												<field name="price_unit" />
+												<field name="price_subtotal" />
+
+											</group>
+										</group>
+									</form>
+									<tree string="Multi Product" editable="bottom">
+										<field name="product_id" on_change="on_change_product_id(product_id)" />
+										<field name="product_uom" />
+										<field name="product_uom_qty"
+											on_change="on_change_product_uom_qty(product_id,product_uom_qty)" />
+										<field name="price_unit" />
+										<field name="price_subtotal" />
+									</tree>
+								</field>
+								<group>
+									<group>
+										<field name="description" class="oe_inline" placeholder="Remark..." />
+									</group>
+									<group>
+										<field name="amount_total" class="oe_inline" />
+									</group>
+								</group>
+							</page>
+
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- filter -->
+		<record id="view_sales_target_filter" model="ir.ui.view">
+			<field name="name">Sale Target Filter</field>
+			<field name="model">sales.target</field>
+			<field name="arch" type="xml">
+				<search string="Search Sales Target">
+					<group expand="0" string="Group By...">
+						<filter string="Sale Team" icon="terp-partner" domain="[]"
+							context="{'group_by':'sale_team_id'}" />
+						<filter string="Month" icon="terp-partner" domain="[]"
+							context="{'group_by':'month'}" />
+						<filter string="Year"  icon="terp-partner" domain="[]"
+							context="{'group_by':'year'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_sales_target_tree">
+			<field name="name">sales.target.tree</field>
+			<field name="model">sales.target</field>
+			<field name="arch" type="xml">
+				<tree string="Sales Target">
+					<field name="sale_team_id" />
+					<field name="branch_id" />
+					<field name="name" />
+					<field name="month" />
+					<field name="year" />
+					<field name="amount_total" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- <record id="view_sales_target_calendar" model="ir.ui.view"> -->
+		<!-- <field name="name">sales.target.calendar</field> -->
+		<!-- <field name="model">sales.target</field> -->
+		<!-- <field name="arch" type="xml"> -->
+		<!-- <calendar string="Sales Target Calendar" color="sale_team_id" -->
+		<!-- date_start="date"> -->
+		<!-- <field name="month" /> -->
+		<!-- <field name="sale_team_id" /> -->
+		<!-- <field name="amount_total" /> -->
+		<!-- </calendar> -->
+		<!-- </field> -->
+		<!-- </record> -->
+
+		<!-- <record model="ir.ui.view" id="view_sales_target_graph"> -->
+		<!-- <field name="name">sales.target.graph</field> -->
+		<!-- <field name="model">sales.target</field> -->
+		<!-- <field name="arch" type="xml"> -->
+		<!-- <graph string="Sale Target" type="bar"> -->
+		<!-- <field name="sale_team_id" type="row" /> -->
+		<!-- <field name="amount_total" type="measure" /> -->
+		<!-- </graph> -->
+		<!-- </field> -->
+		<!-- </record> -->
+
+		<record id="action_sales_target_view" model="ir.actions.act_window">
+			<field name="name">Sales Target</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">sales.target</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" eval="view_sales_target_tree" />
+			<field name="search_view_id" ref="view_sales_target_filter" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create new sale target
+				</p>
+			</field>
+		</record>
+
+		<menuitem id="menu_sales_target" action="action_sales_target_view"
+			parent="base.menu_sales" name="Sales Target Setting " sequence="12" />
+
+
+		<!-- Sale Target Analysis -->
+
+		<record id="view_sale_target_graph" model="ir.ui.view">
+			<field name="name">sale.target.graph</field>
+			<field name="model">sale.target.report</field>
+			<field name="arch" type="xml">
+				<graph string="Sale Target Analysis" type="pivot" stacked="True">
+					<field name="product_id" type="row" />
+					<field name="sale_team_id" type="col" />
+					<field name="product_uom_qty" type="measure" />
+					<field name="amount_total" type="measure" />
+				</graph>
+			</field>
+		</record>
+
+		<record id="filter_sale_target" model="ir.filters">
+			<field name="name">By SaleTeam</field>
+			<field name="model_id">sale.target.report</field>
+			<field name="user_id" eval="False" />
+			<field name="context">{'group_by': ['product_id]}</field>
+		</record>
+
+		<record id="view_sale_target_search" model="ir.ui.view">
+			<field name="name">sale.team.search</field>
+			<field name="model">sale.target.report</field>
+			<field name="arch" type="xml">
+				<search string="Sale Target Analysis">
+					<field name="date" />
+					<filter string="This Year" name="year" invisible="1"
+						domain="[('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]" />
+					<separator />
+					<field name="sale_team_id" />
+					<group expand="0" string="Extended Filters">
+						<field name="product_uom_qty" />
+						<field name="amount_total" />
+					</group>
+					<group expand="1" string="Group By">
+						<filter string="Product" name="Product" context="{'group_by':'product_id'}" />
+						<filter string="Sale Team" name="Sale Team"
+							context="{'group_by':'sale_team_id'}" />
+						<separator />
+						<filter string="Month" context="{'group_by':'month'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<record id="action_sale_target_report" model="ir.actions.act_window">
+			<field name="name">Sale Target Analysis</field>
+			<field name="res_model">sale.target.report</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">graph</field>
+			<field name="search_view_id" ref="view_sale_target_search" />
+			<field name="view_id" ref="view_sale_target_graph" />
+		</record>
+
+		<menuitem action="action_sale_target_report" id="menu_sale_target_report"
+			parent="base.menu_sales" sequence="12" />
+
+
+
+	</data>
+</openerp>
+	    
+	    
+	    
