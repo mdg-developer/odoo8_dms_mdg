@@ -17,11 +17,14 @@ class stock_return_from_mobile(osv.osv):
     
     _columns = {
         'sale_team_id':fields.many2one('crm.case.section', 'Sales Team' , required=True),
-        'user_id':fields.many2one('res.users', 'Return From'  , required=True, select=True, track_visibility='onchange'),    
+        'user_id':fields.many2one('res.users', 'Return From'  , required=True, select=True, track_visibility='onchange'),
          'return_date':fields.date('Date of Return'),
-         'vehicle_no':fields.char('Vehicle No:'),
-        'p_line':fields.one2many('stock.return.line', 'line_id', 'Product Lines',
+        'vehicle_id':fields.many2one('fleet.vehicle', 'Vehicle No'),
+        'p_line':fields.one2many('stock.return.mobile.line', 'line_id', 'Product Lines',
                               copy=True),
+               'branch_id':fields.many2one('res.branch', 'Branch'),
+        'company_id':fields.many2one('res.company', 'Company'),
+
 }
     _defaults = {
         'state' : 'draft',

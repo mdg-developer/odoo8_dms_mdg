@@ -2,7 +2,9 @@ from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 from openerp import tools
 import time
-
+from dateutil.relativedelta import relativedelta
+from datetime import datetime
+import datetime
 class sale_target(osv.osv):
     
     _name = "sales.target"
@@ -42,7 +44,13 @@ class sale_target(osv.osv):
                 print 'valsssss', val1
             res[order.id] = val1
         return res
- 
+    
+    def _default_date(self, cr, uid, ids, context=None):
+        now = datetime.datetime.now()
+        year=now.year
+        month=now.month
+        return time.strftime('%Y-%m-01')
+
       
     _columns = {
         'name': fields.char('Description'),
@@ -72,6 +80,7 @@ class sale_target(osv.osv):
   }
     _defaults = {
         'branch_id': _get_default_branch,
+        'date':_default_date,
         'month' : lambda *a: str(time.strftime('%m')),
         'year' : lambda *a: str(time.strftime('%Y')),
         }        
@@ -114,8 +123,8 @@ class sale_target_line(osv.osv):
                 'product_id':fields.many2one('product.product', 'Product SKU', required=True),
                 'product_uom':fields.many2one('product.uom', 'UOM', required=True),
                 'product_uom_qty':fields.integer('QTY', required=True),
-                 'price_unit': fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Product Price')),
-                'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute=dp.get_precision('Account'), type='float',),
+                 'price_unit': fields.float('Unit Price', required=True, readonly=True, digits_compute=dp.get_precision('Product Price')),
+                'price_subtotal': fields.function(_amount_line, string='Amount', digits_compute=dp.get_precision('Account'), type='float',),
                 }
 sale_target_line()    
 

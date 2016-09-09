@@ -23,7 +23,7 @@ class sale_order(osv.osv):
             res[sale.id] = True
             invoice_existence = False
             for invoice in sale.invoice_ids:
-                if invoice.state!='cancel':
+                if invoice.state != 'cancel':
                     invoice_existence = True
                     if invoice.state != 'paid':
                         res[sale.id] = False
@@ -47,7 +47,7 @@ class sale_order(osv.osv):
                 no_invoiced = True
  
         cursor.execute('SELECT rel.order_id ' \
-                'FROM sale_order_invoice_rel AS rel, account_invoice AS inv '+ sale_clause + \
+                'FROM sale_order_invoice_rel AS rel, account_invoice AS inv ' + sale_clause + \
                 'WHERE rel.invoice_id = inv.id ' + clause)
         res = cursor.fetchall()
         if no_invoiced:
@@ -76,35 +76,38 @@ class sale_order(osv.osv):
                ], 'Deliver Remark'),
                'due_date':fields.date('Due Date'),
                'so_latitude':fields.float('Geo Latitude'),
-               'so_longitude':fields.float('Geo Longitude'),               
+               'so_longitude':fields.float('Geo Longitude'),
                'customer_code':fields.char('Customer Code'),
                'sale_plan_name':fields.char('Sale Plan Name'),
                'sale_plan_day_id':fields.many2one('sale.plan.day', 'Sale Plan Day'),
                'sale_plan_trip_id':fields.many2one('sale.plan.trip', 'Sale Plan Trip'),
                'validity_date':fields.date(string='Expiration Date', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
                'invoiced': fields.function(_invoiced, string='Paid',
-                fnct_search=_invoiced_search, type='boolean', help="It indicates that an invoice has been paid.",store=True),                           
+                fnct_search=_invoiced_search, type='boolean', help="It indicates that an invoice has been paid.", store=True),
+                'delivery_id': fields.many2one('crm.case.section', 'Delivery Team'),
+                'pre_order': fields.boolean("Pre Order" , readonly=True),
+                 
                }
     
     def onchange_partner_id(self, cr, uid, ids, part, context=None):
         
         if not part:
-            return {'value': {'partner_invoice_id': False, 'partner_shipping_id': False,  'payment_term': False, 'fiscal_position': False}}
+            return {'value': {'partner_invoice_id': False, 'partner_shipping_id': False, 'payment_term': False, 'fiscal_position': False}}
 
         part = self.pool.get('res.partner').browse(cr, uid, part, context=context)       
-        addr = self.pool.get('res.partner').address_get(cr, uid, [part.id], ['delivery','invoice','contact'])
+        addr = self.pool.get('res.partner').address_get(cr, uid, [part.id], ['delivery', 'invoice', 'contact'])
         pricelist = part.property_product_pricelist and part.property_product_pricelist.id or False
         invoice_part = self.pool.get('res.partner').browse(cr, uid, addr['invoice'], context=context)
         payment_term = invoice_part.property_payment_term and invoice_part.property_payment_term.id or False
         dedicated_salesman = part.user_id and part.user_id.id or uid
         val = {
             'partner_invoice_id': addr['invoice'],
-            'partner_shipping_id': addr['delivery'],  
-            'customer_code': part.customer_code,                   
+            'partner_shipping_id': addr['delivery'],
+            'customer_code': part.customer_code,
             'payment_term': payment_term,
             'user_id': dedicated_salesman,
         }
-        delivery_onchange = self.onchange_delivery_id(cr, uid, ids, False, part.id, addr['delivery'], False,  context=context)
+        delivery_onchange = self.onchange_delivery_id(cr, uid, ids, False, part.id, addr['delivery'], False, context=context)
         val.update(delivery_onchange['value'])
         if pricelist:
             val['pricelist_id'] = pricelist

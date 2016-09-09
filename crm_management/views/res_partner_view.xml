@@ -94,39 +94,116 @@
 					<xpath expr="//notebook/page[@name='internal_notes']"
 						position="replace"></xpath>
 					<notebook position="inside">
-						<page string="Asset Name">
+						<page string="Asset Name" attrs="{'invisible':[('customer','=',False)]}">
 							<field name="asset_ids" />
 						</page>
+						<page string="Space Rental" attrs="{'invisible':[('customer','=',False)]}">
+							<field name="space_ids" />
+						</page>
 					</notebook>
+				
 					<notebook position="inside">
-						<page string="Customer Image">
+						<page string="Customer Image" attrs="{'invisible': [('customer', '=', False)]}">
 							<div class="row">
 								<div class="col-md-2">
-									<field name="image_one" widget='image' class="oe_avatar"
-										options='{"size": [90, 90]}' />
+									<div id="image_one">
+										<field name="image_one" widget='image' class="oe_avatar"
+											options='{"preview_image": "image_one"}' />
+									</div>
+									<p
+										onclick="var list =document.getElementById('image_one'); var imageName =list.id ; var link = list.getElementsByTagName('img')[0].src;link = link.replace('image_one','image_one');var zoom=document.getElementById('zoom'); zoom.src=link;"
+										data-backdrop="false" data-target=".bs-example-modal-lg"
+										data-toggle="modal" class="btn btn-default source">
+										Zoom
+										<i class="fa fa-plus"></i>
+									</p>
+									<div>
+										<button name="default_image_one" string="Default" type="object"
+											widget="statinfo" />
+									</div>
 								</div>
 								<div class="col-md-2">
-									<field name="image_two" widget='image' class="oe_avatar"
-										options='{"size": [90, 90]}' />
+									<div id="image_two">
+										<field name="image_two" widget='image' class="oe_avatar"
+											options='{"preview_image": "image_two"}' />
+									</div>
+									<p class="btn btn-default source" data-toggle="modal"
+										data-target=".bs-example-modal-lg" data-backdrop="false"
+										onclick="var list =document.getElementById('image_two'); var imageName =list.id ; var link = list.getElementsByTagName('img')[0].src;link = link.replace('image_two','image_two');var zoom=document.getElementById('zoom'); zoom.src=link;">
+										Zoom
+										<i class="fa fa-plus"></i>
+									</p>
+									<div>
+										<button name="default_image_two" string="Default" type="object"
+											widget="statinfo" />
+									</div>
 								</div>
 								<div class="col-md-2">
+									<div id="image_three">
+										<field name="image_three" widget='image' class="oe_avatar"
+											options='{"preview_image": "image_three"}' />
+									</div>
+									<p class="btn btn-default source" data-toggle="modal"
+										data-target=".bs-example-modal-lg" data-backdrop="false"
+										onclick="var list =document.getElementById('image_three'); var imageName =list.id ; var link = list.getElementsByTagName('img')[0].src;link = link.replace('image_three','image_three');var zoom=document.getElementById('zoom'); zoom.src=link;">
+										Zoom
+										<i class="fa fa-plus"></i>
+									</p>
+									<div>
+										<button name="default_image_three" string="Default"
+											type="object" widget="statinfo" />
+									</div>
+								</div>
 
-									<field name="image_three" widget='image' class="oe_avatar"
-										options='{"size": [90, 90]}' />
+								<div class="col-md-2">
+									<div id="image_four">
+										<field name="image_four" widget='image' class="oe_avatar"
+											options='{"preview_image": "image_four"}' />
+									</div>
+									<p class="btn btn-default source" data-toggle="modal"
+										data-target=".bs-example-modal-lg" data-backdrop="false"
+										onclick="var list =document.getElementById('image_four'); var imageName =list.id ; var link = list.getElementsByTagName('img')[0].src;link = link.replace('image_four','image_four');var zoom=document.getElementById('zoom'); zoom.src=link;">
+										Zoom
+										<i class="fa fa-plus"></i>
+									</p>
+
+									<div>
+										<button name="default_image_four" string="Default"
+											type="object" widget="statinfo" />
+									</div>
 								</div>
 								<div class="col-md-2">
+									<div id="image_five">
+										<field name="image_five" widget='image' class="oe_avatar"
+											options='{"preview_image": "image_five"}' />
+									</div>
+									<p class="btn btn-default source" data-toggle="modal"
+										data-target=".bs-example-modal-lg" data-backdrop="false"
+										onclick="var list =document.getElementById('image_five'); var imageName =list.id ; var link = list.getElementsByTagName('img')[0].src;link = link.replace('image_five','image_five');var zoom=document.getElementById('zoom'); zoom.src=link;">
+										Zoom
+										<i class="fa fa-plus"></i>
+									</p>
 
-									<field name="image_four" widget='image' class="oe_avatar"
-										options='{"size": [90, 90]}' />
-								</div>
-								<div class="col-md-2">
-
-									<field name="image_five" widget='image' class="oe_avatar"
-										options='{"size": [90, 90]}' />
+									<div>
+										<button name="default_image_five" string="Default"
+											type="object" widget="statinfo" />
+									</div>
 								</div>
 							</div>
 
 						</page>
+						<!-- Zoom Modal for pop-up -->
+						<div class="modal fade bs-example-modal-lg" tabindex="-1"
+							role="dialog" aria-hidden="true">
+							<div class="modal-dialog modal-lg">
+								<div class="modal-content" align="center">
+									<img id="zoom" src="" width="500" height="500" border="1" />
+									<!-- <div class="modal-footer"> <button type="button" class="close" 
+										data-dismiss="modal"> <span>Close</span> </button> </div> -->
+
+								</div>
+							</div>
+						</div>
 					</notebook>
 					<!-- </xpath> -->
 					<xpath expr="//field[@name='user_id']" position="replace">
@@ -175,12 +252,20 @@
 		</record>
 
 		<!-- Partner group by -->
-		<record id="view_res_partner_filter" model="ir.ui.view">
+		<record id="view_res_partner_filter_inherit" model="ir.ui.view">
 			<field name="name">Customer Filter</field>
 			<field name="model">res.partner</field>
 			<field name="inherit_id" ref="base.view_res_partner_filter" />
 			<field name="arch" type="xml">
+				<xpath expr="//field[@name='name']" position="after">
+					<field name="customer_code" />
+				</xpath>
+
+				<!-- <xpath expr="//group/filter[@string='Salesperson']" position="replace"> -->
+				<!-- </xpath> -->
 				<xpath expr="//group/filter[@string='Country']" position="after">
+					<filter name="section_id" string="Sales Team" domain="[]"
+						context="{'group_by':'section_id'}" />
 					<filter name="township" string="Township" domain="[]"
 						context="{'group_by':'township'}" />
 					<filter name="city" string="City" domain="[]"
@@ -189,6 +274,13 @@
 						context="{'group_by':'state_id'}" />
 					<filter name="demarcation_id" string="Demarcation" domain="[]"
 						context="{'group_by':'demarcation_id'}" />
+					<filter name="sales_channel" string="Sale Channels" domain="[]"
+						context="{'group_by':'sales_channel'}" />
+					<filter name="outlet_type" string="Outlet Type" domain="[]"
+						context="{'group_by':'outlet_type'}" />
+					<filter name="mobile_customer" string="Pending Customer"
+						domain="[]" context="{'group_by':'mobile_customer'}" />
+
 				</xpath>
 			</field>
 		</record>
@@ -202,19 +294,88 @@
 
 				<xpath expr="//field[@name='display_name']" position="after">
 					<field name="customer_code" />
+					<field name="month_sale" />
+					<field name="month_invoice" />
+					<field name="invoice_confirm" />
+					<field name="customer" />
+
+				</xpath>
+				<xpath expr="//ul" position="replace">
+					<ul attrs="{'invisible':[('customer','=',True)]}">
+						<li t-if="record.parent_id.raw_value and !record.function.raw_value">
+							<field name="parent_id" />
+						</li>
+						<li t-if="!record.parent_id.raw_value and record.function.raw_value">
+							<field name="function" />
+						</li>
+						<li t-if="record.parent_id.raw_value and record.function.raw_value">
+							<field name="function" />
+							at
+							<field name="parent_id" />
+						</li>
+						<li t-if="record.city.raw_value and !record.country_id.raw_value">
+							<field name="city" />
+						</li>
+						<li t-if="!record.city.raw_value and record.country_id.raw_value">
+							<field name="country_id" />
+						</li>
+						<li t-if="record.city.raw_value and record.country_id.raw_value">
+							<field name="city" />
+							,
+							<field name="country_id" />
+						</li>
+						<li t-if="record.email.raw_value">
+							<a t-attf-href="mailto:#{record.email.raw_value}">
+								<field name="email" />
+							</a>
+						</li>
+					</ul>
 				</xpath>
 				<xpath expr="//div[@class='oe_kanban_partner_links']"
 					position="inside">
 					<li t-if="record.customer_code.raw_value">
 						<field name="customer_code" />
 					</li>
+
+					<div class="oe_items_list" attrs="{'invisible':[('customer','=',False)]}">
+						<div t-if="record.customer_code.raw_value">
+							<a name="month_sale" type="action">Monthly Sale</a>
+							<a name="month_sale" type="action">
+								<field name="month_sale">
+								</field>
+							</a>
+						</div>
+					</div>
+					<div class="oe_items_list" attrs="{'invisible':[('customer','=',False)]}">
+						<div t-if="record.customer_code.raw_value">
+							<a name="month_invoice" type="action">Monthly Invoice</a>
+							<a name="month_invoice" type="action">
+								<field name="month_invoice">
+								</field>
+							</a>
+						</div>
+					</div>
+					<div class="oe_items_list" attrs="{'invisible':[('customer','=',False)]}">
+						<div t-if="record.customer_code.raw_value">
+							<a name="invoice_confirm" type="action">Invoice Confirm</a>
+							<a name="invoice_confirm" type="action">
+								<field name="invoice_confirm">
+								</field>
+							</a>
+						</div>
+					</div>
+					<div class="oe_items_list" attrs="{'invisible':[('customer','=',False)]}">
+						<div t-if="record.customer_code.raw_value">
+							<a name="section_id" type="action">Sales Team</a>
+							<a name="section_id" type="action">
+								<field name="section_id">
+								</field>
+							</a>
+						</div>
+					</div>
 				</xpath>
-
-
 			</field>
 		</record>
-
-
 		<!-- Asset Type -->
 
 
@@ -229,7 +390,6 @@
 					<field name="type" />
 					<field name="asset_type" />
 					<field name="qty" />
-					<field name="image" />
 				</tree>
 			</field>
 		</record>
@@ -245,12 +405,15 @@
 							<field name="date" />
 							<field name="type" />
 							<field name="partner_id" />
+							<field name="note" />
+
 
 						</group>
 						<group>
 							<field name="asset_type" />
 							<field name="qty" />
 							<field name="image" widget='image' class="oe_avatar" />
+
 						</group>
 					</group>
 				</form>
@@ -281,7 +444,7 @@
 		</record>
 
 		<menuitem id="menu_customer_asset_form111" parent="base.menu_sales"
-			action="open_view_customer_asset_action" sequence="2" />
+			action="open_view_customer_asset_action" sequence="11" />
 
 		<record id="view_crm_partner_assign_form_inherit" model="ir.ui.view">
 			<field name="name">res.partner.gmap</field>

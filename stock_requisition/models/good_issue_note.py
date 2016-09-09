@@ -23,8 +23,8 @@ class good_issue_note(osv.osv):
     _order = "id desc"    
     _track = {
         'state': {
-            'good_issue_note.mt_note_confirm': lambda self, cr, uid, obj, ctx=None: obj.state in ['confirm'],
-            'good_issue_note.mt_note_approve': lambda self, cr, uid, obj, ctx=None: obj.state in ['approve']
+            'good_issue_note.mt_note_confirm': lambda self, cr, uid, obj, ctx = None: obj.state in ['confirm'],
+            'good_issue_note.mt_note_approve': lambda self, cr, uid, obj, ctx = None: obj.state in ['approve']
         },
     }    
     def _get_default_company(self, cr, uid, context=None):
@@ -35,25 +35,27 @@ class good_issue_note(osv.osv):
     
     _columns = {
         'name': fields.char('(GIN)Ref;No.', readonly=True),
-        'request_id':fields.many2one('stock.requisition','(REI)Ref;No.',readonly=True),
+        'request_id':fields.many2one('stock.requisition', '(REI)Ref;No.', readonly=True),
         'to_location_id':fields.many2one('stock.location', 'Issue To', required=True),
         'from_location_id':fields.many2one('stock.location', 'Issue From', required=True),
 #         'so_no' : fields.char('Sales Order/Inv Ref;No.'),
-#         'issue_to':fields.many2one('res.users', "Issue To"),
-#         'request_by':fields.many2one('res.users', "Request By"),
+         'issue_by':fields.many2one('res.users', "Issue By"),
+       'request_by':fields.many2one('res.users', "Request By"),
+        'approve_by':fields.many2one('res.users', "Approve By"),
+
 #         'request_date' : fields.date('Date Requested'),
-         'issue_date':fields.date('Date of Issue'),
-         'vehicle_no':fields.char('Vehicle No:'),
+         'issue_date':fields.datetime('Date of Issue'),
+        'vehicle_id':fields.many2one('fleet.vehicle', 'Vehicle No'),
         'state': fields.selection([
-            ('draft', 'Draft'),
-            ('confirm', 'Confirmed'),
-            ('approve', 'Approved'),
+            ('draft', 'Pending'),
+              ('confirm', 'Sale Manager Approved'),
+            ('approve', 'WH Manager Approved'),
             ('cancel', 'Cancel')
             ], 'Status', readonly=True, copy=False, help="Gives the status of the quotation or sales order.\
               \nThe exception status is automatically set when a cancel operation occurs \
               in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\nThe 'Waiting Schedule' status is set when the invoice is confirmed\
                but waiting for the scheduler to run on the order date.", select=True),
-        'p_line':fields.one2many('good.issue.note.line', 'line_id', 'Product Lines',
+                 'p_line':fields.one2many('good.issue.note.line', 'line_id', 'Product Lines',
                               copy=True),
                 'company_id':fields.many2one('res.company', 'Company'),
 }
@@ -67,44 +69,43 @@ class good_issue_note(osv.osv):
         vals['name'] = id_code
         return super(good_issue_note, self).create(cursor, user, vals, context=context)
     
-    def confirm(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state': 'confirm', })
     def cancel(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'cancel', })
-    def approve(self, cr, uid, ids, context=None):
+    
+    def confirm(self, cr, uid, ids, context=None):
         product_line_obj = self.pool.get('good.issue.note.line')
         note_obj = self.pool.get('good.issue.note')
         picking_obj = self.pool.get('stock.picking')
         move_obj = self.pool.get('stock.move')
 
-        note_value= req_lines ={}
+        note_value = req_lines = {}
         if ids:
-            note_value = note_obj.browse(cr,uid,ids[0],context=context)
+            note_value = note_obj.browse(cr, uid, ids[0], context=context)
             issue_date = note_value.issue_date
             location_id = note_value.to_location_id.id
             from_location_id = note_value.from_location_id.id
             origin = note_value.name
             partner_id = 106
-            cr.execute('select id from stock_picking_type where default_location_dest_id=%s and name like %s',(location_id,'%Internal Transfer%',))
+            cr.execute('select id from stock_picking_type where default_location_dest_id=%s and name like %s', (location_id, '%Internal Transfer%',))
             price_rec = cr.fetchone()
             if price_rec: 
                 picking_type_id = price_rec[0] 
             else:
                 raise osv.except_osv(_('Warning'),
                                      _('Picking Type has not for this transition'))
-            picking_id = picking_obj.create(cr, uid, {'partner_id': partner_id,
+            picking_id = picking_obj.create(cr, uid, {
                                           'date': issue_date,
                                           'origin':origin,
                                           'picking_type_id':picking_type_id}, context=context)
-            note_line_id = product_line_obj.search(cr,uid,[('line_id','=',ids[0])],context=context)
+            note_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
             if note_line_id and picking_id:
                 
                 for id in note_line_id:
-                    note_line_value = product_line_obj.browse(cr,uid,id,context=context)
+                    note_line_value = product_line_obj.browse(cr, uid, id, context=context)
                     product_id = note_line_value.product_id.id
                     name = note_line_value.product_id.name_template
-                    product_uom=note_line_value.product_uom.id
-                    origin=origin
+                    product_uom = note_line_value.product_uom.id
+                    origin = origin
                     quantity = note_line_value.issue_quantity
                     move_obj.create(cr, uid, {'picking_id': picking_id,
                                               'picking_type_id':picking_type_id,
@@ -112,12 +113,24 @@ class good_issue_note(osv.osv):
                                           'product_uom_qty': quantity,
                                           'product_uos_qty': quantity,
                                           'product_uom':product_uom,
-                                          'location_id':from_location_id,
-                                          'location_dest_id':location_id,
+                                          'location_id':location_id,
+                                          'location_dest_id':from_location_id,
                                           'name':name,
                                            'origin':origin,
                                           'state':'confirmed'}, context=context)        
-        return self.write(cr, uid, ids, {'state':'approve'})    
+        return self.write(cr, uid, ids, {'state':'confirm'})    
+    
+    def approve(self, cr, uid, ids, context=None):
+         move_obj = self.pool.get('stock.move')
+         if ids:
+            note_value = self.browse(cr, uid, ids[0], context=context)
+            note_ref = note_value.name
+            move_id = move_obj.search(cr, uid, [('origin', '=', note_ref)], context=context)
+
+            for stock_id in move_id:
+                print 'idddddddddd', stock_id
+                move_obj.action_done(cr, uid, stock_id, context=context)
+         return self.write(cr, uid, ids, {'state':'approve'})    
 
             
 class good_issue_line(osv.osv):  # #prod_pricelist_update_line
@@ -135,8 +148,8 @@ class good_issue_line(osv.osv):  # #prod_pricelist_update_line
         return {'value': values}
         
     _columns = {                
-        'line_id':fields.many2one('good.issue.note', 'Line',ondelete='cascade', select=True),
-        'product_id': fields.many2one('product.product', 'Product',required=True),
+        'line_id':fields.many2one('good.issue.note', 'Line', ondelete='cascade', select=True),
+        'product_id': fields.many2one('product.product', 'Product', required=True),
         'issue_quantity' : fields.float(string='Qty', digits=(16, 0)),
         'product_uom': fields.many2one('product.uom', 'UOM', required=True),
                 'uom_ratio':fields.char('Packing Unit'),

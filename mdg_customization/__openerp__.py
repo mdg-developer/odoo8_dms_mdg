@@ -21,31 +21,22 @@
 ##############################################################################
 
 {
-    'name': 'CRM Management',
+    'name': 'MDG Customization',
     'version': '1.0',
-    'category': 'CRM',
+    'category': 'MDG Customization',
     'sequence': 30,
-    'summary': 'CRM',
+    'summary': 'MDG Customization',
     'description': """
-CRM Management
-Features:
-customer code auto generate by city, township, sale channel 
-e.g YGN-IS-RETAIN-0001,YGN-IS-RETAIN-0002,
-
+MDG Customization
 """,
     'author': 'Seventh Computing',
     'website': 'http://www.7thcomputing.com',
-    'depends': ['base', 'crm','sale', 'address_management_system', 'crm_class', 'hr_branch', 'crm_demarcation', 'sale_management','crm_sale_channel', 'base_geolocalize', 'crm_partner_assign'
-    ],
+    'depends': ['base', 'product'  ,'stock'  ],
     'data': [        
-        'views/res_partner_view.xml',
-        'views/lead_view.xml',
-        'views/res_code_view.xml',
-        'views/sale_order_configuration.xml',
-        'views/res_partner_opportunity.xml',
-        'reports/qweb_view.xml',
-        'reports/report_crm_management.xml',
-        'views/outlet_type_view.xml',
+             'views/product_view.xml',
+             'views/location_view.xml',
+             'views/res_partner_view.xml',
+             'views/product_view.xml',
     ],
     'installable': True,
     'auto_install': False,

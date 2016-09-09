@@ -6,6 +6,8 @@ import urllib
 from openerp.osv import fields, osv
 from openerp import tools
 from openerp.tools.translate import _
+import openerp.addons.decimal_precision as dp
+
 
 def geo_find(addr):
     url = 'https://maps.googleapis.com/maps/api/geocode/json?sensor=false&address='
@@ -48,6 +50,7 @@ outlet_type()
 class res_partner(osv.osv):
 
     _inherit = 'res.partner'
+    
     def _get_default_pricelist(self, cr, uid, ids, field_name, arg, context=None):
         result = {}
         for rec in self.browse(cr, uid, ids, context=context):
@@ -154,14 +157,88 @@ class res_partner(osv.osv):
                             res[partner.id] = round(so_count / week_num, 2)
                         
         return res           
+    def _get_total_sale_data(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        data = 0
+        if context is None:
+            context = {}
+        for line in self.browse(cr, uid, ids, context=context):
+            # cr.execute("   select count(st.id) from sales_target st ,sales_target_line stl where st.id=stl.sale_ids  and stl.product_uom_qty !=0.0 and sale_team_id =  %s and date= %s " ,( line.id,line.date,))
+            # data=cr.fetchone()[0]
+            res[line.id] = data
+        return res
+    def _get_total_invoice_data(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        data = 0
+        if context is None:
+            context = {}
+        for line in self.browse(cr, uid, ids, context=context):
+            # cr.execute("   select count(st.id) from sales_target st ,sales_target_line stl where st.id=stl.sale_ids  and stl.product_uom_qty !=0.0 and sale_team_id =  %s and date= %s " ,( line.id,line.date,))
+            # data=cr.fetchone()[0]
+            res[line.id] = data
+        return res
+    def _get_invoice_confirm(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        data = 0
+        if context is None:
+            context = {}
+        for line in self.browse(cr, uid, ids, context=context):
+            # cr.execute("   select count(st.id) from sales_target st ,sales_target_line stl where st.id=stl.sale_ids  and stl.product_uom_qty !=0.0 and sale_team_id =  %s and date= %s " ,( line.id,line.date,))
+            # data=cr.fetchone()[0]
+            res[line.id] = data
+        return res   
 
+    def default_image_one(self, cr, uid, ids, context=None):
+        res = {}
+        data = 0
+        if context is None:
+            context = {}
+        for line in self.browse(cr, uid, ids, context=context):
+            cr.execute("update res_partner set image_small=%s, image =%s,image_medium=%s where id = %s" , (line.image_one, line.image_one, line.image_one, line.id,))
+        return True
+
+    def default_image_two(self, cr, uid, ids, context=None):
+        res = {}
+        data = 0
+        if context is None:
+            context = {}
+        for line in self.browse(cr, uid, ids, context=context):
+            cr.execute("update res_partner set image_small=%s, image =%s,image_medium=%s where id = %s" , (line.image_two, line.image_two, line.image_two, line.id,))
+        return True
+
+    def default_image_three(self, cr, uid, ids, context=None):
+        res = {}
+        data = 0
+        if context is None:
+            context = {}
+        for line in self.browse(cr, uid, ids, context=context):
+            cr.execute("update res_partner set image_small=%s, image =%s,image_medium=%s where id = %s" , (line.image_three, line.image_three, line.image_three, line.id,))
+        return True
+
+    def default_image_four(self, cr, uid, ids, context=None):
+        res = {}
+        data = 0
+        if context is None:
+            context = {}
+        for line in self.browse(cr, uid, ids, context=context):
+            cr.execute("update res_partner set image_small=%s, image =%s,image_medium=%s where id = %s" , (line.image_four, line.image_four, line.image_four, line.id,))
+        return True
+
+    def default_image_five(self, cr, uid, ids, context=None):
+        res = {}
+        data = 0
+        if context is None:
+            context = {}
+        for line in self.browse(cr, uid, ids, context=context):
+            cr.execute("update res_partner set image_small=%s, image =%s,image_medium=%s where id = %s" , (line.image_five, line.image_five, line.image_five, line.id,))
+        return True
     _columns = {  
                 'customer_code':fields.char('Code', required=False),
                 'outlet_type': fields.many2one('outlettype.outlettype', 'Outlet Type', required=True),
                 'temp_customer':fields.char('Contact Person'),
                 'class_id':fields.many2one('sale.class', 'Class'),
                 'old_code': fields.char('Old Code'),
-                'sales_channel':fields.many2one('sale.channel', 'Sale Channels'),
+                'sales_channel':fields.many2one('sale.channel', 'Sale Channel'),
                 'address':fields.char('Address'),
                 'branch_id':fields.many2one('sale.branch', 'Branch'),
                 'demarcation_id': fields.many2one('sale.demarcation', 'Demarcation'),
@@ -178,16 +255,27 @@ class res_partner(osv.osv):
                 'pricelist_id':fields.function(_get_default_pricelist, type='many2one', relation='product.pricelist', string='Price List', store=True),
                 'payment_term_id':fields.function(_get_default_payment_term_id, type='many2one', relation='account.payment.term', string='Payment Term', store=True),
                  'asset_ids': fields.one2many('res.partner.asset', 'partner_id', 'Asset'),
-        'image_one': fields.binary("Image",
-            help="This field holds the image used as avatar for this contact, limited to 1024x1024px"),
-        'image_two': fields.binary("Image",
-            help="This field holds the image used as avatar for this contact, limited to 1024x1024px"),
-        'image_three': fields.binary("Image",
-            help="This field holds the image used as avatar for this contact, limited to 1024x1024px"),
-        'image_four': fields.binary("Image",
-            help="This field holds the image used as avatar for this contact, limited to 1024x1024px"),
-        'image_five': fields.binary("Image",
-            help="This field holds the image used as avatar for this contact, limited to 1024x1024px"),                                                
+                 'space_ids': fields.one2many('sales.rental', 'partner_id', 'Space Rental'),
+                'image_one': fields.binary("Image",
+                    help="This field holds the image used as avatar for this contact, limited to 1024x1024px"),
+                'image_two': fields.binary("Image",
+                    help="This field holds the image used as avatar for this contact, limited to 1024x1024px"),
+                'image_three': fields.binary("Image",
+                    help="This field holds the image used as avatar for this contact, limited to 1024x1024px"),
+                'image_four': fields.binary("Image",
+                    help="This field holds the image used as avatar for this contact, limited to 1024x1024px"),
+                'image_five': fields.binary("Image",
+                    help="This field holds the image used as avatar for this contact, limited to 1024x1024px"),
+                 'month_sale': fields.function(_get_total_sale_data, digits_compute=dp.get_precision('Product Price'),
+                type='float', readonly=True,
+                string='Monthly Sale'),
+                 'month_invoice': fields.function(_get_total_invoice_data, digits_compute=dp.get_precision('Product Price'),
+                type='float', readonly=True,
+                string='Monthly Invoice'),
+                'invoice_confirm': fields.function(_get_invoice_confirm, digits_compute=dp.get_precision('Product Price'),
+                type='float', readonly=True,
+                string='Invoice Confirm'),
+ 
  } 
     _defaults = {
         'is_company': True,
@@ -374,9 +462,10 @@ class res_partner_asset(osv.Model):
                         'date':fields.date('Date'),
                         'type':fields.selection ([('rent', 'Rent'), ('give', 'Giving')],
                                                     'Type', required=True, default='rent'),
-                        'asset_type':fields.many2one('asset.type','Asset Type'),
+                        'asset_type':fields.many2one('asset.type', 'Asset Type'),
                        'qty':fields.integer('Qty'),
                         'image': fields.binary("Image"),
+                        'note':fields.text('Note'),
   }
     _defaults = {
         'date': fields.datetime.now,

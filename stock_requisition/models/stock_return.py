@@ -39,7 +39,7 @@ class stock_return(osv.osv):
         'return_from':fields.many2one('res.users', 'Return From', required=True),
          'so_no' : fields.char('Sales Order/Inv Ref;No.'),
          'return_date':fields.date('Date of Return'),
-         'vehicle_no':fields.char('Vehicle No:'),
+        'vehicle_id':fields.many2one('fleet.vehicle', 'Vehicle No'),
         'state': fields.selection([
             ('draft', 'Draft'),
             ('confirm', 'Confirmed'),

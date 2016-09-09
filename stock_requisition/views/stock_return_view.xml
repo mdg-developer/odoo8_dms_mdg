@@ -30,7 +30,7 @@
 							<group>
 								<field name="note_id" attrs="{'readonly':[('state','=','approve')]}" />
 								<field name="so_no" attrs="{'readonly':[('state','=','approve')]}" />
-								<field name="vehicle_no" attrs="{'readonly':[('state','=','approve')]}" />
+								<field name="vehicle_id" attrs="{'readonly':[('state','=','approve')]}" />
 								<field name="company_id" attrs="{'readonly':[('state','=','approve')]}" />
 
 							</group>
@@ -78,7 +78,7 @@
 					<field name="return_from" />
 					<field name="so_no" />
 					<field name="return_date" />
-					<field name="vehicle_no" />
+					<field name="vehicle_id" />
 					<field name="state" />
 				</tree>
 			</field>

@@ -15,10 +15,12 @@
 							<group>
 								<field name="sale_team_id" />
 								<field name="user_id"  />
+								<field name="branch_id"/>
 							</group>
 							<group>
 								<field name="return_date" />
-								<field name="vehicle_no" />
+								<field name="vehicle_id" />
+								<field name="company_id"/>
 							</group>
 						</group>
 						<group>
@@ -50,7 +52,7 @@
 					<field name="sale_team_id" />
 					<field name="user_id" />
 					<field name="return_date" />
-					<field name="vehicle_no" />
+					<field name="vehicle_id" />
 				</tree>
 			</field>
 		</record>

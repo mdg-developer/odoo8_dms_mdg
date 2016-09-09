@@ -38,7 +38,8 @@
 				</field>
 				<field name="location_id" position="after">
 					<field name="analytic_account_id" />
-					<field name="van_id" />
+					<field name="van_id" invisible="1" />
+					<field name="vehicle_id" />
 					<field name="sale_channel_id" widget="many2many_tags" />
 					<field name="date" />
 					<field name="total_invoice" />
@@ -134,31 +135,31 @@
 					<xpath expr="//div[@class='oe_items_list']" position="replace">
 						<div class="oe_items_list">
 							<div class="oe_salesteams_quotations" t-if="record.use_quotations.raw_value">
-								<a name="total_invoice" type="action">Achievement</a>
+								<a name="total_invoice" type="action">__Ach</a>
 								<a name="total_invoice" type="action">
 									<field name="total_invoice">
 									</field>
 								</a>
 							</div>
 							<div class="oe_salesteams_quotations" t-if="record.use_quotations.raw_value">
-								<a name="total_sku" type="action">Target</a>
+								<a name="total_sku" type="action">Month Target</a>
 								<a name="total_sku" type="action">
 									<field name="total_sku">
 									</field>
 								</a>
 							</div>
 							<div class="oe_salesteams_quotations" t-if="record.use_quotations.raw_value">
-								<a name="total_sku_inv" type="action">Achievement %</a>
+								<a name="total_sku_inv" type="action">__Ach %</a>
 								<a name="total_sku_inv" type="action">
 									<field name="total_sku_inv">
 									</field>
 								</a>
 							</div>
-						</div>
+							<!-- </div> -->
 
-						<div class="oe_items_list">
+							<!-- <div class="oe_items_list"> -->
 							<div class="oe_salesteams_quotations" t-if="record.use_quotations.raw_value">
-								<a name="total_rout_plan" type="action">Plan    </a>
+								<a name="total_rout_plan" type="action">Month Plan</a>
 								<a name="total_rout_plan" type="action">
 									<field name="total_rout_plan">
 									</field>
@@ -178,11 +179,11 @@
 									</field>
 								</a>
 							</div>
-						</div>
+							<!-- </div> -->
 
-						<div class="oe_items_list">
+							<!-- <div class="oe_items_list"> -->
 							<div class="oe_salesteams_quotations" t-if="record.use_quotations.raw_value">
-								<a name="sale_value" type="action">Sales</a>
+								<a name="sale_value" type="action">Today's Sales</a>
 								<a name="sale_value" type="action">
 									<field name="sale_value">
 									</field>

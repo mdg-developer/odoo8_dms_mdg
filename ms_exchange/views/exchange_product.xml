@@ -10,8 +10,9 @@
 			<field name="arch" type="xml">
 				<tree string="Exchange Product Tree">
 					<field name="transaction_id" />
-					<field name="customer_id" />
 					<field name="date" />
+					<field name="customer_id" />
+					<field name="team_id" />
 					<field name="exchange_type" />
 					<field name="void_flag" />
 					<field name="e_status" />
@@ -26,12 +27,12 @@
 			<field eval="25" name="priority" />
 			<field name="arch" type="xml">
 				<form string="Exchange Product Form">
-					<header>
-						<field name="e_status" invisible="1" />
-						<button name="action_convert_ep" string="Convert Stock Move"
-							type="object" class="oe_highlight" groups="base.group_user"
-							attrs="{'invisible':[('e_status', '=', 'done')]}"></button>
-					</header>
+<!-- 					<header> -->
+<!-- 						<field name="e_status" invisible="1" /> -->
+<!-- 						<button name="action_convert_ep" string="Convert Stock Move" -->
+<!-- 							type="object" class="oe_highlight" groups="base.group_user" -->
+<!-- 							attrs="{'invisible':[('e_status', '=', 'done')]}"></button> -->
+<!-- 					</header> -->
 					<sheet>
 						<group>
 							<group>
@@ -42,6 +43,7 @@
 								<field name="customer_id" on_change='onchange_customer_id(customer_id)' />
 								<field name="customer_code" />
 								<field name="team_id" />
+								<field name="note" />
 							</group>
 							<group>
 								<field name="date" />
@@ -58,9 +60,9 @@
 											<group>
 												<field name="so_No" />
 												<field name="product_id" />
+												<field name="uom_id" />
 												<field name="product_qty" />
-												<field name="amount" />
-												<field name="batchno" />
+												<field name="batchno" invisible="1" />
 												<field name="exp_date" />
 												<field name="trans_type" />
 												<field name="note" />
@@ -70,9 +72,9 @@
 									<tree string="Item Lines" editable="bottom">
 										<field name="so_No" />
 										<field name="product_id" />
+										<field name="uom_id" />
 										<field name="product_qty" />
-										<field name="amount" />
-										<field name="batchno" />
+										<field name="batchno" invisible="1" />
 										<field name="exp_date" />
 										<field name="trans_type" />
 										<field name="note" />
@@ -93,7 +95,8 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" ref="view_exchange_product_tree" />
-			<field name="domain">['|',('exchange_type','=','Exchange'),('exchange_type','=','Color Change')]
+			<field name="domain">['|',('exchange_type','=','Exchange'),('exchange_type','=','Color
+				Change')]
 			</field>
 			<field name="help" type="html">
 				<p class="oe_view_nocontent_create">
@@ -142,7 +145,7 @@
 		<!-- Sale Return Menu Item -->
 		<menuitem id="menu_sale_return" parent="base.menu_sales"
 			name="Sale Return" action="action_sale_return" sequence="13" />
-		
+
 	</data>
 </openerp>
 	    

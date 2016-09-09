@@ -8,8 +8,8 @@
 			<field name="model">sales.rental</field>
 			<field name="inherit_id" ref="sale_management.view_sales_rental_form" />
 			<field name="arch" type="xml">
-				<field name="address" position="after">
-					<field name="branch_id" />
+				<field name="total_amt" position="before">
+					<field name="branch_id" class="oe_inline" />
 				</field>
 			</field>
 		</record>

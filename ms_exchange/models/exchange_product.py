@@ -17,6 +17,8 @@ class exchange_product(osv.osv):
                 'void_flag':fields.selection([('none', 'Unvoid'), ('voided', 'Voided')], 'Void Status'),
                 'location_id'  : fields.many2one('stock.location', 'Location', required=True),
                 'e_status':fields.char('Status'),
+                                'note':fields.text('Note'),
+
     }
     
     _defaults = {        
@@ -134,6 +136,7 @@ class exchange_product_line_item(osv.osv):
     _columns = {
                 'transaction_id': fields.many2one('product.transactions', 'Form,'),
                 'product_id':fields.many2one('product.product', 'Product'),
+                'uom_id': fields.many2one('product.uom', 'UOM', required=True, help="Default Unit of Measure used for all stock operation."),
                 'product_qty':fields.integer('Qty'),
                 'so_No':fields.char('SO Reference'),
                 'trans_type':fields.selection([('In', 'In'), ('Out', 'Out')], 'Type', required=True),
@@ -141,7 +144,6 @@ class exchange_product_line_item(osv.osv):
                 'note':fields.char('Note'),
                 'exp_date':fields.date('Expired Date'),
                 'batchno':fields.char('Batch No'),
-                'amount':fields.float('Amount'),
                 }
     
 exchange_product_line_item()

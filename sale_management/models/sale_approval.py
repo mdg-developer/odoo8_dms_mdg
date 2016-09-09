@@ -67,7 +67,7 @@ class sale_approval(osv.osv):
         'name':fields.text('Description'),
         'credit_amt':fields.float('Credit Note Amount'  , required=True),
         'type':fields.selection({('cash', 'Cash Rebate'), ('stock', 'Stock Rebate')}, string='Type' , required=True),
-        'ref_no':fields.char('Ref Number'  , required=True),
+        'ref_no':fields.char('Ref Number' ),
         'credit_note':fields.many2one('account.creditnote','Credit Note' ,readonly=True),
        'approval_line':fields.one2many('sales.approval.line', 'approval_ids', string='Sale Approval Line', copy=True , required=True),
         'description':fields.text('Terms and Conditions'),
