@@ -63,6 +63,7 @@
 								<field name="model" />
 								<field name="type" />
 								<field name="sale_team_id" />
+								<field name ="is_testing"/>
 
 							</group>
 							<group>

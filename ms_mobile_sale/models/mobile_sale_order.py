@@ -730,18 +730,18 @@ class mobile_sale_order(osv.osv):
         return datas
     # get promotion datas from database
     
-    def get_promos_datas(self, cr, uid , section_id , branch_id, context=None, **kwargs):
+    def get_promos_datas(self, cr, uid , section_id , branch_id,state, context=None, **kwargs):
         cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,
                         logic ,expected_logic_result ,special, special1, special2, special3 ,branch_id 
                         from promos_rules pr where pr.active = true and main_group in 
                         (select product_maingroup_id 
                         from crm_case_section_product_maingroup_rel mg,crm_case_section cs 
                         where cs.id = mg.crm_case_section_id and cs.id = %s)
-                        and pr.branch_id = %s                        
-                        ''', (section_id, branch_id,))
+                        and pr.branch_id = %s and pr.state in (%s)                
+                        ''', (section_id, branch_id, state,))
         datas = cr.fetchall()
-        cr.execute
         return datas
+    
     def get_promos_act_datas(self, cr, uid , section_id , branch_id, context=None, **kwargs):
         cr.execute('''select act.id,act.promotion,act.sequence as act_seq ,act.arguments,act.action_type,act.product_code
                             from promos_rules r ,promos_rules_actions act
@@ -956,7 +956,7 @@ class mobile_sale_order(osv.osv):
     def tablet_info(self, cr, uid, tabetId, context=None, **kwargs):    
         cr.execute('''
             select id as tablet_id,date,create_uid,name,note,mac_address,model,type,storage_day
-            ,hotline,sale_team_id,notification_time
+            ,hotline,sale_team_id,is_testing
             from tablets_information 
             where name = %s
             ''', (tabetId,))
@@ -1227,7 +1227,56 @@ class mobile_sale_order(osv.osv):
             return True
         except Exception, e:
             return False
+    
+    def create_partner_photo(self, cursor, user, vals, context=None):
         
+        try:
+            print 'vals', vals
+            customer_photo_obj = self.pool.get('partner.photo')
+            str = "{" + vals + "}"    
+            str = str.replace("'',", "',")  # null
+            str = str.replace(":',", ":'',")  # due to order_id
+            str = str.replace("}{", "}|{")        
+            str = str.replace(":'}{", ":''}")
+            new_arr = str.split('|')
+            result = []
+            for data in new_arr:
+                x = ast.literal_eval(data)
+                result.append(x)
+            customer_photo = []
+            for r in result:  
+                customer_photo.append(r)
+            if customer_photo:
+                for vs in customer_photo:
+                    result = {
+                        'customer_code':vs['customer_code'],
+                        'customer_id':vs['customer_id'],                        
+                        'comment':vs['comment'],
+                        'image_one':vs['image_one'],
+                        'image_two':vs['image_two'],
+                        'image_three':vs['image_three'],
+                        'image_four':vs['image_four'],
+                        'image_five':vs['image_five']
+                    }
+                    customer_photo_obj.create(cursor, user, result, context=context)
+            
+            cursor.execute('''select customer_code,image_one,image_two,image_three,image_four,
+                            image_five,comment From partner_photo''')
+            data = cursor.fetchall()
+            for r in data:
+                code = r[0]
+                print 'customer id', code
+                cursor.execute('''update partner_photo set image_one = %s, image_two = %s,
+                image_three = %s, image_four = %s, image_five = %s, comment = %s where customer_code = %s'''
+                ,(r[1],r[2],r[3],r[4],r[5]
+                ,r[6],code,))
+                cursor.execute('''delete from partner_photo where customer_code = %s''',(r[0],))                    
+            
+            return True
+        except Exception, e:
+            print e
+            return False
+                
     def udpate_credit_notes_used_status(self, cr, uid, sale_team_id , usedList, context=None, **kwargs):
         try:
             crnote = tuple(usedList)
@@ -1286,7 +1335,209 @@ class mobile_sale_order(osv.osv):
                     where A.asset_type = B.id""")
         datas =cr.fetchall()
         return datas
+        
+    #Get Pending Delivery
+    def get_delivery_datas(self, cr, uid, saleTeamId, context=None, **kwargs):
+        
+        sale_order_obj = self.pool.get('sale.order')
+        list_val = None
+        list_val = sale_order_obj.search(cr, uid, [('pre_order', '=', True), ('delivery_id', '=', saleTeamId), ('shipped', '=', False), ('invoiced', '=', False)],context=context)
+        print 'list_val', list_val
+        list = []
+        try:
+            if list_val:
+                for So_id in list_val:
+                    print 'Sale Order Id', So_id
+                    cr.execute('''select id,date_order,partner_id,amount_tax,amount_untaxed,
+                    payment_term,company_id,pricelist_id,user_id,amount_total,name as invoice_no,
+                    warehouse_id,shipped,sale_plan_day_id,sale_plan_name,so_longitude,payment_type,
+                    due_date,sale_plan_trip_id,so_latitude,customer_code,tb_ref_no as so_refNo,total_dis,deduct_amt,coupon_code,
+                    invoiced,branch_id,delivery_remark from sale_order  where id=%s''', (So_id,))
+                    result = cr.fetchall()
+                    print 'Result Sale Order', result
+                    list.append(result)
+                    print' list', list
+            return list
+        except Exception, e:
+            return False
     
+    def get_delivery_line_datas(self, cr, uid, so_ids, context=None, **kwargs):
+        print 'So_ids', so_ids
+        order_ids = so_ids
+        so_line_obj = self.pool.get('sale.order.line')
+        list_val = None
+        list_val = so_line_obj.search(cr, uid, [('order_id', 'in', order_ids)])
+        print 'list_val', list_val
+        list = []
+        if list_val:
+            for val in list_val:
+                cr.execute('select id,product_id,product_uos_qty,product_uom,price_unit,order_id,discount,discount_amt from sale_order_line where id = %s', (val,))
+                result = cr.fetchall()
+                list.append(result)
+                print' list', list
+        return list
+    
+    def update_deliver_sale_order(self, cr, uid, saleTeamId,saleorderList, context=None, **kwargs):
+        
+        sale_order_obj = self.pool.get('sale.order')
+        saleOrderName = ', '.join(saleorderList) 
+        saleorder = str(tuple(saleorderList))
+        list_val = None
+        list_val = sale_order_obj.search(cr, uid, [('pre_order', '=', True), ('delivery_id', '=', saleTeamId), ('shipped', '=', False), ('invoiced', '=', False)
+                                                   , ('tb_ref_no', 'in', saleorderList)],context=context)
+        print 'list_val', list_val
+        list = []
+        try:
+            if list_val:
+                for So_id in list_val:
+                    print 'Sale Order Id', So_id
+                    cr.execute('''Update sale_order set shipped = true,delivery_remark = 'delivered',invoiced = true
+                                where id = %s and delivery_id = %s''', (So_id,saleTeamId,))                                            
+            return True
+        except Exception, e:
+            return False         
+           
+    def create_mobile_stock_return(self, cursor, user, vals, context=None):
+        print 'vals', vals
+        try :
+            
+            cursor.execute('select id from stock_return_mobile where user_id = %s ',(user,))
+            data = cursor.fetchall()
+            if data:
+                stock_return_id = data[0][0]
+                cursor.execute('delete from stock_return_mobile where id = %s ',(stock_return_id,))
+                cursor.execute('delete from stock_return_mobile_line where line_id = %s ',(stock_return_id,))
+            else:
+                stock_return_id = None
+            
+            stock_return_obj = self.pool.get('stock.return.mobile')
+            stock_return_line_obj = self.pool.get('stock.return.mobile.line')
+            str = "{" + vals + "}"
+            str = str.replace(":''", ":'")  # change Order_id
+            str = str.replace("'',", "',")  # null
+            str = str.replace(":',", ":'',")  # due to order_id
+            str = str.replace(":'}", ":''}")
+            str = str.replace("}{", "}|{")
+            
+            new_arr = str.split('|')
+            result = []
+            for data in new_arr:
+                x = ast.literal_eval(data)
+                result.append(x)
+            stock = []
+            stock_line = []
+            for r in result:
+                print "length", len(r)
+                if len(r) >= 6:
+                    stock_line.append(r)                   
+                else:
+                    stock.append(r)
+            
+            if stock:
+                for sr in stock:
+                    
+                    cursor.execute('select van_id from crm_case_section where id = %s ',(sr['sale_team_id'],))
+                    data = cursor.fetchall()
+                    if data:
+                        vehcle_no = data[0][0]
+                    else:
+                        vehcle_no = None
+                    mso_result = {
+                        'sale_team_id':sr['sale_team_id'],
+                        'return_date':sr['return_date'],                
+                        'company_id':sr['company_id'],
+                        'branch_id':sr['branch_id'],
+                        'vehicle_no':vehcle_no,
+                        'user_id':user,
+                    }
+                    stock_id = stock_return_obj.create(cursor, user, mso_result, context=context)
+                    
+                    for srl in stock_line:                    
+                            mso_line_res = {                                                            
+                                  'line_id':stock_id,
+                                  'return_quantity':srl['return_quantity'],
+                                  'sale_quantity':srl['sale_quantity'],
+                                  'product_id':srl['product_id'],                                  
+                                  'product_uom':srl['product_uom'],
+                                  'foc_quantity':srl['foc_quantity'],                         
+                            }
+                            stock_return_line_obj.create(cursor, user, mso_line_res, context=context)
+            print 'True'
+            return True       
+        except Exception, e:
+            print 'False'
+            return False  
+    #RFI
+    def create_stock_request_from_mobile(self, cursor, user, vals, context=None):
+        print 'vals', vals
+        try : 
+            stock_request_obj = self.pool.get('stock.requisition')
+            stock_request_line_obj = self.pool.get('stock.requisition.line')
+            str = "{" + vals + "}"
+            str = str.replace(":''", ":'")  # change Order_id
+            str = str.replace("'',", "',")  # null
+            str = str.replace(":',", ":'',")  # due to order_id
+            str = str.replace(":'}", ":''}")
+            str = str.replace("}{", "}|{")
+            
+            new_arr = str.split('|')
+            result = []
+            for data in new_arr:
+                x = ast.literal_eval(data)
+                result.append(x)
+            stock = []
+            stock_line = []
+            for r in result:
+                print "length", len(r)
+                if len(r) >= 7:
+                    stock.append(r)                                    
+                else:
+                    stock_line.append(r)
+            
+            if stock:
+                for sr in stock:                                    
+                    cursor.execute('select van_id from crm_case_section where id = %s ',(sr['sale_team_id'],))
+                    data = cursor.fetchall()
+                    if data:
+                        vehcle_no = data[0][0]
+                    else:
+                        vehcle_no = None
+                    mso_result = {
+                        'request_date':sr['request_date'],
+                        'request_by':sr['request_by'],
+                        'issue_date':sr['issue_date'] ,
+                        'state': 'draft',
+                        'issue_to':sr['issue_to'],
+                        'company_id':sr['company_id'],
+                        'branch_id':sr['branch_id'],
+                        'vehicle_no':vehcle_no,
+                    }
+                    stock_id = stock_request_obj.create(cursor, user, mso_result, context=context)
+                    
+                    for srl in stock_line:
+                        
+                            cursor.execute('select uom_ratio from product_template a, product_product b where a.id = b.product_tmpl_id and b.id = %s ',(srl['product_id'],))
+                            data = cursor.fetchall()
+                            if data:
+                                packing_unit = data[0][0]
+                            else:
+                                packing_unit = None
+                                             
+                            mso_line_res = {                                                            
+                                  'line_id':stock_id,
+                                  'remark':srl['remark'],
+                                  'req_quantity':srl['req_quantity'],
+                                  'product_id':srl['product_id'],
+                                  'product_uom':srl['product_uom'],
+                                  'uom_ratio':packing_unit ,                                 
+                            }
+                            stock_request_line_obj.create(cursor, user, mso_line_res, context=context)
+            print 'True'
+            return True       
+        except Exception, e:
+            print 'False'
+            return False
+                
 mobile_sale_order()
 
 class mobile_sale_order_line(osv.osv):
@@ -1468,3 +1719,19 @@ class sale_order(osv.osv):
         invoice_vals.update(self._inv_get(cr, uid, order, context=context))
         return invoice_vals           
 sale_order()
+
+class partner_photo(osv.osv):
+    _name = "partner.photo"
+    _description = "Patner Photo"
+
+    _columns = {       
+        'customer_id':fields.many2one('res.partner', 'Customer', domain="[('customer','=',True)]"),
+        'customer_code':fields.char('Customer Code'),
+        'comment':fields.char('comment'),
+        'image_one':fields.binary('image_one'),
+        'image_two':fields.binary('image_two'),
+        'image_three':fields.binary('image_three'),
+        'image_four':fields.binary('image_four'),
+        'image_five':fields.binary('image_five')
+       }
+partner_photo()    

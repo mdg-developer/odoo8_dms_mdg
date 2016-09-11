@@ -1,6 +1,6 @@
 from openerp.osv import fields, osv
 from openerp.osv import orm
-from openerp import _
+from openerp.tools.translate import _
 from datetime import datetime
 import ast
 
