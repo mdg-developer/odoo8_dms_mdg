@@ -135,7 +135,7 @@
 					<xpath expr="//div[@class='oe_items_list']" position="replace">
 						<div class="oe_items_list">
 							<div class="oe_salesteams_quotations" t-if="record.use_quotations.raw_value">
-								<a name="total_invoice" type="action">__Ach</a>
+								<a name="total_invoice" type="action">Ach</a>
 								<a name="total_invoice" type="action">
 									<field name="total_invoice">
 									</field>
@@ -149,7 +149,7 @@
 								</a>
 							</div>
 							<div class="oe_salesteams_quotations" t-if="record.use_quotations.raw_value">
-								<a name="total_sku_inv" type="action">__Ach %</a>
+								<a name="total_sku_inv" type="action">Ach %</a>
 								<a name="total_sku_inv" type="action">
 									<field name="total_sku_inv">
 									</field>
