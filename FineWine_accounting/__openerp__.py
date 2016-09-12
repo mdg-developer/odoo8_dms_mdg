@@ -20,14 +20,14 @@
 ##############################################################################
 
 {
-    'name': 'MDG- accounting',
+    'name': 'Fine wine- accounting',
     'version': '1.0',
     'category': 'Localization/Account Charts',
     'description': """
 Chart of Accounts for Myanmar Distribution Group.
 ======================================
 
-MDG accounting chart and localization.
+Fine Wine accounting chart and localization.
     """,
     'author': 'Yin May',
     'website': 'http://7thcomputing.com/',

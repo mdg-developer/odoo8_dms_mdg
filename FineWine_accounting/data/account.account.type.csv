@@ -2,7 +2,7 @@
 "account_type_current_assets","Current Assets","Current Assets","asset","Balance"
 "account_type_current_liabilities","Current Liabilities","Current Liabilities","liability","Balance"
 "account_type_equity","Equity","Equity","liability","Balance"
-"account_type_expense","Expense","Expense","liability","None"
+"account_type_expense","Expense","Expense","none","None"
 "account_type_fixed_assets","Fixed Assets","Fixed Assets","asset","Balance"
 "account_type_income","Income","Income","income","None"
 "account_type_payable","Payable","Payable","liability","Unreconciled"
