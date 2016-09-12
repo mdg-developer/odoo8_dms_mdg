@@ -36,7 +36,7 @@ class mobile_stock_delivery(osv.osv):
                          where quant.location_id = %s
                          and quant.product_id = product.id
                          and product.product_tmpl_id = product_temp.id
-                         and product.active = true      
+                         and product.active = true            
                          group by quant.product_id, main_group,name_template,product.id,price
             )A where qty_on_hand > 0  order by name_template
             """, (warehouse_id,))   

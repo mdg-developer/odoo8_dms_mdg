@@ -36,8 +36,7 @@ class pre_sale_order(osv.osv):
         'deduction_amount':fields.float('Deduction Amount'),
         'm_status':fields.selection([('draft', 'Draft'),
                                                       ('done', 'Complete')], string='Status'),
-     'promos_line_ids':fields.one2many('pre.promotion.line', 'promo_line_id', 'Promotion Lines'),
-     'pricelist_id': fields.many2one('product.pricelist', 'Price List',select=True, ondelete='cascade')           
+     'promos_line_ids':fields.one2many('pre.promotion.line', 'promo_line_id', 'Promotion Lines')                
     }
     _order = 'id desc'
     _defaults = {
@@ -86,7 +85,7 @@ class pre_sale_order(osv.osv):
                         partner_id = data[0][0]
                     else:
                         partner_id = None
-
+						
                     mso_result = {
                         'customer_code':so['customer_code'],
                         'paid': True,
@@ -103,8 +102,7 @@ class pre_sale_order(osv.osv):
                         'date':so['date'],
                         'sale_plan_day_id':so['sale_plan_day_id'],
                         'mso_longitude':so['mso_longitude'],
-                        'mso_latitude':so['mso_latitude'],
-                        'pricelist_id':so['pricelist_id']
+                        'mso_latitude':so['mso_latitude']
                     }
                     s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
                     print "Create Sale Order", so['name']
@@ -129,7 +127,6 @@ class pre_sale_order(osv.osv):
                                   'discount':sol['discount'],
                                   'discount_amt':sol['discount_amt'],
                                   'sub_total':sol['sub_total'],
-                                  'uom_id':sol['uom_id']
                                 }
                                 mobile_sale_order_line_obj.create(cursor, user, mso_line_res, context=context) 
                                 print 'Create Order line', sol['so_name']                     
@@ -261,8 +258,7 @@ class pre_sale_order_line(osv.osv):
     _columns = {
         'product_id':fields.many2one('product.product', 'Products'),
         'product_uos_qty':fields.float('Quantity'),
-        #'uom_id':fields.function(_get_uom_from_product, type='many2one', relation='product.uom', string='UOM'),
-        'uom_id':fields.many2one('product.uom', 'UOM', readonly=False),
+        'uom_id':fields.function(_get_uom_from_product, type='many2one', relation='product.uom', string='UOM'),
         'price_unit':fields.float('Unit Price'),
         'discount':fields.float('Discount (%)'),
         'discount_amt':fields.float('Discount (Amt)'),

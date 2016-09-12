@@ -47,7 +47,6 @@
 								<field name="delivery_remark" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="amount_total" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="deduction_amount" attrs="{'readonly':[('m_status','=','done')]}" />
-								<field name="pricelist_id" />
 							</group>
 						</group>
 						<notebook>

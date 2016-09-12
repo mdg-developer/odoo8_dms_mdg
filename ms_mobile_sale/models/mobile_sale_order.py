@@ -44,7 +44,7 @@ class mobile_sale_order(osv.osv):
                 ('voided', 'Voided'),
                 ('none', 'Unvoid')
             ], 'Void'),
-        'date':fields.datetime('Date'),
+      'date':fields.datetime('Date'),
         'note':fields.text('Note'),
         'order_line': fields.one2many('mobile.sale.order.line', 'order_id', 'Order Lines', copy=True),
         'delivery_order_line': fields.one2many('products.to.deliver', 'sale_order_id', 'Delivery Order Lines', copy=True),
@@ -58,8 +58,7 @@ class mobile_sale_order(osv.osv):
                                                       ('done', 'Complete')], string='Status'),
         'due_date':fields.date('Due Date'),
         'payment_term': fields.many2one('account.payment.term', 'Payment Term'),
-       'promos_line_ids':fields.one2many('mso.promotion.line', 'promo_line_id', 'Promotion Lines'),
-       'pricelist_id': fields.many2one('product.pricelist', 'Price List',select=True, ondelete='cascade')           
+       'promos_line_ids':fields.one2many('mso.promotion.line', 'promo_line_id', 'Promotion Lines')                
     }
     _order = 'id desc'
     _defaults = {
@@ -138,8 +137,7 @@ class mobile_sale_order(osv.osv):
                         'payment_term':so['payment_term'],
                         'mso_longitude':so['mso_longitude'],
                         'mso_latitude':so['mso_latitude'],
-                        'outlet_type':outlet_type,
-                        'pricelist_id':so['pricelist_id']
+                        'outlet_type':outlet_type
                     }
                     s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
                     print "Create Sale Order", so['name']
@@ -166,7 +164,6 @@ class mobile_sale_order(osv.osv):
                                   'discount':sol['discount'],
                                   'discount_amt':sol['discount_amt'],
                                   'sub_total':sol['sub_total'],
-                                  'uom_id':sol['uom_id']
                                 }
                                 mobile_sale_order_line_obj.create(cursor, user, mso_line_res, context=context) 
                                 print 'Create Order line', sol['so_name']                     
@@ -258,11 +255,12 @@ class mobile_sale_order(osv.osv):
             str = str.replace(":'}{", ":''}")
             new_arr = str.split('|')
             result = []
-            for data in new_arr:            
-                x = ast.literal_eval(data)                
+            for data in new_arr:
+                x = ast.literal_eval(data)
                 result.append(x)
             customer_visit = []
-            for r in result:                
+            for r in result:
+                print "length", len(r)
                 customer_visit.append(r)  
             if customer_visit:
                 for vs in customer_visit:
@@ -289,8 +287,7 @@ class mobile_sale_order(osv.osv):
                     }
                     customer_visit_obj.create(cursor, user, visit_result, context=context)
             return True
-        except Exception, e:
-            print e            
+        except Exception, e:            
             return False
                 
     def geo_location(self, cr, uid, ids, context=None):
@@ -363,7 +360,7 @@ class mobile_sale_order(osv.osv):
                     elif ms_ids.void_flag == 'none':
                         so_state = 'draft'
                     soResult = {
-                                          'date_order':ms_ids.date,
+                                        'date_order':ms_ids.date,
                                            'partner_id':ms_ids.partner_id.id,
                                            'amount_untaxed':ms_ids.amount_total ,
                                            'partner_invoice_id':ms_ids.partner_id.id,
@@ -421,16 +418,15 @@ class mobile_sale_order(osv.osv):
                                               'product_id':line_id.product_id.id,
                                               'name':product_name,
                                               'price_unit':price_unit,
-                                              'product_uom':1,
+                                              'product_uom':line_id.uom_id.id,
                                               'product_uom_qty':line_id.product_uos_qty,
                                               'discount':line_id.discount,
                                               'discount_amt':line_id.discount_amt,
                                               'company_id':1,  # company_id,
                                               'state':'draft',
                                               'net_total':line_id.sub_total,
-                                              'sale_foc':foc
+                                              'sale_foc':foc,
                                            }
-                                
                                 solObj.create(cr, uid, solResult, context=context)
                                 if soId:
                                     soObj.button_dummy(cr, uid, [soId], context=context)  # update the SO
@@ -440,8 +436,10 @@ class mobile_sale_order(osv.osv):
                         solist.append(soId)
                         # type > cash and delivery_remark > delivered
                         if ms_ids.type == 'cash' and ms_ids.delivery_remark == 'delivered':  # Payment Type=>Cash and Delivery Remark=>Delivered
+                            print 'solist',solist
                             # SO Confirm 
                             soObj.action_button_confirm(cr, uid, solist, context=context)
+                            #print 'so_OBJ',soObj
                             # Create Invoice
                             invoice_id = self.create_invoices(cr, uid, solist, context=context)
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
@@ -1021,7 +1019,7 @@ class mobile_sale_order(osv.osv):
                         saleOrder_Id = data[0][0]
                     else:
                         saleOrder_Id = None
-                    
+                                    
                     promo_line_result = {
                         'promo_line_id':saleOrder_Id,
                         'pro_id':pro_line['pro_id'],
@@ -1065,7 +1063,6 @@ class mobile_sale_order(osv.osv):
             
             if history:
                 for pt in history:
-                    total_amount=float(pt['total_amount'])
                     deno_result = {
                         'invoice_count':pt['invoice_count'],
                         'sale_team_id':pt['sale_team_id'],
@@ -1073,12 +1070,14 @@ class mobile_sale_order(osv.osv):
                         'note':pt['note'],
                         'date':pt['date'],
                         'tablet_id':pt['tablet_id'],
-                        'user_id':pt['user_id'],                        
+                        'user_id':pt['user_id'],
+                        'total_amount':pt['total_amount'][0],
                         'denomination_note_line':False,
                     }
-                                        
+                    print'Deno Reu', deno_result
+                    total_amount=pt['total_amount'],
+
                     deno_id = history_obj.create(cursor, user, deno_result, context=context)
-                    cursor.execute('''update sales_denomination set total_amount = %s where id = %s''',(total_amount, deno_id,) )
                     print'deno_id', deno_id
                     for ptl in notes_line:
                                 note_line_res = {                                                            
@@ -1267,26 +1266,13 @@ class mobile_sale_order(osv.osv):
                         where sale_team_id = %s """, (sale_team_id,))                
         datas =cr.fetchall()
         return datas
-    
+		
     def get_uom(self, cr, uid, context=None, **kwargs):    
         cr.execute("""select id,name,floor(1/factor) as ratio from product_uom where active = true""")
         datas =cr.fetchall()
         print 'Product UOM', datas
-        return datas
-    
-    def get_asset_type(self, cr, uid, context=None, **kwargs):    
-        cr.execute("""select id,name from asset_type""")
-        datas =cr.fetchall()        
-        return datas
-    
-    def get_assets(self, cr, uid, context=None, **kwargs):    
-        cr.execute("""select A.id,A.name,A.partner_id,substring(encode(image::bytea, 'hex'),1,5) as image
-                    ,A.qty,A.date,B.name,A.type 
-                    from res_partner_asset A, asset_type B
-                    where A.asset_type = B.id""")
-        datas =cr.fetchall()
-        return datas
-    
+        return datas		
+
 mobile_sale_order()
 
 class mobile_sale_order_line(osv.osv):
@@ -1303,8 +1289,8 @@ class mobile_sale_order_line(osv.osv):
     _columns = {
         'product_id':fields.many2one('product.product', 'Products'),
         'product_uos_qty':fields.float('Quantity'),
-         'uom_id':fields.many2one('product.uom', 'UOM', readonly=False),
-#        'uom_id':fields.function(_get_uom_from_product, type='many2one', relation='product.uom', string='UOM'),
+#         'uom_id':fields.many2one('product.uom', 'UOM', readonly=False),
+        'uom_id':fields.function(_get_uom_from_product, type='many2one', relation='product.uom', string='UOM'),
         'price_unit':fields.float('Unit Price'),
         'discount':fields.float('Discount (%)'),
         'discount_amt':fields.float('Discount (Amt)'),
