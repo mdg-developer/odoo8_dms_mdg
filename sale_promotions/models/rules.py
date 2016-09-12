@@ -3,6 +3,7 @@ from openerp import netsvc
 from openerp.tools.translate import _
 from openerp import tools
 import logging
+from pyfcm import FCMNotification
  
 ####
 # LOGGER = netsvc.Logger()
@@ -61,6 +62,7 @@ ACTION_TYPES = [
     ('foc_any_product', _('FOC Any Products')),
 	('prod_fix_amt_disc_subtotal', _('Product Fix Amount on Sub Total')),
     ('prod_dis_double', _('Double Discount % on SubTotal')),
+    ('prod_multi_get_x_by_limit', _('Buy Multi Products get X free By Limit')),
 ]
 
 
@@ -166,7 +168,10 @@ class PromotionsRules(osv.Model):
             ], 'Status', readonly=True, copy=False, help="Gives the status of the quotation or sales order.\
               \nThe exception status is automatically set when a cancel operation occurs \
               in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\nThe 'Waiting Schedule' status is set when the invoice is confirmed\
-               but waiting for the scheduler to run on the order date.", select=True), 
+               but waiting for the scheduler to run on the order date.", select=True),
+        'outlettype_id':fields.many2many('outlettype.outlettype', 'promos_rules_outlettype_rel' , 'promos_rules_id' ,'outlettype_id' , string='Outlet Type'),
+        'branch_id':fields.many2many('res.branch', string='Branch'),
+        'customer_ids':fields.many2many('res.partner'),
     }
     _defaults = {
         'logic':lambda * a:'and',
@@ -1247,7 +1252,15 @@ class PromotionsRulesActions(osv.Model):
                               'product_code':"'product_code'",
                               'arguments':"1",
                               }
-                   }    	
+                   }
+        
+        if action_type in ['prod_multi_get_x_by_limit', ] :
+            return{
+                   'value' : {
+                              'product_code':"'product_code_x1';'product_code_x2':'product_code_x'",
+                              'arguments':"1:1;1",
+                              }
+                   }
         # Finally if nothing works prod_dis_double
         return {}
     

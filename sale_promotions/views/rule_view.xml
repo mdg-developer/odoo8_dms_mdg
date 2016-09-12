@@ -21,14 +21,15 @@
 						<group col="4">
 							<field name="sequence" colspan="2" />
 							<field name="active" colspan="2" select="1" />
-							<field name="stop_further" colspan="2" />
+							<!--  <field name="stop_further" colspan="2" />-->
 							<field name="special" colspan="2" select="1" />
-							<field name="special1" colspan="2" select="1" />
+							<!-- <field name="special1" colspan="2" select="1" />
 							<field name="special2" colspan="2" select="1" />
-							<field name="special3" colspan="2" select="1" />
+							<field name="special3" colspan="2" select="1" /> -->
 							<field name="main_group" colspan="2" select="1" />
 							<field name="sale_channel_id" colspan="2"  widget="many2many_tags"/>
-							<field name="branch_id" colspan="2" />
+							<field name="outlettype_id" colspan="2"  widget="many2many_tags"/>
+       						<field name="branch_id" colspan="2" widget="many2many_tags"/>
 						</group>
 
 						<group>
@@ -59,7 +60,7 @@
 								<field name="expressions" nolabel="1">
 									<tree string="Expressions" editable="bottom">
 										<field name="sequence" />
-										<field name="stop_further" />
+									<!-- 	<field name="stop_further" /> -->
 										<field name="attribute" on_change="on_change(attribute, value)" />
 										<field name="comparator" />
 										<field name="value" />
@@ -69,7 +70,7 @@
 										<field name="attribute" on_change="_on_change(attribute, value)" />
 										<field name="comparator" />
 										<field name="value" />
-										<field name="stop_further" />
+											<!-- <field name="stop_further" />	-->
 									</form>
 								</field>
 							</page>
@@ -91,8 +92,8 @@
 									</form>
 								</field>
 							</page>
-							<page string="Partner Categories">
-								<field name="partner_categories" nolabel="1" />
+							<page string="Customers">
+								<field name="customer_ids" nolabel="1" />
 							</page>
 							<page string="Description">
 								<group col="4" colspan="4">
@@ -134,8 +135,8 @@
 					<group expand="0" string="Group By">
 						<filter name="main_group" string="Main Group" domain="[]"
 							context="{'group_by':'main_group'}" />
-						<filter name="branch_id" string="Branch" domain="[]"
-							context="{'group_by':'branch_id'}" />
+						<!-- <filter name="branch_id" string="Branch" domain="[]"
+							context="{'group_by':'branch_id'}" /> -->
 
 					</group>
 				</search>
