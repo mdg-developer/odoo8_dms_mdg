@@ -3,3 +3,4 @@ import good_issue_note
 import stock_return
 import  stock_return_for_mobile
 import request_for_issue
+import good_issue_note_tr
