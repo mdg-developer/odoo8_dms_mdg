@@ -34,6 +34,7 @@ class stock_return(osv.osv):
         return company_id   
         
     _columns = {
+        'sale_team_id':fields.many2one('crm.case.section', 'Sales Team' , required=True),
         'name': fields.char('(SRN)Ref;No.', readonly=True),
         'note_id':fields.many2one('good.issue.note', '(GIN)Ref;No.', readonly=True),
         'return_from':fields.many2one('res.users', 'Return From', required=True),

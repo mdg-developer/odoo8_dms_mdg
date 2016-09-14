@@ -27,9 +27,10 @@
 						<group>
 							<group>
 								<field name="name" />
+								<field name="sale_team_id" attrs="{'readonly':[('state','=','approve')]}" />
 								<field name="to_location_id" attrs="{'readonly':[('state','=','approve')]}" />
 								<field name="from_location_id" attrs="{'readonly':[('state','=','approve')]}" />
-								<field name="issue_by"  attrs="{'readonly':[('state','=','approve')]}" />
+								<field name="issue_by" attrs="{'readonly':[('state','=','approve')]}" />
 								<field name="request_by" attrs="{'readonly':[('state','=','approve')]}" />
 								<field name="approve_by" attrs="{'readonly':[('state','=','approve')]}" />
 
@@ -88,6 +89,25 @@
 			</field>
 		</record>
 
+
+		<record id="view_good_issue_note_filter" model="ir.ui.view">
+			<field name="name">Good Issue NoteFilter</field>
+			<field name="model">good.issue.note</field>
+			<field name="arch" type="xml">
+				<search string="Search Good Issue Note">
+					<group expand="0" string="Group By...">
+						<filter string="Sale Team" icon="terp-partner" domain="[]"
+							context="{'group_by':'sale_team_id'}" />
+						<filter string="Issue From" icon="terp-partner" domain="[]"
+							context="{'group_by':'from_location_id'}" />
+						<filter string="Issue To" icon="terp-partner" domain="[]"
+							context="{'group_by':'to_location_id'}" />
+						<filter string="Date of Issue" icon="terp-partner" domain="[]"
+							context="{'group_by':'issue_date'}" />
+					</group>
+				</search>
+			</field>
+		</record>
 		<!-- Stock Requisition -->
 		<record id="action_good_issue_note" model="ir.actions.act_window">
 			<field name="name">Good Issue Note</field>
@@ -96,7 +116,8 @@
 			<field name="context">{}</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
-			<field name="view_id" ref="good_issue_note_tree"></field>
+			<field name="view_id" ref="good_issue_note_tree" />
+			<field name="search_view_id" ref="view_good_issue_note_filter" />
 			<field name="domain">[]
 			</field>
 			<field name="help" type="html">

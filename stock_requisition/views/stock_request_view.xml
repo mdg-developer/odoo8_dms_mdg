@@ -25,7 +25,8 @@
 						<group>
 							<group>
 								<field name="request_by" attrs="{'readonly':[('state','=','approve')]}" />
-								<field name="sale_team_id" attrs="{'readonly':[('state','=','approve')]}"  on_change="on_change_sale_team_id(sale_team_id)" />
+								<field name="sale_team_id" attrs="{'readonly':[('state','=','approve')]}"
+									on_change="on_change_sale_team_id(sale_team_id)" />
 								<field name="from_location_id" attrs="{'readonly':[('state','=','approve')]}" />
 								<field name="request_date" attrs="{'readonly':[('state','=','approve')]}" />
 								<field name="so_no" attrs="{'readonly':[('state','=','approve')]}" />
@@ -83,7 +84,26 @@
 				</tree>
 			</field>
 		</record>
+		<!-- filter -->
 
+		<record id="view_stock_request_filter" model="ir.ui.view">
+			<field name="name">Stock Request Filter</field>
+			<field name="model">stock.requisition</field>
+			<field name="arch" type="xml">
+				<search string="Search Stock Request">
+					<group expand="0" string="Group By...">
+						<filter string="Sale Team" icon="terp-partner" domain="[]"
+							context="{'group_by':'sale_team_id'}" />
+						<filter string="Request From" icon="terp-partner" domain="[]"
+							context="{'group_by':'from_location_id'}" />
+						<filter string="Request To" icon="terp-partner" domain="[]"
+							context="{'group_by':'to_location_id'}" />
+						<filter string="Request Date" icon="terp-partner" domain="[]"
+							context="{'group_by':'request_date'}" />
+					</group>
+				</search>
+			</field>
+		</record>
 		<!-- Stock Requisition -->
 		<record id="action_stock_requsition" model="ir.actions.act_window">
 			<field name="name">Request For Issue</field>
@@ -92,7 +112,9 @@
 			<field name="context">{}</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
-			<field name="view_id" ref="stock_requisition_tree"></field>
+			<field name="view_id" ref="stock_requisition_tree"/>
+			<field name="search_view_id" ref="view_stock_request_filter" />
+
 			<field name="domain">[]
 			</field>
 			<field name="help" type="html">

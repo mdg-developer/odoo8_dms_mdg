@@ -8,5 +8,18 @@ class res_partner(osv.osv):
         'partner_longitude': fields.float('Geo Longitude', digits=(16, 5), readonly=True),
         'date_localization': fields.date('Geo Localization Date'),
         'contact_note': fields.text('Note'),
+         'gain_account_id': fields.property(
+            type='many2one',
+            relation='account.account',
+            string="Gain Account",
+        #    domain="[('type', '=', 'receivable')]",
+          ),
+            'loss_account_id': fields.property(
+            type='many2one',
+            relation='account.account',
+            string="Loss Account",
+           # domain="[('type', '=', 'receivable')]",
+          ),
+
 
     }

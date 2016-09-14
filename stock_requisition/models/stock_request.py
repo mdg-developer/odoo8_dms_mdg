@@ -111,10 +111,13 @@ class stock_requisition(osv.osv):
             to_location_id = req_value.to_location_id.id
             from_location_id = req_value.from_location_id.id
             vehicle_no = req_value.vehicle_id.id
+            sale_team_id=req_value.sale_team_id.id
             good_id = good_obj.create(cr, uid, {'vehicle_id': vehicle_no,
+                                                'sale_team_id':sale_team_id,
                                           'issue_date': issue_date,
                                           'request_id':request_id,
                                           'to_location_id':to_location_id,
+                                          
                                           'from_location_id':from_location_id}, context=context)
             req_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
             if good_id and req_line_id:

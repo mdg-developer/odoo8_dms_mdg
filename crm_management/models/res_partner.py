@@ -7,8 +7,14 @@ from openerp.osv import fields, osv
 from openerp import tools
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
+import calendar
+from datetime import datetime
+import time
+import datetime
+from datetime import date
+from dateutil import relativedelta
 
-
+DEFAULT_SERVER_DATE_FORMAT = "%Y-%m-%d"
 def geo_find(addr):
     url = 'https://maps.googleapis.com/maps/api/geocode/json?sensor=false&address='
     url += urllib.quote(addr.encode('utf8'))
@@ -50,6 +56,7 @@ outlet_type()
 class res_partner(osv.osv):
 
     _inherit = 'res.partner'
+    _period_number = 5
     
     def _get_default_pricelist(self, cr, uid, ids, field_name, arg, context=None):
         result = {}
@@ -157,36 +164,51 @@ class res_partner(osv.osv):
                             res[partner.id] = round(so_count / week_num, 2)
                         
         return res           
+    
     def _get_total_sale_data(self, cr, uid, ids, field_name, arg, context=None):
-        res = {}
-        data = 0
-        if context is None:
-            context = {}
-        for line in self.browse(cr, uid, ids, context=context):
-            # cr.execute("   select count(st.id) from sales_target st ,sales_target_line stl where st.id=stl.sale_ids  and stl.product_uom_qty !=0.0 and sale_team_id =  %s and date= %s " ,( line.id,line.date,))
-            # data=cr.fetchone()[0]
-            res[line.id] = data
+        res = dict(map(lambda x: (x,0), ids))
+        sale_obj=self.pool.get('sale.order')
+        month_begin = date.today().replace(day=1)
+        to_date = month_begin.replace(day=calendar.monthrange(month_begin.year, month_begin.month)[1]).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+        from_date=time.strftime('%Y-%m-01')
+        # The current user may not have access rights for sale orders
+        try:
+            for partner in self.browse(cr, uid, ids, context):
+                sale_ids = sale_obj.search(cr, uid, [('date_order', '>', from_date), ('date_order', '<', to_date),('partner_id','=',partner.id)], context=context) 
+                res[partner.id] = len(sale_ids)
+        except:
+            pass
         return res
+    
     def _get_total_invoice_data(self, cr, uid, ids, field_name, arg, context=None):
-        res = {}
-        data = 0
-        if context is None:
-            context = {}
-        for line in self.browse(cr, uid, ids, context=context):
-            # cr.execute("   select count(st.id) from sales_target st ,sales_target_line stl where st.id=stl.sale_ids  and stl.product_uom_qty !=0.0 and sale_team_id =  %s and date= %s " ,( line.id,line.date,))
-            # data=cr.fetchone()[0]
-            res[line.id] = data
+        res = dict(map(lambda x: (x,0), ids))
+        invoice_obj=self.pool.get('account.invoice')
+        month_begin = date.today().replace(day=1)
+        to_date = month_begin.replace(day=calendar.monthrange(month_begin.year, month_begin.month)[1]).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+        from_date=time.strftime('%Y-%m-01')
+        # The current user may not have access rights for sale orders
+        try:
+            for partner in self.browse(cr, uid, ids, context):
+                invoice_ids = invoice_obj.search(cr, uid, [('date_invoice', '>', from_date), ('date_invoice', '<', to_date),('partner_id','=',partner.id)], context=context) 
+                res[partner.id] = len(invoice_ids)
+        except:
+            pass
         return res
+    
     def _get_invoice_confirm(self, cr, uid, ids, field_name, arg, context=None):
-        res = {}
-        data = 0
-        if context is None:
-            context = {}
-        for line in self.browse(cr, uid, ids, context=context):
-            # cr.execute("   select count(st.id) from sales_target st ,sales_target_line stl where st.id=stl.sale_ids  and stl.product_uom_qty !=0.0 and sale_team_id =  %s and date= %s " ,( line.id,line.date,))
-            # data=cr.fetchone()[0]
-            res[line.id] = data
-        return res   
+        res = dict(map(lambda x: (x,0), ids))
+        invoice_obj=self.pool.get('account.invoice')
+        month_begin = date.today().replace(day=1)
+        to_date = month_begin.replace(day=calendar.monthrange(month_begin.year, month_begin.month)[1]).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+        from_date=time.strftime('%Y-%m-01')
+        # The current user may not have access rights for sale orders
+        try:
+            for partner in self.browse(cr, uid, ids, context):
+                invoice_ids = invoice_obj.search(cr, uid, [('date_invoice', '>', from_date), ('date_invoice', '<', to_date),('partner_id','=',partner.id),('state','=','paid')], context=context) 
+                res[partner.id] = len(invoice_ids)
+        except:
+            pass
+        return res 
 
     def default_image_one(self, cr, uid, ids, context=None):
         res = {}
@@ -370,15 +392,14 @@ class res_partner(osv.osv):
                      A.customer_code,A.mobile_customer,A.shop_name ,
                      A.address,A.territory,A.village,A.branch_code,
                      A.zip,A.state_name,A.partner_latitude,A.partner_longitude,A.sale_plan_day_id,A.image_medium,A.credit_limit,
-                     A.credit_allow,A.sales_channel,A.branch_id,A.pricelist_id,A.payment_term_id  from (
-
+                     A.credit_allow,A.sales_channel,A.branch_id,A.pricelist_id,A.payment_term_id,A.outlet_type from (
                      select RP.id,RP.name,'' as image,RP.is_company,RPS.sale_plan_day_id,
                      '' as image_small,RP.street,RP.street2,RC.name as city,RP.website,
                      RP.phone,RT.name as township,RP.mobile,RP.email,RP.company_id,RP.customer, 
                      RP.customer_code,RP.mobile_customer,OT.name as shop_name,RP.address,RP.territory,
                      RP.village,RP.branch_code,RP.zip ,RP.partner_latitude,RP.partner_longitude,RS.name as state_name,
                      substring(replace(cast(RP.image_medium as text),'/',''),1,5) as image_medium,RP.credit_limit,RP.credit_allow,
-                     RP.sales_channel,RP.branch_id,RP.pricelist_id,RP.payment_term_id
+                     RP.sales_channel,RP.branch_id,RP.pricelist_id,RP.payment_term_id,RP.outlet_type
                      from sale_plan_day SPD ,outlettype_outlettype OT,
                                             res_partner_sale_plan_day_rel RPS , res_partner RP ,res_country_state RS, res_city RC,res_township RT
                                             where SPD.id = RPS.sale_plan_day_id 
@@ -404,7 +425,7 @@ class res_partner(osv.osv):
                      A.customer_code,A.mobile_customer,A.shop_name ,
                      A.address,A.territory,A.village,A.branch_code,
                      A.zip,A.state_name,A.partner_latitude,A.partner_longitude,A.sale_plan_trip_id,A.image_medium,
-                     A.credit_limit,A.credit_allow,A.sales_channel,A.branch_id,A.pricelist_id,A.payment_term_id 
+                     A.credit_limit,A.credit_allow,A.sales_channel,A.branch_id,A.pricelist_id,A.payment_term_id ,A.outlet_type
                       from (
                      select RP.id,RP.name,'' as image,RP.is_company,
                      '' as image_small,RP.street,RP.street2,RC.name as city,RP.website,
@@ -412,7 +433,7 @@ class res_partner(osv.osv):
                      RP.customer_code,RP.mobile_customer,OT.name as shop_name ,RP.address,RP.territory ,RPT.sale_plan_trip_id,
                      RP.village,RP.branch_code,RP.zip ,RP.partner_latitude,RP.partner_longitude,RS.name as state_name
                       ,substring(replace(cast(RP.image_medium as text),'/',''),1,5) as image_medium ,RP.credit_limit,RP.credit_allow,
-                    ,RP.sales_channel,RP.branch_id,RP.pricelist_id,RP.payment_term_id
+                    ,RP.sales_channel,RP.branch_id,RP.pricelist_id,RP.payment_term_id,RP.outlet_type
                      from sale_plan_trip SPT , res_partner_sale_plan_trip_rel RPT , res_partner RP ,res_country_state RS ,
                      res_city RC, res_township RT,outlettype_outlettype OT 
                      where SPT.id = RPT.sale_plan_trip_id 

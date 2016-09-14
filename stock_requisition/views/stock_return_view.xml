@@ -23,6 +23,7 @@
 						<group>
 							<group>
 								<field name="name" />
+								<field name="sale_team_id" attrs="{'readonly':[('state','=','approve')]}" />
 								<field name="return_from" attrs="{'readonly':[('state','=','approve')]}" />
 								<field name="return_date" attrs="{'readonly':[('state','=','approve')]}" />
 
@@ -66,7 +67,25 @@
 				</form>
 			</field>
 		</record>
+		<!-- filter -->
 
+		<record id="view_stock_return_filter" model="ir.ui.view">
+			<field name="name">Stock Return Filter</field>
+			<field name="model">stock.return</field>
+			<field name="arch" type="xml">
+				<search string="Search Stock Return">
+					<group expand="0" string="Group By...">
+						<filter string="Sale Team" icon="terp-partner" domain="[]"
+							context="{'group_by':'sale_team_id'}" />
+						<filter string="Return From" icon="terp-partner" domain="[]"
+							context="{'group_by':'return_from'}" />
+						<filter string="Date of Return" icon="terp-partner" domain="[]"
+							context="{'group_by':'return_date'}" />
+
+					</group>
+				</search>
+			</field>
+		</record>
 		<!-- ============================== Content Tree ============================== -->
 		<record id="stock_return_tree" model="ir.ui.view">
 			<field name="name">stock_return_tree</field>
@@ -92,7 +111,8 @@
 			<field name="context">{}</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
-			<field name="view_id" ref="stock_return_tree"></field>
+			<field name="view_id" ref="stock_return_tree" />
+			<field name="search_view_id" ref="view_stock_return_filter" />
 			<field name="domain">[]
 			</field>
 			<field name="help" type="html">
