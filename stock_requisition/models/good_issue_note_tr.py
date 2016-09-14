@@ -27,11 +27,7 @@ class good_issue_note_tr(osv.osv):
             'good_issue_note_tr.mt_note_approve': lambda self, cr, uid, obj, ctx = None: obj.state in ['approve']
         },
     }    
-    def _get_default_company(self, cr, uid, context=None):
-        company_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
-        if not company_id:
-            raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
-        return company_id   
+       
     
     _columns = {
         'name': fields.char('(GIN) Ref:No.', readonly=True),
@@ -53,11 +49,11 @@ class good_issue_note_tr(osv.osv):
                but waiting for the scheduler to run on the order date.", select=True),
                  'p_line':fields.one2many('good.issue.note.tr.line', 'line_id', 'Product Lines',
                               copy=True),
-                'company_id':fields.many2one('res.company', 'Company'),
+                
 }
     _defaults = {
         'state' : 'draft',
-         'company_id': _get_default_company,
+         
     }     
     def create(self, cursor, user, vals, context=None):
         id_code = self.pool.get('ir.sequence').get(cursor, user,

@@ -26,16 +26,11 @@ class issue_requisition(osv.osv):
             'issue_requisition.mt_requisition_confirm': lambda self, cr, uid, obj, ctx = None: obj.state in ['confirm'],
             'issue_requisition.mt_requisition_approve': lambda self, cr, uid, obj, ctx = None: obj.state in ['approve']
         },
-    }    
-    def _get_default_company(self, cr, uid, context=None):
-        company_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
-        if not company_id:
-            raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
-        return company_id     
+    }       
     
     _columns = {
-        'name': fields.char('(TR)Ref;No.', readonly=True),
-        'request_id':fields.many2one('stock.requisition', '(REI)Ref;No.', readonly=True),
+        'name': fields.char('(TR) Ref:No.', readonly=True),
+        'request_id':fields.many2one('stock.requisition', '(RFI) Ref:No.', readonly=True),
         'from_location_id':fields.many2one('stock.location', 'Request From'),
         'to_location_id':fields.many2one('stock.location', 'Request To'),
         'so_no' : fields.char('Reference of Sales Request'),
@@ -52,7 +47,7 @@ class issue_requisition(osv.osv):
                but waiting for the scheduler to run on the order date.", select=True),
         'p_line':fields.one2many('issue.requisition.line', 'line_id', 'Product Lines',
                               copy=True),
-                'company_id':fields.many2one('res.company', 'Company'),
+        
 
 }
     _defaults = {
