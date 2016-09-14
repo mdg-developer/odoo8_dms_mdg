@@ -693,7 +693,7 @@ class mobile_sale_order(osv.osv):
             return res['res_id']
     # kzo Edit
     def get_products_by_sale_team(self, cr, uid, section_id , context=None, **kwargs):
-        cr.execute('''select  pp.id,pt.list_price , coalesce(pt.description, ' ') as description,pt.categ_id,pc.name as categ_name,pp.default_code, 
+        cr.execute('''select  pp.id,pt.list_price , coalesce(replace(pt.description,',',';'), ' ') as description,pt.categ_id,pc.name as categ_name,pp.default_code, 
                          pt.name,substring(replace(cast(pt.image_small as text),'/',''),1,5) as image_small,pt.main_group,pt.uom_ratio,
                          pp.product_tmpl_id
                         from crm_case_section_product_product_rel crm_real ,
@@ -1537,7 +1537,22 @@ class mobile_sale_order(osv.osv):
         except Exception, e:
             print 'False'
             return False
-                
+    
+    def get_promos_outlet(self, cr, uid, context=None, **kwargs):    
+        cr.execute("""select promos_rules_id,outlettype_id from promos_rules_outlettype_rel""")
+        datas =cr.fetchall()        
+        return datas
+    
+    def get_promos_branch(self, cr, uid, context=None, **kwargs):    
+        cr.execute("""select promos_rules_id,res_branch_id from promos_rules_res_branch_rel""")
+        datas =cr.fetchall()        
+        return datas
+    
+    def get_promos_partner(self, cr, uid, context=None, **kwargs):    
+        cr.execute("""select promos_rules_id,res_partner_id from promos_rules_res_partner_rel""")
+        datas =cr.fetchall()        
+        return datas
+        
 mobile_sale_order()
 
 class mobile_sale_order_line(osv.osv):
