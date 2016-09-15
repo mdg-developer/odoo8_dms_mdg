@@ -44,8 +44,8 @@
 									<field name="class" />
 									<field name="frequency" />
 									<field name="purchase_date" />
-									<field name="w1_mon" />
-									<field name="w1_tue"  />
+									<field name="w1_mon" style="font-weight: bold;" />
+									<field name="w1_tue" />
 									<field name="w1_wed" />
 									<field name="w1_thur" />
 									<field name="w1_fri" />
@@ -70,7 +70,88 @@
 									<field name="w4_sat" />
 								</tree>
 							</field>
+							<group col="28">
+								<field name="partner_count" class="oe_inline" style="font-size:13pt;" />
+								<label for="w1_count_mon" string="Count" style="font-size:8pt;"
+									id="count" name="count" />
+<!-- 								<div> -->
+<!-- 								&#x20;&#x20;&#x20; -->
+<!-- 								</div> -->
+								<div>
+									<field name="w1_count_mon" class="oe_inline" style="margin-left:5pt; font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w1_count_tue" class="oe_inline" style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w1_count_wed" class="oe_inline" style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w1_count_thur" class="oe_inline" style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w1_count_fri" class="oe_inline" style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w1_count_sat" class="oe_inline" style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w2_count_mon" class="oe_inline" style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w2_count_tue" class="oe_inline" style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w2_count_wed" class="oe_inline" style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w2_count_thur" class="oe_inline" style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w2_count_fri" class="oe_inline" style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w2_count_sat" class="oe_inline" style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w3_count_mon" class="oe_inline" style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w3_count_tue" class="oe_inline" style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w3_count_wed" class="oe_inline" style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w3_count_thur" class="oe_inline" style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w3_count_fri" class="oe_inline" style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w3_count_sat" class="oe_inline" style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w4_count_mon" class="oe_inline" style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w4_count_tue" class="oe_inline" style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w4_count_wed" class="oe_inline" style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w4_count_thur" class="oe_inline" style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w4_count_fri" class="oe_inline" style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w4_count_sat" class="oe_inline" style="margin-left:5pt;font-size:15pt;" />
+								</div>
+							</group>
 						</page>
+
 					</notebook>
 
 				</form>

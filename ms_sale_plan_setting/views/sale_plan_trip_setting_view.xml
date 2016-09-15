@@ -51,6 +51,58 @@
 									<field name="day_15" />
 								</tree>
 							</field>
+							<group col="19">
+								<field name="partner_count" class="oe_inline"  style="font-size:13pt;" />
+								<label for="day_count_1" string="Count"  style="font-size:8pt;"/>
+								<div>
+								&#x20;&#x20;&#x20;
+								</div>								
+								<div>
+									<field name="day_count_1" class="oe_inline"  style="margin-left:5pt; font-size:15pt;" />
+								</div>
+								<div>
+									<field name="day_count_2" class="oe_inline" style="margin-left:5pt; font-size:15pt;" />
+								</div>
+								<div>
+									<field name="day_count_3" class="oe_inline" style="margin-left:5pt; font-size:15pt;" />
+								</div>
+								<div>
+									<field name="day_count_4" class="oe_inline" style="margin-left:5pt; font-size:15pt;" />
+								</div>
+								<div>
+									<field name="day_count_5" class="oe_inline" style="margin-left:5pt; font-size:15pt;" />
+								</div>
+								<div>
+									<field name="day_count_6" class="oe_inline" style="margin-left:5pt; font-size:15pt;" />
+								</div>
+								<div>
+									<field name="day_count_7" class="oe_inline" style="margin-left:5pt; font-size:15pt;" />
+								</div>
+								<div>
+									<field name="day_count_8" class="oe_inline" style="margin-left:5pt; font-size:15pt;" />
+								</div>
+								<div>
+									<field name="day_count_9" class="oe_inline" style="margin-left:5pt; font-size:15pt;" />
+								</div>
+								<div>
+									<field name="day_count_10" class="oe_inline" style="margin-left:5pt; font-size:15pt;" />
+								</div>
+								<div>
+									<field name="day_count_11" class="oe_inline" style="margin-left:5pt; font-size:15pt;" />
+								</div>
+								<div>
+									<field name="day_count_12" class="oe_inline" style="margin-left:5pt; font-size:15pt;" />
+								</div>
+								<div>
+									<field name="day_count_13" class="oe_inline" style="margin-left:5pt; font-size:15pt;" />
+								</div>
+								<div>
+									<field name="day_count_14" class="oe_inline" style="margin-left:5pt; font-size:15pt;" />
+								</div>
+								<div>
+									<field name="day_count_15" class="oe_inline" style="margin-left:5pt; font-size:15pt;" />
+								</div>
+							</group>
 						</page>
 					</notebook>
 
@@ -67,7 +119,6 @@
 					<field name="date" />
 					<field name="from_date" />
 					<field name="to_date" />
-
 				</tree>
 			</field>
 		</record>
@@ -107,7 +158,7 @@
 		</record>
 
 
-		<menuitem action='action_sale_plan_trip_setting'  id="menu_sale_plan_trip_setting"
+		<menuitem action='action_sale_plan_trip_setting' id="menu_sale_plan_trip_setting"
 			parent="base.menu_mobile_sale_sale_target_menu" sequence="4" />
 	</data>
 </openerp>

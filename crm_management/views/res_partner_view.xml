@@ -96,10 +96,10 @@
 					<xpath expr="//notebook/page[@name='internal_notes']"
 						position="replace"></xpath>
 					<notebook position="inside">
-						<page string="Assets Name" attrs="{'invisible':[('customer','=',False)]}">
+						<page string="Assets" attrs="{'invisible':[('customer','=',False)]}">
 							<field name="asset_ids" />
 						</page>
-						<page string="Space Rental" attrs="{'invisible':[('customer','=',False)]}">
+						<page string="Rental" attrs="{'invisible':[('customer','=',False)]}">
 							<field name="space_ids" />
 						</page>
 					</notebook>
@@ -208,10 +208,10 @@
 						</div>
 					</notebook>
 					<!-- </xpath> -->
-					<xpath expr="//field[@name='user_id']" position="replace">
-						<field name="user_id" string="Salesman Name"
-							context="{'default_groups_ref': ['base.group_partner_manager']}" />
-					</xpath>
+<!-- 					<xpath expr="//field[@name='user_id']" position="replace"> -->
+<!-- 						<field name="user_id" string="Salesman Name" -->
+<!-- 							context="{'default_groups_ref': ['base.group_partner_manager']}" /> -->
+<!-- 					</xpath> -->
 
 
 				</data>
@@ -451,17 +451,17 @@
 		<menuitem id="menu_customer_asset_form111" parent="base.menu_sales"
 			action="open_view_customer_asset_action" sequence="11" />
 
-		<record id="view_crm_partner_assign_form_inherit" model="ir.ui.view">
-			<field name="name">res.partner.gmap</field>
-			<field name="model">res.partner</field>
-			<field name="inherit_id" ref="crm_partner_assign.view_crm_partner_assign_form" />
-			<field name="arch" type="xml">
-				<xpath expr="//field[@name='opportunity_assigned_ids']"
-					position="after">
-					<widget type="gmap_marker" lat="partner_latitude" lng="partner_longitude" />
-				</xpath>
-			</field>
-		</record>
+<!-- 		<record id="view_crm_partner_assign_form_inherit" model="ir.ui.view"> -->
+<!-- 			<field name="name">res.partner.gmap</field> -->
+<!-- 			<field name="model">res.partner</field> -->
+<!-- 			<field name="inherit_id" ref="crm_partner_assign.view_crm_partner_assign_form" /> -->
+<!-- 			<field name="arch" type="xml"> -->
+<!-- 				<xpath expr="//field[@name='opportunity_assigned_ids']" -->
+<!-- 					position="after"> -->
+<!-- 					<widget type="gmap_marker" lat="partner_latitude" lng="partner_longitude" /> -->
+<!-- 				</xpath> -->
+<!-- 			</field> -->
+<!-- 		</record> -->
 
 	</data>
 </openerp>
