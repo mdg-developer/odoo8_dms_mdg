@@ -259,6 +259,8 @@ class res_partner(osv.osv):
                 'outlet_type': fields.many2one('outlettype.outlettype', 'Outlet Type', required=True),
                 'temp_customer':fields.char('Contact Person'),
                 'class_id':fields.many2one('sale.class', 'Class'),
+                        'frequency_id':fields.many2one('plan.frequency','Frequency',required=True),
+
                 'old_code': fields.char('Old Code'),
                 'sales_channel':fields.many2one('sale.channel', 'Sale Channel'),
                 'address':fields.char('Address'),

@@ -117,7 +117,6 @@ class stock_requisition(osv.osv):
                                           'issue_date': issue_date,
                                           'request_id':request_id,
                                           'to_location_id':to_location_id,
-                                          
                                           'from_location_id':from_location_id}, context=context)
             req_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
             if good_id and req_line_id:

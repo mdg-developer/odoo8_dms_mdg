@@ -40,8 +40,8 @@ Request For Issue And Good Issue Note Module
         'views/good_issue_note_view.xml',
         'views/stock_return_view.xml',
         'views/stock_return_for_mobile_view.xml',
-        'views/request_for_issue_view.xml',
         'views/good_issue_note_tr_view.xml',
+        'views/request_for_issue_view.xml',
     ],
     'test': [
 

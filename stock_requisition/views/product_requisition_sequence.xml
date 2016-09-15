@@ -1,53 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>
+	<data>
 
-        <record id="product_req_sequence" model="ir.sequence.type">
-            <field name="name">Stock Request Sequence</field>
-            <field name="code">request.code</field>
-        </record>
+		<record id="product_req_sequence" model="ir.sequence.type">
+			<field name="name">Stock Request Sequence</field>
+			<field name="code">request.code</field>
+		</record>
 
-        <record id="product_req_seq" model="ir.sequence">
-            <field name="name">Stock Request Sequence</field>
-            <field name="code">request.code</field>
-            <field name="prefix">RFI/%(year)s</field>
-            <field name="padding">5</field>
-        </record>
-        
-       <record id="good_note_sequence" model="ir.sequence.type">
-            <field name="name">Good Issue Note Sequence</field>
-            <field name="code">good.issue.note.code</field>
-        </record>
+		<record id="product_req_seq" model="ir.sequence">
+			<field name="name">Stock Request Sequence</field>
+			<field name="code">request.code</field>
+			<field name="prefix">RFI/%(year)s</field>
+			<field name="padding">5</field>
+		</record>
 
-        <record id="good_note_seq" model="ir.sequence">
-            <field name="name">Good Issue Note Sequence</field>
-            <field name="code">good.issue.note.code</field>
-            <field name="prefix">GIN/%(year)s</field>
-            <field name="padding">5</field>
-        </record>
-        
-       <record id="stock_return_sequence" model="ir.sequence.type">
-            <field name="name">Stock Return Note Sequence</field>
-            <field name="code">stock.return.code</field>
-        </record>
+		<record id="good_note_sequence" model="ir.sequence.type">
+			<field name="name">Good Issue Note Sequence</field>
+			<field name="code">good.issue.note.code</field>
+		</record>
 
-        <record id="stock_return_seq" model="ir.sequence">
-            <field name="name">Stock Return Note Sequence</field>
-            <field name="code">stock.return.code</field>
-            <field name="prefix">SRN/%(year)s</field>
-            <field name="padding">5</field>
-        </record>
-        
-        <record id="request_for_issue_sequence" model="ir.sequence.type">
-            <field name="name">Request For Issue Sequence</field>
-            <field name="code">issue_request.code</field>
-        </record>
+		<record id="good_note_seq" model="ir.sequence">
+			<field name="name">Good Issue Note Sequence</field>
+			<field name="code">good.issue.note.code</field>
+			<field name="prefix">GIN/%(year)s</field>
+			<field name="padding">5</field>
+		</record>
 
-        <record id="request_issue_seq" model="ir.sequence">
-            <field name="name">Request For Issue Sequence</field>
-            <field name="code">issue_request.code</field>
-            <field name="prefix">TR/%(year)s</field>
-            <field name="padding">5</field>
-        </record>
-    </data>
+		<record id="stock_return_sequence" model="ir.sequence.type">
+			<field name="name">Stock Return Note Sequence</field>
+			<field name="code">stock.return.code</field>
+		</record>
+
+		<record id="stock_return_seq" model="ir.sequence">
+			<field name="name">Stock Return Note Sequence</field>
+			<field name="code">stock.return.code</field>
+			<field name="prefix">SRN/%(year)s</field>
+			<field name="padding">5</field>
+		</record>
+		<record id="request_for_issue_sequence" model="ir.sequence.type">
+			<field name="name">Request For Issue Sequence</field>
+			<field name="code">issue_request.code</field>
+		</record>
+
+		<record id="request_issue_seq" model="ir.sequence">
+			<field name="name">Request For Issue Sequence</field>
+			<field name="code">issue_request.code</field>
+			<field name="prefix">TR/%(year)s</field>
+			<field name="padding">5</field>
+		</record>
+	</data>
 </openerp>

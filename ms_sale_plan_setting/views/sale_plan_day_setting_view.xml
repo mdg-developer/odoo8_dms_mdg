@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+		<record id="view_plan_frequency_form" model="ir.ui.view">
+			<field name="name">plan.frequency.form</field>
+			<field name="model">plan.frequency</field>
+			<field name="arch" type="xml">
+				<form>
+					<group>
+						<field name="name" class="oe_inline" />
+					</group>
+				</form>
+			</field>
+		</record>
+
+		<record id="view_sale_plan_for_day_setting_form" model="ir.ui.view">
+			<field name="name">plan.setting.form</field>
+			<field name="model">sale.plan.day.setting</field>
+			<field name="arch" type="xml">
+				<form string="Sale Plans Setting" version="7.0">
+					<header>
+						<button name="confirm" string="Confirm" class="oe_highlight"
+							type="object" states="draft" />
+						<button name="refresh" string="Refresh Customer" class="oe_highlight"
+							type="object" states="draft,confirm" />
+						<field name="state" widget="statusbar" />
+					</header>
+					<group>
+						<group>
+							<field name="name" />
+							<field name="sale_team_id" on_change="on_change_sale_team_id(sale_team_id)" />
+						</group>
+						<group>
+							<field name="date" />
+							<field name="start_date" />
+						</group>
+					</group>
+					<notebook>
+						<page string="Plan Setting">
+							<field name="plan_line" attrs="{'readonly':[('state','=','confirm')]}">
+								<tree string="Plan Line" editable="bottom">
+									<field name="code" />
+									<field name="partner_id" />
+									<field name="class" />
+									<field name="frequency" />
+									<field name="purchase_date" />
+									<field name="w1_mon" />
+									<field name="w1_tue"  />
+									<field name="w1_wed" />
+									<field name="w1_thur" />
+									<field name="w1_fri" />
+									<field name="w1_sat" />
+									<field name="w2_mon" />
+									<field name="w2_tue" />
+									<field name="w2_wed" />
+									<field name="w2_thur" />
+									<field name="w2_fri" />
+									<field name="w2_sat" />
+									<field name="w3_mon" />
+									<field name="w3_tue" />
+									<field name="w3_wed" />
+									<field name="w3_thur" />
+									<field name="w3_fri" />
+									<field name="w3_sat" />
+									<field name="w4_mon" />
+									<field name="w4_tue" />
+									<field name="w4_wed" />
+									<field name="w4_thur" />
+									<field name="w4_fri" />
+									<field name="w4_sat" />
+								</tree>
+							</field>
+						</page>
+					</notebook>
+
+				</form>
+			</field>
+		</record>
+		<record id="plan_setting_tree" model="ir.ui.view">
+			<field name="name">plan_setting_tree</field>
+			<field name="model">sale.plan.day.setting</field>
+			<field name="arch" type="xml">
+				<tree string="Plan Setting Tree">
+					<field name="name" />
+					<field name="sale_team_id" />
+					<field name="date" />
+					<field name="start_date" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_plan_setting_filter" model="ir.ui.view">
+			<field name="name">Plan Setting Filterr</field>
+			<field name="model">sale.plan.day.setting</field>
+			<field name="arch" type="xml">
+				<search string="Search Plan Setting">
+					<group expand="0" string="Group By...">
+						<filter string="Sale Team" icon="terp-partner" domain="[]"
+							context="{'group_by':'sale_team_id'}" />
+						<filter string="Date" icon="terp-partner" domain="[]"
+							context="{'group_by':'date'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+
+
+		<record id="action_sale_plan_setting" model="ir.actions.act_window">
+			<field name="name">Sale Plan Day Setting</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">sale.plan.day.setting</field>
+			<field name="context">{}</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="plan_setting_tree" />
+			<field name="search_view_id" ref="view_plan_setting_filter" />
+			<field name="domain">[]
+			</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to Register Sale Plan Day Setting.
+				</p>
+			</field>
+		</record>
+
+
+		<menuitem action='action_sale_plan_setting' id="menu_sale_plan_setting"
+			parent="base.menu_mobile_sale_sale_target_menu" sequence="3" />
+	</data>
+</openerp>
+		

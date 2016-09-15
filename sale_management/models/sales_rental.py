@@ -41,7 +41,7 @@ class sale_rental(osv.osv):
          
     _columns = {
         'company_id':fields.many2one('res.company', 'Company'),
-        'date':fields.date('Transition Date'),
+        'date':fields.date('Txn Date'),
        'from_date':fields.date('Contract Start Date'),
         'to_date':fields.date('Contract End Date'),
         'partner_id':fields.many2one('res.partner', 'Customer'  , required=True),  # 

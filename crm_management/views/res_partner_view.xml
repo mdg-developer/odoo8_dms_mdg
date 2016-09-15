@@ -35,6 +35,8 @@
 					</xpath>
 					<xpath expr="//field[@name='email']" position="after">
 						<field name="class_id" />
+						<field name="frequency_id" />
+
 						<field name="old_code" />
 
 						<group>
@@ -94,14 +96,14 @@
 					<xpath expr="//notebook/page[@name='internal_notes']"
 						position="replace"></xpath>
 					<notebook position="inside">
-						<page string="Asset Name" attrs="{'invisible':[('customer','=',False)]}">
+						<page string="Assets Name" attrs="{'invisible':[('customer','=',False)]}">
 							<field name="asset_ids" />
 						</page>
 						<page string="Space Rental" attrs="{'invisible':[('customer','=',False)]}">
 							<field name="space_ids" />
 						</page>
 					</notebook>
-				
+
 					<notebook position="inside">
 						<page string="Customer Image" attrs="{'invisible': [('customer', '=', False)]}">
 							<div class="row">
@@ -280,7 +282,10 @@
 						context="{'group_by':'outlet_type'}" />
 					<filter name="mobile_customer" string="Pending Customer"
 						domain="[]" context="{'group_by':'mobile_customer'}" />
-
+					<filter name="class_id" string="Class" domain="[]"
+						context="{'group_by':'class_id'}" />
+					<filter name="frequency_id" string="Frequency" domain="[]"
+						context="{'group_by':'frequency_id'}" />
 				</xpath>
 			</field>
 		</record>
@@ -434,7 +439,7 @@
 		</record>
 
 		<record model="ir.actions.act_window" id="open_view_customer_asset_action">
-			<field name="name">Customer Asset</field>
+			<field name="name">Customer Assets</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">res.partner.asset</field>
 			<field name="view_type">form</field>

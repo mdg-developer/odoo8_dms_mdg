@@ -22,7 +22,7 @@
 							<field name="sequence" colspan="2" />
 							<field name="active" colspan="2" select="1" />
 							<!--  <field name="stop_further" colspan="2" />-->
-							<field name="special" colspan="2" select="1" />
+<!-- 							<field name="special" colspan="2" select="1"  invisible="1"/> -->
 							<!-- <field name="special1" colspan="2" select="1" />
 							<field name="special2" colspan="2" select="1" />
 							<field name="special3" colspan="2" select="1" /> -->
@@ -30,16 +30,18 @@
 							<field name="sale_channel_id" colspan="2"  widget="many2many_tags"/>
 							<field name="outlettype_id" colspan="2"  widget="many2many_tags"/>
        						<field name="branch_id" colspan="2" widget="many2many_tags"/>
+       							<field name="from_date" />
+								<field name="to_date" />
 						</group>
 
-						<group>
-							<separator string="Coupon/Voucher Settings" col="4" />
-							<separator string="Applicable Period" col="2" />
-							<group>
-								<field name="coupon_code" />
-								<field name="coupon_used" />
-								<field name="uses_per_coupon" attrs="{'required':[('coupon_code','!=',False)]}" />
-								<field name="uses_per_partner" attrs="{'required':[('coupon_code','!=',False)]}" />
+						<group  invisible="1">
+							<separator string="Coupon/Voucher Settings" col="4"  invisible="1"/>
+							<separator string="Applicable Period" col="2"  invisible="1"/>
+							<group >
+								<field name="coupon_code" invisible="1"/>
+								<field name="coupon_used"  invisible="1"/>
+								<field name="uses_per_coupon" attrs="{'required':[('coupon_code','!=',False)]}"  invisible="1"/>
+								<field name="uses_per_partner" attrs="{'required':[('coupon_code','!=',False)]}"  invisible="1"/>
 							</group>
 							<group>
 
