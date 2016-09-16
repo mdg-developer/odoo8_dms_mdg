@@ -5,6 +5,7 @@ from openerp.tools.translate import _
 import ast
 import time
 
+
 DEFAULT_SERVER_DATE_FORMAT = "%Y-%m-%d"
 class mobile_sale_order(osv.osv):
     
@@ -956,7 +957,7 @@ class mobile_sale_order(osv.osv):
     def tablet_info(self, cr, uid, tabetId, context=None, **kwargs):    
         cr.execute('''
             select id as tablet_id,date,create_uid,name,note,mac_address,model,type,storage_day
-            ,hotline,sale_team_id,is_testing
+            ,replace(hotline,',',';') hotline,sale_team_id,is_testing
             from tablets_information 
             where name = %s
             ''', (tabetId,))
@@ -1056,8 +1057,7 @@ class mobile_sale_order(osv.osv):
             history = []
             notes_line = []
             
-            for r in result:
-                print "length", len(r)
+            for r in result:                
                 if len(r) >= 7:
                     history.append(r)                   
                 else:
@@ -1066,6 +1066,7 @@ class mobile_sale_order(osv.osv):
             if history:
                 for pt in history:
                     total_amount=float(pt['total_amount'])
+                    product_amount=float(pt['product_amount'])
                     deno_result = {
                         'invoice_count':pt['invoice_count'],
                         'sale_team_id':pt['sale_team_id'],
@@ -1073,18 +1074,24 @@ class mobile_sale_order(osv.osv):
                         'note':pt['note'],
                         'date':pt['date'],
                         'tablet_id':pt['tablet_id'],
-                        'user_id':pt['user_id'],                        
+                        'user_id':pt['user_id'],         
                         'denomination_note_line':False,
+                        'denomination_product_line':False,
+                        'branch_id':pt['branch_id'],
+                        'total_amount':pt['total_amount'],
+                        'diff_amount':pt['diff_amount'],
+                        'product_amount':pt['product_amount'],
                     }
                                         
                     deno_id = history_obj.create(cursor, user, deno_result, context=context)
                     cursor.execute('''update sales_denomination set total_amount = %s where id = %s''',(total_amount, deno_id,) )
-                    print'deno_id', deno_id
+                    cursor.execute('''update sales_denomination set product_amount = %s where id = %s''',(product_amount, deno_id,) )                
                     for ptl in notes_line:
                                 note_line_res = {                                                            
                                   'denomination_note_ids':deno_id,
                                   'note_qty':ptl['note_qty'],
                                   'notes':ptl['notes'],
+                                  'amount':ptl['amount'],
                                 }
                                 notes_line_obj.create(cursor, user, note_line_res, context=context)
                     
