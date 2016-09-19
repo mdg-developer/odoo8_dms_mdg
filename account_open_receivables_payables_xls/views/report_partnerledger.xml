@@ -76,7 +76,7 @@
                                 <strong t-esc="sum_credit_partner(partner)"/>
                             </td>
                             <td class="text-right">
-                                <strong t-esc="formatLang((sum_debit_partner(partner) - sum_credit_partner(partner)), currency_obj=res_company.currency_id)"/>
+                                <strong t-esc="formatLang((sum_debit_partner(partner) - sum_credit_partner(partner))*-1, currency_obj=res_company.currency_id)"/>
                             </td>
                         </tr>
                         <tr t-if="initial_balance">
