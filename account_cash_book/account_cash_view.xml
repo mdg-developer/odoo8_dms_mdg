@@ -80,5 +80,7 @@
 
 			</field>
 		</record>
+    <menuitem action="account.action_view_bank_statement_tree" id="account.journal_cash_move_lines" name ="Cash Book"
+            parent="account.menu_finance_bank_and_cash"/>       		
 	</data>
 </openerp>

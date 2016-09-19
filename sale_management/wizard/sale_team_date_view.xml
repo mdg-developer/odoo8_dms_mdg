@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- === Sales Team Date Form === -->
+
+		<record id="view_sale_team_date_form" model="ir.ui.view">
+			<field name="name">sale.team.date.form</field>
+			<field name="model">sale.team.date</field>
+			<field name="arch" type="xml">
+				<form string="Sales Team Date">
+					<h3>
+						<label string="Inset Date" />
+					</h3>
+					<field name="date" />
+
+					<footer>
+						<button string="Change" name="date_change" type="object"
+							class="oe_highlight" />
+						or
+						<button string="Cancel" class="oe_link" special="cancel" />
+					</footer>
+				</form>
+
+			</field>
+		</record>
+
+		<record id="open_view_date_form" model="ir.actions.act_window">
+			<field name="name">Sale Team Date</field>
+			<field name="res_model">sale.team.date</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_sale_team_date_form" />
+			<field name="target">new</field>
+		</record>
+
+
+
+		<!-- <menuitem id="sales_team_date" action="open_view_date_form" -->
+		<!-- parent="base.menu_sales" " sequence="12" /> -->
+
+	</data>
+</openerp>
+	    
+	    
+	    

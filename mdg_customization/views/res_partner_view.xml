@@ -28,11 +28,13 @@
 								<field name="date_localization" />
 							</group>
 							<group>
-								<field name="grade_id" widget="selection" />
-								<field name="activation" widget="selection" />
+<!-- 								<field name="grade_id" widget="selection" /> -->
+<!-- 								<field name="activation" widget="selection" /> -->
 								<field name="date_review" />
 								<field name="date_review_next" />
 								<field name="date_partnership" string="Activation Date" />
+								<field name="create_date" />
+																
 							</group>
 						</group>
 						<group>

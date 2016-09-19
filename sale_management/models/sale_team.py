@@ -5,32 +5,34 @@ class crm_case_section(osv.osv):
     _inherit = 'crm.case.section'
 
     def _get_total_invoice_data(self, cr, uid, ids, field_name, arg, context=None):
-        res = {}
-        if context is None:
-            context = {}
+        res = dict(map(lambda x: (x,0), ids))        
         for line in self.browse(cr, uid, ids, context=context):
-            cr.execute("select count(id) from account_invoice  where state not in ('draft','cancel') and section_id = %s and date_due = %s" , (line.id, line.date,))
+            cr.execute("select count(id) from account_invoice where state not in ('draft','cancel') and section_id = %s and date_invoice = %s" , (line.id, line.date,))
             data = cr.fetchone()[0]
             res[line.id] = data
         return res        
     
     def _get_total_sku_data(self, cr, uid, ids, field_name, arg, context=None):
-        res = {}
-        if context is None:
-            context = {}
-        for line in self.browse(cr, uid, ids, context=context):
-            cr.execute("   select count(st.id) from sales_target st ,sales_target_line stl where st.id=stl.sale_ids  and stl.product_uom_qty !=0.0 and sale_team_id =  %s and date= %s " , (line.id, line.date,))
+        res = dict(map(lambda x: (x,0), ids))        
+        # res = {}
+        for line in self.browse(cr, uid, ids, context=context):            
+            cr.execute("select count(st.id) from sales_target st ,sales_target_line stl where st.id=stl.sale_ids and stl.product_uom_qty !=0.0 and sale_team_id = %s and date= %s " , (line.id, line.date,))
             data = cr.fetchone()[0]
             res[line.id] = data
         return res       
+    
     def _get_total_sku_invoice_percent(self, cr, uid, ids, field_name, arg, context=None):
-        res = {}
+        res ={}   
         data = 0
-        if context is None:
-            context = {}
+        total_invoice=0
+        total_sku=0
         for line in self.browse(cr, uid, ids, context=context):
-            # cr.execute("   select count(st.id) from sales_target st ,sales_target_line stl where st.id=stl.sale_ids  and stl.product_uom_qty !=0.0 and sale_team_id =  %s and date= %s " ,( line.id,line.date,))
-            # data=cr.fetchone()[0]
+            total_invoice=line.total_invoice
+            total_sku=line.total_sku
+            if total_invoice!=0.0 and total_sku !=0.0:
+                data=total_invoice/total_sku
+            else:
+                data=0
             res[line.id] = data
         return res        
  
@@ -51,8 +53,8 @@ class crm_case_section(osv.osv):
         if context is None:
             context = {}
         for line in self.browse(cr, uid, ids, context=context):
-            # cr.execute("   select count(st.id) from sales_target st ,sales_target_line stl where st.id=stl.sale_ids  and stl.product_uom_qty !=0.0 and sale_team_id =  %s and date= %s " ,( line.id,line.date,))
-            # data=cr.fetchone()[0]
+            cr.execute(" select count(id) from customer_visit where sale_team_id=%s  and  (date+ '6 hour'::interval + '30 minutes'::interval)::date=%s" ,(line.id,line.date,))
+            data=cr.fetchone()[0]
             res[line.id] = data
         return res      
 
@@ -62,8 +64,14 @@ class crm_case_section(osv.osv):
         if context is None:
             context = {}
         for line in self.browse(cr, uid, ids, context=context):
-            # cr.execute("select count(st.id) from sales_target st ,sales_target_line stl where st.id=stl.sale_ids  and stl.product_uom_qty !=0.0 and sale_team_id =  %s and date= %s " ,( line.id,line.date,))
-            # data=cr.fetchone()[0]
+            cr.execute("select count(id) from sale_order where state ='draft' and section_id=%s and (date_order+ '6 hour'::interval + '30 minutes'::interval)::date=%s and pre_order ='t'" ,( line.id,line.date,))
+            pre_sale=cr.fetchone()[0]
+            cr.execute("select count(id) from sale_order where state not in ('draft','cancel')  and section_id=%s and (date_order+ '6 hour'::interval + '30 minutes'::interval)::date=%s and pre_order ='f'" ,(line.id,line.date,))
+            sale_order=cr.fetchone()[0]
+            if pre_sale!=0 and sale_order!=0:
+                data=pre_sale/sale_order
+            else:
+                data=0            
             res[line.id] = data
         return res         
     
@@ -73,8 +81,8 @@ class crm_case_section(osv.osv):
         if context is None:
             context = {}
         for line in self.browse(cr, uid, ids, context=context):
-            # cr.execute("   select count(st.id) from sales_target st ,sales_target_line stl where st.id=stl.sale_ids  and stl.product_uom_qty !=0.0 and sale_team_id =  %s and date= %s " ,( line.id,line.date,))
-            # data=cr.fetchone()[0]
+            cr.execute("select count(id) from sale_order where state not in ('draft','cancel')  and section_id=%s and (date_order+ '6 hour'::interval + '30 minutes'::interval)::date=%s and pre_order ='f'" ,(line.id,line.date,))
+            data=cr.fetchone()[0]
             res[line.id] = data
         return res         
     def _get_sale_month(self, cr, uid, ids, field_name, arg, context=None):
@@ -94,8 +102,8 @@ class crm_case_section(osv.osv):
         if context is None:
             context = {}
         for line in self.browse(cr, uid, ids, context=context):
-            # cr.execute("   select count(st.id) from sales_target st ,sales_target_line stl where st.id=stl.sale_ids  and stl.product_uom_qty !=0.0 and sale_team_id =  %s and date= %s " ,( line.id,line.date,))
-            # data=cr.fetchone()[0]
+            cr.execute("select count(id) from sale_order where state ='progress' and section_id=%s and (date_order+ '6 hour'::interval + '30 minutes'::interval)::date=%s" ,( line.id,line.date,))
+            data=cr.fetchone()[0]
             res[line.id] = data
         return res  
     
@@ -138,8 +146,8 @@ class crm_case_section(osv.osv):
         if context is None:
             context = {}
         for line in self.browse(cr, uid, ids, context=context):
-            # cr.execute("   select count(st.id) from sales_target st ,sales_target_line stl where st.id=stl.sale_ids  and stl.product_uom_qty !=0.0 and sale_team_id =  %s and date= %s " ,( line.id,line.date,))
-            # data=cr.fetchone()[0]
+            cr.execute(" select count(id) from sale_order where state not in ('draft','cancel') and payment_type='credit' and section_id=%s and (date_order+ '6 hour'::interval + '30 minutes'::interval)::date=%s" ,(line.id,line.date,))
+            data=cr.fetchone()[0]
             res[line.id] = data
         return res
   
@@ -155,24 +163,20 @@ class crm_case_section(osv.osv):
                 'demarcation_ids':fields.many2many('sale.demarcation'),
                 'van_id':fields.char('Vehicle No'),
                 'vehicle_id':fields.many2one('fleet.vehicle', 'Vehicle No'),
-
                 'main_group_id': fields.many2many('product.maingroup'),
                                 'date':fields.date('Date'),
                 'delivery_team_id': fields.many2one('crm.case.section', 'Delivery Team'),
+                'date':fields.date('Date'),                
                 'total_invoice': fields.function(_get_total_invoice_data, digits_compute=dp.get_precision('Product Price'),
-                type='float', readonly=True,
+                type='float', 
                 string='Total Invoice'),
                 'date':fields.date('Date'),
                 'total_sku': fields.function(_get_total_sku_data, digits_compute=dp.get_precision('Product Price'),
-                type='float', readonly=True,
+                type='float', 
                 string='Total SKU'),
                  'total_sku_inv': fields.function(_get_total_sku_invoice_percent, digits_compute=dp.get_precision('Product Price'),
-                type='float', readonly=True,
+                type='float',
                 string='Invoice/SKU %'),
-                'total_sku': fields.function(_get_total_invoice_data, digits_compute=dp.get_precision('Product Price'),
-                type='float', readonly=True,
-                string='Total Invoice'),
-                'date':fields.date('Date'),
                 'total_rout_plan': fields.function(_get_total_rout_plan, digits_compute=dp.get_precision('Product Price'),
                 type='float', readonly=True,
                 string='Total Rout Plan'),

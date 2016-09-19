@@ -3,7 +3,6 @@
 	<data>
 
 		<!-- customer creation form -->
-
 		<record id="res_partner_form_view" model="ir.ui.view">
 			<field name="name">res.partner.form.view</field>
 			<field name="model">res.partner</field>
@@ -99,7 +98,7 @@
 						<page string="Assets" attrs="{'invisible':[('customer','=',False)]}">
 							<field name="asset_ids" />
 						</page>
-						<page string="Rental" attrs="{'invisible':[('customer','=',False)]}">
+						<page string="Rentals" attrs="{'invisible':[('customer','=',False)]}">
 							<field name="space_ids" />
 						</page>
 					</notebook>
