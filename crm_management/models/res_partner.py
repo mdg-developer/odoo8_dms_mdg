@@ -148,9 +148,7 @@ class res_partner(osv.osv):
             so_number = cr.fetchall()
             
             if so_number:
-                so_count = so_number[0][0] 
-                
-                
+                so_count = so_number[0][0]                                 
                 if day > 6.0:
                     week_num = day / 7
                     
@@ -471,7 +469,8 @@ class res_partner(osv.osv):
                                 codeId = codeObj.create(cr, uid, codeResult, context=context)
                                 code = codeObj.generateCode(cr, uid, codeId, context=context)
                 if code:
-                    self.write(cr, uid, ids, {'customer_code':code}, context=context)
+                    from datetime import datetime
+                    self.write(cr, uid, ids, {'customer_code':code,'date_partnership':datetime.now().date()}, context=context)
             return True
 res_partner()
 class res_partner_asset(osv.Model):

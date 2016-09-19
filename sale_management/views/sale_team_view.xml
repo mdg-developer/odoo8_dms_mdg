@@ -42,8 +42,19 @@
 					<field name="vehicle_id" />
 					<field name="sale_channel_id" widget="many2many_tags" />
 					<field name="date" />
-					<field name="total_invoice" />
-
+					<field name="total_invoice" invisible="1" />
+					<field name="total_sku" invisible="1" />
+					<field name="total_sku_inv" invisible="1" />
+					<field name="total_rout_plan" invisible="1" />
+					<field name="total_customer_visit" invisible="1" />
+					<field name="total_pre_sale" invisible="1" />
+					<field name="sale_value" invisible="1" />
+					<field name="sale_total_month" invisible="1" />
+					<field name="sale_confirm_today" invisible="1" />
+					<field name="sale_work_day" invisible="1" />
+					<field name="sku_invoice" invisible="1" />
+					<field name="product_invoice" invisible="1" />
+					<field name="credit_sale" invisible="1" />
 				</field>
 
 
@@ -92,10 +103,6 @@
 							</kanban>
 						</field>
 					</page>
-
-
-
-
 					<!-- Add Product Main Group -->
 					<page string="Product Main Group">
 						<separator string="Main Group" />
@@ -122,6 +129,7 @@
 
 			</field>
 		</record>
+
 		<record id="crm_case_section_salesteams_view_kanban_inherit"
 			model="ir.ui.view">
 			<field name="name">crm.case.section.kanban</field>
@@ -131,22 +139,55 @@
 				<data>
 					<xpath expr="//field[@name='name']" position="after">
 						<field name="total_invoice" />
+						<field name="total_sku" />
+						<field name="total_sku_inv" />
+						<field name="total_rout_plan" />
+						<field name="total_customer_visit" />
+						<field name="total_pre_sale" />
+						<field name="sale_value" />
+						<field name="sale_total_month" />
+						<field name="sale_confirm_today" />
+						<field name="sale_work_day" />
+						<field name="sku_invoice" />
+						<field name="product_invoice" />
+						<field name="credit_sale" />
 					</xpath>
 					<xpath expr="//div[@class='oe_items_list']" position="replace">
 						<div class="oe_items_list">
-							<div class="oe_salesteams_quotations" t-if="record.use_quotations.raw_value">
-								<a name="total_invoice" type="action">MTD Ach</a>
-								<a name="total_invoice" type="action">
-									<field name="total_invoice">
+							<div>
+								<a type="button">
+									<button name="%(open_view_date_form)d" type="action"
+										widget="statinfo" class="oe_highlight">
+										<span>Insert Date</span>
+									</button>
+								</a>
+							</div>
+							<div>
+
+								<a name="date" type="action">
+									<field name="date">
 									</field>
 								</a>
 							</div>
-							<div class="oe_salesteams_quotations" t-if="record.use_quotations.raw_value">
-								<a name="total_sku" type="action">Month Target</a>
-								<a name="total_sku" type="action">
-									<field name="total_sku">
-									</field>
-								</a>
+
+							<div class="oe_items_list">
+								<div>
+									<a name="total_invoice" type="action">MTD Ach</a>
+									<a name="total_invoice" type="action">
+										<field name="total_invoice">
+										</field>
+									</a>
+								</div>
+							</div>
+							<div class="oe_items_list">
+
+								<div>
+									<a name="total_sku" type="action">Month Target</a>
+									<a name="total_sku" type="action">
+										<field name="total_sku">
+										</field>
+									</a>
+								</div>
 							</div>
 							<div class="oe_salesteams_quotations" t-if="record.use_quotations.raw_value">
 								<a name="total_sku_inv" type="action">MTD Ach %</a>
@@ -155,17 +196,14 @@
 									</field>
 								</a>
 							</div>
-							<!-- </div> -->
-
-							<!-- <div class="oe_items_list"> -->
-							<div class="oe_salesteams_quotations" t-if="record.use_quotations.raw_value">
+							<div>
 								<a name="total_rout_plan" type="action">Plan</a>
 								<a name="total_rout_plan" type="action">
 									<field name="total_rout_plan">
 									</field>
 								</a>
 							</div>
-							<div class="oe_salesteams_quotations" t-if="record.use_quotations.raw_value">
+							<div>
 								<a name="total_customer_visit" type="action">Coverage</a>
 								<a name="total_customer_visit" type="action">
 									<field name="total_customer_visit">
