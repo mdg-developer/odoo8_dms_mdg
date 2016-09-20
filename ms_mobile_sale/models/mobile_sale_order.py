@@ -1638,13 +1638,13 @@ class mobile_product_yet_to_deliver_line(osv.osv):
                 }
 mobile_product_yet_to_deliver_line()
 
-class account_invoice(osv.osv):
-    _inherit = "account.invoice"
+#class account_invoice(osv.osv):
+  #  _inherit = "account.invoice"
   
-    _columns = {
-             'payment_type': fields.char('Payment Type', size=64, readonly=True),
-               }
-account_invoice()    
+    #_columns = {
+         #    'payment_type': fields.char('Payment Type', size=64, readonly=True),
+            #   }
+#account_invoice()    
  
 class sale_order(osv.osv):
     _inherit = "sale.order" 
