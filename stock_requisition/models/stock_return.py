@@ -97,7 +97,7 @@ class stock_return_line(osv.osv):  # #prod_pricelist_update_line
         'product_uom': fields.many2one('product.uom', 'UOM', required=True),
         'uom_ratio':fields.char('Packing Unit'),
         'qty_by_wh':fields.char('Received Qty by WH'),
-        'expiry_date':fields.char('Expiry'),
+        'expiry_date':fields.date('Expiry'),
          'remark':fields.char('Remark'),
     }
         

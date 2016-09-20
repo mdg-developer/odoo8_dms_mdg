@@ -58,8 +58,7 @@ class account_invoice(models.Model):
     payment_type = fields.Selection([
                     ('credit', 'Credit'),
                     ('cash', 'Cash'),
-#                     ('consignment', 'Consignment'),
-#                     ('advanced', 'Advanced')
+                     ('consignment', 'Consignment'),
                     ],string= 'Payment Type',default='credit')
     
     account_id = fields.Many2one('account.account', string='Account',

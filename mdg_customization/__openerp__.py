@@ -36,7 +36,7 @@ MDG Customization
              'views/product_view.xml',
              'views/location_view.xml',
              'views/res_partner_view.xml',
-             'views/product_view.xml',
+             'views/product_uom_view.xml',
     ],
     'installable': True,
     'auto_install': False,

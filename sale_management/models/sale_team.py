@@ -1,6 +1,9 @@
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
-
+from datetime import datetime, timedelta
+import calendar
+from openerp import tools
+OE_DATEFORMAT = "%Y-%m-%d"
 class crm_case_section(osv.osv):
     _inherit = 'crm.case.section'
 
@@ -42,8 +45,12 @@ class crm_case_section(osv.osv):
         if context is None:
             context = {}
         for line in self.browse(cr, uid, ids, context=context):
-            # cr.execute("   select count(st.id) from sales_target st ,sales_target_line stl where st.id=stl.sale_ids  and stl.product_uom_qty !=0.0 and sale_team_id =  %s and date= %s " ,( line.id,line.date,))
-            # data=cr.fetchone()[0]
+            cr.execute("select partner_count from sale_plan_day_setting where sale_team_id=%s  order by id desc" ,( line.id,))
+            partner_count=cr.fetchone()
+            if partner_count:
+                data=partner_count[0]
+            else:
+                data=0
             res[line.id] = data
         return res       
  
@@ -84,16 +91,32 @@ class crm_case_section(osv.osv):
             cr.execute("select count(id) from sale_order where state not in ('draft','cancel')  and section_id=%s and (date_order+ '6 hour'::interval + '30 minutes'::interval)::date=%s and pre_order ='f'" ,(line.id,line.date,))
             data=cr.fetchone()[0]
             res[line.id] = data
-        return res         
+        return res
+    
     def _get_sale_month(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         data = 0
-        if context is None:
-            context = {}
         for line in self.browse(cr, uid, ids, context=context):
-            # cr.execute("   select count(st.id) from sales_target st ,sales_target_line stl where st.id=stl.sale_ids  and stl.product_uom_qty !=0.0 and sale_team_id =  %s and date= %s " ,( line.id,line.date,))
-            # data=cr.fetchone()[0]
-            res[line.id] = data
+            team_date=line.date
+            date_filter = datetime.strptime(team_date, OE_DATEFORMAT).date()                       
+            month_begin =date_filter.replace(day=1)
+            to_date = month_begin.replace(day=calendar.monthrange(month_begin.year, month_begin.month)[1]).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+            day_from = month_begin
+            day_to = datetime.strptime(to_date, "%Y-%m-%d").date()
+            nb_of_days = (day_to - day_from).days + 1
+            cr.execute("select count(id) from hr_holidays_public_line where date between %s and %s",(day_from,day_to)) 
+            day_count=cr.fetchone()
+            if day_count:
+                day_count=nb_of_days-day_count[0]
+            else:
+                day_count=nb_of_days
+            cr.execute("select sum(amount_total) from sale_order where state not in ('draft','cancel')  and section_id=%s and (date_order+ '6 hour'::interval + '30 minutes'::interval)::date between %s and %s" ,(line.id,day_from,day_to,))
+            sale_value=cr.fetchone()
+            if sale_value and sale_value[0] is not None:                
+                sale_value=sale_value[0]/day_count
+            else:
+                sale_value=0/day_count                
+            res[line.id] = sale_value
         return res  
     
     def _get_sale_confirm(self, cr, uid, ids, field_name, arg, context=None):
@@ -110,13 +133,28 @@ class crm_case_section(osv.osv):
     def _get_sale_work(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         data = 0
-        if context is None:
-            context = {}
         for line in self.browse(cr, uid, ids, context=context):
-            # cr.execute("   select count(st.id) from sales_target st ,sales_target_line stl where st.id=stl.sale_ids  and stl.product_uom_qty !=0.0 and sale_team_id =  %s and date= %s " ,( line.id,line.date,))
-            # data=cr.fetchone()[0]
-            res[line.id] = data
-        return res
+            team_date=line.date
+            date_filter = datetime.strptime(team_date, OE_DATEFORMAT).date()                       
+            month_begin =date_filter.replace(day=1)
+            to_date = month_begin.replace(day=calendar.monthrange(month_begin.year, month_begin.month)[1]).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+            day_from = month_begin
+            day_to = datetime.strptime(to_date, "%Y-%m-%d").date()
+            nb_of_days = (day_to - day_from).days + 1
+            cr.execute("select count(id) from hr_holidays_public_line where date between %s and %s",(day_from,day_to)) 
+            day_count=cr.fetchone()
+            if day_count:
+                day_count=nb_of_days-day_count[0]
+            else:
+                day_count=nb_of_days
+            cr.execute("select count(id) from sale_order where state not in ('draft','cancel')  and section_id=%s and (date_order+ '6 hour'::interval + '30 minutes'::interval)::date between %s and %s" ,(line.id,day_from,day_to,))
+            sale_count=cr.fetchone()
+            if sale_count:                
+                sale_count=sale_count[0]/day_count
+            else:
+                sale_count=0/day_count
+            res[line.id] = sale_count
+        return res 
     
     def _get_sku_invoice(self, cr, uid, ids, field_name, arg, context=None):
         res = {}

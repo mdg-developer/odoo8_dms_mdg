@@ -31,7 +31,7 @@ Request For Issue And Good Issue Note Module
 
     """,
     'website': 'https://www.odoo.com/page/warehouse',
-    'depends': ['base','stock'],
+    'depends': ['base','sale','stock'],
     'category': 'stock',
     'sequence': 16,
     'data': [

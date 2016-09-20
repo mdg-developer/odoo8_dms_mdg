@@ -187,7 +187,8 @@ class res_partner(osv.osv):
         # The current user may not have access rights for sale orders
         try:
             for partner in self.browse(cr, uid, ids, context):
-                invoice_ids = invoice_obj.search(cr, uid, [('date_invoice', '>', from_date), ('date_invoice', '<', to_date),('partner_id','=',partner.id)], context=context) 
+                invoice_ids = invoice_obj.search(cr, uid, [('date_invoice', '>=', from_date), ('date_invoice', '<=', to_date),('partner_id','=',partner.id)], context=context) 
+                print '------------------',invoice_ids
                 res[partner.id] = len(invoice_ids)
         except:
             pass
@@ -208,6 +209,80 @@ class res_partner(osv.osv):
             pass
         return res 
 
+    def _get_last_purchase_date(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict(map(lambda x: (x,0), ids))
+        last_order_date=False
+        for data in self.browse(cr, uid, ids, context=context):
+            cr.execute("select date_order::date from sale_order where partner_id =%s order by id desc", (data.id,))
+            last_order = cr.fetchone()
+            if last_order:
+                last_order_date = last_order[0]
+            else:
+                last_order_date = False
+            
+            res[data.id] = last_order_date
+        return res 
+
+    def _get_last_visit_date(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict(map(lambda x: (x,0), ids))
+        for data in self.browse(cr, uid, ids, context=context):
+            cr.execute("select date from customer_visit where customer_id=%s order by id desc", (data.id,))
+            last_visit = cr.fetchone()
+            if last_visit:
+                last_visit_date = last_visit[0]
+            else:
+                last_visit_date = False
+            
+            res[data.id] = last_visit_date
+        return res 
+    def _get_last_purchase_amount(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict(map(lambda x: (x,0), ids))
+        last_order_amount=False
+        for data in self.browse(cr, uid, ids, context=context):
+            cr.execute("select amount_total from sale_order where partner_id =%s order by id desc", (data.id,))
+            last_order = cr.fetchone()
+            if last_order:
+                last_order_amount = last_order[0]
+            else:
+                last_order_amount = 0.0
+            
+            res[data.id] = last_order_amount
+        return res
+    
+    def _get_all_invoice_amount(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict(map(lambda x: (x,0), ids))
+        amount_total=0.0
+        for data in self.browse(cr, uid, ids, context=context):
+            cr.execute("select sum(amount_total) from account_invoice where partner_id =%s", (data.id,))
+            amount_total = cr.fetchone()
+            if amount_total:
+                amount_total = amount_total[0]
+            else:
+                amount_total = 0.0
+            
+            res[data.id] = amount_total
+        return res 
+
+    def _get_monthly_invoice_amount(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict(map(lambda x: (x,0), ids))
+        m_amount_total=0.0
+        m_date='2016-09-20'
+        month_begin = date.today().replace(day=1)
+        #month_begin =m_date().replace(day=1)
+        to_date = month_begin.replace(day=calendar.monthrange(month_begin.year, month_begin.month)[1]).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+        from_date=time.strftime('%Y-%m-01') 
+        print 'from_date',from_date,to_date               
+        for data in self.browse(cr, uid, ids, context=context):
+            cr.execute("select sum(amount_total) from account_invoice where partner_id =%s and date_invoice between %s and %s ", (data.id,from_date,to_date,))
+            amount_total = cr.fetchone()
+            if amount_total:
+                m_amount_total = amount_total[0]
+            else:
+                m_amount_total = 0.0
+            
+            res[data.id] = m_amount_total
+        return res 
+           
     def default_image_one(self, cr, uid, ids, context=None):
         res = {}
         data = 0
@@ -257,7 +332,7 @@ class res_partner(osv.osv):
                 'outlet_type': fields.many2one('outlettype.outlettype', 'Outlet Type', required=True),
                 'temp_customer':fields.char('Contact Person'),
                 'class_id':fields.many2one('sale.class', 'Class'),
-                'frequency_id':fields.many2one('plan.frequency','Frequency',required=True),
+                'frequency_id':fields.many2one('plan.frequency','Frequency',required=False),
                 'old_code': fields.char('Old Code'),
                 'sales_channel':fields.many2one('sale.channel', 'Sale Channel'),
                 'address':fields.char('Address'),
@@ -290,13 +365,27 @@ class res_partner(osv.osv):
                  'month_sale': fields.function(_get_total_sale_data, digits_compute=dp.get_precision('Product Price'),
                 type='float', readonly=True,
                 string='Monthly Sale'),
-                 'month_invoice': fields.function(_get_total_invoice_data, digits_compute=dp.get_precision('Product Price'),
-                type='float', readonly=True,
+                 'month_invoice': fields.function(_get_total_invoice_data,
+                type='integer', readonly=True,
                 string='Monthly Invoice'),
                 'invoice_confirm': fields.function(_get_invoice_confirm, digits_compute=dp.get_precision('Product Price'),
                 type='float', readonly=True,
                 string='Invoice Confirm'),
- 
+                 'last_purchase_date': fields.function(_get_last_purchase_date,
+                type='date', readonly=True,
+                string='Last Purchase Date'),
+                 'last_purchase_amount': fields.function(_get_last_purchase_amount,
+                type='float', readonly=True,
+                string='Last Purchase Amount'),                
+                'all_invoice_amount': fields.function(_get_all_invoice_amount,
+                type='float', readonly=True,
+                string='All Invoice Amount'),  
+                'month_invoice_amount': fields.function(_get_monthly_invoice_amount,
+                type='float', readonly=True,
+                string='Month Invoice Amount'),  
+                'last_visit_date':fields.function(_get_last_visit_date,
+                type='datetime', readonly=True,
+                string='Lastest Visit Date'),                                  
  } 
     _defaults = {
         'is_company': True,

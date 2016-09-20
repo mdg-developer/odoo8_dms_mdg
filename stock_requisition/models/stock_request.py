@@ -15,6 +15,7 @@ from openerp.osv import fields , osv
 from openerp.tools.translate import _
 import datetime
 import math
+from openerp import workflow
 
 class stock_requisition(osv.osv):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
@@ -34,13 +35,18 @@ class stock_requisition(osv.osv):
         return company_id     
     
     def on_change_sale_team_id(self, cr, uid, ids, sale_team_id, context=None):
+        sale_order_obj = self.pool.get('sale.order')
         values = {}
         data_line = []
+        order_line = []
+        
         if sale_team_id:
             sale_team = self.pool.get('crm.case.section').browse(cr, uid, sale_team_id, context=context)
             location = sale_team.location_id
-            vehicle_id=sale_team.vehicle_id
+            vehicle_id = sale_team.vehicle_id
             product_line = sale_team.product_ids
+            order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False), ('invoiced', '=', False), ('state', 'not in', ['done', 'cancel'])], context=context) 
+            print 'order_ids', order_ids
             for line in product_line:
                 product = self.pool.get('product.product').browse(cr, uid, line.id, context=context)
                 data_line.append({
@@ -48,29 +54,42 @@ class stock_requisition(osv.osv):
                                      'product_uom': product.product_tmpl_id.uom_id and product.product_tmpl_id.uom_id.id or False,
                                     'uom_ratio': product.product_tmpl_id.uom_ratio,
                                     'req_quantity':0.0,
+                                    'big_uom_id':product.product_tmpl_id.big_uom_id and product.product_tmpl_id.big_uom_id.id or False,
+                                    'big_req_quantity':0.0,
                                               })
+            for line in order_ids:
+                order = sale_order_obj.browse(cr, uid, line, context=context)
+                order_line.append({
+                                    'name':order.name,
+                                     'ref_no':order.tb_ref_no,
+                                    'amount':order.amount_total,
+                                    'date':order.date_order,
+                                    'sale_team_id':order.section_id.id,
+                                    'state':order.state,
+                                              })              
             values = {
                  'from_location_id':location,
                  'vehicle_id':vehicle_id,
                 'p_line': data_line,
+                'order_line':order_line
             }
         return {'value': values}    
     _columns = {
-        'sale_team_id':fields.many2one('crm.case.section', 'Sale Team'),
+        'sale_team_id':fields.many2one('crm.case.section', 'Delivery Team', required=True),
         'name': fields.char('(REI)Ref;No.', readonly=True),
-        'from_location_id':fields.many2one('stock.location', 'Request From'),
+        'from_location_id':fields.many2one('stock.location', 'Requested From', required=True),
         'to_location_id':fields.many2one('stock.location', 'Request To'),
         'so_no' : fields.char('Sales Order/Inv Ref;No.'),
         'issue_to':fields.many2one('res.users', "Issue To"),
-        'request_by':fields.many2one('res.users', "Request By"),
-        'approve_by':fields.many2one('res.users', "Approve By"),
+        'request_by':fields.many2one('res.users', "Requested By"),
+        'approve_by':fields.many2one('res.users', "Approved By"),
         'request_date' : fields.datetime('Date Requested'),
-         'issue_date':fields.datetime('Date For Issue'),
+         'issue_date':fields.datetime('Date For Issue From'),
+         's_issue_date':fields.datetime('Date For Issue To'),
         'vehicle_id':fields.many2one('fleet.vehicle', 'Vehicle No'),
         'state': fields.selection([
-            ('draft', 'Pending'),
+            ('draft', 'Request'),
             ('approve', 'Approved'),
-            ('cancel', 'Cancel')
             ], 'Status', readonly=True, copy=False, help="Gives the status of the quotation or sales order.\
               \nThe exception status is automatically set when a cancel operation occurs \
               in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\nThe 'Waiting Schedule' status is set when the invoice is confirmed\
@@ -78,6 +97,7 @@ class stock_requisition(osv.osv):
         'p_line':fields.one2many('stock.requisition.line', 'line_id', 'Product Lines',
                               copy=True),
                 'company_id':fields.many2one('res.company', 'Company'),
+                 'order_line': fields.one2many('stock.requisition.order', 'stock_line_id', 'Sale Order', copy=True),
 
 }
     _defaults = {
@@ -93,8 +113,28 @@ class stock_requisition(osv.osv):
         vals['name'] = id_code
         return super(stock_requisition, self).create(cursor, user, vals, context=context)
 
-    def cancel(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state': 'cancel', })
+    def so_list(self, cr, uid, ids, context=None):
+        sale_order_obj = self.pool.get('sale.order')
+        so_line_obj = self.pool.get('stock.requisition.order')
+        if ids:
+            stock_request_data = self.browse(cr, uid, ids[0], context=context)
+            issue_date_from = stock_request_data.issue_date
+            issue_date_to = stock_request_data.s_issue_date
+            sale_team_id = stock_request_data.sale_team_id.id
+            order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False), ('invoiced', '=', False), ('state', 'not in', ['done', 'cancel']),('date_order','>',issue_date_from),('date_order','<',issue_date_to)], context=context) 
+            print 'order_ids',order_ids,stock_request_data.id
+            cr.execute("delete from stock_requisition_order where  stock_line_id=%s",(stock_request_data.id,))
+            for line in order_ids:
+                order = sale_order_obj.browse(cr, uid, line, context=context)                
+                so_line_obj.create(cr, uid, {'stock_line_id': stock_request_data.id,
+                                                        'name':order.name,
+                                                         'ref_no':order.tb_ref_no,
+                                                        'amount':order.amount_total,
+                                                        'date':order.date_order,
+                                                        'sale_team_id':order.section_id.id,
+                                                        'state':order.state
+                                         }, context=context)        
+        return True
     
     def approve(self, cr, uid, ids, context=None):
         product_line_obj = self.pool.get('stock.requisition.line')
@@ -106,12 +146,11 @@ class stock_requisition(osv.osv):
         if ids:
             req_value = requisition_obj.browse(cr, uid, ids[0], context=context)
             request_id = req_value.id
-
             issue_date = req_value.issue_date
             to_location_id = req_value.to_location_id.id
             from_location_id = req_value.from_location_id.id
             vehicle_no = req_value.vehicle_id.id
-            sale_team_id=req_value.sale_team_id.id
+            sale_team_id = req_value.sale_team_id.id
             good_id = good_obj.create(cr, uid, {'vehicle_id': vehicle_no,
                                                 'sale_team_id':sale_team_id,
                                           'issue_date': issue_date,
@@ -123,16 +162,20 @@ class stock_requisition(osv.osv):
                 
                 for id in req_line_id:
                     req_line_value = product_line_obj.browse(cr, uid, id, context=context)
-                    if req_line_value.req_quantity!=0:
+                    if (req_line_value.req_quantity + req_line_value.big_req_quantity) != 0:
                         product_id = req_line_value.product_id.id
                         product_uom = req_line_value.product_uom.id
+                        big_uom_id = req_line_value.big_uom_id.id
+                        big_req_quantity = req_line_value.big_req_quantity
                         uom_ratio = req_line_value.uom_ratio
                         quantity = req_line_value.req_quantity
                         good_line_obj.create(cr, uid, {'line_id': good_id,
                                               'product_id': product_id,
                                               'product_uom': product_uom,
                                               'uom_ratio':uom_ratio,
-                                              'issue_quantity':quantity}, context=context)
+                                             'big_uom_id':big_uom_id,
+                                              'issue_quantity':quantity,
+                                              'big_issue_quantity':big_req_quantity}, context=context)
                     
         return self.write(cr, uid, ids, {'state':'approve'})    
 
@@ -148,6 +191,7 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
             values = {
                 'product_uom': product.product_tmpl_id.uom_id and product.product_tmpl_id.uom_id.id or False,
                 'uom_ratio': product.product_tmpl_id.uom_ratio,
+                'big_uom_id': product.product_tmpl_id.big_uom_id and product.product_tmpl_id.big_uom_id.id or False,
             }
         return {'value': values}
         
@@ -155,10 +199,36 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
         'line_id':fields.many2one('stock.requisition', 'Line', ondelete='cascade', select=True),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'req_quantity' : fields.float(string='Qty', digits=(16, 0)),
-        'product_uom': fields.many2one('product.uom', 'UOM', required=True),
-                'uom_ratio':fields.char('Packing Unit'),
-                'remark':fields.char('Remark'),
+        'product_uom': fields.many2one('product.uom', 'Smaller UOM', required=True),
+        'uom_ratio':fields.char('Packing Unit'),
+         'remark':fields.char('Remark'),
+        'big_uom_id': fields.many2one('product.uom', 'Bigger UOM', required=True, help="Default Unit of Measure used for all stock operation."),
+        'big_req_quantity' : fields.float(string='Qty', digits=(16, 0)),
+         
     }
         
-   
-    
+class stock_requisition_order(osv.osv):  # #prod_pricelist_update_line
+    _name = 'stock.requisition.order'
+    _description = 'Request OrderLine'
+    _columns = {                
+        'stock_line_id':fields.many2one('stock.requisition', 'Line', ondelete='cascade', select=True),
+        'name': fields.char('Order No'),
+        'ref_no' : fields.char('Order Reference'),
+        'amount': fields.float('Amount'),
+        'date':fields.char('Date'),
+        'sale_team_id':fields.many2one('crm.case.section', 'Sales Team'),
+        'state': fields.selection([
+            ('draft', 'Draft Quotation'),
+            ('sent', 'Quotation Sent'),
+            ('cancel', 'Cancelled'),
+            ('waiting_date', 'Waiting Schedule'),
+            ('progress', 'Sales Order'),
+            ('manual', 'Sale to Invoice'),
+            ('shipping_except', 'Shipping Exception'),
+            ('invoice_except', 'Invoice Exception'),
+            ('done', 'Done'),
+            ], 'Status', readonly=True, copy=False, help="Gives the status of the quotation or sales order.\
+              \nThe exception status is automatically set when a cancel operation occurs \
+              in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\nThe 'Waiting Schedule' status is set when the invoice is confirmed\
+               but waiting for the scheduler to run on the order date.", select=True),
+    }

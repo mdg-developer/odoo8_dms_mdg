@@ -10,7 +10,7 @@
 				</xpath>
 			</field>
 		</record>
-		
+
 		<record id="inherit_view_crm_partner_assign_form" model="ir.ui.view">
 			<field name="name">res.partner.geo.inherit</field>
 			<field name="model">res.partner</field>
@@ -28,13 +28,13 @@
 								<field name="date_localization" />
 							</group>
 							<group>
-<!-- 								<field name="grade_id" widget="selection" /> -->
-<!-- 								<field name="activation" widget="selection" /> -->
+								<!-- <field name="grade_id" widget="selection" /> -->
+								<!-- <field name="activation" widget="selection" /> -->
 								<field name="date_review" />
 								<field name="date_review_next" />
 								<field name="date_partnership" string="Activation Date" />
 								<field name="create_date" />
-																
+
 							</group>
 						</group>
 						<group>
@@ -44,30 +44,44 @@
 							<group>
 								<group>
 									<label for="start_time" string="Operation Hour" />
-                                    <div>
-                                        <field name="start_time" class="oe_inline"/> - <field name="start_rate" class="oe_inline"/>To
-                                    </div>
-                                    <label string=""/>
-                                    <div>
-                                        <field name="end_time" class="oe_inline"/> - <field name="end_rate" class="oe_inline"/>
-                                    </div>
+									<div>
+										<field name="start_time" class="oe_inline" />
+										-
+										<field name="start_rate" class="oe_inline" />
+										To
+									</div>
+									<label string="" />
+									<div>
+										<field name="end_time" class="oe_inline" />
+										-
+										<field name="end_rate" class="oe_inline" />
+									</div>
 									<label for="mon" string="OFF Day" />
- 									<div>
-                                        <field name="mon" class="oe_inline"/>MON       <field name="tue" class="oe_inline"/>TUE    <field name="wed" />WED  <field name="thur" />TURS
-                                    </div> 
-                                    <label string=""/>
-                                        <div>
-                                            <field name="fri" />FRI  <field name="sat" />SAT <field name="sun" />SUN
-                                        </div>                               
+									<div>
+										<field name="mon" class="oe_inline" />
+										MON
+										<field name="tue" class="oe_inline" />
+										TUE
+										<field name="wed" />
+										WED
+										<field name="thur" />
+										TURS
+									</div>
+									<label string="" />
+									<div>
+										<field name="fri" />
+										FRI
+										<field name="sat" />
+										SAT
+										<field name="sun" />
+										SUN
+									</div>
 								</group>
 							</group>
-
 						</group>
-
 						<field name="opportunity_assigned_ids" colspan="4" nolabel="1"
 							invisible="1">
 						</field>
-
 					</page>
 				</xpath>
 				<xpath expr="//page[@string='Contacts']" position="replace" />
@@ -287,12 +301,10 @@
 							attrs="{'invisible':[('customer','=',True)]}" />
 					</field>
 					<field name="property_supplier_payment_term" position="replace">
-
 						<field name="property_supplier_payment_term" widget="selection"
 							attrs="{'invisible':[('customer','=',True)]}" />
 					</field>
 					<field name="debit" position="replace">
-
 						<field name="debit" attrs="{'invisible':[('customer','=',True)]}" />
 					</field>
 				</data>
@@ -315,6 +327,29 @@
 						<field name="property_stock_supplier" domain="[('usage','=','supplier')]"
 							attrs="{'invisible':[('customer','=',True)]}" />
 					</xpath>
+				</data>
+			</field>
+		</record>
+		<record id="mdg_res_partner_button_form_view" model="ir.ui.view">
+			<field name="name">res.partner.form.view</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="account.partner_view_buttons" />
+			<field name="arch" type="xml">
+				<data>
+					<button id='invoice_button' position="replace">
+						<button type="action" class="oe_stat_button" id="invoice_button"
+							icon="fa-pencil-square-o" name="%(account.action_invoice_tree)d"
+							context="{'search_default_partner_id': active_id,'default_partner_id': active_id}"
+							groups="account.group_account_invoice" invisible="1">
+							<div>
+								<strong>
+									<field name="total_invoiced" widget="monetary" />
+								</strong>
+								<br />
+								Invoiced
+							</div>
+						</button>
+					</button>
 				</data>
 			</field>
 		</record>

@@ -11,11 +11,19 @@ class sale_plan_for_trip_setting(osv.osv):
             partner_ids = customer_obj.search(cr, uid, [('section_id', '=', sale_team_id)], context=context)
             if  partner_ids:                
                 for line in partner_ids:
+                    print ' line', line
+                    cr.execute("select date_order::date from sale_order  where partner_id =%s order by id desc",(line,))
+                    last_order=cr.fetchone()
+                    if last_order:
+                        last_order_date=last_order[0]
+                    else:
+                        last_order_date=False                    
                     partner = customer_obj.browse(cr, uid, line, context=context)
                     data_line.append({
                                         'code':partner.customer_code,
                                          'class':partner.class_id.id,
                                         'partner_id': line,
+                                         'purchase_date':last_order_date,
                                         'frequency':partner.frequency_id.id,
                                                   })
             values = {

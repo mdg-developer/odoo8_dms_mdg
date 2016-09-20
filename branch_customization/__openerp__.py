@@ -43,7 +43,8 @@ Branch Customization
          'views/hr_view.xml',
          'views/location_view.xml',
          'views/warehouse_ext_view.xml',
-         'views/account_ext_view.xml'
+         'views/account_ext_view.xml',
+         'views/sale_team_view.xml'
                 ],
     'installable': True,
     'auto_install': False,
