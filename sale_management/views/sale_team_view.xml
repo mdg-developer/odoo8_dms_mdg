@@ -155,12 +155,12 @@
 					<xpath expr="//div[@class='oe_items_list']" position="replace">
 						<div class="oe_items_list">
 							<div>
-								<a type="button">
+								<!-- <a type="button">
 									<button name="%(open_view_date_form)d" type="action"
 										widget="statinfo" class="oe_highlight">
 										<span>Insert Date</span>
 									</button>
-								</a>
+								</a> -->
 							</div>
 							<div>
 
@@ -290,6 +290,8 @@
 				</data>
 			</field>
 		</record>
+		<menuitem id="sales_team.menu_sales_team_act"  action="open_view_date_form" name ="Sales Teams"
+			sequence="1" parent="base.menu_sales" groups="base.group_multi_salesteams" />		
 	</data>
 </openerp>
 		
