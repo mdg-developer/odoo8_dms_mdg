@@ -414,6 +414,7 @@ class sale_plan_for_day_setting(osv.osv):
                                                         'date':date,
                                                   'principal': principal,
                                                   'branch_id':branch,
+                                                  'main_group':main_group,
                                                   'active':True,
                                                   'week':1,
                                                   }, context=context)   

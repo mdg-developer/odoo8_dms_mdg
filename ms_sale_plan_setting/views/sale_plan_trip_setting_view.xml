@@ -10,14 +10,16 @@
 					<header>
 						<button name="confirm" string="Confirm" class="oe_highlight"
 							type="object" states="draft" />
-						<button name="refresh" string="Refresh Customer" class="oe_highlight"
-							type="object" states="draft,confirm" />
+<!-- 						<button name="refresh" string="Refresh Customer" class="oe_highlight" -->
+<!-- 							type="object" states="draft,confirm" /> -->
 						<field name="state" widget="statusbar" />
 					</header>
 					<group>
 						<group>
 							<field name="name" />
 							<field name="sale_team_id" on_change="on_change_sale_team_id(sale_team_id)" />
+							<field name="main_group" string="Main Group" widget="many2many_tags" />
+							<field name="branch_id" string="Branch" />							
 						</group>
 						<group>
 							<field name="date" />
@@ -25,10 +27,11 @@
 							<field name="to_date" />
 						</group>
 					</group>
+					    <button name="%(action_plan_trip_by_customer)d"  type="action" states="draft" string="Add Customer"   icon="fa-pencil-square-o" widget="statinfo" class="oe_inline oe_stat_button"/>		    
 					<notebook>
 						<page string="Plan Setting">
-							<field name="plan_line" attrs="{'readonly':[('state','=','confirm')]}">
-								<tree string="Plan Line" editable="bottom">
+							<field name="plan_line" attrs="{'readonly':[('state','=','confirm')]}" >
+								<tree string="Plan Line" editable="bottom" default_order="id desc">
 									<field name="code" />
 									<field name="partner_id" />
 									<field name="class" />

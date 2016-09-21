@@ -7,6 +7,11 @@ class sale_plan_for_trip_setting(osv.osv):
         customer_obj = self.pool.get('res.partner')
         values = {}
         data_line = []
+        sale_team_obj = self.pool.get('crm.case.section')                
+        sale_team = sale_team_obj.search(cr, uid, [('id', '=', sale_team_id)], context=context)
+        team_data=sale_team_obj.browse(cr, uid, sale_team, context=context)
+        main_group=team_data.main_group_id
+        branch_id=team_data.branch_id.id        
         if sale_team_id:            
             partner_ids = customer_obj.search(cr, uid, [('section_id', '=', sale_team_id)], context=context)
             if  partner_ids:                
@@ -27,6 +32,8 @@ class sale_plan_for_trip_setting(osv.osv):
                                         'frequency':partner.frequency_id.id,
                                                   })
             values = {
+                      'main_group':main_group,
+                      'branch_id':branch_id,                      
                 'plan_line': data_line,
             }
         return {'value': values}    
@@ -176,7 +183,8 @@ class sale_plan_for_trip_setting(osv.osv):
         'plan_line':fields.one2many('sale.plan.trip.setting.line', 'line_id', 'Plan Lines',
                               copy=True),
         'partner_count' : fields.function(get_partner_count, string='Customer Count', readonly=True, store=True, type='integer'),
-                
+             'main_group':fields.many2many('product.maingroup', 'product_maingroup_sale_plan_trip_setting_rel', id1='sale_plan_trip_setting_id', id2='product_maingroup_id', string='Main Group'),
+           'branch_id':fields.many2one('res.branch', 'Branch'),                
         'day_count_1' : fields.function(day_1_count, string='Count', readonly=True, store=True, type='integer'),
         'day_count_2' : fields.function(day_2_count, string='Count', readonly=True, store=True, type='integer'),
         'day_count_3' : fields.function(day_3_count, string='Count', readonly=True, store=True, type='integer'),
@@ -192,12 +200,338 @@ class sale_plan_for_trip_setting(osv.osv):
         'day_count_13' : fields.function(day_13_count, string='Count', readonly=True, store=True, type='integer'),
         'day_count_14' : fields.function(day_14_count, string='Count', readonly=True, store=True, type='integer'),
         'day_count_15' : fields.function(day_15_count, string='Count', readonly=True, store=True, type='integer'),
-        
                  }
     _defaults = {
                'state':'draft',
     }
-    def confirm(self, cr, uid, ids, context=None):               
+    def confirm(self, cr, uid, ids, context=None):  
+        plan_obj = self.pool.get('sale.plan.trip')
+        plan_setting = self.browse(cr, uid, ids, context=context)
+        sale_team_id = plan_setting.sale_team_id.id
+        sale_team_name = plan_setting.sale_team_id.name
+        main_group = plan_setting.main_group.ids
+        print ' main_group',main_group
+        branch = plan_setting.branch_id.id
+        date = plan_setting.date
+        for plan_line in plan_setting.plan_line:
+            day_count_1 = plan_line.day_1
+            day_count_2 = plan_line.day_2
+            day_count_3 = plan_line.day_3
+            day_count_4 = plan_line.day_4
+            day_count_5 = plan_line.day_5           
+            day_count_6 = plan_line.day_6           
+            day_count_7 = plan_line.day_7
+            day_count_8 = plan_line.day_8
+            day_count_9 = plan_line.day_9
+            day_count_10 = plan_line.day_10
+            day_count_11 = plan_line.day_11           
+            day_count_12 = plan_line.day_12       
+            day_count_13 = plan_line.day_13
+            day_count_14 = plan_line.day_14
+            day_count_15 = plan_line.day_15                           
+            partner_id = plan_line.partner_id.id
+            if day_count_1 == True:
+                if day_count_1 == True:status = 'Day 1' + '(' + sale_team_name + ')'                
+                setting_id = plan_obj.search(cr, uid, [('date', '=',date ), ('sale_team', '=', sale_team_id),('name','=',status)], context=context)             
+                if setting_id:
+                    cr.execute("select partner_id from res_partner_sale_plan_trip_rel where sale_plan_trip_id=%s and partner_id=%s", (setting_id[0], partner_id,))
+                    rel_partner_id = cr.fetchone()
+                    if rel_partner_id:
+                        cr.execute("delete from res_partner_sale_plan_trip_rel where partner_id=%s and sale_plan_trip_id=%s", (rel_partner_id[0], setting_id[0]))                    
+                    cr.execute('INSERT INTO res_partner_sale_plan_trip_rel (sale_plan_trip_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))                    
+                else:                
+                    plan_id = plan_obj.create(cr, uid, {'name': status,
+                                                        'sale_team':sale_team_id,
+                                                        'date':date,
+                                                  'branch_id':branch,
+                                                  'main_group':main_group,
+                                                  'active':True,
+                                                  }, context=context)   
+                    cr.execute('INSERT INTO res_partner_sale_plan_trip_rel (sale_plan_trip_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
+                    for main_group_id in main_group:
+                        cr.execute('INSERT INTO product_maingroup_sale_plan_trip_rel (sale_plan_trip_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))     
+
+            if day_count_2 == True:
+                if day_count_2 == True:status = 'Day 2' + '(' + sale_team_name + ')'                
+                setting_id = plan_obj.search(cr, uid, [('date', '=',date ), ('sale_team', '=', sale_team_id),('name','=',status)], context=context)             
+                if setting_id:
+                    cr.execute("select partner_id from res_partner_sale_plan_trip_rel where sale_plan_trip_id=%s and partner_id=%s", (setting_id[0], partner_id,))
+                    rel_partner_id = cr.fetchone()
+                    if rel_partner_id:
+                        cr.execute("delete from res_partner_sale_plan_trip_rel where partner_id=%s and sale_plan_trip_id=%s", (rel_partner_id[0], setting_id[0]))                    
+                    cr.execute('INSERT INTO res_partner_sale_plan_trip_rel (sale_plan_trip_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))                    
+                else:                
+                    plan_id = plan_obj.create(cr, uid, {'name': status,
+                                                        'sale_team':sale_team_id,
+                                                        'date':date,
+                                                  'branch_id':branch,
+                                                  'main_group':main_group,
+                                                  'active':True,
+                                                  }, context=context)   
+                    cr.execute('INSERT INTO res_partner_sale_plan_trip_rel (sale_plan_trip_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
+                    for main_group_id in main_group:
+                        cr.execute('INSERT INTO product_maingroup_sale_plan_trip_rel (sale_plan_trip_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))     
+            if day_count_3 == True:
+                if day_count_3 == True:status = 'Day 3' + '(' + sale_team_name + ')'                
+                setting_id = plan_obj.search(cr, uid, [('date', '=',date ), ('sale_team', '=', sale_team_id),('name','=',status)], context=context)             
+                if setting_id:
+                    cr.execute("select partner_id from res_partner_sale_plan_trip_rel where sale_plan_trip_id=%s and partner_id=%s", (setting_id[0], partner_id,))
+                    rel_partner_id = cr.fetchone()
+                    if rel_partner_id:
+                        cr.execute("delete from res_partner_sale_plan_trip_rel where partner_id=%s and sale_plan_trip_id=%s", (rel_partner_id[0], setting_id[0]))                    
+                    cr.execute('INSERT INTO res_partner_sale_plan_trip_rel (sale_plan_trip_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))                    
+                else:                
+                    plan_id = plan_obj.create(cr, uid, {'name': status,
+                                                        'sale_team':sale_team_id,
+                                                        'date':date,
+                                                  'branch_id':branch,
+                                                  'main_group':main_group,
+                                                  'active':True,
+                                                  }, context=context)   
+                    cr.execute('INSERT INTO res_partner_sale_plan_trip_rel (sale_plan_trip_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
+                    for main_group_id in main_group:
+                        cr.execute('INSERT INTO product_maingroup_sale_plan_trip_rel (sale_plan_trip_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))     
+            if day_count_4 == True:
+                if day_count_4 == True:status = 'Day 4' + '(' + sale_team_name + ')'                
+                setting_id = plan_obj.search(cr, uid, [('date', '=',date ), ('sale_team', '=', sale_team_id),('name','=',status)], context=context)             
+                if setting_id:
+                    cr.execute("select partner_id from res_partner_sale_plan_trip_rel where sale_plan_trip_id=%s and partner_id=%s", (setting_id[0], partner_id,))
+                    rel_partner_id = cr.fetchone()
+                    if rel_partner_id:
+                        cr.execute("delete from res_partner_sale_plan_trip_rel where partner_id=%s and sale_plan_trip_id=%s", (rel_partner_id[0], setting_id[0]))                    
+                    cr.execute('INSERT INTO res_partner_sale_plan_trip_rel (sale_plan_trip_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))                    
+                else:                
+                    plan_id = plan_obj.create(cr, uid, {'name': status,
+                                                        'sale_team':sale_team_id,
+                                                        'date':date,
+                                                  'branch_id':branch,
+                                                  'main_group':main_group,
+                                                  'active':True,
+                                                  }, context=context)   
+                    cr.execute('INSERT INTO res_partner_sale_plan_trip_rel (sale_plan_trip_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
+                    for main_group_id in main_group:
+                        cr.execute('INSERT INTO product_maingroup_sale_plan_trip_rel (sale_plan_trip_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))     
+            if day_count_5 == True:
+                if day_count_5 == True:status = 'Day 5' + '(' + sale_team_name + ')'                
+                setting_id = plan_obj.search(cr, uid, [('date', '=',date ), ('sale_team', '=', sale_team_id),('name','=',status)], context=context)             
+                if setting_id:
+                    cr.execute("select partner_id from res_partner_sale_plan_trip_rel where sale_plan_trip_id=%s and partner_id=%s", (setting_id[0], partner_id,))
+                    rel_partner_id = cr.fetchone()
+                    if rel_partner_id:
+                        cr.execute("delete from res_partner_sale_plan_trip_rel where partner_id=%s and sale_plan_trip_id=%s", (rel_partner_id[0], setting_id[0]))                    
+                    cr.execute('INSERT INTO res_partner_sale_plan_trip_rel (sale_plan_trip_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))                    
+                else:                
+                    plan_id = plan_obj.create(cr, uid, {'name': status,
+                                                        'sale_team':sale_team_id,
+                                                        'date':date,
+                                                  'branch_id':branch,
+                                                  'main_group':main_group,
+                                                  'active':True,
+                                                  }, context=context)   
+                    cr.execute('INSERT INTO res_partner_sale_plan_trip_rel (sale_plan_trip_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
+                    for main_group_id in main_group:
+                        cr.execute('INSERT INTO product_maingroup_sale_plan_trip_rel (sale_plan_trip_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))     
+            if day_count_6 == True:
+                if day_count_6 == True:status = 'Day 6' + '(' + sale_team_name + ')'                
+                setting_id = plan_obj.search(cr, uid, [('date', '=',date ), ('sale_team', '=', sale_team_id),('name','=',status)], context=context)             
+                if setting_id:
+                    cr.execute("select partner_id from res_partner_sale_plan_trip_rel where sale_plan_trip_id=%s and partner_id=%s", (setting_id[0], partner_id,))
+                    rel_partner_id = cr.fetchone()
+                    if rel_partner_id:
+                        cr.execute("delete from res_partner_sale_plan_trip_rel where partner_id=%s and sale_plan_trip_id=%s", (rel_partner_id[0], setting_id[0]))                    
+                    cr.execute('INSERT INTO res_partner_sale_plan_trip_rel (sale_plan_trip_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))                    
+                else:                
+                    plan_id = plan_obj.create(cr, uid, {'name': status,
+                                                        'sale_team':sale_team_id,
+                                                        'date':date,
+                                                  'branch_id':branch,
+                                                  'main_group':main_group,
+                                                  'active':True,
+                                                  }, context=context)   
+                    cr.execute('INSERT INTO res_partner_sale_plan_trip_rel (sale_plan_trip_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
+                    for main_group_id in main_group:
+                        cr.execute('INSERT INTO product_maingroup_sale_plan_trip_rel (sale_plan_trip_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))     
+            if day_count_7== True:
+                if day_count_7 == True:status = 'Day 7' + '(' + sale_team_name + ')'                
+                setting_id = plan_obj.search(cr, uid, [('date', '=',date ), ('sale_team', '=', sale_team_id),('name','=',status)], context=context)             
+                if setting_id:
+                    cr.execute("select partner_id from res_partner_sale_plan_trip_rel where sale_plan_trip_id=%s and partner_id=%s", (setting_id[0], partner_id,))
+                    rel_partner_id = cr.fetchone()
+                    if rel_partner_id:
+                        cr.execute("delete from res_partner_sale_plan_trip_rel where partner_id=%s and sale_plan_trip_id=%s", (rel_partner_id[0], setting_id[0]))                    
+                    cr.execute('INSERT INTO res_partner_sale_plan_trip_rel (sale_plan_trip_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))                    
+                else:                
+                    plan_id = plan_obj.create(cr, uid, {'name': status,
+                                                        'sale_team':sale_team_id,
+                                                        'date':date,
+                                                  'branch_id':branch,
+                                                  'main_group':main_group,
+                                                  'active':True,
+                                                  }, context=context)   
+                    cr.execute('INSERT INTO res_partner_sale_plan_trip_rel (sale_plan_trip_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
+                    for main_group_id in main_group:
+                        cr.execute('INSERT INTO product_maingroup_sale_plan_trip_rel (sale_plan_trip_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))     
+            if day_count_8 == True:
+                if day_count_8 == True:status = 'Day 8' + '(' + sale_team_name + ')'                
+                setting_id = plan_obj.search(cr, uid, [('date', '=',date ), ('sale_team', '=', sale_team_id),('name','=',status)], context=context)             
+                if setting_id:
+                    cr.execute("select partner_id from res_partner_sale_plan_trip_rel where sale_plan_trip_id=%s and partner_id=%s", (setting_id[0], partner_id,))
+                    rel_partner_id = cr.fetchone()
+                    if rel_partner_id:
+                        cr.execute("delete from res_partner_sale_plan_trip_rel where partner_id=%s and sale_plan_trip_id=%s", (rel_partner_id[0], setting_id[0]))                    
+                    cr.execute('INSERT INTO res_partner_sale_plan_trip_rel (sale_plan_trip_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))                    
+                else:                
+                    plan_id = plan_obj.create(cr, uid, {'name': status,
+                                                        'sale_team':sale_team_id,
+                                                        'date':date,
+                                                  'branch_id':branch,
+                                                  'main_group':main_group,
+                                                  'active':True,
+                                                  }, context=context)   
+                    cr.execute('INSERT INTO res_partner_sale_plan_trip_rel (sale_plan_trip_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
+                    for main_group_id in main_group:
+                        cr.execute('INSERT INTO product_maingroup_sale_plan_trip_rel (sale_plan_trip_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))     
+            if day_count_9 == True:
+                if day_count_9 == True:status = 'Day 9' + '(' + sale_team_name + ')'                
+                setting_id = plan_obj.search(cr, uid, [('date', '=',date ), ('sale_team', '=', sale_team_id),('name','=',status)], context=context)             
+                if setting_id:
+                    cr.execute("select partner_id from res_partner_sale_plan_trip_rel where sale_plan_trip_id=%s and partner_id=%s", (setting_id[0], partner_id,))
+                    rel_partner_id = cr.fetchone()
+                    if rel_partner_id:
+                        cr.execute("delete from res_partner_sale_plan_trip_rel where partner_id=%s and sale_plan_trip_id=%s", (rel_partner_id[0], setting_id[0]))                    
+                    cr.execute('INSERT INTO res_partner_sale_plan_trip_rel (sale_plan_trip_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))                    
+                else:                
+                    plan_id = plan_obj.create(cr, uid, {'name': status,
+                                                        'sale_team':sale_team_id,
+                                                        'date':date,
+                                                  'branch_id':branch,
+                                                  'main_group':main_group,
+                                                  'active':True,
+                                                  }, context=context)   
+                    cr.execute('INSERT INTO res_partner_sale_plan_trip_rel (sale_plan_trip_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
+                    for main_group_id in main_group:
+                        cr.execute('INSERT INTO product_maingroup_sale_plan_trip_rel (sale_plan_trip_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))     
+            if day_count_10 == True:
+                if day_count_10 == True:status = 'Day 10' + '(' + sale_team_name + ')'                
+                setting_id = plan_obj.search(cr, uid, [('date', '=',date ), ('sale_team', '=', sale_team_id),('name','=',status)], context=context)             
+                if setting_id:
+                    cr.execute("select partner_id from res_partner_sale_plan_trip_rel where sale_plan_trip_id=%s and partner_id=%s", (setting_id[0], partner_id,))
+                    rel_partner_id = cr.fetchone()
+                    if rel_partner_id:
+                        cr.execute("delete from res_partner_sale_plan_trip_rel where partner_id=%s and sale_plan_trip_id=%s", (rel_partner_id[0], setting_id[0]))                    
+                    cr.execute('INSERT INTO res_partner_sale_plan_trip_rel (sale_plan_trip_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))                    
+                else:                
+                    plan_id = plan_obj.create(cr, uid, {'name': status,
+                                                        'sale_team':sale_team_id,
+                                                        'date':date,
+                                                  'branch_id':branch,
+                                                  'main_group':main_group,
+                                                  'active':True,
+                                                  }, context=context)   
+                    cr.execute('INSERT INTO res_partner_sale_plan_trip_rel (sale_plan_trip_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
+                    for main_group_id in main_group:
+                        cr.execute('INSERT INTO product_maingroup_sale_plan_trip_rel (sale_plan_trip_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))     
+            if day_count_11 == True:
+                if day_count_11 == True:status = 'Day 11' + '(' + sale_team_name + ')'                
+                setting_id = plan_obj.search(cr, uid, [('date', '=',date ), ('sale_team', '=', sale_team_id),('name','=',status)], context=context)             
+                if setting_id:
+                    cr.execute("select partner_id from res_partner_sale_plan_trip_rel where sale_plan_trip_id=%s and partner_id=%s", (setting_id[0], partner_id,))
+                    rel_partner_id = cr.fetchone()
+                    if rel_partner_id:
+                        cr.execute("delete from res_partner_sale_plan_trip_rel where partner_id=%s and sale_plan_trip_id=%s", (rel_partner_id[0], setting_id[0]))                    
+                    cr.execute('INSERT INTO res_partner_sale_plan_trip_rel (sale_plan_trip_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))                    
+                else:                
+                    plan_id = plan_obj.create(cr, uid, {'name': status,
+                                                        'sale_team':sale_team_id,
+                                                        'date':date,
+                                                  'branch_id':branch,
+                                                  'main_group':main_group,
+                                                  'active':True,
+                                                  }, context=context)   
+                    cr.execute('INSERT INTO res_partner_sale_plan_trip_rel (sale_plan_trip_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
+                    for main_group_id in main_group:
+                        cr.execute('INSERT INTO product_maingroup_sale_plan_trip_rel (sale_plan_trip_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))     
+            if day_count_12 == True:
+                if day_count_12 == True:status = 'Day 12' + '(' + sale_team_name + ')'                
+                setting_id = plan_obj.search(cr, uid, [('date', '=',date ), ('sale_team', '=', sale_team_id),('name','=',status)], context=context)             
+                if setting_id:
+                    cr.execute("select partner_id from res_partner_sale_plan_trip_rel where sale_plan_trip_id=%s and partner_id=%s", (setting_id[0], partner_id,))
+                    rel_partner_id = cr.fetchone()
+                    if rel_partner_id:
+                        cr.execute("delete from res_partner_sale_plan_trip_rel where partner_id=%s and sale_plan_trip_id=%s", (rel_partner_id[0], setting_id[0]))                    
+                    cr.execute('INSERT INTO res_partner_sale_plan_trip_rel (sale_plan_trip_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))                    
+                else:                
+                    plan_id = plan_obj.create(cr, uid, {'name': status,
+                                                        'sale_team':sale_team_id,
+                                                        'date':date,
+                                                  'branch_id':branch,
+                                                  'main_group':main_group,
+                                                  'active':True,
+                                                  }, context=context)   
+                    cr.execute('INSERT INTO res_partner_sale_plan_trip_rel (sale_plan_trip_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
+                    for main_group_id in main_group:
+                        cr.execute('INSERT INTO product_maingroup_sale_plan_trip_rel (sale_plan_trip_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))     
+            if day_count_13 == True:
+                if day_count_13 == True:status = 'Day 13' + '(' + sale_team_name + ')'                
+                setting_id = plan_obj.search(cr, uid, [('date', '=',date ), ('sale_team', '=', sale_team_id),('name','=',status)], context=context)             
+                if setting_id:
+                    cr.execute("select partner_id from res_partner_sale_plan_trip_rel where sale_plan_trip_id=%s and partner_id=%s", (setting_id[0], partner_id,))
+                    rel_partner_id = cr.fetchone()
+                    if rel_partner_id:
+                        cr.execute("delete from res_partner_sale_plan_trip_rel where partner_id=%s and sale_plan_trip_id=%s", (rel_partner_id[0], setting_id[0]))                    
+                    cr.execute('INSERT INTO res_partner_sale_plan_trip_rel (sale_plan_trip_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))                    
+                else:                
+                    plan_id = plan_obj.create(cr, uid, {'name': status,
+                                                        'sale_team':sale_team_id,
+                                                        'date':date,
+                                                  'branch_id':branch,
+                                                  'main_group':main_group,
+                                                  'active':True,
+                                                  }, context=context)   
+                    cr.execute('INSERT INTO res_partner_sale_plan_trip_rel (sale_plan_trip_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
+                    for main_group_id in main_group:
+                        cr.execute('INSERT INTO product_maingroup_sale_plan_trip_rel (sale_plan_trip_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))     
+            if day_count_14 == True:
+                if day_count_14 == True:status = 'Day 14' + '(' + sale_team_name + ')'                
+                setting_id = plan_obj.search(cr, uid, [('date', '=',date ), ('sale_team', '=', sale_team_id),('name','=',status)], context=context)             
+                if setting_id:
+                    cr.execute("select partner_id from res_partner_sale_plan_trip_rel where sale_plan_trip_id=%s and partner_id=%s", (setting_id[0], partner_id,))
+                    rel_partner_id = cr.fetchone()
+                    if rel_partner_id:
+                        cr.execute("delete from res_partner_sale_plan_trip_rel where partner_id=%s and sale_plan_trip_id=%s", (rel_partner_id[0], setting_id[0]))                    
+                    cr.execute('INSERT INTO res_partner_sale_plan_trip_rel (sale_plan_trip_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))                    
+                else:                
+                    plan_id = plan_obj.create(cr, uid, {'name': status,
+                                                        'sale_team':sale_team_id,
+                                                        'date':date,
+                                                  'branch_id':branch,
+                                                  'main_group':main_group,
+                                                  'active':True,
+                                                  }, context=context)   
+                    cr.execute('INSERT INTO res_partner_sale_plan_trip_rel (sale_plan_trip_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
+                    for main_group_id in main_group:
+                        cr.execute('INSERT INTO product_maingroup_sale_plan_trip_rel (sale_plan_trip_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))     
+            if day_count_15== True:
+                if day_count_15 == True:status = 'Day 15' + '(' + sale_team_name + ')'                
+                setting_id = plan_obj.search(cr, uid, [('date', '=',date ), ('sale_team', '=', sale_team_id),('name','=',status)], context=context)             
+                if setting_id:
+                    cr.execute("select partner_id from res_partner_sale_plan_trip_rel where sale_plan_trip_id=%s and partner_id=%s", (setting_id[0], partner_id,))
+                    rel_partner_id = cr.fetchone()
+                    if rel_partner_id:
+                        cr.execute("delete from res_partner_sale_plan_trip_rel where partner_id=%s and sale_plan_trip_id=%s", (rel_partner_id[0], setting_id[0]))                    
+                    cr.execute('INSERT INTO res_partner_sale_plan_trip_rel (sale_plan_trip_id,partner_id) VALUES (%s,%s)', (setting_id[0], partner_id,))                    
+                else:                
+                    plan_id = plan_obj.create(cr, uid, {'name': status,
+                                                        'sale_team':sale_team_id,
+                                                        'date':date,
+                                                  'branch_id':branch,
+                                                  'main_group':main_group,
+                                                  'active':True,
+                                                  }, context=context)   
+                    cr.execute('INSERT INTO res_partner_sale_plan_trip_rel (sale_plan_trip_id,partner_id) VALUES (%s,%s)', (plan_id, partner_id,))
+                    for main_group_id in main_group:
+                        cr.execute('INSERT INTO product_maingroup_sale_plan_trip_rel (sale_plan_trip_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))     
+                                  
         return self.write(cr, uid, ids, {'state': 'confirm' })      
     
     def refresh(self, cr, uid, ids, context=None):
