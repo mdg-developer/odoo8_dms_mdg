@@ -43,12 +43,16 @@ class good_issue_note(osv.osv):
          'issue_by':fields.many2one('res.users', "Issue By"),
        'request_by':fields.many2one('res.users', "Requested By"),
         'approve_by':fields.many2one('res.users', "Approved By"),
+        'receive_by':fields.many2one('res.users', "Received By"),
+       
 #         'request_date' : fields.date('Date Requested'),
          'issue_date':fields.datetime('Date for Issue'),
         'vehicle_id':fields.many2one('fleet.vehicle', 'Vehicle No'),
         'state': fields.selection([
-            ('draft', 'Request'),
-            ('approve', 'Approved'),
+            ('draft', 'Pending'),
+            ('issue','Issued'),
+            ('confirm', 'Approved'),
+            ('approve', 'Received'),
             ], 'Status', readonly=True, copy=False, help="Gives the status of the quotation or sales order.\
               \nThe exception status is automatically set when a cancel operation occurs \
               in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\nThe 'Waiting Schedule' status is set when the invoice is confirmed\
@@ -67,12 +71,13 @@ class good_issue_note(osv.osv):
         vals['name'] = id_code
         return super(good_issue_note, self).create(cursor, user, vals, context=context)
     
-    def cancel(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state': 'cancel', })
+    def issue(self, cr, uid, ids, context=None):
+        
+        return self.write(cr, uid, ids, {'state': 'issue','issue_by':uid })
     
     def confirm(self, cr, uid, ids, context=None):
         
-        return self.write(cr, uid, ids, {'state':'confirm'})    
+        return self.write(cr, uid, ids, {'state':'confirm' ,'approve_by':uid})    
     
     def approve(self, cr, uid, ids, context=None):
         product_line_obj = self.pool.get('good.issue.note.line')
@@ -109,11 +114,23 @@ class good_issue_note(osv.osv):
                     product_uom = note_line_value.product_uom.id
                     origin = origin
                     quantity = note_line_value.issue_quantity
+                    big_qty=note_line_value.big_issue_quantity
+                    big_uom=note_line_value.big_uom_id.id
+                    lot_id=note_line_value.batch_no.id
+                    bigger_qty=0
+                    if big_uom:
+                        cr.execute("select floor(1/factor) as ratio from product_uom where active = true and id=%s",(big_uom,))
+                        bigger_qty=cr.fetchone()
+                        if bigger_qty:
+                            bigger_qty=bigger_qty[0]*big_qty
+
+                        
                     move_id=move_obj.create(cr, uid, {'picking_id': picking_id,
                                               'picking_type_id':picking_type_id,
+                                              'restrict_lot_id':lot_id,
                                           'product_id': product_id,
-                                          'product_uom_qty': quantity,
-                                          'product_uos_qty': quantity,
+                                          'product_uom_qty': quantity+bigger_qty,
+                                          'product_uos_qty': quantity+bigger_qty,
                                           'product_uom':product_uom,
                                           'location_id':location_id,
                                           'location_dest_id':from_location_id,
@@ -128,7 +145,7 @@ class good_issue_note(osv.osv):
 #             move_id = move_obj.search(cr, uid, [('origin', '=', note_ref)], context=context)
 #             for stock_id in move_id:
 #                 print 'idddddddddd', stock_id                
-        return self.write(cr, uid, ids, {'state':'approve'})            
+        return self.write(cr, uid, ids, {'state':'approve','receive_by':uid})            
 class good_issue_line(osv.osv):  # #prod_pricelist_update_line
     _name = 'good.issue.note.line'
     _description = 'Note Line'

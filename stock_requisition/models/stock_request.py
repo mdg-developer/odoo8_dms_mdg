@@ -177,7 +177,7 @@ class stock_requisition(osv.osv):
                                               'issue_quantity':quantity,
                                               'big_issue_quantity':big_req_quantity}, context=context)
                     
-        return self.write(cr, uid, ids, {'state':'approve'})    
+        return self.write(cr, uid, ids, {'state':'approve' ,'request_by':uid})    
 
             
 class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line

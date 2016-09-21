@@ -11,10 +11,12 @@
 			<field name="arch" type="xml">
 				<form string="Good Issue Note Form">
 					<header>
-						<button name="approve" string="Request" class="oe_highlight"
+						<button name="issue" string="Issue" class="oe_highlight"
 							type="object" states="draft" groups="stock.group_stock_manager" />
-<!-- 						<button name="approve" string="WH Manager Approve" class="oe_highlight" -->
-<!-- 							type="object" states="confirm" groups="stock.group_stock_manager" /> -->
+						<button name="confirm" string="Approve" class="oe_highlight"
+							type="object" states="issue" groups="stock.group_stock_manager" />
+						<button name="approve" string="Receive" class="oe_highlight"
+							type="object" states="confirm" groups="stock.group_stock_manager" />
 <!-- 						<button name="cancel" string="Cancel" class="oe_highlight" -->
 <!-- 							type="object" states="confirm" groups="stock.group_stock_manager" /> -->
 						<field name="state" widget="statusbar" />
@@ -31,16 +33,15 @@
 									invisible="1" />
 								<field name="to_location_id" attrs="{'readonly':[('state','=','approve')]}" />
 								<field name="from_location_id" attrs="{'readonly':[('state','=','approve')]}" />
-								<field name="issue_by" attrs="{'readonly':[('state','=','approve')]}"
-									invisible="1" />
 								<field name="request_by" attrs="{'readonly':[('state','=','approve')]}" />
-
 							</group>
 							<group>
 								<field name="request_id" />
 								<field name="issue_date" attrs="{'readonly':[('state','=','approve')]}" />
 								<field name="vehicle_id" attrs="{'readonly':[('state','=','approve')]}" />
+								<field name="issue_by" attrs="{'readonly':[('state','=','approve')]}" />
 								<field name="approve_by" attrs="{'readonly':[('state','=','approve')]}" />
+								<field name="receive_by" attrs="{'readonly':[('state','=','approve')]}" />
 								<field name="company_id" attrs="{'readonly':[('state','=','approve')]}" />
 
 							</group>
