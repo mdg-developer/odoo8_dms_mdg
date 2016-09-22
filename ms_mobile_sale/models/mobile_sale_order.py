@@ -747,7 +747,7 @@ class mobile_sale_order(osv.osv):
     
     def get_promos_datas(self, cr, uid , section_id , branch_id,state, context=None, **kwargs):
         cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,
-                        logic ,expected_logic_result ,special, special1, special2, special3 ,branch_id 
+                        logic ,expected_logic_result ,special, special1, special2, special3 ,branch_id ,description
                         from promos_rules pr where pr.active = true and main_group in 
                         (select product_maingroup_id 
                         from crm_case_section_product_maingroup_rel mg,crm_case_section cs 
@@ -1727,6 +1727,11 @@ class mobile_sale_order(osv.osv):
         datas =cr.fetchall()        
         return datas
         
+    def get_promo_product(self, cr, uid, context=None, **kwargs):    
+        cr.execute('''select promos_rules_id,product_id from promos_rules_product_rel''')
+        datas =cr.fetchall()        
+        return datas
+    
 mobile_sale_order()
 
 class mobile_sale_order_line(osv.osv):
@@ -1743,8 +1748,8 @@ class mobile_sale_order_line(osv.osv):
     _columns = {
         'product_id':fields.many2one('product.product', 'Products'),
         'product_uos_qty':fields.float('Quantity'),
-         'uom_id':fields.many2one('product.uom', 'UOM', readonly=False),
-#        'uom_id':fields.function(_get_uom_from_product, type='many2one', relation='product.uom', string='UOM'),
+#          'uom_id':fields.many2one('product.uom', 'UOM', readonly=False),
+        'uom_id':fields.function(_get_uom_from_product, type='many2one', relation='product.uom', string='UOM'),
         'price_unit':fields.float('Unit Price'),
         'discount':fields.float('Discount (%)'),
         'discount_amt':fields.float('Discount (Amt)'),
