@@ -52,6 +52,7 @@
 								<field name="due_date" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="payment_term" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="type" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="journal_id" attrs="{'readonly':[('m_status','=','done')]}"  widget="selection" />
 								<field name="tablet_id" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="delivery_remark" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="amount_total" attrs="{'readonly':[('m_status','=','done')]}" />

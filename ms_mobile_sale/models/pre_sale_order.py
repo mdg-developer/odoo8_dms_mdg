@@ -159,6 +159,14 @@ class pre_sale_order(osv.osv):
                 for preObj_ids in presaleorderObj.browse(cr, uid, ids[0], context=context):
                     if preObj_ids:
                         print 'pricelist_id', pricelist_id
+                        print 'Sale Team',preObj_ids.sale_team
+                        cr.execute('select delivery_team_id from crm_case_section where id = %s ', (preObj_ids.sale_team.id,))
+                        data = cr.fetchall()
+                        if data:
+                            delivery_id = data[0][0]
+                        else:
+                            delivery_id = None
+                        
                         saleOrderResult = {'partner_id':preObj_ids.partner_id.id,
                                                         'customer_code':preObj_ids.customer_code,
                                                         'sale_plan_name':preObj_ids.sale_plan_name,
@@ -175,7 +183,9 @@ class pre_sale_order(osv.osv):
                                                         'deduct_amt':preObj_ids.deduction_amount,
 #                                                         'client_order_ref':preObj_ids.tablet_id.name,
                                                         'state':'draft',
-                                                        'pricelist_id':pricelist_id
+                                                        'pricelist_id':pricelist_id,
+                                                        'pre_order':True,
+                                                        'delivery_id':delivery_id,
                                                          }
                         so_id = saleOrderObj.create(cr, uid, saleOrderResult, context=context)
                     if so_id and preObj_ids.order_line:
