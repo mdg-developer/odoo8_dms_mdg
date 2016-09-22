@@ -51,6 +51,11 @@ class account_voucher(osv.osv):
                                     \n* The \'Pro-forma\' when voucher is in Pro-forma status,voucher does not have an voucher number. \
                                     \n* The \'Posted\' status is used when user create voucher,a voucher number is generated and voucher entries are created in account \
                                     \n* The \'Cancelled\' status is used when user cancel voucher.'),
+                        'writeoff_amount': fields.function(_get_writeoff_amount, string='Difference Amount', type='float', readonly=True, help="Computed as the difference between the amount stated in the voucher and the sum of allocation on the voucher lines."),
+                        'discount_account_id': fields.related('company_id', 'discount_account_id', type="many2one",
+                                                               relation='account.account',
+                                                               string="Discount Account",
+                                                               domain="[('type', '=', 'other')]"),
               }
     
     def finance_approve(self, cr, uid, ids, context=None):
@@ -252,7 +257,6 @@ class account_voucher(osv.osv):
         else: 
             res['value'].update({'discount_account_id': False})
         return res
-        
 account_voucher()
 
 class account_voucher_line(osv.osv):
@@ -265,4 +269,3 @@ class account_voucher_line(osv.osv):
         if total_discount:
             vals['total_dis'] = total_discount 
         return {'value': vals}
-account_voucher_line()

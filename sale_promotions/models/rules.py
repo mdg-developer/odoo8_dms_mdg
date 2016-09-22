@@ -172,6 +172,8 @@ class PromotionsRules(osv.Model):
         'outlettype_id':fields.many2many('outlettype.outlettype', 'promos_rules_outlettype_rel' , 'promos_rules_id' ,'outlettype_id' , string='Outlet Type'),
         'branch_id':fields.many2many('res.branch', string='Branch'),
         'customer_ids':fields.many2many('res.partner'),
+        'product_ids':fields.many2many('product.product', 'promos_rules_product_rel' , 'promos_rules_id' ,'product_id' , string='Product'),
+        
     }
     _defaults = {
         'logic':lambda * a:'and',
