@@ -155,10 +155,20 @@ class good_issue_line(osv.osv):  # #prod_pricelist_update_line
         if product_id:
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             values = {
+                      'big_uom_id':product.product_tmpl_id.uom_id and product.product_tmpl_id.uom_id.id or False,
                 'product_uom': product.product_tmpl_id.uom_id and product.product_tmpl_id.uom_id.id or False,
                 'uom_ratio': product.product_tmpl_id.uom_ratio,
             }
         return {'value': values}
+    
+    def on_change_expired_date(self, cr, uid, ids, batch_no, context=None):
+        values = {}
+        if batch_no:
+            lot_obj = self.pool.get('stock.production.lot').browse(cr, uid, batch_no, context=context)
+            values = {
+                'expiry_date': lot_obj.life_date,
+            }
+        return {'value': values}    
         
     _columns = {                
         'line_id':fields.many2one('good.issue.note', 'Line', ondelete='cascade', select=True),

@@ -76,13 +76,15 @@ class sale_target(osv.osv):
          'date':fields.date('Target Date'),
          'year':fields.char('Year'),
        'amount_total': fields.function(_amount_all, string='Total Value', digits_compute=dp.get_precision('Product Price'), store=True),
-       
+        'company_id': fields.many2one('res.company', 'Company', required=True, readonly=True),
   }
     _defaults = {
         'branch_id': _get_default_branch,
         'date':_default_date,
         'month' : lambda *a: str(time.strftime('%m')),
         'year' : lambda *a: str(time.strftime('%Y')),
+        'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'sales.target',context=context),
+        
         }        
 sale_target()
 
@@ -136,6 +138,14 @@ class sale_target_report(osv.osv):
     _description = "Sale Target Statistics"
     _auto = False
     _rec_name = 'date'
+    
+    def _compute_price(self):
+        price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
+        taxes = self.invoice_line_tax_id.compute_all(price, self.quantity, product=self.product_id, partner=self.invoice_id.partner_id)
+        self.price_subtotal = taxes['total']
+        if self.invoice_id:
+            self.price_subtotal = self.invoice_id.currency_id.round(self.price_subtotal)
+            
     _columns = {
    'branch_id': fields.many2one('res.branch', 'Branch'),
         'month': fields.selection([
@@ -163,7 +173,9 @@ class sale_target_report(osv.osv):
                 'product_uom_qty':fields.integer('QTY', required=True),
                  'price_unit': fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Product Price')),
                  'amount_total': fields.float('Total Value', required=True, digits_compute=dp.get_precision('Product Price')),
-                'price_sub_total': fields.float('Subtotal', required=True, digits_compute=dp.get_precision('Product Price')),
+        #        'price_sub_total': fields.float('Subtotal', required=True, digits_compute=dp.get_precision('Product Price')),
+                'price_sub_total': fields.function(_compute_price, string='Subtotal', digits_compute=dp.get_precision('Product Price'), type='float',store=True, readonly=True),
+
 
               }
     _order = 'date desc'
