@@ -109,8 +109,6 @@ class stock_requisition(osv.osv):
         'state' : 'draft',
          'company_id': _get_default_company,
          'request_date': fields.datetime.now,
-
-
     }     
     
     def create(self, cursor, user, vals, context=None):

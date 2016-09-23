@@ -92,7 +92,6 @@ class good_issue_note(osv.osv):
             location_id = note_value.to_location_id.id
             from_location_id = note_value.from_location_id.id
             origin = note_value.name
-            partner_id = 106
             cr.execute('select id from stock_picking_type where default_location_dest_id=%s and name like %s', (location_id, '%Internal Transfer%',))
             price_rec = cr.fetchone()
             if price_rec: 
