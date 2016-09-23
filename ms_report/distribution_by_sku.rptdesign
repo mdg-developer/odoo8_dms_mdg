@@ -367,6 +367,7 @@ sale AS (
 	from account_invoice inv,account_invoice_line inv_line
 	where inv.id=inv_line.invoice_id
 	and inv.state !='cancel'
+	and inv.origin like 'SO%'
 	and inv.date_invoice between ? and ?
 	--$SalesTeam$ 	
 	--$branch_id$
