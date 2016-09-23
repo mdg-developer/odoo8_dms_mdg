@@ -32,7 +32,7 @@ Product Categories
 """,
     'author': 'Seventh Computing',
     'website': 'http://www.7thcomputing.com',
-    'depends': ['base'
+    'depends': ['base','product','account','account_anglo_saxon'
     ],
     'data': [        
     ],
