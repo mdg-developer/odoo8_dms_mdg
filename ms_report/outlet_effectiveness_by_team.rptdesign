@@ -225,6 +225,7 @@ order by code]]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">1</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -235,6 +236,7 @@ order by code]]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">2</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -245,6 +247,7 @@ order by code]]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">3</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -255,6 +258,7 @@ order by code]]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">4</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -265,6 +269,7 @@ order by code]]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">5</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -275,6 +280,7 @@ order by code]]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">6</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -381,6 +387,7 @@ else
 	select section_id as sale_team_id,count(distinct partner_id) as ach
 	from account_invoice 	
 	where state!='cancel'
+	and origin like 'SO%'
 	and date_invoice between ? and ?	
 	and section_id is not null
 	group by section_id),
