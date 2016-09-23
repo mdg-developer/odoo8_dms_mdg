@@ -43,13 +43,6 @@
 						<field name="partner_id" required="1" invisible="context.get('line_type', False)" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" 
 						context="{'invoice_currency':currency_id, 'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"  string="Supplier" domain="[('supplier', '=', True)]"/>
 					</xpath>
-					
-					<field name="journal_id" position="after">
-						<field name="discount_account_id" />
-					</field>
-					<field name="reconcile" position="after">
-						<field name="total_discount" sum="Total Discount" on_change="onchange_discount_amount(total_discount, context)"/>
-					</field>
 				</data>
 
 			</field>
