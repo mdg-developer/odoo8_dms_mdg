@@ -12,6 +12,11 @@
                 </xpath>
             </field>
         </record>
+        
+        <!-- Stock Landed Cost Menu -->
+        <menuitem name="Landed Costs" parent="base.menu_purchase_root" id="stock_landed_costs.menu_stock_landed_cost_main" />
+     	<menuitem action="stock_landed_costs.action_stock_landed_cost" id="stock_landed_costs.menu_stock_landed_cost" name="Landed Costs"
+		 parent="stock_landed_costs.menu_stock_landed_cost_main"  sequence="1"/>
 
      
     </data>
