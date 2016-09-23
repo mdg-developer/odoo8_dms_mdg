@@ -27,7 +27,7 @@ class product_category(osv.osv):
         'property_account_income_categ': fields.property(
             type='many2one',
             relation='account.account',
-            string="Sale",
+            string="Sales Account",
             help="This account will be used for invoices to value sales."),
         'property_account_expense_categ': fields.property(
             type='many2one',
@@ -38,14 +38,14 @@ class product_category(osv.osv):
         'property_stock_account_input_categ': fields.property(
             type='many2one',
             relation='account.account',
-            string='GIT',
+            string='GIT Account',
             help="When doing real-time inventory valuation, counterpart journal items for all incoming stock moves will be posted in this account, unless "
                  "there is a specific valuation account set on the source location. This is the default value for all products in this category. It "
                  "can also directly be set on each product"),
         'property_stock_account_output_categ': fields.property(
             type='many2one',
             relation='account.account',
-            string='COGS',
+            string='COGS Account',
             help="When doing real-time inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account, unless "
                  "there is a specific valuation account set on the destination location. This is the default value for all products in this category. It "
                  "can also directly be set on each product"),
