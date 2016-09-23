@@ -392,6 +392,7 @@ from
 from account_invoice inv,res_partner res
 where inv.partner_id=res.id 
 and inv.state != 'cancel'
+and origin like 'SO%'
 and inv.date_invoice between ? and ?
 --$branch$
 --$customer$
