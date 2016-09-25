@@ -748,11 +748,14 @@ class mobile_sale_order(osv.osv):
     def get_promos_datas(self, cr, uid , section_id , branch_id,state, context=None, **kwargs):
         cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,
                         logic ,expected_logic_result ,special, special1, special2, special3 ,branch_id ,description
-                        from promos_rules pr where pr.active = true and main_group in 
+                        from promos_rules pr ,promos_rules_res_branch_rel pro_br_rel
+                        where pr.active = true and main_group in 
                         (select product_maingroup_id 
                         from crm_case_section_product_maingroup_rel mg,crm_case_section cs 
-                        where cs.id = mg.crm_case_section_id and cs.id = %s)
-                        and pr.branch_id = %s and pr.state in (%s)                
+                        where cs.id = mg.crm_case_section_id and cs.id = %s)                        
+                        and pr.id = pro_br_rel.promos_rules_id
+                        and pro_br_rel.res_branch_id = %s
+                        and pr.state in (%s)            
                         ''', (section_id, branch_id, state,))
         datas = cr.fetchall()
         return datas
@@ -1435,7 +1438,10 @@ class mobile_sale_order(osv.osv):
                         solist=So_id       
                         journal_id=deli['journal_id']
                         soObj.action_button_confirm(cr, uid, solist, context=context)
-                    
+                        
+                        #For DO
+                        self.stock_deliver(cr, uid ,None ,So_id,context)
+                        
                         # Create Invoice
                         print 'Context', context
                         invoice_id = self.create_invoices(cr, uid, solist, context=context)
@@ -1732,6 +1738,62 @@ class mobile_sale_order(osv.osv):
         datas =cr.fetchall()        
         return datas
     
+    def stock_deliver(self, cr, uid, ids, soId, context=None):
+        sale_obj = self.pool.get('sale.order')
+        if soId:
+            sale_id = sale_obj.browse(cr, uid, soId, context)
+            procurement_group_id = stock_picking_id = None
+            cr.execute(""" select id from procurement_group where name = %s """, (sale_id.name,))
+            data = cr.fetchall()
+            if data:
+                try:
+                    procurement_group_id = data[0][0]
+                except Exception, e:
+                    procurement_group_id = data[0]    
+            if procurement_group_id:
+                procurement_group = self.pool.get('procurement.group').browse(cr, uid, procurement_group_id, context)        
+            if procurement_group:
+                cr.execute(""" select id from stock_picking where group_id =%s and state not in ('draft','cancel','done') """, (procurement_group.id,))
+                data = cr.fetchall()
+                if data:
+                    try:
+                        stock_picking_id = data[0][0]
+                    except Exception, e:
+                        stock_picking_id = data[0]
+            if stock_picking_id:
+                stock_picking = self.pool.get('stock.picking').browse(cr, uid, stock_picking_id, context)
+            else:
+                raise osv.except_osv(_('No More Stock Receive!'), _("There no stock receipt for Incoming Stock ."))
+                return False
+            if stock_picking:
+                cr.execute(""" select id from stock_move where picking_id =%s """ , (stock_picking.id,))
+                data = cr.fetchall()
+                if data:
+                    try:
+                        move_list = data[0]
+                    except Exception, e:
+                        move_list = data
+                if move_list:
+                    result = {}
+                    result = self.pool.get('stock.move').read(cr, uid, move_list[0], ['product_uom_qty'], context)
+                    total_qty = result['product_uom_qty']
+                if total_qty > 0:
+                    print 'Stock Received Successful'
+                    # first confirm the original picking, original qty - actual qty
+                    cr.execute(""" update stock_move set product_uom_qty = %s where picking_id = %s """, (total_qty, stock_picking.id,))
+                    move_id = None
+                    cr.execute(""" select id from stock_move where picking_id = %s """ , (stock_picking.id,))
+                    data = cr.fetchall()
+                    if data:
+                        try:
+                            move_id = data[0][0]
+                        except Exception, e:
+                            move_id = data[0]
+                    if move_id:
+                        self.pool.get('stock.move').action_done(cr, uid, move_id, context)
+                    self.write(cr, uid, ids, {'state':'done'}, context=None)                    
+        return True
+        
 mobile_sale_order()
 
 class mobile_sale_order_line(osv.osv):
