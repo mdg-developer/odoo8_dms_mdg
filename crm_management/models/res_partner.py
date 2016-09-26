@@ -188,7 +188,6 @@ class res_partner(osv.osv):
         try:
             for partner in self.browse(cr, uid, ids, context):
                 invoice_ids = invoice_obj.search(cr, uid, [('date_invoice', '>=', from_date), ('date_invoice', '<=', to_date),('partner_id','=',partner.id)], context=context) 
-                print '------------------',invoice_ids
                 res[partner.id] = len(invoice_ids)
         except:
             pass

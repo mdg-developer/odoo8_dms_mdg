@@ -192,7 +192,6 @@ class stock_return(osv.osv):
                                           'state':'confirmed'}, context=context)     
                     move_id=move_obj.action_done(cr, uid, move_id, context=context)
                     print 'doned',move_id                         
-        
         return self.write(cr, uid, ids, {'state':'approve'})    
 
             
