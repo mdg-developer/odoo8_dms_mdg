@@ -3,6 +3,7 @@ import openerp.addons.decimal_precision as dp
 from datetime import datetime, timedelta
 import calendar
 from openerp import tools
+
 OE_DATEFORMAT = "%Y-%m-%d"
 class crm_case_section(osv.osv):
     _inherit = 'crm.case.section'
@@ -244,7 +245,7 @@ class crm_case_section(osv.osv):
                 string='Daily Average'),
                 'credit_sale': fields.function(_get_credit_sale, digits_compute=dp.get_precision('Product Price'),
                 type='float', readonly=True,
-                string='Credit Outstanding'),
+                string='Credit Outstanding'),                
         }
     _sql_constraints = [
         ('code_uniq', 'unique (code)', 'The code of the sales team must be unique !')
