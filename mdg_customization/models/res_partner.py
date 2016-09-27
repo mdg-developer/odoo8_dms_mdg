@@ -35,7 +35,8 @@ class res_partner(osv.osv):
         'date_localization': fields.date('Geo Localization Date'),
         'contact_note': fields.text('Note'),
        'credit_allow':fields.boolean('Credit Approved'),
-
+       'is_consignment':fields.boolean('Consignment'),
+       
          'gain_account_id': fields.property(
             type='many2one',
             relation='account.account',

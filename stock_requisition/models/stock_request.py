@@ -103,6 +103,7 @@ class stock_requisition(osv.osv):
                               copy=True),
                 'company_id':fields.many2one('res.company', 'Company'),
                  'order_line': fields.one2many('stock.requisition.order', 'stock_line_id', 'Sale Order', copy=True),
+                 'pre_order':fields.boolean('Pre Order')
 
 }
     _defaults = {
@@ -133,10 +134,11 @@ class stock_requisition(osv.osv):
             
             if request_date:
                     cr.execute("select sol.product_id,sum(product_uom_qty) as qty ,sol.product_uom from sale_order so,sale_order_line sol where so.id=sol.order_id and delivery_id=%s and (date_order+ '6 hour'::interval + '30 minutes'::interval)::date between %s and %s group by product_id,product_uom",(sale_team_id,issue_date_from,issue_date_to,))
-                    sale_record=cr.fetchall()                   
+                    sale_record=cr.fetchall()             
+                    print 'sale_record',sale_record      
                     if sale_record:
                         for sale_data in sale_record:
-                            product_id=int(sale_data[1])
+                            product_id=int(sale_data[0])
                             sale_qty=int(sale_data[1])
                             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)                                                                          
                             cr.execute("select floor(1/factor) as ratio from product_uom where active = true and id=%s",(product.product_tmpl_id.big_uom_id.id,))

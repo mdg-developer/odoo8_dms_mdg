@@ -252,11 +252,14 @@
 						expr="//page[@name='sales_purchases']/group/group/field[@name='customer']"
 						position="replace">
 						<field name="customer" attrs="{'invisible':[('supplier','=',True)]}" />
+						<field name="is_consignment" attrs="{'invisible':[('supplier','=',True)]}" />
+												
 					</xpath>
 					<xpath
 						expr="//page[@name='sales_purchases']/group/group/field[@name='supplier']"
 						position="replace">
 						<field name="supplier" attrs="{'invisible':[('customer','=',True)]}" />
+						
 					</xpath>
 
 					<xpath

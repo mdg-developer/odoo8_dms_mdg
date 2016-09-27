@@ -2,6 +2,7 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 
+
 class account_bank_statement_line(osv.osv):
     _inherit='account.bank.statement.line'
     
@@ -83,5 +84,9 @@ class account_voucher(osv.osv):
         }
         return (move_line, move_line_counterpart)    
     
-    
-    
+class account_invoice(osv.osv):
+    _inherit = 'account.invoice'    
+    _columns = {
+                'pre_order': fields.boolean('Pre Order'),
+                }
+account_invoice()   

@@ -21,23 +21,23 @@
 ##############################################################################
 
 {
-    'name': 'MDG Customization',
+    'name': 'Menu Customization',
     'version': '1.0',
-    'category': 'MDG Customization',
+    'category': '',
     'sequence': 30,
-    'summary': 'MDG Customization',
+    'summary': 'Menu Customization',
     'description': """
-MDG Customization
+Menu Customization
+
 """,
     'author': 'Seventh Computing',
     'website': 'http://www.7thcomputing.com',
-    'depends': ['base', 'product'  ,'stock'],
+    'depends': ['base', 'ms_mobile_sale',
+    ],
     'data': [        
-             'views/product_view.xml',
-             'views/location_view.xml',
-             'views/res_partner_view.xml',
-             'views/product_uom_view.xml',
-             'views/account_invoice_view.xml'
+             'security/hr_security.xml',
+        'views/sale_view.xml',
+          
     ],
     'installable': True,
     'auto_install': False,
