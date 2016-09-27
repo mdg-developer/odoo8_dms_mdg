@@ -762,14 +762,15 @@ class mobile_sale_order(osv.osv):
     
     def get_promos_act_datas(self, cr, uid , section_id , branch_id, context=None, **kwargs):
         cr.execute('''select act.id,act.promotion,act.sequence as act_seq ,act.arguments,act.action_type,act.product_code
-                            from promos_rules r ,promos_rules_actions act
+                            from promos_rules r ,promos_rules_actions act,promos_rules_res_branch_rel pro_br_rel
                             where r.id = act.promotion
                             and r.active = 't'
                             and r.main_group in
                             (select product_maingroup_id 
                             from crm_case_section_product_maingroup_rel mg,crm_case_section cs 
                             where cs.id = mg.crm_case_section_id and cs.id = %s)
-                            and r.branch_id = %s
+                            and r.id = pro_br_rel.promos_rules_id
+                            and pro_br_rel.res_branch_id = %s
                     ''', (section_id, branch_id,))
         datas = cr.fetchall()
         cr.execute
@@ -778,14 +779,15 @@ class mobile_sale_order(osv.osv):
         cr.execute('''select cond.id,cond.promotion,cond.sequence as cond_seq,
                             cond.attribute as cond_attr,cond.comparator as cond_comparator,
                             cond.value as comp_value
-                            from promos_rules r ,promos_rules_conditions_exps cond
+                            from promos_rules r ,promos_rules_conditions_exps cond,promos_rules_res_branch_rel pro_br_rel
                             where r.id = cond.promotion
                             and r.active = 't'
                             and r.main_group in
                             (select product_maingroup_id 
                             from crm_case_section_product_maingroup_rel mg,crm_case_section cs 
                             where cs.id = mg.crm_case_section_id and cs.id = %s)
-                            and r.branch_id = %s
+                            and r.id = pro_br_rel.promos_rules_id
+                            and pro_br_rel.res_branch_id = %s
                     ''', (section_id, branch_id,))
         datas = cr.fetchall()
         cr.execute
@@ -1610,23 +1612,14 @@ class mobile_sale_order(osv.osv):
             
             if stock:
                 for sr in stock:
-                    
-                    cursor.execute('select van_id from crm_case_section where id = %s ',(sr['sale_team_id'],))
-                    data = cursor.fetchall()
-                    if data:
-                        vehcle_no = data[0][0]
-                    else:
-                        vehcle_no = None
                     mso_result = {
                         'sale_team_id':sr['sale_team_id'],
                         'return_date':sr['return_date'],                
                         'company_id':sr['company_id'],
-                        'branch_id':sr['branch_id'],
-                        'vehicle_no':vehcle_no,
+                        'branch_id':sr['branch_id'],                        
                         'user_id':user,
                     }
-                    stock_id = stock_return_obj.create(cursor, user, mso_result, context=context)
-                    
+                    stock_id = stock_return_obj.create(cursor, user, mso_result, context=context)                  
                     for srl in stock_line:                    
                             mso_line_res = {                                                            
                                   'line_id':stock_id,
