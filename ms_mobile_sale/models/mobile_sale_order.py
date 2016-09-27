@@ -755,7 +755,7 @@ class mobile_sale_order(osv.osv):
                         where cs.id = mg.crm_case_section_id and cs.id = %s)                        
                         and pr.id = pro_br_rel.promos_rules_id
                         and pro_br_rel.res_branch_id = %s
-                        and pr.state in (%s)            
+                        and pr.state in (%s) 
                         ''', (section_id, branch_id, state,))
         datas = cr.fetchall()
         return datas
@@ -844,34 +844,60 @@ class mobile_sale_order(osv.osv):
 #         return datas
     
     # get pricelsit datas
-    def get_pricelist_datas(self, cr, uid , section_id, context=None, **kwargs):
-        cr.execute('''select id,name,type,active from product_pricelist where main_group_id in (select product_maingroup_id 
-                        from crm_case_section_product_maingroup_rel mg,crm_case_section cs 
-                        where cs.id = mg.crm_case_section_id and cs.id = %s) 
-                        or main_group_id is null and active = 'true' ''', (section_id,))
-        datas = cr.fetchall()
-        cr.execute
-        return datas
+#     def get_pricelist_datas(self, cr, uid , section_id, context=None, **kwargs):
+#         cr.execute('''select id,name,type,active from product_pricelist where main_group_id in (select product_maingroup_id 
+#                         from crm_case_section_product_maingroup_rel mg,crm_case_section cs 
+#                         where cs.id = mg.crm_case_section_id and cs.id = %s) 
+#                         or main_group_id is null and active = 'true' ''', (section_id,))
+#         datas = cr.fetchall()
+#         cr.execute
+#         return datas
+# 
+#     def get_pricelist_version_datas(self, cr, uid, section_id , context=None, **kwargs):
+#         cr.execute('''select pv.id,date_end,date_start,pv.active,pv.name,pv.pricelist_id 
+#                         from product_pricelist_version pv, product_pricelist pp where pv.pricelist_id = pp.id 
+#                         and (pp.main_group_id in (select product_maingroup_id 
+#                         from crm_case_section_product_maingroup_rel mg,crm_case_section cs 
+#                         where cs.id = mg.crm_case_section_id and cs.id =%s) or pp.main_group_id is null)''', (section_id,))
+#         datas = cr.fetchall()
+#         cr.execute
+#         return datas
+#     def get_pricelist_item_datas(self, cr, uid, section_id , context=None, **kwargs):
+#         cr.execute('''select pi.id,pi.price_discount,pi.sequence,pi.product_tmpl_id,pi.name,pi.base_pricelist_id,
+#                     pi.product_id,pi.base,pi.price_version_id,pi.min_quantity,
+#                     pi.categ_id,pi.price_surcharge ,pi.product_uom_id
+# 					from product_pricelist_item pi, product_pricelist_version pv, product_pricelist pp where pv.pricelist_id = pp.id 
+#                     and pv.id = pi.price_version_id and (pp.main_group_id in (select product_maingroup_id 
+#                     from crm_case_section_product_maingroup_rel mg,crm_case_section cs 
+#                     where cs.id = mg.crm_case_section_id and cs.id = %s) or pp.main_group_id is null)''', (section_id,))
+#         datas = cr.fetchall()
+#         cr.execute
+#         return datas
 
-    def get_pricelist_version_datas(self, cr, uid, section_id , context=None, **kwargs):
-        cr.execute('''select pv.id,date_end,date_start,pv.active,pv.name,pv.pricelist_id 
-                        from product_pricelist_version pv, product_pricelist pp where pv.pricelist_id = pp.id 
-                        and (pp.main_group_id in (select product_maingroup_id 
-                        from crm_case_section_product_maingroup_rel mg,crm_case_section cs 
-                        where cs.id = mg.crm_case_section_id and cs.id =%s) or pp.main_group_id is null)''', (section_id,))
+    def get_pricelist_datas(self, cr, uid ,section_id, context=None, **kwargs):
+        cr.execute(''' select ppl.id,ppl.name,ppl.type, ppl.active 
+                 from crm_case_section_product_pricelist_rel cpr , product_pricelist ppl
+                 where ppl.id = cpr.product_pricelist_id 
+                 and ppl.active = true
+                 and cpr.crm_case_section_id = %s''', (section_id,))
         datas = cr.fetchall()
-        cr.execute
+        print 'Price List Data', datas
         return datas
-    def get_pricelist_item_datas(self, cr, uid, section_id , context=None, **kwargs):
+    
+    def get_pricelist_version_datas(self, cr, uid, pricelist_id, context=None, **kwargs):
+        cr.execute('''select pv.id,date_end,date_start,pv.active,pv.name,pv.pricelist_id 
+                        from product_pricelist_version pv, product_pricelist pp where pv.pricelist_id = pp.id                                                                        
+                        and pv.pricelist_id = %s''', (pricelist_id,))
+        datas = cr.fetchall()
+        return datas
+    
+    def get_pricelist_item_datas(self, cr, uid, version_id, context=None, **kwargs):
         cr.execute('''select pi.id,pi.price_discount,pi.sequence,pi.product_tmpl_id,pi.name,pi.base_pricelist_id,
                     pi.product_id,pi.base,pi.price_version_id,pi.min_quantity,
-                    pi.categ_id,pi.price_surcharge ,pi.product_uom_id
-					from product_pricelist_item pi, product_pricelist_version pv, product_pricelist pp where pv.pricelist_id = pp.id 
-                    and pv.id = pi.price_version_id and (pp.main_group_id in (select product_maingroup_id 
-                    from crm_case_section_product_maingroup_rel mg,crm_case_section cs 
-                    where cs.id = mg.crm_case_section_id and cs.id = %s) or pp.main_group_id is null)''', (section_id,))
-        datas = cr.fetchall()
-        cr.execute
+                    pi.categ_id,pi.price_surcharge from product_pricelist_item pi, product_pricelist_version pv, product_pricelist pp where pv.pricelist_id = pp.id 
+                    and pv.id = pi.price_version_id
+                    and pi.price_version_id = %s''', (version_id,))
+        datas = cr.fetchall()        
         return datas
     
 #     def get_product_uoms(self, cr, uid , saleteam_id, context=None, **kwargs):
@@ -1620,7 +1646,8 @@ class mobile_sale_order(osv.osv):
                         'user_id':user,
                     }
                     stock_id = stock_return_obj.create(cursor, user, mso_result, context=context)                  
-                    for srl in stock_line:                    
+                    for srl in stock_line:
+                            print 'FOC QTY', srl['foc_quantity']                
                             mso_line_res = {                                                            
                                   'line_id':stock_id,
                                   'return_quantity':srl['return_quantity'],

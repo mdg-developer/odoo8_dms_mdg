@@ -201,6 +201,7 @@ class crm_case_section(osv.osv):
                 'sale_channel_id':fields.many2many('sale.channel', 'sale_team_channel_rel', 'sale_team_id', 'sale_channel_id', string='Sale Channel'),
                 'demarcation_ids':fields.many2many('sale.demarcation'),
                 'van_id':fields.char('Vehicle No'),
+                'pricelist_ids':fields.many2many('product.pricelist'),
                 'vehicle_id':fields.many2one('fleet.vehicle', 'Vehicle No'),
                 'main_group_id': fields.many2many('product.maingroup'),
                                 'date':fields.date('Date'),
