@@ -285,8 +285,8 @@ class pre_sale_order_line(osv.osv):
     _columns = {
         'product_id':fields.many2one('product.product', 'Products'),
         'product_uos_qty':fields.float('Quantity'),
-        'uom_id':fields.function(_get_uom_from_product, type='many2one', relation='product.uom', string='UOM'),
-#         'uom_id':fields.many2one('product.uom', 'UOM', readonly=False),
+#        'uom_id':fields.function(_get_uom_from_product, type='many2one', relation='product.uom', string='UOM'),
+        'uom_id':fields.many2one('product.uom', 'UOM', readonly=False),
         'price_unit':fields.float('Unit Price'),
         'discount':fields.float('Discount (%)'),
         'discount_amt':fields.float('Discount (Amt)'),
