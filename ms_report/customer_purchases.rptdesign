@@ -386,7 +386,7 @@ else
                     <property name="nativeDataType">2</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select row_number() over (order by id) as seq,*,(value/invoices) as value_inv
+            <xml-property name="queryText"><![CDATA[select row_number() over (order by name) as seq,*,(value/invoices) as value_inv
 from 
 (select res.id,res.name,sum(amount_total) as value,count(inv.id) as invoices,partner_id,inv.branch_id,inv.company_id
 from account_invoice inv,res_partner res
