@@ -247,6 +247,8 @@ class crm_case_section(osv.osv):
                 'credit_sale': fields.function(_get_credit_sale, digits_compute=dp.get_precision('Product Price'),
                 type='float', readonly=True,
                 string='Credit Outstanding'),                
+                 'price_list_line': fields.one2many('price.list.line', 'team_id', 'Price List', copy=True),
+                
         }
     _sql_constraints = [
         ('code_uniq', 'unique (code)', 'The code of the sales team must be unique !')

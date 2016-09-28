@@ -53,11 +53,11 @@
 			</field>
 		</record>
 		<!-- RFI -->
-		<menuitem action='action_stock_requsition1'
-			id="menu_stock_requisition" name="Pre-Sales RFI" parent="menu_sale_order_menu"
-			sequence="2" groups="stock.group_stock_manager,base.group_sale_manager" />
-		<menuitem action='action_stock_requsition2'
-			id="menu_direct_stock_requisition" name="Direct Sales RFI" parent="menu_direct_sale_order_menu"
+		<menuitem action='action_stock_requsition1' id="menu_stock_requisition"
+			name="Pre-Sales RFI" parent="menu_sale_order_menu" sequence="2"
+			groups="stock.group_stock_manager,base.group_sale_manager" />
+		<menuitem action='action_stock_requsition2' id="menu_direct_stock_requisition"
+			name="Direct Sales RFI" parent="menu_direct_sale_order_menu"
 			sequence="2" groups="stock.group_stock_manager,base.group_sale_manager" />
 
 		<!-- Delete Phone Call -->
@@ -173,7 +173,7 @@
 			<field name="res_model">res.partner</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">kanban,tree,form</field>
-			<field name="context">{"search_default_customer":1,}</field>
+			<field name="context">{"search_default_customer":1,'default_mobile_customer': True}</field>
 			<field name="domain">[('mobile_customer','=',True)]</field>
 			<field name="search_view_id" ref="base.view_res_partner_filter" />
 			<field name="help" type="html">
@@ -196,8 +196,9 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">kanban,tree,form</field>
 			<field name="context">{"search_default_customer":1,}</field>
-			<field name="domain">[('date_partnership','&lt;',(context_today()+relativedelta(months=1)).strftime('%Y-%m-01')),
-				('date_partnership','&gt;=',time.strftime('%Y-%m-01'))]</field>
+			<!-- <field name="domain">[('date_partnership','&lt;',(context_today()+relativedelta(months=1)).strftime('%Y-%m-01')), 
+				('date_partnership','&gt;=',time.strftime('%Y-%m-01'))]</field> -->
+			<field name="domain">[('mobile_customer','=',False)]</field>
 			<field name="search_view_id" ref="base.view_res_partner_filter" />
 			<field name="help" type="html">
 				<p class="oe_view_nocontent_create">
@@ -239,7 +240,7 @@
 			<field name="res_model">res.partner</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">kanban,tree,form</field>
-			<field name="context">{"search_default_customer":1,}</field>
+			<field name="context">{"search_default_customer":1,'default_is_consignment': True}</field>
 			<field name="domain">[('is_consignment','=',True)]</field>
 			<field name="search_view_id" ref="base.view_res_partner_filter" />
 			<field name="help" type="html">
@@ -356,5 +357,43 @@
 			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
 		</record>
 
+		<!-- Contacts Segmentation -->
+		<record model="ir.ui.menu" id="crm.menu_crm_segmentation-act">
+			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
+		</record>
+
+		<!-- Purchase Address Book -->
+		<record model="ir.ui.menu" id="base.menu_config_address_book">
+			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
+		</record>
+		<!-- Phone Contact -->
+		<record model="ir.ui.menu" id="crm.menu_crm_config_phonecall">
+			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
+		</record>
+		<!-- Product Attribute -->
+		<record model="ir.ui.menu" id="product.menu_attribute_action">
+			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
+		</record>
+		<record model="ir.ui.menu" id="product.menu_variants_action">
+			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
+		</record>
+		<!-- Leads -->
+		<record model="ir.ui.menu" id="base.menu_crm_config_lead">
+			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
+		</record>
+		
+		<!-- Demarcation -->
+		<record model="ir.ui.menu" id="crm_demarcation.config_demarcation">
+			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
+		</record>		
+	<!-- Main Group -->
+		<record model="ir.ui.menu" id="product_product.product_maingroup_menu">
+			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
+		</record>				
+	<!-- Devision Group -->
+		<record model="ir.ui.menu" id="product_product.product_devision_menu">
+			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
+		</record>					
+		
 	</data>
 </openerp>

@@ -36,7 +36,6 @@ class res_partner(osv.osv):
         'contact_note': fields.text('Note'),
        'credit_allow':fields.boolean('Credit Approved'),
        'is_consignment':fields.boolean('Consignment'),
-       
          'gain_account_id': fields.property(
             type='many2one',
             relation='account.account',
@@ -61,7 +60,7 @@ class res_partner(osv.osv):
          'sat':fields.boolean('SAT'),
          'sun':fields.boolean('SUN'),
      'section_id':fields.many2many('crm.case.section', 'sale_team_customer_rel', 'sale_team_id', 'partner_id', string='Sales Team'),
-         
+ 
     }
     _defaults = {
                'start_time':'01',
@@ -70,3 +69,4 @@ class res_partner(osv.osv):
                'end_rate':'pm',
                
     }
+    

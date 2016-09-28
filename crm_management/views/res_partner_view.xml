@@ -19,8 +19,9 @@
 						<field name="sales_channel" attrs="{'invisible':[('customer','=',False)]}" />
 						<field name="branch_id" attrs="{'invisible':[('customer','=',False)]}" />
 						<field name="demarcation_id" attrs="{'invisible':[('customer','=',False)]}" />
+						<field name="chiller" attrs="{'invisible':[('customer','=',False)]}" />																								
 					</xpath>
-					<!-- <xpath expr="//field[@name='street']" position="before"> <field 
+					<!-- <xpath expr="//field[@name='stree`t']" position="before"> <field 
 						name="address" placeholder="Address..." /> </xpath> -->
 					<xpath expr="//field[@name='function']" position="before">
 						<field name="temp_customer" />
@@ -35,7 +36,7 @@
 					<xpath expr="//field[@name='email']" position="after">
 						<field name="class_id" />
 						<field name="frequency_id" attrs="{'invisible':[('customer','=',False)]}" />
-
+						
 						<field name="old_code" />
 
 						<group>
@@ -156,7 +157,7 @@
 										<group>
 											<field name="asset_type" />
 											<field name="qty" />
-											<field name="image" widget='image' class="oe_avatar" />
+											<field name="image"  widget='image' class="oe_avatar" />
 										</group>
 									</group>
 								</form>

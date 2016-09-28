@@ -30,6 +30,20 @@
 			<field name="model">product.pricelist.item</field>
 			<field name="inherit_id" ref="product.product_pricelist_item_form_view" />
 			<field name="arch" type="xml">
+			    <label for="name" position="replace"/>
+			        
+				<field name="name" position="replace">
+					<field name="name" invisible="1" />
+				</field>
+				<field name="price_round" position="replace">
+					<field name="price_round" invisible="1" />
+				</field>
+				<field name="price_min_margin" position="replace">
+					<field name="price_min_margin" invisible="1" />
+				</field>
+				<field name="price_max_margin" position="replace">
+					<field name="price_max_margin" invisible="1" />
+				</field>
 				<xpath expr="//form/group/field[@name='price_max_margin']"
 					position="after">
 					<newline />
@@ -59,14 +73,19 @@
 			<field name="model">product.pricelist.item</field>
 			<field name="inherit_id" ref="product.product_pricelist_item_tree_view" />
 			<field name="arch" type="xml">
-				
+				<field name="sequence" position="replace">
+					<field name="sequence" invisible="1" />
+				</field>
+				<field name="name" position="replace">
+					<field name="name" invisible="1" />
+				</field>
 				<field name="min_quantity" position="replace">
 					<field name="new_price" />
 				</field>
 				<field name="categ_id" position="after">
 					<field name="list_price" />
-					<field name="price_discount" string="* ( 1 + " />
-					<field name="price_surcharge" string=" ) + " />
+					<field name="price_discount" string=" +/- " />
+					<field name="price_surcharge" string="%change" />
 				</field>
 				<field name="product_tmpl_id" position="replace">
 					<field name="product_tmpl_id" invisible="1" />
@@ -84,5 +103,49 @@
 		<menuitem action="product.product_pricelist_action2" id="product.menu_product_pricelist_action2"
 			parent="product.menu_product_pricelist_main" name="Base PriceList"
 			sequence="1" groups="product.group_sale_pricelist" />
+
+		<record id="product_pricelist_version_form_view_inherit1"
+			model="ir.ui.view">
+			<field name="name">product.pricelist.version.form.inherit</field>
+			<field name="model">product.pricelist.version</field>
+			<field name="inherit_id" ref="product.product_pricelist_version_form_view"></field>
+			<field name="arch" type="xml">
+				<xpath expr="//page/field[@name='items_id']" position="replace">
+					<field name="items_id">
+						<tree string="Item List" editable="bottom">
+							<field name="product_id" on_change="product_id_change(product_id)" />
+							<field name="sequence" invisible="1" />
+							<field name="name" invisible="1" />
+							<field name="base" invisible="1" />
+							<field name="categ_id" invisible="1" />
+							<field name="product_tmpl_id" invisible="1" />
+							<field name="product_uom_id" />
+							<field name="list_price" />
+							<field name="price_discount" string=" +/- " 
+								on_change="price_dis_change(product_id,price_discount,new_price,price_surcharge)" />
+							<field name="price_surcharge" string="%change"
+								on_change="price_subcharge_change(product_id,price_discount,new_price,price_surcharge)" />
+							<field name="new_price" />
+						</tree>
+					</field>
+				</xpath>
+			</field>
+		</record>
+		<!-- Stock Requisition -->
+		<record id="action_product_pricelist_item" model="ir.actions.act_window">
+			<field name="name">Product Pricelist Item</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">product.pricelist.item</field>
+			<field name="context">{}</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="product.product_pricelist_item_tree_view" />
+			<field name="domain">[]
+			</field>
+		</record>
+		<menuitem action='action_product_pricelist_item' id="menu_product_pricelist_item"
+			parent="product.menu_product_pricelist_main" sequence="3"
+			groups="base.group_no_one" />
+
 	</data>
 </openerp>

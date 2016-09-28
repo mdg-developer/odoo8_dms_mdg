@@ -30,8 +30,8 @@
 							<group>
 								<!-- <field name="grade_id" widget="selection" /> -->
 								<!-- <field name="activation" widget="selection" /> -->
-								<field name="date_review" />
-								<field name="date_review_next" />
+								<field name="date_review" invisible="1" />
+								<field name="date_review_next" invisible="1" />
 								<field name="date_partnership" string="Activation Date" />
 								<field name="create_date" />
 
@@ -248,18 +248,19 @@
 					<!-- <field name="active" position="replace" /> <notebook position="inside"> 
 						<page string="Marketing"> <label for="active" /> <field name="active" /> 
 						<div> <label for="opt_out" /> <field name="opt_out" /> </div> </page> </notebook> -->
+
 					<xpath
 						expr="//page[@name='sales_purchases']/group/group/field[@name='customer']"
 						position="replace">
 						<field name="customer" attrs="{'invisible':[('supplier','=',True)]}" />
 						<field name="is_consignment" attrs="{'invisible':[('supplier','=',True)]}" />
-												
+
 					</xpath>
 					<xpath
 						expr="//page[@name='sales_purchases']/group/group/field[@name='supplier']"
 						position="replace">
 						<field name="supplier" attrs="{'invisible':[('customer','=',True)]}" />
-						
+
 					</xpath>
 
 					<xpath
@@ -292,33 +293,29 @@
 			<field name="inherit_id" ref="account.view_partner_property_form" />
 			<field name="arch" type="xml">
 				<data>
-					<field name="property_account_receivable" position="replace">
-						<field name="property_account_receivable" groups="account.group_account_invoice"
-							attrs="{'invisible':[('supplier','=',True)]}" />
-					</field>
-					<field name="property_payment_term" position="replace">
-
-						<field name="property_payment_term" widget="selection"
-							attrs="{'invisible':[('supplier','=',True)]}" />
-					</field>
+					<!-- <field name="property_account_receivable" position="replace"> <field 
+						name="property_account_receivable" groups="account.group_account_invoice" 
+						attrs="{'invisible':[('supplier','=',True)]}" /> </field> <field name="property_payment_term" 
+						position="replace"> <field name="property_payment_term" widget="selection" 
+						attrs="{'invisible':[('supplier','=',True)]}" /> </field> -->
 					<field name="credit" position="replace">
 						<field name="credit" attrs="{'invisible':[('supplier','=',True)]}" />
 					</field>
 					<field name="credit_limit" position="replace">
 						<field name="credit_limit" attrs="{'invisible':[('supplier','=',True)]}" />
 					</field>
-					<field name="property_account_payable" position="replace">
-						<field name="property_account_payable" groups="account.group_account_invoice"
-							attrs="{'invisible':[('customer','=',True)]}" />
+					<field name="property_account_payable" position="after">
+						<!-- <field name="property_account_payable" groups="account.group_account_invoice" -->
+						<!-- attrs="{'invisible':[('customer','=',True)]}" /> -->
 						<field name="gain_account_id" groups="account.group_account_invoice"
 							attrs="{'invisible':[('customer','=',True)]}" />
 						<field name="loss_account_id" groups="account.group_account_invoice"
 							attrs="{'invisible':[('customer','=',True)]}" />
 					</field>
-					<field name="property_supplier_payment_term" position="replace">
-						<field name="property_supplier_payment_term" widget="selection"
-							attrs="{'invisible':[('customer','=',True)]}" />
-					</field>
+					<!-- <field name="property_supplier_payment_term" position="replace"> -->
+					<!-- <field name="property_supplier_payment_term" widget="selection" -->
+					<!-- attrs="{'invisible':[('customer','=',True)]}" /> -->
+					<!-- </field> -->
 					<field name="debit" position="replace">
 						<field name="debit" attrs="{'invisible':[('customer','=',True)]}" />
 					</field>

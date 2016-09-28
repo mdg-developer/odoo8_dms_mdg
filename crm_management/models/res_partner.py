@@ -332,6 +332,8 @@ class res_partner(osv.osv):
                 'temp_customer':fields.char('Contact Person'),
                 'class_id':fields.many2one('sale.class', 'Class'),
                 'frequency_id':fields.many2one('plan.frequency','Frequency',required=False),
+       'chiller':fields.boolean('Chiller'),
+                
                 'old_code': fields.char('Old Code'),
                 'sales_channel':fields.many2one('sale.channel', 'Sale Channel'),
                 'address':fields.char('Address'),
@@ -430,6 +432,7 @@ class res_partner(osv.osv):
         datas = cr.fetchall()
         cr.execute
         return datas
+    
     def res_partners_return(self, cr, uid, section_id , context=None, **kwargs):
         cr.execute('''
                     
@@ -558,7 +561,7 @@ class res_partner(osv.osv):
                                 code = codeObj.generateCode(cr, uid, codeId, context=context)
                 if code:
                     from datetime import datetime
-                    self.write(cr, uid, ids, {'customer_code':code,'date_partnership':datetime.now().date()}, context=context)
+                    self.write(cr, uid, ids, {'customer_code':code,'date_partnership':datetime.now().date(),'mobile_customer':False}, context=context)
             return True
 res_partner()
 class res_partner_asset(osv.Model):

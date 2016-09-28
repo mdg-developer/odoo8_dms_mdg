@@ -52,7 +52,8 @@
 								<field name="due_date" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="payment_term" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="type" attrs="{'readonly':[('m_status','=','done')]}" />
-								<field name="journal_id" attrs="{'readonly':[('m_status','=','done')]}"  widget="selection" />
+								<!-- <field name="journal_id" attrs="{'readonly':[('m_status','=','done')]}" 
+									widget="selection" /> -->
 								<field name="tablet_id" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="delivery_remark" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="amount_total" attrs="{'readonly':[('m_status','=','done')]}" />
@@ -64,7 +65,7 @@
 								<field name="remaining_amount" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="paid" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="void_flag" attrs="{'readonly':[('m_status','=','done')]}" />
-								<field name="balance" attrs="{'readonly':[('m_status','=','done')]}" />								
+								<field name="balance" attrs="{'readonly':[('m_status','=','done')]}" />
 							</group>
 						</group>
 
@@ -166,13 +167,25 @@
 								</field>
 
 							</page>
+							<page string="Payment Lines">
+								<field name="payment_line_ids" attrs="{'readonly':[('m_status','=','done')]}">
+									<tree string="Payment Lines" editable="bottom"
+										attrs="{'readonly':[('m_status','=','done')]}">
 
+										<field name="type" />
+										<field name="journal_id" />
+										<field name="amount" sum="Price" />
 
-
+									</tree>
+								</field>
+							</page>
+							<page string="Google Map">
+								<widget type="gmap_marker" lat="mso_latitude" lng="mso_longitude"
+									description="field_descriptions" />
+							</page>
 						</notebook>
 
-						<widget type="gmap_marker" lat="mso_latitude" lng="mso_longitude"
-							description="field_descriptions" />
+
 					</sheet>
 				</form>
 			</field>

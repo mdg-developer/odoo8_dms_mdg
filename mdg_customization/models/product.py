@@ -34,12 +34,18 @@ class product_pricelist_item(osv.osv):
         product_tmpl_id = prod[0]['product_tmpl_id'][0]
         temp = self.pool.get('product.template').read(cr,uid,[product_tmpl_id],['list_price'])
         product_price = temp[0]['list_price']
-      
+        product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)                                                  
+        uom_id=product.product_tmpl_id.uom_id and product.product_tmpl_id.uom_id.id or False,
+        categ_id=product.product_tmpl_id.categ_id.id,
+        print ' product_temp'   ,product   ,categ_id
+        
+        product_tmpl_id=product.product_tmpl_id and product.product_tmpl_id.id or False,
         if prod[0]['code']:
-            return {'value': {'name': prod[0]['code'],'new_price': product_price,'list_price':product_price}
+            return {'value': {'name': prod[0]['code'],'new_price': product_price,'list_price':product_price,'product_uom_id':uom_id,'base':1,'categ_id':categ_id,'product_tmpl_id':product_tmpl_id}
                  
                     }
         return {}
+    
     def price_dis_change(self, cr, uid, ids,product_id,price_discount,new_price,price_surcharge, context=None):
         
         if not product_id:
@@ -64,3 +70,17 @@ class product_pricelist_item(osv.osv):
             new_price = (product_price * (1+price_discount))+price_surcharge
             return {'value':{'new_price':new_price}}
         return {}
+    
+class price_list_line(osv.osv):
+    _name = 'price.list.line'
+    _description = 'Price List Line'           
+    _columns = {                
+        'team_id':fields.many2one('crm.case.section', 'Line', ondelete='cascade', select=True),    
+        'property_product_pricelist': fields.property(
+            type='many2one', 
+            relation='product.pricelist', 
+            domain=[('type','=','sale')],
+            string="Sale Pricelist", 
+            help="This pricelist will be used, instead of the default one, for sales to the current partner"),
+        'is_default':fields.boolean('Default'),
+        }

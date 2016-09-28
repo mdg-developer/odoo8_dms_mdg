@@ -32,7 +32,7 @@ Menu Customization
 """,
     'author': 'Seventh Computing',
     'website': 'http://www.7thcomputing.com',
-    'depends': ['base', 'ms_mobile_sale',
+    'depends': ['base', 'ms_mobile_sale','ms_mobile_sale_credit'
     ],
     'data': [        
              'security/hr_security.xml',
