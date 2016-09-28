@@ -60,6 +60,7 @@ class good_issue_note(osv.osv):
                  'p_line':fields.one2many('good.issue.note.line', 'line_id', 'Product Lines',
                               copy=True),
                 'company_id':fields.many2one('res.company', 'Company'),
+                'partner_id':fields.many2one('res.partner', string='Partner')
 }
     _defaults = {
         'state' : 'draft',

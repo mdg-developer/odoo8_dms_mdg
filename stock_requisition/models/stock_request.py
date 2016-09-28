@@ -103,7 +103,8 @@ class stock_requisition(osv.osv):
                               copy=True),
                 'company_id':fields.many2one('res.company', 'Company'),
                  'order_line': fields.one2many('stock.requisition.order', 'stock_line_id', 'Sale Order', copy=True),
-                 'pre_order':fields.boolean('Pre Order')
+                 'pre_order':fields.boolean('Pre Order'),
+         'partner_id':fields.many2one('res.partner', string='Partner'),
 
 }
     _defaults = {
