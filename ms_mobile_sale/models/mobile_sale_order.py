@@ -909,7 +909,7 @@ class mobile_sale_order(osv.osv):
     def get_pricelist_item_datas(self, cr, uid, version_id, context=None, **kwargs):
         cr.execute('''select pi.id,pi.price_discount,pi.sequence,pi.product_tmpl_id,pi.name,pp.id base_pricelist_id,
                     pi.product_id,pi.base,pi.price_version_id,pi.min_quantity,
-                    pi.categ_id,pi.price_surcharge
+                    pi.categ_id,pi.price_surcharge,pi.product_uom_id
                     from product_pricelist_item pi, product_pricelist_version pv, product_pricelist pp
                     where pv.pricelist_id = pp.id 
                     and pv.id = pi.price_version_id
