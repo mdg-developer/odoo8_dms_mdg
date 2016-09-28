@@ -43,7 +43,9 @@ class pre_sale_order(osv.osv):
         'm_status':fields.selection([('draft', 'Draft'),
                                                       ('done', 'Complete')], string='Status'),
      'promos_line_ids':fields.one2many('pre.promotion.line', 'promo_line_id', 'Promotion Lines'),
-     'pricelist_id': fields.many2one('product.pricelist', 'Price List',select=True, ondelete='cascade')           
+     'pricelist_id': fields.many2one('product.pricelist', 'Price List',select=True, ondelete='cascade'),           
+       'payment_line_ids':fields.one2many('customer.payment', 'pre_order_id', 'Payment Lines'),
+     
     }
     _order = 'id desc'
     _defaults = {
@@ -189,7 +191,7 @@ class pre_sale_order(osv.osv):
                                                         'section_id':preObj_ids.sale_team.id,
                                                         'deduct_amt':preObj_ids.deduction_amount,
 #                                                         'client_order_ref':preObj_ids.tablet_id.name,
-                                                        'state':'draft',
+                                                        'state':'manual',
                                                          'payment_type':preObj_ids.type,
                                                         'pricelist_id':pricelist_id,
                                                         'pre_order':True,

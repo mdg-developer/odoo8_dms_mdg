@@ -9,17 +9,13 @@ from openerp import netsvc
 DEFAULT_SERVER_DATE_FORMAT = "%Y-%m-%d"
 class customer_payment(osv.osv):
     _name = "customer.payment"
-    _columns = {
-     'type':fields.selection([
-                ('cash', 'Cash'),
-                ('bank', 'Bank'),
-#                 ('advanced', 'Advanced')
-            ], 'Payment Type'),
-                
+    _columns = {               
    'payment_id':fields.many2one('mobile.sale.order', 'Line'),
-   'journal_id'  : fields.many2one('account.journal', 'Journal' ,domain=[('type','in',('cash','bank'))]),      
-   'amount':fields.float('Amount'),
-   'notes':fields.char('Notes')
+ 'pre_order_id'  :fields.many2one('pre.sale.order', 'Line'),
+   'journal_id'  : fields.many2one('account.journal', 'Payment Method' ,domain=[('type','in',('cash','bank'))]),      
+   'amount':fields.float('Paid Amount'),
+   'notes':fields.char('Payment Ref'),
+   'date':fields.date('Date'),
         }
 class mobile_sale_order(osv.osv):
     
