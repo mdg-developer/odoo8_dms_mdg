@@ -70,7 +70,7 @@
 
 		<!-- Invoices -->
 
-		<record id="action_invoice_tree2" model="ir.actions.act_window">
+		<record id="action_invoice_tree_cus_1" model="ir.actions.act_window">
 			<field name="name">Pre-Sales Invoices</field>
 			<field name="res_model">account.invoice</field>
 			<field name="view_type">form</field>
@@ -83,6 +83,7 @@
 				'journal_type': 'sale'}
 			</field>
 			<field name="search_view_id" ref="account.view_account_invoice_filter" />
+			<field name="view_id" ref="account.invoice_form" />
 			<field name="help" type="html">
 				<p class="oe_view_nocontent_create"> Click
 					to create a customer invoice.
@@ -101,8 +102,19 @@
 				</p>
 			</field>
 		</record>
+       <record id="action_invoice_tree_cus_1_view1" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="action_invoice_tree_cus_1"/>
+        </record>
 
-		<record id="action_invoice_tree3" model="ir.actions.act_window">
+        <record id="action_invoice_tree_cus_1_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account.invoice_form"/>
+            <field name="act_window_id" ref="action_invoice_tree_cus_1"/>
+        </record>
+		<record id="action_invoice_tree_cus_2" model="ir.actions.act_window">
 			<field name="name">Direct Sales Invoices</field>
 			<field name="res_model">account.invoice</field>
 			<field name="view_type">form</field>
@@ -115,6 +127,7 @@
 				'journal_type': 'sale'}
 			</field>
 			<field name="search_view_id" ref="account.view_account_invoice_filter" />
+			<field name="view_id" ref="account.invoice_form" />
 			<field name="help" type="html">
 				<p class="oe_view_nocontent_create"> Click
 					to create a customer invoice.
@@ -133,9 +146,23 @@
 				</p>
 			</field>
 		</record>
-		<menuitem action="action_invoice_tree2" id="menu_pre_action_invoice_tree1"
+		
+       <record id="action_invoice_tree_cus_2_view1" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="action_invoice_tree_cus_2"/>
+        </record>
+
+        <record id="action_invoice_tree_cus_2_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account.invoice_form"/>
+            <field name="act_window_id" ref="action_invoice_tree_cus_2"/>
+        </record>
+        		
+		<menuitem action="action_invoice_tree_cus_1" id="menu_pre_action_invoice_tree_cus_1"
 			parent="menu_sale_order_menu" name="Pre-Sales Invoices" />
-		<menuitem action="action_invoice_tree3" id="menu_direct_action_invoice_tree1"
+		<menuitem action="action_invoice_tree_cus_2" id="menu_direct_action_invoice_tree_cus_2"
 			parent="menu_direct_sale_order_menu" name="Direct Sales Invoices" />
 		<!-- Sale Order -->
 		<!-- Quotation -->
@@ -173,7 +200,9 @@
 			<field name="res_model">res.partner</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">kanban,tree,form</field>
-			<field name="context">{"search_default_customer":1,'default_mobile_customer': True}</field>
+			<field name="context">{"search_default_customer":1,'default_mobile_customer':
+				True}
+			</field>
 			<field name="domain">[('mobile_customer','=',True)]</field>
 			<field name="search_view_id" ref="base.view_res_partner_filter" />
 			<field name="help" type="html">
@@ -240,7 +269,9 @@
 			<field name="res_model">res.partner</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">kanban,tree,form</field>
-			<field name="context">{"search_default_customer":1,'default_is_consignment': True}</field>
+			<field name="context">{"search_default_customer":1,'default_is_consignment':
+				True}
+			</field>
 			<field name="domain">[('is_consignment','=',True)]</field>
 			<field name="search_view_id" ref="base.view_res_partner_filter" />
 			<field name="help" type="html">
@@ -381,19 +412,19 @@
 		<record model="ir.ui.menu" id="base.menu_crm_config_lead">
 			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
 		</record>
-		
+
 		<!-- Demarcation -->
 		<record model="ir.ui.menu" id="crm_demarcation.config_demarcation">
 			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
-		</record>		
-	<!-- Main Group -->
+		</record>
+		<!-- Main Group -->
 		<record model="ir.ui.menu" id="product_product.product_maingroup_menu">
 			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
-		</record>				
-	<!-- Devision Group -->
+		</record>
+		<!-- Devision Group -->
 		<record model="ir.ui.menu" id="product_product.product_devision_menu">
 			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
-		</record>					
-		
+		</record>
+
 	</data>
 </openerp>

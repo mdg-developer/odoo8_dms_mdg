@@ -41,7 +41,9 @@ Mobile Sales
            #  'views/account_invioce_inherit.xml',
              'reports/qweb_view.xml',
              'reports/report_pre_sale.xml',
-             'reports/report_mobile_sale.xml'
+             'reports/report_mobile_sale.xml',
+             'wizard/pre_sale_view.xml',
+             'wizard/direct_sale_view.xml',
 
     ],
     'installable': True,
