@@ -1878,14 +1878,52 @@ class mobile_sale_order(osv.osv):
                         'payment_id':so_id,                        
                         'journal_id':ar['journal_id'],
                         'amount':ar['amount'],
-                        'type':ar['type'],
-                        'notes':ar['notes'],                      
+                        'date':ar['date'],
+                        'notes':ar['notes'],    
                     }
                     rental_obj.create(cursor, user, rental_result, context=context)
             return True
         except Exception, e:
             print 'False'
             return False
+        
+    def create_pre_order_payment(self, cursor, user, vals, context=None):
+        try:
+            rental_obj = self.pool.get('customer.payment')
+            str = "{" + vals + "}"
+            str = str.replace("'',", "',")  # null
+            str = str.replace(":',", ":'',")  # due to order_id
+            str = str.replace("}{", "}|{")
+            str = str.replace(":'}{", ":''}")
+            new_arr = str.split('|')
+            result = []
+            for data in new_arr:
+                x = ast.literal_eval(data)
+                result.append(x)
+            rental_collection = []
+            for r in result:
+                rental_collection.append(r)  
+            if rental_collection:
+                for ar in rental_collection:            
+                    cursor.execute('select id from pre_sale_order where name = %s ', (ar['payment_id'],))
+                    data = cursor.fetchall()
+                    if data:
+                        so_id = data[0][0]
+                    else:
+                        so_id = None
+                    
+                    rental_result = {                    
+                        'pre_order_id':so_id,                        
+                        'journal_id':ar['journal_id'],
+                        'amount':ar['amount'],
+                        'date':ar['date'],
+                        'notes':ar['notes'],    
+                    }
+                    rental_obj.create(cursor, user, rental_result, context=context)
+            return True
+        except Exception, e:
+            print 'False'
+            return False  
         
 mobile_sale_order()
 
