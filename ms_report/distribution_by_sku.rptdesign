@@ -983,7 +983,7 @@ params["sales_team"].displayText
                             <property name="paddingRight">3pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Percent</property>
-                                <property name="pattern">#,##0%{RoundingMode=HALF_UP}</property>
+                                <property name="pattern">#,##0.00%{RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">percent_target</property>
