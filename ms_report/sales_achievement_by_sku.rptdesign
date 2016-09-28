@@ -522,16 +522,18 @@ else
                     <property name="nativeDataType">2</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select row_number() over (order by date_order) as seq,*,(ach_amt/target_amt) as percent_target
+            <xml-property name="queryText"><![CDATA[select row_number() over (order by name_template) as seq,*,(ach_amt/target_amt) as percent_target
 from 
 (
 select sum(ach_amt) as ach_amt,section_id,month,year,product_id,name_template,date_order,branch_id
 from (
 select name_template,section_id,(product_uom_qty*price_unit) as ach_amt,date_part('month',date_order)::int as month,date_part('year',date_order)::int as year,product_id,(date_order+ '6 hour'::interval + '30 minutes'::interval)::date as date_order,branch_id
-from sale_order so,sale_order_line sol,product_product pp
+from sale_order so,sale_order_line sol,product_product pp,product_template pt
 where so.id=sol.order_id
 and sol.product_id=pp.id
+and pp.product_tmpl_id=pt.id
 and so.state in ('progress','manual','done')
+and (is_foc!='true' or is_foc is null)
 --$sales_team$
 --$branch_id$
 and (date_order+ '6 hour'::interval + '30 minutes'::interval)::date between ? and ?)AA
@@ -543,7 +545,7 @@ select (price_unit*product_uom_qty) as target_amt,sale_team_id,month::int,year::
 from sales_target st,sales_target_line stl
 where st.id=stl.sale_ids
 )B on A.section_id=B.sale_team_id and A.month=B.month and A.year=B.year and A.product_id=B.product_id and A.branch_id=B.branch_id
-order by date_order]]></xml-property>
+order by name_template]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
