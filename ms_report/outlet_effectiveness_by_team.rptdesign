@@ -412,7 +412,7 @@ sale_plan_trip as(
 	and sale_team is not null
 	group by spt.sale_team) 
 
-select row_number() over (order by id) as seq,*,(plan-ach) as miss,(plan::float-(plan-ach)::float)/plan::float as percent_target
+select row_number() over (order by code) as seq,*,(plan-ach) as miss,(plan::float-(plan-ach)::float)/plan::float as percent_target
 from 
 (select distinct sales_team.code,sales_team.id,inv.ach,(day_plan.plan+trip_plan.plan) as plan
 from crm_case_section sales_team
