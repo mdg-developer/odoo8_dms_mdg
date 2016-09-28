@@ -175,6 +175,7 @@
 										<field name="type" />
 										<field name="journal_id" />
 										<field name="amount" sum="Price" />
+										<field name="notes"/>
 
 									</tree>
 								</field>

@@ -18,6 +18,12 @@ class pre_sale_order(osv.osv):
         'mso_latitude':fields.float('Geo Latitude'),
         'mso_longitude':fields.float('Geo Longitude'),
         'amount_total':fields.float('Total Amount'),
+        'type':fields.selection([
+                ('credit', 'Credit'),
+                ('cash', 'Cash'),
+                ('consignment', 'Consignment'),
+                ('advanced', 'Advanced')
+            ], 'Payment Type'),
         'delivery_remark':fields.selection([
                 ('partial', 'Partial'),
                 ('delivered', 'Delivered'),
@@ -96,6 +102,7 @@ class pre_sale_order(osv.osv):
                         'location_id':so['location_id'],
                         'user_id':so['user_id'],
                         'name':so['name'],
+                        'type':so['type'],
                         'partner_id':partner_id,
                         'sale_plan_name':so['sale_plan_day_name'],
                         'amount_total':so['amount_total'],
@@ -183,6 +190,7 @@ class pre_sale_order(osv.osv):
                                                         'deduct_amt':preObj_ids.deduction_amount,
 #                                                         'client_order_ref':preObj_ids.tablet_id.name,
                                                         'state':'draft',
+                                                         'payment_type':preObj_ids.type,
                                                         'pricelist_id':pricelist_id,
                                                         'pre_order':True,
                                                         'delivery_id':delivery_id,

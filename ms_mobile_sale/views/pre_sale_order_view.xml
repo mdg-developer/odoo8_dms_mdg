@@ -43,6 +43,8 @@
 							</group>
 							<group>
 								<field name="date" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="type" attrs="{'readonly':[('m_status','=','done')]}" />
+								
 								<field name="tablet_id" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="delivery_remark" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="amount_total" attrs="{'readonly':[('m_status','=','done')]}" />

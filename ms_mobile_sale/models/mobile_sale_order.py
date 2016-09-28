@@ -17,8 +17,9 @@ class customer_payment(osv.osv):
             ], 'Payment Type'),
                 
    'payment_id':fields.many2one('mobile.sale.order', 'Line'),
- 'journal_id'  : fields.many2one('account.journal', 'Journal' ,domain=[('type','in',('cash','bank'))]),      
- 'amount':fields.float('Amount')
+   'journal_id'  : fields.many2one('account.journal', 'Journal' ,domain=[('type','in',('cash','bank'))]),      
+   'amount':fields.float('Amount'),
+   'notes':fields.char('Notes')
         }
 class mobile_sale_order(osv.osv):
     
@@ -889,11 +890,11 @@ class mobile_sale_order(osv.osv):
 #         return datas
 
     def get_pricelist_datas(self, cr, uid , section_id, context=None, **kwargs):
-        cr.execute(''' select ppl.id,ppl.name,ppl.type, ppl.active 
-                 from crm_case_section_product_pricelist_rel cpr , product_pricelist ppl
-                 where ppl.id = cpr.product_pricelist_id 
+        cr.execute('''select ppl.id,ppl.name,ppl.type, ppl.active , cpr.is_default
+                 from price_list_line cpr , product_pricelist ppl
+                 where ppl.id = cpr.property_product_pricelist 
                  and ppl.active = true
-                 and cpr.crm_case_section_id = %s''', (section_id,))
+                 and cpr.team_id = %s''', (section_id,))
         datas = cr.fetchall()
         print 'Price List Data', datas
         return datas
@@ -906,9 +907,11 @@ class mobile_sale_order(osv.osv):
         return datas
     
     def get_pricelist_item_datas(self, cr, uid, version_id, context=None, **kwargs):
-        cr.execute('''select pi.id,pi.price_discount,pi.sequence,pi.product_tmpl_id,pi.name,pi.base_pricelist_id,
+        cr.execute('''select pi.id,pi.price_discount,pi.sequence,pi.product_tmpl_id,pi.name,pp.id base_pricelist_id,
                     pi.product_id,pi.base,pi.price_version_id,pi.min_quantity,
-                    pi.categ_id,pi.price_surcharge from product_pricelist_item pi, product_pricelist_version pv, product_pricelist pp where pv.pricelist_id = pp.id 
+                    pi.categ_id,pi.price_surcharge
+                    from product_pricelist_item pi, product_pricelist_version pv, product_pricelist pp
+                    where pv.pricelist_id = pp.id 
                     and pv.id = pi.price_version_id
                     and pi.price_version_id = %s''', (version_id,))
         datas = cr.fetchall()        
@@ -1827,6 +1830,44 @@ class mobile_sale_order(osv.osv):
                         self.pool.get('stock.move').action_done(cr, uid, move_id, context)
                     self.write(cr, uid, ids, {'state':'done'}, context=None)                    
         return True
+    
+    def create_sale_order_payment(self, cursor, user, vals, context=None):
+        try:
+            rental_obj = self.pool.get('customer.payment')
+            str = "{" + vals + "}"
+            str = str.replace("'',", "',")  # null
+            str = str.replace(":',", ":'',")  # due to order_id
+            str = str.replace("}{", "}|{")
+            str = str.replace(":'}{", ":''}")
+            new_arr = str.split('|')
+            result = []
+            for data in new_arr:
+                x = ast.literal_eval(data)
+                result.append(x)
+            rental_collection = []
+            for r in result:
+                rental_collection.append(r)  
+            if rental_collection:
+                for ar in rental_collection:            
+                    cursor.execute('select id from mobile_sale_order where name = %s ', (ar['payment_id'],))
+                    data = cursor.fetchall()
+                    if data:
+                        so_id = data[0][0]
+                    else:
+                        so_id = None
+                    
+                    rental_result = {                    
+                        'payment_id':so_id,                        
+                        'journal_id':ar['journal_id'],
+                        'amount':ar['amount'],
+                        'type':ar['type'],
+                        'notes':ar['notes'],                      
+                    }
+                    rental_obj.create(cursor, user, rental_result, context=context)
+            return True
+        except Exception, e:
+            print 'False'
+            return False
         
 mobile_sale_order()
 
