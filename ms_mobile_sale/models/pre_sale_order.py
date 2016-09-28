@@ -223,6 +223,10 @@ class pre_sale_order(osv.osv):
                                 saleOrderLineObj.create(cr, uid, detailResult, context=context)
                     if so_id:
                         saleOrderObj.button_dummy(cr, uid, [so_id], context=context)
+                        #Do Open
+                        saleOrderObj.action_button_confirm(cr, uid, [so_id], context=context)
+                        
+                        
             except Exception, e:
                 raise orm.except_orm(_('Error :'), _("Error Occured while Convert Mobile Sale Order! \n [ %s ]") % (e))
             self.write(cr, uid, ids[0], {'m_status':'done'}, context=context)                        

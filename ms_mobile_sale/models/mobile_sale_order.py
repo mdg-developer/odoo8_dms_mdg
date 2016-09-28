@@ -1482,11 +1482,27 @@ class mobile_sale_order(osv.osv):
                     if So_id:
                         solist = So_id       
                         journal_id = deli['journal_id']
-                        soObj.action_button_confirm(cr, uid, solist, context=context)
+                        #soObj.action_button_confirm(cr, uid, solist, context=context)
                         
                         # For DO
-                        self.stock_deliver(cr, uid , None , So_id, context)
-                        
+                      #  self.stock_deliver(cr, uid , None , So_id, context)
+                        stockViewResult = soObj.action_view_delivery(cr, uid, So_id, context=context)    
+                        if stockViewResult:
+                            # stockViewResult is form result
+                            # stocking id =>stockViewResult['res_id']
+                            # click force_assign
+                            stockPickingObj.force_assign(cr, uid, stockViewResult['res_id'], context=context)
+                            # transfer
+                            # call the transfer wizard
+                            # change list
+                            pickList = []
+                            pickList.append(stockViewResult['res_id'])
+                            wizResult = stockPickingObj.do_enter_transfer_details(cr, uid, pickList, context=context)
+                            # pop up wizard form => wizResult
+                            detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
+                            if detailObj:
+                                detailObj.do_detailed_transfer()    
+                            print 'testing---------------',                   
                         # Create Invoice
                         print 'Context', context
                         invoice_id = self.create_invoices(cr, uid, solist, context=context)
@@ -1498,13 +1514,15 @@ class mobile_sale_order(osv.osv):
                             # invObj contain => account.invoice(1,) like that
                             print 'invoice_id', invoice_id
                              
-                            invObj = invoiceObj.browse(cr, 1, invlist, context=context)
+                            invObj = invoiceObj.browse(cr, uid, invlist, context=context)
                             print 'invObj', invObj
                             invObj.action_date_assign()
                             invObj.action_move_create()
                             invObj.action_number()
                             # validate invoice
                             invObj.invoice_validate()
+                            #pre_order =True
+                            invoiceObj.write(cr,uid,invoice_id,{'pre_order':True}, context)                           
 #                             
 #                             # register Payment
 #                             # calling the register payment pop-up
