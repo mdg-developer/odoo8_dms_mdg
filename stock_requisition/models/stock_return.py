@@ -129,7 +129,8 @@ class stock_return(osv.osv):
         'p_line':fields.one2many('stock.return.line', 'line_id', 'Product Lines',
                               copy=True),
                 'company_id':fields.many2one('res.company', 'Company'),
-}
+				'partner_id':fields.many2one('res.partner', 'Customer'), 
+}		
     _defaults = {
         'state' : 'draft',
          'company_id': _get_default_company,

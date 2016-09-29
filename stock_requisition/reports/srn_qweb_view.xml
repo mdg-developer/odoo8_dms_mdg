@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<report id="stock_return" model="stock.return" string="Stock Return"
+			report_type="qweb-pdf" name="stock_requisition.stock_return_note" file="stock_requisition.stock_return"
+			attachment_use="True" attachment="('Stock Return Note')+'.pdf'" />
+		
+	</data>
+</openerp>

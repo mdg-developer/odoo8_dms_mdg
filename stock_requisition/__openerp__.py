@@ -44,7 +44,9 @@ Request For Issue And Good Issue Note Module
         'views/request_for_issue_view.xml',
         'reports/qweb_view.xml',
         'reports/report_good_issue_note.xml',
-        'reports/report_stock_request.xml'
+        'reports/report_stock_request.xml',
+		'reports/srn_qweb_view.xml',
+        'reports/stock_return_note.xml',
     ],
     'test': [
 
