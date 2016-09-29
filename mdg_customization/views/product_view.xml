@@ -30,8 +30,8 @@
 			<field name="model">product.pricelist.item</field>
 			<field name="inherit_id" ref="product.product_pricelist_item_form_view" />
 			<field name="arch" type="xml">
-			    <label for="name" position="replace"/>
-			        
+				<label for="name" position="replace" />
+
 				<field name="name" position="replace">
 					<field name="name" invisible="1" />
 				</field>
@@ -84,8 +84,8 @@
 				</field>
 				<field name="categ_id" position="after">
 					<field name="list_price" />
-					<field name="price_discount"  string="%Change" />
-					<field name="price_surcharge"  string=" +/- " />
+					<field name="price_discount" string="%Change" />
+					<field name="price_surcharge" string=" +/- " />
 				</field>
 				<field name="product_tmpl_id" position="replace">
 					<field name="product_tmpl_id" invisible="1" />
@@ -110,6 +110,10 @@
 			<field name="model">product.pricelist.version</field>
 			<field name="inherit_id" ref="product.product_pricelist_version_form_view"></field>
 			<field name="arch" type="xml">
+				<field name="company_id" position="after">
+					<button name="retrieve_data" string="Retrieve" type="object"
+						class="oe_highlight" icon="terp-stock_effects-object-colorize" />
+				</field>
 				<xpath expr="//page/field[@name='items_id']" position="replace">
 					<field name="items_id">
 						<tree string="Item List" editable="bottom">
@@ -123,7 +127,7 @@
 							<field name="list_price" />
 							<field name="price_discount" string="%Change"
 								on_change="price_dis_change(product_id,price_discount,new_price,price_surcharge)" />
-							<field name="price_surcharge"   string=" +/- " 
+							<field name="price_surcharge" string=" +/- "
 								on_change="price_subcharge_change(product_id,price_discount,new_price,price_surcharge)" />
 							<field name="new_price" />
 						</tree>
@@ -143,9 +147,9 @@
 			<field name="domain">[]
 			</field>
 		</record>
-<!-- 		<menuitem action='action_product_pricelist_item' id="menu_product_pricelist_item" -->
-<!-- 			parent="product.menu_product_pricelist_main" sequence="3" -->
-<!-- 			groups="base.group_no_one" /> -->
+		<!-- <menuitem action='action_product_pricelist_item' id="menu_product_pricelist_item" -->
+		<!-- parent="product.menu_product_pricelist_main" sequence="3" -->
+		<!-- groups="base.group_no_one" /> -->
 
 	</data>
 </openerp>

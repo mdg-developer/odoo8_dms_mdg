@@ -32,6 +32,29 @@ class product_pricelist_version(osv.osv):
                       'date_start': fields.date('Start Date', help="First valid date for the version.", required=True),
         'date_end': fields.date('End Date', help="Last valid date for the version.", required=True),
               }
+    def retrieve_data(self, cr, uid,ids, context=None):
+        item_obj=self.pool.get('product.pricelist.item')        
+        product_obj=self.pool.get('product.product')        
+        
+        if ids:
+            product_ids = product_obj.search(cr, uid, [('is_foc', '=', False),('type','=','product')], context=context) 
+            for product in product_ids:
+                product_data=product_obj.browse(cr, uid, product, context=context)
+                uom_id=product_data.product_tmpl_id.uom_id and product_data.product_tmpl_id.uom_id.id or False,
+                price=product_data.list_price
+                name=product_data.product_tmpl_id.default_code
+                categ_id=product_data.product_tmpl_id.categ_id.id
+                item_id = item_obj.create(cr, uid, {
+                                                    'product_id':product_data.id,
+                                                    'name': name,
+                                                'new_price':price,
+                                          'list_price': price,
+                                          'product_uom_id':uom_id,
+                                          'base':1,
+                                          'categ_id':categ_id,
+                                          'price_version_id':ids[0]}, context=context)
+                print 'item_id',item_id
+        return True
 class product_pricelist_item(osv.osv):
     _inherit = "product.pricelist.item"
     _description = "Pricelist Item"        
@@ -52,7 +75,6 @@ class product_pricelist_item(osv.osv):
         uom_id = product.product_tmpl_id.uom_id and product.product_tmpl_id.uom_id.id or False,
         categ_id = product.product_tmpl_id.categ_id.id,
         print ' product_temp'   , product   , categ_id
-        
         product_tmpl_id = product.product_tmpl_id and product.product_tmpl_id.id or False,
         if prod[0]['code']:
             return {'value': {'name': prod[0]['code'], 'new_price': product_price, 'list_price':product_price, 'product_uom_id':uom_id, 'base':1, 'categ_id':categ_id, 'product_tmpl_id':product_tmpl_id}
