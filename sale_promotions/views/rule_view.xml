@@ -45,7 +45,7 @@
 								<field name="uses_per_coupon" attrs="{'required':[('coupon_code','!=',False)]}"  invisible="1"/>
 								<field name="uses_per_partner" attrs="{'required':[('coupon_code','!=',False)]}"  invisible="1"/>
 							</group>
-<!--  							<group>
+							<!--<group>
 								<field name="from_date" />
 								<field name="to_date" />
 							</group>-->
@@ -147,7 +147,7 @@
 		</record>
 
 		<record id="act_promotion_rules" model="ir.actions.act_window">
-			<field name="name">Promotion Rules</field>
+			<field name="name">Promotions</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">promos.rules</field>
 			<field name="src_model">promos.rules</field>

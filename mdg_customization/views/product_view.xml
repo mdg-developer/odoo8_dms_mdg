@@ -101,7 +101,7 @@
 			</field>
 		</record>
 		<menuitem action="product.product_pricelist_action2" id="product.menu_product_pricelist_action2"
-			parent="product.menu_product_pricelist_main" name="Base PriceList"
+			parent="product.menu_product_pricelist_main" name="Base PriceLists"
 			sequence="1" groups="product.group_sale_pricelist" />
 
 		<record id="product_pricelist_version_form_view_inherit1"

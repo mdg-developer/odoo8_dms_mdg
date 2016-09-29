@@ -68,7 +68,6 @@ class plan_trip_customer(osv.osv_memory):
                                     'frequency':partner.frequency_id.id,
                                     'line_id':max_id,
                                               }, context=context) 
-                    print 'create------------------------------------------------'    
         return True
 
 

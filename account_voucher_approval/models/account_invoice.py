@@ -17,6 +17,7 @@ class account_invoice(models.Model):
     
     @api.model
     def _default_journal(self):
+        print ' _default_journal'
         inv_type = self._context.get('type', 'out_invoice')
         inv_types = inv_type if isinstance(inv_type, list) else [inv_type]
         company_id = self._context.get('company_id', self.env.user.company_id.id)
@@ -58,7 +59,8 @@ class account_invoice(models.Model):
     payment_type = fields.Selection([
                     ('credit', 'Credit'),
                     ('cash', 'Cash'),
-                     ('consignment', 'Consignment'),
+                    ('consignment', 'Consignment'),
+#                     ('advanced', 'Advanced')
                     ],string= 'Payment Type',default='credit')
     
     account_id = fields.Many2one('account.account', string='Account',
@@ -69,10 +71,11 @@ class account_invoice(models.Model):
         self.write(cr, uid, ids, {'state':'fm_approve'}, context=None)
         return True   
     
-    @api.multi    
-    def invoice_validate(self):    
-        payment_type = self.payment_type
-        if payment_type =='cash':
-            return self.write({'state': 'paid'})
-        else:    
-            return self.write({'state': 'open'})
+#     @api.multi    
+#     def invoice_validate(self):    
+#         payment_type = self.payment_type
+#         print 'payment_type',payment_type
+#         if payment_type =='cash':
+#             return self.write({'state': 'paid'})
+#         else:    
+#             return self.write({'state': 'open'})

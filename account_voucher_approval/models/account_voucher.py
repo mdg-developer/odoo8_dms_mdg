@@ -2,7 +2,6 @@ from openerp.osv import fields, osv
 
 class account_voucher(osv.osv):
     _inherit = 'account.voucher'
-        
     _columns = {
                         'state':fields.selection(
                         [('draft', 'Draft'),
@@ -16,7 +15,6 @@ class account_voucher(osv.osv):
                                     \n* The \'Pro-forma\' when voucher is in Pro-forma status,voucher does not have an voucher number. \
                                     \n* The \'Posted\' status is used when user create voucher,a voucher number is generated and voucher entries are created in account \
                                     \n* The \'Cancelled\' status is used when user cancel voucher.'),
-                        
               }
     
     def finance_approve(self, cr, uid, ids, context=None):
@@ -26,4 +24,4 @@ class account_voucher(osv.osv):
     def cashier_approve(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'cashier_approve'}, context=None)
         return True
-    
+account_voucher()

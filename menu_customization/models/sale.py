@@ -10,3 +10,7 @@ class stock_request(osv.osv):
     
 stock_request()
     
+class account_invoice(osv.osv):
+    _inherit = 'account.invoice'
+    
+account_invoice()

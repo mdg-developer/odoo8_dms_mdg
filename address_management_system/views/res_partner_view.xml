@@ -17,7 +17,7 @@
 			    </xpath>
 			    
 			     <xpath expr="//field[@name='state_id']" position="before" >			    	
-			        <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+			        <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' required="1"/>
 			    </xpath>
 			    
 			    <xpath expr="//field[@name='state_id']" position="replace" >
@@ -25,7 +25,7 @@
 	            </xpath>
 	            
 	            <xpath expr="//field[@name='country_id']" position="after" >
-					<field name="state_id"  class="o_address_state" placeholder="Division/State" domain="[('country_id', '=', country_id) ]" style="width: 100%%"/>
+					<field name="state_id"  class="o_address_state" placeholder="Division/State" domain="[('country_id', '=', country_id) ]" style="width: 100%%" required="1"/>
 			    </xpath>	            
 	            			   	  			 
 			    <xpath expr="//field[@name='city']" position="replace" >
@@ -41,8 +41,8 @@
 			    </xpath>
 			    
 			    <xpath expr="//field[@name='city']" position="after" >
-			    	 <field name="township" class="o_address_state" placeholder="Township" domain="[('city', '=', city)]" style="width: 66%%"/>
-			       <field name="zip" class="o_address_city" placeholder="ZIP" style="width: 30%%"/>
+			    	 <field name="township" class="o_address_state" placeholder="Township" domain="[('city', '=', city)]" style="width: 66%%" required="1"/>
+			       <field name="zip" class="o_address_city" placeholder="ZIP" style="width: 30%%" invisible="1"/>
 			    </xpath>
 			    
    	            <xpath expr="//field[@name='street']" position="replace" >
@@ -50,7 +50,7 @@
 			    </xpath>
 			    
 			    <xpath expr="//field[@name='zip']" position="after" >
-	               <field name="street" placeholder="Street..." class="o_address_street"/>                            
+	               <field name="street" placeholder="Street..." class="o_address_street"  required="1"/>                            
 	            </xpath>
 	            
 			    <xpath expr="//field[@name='street2']" position="replace" >

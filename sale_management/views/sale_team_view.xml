@@ -22,6 +22,8 @@
 			<field name="inherit_id" ref="sales_team.crm_case_section_view_form" />
 			<field name="priority" eval="20" />
 			<field name="arch" type="xml">
+				<field name="change_responsible" position="replace">
+				</field>
 				<field name="code" position="replace">
 					<field name="code" />
 				</field>
@@ -34,9 +36,9 @@
 				</field>
 				<field name="warehouse_id" position="after">
 					<field name="location_id" />
-
 				</field>
 				<field name="location_id" position="after">
+					<field name="issue_location_id" />				    				    
 					<field name="analytic_account_id" />
 					<field name="van_id" invisible="1" />
 					<field name="vehicle_id" />
@@ -78,21 +80,21 @@
 							</kanban>
 						</field>
 					</page>
-												
+
 					<page string="Pricelists">
-							<field name="price_list_line">
-								<form string="Pricelists">
-									<group>
-										<field name="property_product_pricelist" widget="selection" />
-										<field name="is_default" />
-									</group>
-								</form>
-								<tree string="Pricelists" editable="bottom">
+						<field name="price_list_line">
+							<form string="Pricelists">
+								<group>
 									<field name="property_product_pricelist" widget="selection" />
 									<field name="is_default" />
-								</tree>
-							</field>
-						</page>
+								</group>
+							</form>
+							<tree string="Pricelists" editable="bottom">
+								<field name="property_product_pricelist" widget="selection" />
+								<field name="is_default" />
+							</tree>
+						</field>
+					</page>
 					<!-- Add adding demarcation -->
 
 					<page string="Demarcations">
@@ -301,6 +303,16 @@
 					</xpath>
 
 				</data>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="sales_team_form_view_in_crm_inherit">
+			<field name="name">crm.case.section.form</field>
+			<field name="model">crm.case.section</field>
+			<field name="inherit_id" ref="crm.sales_team_form_view_in_crm" />
+			<field name="arch" type="xml">
+				<page string="Stages" position="replace">
+				</page>
 			</field>
 		</record>
 		<!-- <menuitem id="sales_team.menu_sales_team_act" action="open_view_date_form" 

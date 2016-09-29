@@ -50,7 +50,8 @@ class stock_requisition(osv.osv):
             location = sale_team.location_id
             vehicle_id = sale_team.vehicle_id
             product_line = sale_team.product_ids
-            order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False), ('invoiced', '=', False), ('state', 'not in', ['done', 'cancel'])], context=context) 
+            to_location_id=sale_team.issue_location_id
+            order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False),('is_generate','=',False), ('invoiced', '=', False), ('state', 'not in', ['done', 'cancel'])], context=context) 
             print 'order_ids', order_ids
             for line in product_line:                
                 product = self.pool.get('product.product').browse(cr, uid, line.id, context=context)                                                  
@@ -74,6 +75,7 @@ class stock_requisition(osv.osv):
                                               })              
             values = {
                  'from_location_id':location,
+                 'to_location_id':to_location_id ,
                  'vehicle_id':vehicle_id,
                 'p_line': data_line,
                 'order_line':order_line
@@ -129,7 +131,7 @@ class stock_requisition(osv.osv):
             issue_date_to = stock_request_data.s_issue_date
             sale_team_id = stock_request_data.sale_team_id.id
             request_date=stock_request_data.request_date
-            order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False), ('invoiced', '=', False), ('state', 'not in', ['done', 'cancel']),('date_order','>',issue_date_from),('date_order','<',issue_date_to)], context=context) 
+            order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False),('is_generate','=',False), ('invoiced', '=', False), ('state', 'not in', ['done', 'cancel']),('date_order','>',issue_date_from),('date_order','<',issue_date_to)], context=context) 
             print 'order_ids',order_ids,stock_request_data.id
             cr.execute("delete from stock_requisition_order where  stock_line_id=%s",(stock_request_data.id,))
             
@@ -169,8 +171,10 @@ class stock_requisition(osv.osv):
     def approve(self, cr, uid, ids, context=None):
         product_line_obj = self.pool.get('stock.requisition.line')
         requisition_obj = self.pool.get('stock.requisition')
+        sale_order_obj = self.pool.get('sale.order')
         good_obj = self.pool.get('good.issue.note')
         good_line_obj = self.pool.get('good.issue.note.line')
+        stock_so_line_obj = self.pool.get('stock.requisition.order')
 
         req_value = req_lines = {}
         if ids:
@@ -181,6 +185,11 @@ class stock_requisition(osv.osv):
             from_location_id = req_value.from_location_id.id
             vehicle_no = req_value.vehicle_id.id
             sale_team_id = req_value.sale_team_id.id
+            for order in req_value.order_line:
+                so_name=order.name
+                order_id= sale_order_obj.search(cr, uid, [('name', '=', so_name)], context=context) 
+                sale_order_obj.write(cr, uid, order_id, {'is_generate':True})    
+                print 'order',order_id
             good_id = good_obj.create(cr, uid, {'vehicle_id': vehicle_no,
                                                 'sale_team_id':sale_team_id,
                                           'issue_date': issue_date,

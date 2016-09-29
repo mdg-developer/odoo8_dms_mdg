@@ -185,7 +185,9 @@
 			<field name="model">pre.sale.order</field>
 			<field name="arch" type="xml">
 				<search string="Search Pre Sale Order Filters">
-
+					<filter string="Draft"
+						domain="[ ('m_status', '=', 'draft')]"
+						name="state" />
 					<group expand="0" string="Group By">
 						<filter name="tablet_id" string="Tablet Name" domain="[]"
 							context="{'group_by':'tablet_id'}" />
@@ -201,6 +203,8 @@
 							domain="[]" context="{'group_by':'sale_plan_day_id'}" />
 						<filter name="partner_id" string="Customer" domain="[]"
 							context="{'group_by':'partner_id'}" />
+						<filter name="m_status" string="Status" domain="[]"
+							context="{'group_by':'m_status'}" />						
 					</group>
 				</search>
 			</field>
@@ -261,7 +265,8 @@
 			<field name="view_mode">tree,form,calendar,graph</field>
 			<field name="view_id" ref="view_pre_sale_order_tree" />
 			<field name="search_view_id" ref="view_pre_sale_order_filter" />
-
+			<field name="context">{ 'search_default_state': 1}
+			</field>
 			<field name="help" type="html">
 				<p class="oe_view_nocontent_create">
 					Click to create new pre sale order.

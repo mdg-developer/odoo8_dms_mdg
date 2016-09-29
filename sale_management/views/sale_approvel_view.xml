@@ -164,8 +164,8 @@
 				</p>
 			</field>
 		</record>
-		<menuitem id="sales_approval" parent="base.menu_sales" name="Sales Approval"
-			sequence="12" />
+		<menuitem id="sales_approval" parent="base.menu_base_partner" name="Sales Approval"
+			sequence="14" />
 		<menuitem id="sales_approval_menu1" action="action_sales_approval_view"
 			parent="sales_approval" sequence="1" />
 		<menuitem id="sales_approval_menu2" action="action_sales_approval_view1"

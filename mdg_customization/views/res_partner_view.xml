@@ -245,6 +245,9 @@
 			<field name="inherit_id" ref="base.view_partner_form" />
 			<field name="arch" type="xml">
 				<data>
+				    <field name="fax" position="replace">
+				         <field name="fax" invisible="1"/>
+				    </field>
 					<!-- <field name="active" position="replace" /> <notebook position="inside"> 
 						<page string="Marketing"> <label for="active" /> <field name="active" /> 
 						<div> <label for="opt_out" /> <field name="opt_out" /> </div> </page> </notebook> -->

@@ -21,14 +21,16 @@
 			<field name="view_mode">tree,form,calendar,graph</field>
 			<field name="search_view_id" ref="sale.view_sales_order_filter" />
 			<field name="context">{
-				'search_default_my_sale_orders_filter': 1
+				'search_default_my_generate': 1
 				}
 			</field>
-			<field name="domain">[('state', 'not in', ('draft', 'sent', 'cancel')),('pre_order','=',True)]
+			<field name="domain">[('state', 'not in', ('draft', 'sent',
+				'cancel')),('pre_order','=',True)]
 			</field>
 			<field name="help" type="html">
 				<p class="oe_view_nocontent_create">
-					Click to create a quotation that can be converted into a sales
+					Click to create a quotation that can be converted into a
+					sales
 					order.
 				</p>
 				<p>
@@ -37,7 +39,7 @@
 				</p>
 			</field>
 		</record>
-		<menuitem action="action_orders1"  id="menu_sale_order_1"
+		<menuitem action="action_orders1" id="menu_sale_order_1"
 			parent="menu_sale_order_menu" sequence="2"
 			groups="base.group_sale_salesman,base.group_sale_manager" />
 		<!-- Direct Sale -->
@@ -45,19 +47,19 @@
 			name="Direct Sales" sequence="2" />
 		<menuitem id="ms_mobile_sale.menu_mobile_sale_order" parent="menu_direct_sale_order_menu"
 			name="Direct Sales Mobile" action="ms_mobile_sale.action_moble_sale_order"
-			sequence="1" />
+			sequence="2" />
 
 		<record id="action_stock_requsition1" model="ir.actions.act_window">
 			<field name="name">Pre-Sales RFI</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">stock.requisition</field>
 			<field name="domain">[('pre_order','=',True)]</field>
-			<field name="context">{'default_pre_order': True}</field>
+			<field name="context">{'default_pre_order':
+				True,'search_default_state_filter': 1}</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" ref="stock_requisition.stock_requisition_tree" />
 			<field name="search_view_id" ref="stock_requisition.view_stock_request_filter" />
-
 			<field name="help" type="html">
 				<p class="oe_view_nocontent_create">
 					Click to Register Stock Requisition .
@@ -70,7 +72,8 @@
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">stock.requisition</field>
 			<field name="domain">[('pre_order','=',False)]</field>
-			<field name="context">{'default_pre_order': False}</field>
+			<field name="context">{'default_pre_order':
+				False,'search_default_state_filter': 1}</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" ref="stock_requisition.stock_requisition_tree" />
@@ -87,7 +90,7 @@
 			groups="stock.group_stock_manager,base.group_sale_manager" />
 		<menuitem action='action_stock_requsition2' id="menu_direct_stock_requisition"
 			name="Direct Sales RFI" parent="menu_direct_sale_order_menu"
-			sequence="2" groups="stock.group_stock_manager,base.group_sale_manager" />
+			sequence="1" groups="stock.group_stock_manager,base.group_sale_manager" />
 
 		<!-- Delete Phone Call -->
 		<record model="ir.ui.menu" id="crm.menu_crm_case_phone_inbound">
@@ -98,6 +101,19 @@
 		</record>
 
 		<!-- Invoices -->
+		<record id="view_account_invoice_filter" model="ir.ui.view">
+			<field name="name">account.invoice.select</field>
+			<field name="model">account.invoice</field>
+			<field name="inherit_id" ref="account.view_account_invoice_filter" />
+			<field name="arch" type="xml">
+				<filter name="unpaid" position="after">
+					<filter string="Today"
+						domain="[ ('date_invoice', '=', context_today().strftime('%Y-%m-%d'))]"
+						name="today_date" />
+				</filter>
+
+			</field>
+		</record>
 
 		<record id="action_invoice_tree_cus_1" model="ir.actions.act_window">
 			<field name="name">Pre-Sales Invoices</field>
@@ -108,10 +124,12 @@
 			<field name="domain">[('type','=','out_invoice'),('pre_order','=',True)]
 			</field>
 			<field name="context">{'default_type':'out_invoice',
+				'search_default_today_date': 1,
 				'type':'out_invoice',
-				'journal_type': 'sale'}
+				'journal_type':
+				'sale'}
 			</field>
-			<field name="search_view_id" ref="account.view_account_invoice_filter" />
+			<field name="search_view_id" ref="view_account_invoice_filter" />
 			<field name="view_id" ref="account.invoice_form" />
 			<field name="help" type="html">
 				<p class="oe_view_nocontent_create"> Click
@@ -152,10 +170,12 @@
 			<field name="domain">[('type','=','out_invoice'),('pre_order','=',False)]
 			</field>
 			<field name="context">{'default_type':'out_invoice',
+				'search_default_today_date': 1,
 				'type':'out_invoice',
-				'journal_type': 'sale'}
+				'journal_type':
+				'sale'}
 			</field>
-			<field name="search_view_id" ref="account.view_account_invoice_filter" />
+			<field name="search_view_id" ref="view_account_invoice_filter" />
 			<field name="view_id" ref="account.invoice_form" />
 			<field name="help" type="html">
 				<p class="oe_view_nocontent_create"> Click
@@ -194,8 +214,8 @@
 		<menuitem action="action_invoice_tree_cus_2" id="menu_direct_action_invoice_tree_cus_2"
 			parent="menu_direct_sale_order_menu" name="Direct Sales Invoices" />
 		<!-- Quotation -->
-<!-- 		<menuitem id="sale.menu_sale_quotations" action="sale.action_quotations" -->
-<!-- 			parent="base.menu_sales" name="Draft Order" sequence="1" /> -->
+		<!-- <menuitem id="sale.menu_sale_quotations" action="sale.action_quotations" -->
+		<!-- parent="base.menu_sales" name="Draft Order" sequence="1" /> -->
 		<!-- Sale Order -->
 		<menuitem action="sale.action_orders" id="sale.menu_sale_order"
 			parent="base.menu_sales" sequence="2"
@@ -204,8 +224,10 @@
 			parent="base.menu_sales" name="Sales Invoices" sequence="3" />
 
 		<!-- Sales Team Sequence -->
+		<menuitem id="menu_sale_team_menu" parent="base.menu_base_partner"
+			name="Sales Teams" sequence="3" />
 		<menuitem id="sales_team.menu_sales_team_act" action="sales_team.crm_case_section_salesteams_act"
-			sequence="4" parent="base.menu_sales" groups="base.group_multi_salesteams" />
+			sequence="4" parent="menu_sale_team_menu" groups="base.group_multi_salesteams" />
 
 		<!-- Route Plan -->
 		<menuitem id="menu_rout_plan_menu" parent="base.menu_base_partner"
@@ -380,17 +402,17 @@
 
 		<!-- Notification -->
 		<menuitem id="menu_sales_notification_menu" parent="base.menu_base_partner"
-			name="Notification" sequence="13" />
+			name="Notification" sequence="14" />
 		<menuitem id="google_fcm.menu_fcm_notification" parent="menu_sales_notification_menu"
 			name="Notification" action="google_fcm.action_fcm_notification"
 			sequence="1" />
 		<!-- AR Collection -->
 		<menuitem name="Payment" id="ms_mobile_sale_credit.ar_collection_menu"
-			parent="base.menu_base_partner" sequence="14" />
+			parent="base.menu_base_partner" sequence="13" />
 		<menuitem action="account_creditnote.action_creditnote" id="menu_creditnote_1"
 			parent="ms_mobile_sale_credit.ar_collection_menu" sequence="2" />
 		<!-- Rout Plan Settings -->
-		<menuitem id="rout_plan_setting" name="Rout Plan Setting"
+		<menuitem id="rout_plan_setting" name="Route Plan Setting"
 			parent="base.menu_base_config" />
 		<menuitem action='ms_sale_plan_setting.action_sale_plan_setting'
 			id="ms_sale_plan_setting.menu_sale_plan_setting" parent="rout_plan_setting"
@@ -450,7 +472,7 @@
 		<record model="ir.ui.menu" id="product_product.product_maingroup_menu">
 			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
 		</record>
-		<!-- Division Group-->
+		<!-- Division Group -->
 		<record model="ir.ui.menu" id="product_product.product_devision_menu">
 			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
 		</record>
@@ -461,6 +483,6 @@
 		<!-- Import Sale Order -->
 		<record model="ir.ui.menu" id="data_import_dms.menu_data_import_mobile_so">
 			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
-		</record>		
+		</record>
 	</data>
 </openerp>
