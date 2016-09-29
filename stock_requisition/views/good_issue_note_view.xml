@@ -109,6 +109,7 @@
 							context="{'group_by':'to_location_id'}" />
 						<filter string="Date of Issue" icon="terp-partner" domain="[]"
 							context="{'group_by':'issue_date'}" />
+						<filter string="Pending" domain="[('state','=','draft')]" name="state_filter"/>
 					</group>
 				</search>
 			</field>
@@ -118,7 +119,7 @@
 			<field name="name">Good Issue Note</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">good.issue.note</field>
-			<field name="context">{}</field>
+			<field name="context">{'search_default_state_filter': 1}</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" ref="good_issue_note_tree" />
