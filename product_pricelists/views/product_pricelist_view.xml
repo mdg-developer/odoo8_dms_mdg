@@ -21,7 +21,7 @@
 				<xpath expr="//form/h1" position="after">
 					<group>
 						<group>
-							<field name="main_group_id" string="Main Group" />
+							<field name="branch_id" string="Branch"  widget="many2many_tags"/>
 						</group>
 					</group>
 				</xpath>

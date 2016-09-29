@@ -9,14 +9,43 @@
 		<menuitem id="menu_sale_order_menu" parent="base.menu_base_partner"
 			name="Pre-Sales" sequence="1" />
 		<menuitem id="ms_mobile_sale.menu_pre_sale_order_menu"
-			parent="menu_sale_order_menu" name="Pre-Sales Orders"
+			parent="menu_sale_order_menu" name="Pre-Sales Mobile"
 			action="ms_mobile_sale.action_pre_sale_order" sequence="1" />
+		<!-- Sale Order -->
 
+		<record id="action_orders1" model="ir.actions.act_window">
+			<field name="name">Pre-Sales Orders</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">sale.order</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form,calendar,graph</field>
+			<field name="search_view_id" ref="sale.view_sales_order_filter" />
+			<field name="context">{
+				'search_default_my_sale_orders_filter': 1
+				}
+			</field>
+			<field name="domain">[('state', 'not in', ('draft', 'sent', 'cancel')),('pre_order','=',True)]
+			</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create a quotation that can be converted into a sales
+					order.
+				</p>
+				<p>
+					Odoo will help you efficiently handle the complete sales flow:
+					quotation, sales order, delivery, invoicing and payment.
+				</p>
+			</field>
+		</record>
+		<menuitem action="action_orders1"  id="menu_sale_order_1"
+			parent="menu_sale_order_menu" sequence="2"
+			groups="base.group_sale_salesman,base.group_sale_manager" />
 		<!-- Direct Sale -->
 		<menuitem id="menu_direct_sale_order_menu" parent="base.menu_base_partner"
-			name="Direct Sale" sequence="2" />
+			name="Direct Sales" sequence="2" />
 		<menuitem id="ms_mobile_sale.menu_mobile_sale_order" parent="menu_direct_sale_order_menu"
-			action="ms_mobile_sale.action_moble_sale_order" sequence="1" />
+			name="Direct Sales Mobile" action="ms_mobile_sale.action_moble_sale_order"
+			sequence="1" />
 
 		<record id="action_stock_requsition1" model="ir.actions.act_window">
 			<field name="name">Pre-Sales RFI</field>
@@ -54,7 +83,7 @@
 		</record>
 		<!-- RFI -->
 		<menuitem action='action_stock_requsition1' id="menu_stock_requisition"
-			name="Pre-Sales RFI" parent="menu_sale_order_menu" sequence="2"
+			name="Pre-Sales RFI" parent="menu_sale_order_menu" sequence="3"
 			groups="stock.group_stock_manager,base.group_sale_manager" />
 		<menuitem action='action_stock_requsition2' id="menu_direct_stock_requisition"
 			name="Direct Sales RFI" parent="menu_direct_sale_order_menu"
@@ -102,18 +131,18 @@
 				</p>
 			</field>
 		</record>
-       <record id="action_invoice_tree_cus_1_view1" model="ir.actions.act_window.view">
-            <field eval="1" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="act_window_id" ref="action_invoice_tree_cus_1"/>
-        </record>
+		<record id="action_invoice_tree_cus_1_view1" model="ir.actions.act_window.view">
+			<field eval="1" name="sequence" />
+			<field name="view_mode">tree</field>
+			<field name="act_window_id" ref="action_invoice_tree_cus_1" />
+		</record>
 
-        <record id="action_invoice_tree_cus_1_view2" model="ir.actions.act_window.view">
-            <field eval="2" name="sequence"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="account.invoice_form"/>
-            <field name="act_window_id" ref="action_invoice_tree_cus_1"/>
-        </record>
+		<record id="action_invoice_tree_cus_1_view2" model="ir.actions.act_window.view">
+			<field eval="2" name="sequence" />
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="account.invoice_form" />
+			<field name="act_window_id" ref="action_invoice_tree_cus_1" />
+		</record>
 		<record id="action_invoice_tree_cus_2" model="ir.actions.act_window">
 			<field name="name">Direct Sales Invoices</field>
 			<field name="res_model">account.invoice</field>
@@ -146,28 +175,28 @@
 				</p>
 			</field>
 		</record>
-		
-       <record id="action_invoice_tree_cus_2_view1" model="ir.actions.act_window.view">
-            <field eval="1" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="act_window_id" ref="action_invoice_tree_cus_2"/>
-        </record>
 
-        <record id="action_invoice_tree_cus_2_view2" model="ir.actions.act_window.view">
-            <field eval="2" name="sequence"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="account.invoice_form"/>
-            <field name="act_window_id" ref="action_invoice_tree_cus_2"/>
-        </record>
-        		
+		<record id="action_invoice_tree_cus_2_view1" model="ir.actions.act_window.view">
+			<field eval="1" name="sequence" />
+			<field name="view_mode">tree</field>
+			<field name="act_window_id" ref="action_invoice_tree_cus_2" />
+		</record>
+
+		<record id="action_invoice_tree_cus_2_view2" model="ir.actions.act_window.view">
+			<field eval="2" name="sequence" />
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="account.invoice_form" />
+			<field name="act_window_id" ref="action_invoice_tree_cus_2" />
+		</record>
+
 		<menuitem action="action_invoice_tree_cus_1" id="menu_pre_action_invoice_tree_cus_1"
 			parent="menu_sale_order_menu" name="Pre-Sales Invoices" />
 		<menuitem action="action_invoice_tree_cus_2" id="menu_direct_action_invoice_tree_cus_2"
 			parent="menu_direct_sale_order_menu" name="Direct Sales Invoices" />
-		<!-- Sale Order -->
 		<!-- Quotation -->
-		<menuitem id="sale.menu_sale_quotations" action="sale.action_quotations"
-			parent="base.menu_sales" name="Draft Order" sequence="1" />
+<!-- 		<menuitem id="sale.menu_sale_quotations" action="sale.action_quotations" -->
+<!-- 			parent="base.menu_sales" name="Draft Order" sequence="1" /> -->
+		<!-- Sale Order -->
 		<menuitem action="sale.action_orders" id="sale.menu_sale_order"
 			parent="base.menu_sales" sequence="2"
 			groups="base.group_sale_salesman,base.group_sale_manager" />
@@ -421,10 +450,17 @@
 		<record model="ir.ui.menu" id="product_product.product_maingroup_menu">
 			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
 		</record>
-		<!-- Devision Group -->
+		<!-- Division Group-->
 		<record model="ir.ui.menu" id="product_product.product_devision_menu">
 			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
 		</record>
-
+		<!-- Draft -->
+		<record model="ir.ui.menu" id="sale.menu_sale_quotations">
+			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
+		</record>
+		<!-- Import Sale Order -->
+		<record model="ir.ui.menu" id="data_import_dms.menu_data_import_mobile_so">
+			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
+		</record>		
 	</data>
 </openerp>

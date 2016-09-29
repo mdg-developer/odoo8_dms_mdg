@@ -129,7 +129,7 @@
 		</record>
 
 		<menuitem id="sales_denomination" action="action_sales_denomination_view"
-			parent="base.menu_sales" name="Sales Denomination" sequence="12" />
+			parent="account.menu_finance_bank_and_cash" name="Cash Denomination" sequence="15" />
 	</data>
 </openerp>
 	    

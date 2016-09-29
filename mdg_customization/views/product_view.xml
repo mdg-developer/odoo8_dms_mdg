@@ -84,8 +84,8 @@
 				</field>
 				<field name="categ_id" position="after">
 					<field name="list_price" />
-					<field name="price_discount" string=" +/- " />
-					<field name="price_surcharge" string="%change" />
+					<field name="price_discount"  string="%Change" />
+					<field name="price_surcharge"  string=" +/- " />
 				</field>
 				<field name="product_tmpl_id" position="replace">
 					<field name="product_tmpl_id" invisible="1" />
@@ -121,9 +121,9 @@
 							<field name="product_tmpl_id" invisible="1" />
 							<field name="product_uom_id" />
 							<field name="list_price" />
-							<field name="price_discount" string=" +/- " 
+							<field name="price_discount" string="%Change"
 								on_change="price_dis_change(product_id,price_discount,new_price,price_surcharge)" />
-							<field name="price_surcharge" string="%change"
+							<field name="price_surcharge"   string=" +/- " 
 								on_change="price_subcharge_change(product_id,price_discount,new_price,price_surcharge)" />
 							<field name="new_price" />
 						</tree>
@@ -143,9 +143,9 @@
 			<field name="domain">[]
 			</field>
 		</record>
-		<menuitem action='action_product_pricelist_item' id="menu_product_pricelist_item"
-			parent="product.menu_product_pricelist_main" sequence="3"
-			groups="base.group_no_one" />
+<!-- 		<menuitem action='action_product_pricelist_item' id="menu_product_pricelist_item" -->
+<!-- 			parent="product.menu_product_pricelist_main" sequence="3" -->
+<!-- 			groups="base.group_no_one" /> -->
 
 	</data>
 </openerp>

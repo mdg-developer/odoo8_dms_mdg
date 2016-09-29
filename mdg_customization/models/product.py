@@ -1,5 +1,10 @@
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
+class product_product(osv.osv):
+    _inherit = 'product.product'
+    _columns = {
+        'default_code' : fields.char('Internal Reference', select=True,required=True),
+        }
 
 class product_template(osv.osv):
     _inherit = 'product.template'
@@ -8,6 +13,8 @@ class product_template(osv.osv):
         'is_foc':fields.boolean('Is FOC'),
         'big_list_price': fields.float('Bigger Price', digits_compute=dp.get_precision('Product Price'), help="Base price to compute the customer price. Sometimes called the catalog price."),
         'list_price': fields.float('Smaller Price', digits_compute=dp.get_precision('Product Price'), help="Base price to compute the customer price. Sometimes called the catalog price."),
+         'default_code': fields.related('product_variant_ids', 'default_code', type='char', string='Internal Reference',required=True),
+                
                     }
     
     def _get_uom_id(self, cr, uid, *args):
@@ -76,11 +83,6 @@ class price_list_line(osv.osv):
     _description = 'Price List Line'           
     _columns = {                
         'team_id':fields.many2one('crm.case.section', 'Line', ondelete='cascade', select=True),    
-        'property_product_pricelist': fields.property(
-            type='many2one', 
-            relation='product.pricelist', 
-            domain=[('type','=','sale')],
-            string="Sale Pricelist", 
-            help="This pricelist will be used, instead of the default one, for sales to the current partner"),
+        'property_product_pricelist': fields.many2one('product.pricelist',  string="Sale Pricelist", domain=[('type','=','sale')] ),
         'is_default':fields.boolean('Default'),
         }
