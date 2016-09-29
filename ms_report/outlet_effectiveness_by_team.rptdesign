@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.4.2.v201410272105 Build &lt;4.4.2.v20150217-1805></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="bidiLayoutOrientation">ltr</property>
@@ -199,6 +199,18 @@ order by code]]></xml-property>
                     <text-property name="heading">ach</text-property>
                 </structure>
                 <structure>
+                    <property name="columnName">day_plan</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">day_plan</text-property>
+                    <text-property name="heading">day_plan</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">trip_plan</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">trip_plan</text-property>
+                    <text-property name="heading">trip_plan</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">plan</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">plan</text-property>
@@ -309,16 +321,26 @@ order by code]]></xml-property>
                     </structure>
                     <structure>
                         <property name="position">5</property>
-                        <property name="name">plan</property>
+                        <property name="name">day_plan</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">6</property>
-                        <property name="name">miss</property>
+                        <property name="name">trip_plan</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">7</property>
+                        <property name="name">plan</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">miss</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
                         <property name="name">percent_target</property>
                         <property name="dataType">float</property>
                     </structure>
@@ -363,20 +385,34 @@ else
                 </structure>
                 <structure>
                     <property name="position">5</property>
+                    <property name="name">day_plan</property>
+                    <property name="nativeName">day_plan</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">-5</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">trip_plan</property>
+                    <property name="nativeName">trip_plan</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">-5</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
                     <property name="name">plan</property>
                     <property name="nativeName">plan</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">-5</property>
                 </structure>
                 <structure>
-                    <property name="position">6</property>
+                    <property name="position">8</property>
                     <property name="name">miss</property>
                     <property name="nativeName">miss</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">-5</property>
                 </structure>
                 <structure>
-                    <property name="position">7</property>
+                    <property name="position">9</property>
                     <property name="name">percent_target</property>
                     <property name="nativeName">percent_target</property>
                     <property name="dataType">float</property>
@@ -412,9 +448,12 @@ sale_plan_trip as(
 	and sale_team is not null
 	group by spt.sale_team) 
 
-select row_number() over (order by code) as seq,*,(plan-ach) as miss,(plan::float-(plan-ach)::float)/plan::float as percent_target
+select row_number() over (order by code) as seq,*,case when (plan-ach)>=0 then  (plan-ach) end as miss,case when plan>0 then (plan::float-(plan-ach)::float)/plan::float end as percent_target
 from 
-(select distinct sales_team.code,sales_team.id,inv.ach,(day_plan.plan+trip_plan.plan) as plan
+(
+select *,(day_plan+trip_plan) as plan
+from (
+select distinct sales_team.code,sales_team.id,inv.ach,case when day_plan.plan is null then 0 else day_plan.plan end as day_plan,case when trip_plan.plan is null then 0 else trip_plan.plan end as trip_plan
 from crm_case_section sales_team
 left join account_invoice inv on (sales_team.id=inv.sale_team_id)
 left join sale_plan_day day_plan on (sales_team.id=day_plan.sale_team_id)
@@ -423,6 +462,7 @@ where active=True
 --$sales_team$
 --and sales_team.branch_id=?
 order by code)A
+)AA
 ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
@@ -713,18 +753,18 @@ order by code)A
     <page-setup>
         <simple-master-page name="NewSimpleMasterPage" id="50" extends="report_library.NewSimpleMasterPage">
             <overridden-values>
-                <ref-entry baseId="37" name="NewGrid" id="51"/>
-                <ref-entry baseId="38" id="52"/>
-                <ref-entry baseId="39" id="53"/>
-                <ref-entry baseId="40" id="54"/>
-                <ref-entry baseId="41" id="55"/>
-                <ref-entry baseId="42" id="56"/>
+                <ref-entry baseId="37" name="NewGrid" id="106"/>
+                <ref-entry baseId="38" id="107"/>
+                <ref-entry baseId="39" id="108"/>
+                <ref-entry baseId="40" id="109"/>
+                <ref-entry baseId="41" id="110"/>
+                <ref-entry baseId="42" id="111"/>
                 <ref-entry baseId="58" name="NewImage" id="58"/>
-                <ref-entry baseId="43" id="59"/>
-                <ref-entry baseId="59" name="NewData" id="60"/>
-                <ref-entry baseId="44" id="61"/>
-                <ref-entry baseId="45" id="62"/>
-                <ref-entry baseId="48" id="63"/>
+                <ref-entry baseId="43" id="112"/>
+                <ref-entry baseId="59" name="NewData" id="59"/>
+                <ref-entry baseId="44" id="113"/>
+                <ref-entry baseId="45" id="114"/>
+                <ref-entry baseId="48" id="115"/>
             </overridden-values>
         </simple-master-page>
     </page-setup>
