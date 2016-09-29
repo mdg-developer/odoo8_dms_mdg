@@ -173,26 +173,27 @@ class stock_return(osv.osv):
             rec_big_quantity=line.rec_big_quantity
             rec_small_quantity=line.rec_small_quantity
             rec_small_uom_id=line.rec_small_uom_id.id             
-            product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)       
-            name = line.product_id.name_template                                                                               
-            cr.execute("select floor(1/factor) as ratio from product_uom where active = true and id=%s",(rec_big_uom_id,))
-            big_qty=cr.fetchone()
-            if big_qty:
-                    bigger_qty=big_qty[0]*rec_big_quantity                        
-                    move_id=move_obj.create(cr, uid, {'picking_id': picking_id,
-                                              'picking_type_id':picking_type_id,
-                                            #  'restrict_lot_id':lot_id,
-                                          'product_id': product_id,
-                                          'product_uom_qty': rec_small_quantity+bigger_qty,
-                                          'product_uos_qty': rec_small_quantity+bigger_qty,
-                                          'product_uom':rec_small_uom_id,
-                                          'location_id':ven_location_id,
-                                          'location_dest_id':main_location_id,
-                                          'name':name,
-                                           'origin':origin,
-                                          'state':'confirmed'}, context=context)     
-                    move_id=move_obj.action_done(cr, uid, move_id, context=context)
-                    print 'doned',move_id                         
+            if (rec_small_quantity+rec_big_quantity>0):
+                product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)       
+                name = line.product_id.name_template                                                                               
+                cr.execute("select floor(1/factor) as ratio from product_uom where active = true and id=%s",(rec_big_uom_id,))
+                big_qty=cr.fetchone()
+                if big_qty:
+                        bigger_qty=big_qty[0]*rec_big_quantity                        
+                        move_id=move_obj.create(cr, uid, {'picking_id': picking_id,
+                                                  'picking_type_id':picking_type_id,
+                                                #  'restrict_lot_id':lot_id,
+                                              'product_id': product_id,
+                                              'product_uom_qty': rec_small_quantity+bigger_qty,
+                                              'product_uos_qty': rec_small_quantity+bigger_qty,
+                                              'product_uom':rec_small_uom_id,
+                                              'location_id':ven_location_id,
+                                              'location_dest_id':main_location_id,
+                                              'name':name,
+                                               'origin':origin,
+                                              'state':'confirmed'}, context=context)     
+                        move_id=move_obj.action_done(cr, uid, move_id, context=context)
+                        print 'doned',move_id                         
         return self.write(cr, uid, ids, {'state':'approve'})    
 
             
