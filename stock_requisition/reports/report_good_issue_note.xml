@@ -18,8 +18,10 @@
 
             <div class="row mt32 mb32">
                 <div class="col-xs-2" t-if="o.from_location_id.name">
-                    <strong>Issue From:</strong>
-                    <p t-field="o.from_location_id.name"/>
+                    <strong>Issue From:</strong><br></br>
+                    <span t-field="o.from_location_id.location_id.name" />
+					<b>/</b>
+					<span t-field="o.from_location_id.name" />
                 </div>
                 <div class="col-xs-2" t-if="o.request_by">
                     <strong>Request By:</strong>
@@ -37,8 +39,10 @@
             
             <div class="row mt32 mb32">
                 <div class="col-xs-2" t-if="o.to_location_id.name">
-                    <strong>Issue To:</strong>
-                    <p t-field="o.to_location_id.name"/>
+                    <strong>Issue To:</strong><br></br>
+					<span t-field="o.to_location_id.location_id.name" />
+					<b>/</b>
+					<span t-field="o.to_location_id.name" />
                 </div>
                 <div class="col-xs-2" t-if="o.receive_by">
                     <strong>Received By:</strong>
@@ -49,8 +53,10 @@
                     <p t-field="o.approve_by"/>
                 </div>
                 <div class="col-xs-2" t-if="o.vehicle_id.model_id.modelname">
-                    <strong>Vehicle No:</strong>
-                    <p t-field="o.vehicle_id.model_id.modelname"/>
+                    <strong>Vehicle No:</strong><br></br>
+                    <span t-field="o.vehicle_id.model_id.brand_id.name" />
+					<b>/</b>
+					<span t-field="o.vehicle_id.model_id.modelname" />
                 </div>
                 <div class="col-xs-2" t-if="o.issue_date">
                     <strong>Date for Issue:</strong>
