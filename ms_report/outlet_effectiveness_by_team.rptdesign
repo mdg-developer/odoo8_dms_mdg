@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.4.2.v201410272105 Build &lt;4.4.2.v20150217-1805></property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="bidiLayoutOrientation">ltr</property>
@@ -62,7 +62,7 @@
         </scalar-parameter>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="65"
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="116"
  extends="report_library.Data Source"/>
     </data-sources>
     <data-sets>
@@ -424,7 +424,7 @@ else
 	from account_invoice 	
 	where state!='cancel'
 	and origin like 'SO%'
-	and date_invoice between ? and ?	
+	and date_invoice between ? and ?
 	and section_id is not null
 	group by section_id),
 
@@ -434,7 +434,7 @@ sale_plan_day as(
 	where spd.id=rel.sale_plan_day_id
 	and res.id=rel.partner_id	
 	and spd.active='true'
-	and spd.date between ? and ?	
+	and spd.date between ? and ?
 	and sale_team is not null
 	group by spd.sale_team),
 
@@ -444,16 +444,16 @@ sale_plan_trip as(
 	where spt.id=rel.sale_plan_trip_id
 	and res.id=rel.partner_id	
 	and spt.active='true'
-	and spt.date between ? and ?	
+	and spt.date between ? and ?
 	and sale_team is not null
 	group by spt.sale_team) 
 
-select row_number() over (order by code) as seq,*,case when (plan-ach)>=0 then  (plan-ach) end as miss,case when plan>0 then (plan::float-(plan-ach)::float)/plan::float end as percent_target
+select row_number() over (order by code) as seq,*,case when (plan-ach)>=0 then (plan-ach) else 0 end as miss,case when plan>0 then (plan::float-(plan-ach)::float)/plan::float else 0 end as percent_target
 from 
 (
 select *,(day_plan+trip_plan) as plan
 from (
-select distinct sales_team.code,sales_team.id,inv.ach,case when day_plan.plan is null then 0 else day_plan.plan end as day_plan,case when trip_plan.plan is null then 0 else trip_plan.plan end as trip_plan
+select distinct sales_team.code,sales_team.id,case when inv.ach is null then 0 else inv.ach end ach,case when day_plan.plan is null then 0 else day_plan.plan end as day_plan,case when trip_plan.plan is null then 0 else trip_plan.plan end as trip_plan
 from crm_case_section sales_team
 left join account_invoice inv on (sales_team.id=inv.sale_team_id)
 left join sale_plan_day day_plan on (sales_team.id=day_plan.sale_team_id)
