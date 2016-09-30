@@ -386,9 +386,9 @@ else
                     <property name="nativeDataType">2</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select row_number() over (order by name) as seq,*,(value/invoices) as value_inv
+            <xml-property name="queryText"><![CDATA[select row_number() over (order by name) as seq,*,case when invoices>0 then (value/invoices) else 0 end as value_inv
 from 
-(select res.id,res.name,sum(amount_total) as value,count(inv.id) as invoices,partner_id,inv.branch_id,inv.company_id
+(select res.id,res.name,COALESCE(sum(amount_total),0) as value,count(inv.id) as invoices,partner_id,inv.branch_id,inv.company_id
 from account_invoice inv,res_partner res
 where inv.partner_id=res.id 
 and inv.state != 'cancel'
