@@ -354,16 +354,16 @@ else
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[WITH saletarget AS (
-	select stl.product_id,sum(distribution_price) target 
+	select stl.product_id,COALESCE(sum(distribution_price),0) target 
 	from sales_target st, sales_target_line stl
 	where st.id = stl.sale_ids 
-	and st.date between ? and ? 
+	and st.date between ? and ?
 	--$sales_team$
 	--$branch_id$
 	group by product_id
 ),
 sale AS (
-	select count(inv.partner_id) as ach,product_id
+	select count(inv.partner_id) as ach,product_id	
 	from account_invoice inv,account_invoice_line inv_line
 	where inv.id=inv_line.invoice_id
 	and inv.state !='cancel'
@@ -374,9 +374,9 @@ sale AS (
 	group by product_id
 )
 
-select *,(ach::float/target::float) as percent_target
+select *,case when target>0 then (ach::float/target::float) when target=0 then 0 end as percent_target
 from 
-(select row_number() over (order by name_template) as seq,name_template,sale.ach,target.target
+(select row_number() over (order by name_template) as seq,name_template,case when sale.ach is null then 0 else sale.ach end as ach,case when target.target is null then 0 else target.target end as target
 from product_product pp
 left join product_template pt on (pp.product_tmpl_id=pt.id)
 left join saletarget target on (pp.id=target.product_id)
