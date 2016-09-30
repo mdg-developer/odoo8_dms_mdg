@@ -725,7 +725,7 @@ class mobile_sale_order(osv.osv):
     def get_products_by_sale_team(self, cr, uid, section_id , context=None, **kwargs):
         cr.execute('''select  pp.id,pt.list_price , coalesce(replace(pt.description,',',';'), ' ') as description,pt.categ_id,pc.name as categ_name,pp.default_code, 
                          pt.name,substring(replace(cast(pt.image_small as text),'/',''),1,5) as image_small,pt.main_group,pt.uom_ratio,
-                         pp.product_tmpl_id
+                         pp.product_tmpl_id,pt.is_foc
                         from crm_case_section_product_product_rel crm_real ,
                         crm_case_section ccs ,product_template pt, product_product pp , product_category pc
                         where pp.id = crm_real.product_product_id
@@ -771,11 +771,12 @@ class mobile_sale_order(osv.osv):
                         and pr.id = pro_br_rel.promos_rules_id
                         and pro_br_rel.res_branch_id = %s
                         and pr.state in (%s) 
+                        and  now()::date  between from_date::date and to_date::date
                         ''', (section_id, branch_id, state,))
         datas = cr.fetchall()
         return datas
     
-    def get_promos_act_datas(self, cr, uid , section_id , branch_id, context=None, **kwargs):
+    def get_promos_act_datas(self, cr, uid , section_id , branch_id, promo_id, context=None, **kwargs):
         cr.execute('''select act.id,act.promotion,act.sequence as act_seq ,act.arguments,act.action_type,act.product_code
                             from promos_rules r ,promos_rules_actions act,promos_rules_res_branch_rel pro_br_rel
                             where r.id = act.promotion
@@ -786,11 +787,12 @@ class mobile_sale_order(osv.osv):
                             where cs.id = mg.crm_case_section_id and cs.id = %s)
                             and r.id = pro_br_rel.promos_rules_id
                             and pro_br_rel.res_branch_id = %s
-                    ''', (section_id, branch_id,))
+                            and act.promotion = %s                    
+                    ''', (section_id, branch_id, promo_id,))
         datas = cr.fetchall()
         cr.execute
         return datas
-    def get_promos_cond_datas(self, cr, uid , section_id , branch_id, context=None, **kwargs):
+    def get_promos_cond_datas(self, cr, uid , section_id , branch_id,promo_id, context=None, **kwargs):
         cr.execute('''select cond.id,cond.promotion,cond.sequence as cond_seq,
                             cond.attribute as cond_attr,cond.comparator as cond_comparator,
                             cond.value as comp_value
@@ -803,10 +805,12 @@ class mobile_sale_order(osv.osv):
                             where cs.id = mg.crm_case_section_id and cs.id = %s)
                             and r.id = pro_br_rel.promos_rules_id
                             and pro_br_rel.res_branch_id = %s
-                    ''', (section_id, branch_id,))
+                            and cond.promotion = %s  
+                    ''', (section_id, branch_id,promo_id,))
         datas = cr.fetchall()
         cr.execute
         return datas
+   
     def get_promos_rule_partner_datas(self, cr, uid , section_id , context=None, **kwargs):
         cr.execute('''select category_id,rule_id from rule_partner_cat_rel''')
         datas = cr.fetchall()
@@ -1726,12 +1730,19 @@ class mobile_sale_order(osv.osv):
             
             if stock:
                 for sr in stock:                                    
-                    cursor.execute('select van_id from crm_case_section where id = %s ', (sr['sale_team_id'],))
+                    cursor.execute('select van_id,location_id,issue_location_id,delivery_team_id from crm_case_section where id = %s ', (sr['sale_team_id'],))
                     data = cursor.fetchall()
                     if data:
                         vehcle_no = data[0][0]
+                        from_location_id = data[0][1]
+                        to_location_id = data[0][2]
+                        delivery_id = data[0][3]                        
                     else:
                         vehcle_no = None
+                        from_location_id = None
+                        to_location_id = None
+                        delivery_id = None          
+                    
                     mso_result = {
                         'request_date':sr['request_date'],
                         'request_by':sr['request_by'],
@@ -1741,6 +1752,9 @@ class mobile_sale_order(osv.osv):
                         'company_id':sr['company_id'],
                         'branch_id':sr['branch_id'],
                         'vehicle_no':vehcle_no,
+                        'from_location_id':from_location_id,
+                        'to_location_id':to_location_id,
+                        'sale_team_id':delivery_id,
                     }
                     stock_id = stock_request_obj.create(cursor, user, mso_result, context=context)
                     
@@ -1784,7 +1798,7 @@ class mobile_sale_order(osv.osv):
         return datas
     
     def get_account_journal(self, cr, uid, context=None, **kwargs):    
-        cr.execute("""select id,name from account_journal where type in ('cash','bank')""")
+        cr.execute("""select id,name from account_journal where is_tablet = true""")
         datas = cr.fetchall()        
         return datas
         
@@ -1924,7 +1938,53 @@ class mobile_sale_order(osv.osv):
         except Exception, e:
             print 'False'
             return False  
-        
+    
+    def get_country(self, cr, uid , context=None):        
+        cr.execute('''select id,code,name from res_country where id between 146 and 160''')
+        datas = cr.fetchall()        
+        return datas
+    def get_division_state(self, cr, uid , context=None):        
+        cr.execute('''select id,name from res_country_state''')
+        datas = cr.fetchall()        
+        return datas
+    
+    def get_city(self, cr, uid , context=None):        
+        cr.execute('''select id,code,name,state_id from res_city''')
+        datas = cr.fetchall()        
+        return datas
+    
+    def get_township(self, cr, uid , context=None):        
+        cr.execute('''select id,code,name,city from res_township''')
+        datas = cr.fetchall()        
+        return datas
+
+    def get_outlet_type(self, cr, uid , context=None):        
+        cr.execute('''select id,name from outlettype_outlettype''')
+        datas = cr.fetchall()        
+        return datas
+    
+    def get_sale_branch(self, cr, uid , context=None):        
+        cr.execute('''select id,name from sale_branch''')
+        datas = cr.fetchall()        
+        return datas
+    
+    def get_sale_demarcation(self, cr, uid , context=None):        
+        cr.execute('''select id,name from sale_demarcation''')
+        datas = cr.fetchall()        
+        return datas
+     
+    def get_sale_class(self, cr, uid , context=None):        
+        cr.execute('''select id,name from sale_class''')
+        datas = cr.fetchall()        
+        return datas
+    
+    def get_frequency(self, cr, uid , context=None):        
+        cr.execute('''select id,name from plan_frequency''')
+        datas = cr.fetchall()        
+        return datas
+    
+    
+    
 mobile_sale_order()
 
 class mobile_sale_order_line(osv.osv):
