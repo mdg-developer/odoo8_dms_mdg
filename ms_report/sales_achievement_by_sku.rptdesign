@@ -197,88 +197,22 @@ order by code]]></xml-property>
                     <text-property name="heading">seq</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">ach_amt</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">ach_amt</text-property>
-                    <text-property name="heading">ach_amt</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">section_id</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">section_id</text-property>
-                    <text-property name="heading">section_id</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">month</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">month</text-property>
-                    <text-property name="heading">month</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">year</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">year</text-property>
-                    <text-property name="heading">year</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">product_id</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">product_id</text-property>
-                    <text-property name="heading">product_id</text-property>
-                </structure>
-                <structure>
                     <property name="columnName">name_template</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">name_template</text-property>
                     <text-property name="heading">name_template</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">date_order</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">date_order</text-property>
-                    <text-property name="heading">date_order</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">branch_id</property>
+                    <property name="columnName">ach_amt</property>
                     <property name="analysis">measure</property>
-                    <text-property name="displayName">branch_id</text-property>
-                    <text-property name="heading">branch_id</text-property>
+                    <text-property name="displayName">ach_amt</text-property>
+                    <text-property name="heading">ach_amt</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">target_amt</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">target_amt</text-property>
                     <text-property name="heading">target_amt</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">sale_team_id</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">sale_team_id</text-property>
-                    <text-property name="heading">sale_team_id</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">month_12</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">month</text-property>
-                    <text-property name="heading">month</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">year_13</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">year</text-property>
-                    <text-property name="heading">year</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">product_id_14</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">product_id</text-property>
-                    <text-property name="heading">product_id</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">branch_id_15</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">branch_id</text-property>
-                    <text-property name="heading">branch_id</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">percent_target</property>
@@ -318,76 +252,21 @@ order by code]]></xml-property>
                     </structure>
                     <structure>
                         <property name="position">2</property>
-                        <property name="name">ach_amt</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
-                        <property name="position">3</property>
-                        <property name="name">section_id</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">4</property>
-                        <property name="name">month</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">5</property>
-                        <property name="name">year</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">6</property>
-                        <property name="name">product_id</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">7</property>
                         <property name="name">name_template</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">8</property>
-                        <property name="name">date_order</property>
-                        <property name="dataType">date</property>
+                        <property name="position">3</property>
+                        <property name="name">ach_amt</property>
+                        <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">9</property>
-                        <property name="name">branch_id</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">10</property>
+                        <property name="position">4</property>
                         <property name="name">target_amt</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">11</property>
-                        <property name="name">sale_team_id</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">12</property>
-                        <property name="name">month_12</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">13</property>
-                        <property name="name">year_13</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">14</property>
-                        <property name="name">product_id_14</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">15</property>
-                        <property name="name">branch_id_15</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">16</property>
+                        <property name="position">5</property>
                         <property name="name">percent_target</property>
                         <property name="dataType">decimal</property>
                     </structure>
@@ -418,134 +297,62 @@ else
                 </structure>
                 <structure>
                     <property name="position">2</property>
-                    <property name="name">ach_amt</property>
-                    <property name="nativeName">ach_amt</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">2</property>
-                </structure>
-                <structure>
-                    <property name="position">3</property>
-                    <property name="name">section_id</property>
-                    <property name="nativeName">section_id</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">4</property>
-                    <property name="name">month</property>
-                    <property name="nativeName">month</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">5</property>
-                    <property name="name">year</property>
-                    <property name="nativeName">year</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">6</property>
-                    <property name="name">product_id</property>
-                    <property name="nativeName">product_id</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">7</property>
                     <property name="name">name_template</property>
                     <property name="nativeName">name_template</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">8</property>
-                    <property name="name">date_order</property>
-                    <property name="nativeName">date_order</property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
+                    <property name="position">3</property>
+                    <property name="name">ach_amt</property>
+                    <property name="nativeName">ach_amt</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">9</property>
-                    <property name="name">branch_id</property>
-                    <property name="nativeName">branch_id</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">10</property>
+                    <property name="position">4</property>
                     <property name="name">target_amt</property>
                     <property name="nativeName">target_amt</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">11</property>
-                    <property name="name">sale_team_id</property>
-                    <property name="nativeName">sale_team_id</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">12</property>
-                    <property name="name">month_12</property>
-                    <property name="nativeName">month</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">13</property>
-                    <property name="name">year_13</property>
-                    <property name="nativeName">year</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">14</property>
-                    <property name="name">product_id_14</property>
-                    <property name="nativeName">product_id</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">15</property>
-                    <property name="name">branch_id_15</property>
-                    <property name="nativeName">branch_id</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">16</property>
+                    <property name="position">5</property>
                     <property name="name">percent_target</property>
                     <property name="nativeName">percent_target</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select row_number() over (order by name_template) as seq,*,(ach_amt/target_amt) as percent_target
-from 
-(
-select sum(ach_amt) as ach_amt,section_id,month,year,product_id,name_template,date_order,branch_id
-from (
-select name_template,section_id,(product_uom_qty*price_unit) as ach_amt,date_part('month',date_order)::int as month,date_part('year',date_order)::int as year,product_id,(date_order+ '6 hour'::interval + '30 minutes'::interval)::date as date_order,branch_id
-from sale_order so,sale_order_line sol,product_product pp,product_template pt
-where so.id=sol.order_id
-and sol.product_id=pp.id
-and pp.product_tmpl_id=pt.id
-and so.state in ('progress','manual','done')
-and (is_foc!='true' or is_foc is null)
---$sales_team$
---$branch_id$
-and (date_order+ '6 hour'::interval + '30 minutes'::interval)::date between ? and ?)AA
-group by product_id,section_id,month,year,product_id,name_template,date_order,branch_id
-)A
-left join
-(
-select (price_unit*product_uom_qty) as target_amt,sale_team_id,month::int,year::int,product_id,branch_id
-from sales_target st,sales_target_line stl
-where st.id=stl.sale_ids
-)B on A.section_id=B.sale_team_id and A.month=B.month and A.year=B.year and A.product_id=B.product_id and A.branch_id=B.branch_id
-order by name_template]]></xml-property>
+            <xml-property name="queryText"><![CDATA[with sale_order as (
+	select name_template,section_id,(product_uom_qty*price_unit) as ach_amt,date_part('month',date_order)::int as month,date_part('year',date_order)::int as year,product_id,(date_order+ '6 hour'::interval + '30 minutes'::interval)::date as date_order,branch_id
+	from sale_order so,sale_order_line sol,product_product pp,product_template pt
+	where so.id=sol.order_id
+	and sol.product_id=pp.id
+	and pp.product_tmpl_id=pt.id
+	and so.state in ('progress','manual','done')
+	and (is_foc!='true' or is_foc is null)
+	--$sales_team$
+	--$branch_id$
+	and (date_order+ '6 hour'::interval + '30 minutes'::interval)::date between ? and ?),
+
+ach_amt as (	
+	select COALESCE(sum(ach_amt),0) as ach_amt,product_id
+	from sale_order
+	group by product_id),
+
+target as (
+	select (price_unit*product_uom_qty) as target_amt,sale_team_id,st.month::int,st.year::int,stl.product_id,st.branch_id,pp.name_template
+	from sales_target st,sales_target_line stl,sale_order so,product_product pp
+	where st.id=stl.sale_ids
+	and pp.id=stl.product_id
+	and so.section_id=st.sale_team_id and so.month=st.month::int and so.year=st.year::int and so.product_id=stl.product_id and so.branch_id=st.branch_id)
+	
+select row_number() over (order by name_template) as seq,name_template,ach_amt as ach_amt,case when target_amt is null then 0 else target_amt end as target_amt,
+case when target_amt>0 then (ach_amt/target_amt) when target_amt=0 then 0 end as percent_target
+from ach_amt ach,target target
+where ach.product_id=target.product_id
+group by ach.product_id,name_template,target_amt,ach_amt]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
