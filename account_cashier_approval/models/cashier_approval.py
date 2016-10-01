@@ -305,6 +305,8 @@ class cashier_approval(osv.osv):
                                 }
                     voucherLineObj.create(cr, uid, line_data, context=context)  
                     voucherObj.button_proforma_voucher(cr, uid, vlist , context=context)
+                    cr.execute("""update account_invoice set state='paid'
+                    where id=%s and residual=0""",(invoice.id,))
                     cr.execute("""update sale_order set invoiced='t' from account_invoice
                     where sale_order.name=account_invoice.reference and account_invoice.residual=0 and account_invoice.id=%s""",(invoice.id,))
 #                 if voucherId:
