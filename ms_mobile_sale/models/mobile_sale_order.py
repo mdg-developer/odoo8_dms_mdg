@@ -1363,11 +1363,11 @@ class mobile_sale_order(osv.osv):
         return datas
         
     # Get Pending Delivery
-    def get_delivery_datas(self, cr, uid, saleTeamId, context=None, **kwargs):
+    def get_delivery_datas(self, cr, uid, saleTeamId,soList, context=None, **kwargs):
         
         sale_order_obj = self.pool.get('sale.order')
         list_val = None
-        list_val = sale_order_obj.search(cr, uid, [('pre_order', '=', True), ('delivery_id', '=', saleTeamId), ('shipped', '=', False), ('invoiced', '=', False)], context=context)
+        list_val = sale_order_obj.search(cr, uid, [('pre_order', '=', True), ('delivery_id', '=', saleTeamId), ('shipped', '=', False), ('invoiced', '=', False) , ('tb_ref_no', 'not in', soList)], context=context)
         print 'list_val', list_val
         list = []
         try:
@@ -1913,11 +1913,6 @@ class mobile_sale_order(osv.osv):
 
     def get_outlet_type(self, cr, uid , context=None):        
         cr.execute('''select id,name from outlettype_outlettype''')
-        datas = cr.fetchall()        
-        return datas
-    
-    def get_sale_branch(self, cr, uid , context=None):        
-        cr.execute('''select id,name from sale_branch''')
         datas = cr.fetchall()        
         return datas
     
