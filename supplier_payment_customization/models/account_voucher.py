@@ -1,15 +1,8 @@
-import time
-from lxml import etree
-
 from openerp.osv import fields, osv
-import openerp.addons.decimal_precision as dp
-from openerp.tools.translate import _
-from openerp.tools import float_compare
-from openerp.report import report_sxw
-import openerp
 
 class account_voucher(osv.osv):
     _inherit = 'account.voucher'
+<<<<<<< HEAD:supplier_payment_customization/models/account_voucher.py
     
     def onchange_discount(self, cr, uid, ids, context=None):
         res = {}
@@ -263,3 +256,31 @@ class account_voucher_line(osv.osv):
             'total_dis': total_discount,
             }
              return {'value': val}
+=======
+     
+    _columns = {
+                        'state':fields.selection(
+                        [('draft', 'Draft'),
+                         ('cancel', 'Cancelled'),
+                         ('finance_approve', 'Finance Approved'),
+                         ('cashier_approve', 'Cashier Approved'),
+                         ('proforma', 'Pro-forma'),
+                         ('posted', 'Posted')
+                        ], 'Status', readonly=True, track_visibility='onchange', copy=False,
+                        help=' * The \'Draft\' status is used when a user is encoding a new and unconfirmed Voucher. \
+                                    \n* The \'Pro-forma\' when voucher is in Pro-forma status,voucher does not have an voucher number. \
+                                    \n* The \'Posted\' status is used when user create voucher,a voucher number is generated and voucher entries are created in account \
+                                    \n* The \'Cancelled\' status is used when user cancel voucher.'),
+                
+              }
+    
+    def finance_approve(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state':'finance_approve'}, context=None)
+        return True
+    
+    def cashier_approve(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state':'cashier_approve'}, context=None)
+        return True
+        
+   
+>>>>>>> 8b283d7b8438737243a5fb70a48e6ef0f0f12e02:account/account_voucher_approval/models/account_voucher.py

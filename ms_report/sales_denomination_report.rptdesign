@@ -546,14 +546,33 @@ order by team.id]]></xml-property>
         </style>
     </styles>
     <page-setup>
-        <simple-master-page name="Simple MasterPage" id="2">
+        <simple-master-page name="NewSimpleMasterPage" id="247" extends="report_library.NewSimpleMasterPage">
             <property name="type">us-ledger</property>
-            <page-footer>
-                <text id="3">
-                    <property name="contentType">html</property>
-                    <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
-                </text>
-            </page-footer>
+            <property name="orientation">landscape</property>
+            <property name="rightMargin">0.25in</property>
+            <overridden-values>
+                <ref-entry baseId="37" name="NewGrid" id="248">
+                    <property name="verticalAlign">bottom</property>
+                    <property name="width">16.5in</property>
+                </ref-entry>
+                <ref-entry baseId="38" id="249">
+                    <property name="width">3.013888888888889in</property>
+                </ref-entry>
+                <ref-entry baseId="39" id="39">
+                    <property name="width">8in</property>
+                </ref-entry>
+                <ref-entry baseId="40" id="40">
+                    <property name="width">5.208333333333333in</property>
+                </ref-entry>
+                <ref-entry baseId="41" id="41"/>
+                <ref-entry baseId="42" id="42"/>
+                <ref-entry baseId="58" name="NewImage" id="58"/>
+                <ref-entry baseId="43" id="43"/>
+                <ref-entry baseId="59" name="NewData" id="59"/>
+                <ref-entry baseId="44" id="44"/>
+                <ref-entry baseId="45" id="45"/>
+                <ref-entry baseId="48" id="48"/>
+            </overridden-values>
         </simple-master-page>
     </page-setup>
     <body>
@@ -562,6 +581,7 @@ order by team.id]]></xml-property>
             <row id="9">
                 <cell id="10">
                     <grid id="135">
+                        <property name="width">16.4in</property>
                         <column id="136">
                             <property name="width">8.13888888888889in</property>
                         </column>
@@ -727,7 +747,7 @@ order by team.id]]></xml-property>
                             <property name="borderBottomWidth">thin</property>
                             <property name="borderRightStyle">solid</property>
                             <property name="borderRightWidth">thin</property>
-                            <property name="width">164px</property>
+                            <property name="width">2.1805555555555554in</property>
                             <property name="content">
                                 <data id="237">
                                     <property name="paddingRight">3pt</property>
@@ -947,6 +967,7 @@ order by team.id]]></xml-property>
                 </extended-item>
             </property>
             <property name="hideMeasureHeader">true</property>
+            <property name="width">16.4in</property>
             <list-property name="boundDataColumns">
                 <structure>
                     <property name="name">name</property>

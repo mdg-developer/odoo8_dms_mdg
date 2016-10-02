@@ -16,10 +16,13 @@ class account_creditnote(osv.osv):
                 'terms_and_conditions': fields.char('Terms and Conditions'),
                 'm_status':fields.selection([('new', 'New'), ('issued', 'Issued'),
                                                       ('used', 'Used')], string='Status',default='new'),
-                'type':fields.selection({('cash', 'Cash Rebate'), ('stock', 'Stock Rebate')}, string='Type' , required=True),
+                'type':fields.selection({('cash', 'Cash Rebate')}, string='Type' , required=True),
                 'amount': fields.float('Amount'),
                 
                 }
+    _defaults = {
+        'type':'cash',
+        }       
     def create(self, cursor, user, vals, context=None):
         credit_no = self.pool.get('ir.sequence').get(cursor, user,
             'creditnote.code') or '/'

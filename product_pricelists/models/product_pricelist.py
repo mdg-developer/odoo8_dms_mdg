@@ -7,6 +7,8 @@ class product_pricelist(osv.osv):
     _inherit = "product.pricelist"
     _columns = {
                 'main_group_id':fields.many2one('product.maingroup', 'Main Group'),
+         'branch_id':fields.many2many('res.branch', 'pricelist_branch_rel', 'pricelist_id', 'branch_id', string='Branch'),
+               
         'state': fields.selection([
             ('draft', 'Draft'),
             ('approve', 'Approved'),
@@ -14,6 +16,7 @@ class product_pricelist(osv.osv):
               \nThe exception status is automatically set when a cancel operation occurs \
               in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\nThe 'Waiting Schedule' status is set when the invoice is confirmed\
                but waiting for the scheduler to run on the order date.", select=True),
+                
                 }
     _defaults = {
         'state':'draft',

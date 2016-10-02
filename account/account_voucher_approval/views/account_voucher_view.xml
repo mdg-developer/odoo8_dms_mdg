@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="view_voucher_approval_form" model="ir.ui.view">
+			<field name="name">voucher_approval_form</field>
+			<field name="model">account.voucher</field>
+			<field name="inherit_id" ref="account_voucher.view_vendor_receipt_form" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//button[@name='cancel_voucher']" position="replace">
+					</xpath>
+					<xpath expr="//button[@name='proforma_voucher']" position="replace">
+						<button name="finance_approve" string="Finance Approved"
+							type="object" states="draft" class="oe_highlight" sequence="3" />
+						<button name="cashier_approve" string="Cashier Approved"
+							type="object" states="finance_approve" class="oe_highlight"
+							sequence="3" />
+						<button name="proforma_voucher" string="Validate"  states="cashier_approve"
+							class="oe_highlight" />
+						<button name="cancel_voucher" string="Cancel Receipt"
+							states="draft,proforma,finance_approve,cashier_approve" />
+					</xpath>
+
+					<xpath expr="//field[@name='state']" position="replace">
+						<field name="state" widget="statusbar"
+							statusbar_visible="draft,finance_approve,cashier_approve,posted"
+							statusbar_colors='{"proforma":"blue"}' />
+					</xpath>
+
+				</data>
+
+			</field>
+		</record>
+		<!-- Supplier Payment -->
+		<record id="view_vendor_payment_form_inherit" model="ir.ui.view">
+			<field name="name">account.voucher.payment.form</field>
+			<field name="model">account.voucher</field>
+			<field name="inherit_id" ref="account_voucher.view_vendor_payment_form" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//field[@name='partner_id']" position="replace">
+						<field name="partner_id" required="1" invisible="context.get('line_type', False)" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" 
+						context="{'invoice_currency':currency_id, 'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"  string="Supplier" domain="[('supplier', '=', True)]"/>
+					</xpath>
+				</data>
+
+			</field>
+		</record>
+	</data>
+</openerp>

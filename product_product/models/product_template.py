@@ -68,7 +68,7 @@ class product_template(osv.osv):
                  "or any of its children.\n"
                  "Otherwise, this includes goods stored in any Stock Location "
                  "with 'internal' type."),
-                'uom_ratio':fields.char('UOM Ratio')
+                'uom_ratio':fields.char('Packing Size')
                 }
      
     _defaults = {
