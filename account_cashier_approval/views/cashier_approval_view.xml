@@ -13,8 +13,8 @@
 							class="oe_highlight"  /> -->
 						<button name="confirm_" string="Confirm" type="object"
 							class="oe_highlight" attrs="{'invisible':[('state','not in',('draft'))]}" />
-						<!-- <button name="cashier_approve" string="Cashier Approve" type="object"
-							class="oe_highlight" attrs="{'invisible':[('state','not in',('pending'))]}" /> -->
+						<button name="cashier_approve" string="Cashier Approve" type="object"
+							class="oe_highlight" attrs="{'invisible':[('state','not in',('pending'))]}" />
 						<button name="set_to_draft" string="Set to draft" type="object"
 							class="oe_highlight" attrs="{'invisible':[('state','in',('done','draft'))]}" />	
 						<field name="state" widget="statusbar" statusbar_visible="draft,pending,done" />
@@ -173,7 +173,25 @@
 
  
 									</page>
-                                      
+									
+                                     <page string="Payment">
+                                     	<field name="cashier_customer_payment_line">                                          
+ 											<form string="Payment Lines">
+                                                
+                                                <field name="type"/>
+	                                            <field name="journal_id"/>
+	                                            <field name="amount"/>                                            
+	                                            <field name="notes"/>
+                                            </form>                                           
+                                            <tree string="Payment Lines" editable="bottom">
+                                                
+                                                <field name="type"/>
+	                                            <field name="journal_id"/>
+	                                            <field name="amount"/>        
+	                                            <field name="notes"/>  
+                                            </tree>
+                                      	</field>
+                                     </page> 
 								</notebook>
 					</sheet>
 				</form>

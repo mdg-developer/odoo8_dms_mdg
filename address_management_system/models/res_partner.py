@@ -9,8 +9,9 @@ class res_partner(osv.osv):
     _inherit = 'res.partner'
     _columns = {               
              
-            'city':fields.many2one('res.city','City'),
-            'township':fields.many2one('res.township','Township'),
+            'city':fields.many2one('res.city','City',required=True),
+            'township':fields.many2one('res.township','Township',required=True),
+        'street': fields.char('Street',required=True),
                                   
     } 
     

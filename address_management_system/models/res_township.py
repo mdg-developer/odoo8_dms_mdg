@@ -11,7 +11,7 @@ class res_township(osv.osv):
 
     _columns = {
                 
-    'city' : fields.many2one('res.city', 'City', ondelete='restrict'),
+    'city' : fields.many2one('res.city', 'City', ondelete='restrict',required=True),
     'name': fields.char('Township Name', required=True),
     'code': fields.char('Township Code', size=3, help='The township code in max. three chars.', required=True)
                }

@@ -75,7 +75,7 @@
 		</record>
 
 		<record id="action_sales_return_view" model="ir.actions.act_window">
-			<field name="name">Sales Return</field>
+			<field name="name">Sales Returns</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">sales.return</field>
 			<field name="view_type">form</field>

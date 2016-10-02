@@ -188,7 +188,6 @@ class res_partner(osv.osv):
         try:
             for partner in self.browse(cr, uid, ids, context):
                 invoice_ids = invoice_obj.search(cr, uid, [('date_invoice', '>=', from_date), ('date_invoice', '<=', to_date),('partner_id','=',partner.id)], context=context) 
-                print '------------------',invoice_ids
                 res[partner.id] = len(invoice_ids)
         except:
             pass
@@ -327,16 +326,25 @@ class res_partner(osv.osv):
         for line in self.browse(cr, uid, ids, context=context):
             cr.execute("update res_partner set image_small=%s, image =%s,image_medium=%s where id = %s" , (line.image_five, line.image_five, line.image_five, line.id,))
         return True
+
+    def _default_country(self,cr, uid, ids,context=None, uid2=False):
+        if not uid2:
+            uid2 = uid
+        cr.execute("select id from res_country where name ='Myanmar'")
+        country_id=cr.fetchone()[0]
+        return country_id       
+
     _columns = {  
                 'customer_code':fields.char('Code', required=False),
                 'outlet_type': fields.many2one('outlettype.outlettype', 'Outlet Type', required=True),
                 'temp_customer':fields.char('Contact Person'),
                 'class_id':fields.many2one('sale.class', 'Class'),
                 'frequency_id':fields.many2one('plan.frequency','Frequency',required=False),
+                'chiller':fields.boolean('Chiller'),
                 'old_code': fields.char('Old Code'),
-                'sales_channel':fields.many2one('sale.channel', 'Sale Channel'),
+                'sales_channel':fields.many2one('sale.channel', 'Sale Channel',required=True),
                 'address':fields.char('Address'),
-                'branch_id':fields.many2one('sale.branch', 'Branch'),
+                'branch_id':fields.many2one('res.branch', 'Branch',required=True),
                 'demarcation_id': fields.many2one('sale.demarcation', 'Demarcation'),
                 'mobile_customer': fields.boolean('Pending Customer', help="Check this box if this contact is a mobile customer. If it's not checked, purchase people will not see it when encoding a purchase order."),
                 # 'sale_order_count_by_week': fields.function(sale_order_count_by_week, string='# of Sales Order by week', type='integer'),
@@ -385,12 +393,15 @@ class res_partner(osv.osv):
                 string='Month Invoice Amount'),  
                 'last_visit_date':fields.function(_get_last_visit_date,
                 type='datetime', readonly=True,
-                string='Lastest Visit Date'),                                  
+                string='Lastest Visit Date'),                        
+        'user_id': fields.many2one('res.users', 'Created By', help='The internal user that is in charge of communicating with this contact if any.'),
+          
  } 
     _defaults = {
         'is_company': True,
         'pending' : None,
         'idle' : None,
+        'country_id':_default_country,
     }
     _sql_constraints = [        
         ('customer_code_uniq', 'unique (customer_code)', 'Customer code must be unique !'),
@@ -431,6 +442,7 @@ class res_partner(osv.osv):
         datas = cr.fetchall()
         cr.execute
         return datas
+    
     def res_partners_return(self, cr, uid, section_id , context=None, **kwargs):
         cr.execute('''
                     
@@ -554,12 +566,12 @@ class res_partner(osv.osv):
                             if codeId:
                                 code = codeObj.generateCode(cr, uid, codeId[0], context=context)
                             else:
-                                codeResult = {'city_id':cityId.id, 'township_id':townshipId.id, 'sale_channel_id':channelId.id, 'nextnumber':1, 'padding':4}
+                                codeResult = {'city_id':cityId.id, 'township_id':townshipId.id, 'sale_channel_id':channelId.id, 'nextnumber':1, 'padding':6}
                                 codeId = codeObj.create(cr, uid, codeResult, context=context)
                                 code = codeObj.generateCode(cr, uid, codeId, context=context)
                 if code:
                     from datetime import datetime
-                    self.write(cr, uid, ids, {'customer_code':code,'date_partnership':datetime.now().date()}, context=context)
+                    self.write(cr, uid, ids, {'customer_code':code,'date_partnership':datetime.now().date(),'mobile_customer':False}, context=context)
             return True
 res_partner()
 class res_partner_asset(osv.Model):

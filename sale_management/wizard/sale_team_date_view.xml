@@ -9,7 +9,7 @@
 			<field name="arch" type="xml">
 				<form string="Sales Team Date">
 					<h3>
-						<label string="Inset Date" />
+						<label string="Target Date" />
 					</h3>
 					<field name="date" />
 
@@ -33,10 +33,6 @@
 			<field name="target">new</field>
 		</record>
 
-
-
-		<!-- <menuitem id="sales_team_date" action="open_view_date_form" -->
-		<!-- parent="base.menu_sales" " sequence="12" /> -->
 
 	</data>
 </openerp>

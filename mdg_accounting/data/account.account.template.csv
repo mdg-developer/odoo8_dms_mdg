@@ -1,371 +1,592 @@
 id,code,name,parent_id:id,type,user_type:id,reconcile
-0,0,"MDG Co., Ltd",,view,account_type_view,FALSE
-1,1,ASSETS,0,view,account_type_view,FALSE
-2,2,LIABILITIES,0,view,account_type_view,FALSE
-3,3,EQUITY,0,view,account_type_view,FALSE
-4,4,REVENUE,0,view,account_type_view,FALSE
-5,5, COST OF GOODS SOLD,0,view,account_type_view,FALSE
-6,6,SELLING AND ADMINISTRATION EXPENSES,0,view,account_type_view,FALSE
-1000,1000,Fixed Assets,1,view,account_type_view,FALSE
-10000,10000,Cost of Land,1000,other,account_type_fixed_assets,TRUE
-10010,10010,Building,1000,view,account_type_view,FALSE
-10011,10011,Cost of Building,10010,other,account_type_fixed_assets,TRUE
-10012,10012,Accum Dep: for Building,10010,other,account_type_fixed_assets,TRUE
-10020,10020,Vehicles,1000,view,account_type_view,FALSE
-10021,10021,Cost of Vehicles,10020,other,account_type_fixed_assets,TRUE
-10022,10022,Accum Dep: for Vehicles,10020,other,account_type_fixed_assets,TRUE
-10030,10030,Tools & Accessories,1000,view,account_type_view,FALSE
-10031,10031,Cost of Tools & Accessories,10030,other,account_type_fixed_assets,TRUE
-10032,10032,Accum Dep: for Tools & Accesso,10030,other,account_type_fixed_assets,TRUE
-10040,10040,Furnitures & Fittings,1000,view,account_type_view,FALSE
-10041,10041,Costs of Furnitures & Fittings,10040,other,account_type_fixed_assets,TRUE
-10042,10042,Accum Dep: for Furnitures & Fi,10040,other,account_type_fixed_assets,TRUE
-10050,10050,Office Equipments,1000,view,account_type_view,FALSE
-10051,10051,Costs of Office Equipments,10050,other,account_type_fixed_assets,TRUE
-10052,10052,Accum Dep: for Costs of Office,10050,other,account_type_fixed_assets,TRUE
-10060,10060,Computer &  Accessori,1000,view,account_type_view,FALSE
-10061,10061,Costs of Computer &  Accessori,10060,other,account_type_fixed_assets,TRUE
-10062,10062,Accum Dep: for Computer &  Acc,10060,other,account_type_fixed_assets,TRUE
-10070,10070,Printers,1000,view,account_type_view,FALSE
-10071,10071,Costs of Printers,10070,other,account_type_fixed_assets,TRUE
-10072,10072,Accum Dep: for Printers,10070,other,account_type_fixed_assets,TRUE
-10080,10080,Copier,1000,view,account_type_view,FALSE
-10081,10081,Costs of Copier,10080,other,account_type_fixed_assets,TRUE
-10082,10082,Accum Dep: for Copier,10080,other,account_type_fixed_assets,TRUE
-10090,10090,Air Con,1000,view,account_type_view,FALSE
-10091,10091,Costs of Air Con,10090,other,account_type_fixed_assets,TRUE
-10092,10092,Accum Dep: for Air Con,10090,other,account_type_fixed_assets,TRUE
-10110,10110,Generators & Motors,1000,view,account_type_view,FALSE
-10111,10111,Costs of Generators & Motors,10110,other,account_type_fixed_assets,TRUE
-10112,10112,Accum Dep: for Generators & Mo,10110,other,account_type_fixed_assets,TRUE
-10120,10120,Water Pump,1000,view,account_type_view,FALSE
-10121,10121,Costs of Water Pump,10120,other,account_type_fixed_assets,TRUE
-10122,10122,Accum Dep: for Water Pump,10120,other,account_type_fixed_assets,TRUE
-10130,10130,Safe Box,1000,view,account_type_view,FALSE
-10131,10131,Costs of Safe Box,10130,other,account_type_fixed_assets,TRUE
-10132,10132,Accum Dep: for Safe Box,10130,other,account_type_fixed_assets,TRUE
-10140,10140,"Phone, Fax, & Accesso",1000,view,account_type_view,FALSE
-10141,10141,"Costs of Phone, Fax, & Accesso",10140,other,account_type_fixed_assets,TRUE
-10142,10142,"Accum Dep: for Phone, Fax, & A",10140,other,account_type_fixed_assets,TRUE
-10150,10150,Renovation,1000,view,account_type_view,FALSE
-10151,10151,Costs of Renovation,10150,other,account_type_fixed_assets,TRUE
-10152,10152,Accum Dep: for Renovation,10150,other,account_type_fixed_assets,TRUE
-10160,10160,Warehouse Accessories,1000,view,account_type_view,FALSE
-10161,10161,Costs of Warehouse Accessories,10160,other,account_type_fixed_assets,TRUE
-10162,10162,Accum Dep: for Warehouse Acces,10160,other,account_type_fixed_assets,TRUE
-10170,10170,Software System,1000,view,account_type_view,FALSE
-10171,10171,Costs of Software System,10170,other,account_type_fixed_assets,TRUE
-10172,10172,Accum Dep: for Software System,10170,other,account_type_fixed_assets,TRUE
-10180,10180,Disposal of Fixed Assets,1000,other,account_type_fixed_assets,TRUE
-11000,11000,Current Assets,1,view,account_type_view,FALSE
-11100,11100,Cash,11000,view,account_type_view,FALSE
-11101,11101,Cash In Hand (Kyat),11100,liquidity,account_type_current_assets,TRUE
-11102,11102,Cash In Hand (USD-$),11100,liquidity,account_type_current_assets,TRUE
-11103,11103,Cash In Hand (SGD),11100,liquidity,account_type_current_assets,TRUE
-11104,11104,Cash In Transit,11100,liquidity,account_type_current_assets,TRUE
-11200,11200,Bank,11000,view,account_type_view,FALSE
-11201,11201,KBZ Bank Curret (TMW),11200,liquidity,account_type_current_assets,TRUE
-11202,11202,KBZ Bank-Current (Mingalar Zay,11200,liquidity,account_type_current_assets,TRUE
-11203,11203,KBZ Bank (Kamaryut),11200,liquidity,account_type_current_assets,TRUE
-11204,11204,YOMA Bank (Mingalar Zay),11200,liquidity,account_type_current_assets,TRUE
-11205,11205,YOMA Bank (Myaynigone),11200,liquidity,account_type_current_assets,TRUE
-11206,11206,GTBP Bank (Shwe Baho),11200,liquidity,account_type_current_assets,TRUE
-11207,11207,CB Bank (Mingalar Zay),11200,liquidity,account_type_current_assets,TRUE
-11208,11208,AYWD Bank (Ywarma Gwae),11200,liquidity,account_type_current_assets,TRUE
-11209,11209,AYWD Bank (Bo Aung Kyaw) Savin,11200,liquidity,account_type_current_assets,TRUE
-11210,11210,Myanmar Apex Bank-Saving (Ming,11200,liquidity,account_type_current_assets,TRUE
-11211,11211,United Amara Bank (TGG),11200,liquidity,account_type_current_assets,TRUE
-11212,11212,KBZ Bank-Saving (Mingalar Zay),11200,liquidity,account_type_current_assets,TRUE
-11213,11213,Myanmar Apex Bank- Current (Mi,11200,liquidity,account_type_current_assets,TRUE
-11214,11214,AYWD BANK (Bo Aung Kyaw) Curre,11200,liquidity,account_type_current_assets,TRUE
-11215,11215,AYWD BANK - Saving ( BYN),11200,liquidity,account_type_current_assets,TRUE
-11216,11216,AYWD BANK - Current ( BYN),11200,liquidity,account_type_current_assets,TRUE
-11217,11217,AYWD(MGLZ)Saving- Fine Wine,11200,liquidity,account_type_current_assets,TRUE
-11218,11218,KBZ(TMWE)SMG(Current),11200,liquidity,account_type_current_assets,TRUE
-11219,11219,Apex(MGLZ)Fine Wine Distributi,11200,liquidity,account_type_current_assets,TRUE
-11220,11220,Myanmar Citizens Bank(Curr AC),11200,liquidity,account_type_current_assets,TRUE
-11221,11221,AYWD BANK(MGLZ)Saving-Katana,11200,liquidity,account_type_current_assets,TRUE
-11222,11222,Apex(MGLZ) (Saving) Fine Wine,11200,liquidity,account_type_current_assets,TRUE
-11223,11223,Myanmar Apex Bank-Current(TP),11200,liquidity,account_type_current_assets,TRUE
-11224,11224,AYWD(MGLZ)Current,11200,liquidity,account_type_current_assets,TRUE
-11225,11225,Yoma (Byn),11200,liquidity,account_type_current_assets,TRUE
-11226,11226,Myanmar Apex-Saving(MGZ)Mobile,11200,liquidity,account_type_current_assets,TRUE
-11227,11227,MyanmarApex-Current(MGZ)Mobile,11200,liquidity,account_type_current_assets,TRUE
-11228,11228,Myanmar Apex-USD(MGZ)Mobile,11200,liquidity,account_type_current_assets,TRUE
-11229,11229,Apex(MGLZ) (Current)MDG Group,11200,liquidity,account_type_current_assets,TRUE
-11230,11230,Apex(MGLZ) (Saving)MDG Group,11200,liquidity,account_type_current_assets,TRUE
-11231,11231,MICB Bank - MDG,11200,liquidity,account_type_current_assets,TRUE
-11232,11232,MFTB Bank - ML,11200,liquidity,account_type_current_assets,TRUE
-11233,11233,MFTB Bank - MLT,11200,liquidity,account_type_current_assets,TRUE
-11234,11234,MFTB Bank - NDN,11200,liquidity,account_type_current_assets,TRUE
-11235,11235,MFTB Bank - SS,11200,liquidity,account_type_current_assets,TRUE
-11236,11236,MFTB Bank - MBC,11200,liquidity,account_type_current_assets,TRUE
-11237,11237,MFTB Bank - Transview,11200,liquidity,account_type_current_assets,TRUE
-11238,11238,MFTB Bank-MDG,11200,liquidity,account_type_current_assets,TRUE
-11239,11239,MFTB Bank-Fine Wine,11200,liquidity,account_type_current_assets,TRUE
-11240,11240,Myanmar Apex(Thein Phyu)-USD-$,11200,liquidity,account_type_current_assets,TRUE
-11241,11241,AYWD(MGZ) Saving-MDG Mobile,11200,liquidity,account_type_current_assets,TRUE
-11242,11242,AYWD(MGZ) Current -MDG Mobile,11200,liquidity,account_type_current_assets,TRUE
-11243,11243,CB(MGZ) Current -MDG Mobile,11200,liquidity,account_type_current_assets,TRUE
-11244,11244,CB(MGZ) Saving -MDG Mobile,11200,liquidity,account_type_current_assets,TRUE
-11245,11245,KBZ-US$-06010906004285101,11200,liquidity,account_type_current_assets,TRUE
-11246,11246,AYWD-US$-8001103030264357,11200,liquidity,account_type_current_assets,TRUE
-11247,11247,CB(HO)-US$-0010101200410977,11200,liquidity,account_type_current_assets,TRUE
-11248,11248,YOMA(HO)-US$-6661211900000532,11200,liquidity,account_type_current_assets,TRUE
-11249,11249,CB(MGLZ) Current-MDG Group,11200,liquidity,account_type_current_assets,TRUE
-11250,11250,CB(MGLZ) Saving-MDG Group,11200,liquidity,account_type_current_assets,TRUE
-11251,11251,YOMA(MGLZ) (Current)MDG Group,11200,liquidity,account_type_current_assets,TRUE
-11252,11252,YOMA(MGLZ) (Saving)MDG Group,11200,liquidity,account_type_current_assets,TRUE
-11253,11253,KBZ(MGLZ) (Saving)MDG Group,11200,liquidity,account_type_current_assets,TRUE
-11254,11254,KBZ(MGLZ) (Current)MDG Group,11200,liquidity,account_type_current_assets,TRUE
-11255,11255,APEX(MGLZ) (Smart Saving)MDG,11200,liquidity,account_type_current_assets,TRUE
-11256,11256,AYWD(MGLZ) (Saving)MDG Group,11200,liquidity,account_type_current_assets,TRUE
-11257,11257,AYWD(MGLZ) (Current)MDG Group,11200,liquidity,account_type_current_assets,TRUE
-11258,11258,APEX(MGLZ)(Saving)In Haus,11200,liquidity,account_type_current_assets,TRUE
-11259,11259,APEX(MGLZ) (Current)In Haus,11200,liquidity,account_type_current_assets,TRUE
-11260,11260,CB(HO)-0010100500013088-Curren,11200,liquidity,account_type_current_assets,TRUE
-11261,11261,CB(HO)-0010600300001805-Saving,11200,liquidity,account_type_current_assets,TRUE
-11262,11262,YOMA(MGZ)CallDepo-025275002197,11200,liquidity,account_type_current_assets,TRUE
-11263,11263,APEX(TMW)-0610153015004442029,11200,liquidity,account_type_current_assets,TRUE
-11264,11264,APEX(TMW)-0610123015004442018,11200,liquidity,account_type_current_assets,TRUE
-11265,11265,YOMA(MGZ)LoanAC025175004714,11200,liquidity,account_type_current_assets,TRUE
-11300,11300,Accounts Receivable,11000,view,account_type_view,FALSE
-11301,11301,Account Receivable-SD-MBC,11300,other,account_type_current_assets,TRUE
-11302,11302,Account Receivable-N ,11300,other,account_type_current_assets,TRUE
-11303,11303,Account Receivable-Pocari,11300,other,account_type_current_assets,TRUE
-11304,11304,Prov for Bad & Doubtful Debts,11300,other,account_type_current_assets,TRUE
-11305,11305,Other Receivable,11300,other,account_type_current_assets,TRUE
-11400,11400,Other Current Assets,11000,view,account_type_view,FALSE
-11410,11410,Advanced ,11400,view,account_type_view,FALSE
-11411,11411,Advanced Income Tax,11410,other,account_type_current_assets,TRUE
-11412,11412,Advanced Commercial Tax,11410,other,account_type_current_assets,TRUE
-11420,11420,Customs Clearance charges,11400,other,account_type_current_assets,TRUE
-11421,11421,Yangon Current,11400,other,account_type_current_assets,TRUE
-11422,11422,Mandalay Current,11400,other,account_type_current_assets,TRUE
-11423,11423,Receivable for Staff Uniform,11400,other,account_type_current_assets,TRUE
-11424,11424,Rec;Staff Compensate & Penalty,11400,other,account_type_current_assets,TRUE
-11430,11430,Prepaid ,11400,view,account_type_view,FALSE
-11431,11431,Prepaid Telephone Charges,11430,other,account_type_current_assets,TRUE
-11432,11432,Prepaid Rental Charges,11430,other,account_type_current_assets,TRUE
-11433,11433,Prepaid Insurance & Fire Premi,11430,other,account_type_current_assets,TRUE
-11434,11434,Prepaid Others,11430,other,account_type_current_assets,TRUE
-11440,11440,Staff Advance,11400,view,account_type_view,FALSE
-11441,11441,Staff Advance (Other),11440,other,account_type_current_assets,TRUE
-11442,11442,Staff Advance (Trip),11440,other,account_type_current_assets,TRUE
-11443,11443,Staff Advance (Travelling),11440,other,account_type_current_assets,TRUE
-11500,11500,Inventory,11000,view,account_type_view,FALSE
-11501,11501,Inventory-Fuel,11500,other,account_type_current_assets,TRUE
-11502,11502,Inventory-MBC,11500,other,account_type_current_assets,TRUE
-11503,11503,Inventory-FOC (MBC),11500,other,account_type_current_assets,TRUE
-11504,11504,Inventory-N ,11500,other,account_type_current_assets,TRUE
-11505,11505,Inventory-Pocari,11500,other,account_type_current_assets,TRUE
-11506,11506,Goods In Transit,11500,other,account_type_current_assets,TRUE
-11425,11425,MBC Current,11400,other,account_type_current_assets,TRUE
-11600,11600,Other Receivable,11000,view,account_type_view,FALSE
-11601,11601,Transview Current,11600,other,account_type_current_assets,TRUE
-11602,11602,DK 35 Current,11600,other,account_type_current_assets,TRUE
-11603,11603,Tennis Federation Current,11600,other,account_type_current_assets,TRUE
-11604,11604,Vinyl Printing Current,11600,other,account_type_current_assets,TRUE
-11605,11605,Fine Y Current,11600,other,account_type_current_assets,TRUE
-11606,11606,MD Current,11600,other,account_type_current_assets,TRUE
-11607,11607,Katana Restaurant Current,11600,other,account_type_current_assets,TRUE
-11608,11608,MDG Mobile Current,11600,other,account_type_current_assets,TRUE
-11609,11609,the in haus Current,11600,other,account_type_current_assets,TRUE
-11610,11610,Myanmar GR Current,11600,other,account_type_current_assets,TRUE
-11611,11611,Best Oil Current,11600,other,account_type_current_assets,TRUE
-11612,11612,Jump Digital Marketing Current,11600,other,account_type_current_assets,TRUE
-11426,11426,Air Soda Current,11400,other,account_type_current_assets,TRUE
-11427,11427,Azims Current,11400,other,account_type_current_assets,TRUE
-11428,11428,Nestle Current,11400,other,account_type_current_assets,TRUE
-11429,11429,Pocari Sweat Current,11400,other,account_type_current_assets,TRUE
-11430,11430,Nescafe' Machine Current,11400,other,account_type_current_assets,TRUE
-20000,20000,Current Liabilities,2,view,account_type_view,FALSE
-20100,20100,Accounts Payable,20000,view,account_type_view,FALSE
-20101,20101,Accounts Payable,20100,payable,account_type_payable,TRUE
-20102,20102,Accounts Payable-MBC,20100,payable,account_type_payable,TRUE
-20103,20103,Accounts Payable-N,20100,payable,account_type_payable,TRUE
-20104,20104,Accounts Payable-Pocari,20100,payable,account_type_payable,TRUE
-20105,20105,Account Payable-Transfer,20100,payable,account_type_payable,TRUE
-20106,20106,Payable to Others,20100,payable,account_type_payable,TRUE
-20200,20200,Other Current Liabilities,20000,view,account_type_view,FALSE
-20201,20201,Advance Received (Sales),20200,other,account_type_current_liabilities,TRUE
-20202,20202,Deposits for Dealers,20200,other,account_type_current_liabilities,TRUE
-20210,20210,Provision,20200,view,account_type_view,FALSE
-20211,20211,Provision for Income Tax,20210,other,account_type_current_liabilities,TRUE
-20212,20212,Provision for Commercial Tax,20210,other,account_type_current_liabilities,TRUE
-20220,20220,Accrued,20200,view,account_type_view,FALSE
-20221,20221,Accrued Telephone Bill,20220,other,account_type_current_liabilities,TRUE
-20222,20222,Accrued Electricity Bill,20220,other,account_type_current_liabilities,TRUE
-20223,20223,Accrued Internet Bill,20220,other,account_type_current_liabilities,TRUE
-20224,20224,Accrued Others,20220,other,account_type_current_liabilities,TRUE
-21000,21000,Long Term Liabilities,2,view,account_type_view,FALSE
-21010,21010,Loan (Bank Loan & Other),21000,other,account_type_current_liabilities,TRUE
-30000,30000,Capital,3,other,account_type_equity,FALSE
-31000,31000,Retained  Earnings,3,other,account_type_equity,FALSE
-40000,40000,Sales,4,view,account_type_view,FALSE
-40001,40001,Sales-MBC-CS,40000,other,account_type_income,FALSE
-40002,40002,Sales-MBC-CR,40000,other,account_type_income,FALSE
-40003,40003,Sales-N-CS ,40000,other,account_type_income,FALSE
-40004,40004,Sales-N-CR ,40000,other,account_type_income,FALSE
-40005,40005,Sales-Pocari-CS ,40000,other,account_type_income,FALSE
-40006,40006,Sales-Pocari-CR ,40000,other,account_type_income,FALSE
-40007,40007,Sales Discounts-MBC,40000,other,account_type_expense,FALSE
-40008,40008,Sales Discounts-N,40000,other,account_type_expense,FALSE
-40009,40009,Sales Discounts-Pocari,40000,other,account_type_expense,FALSE
-40010,40010,Sales Returns-MBC,40000,other,account_type_expense,FALSE
-40011,40011,Sales Returns-N,40000,other,account_type_expense,FALSE
-40012,40012,Sales Returns-Pocari,40000,other,account_type_expense,FALSE
-41000,41000,Promotion Income,4,other,account_type_income,FALSE
-42000,42000,Other Income,4,other,account_type_income,FALSE
-50000,50000,Cost of Sales,5,other,account_type_expense,FALSE
-50001,50001,Cost of Sales-MBC,5,other,account_type_expense,FALSE
-50002,50002,Cost Of Sales-N ,5,other,account_type_expense,FALSE
-50003,50003,Cost Of Sales-Pocari ,5,other,account_type_expense,FALSE
-60000,60000,Administration Expenses,6,view,account_type_view,FALSE
-60100,60100,Staff Expenes,60000,view,account_type_view,FALSE
-60101,60101,Salaries,60100,other,account_type_expense,FALSE
-60102,60102,Meal Allowance,60100,other,account_type_expense,FALSE
-60103,60103,Staff Commission,60100,other,account_type_expense,FALSE
-60104,60104,Long Service Bonus,60100,other,account_type_expense,FALSE
-60105,60105,Education Allowance,60100,other,account_type_expense,FALSE
-60106,60106,Transportation Allowance,60100,other,account_type_expense,FALSE
-60107,60107,Driving Allowance,60100,other,account_type_expense,FALSE
-60108,60108,Other Allowance,60100,other,account_type_expense,FALSE
-60109,60109,Wages,60100,other,account_type_expense,FALSE
-60110,60110,OT Expense,60100,other,account_type_expense,FALSE
-60111,60111,Birthday Allowance,60100,other,account_type_expense,FALSE
-60112,60112,Maternity Allowance,60100,other,account_type_expense,FALSE
-60113,60113,Funeral Subsidiary,60100,other,account_type_expense,FALSE
-60114,60114,Training Fees,60100,other,account_type_expense,FALSE
-60115,60115,Wedding Present (Staff),60100,other,account_type_expense,FALSE
-60116,60116,Gift & Present (Staff),60100,other,account_type_expense,FALSE
-60117,60117,Medical Charges,60100,other,account_type_expense,FALSE
-60118,60118,Staff Welfare,60100,other,account_type_expense,FALSE
-60119,60119,Special Meal Allowance (Staff),60100,other,account_type_expense,FALSE
-60120,60120,Entertainment (Staff),60100,other,account_type_expense,FALSE
-60121,60121,Employee of the Month,60100,other,account_type_expense,FALSE
-60122,60122,Ten Years Service Award,60100,other,account_type_expense,FALSE
-60123,60123,SSB Contribution,60100,other,account_type_expense,FALSE
-60124,60124,Staff Uniform,60100,other,account_type_expense,FALSE
-60125,60125,Staff Party Expense,60100,other,account_type_expense,FALSE
-60200,60200,Office Expenses,60000,view,account_type_view,FALSE
-60201,60201,Purified Water,60200,other,account_type_expense,FALSE
-60202,60202,Fax-mail Expense,60200,other,account_type_expense,FALSE
-60203,60203,IT Expense,60200,other,account_type_expense,FALSE
-60204,60204,Copying Expense,60200,other,account_type_expense,FALSE
-60205,60205,Printing Expense,60200,other,account_type_expense,FALSE
-60206,60206,Stationery Expense,60200,other,account_type_expense,FALSE
-60207,60207,Postage,60200,other,account_type_expense,FALSE
-60208,60208,"Newspaper,Journal & Magazine",60200,other,account_type_expense,FALSE
-60209,60209,Security Expense,60200,other,account_type_expense,FALSE
-60210,60210,General Expense (Admin),60200,other,account_type_expense,FALSE
-60211,60211,Cleaning Expense,60200,other,account_type_expense,FALSE
-60212,60212,Transport Charges,60200,other,account_type_expense,FALSE
-60213,60213,CDC Home Tax,60200,other,account_type_expense,FALSE
-60214,60214,Electricity Bill,60200,other,account_type_expense,FALSE
-60215,60215,Phone Bill,60200,other,account_type_expense,FALSE
-60216,60216,External Phone Call,60200,other,account_type_expense,FALSE
-60217,60217,Internet Bill,60200,other,account_type_expense,FALSE
-60218,60218,Water Tax,60200,other,account_type_expense,FALSE
-60219,60219,Land Tax,60200,other,account_type_expense,FALSE
-60220,60220,YCDC Garbage Tax,60200,other,account_type_expense,FALSE
-60300,60300,Other Expenses,60000,view,account_type_view,FALSE
-60301,60301,Gift & Present (Others),60300,other,account_type_expense,FALSE
-60302,60302,Entertainment (Others),60300,other,account_type_expense,FALSE
-60303,60303,External Audit Fees,60300,other,account_type_expense,FALSE
-60304,60304,Company Licence Renewal Expense,60300,other,account_type_expense,FALSE
-60305,60305,Bonus Trip Expense,60300,other,account_type_expense,FALSE
-60306,60306,Consultant Fees,60300,other,account_type_expense,FALSE
-60307,60307,External Loan Interest,60300,other,account_type_expense,FALSE
-60308,60308,Recruitment Expenses,60300,other,account_type_expense,FALSE
-60309,60309,Fire Insurance Expenses,60300,other,account_type_expense,FALSE
-60310,60310,Donation,60300,other,account_type_expense,FALSE
-60311,60311,Seasonal & Trade Donation Expense,60300,other,account_type_expense,FALSE
-60400,60400,Rental,60000,view,account_type_view,FALSE
-60401,60401,Office Rental Chares,60400,other,account_type_expense,FALSE
-60402,60402,Phone Rental Charges,60400,other,account_type_expense,FALSE
-60403,60403,Vehicles Rental Charges,60400,other,account_type_expense,FALSE
-60404,60404,Warehouse Rental Charges,60400,other,account_type_expense,FALSE
-60500,60500,R&M,60000,view,account_type_view,FALSE
-60501,60501,Building R&M,60500,other,account_type_expense,FALSE
-60502,60502,WH Accessories R&M,60500,other,account_type_expense,FALSE
-60503,60503,Landscaping/Road,60500,other,account_type_expense,FALSE
-60504,60504,Renovation,60500,other,account_type_expense,FALSE
-60505,60505,Office Fur & Fitting R&M,60500,other,account_type_expense,FALSE
-60506,60506,"Computer,Printer & AccR&M",60500,other,account_type_expense,FALSE
-60507,60507,Office Equipment R&M,60500,other,account_type_expense,FALSE
-60508,60508,Electronic Acc R&M,60500,other,account_type_expense,FALSE
-60509,60509,Aicon R&M,60500,other,account_type_expense,FALSE
-60510,60510,Generator R&M,60500,other,account_type_expense,FALSE
-60511,60511,Water Motor/Pump R&M,60500,other,account_type_expense,FALSE
-60600,60600,Vehicle Expenes,60000,view,account_type_view,FALSE
-60601,60601,Car Repair,60600,other,account_type_expense,FALSE
-60602,60602,Car Maintenance,60600,other,account_type_expense,FALSE
-60603,60603,Cycle Repair,60600,other,account_type_expense,FALSE
-60604,60604,Cycle maintenance,60600,other,account_type_expense,FALSE
-60605,60605,Vehicles Accessories (Store),60600,other,account_type_expense,FALSE
-60606,60606,Car Licence Renewal,60600,other,account_type_expense,FALSE
-60607,60607,Car Operation Licence Renewal,60600,other,account_type_expense,FALSE
-60608,60608,Purchase Tax,60600,other,account_type_expense,FALSE
-60609,60609,Running Tax,60600,other,account_type_expense,FALSE
-60610,60610,Vehicle Pass Permit,60600,other,account_type_expense,FALSE
-60611,60611,Fine & Other,60600,other,account_type_expense,FALSE
-60612,60612,Petrol,60600,other,account_type_expense,FALSE
-60613,60613,Diesel,60600,other,account_type_expense,FALSE
-60614,60614,Fuel & Lubricant,60600,other,account_type_expense,FALSE
-61000,61000,Selling & Distribution Expense,6,view,account_type_view,FALSE
-61001,61001,Bank Charges,61000,other,account_type_expense,FALSE
-50004,50004,Freight In-N,5,other,account_type_expense,FALSE
-50005,50005,Freight In-MBC,5,other,account_type_expense,FALSE
-50006,50006,Freight In-Pocari,5,other,account_type_expense,FALSE
-50007,50007,Labour In-N,5,other,account_type_expense,FALSE
-50008,50008,Labour In-MBC,5,other,account_type_expense,FALSE
-50009,50009,Labour In-Pocari,5,other,account_type_expense,FALSE
-61002,61002,Short Trip Expense,61000,other,account_type_expense,FALSE
-61003,61003,Long Trip Expense,61000,other,account_type_expense,FALSE
-61004,61004,Loyalty Expense,61000,other,account_type_expense,FALSE
-61005,61005,WS Commission (Customer),61000,other,account_type_expense,FALSE
-61006,61006,Dealer Commission & Expense,61000,other,account_type_expense,FALSE
-61007,61007,Depot Commission & Expense,61000,other,account_type_expense,FALSE
-61008,61008,Sales Refund (Product),61000,other,account_type_expense,FALSE
-61009,61009,Lucky Draw Program,61000,other,account_type_expense,FALSE
-61010,61010,Sales & Promotion Expense,61000,other,account_type_expense,FALSE
-61011,61011,Promotion Program,61000,other,account_type_expense,FALSE
-61012,61012,Area Dealer Expenses ,61000,other,account_type_expense,FALSE
-61013,61013,Incentive & comission,61000,other,account_type_expense,FALSE
-61014,61014,Bonus Commission,61000,other,account_type_expense,FALSE
-61015,61015,Best Team Prize,61000,other,account_type_expense,FALSE
-61016,61016,Travelling Expense,61000,other,account_type_expense,FALSE
-61017,61017,Road & Bridge,61000,other,account_type_expense,FALSE
-61018,61018,City Entrance,61000,other,account_type_expense,FALSE
-61019,61019,Wheel Tax,61000,other,account_type_expense,FALSE
-61020,61020,Car Parking Fees,61000,other,account_type_expense,FALSE
-61021,61021,Case Expense,61000,other,account_type_expense,FALSE
-61022,61022,PG Booth Expense,61000,other,account_type_expense,FALSE
-61023,61023,Traditional Event Expense,61000,other,account_type_expense,FALSE
-61024,61024,Export & Import Expense,61000,other,account_type_expense,FALSE
-61025,61025,FDA Expense,61000,other,account_type_expense,FALSE
-61026,61026,Tape,61000,other,account_type_expense,FALSE
-61027,61027,Gun & Gun Pin,61000,other,account_type_expense,FALSE
-61028,61028,General Expense,61000,other,account_type_expense,FALSE
-61029,61029,MKT & Advertising Expense (MDG),61000,other,account_type_expense,FALSE
-61030,61030,Stock Write Off,61000,other,account_type_expense,FALSE
-61031,61031,Cash write Off,61000,other,account_type_expense,FALSE
-61032,61032,Stock Adjustment AC,61000,other,account_type_expense,FALSE
-61033,61033,Bad Debts (Debtors),61000,other,account_type_expense,FALSE
-61034,61034,Income Tax,61000,other,account_type_expense,FALSE
-61035,61035,Commercial Tax,61000,other,account_type_expense,FALSE
-61036,61036,BOD Expense,61000,other,account_type_expense,FALSE
-61037,61037,Sampling Expense (Product),61000,other,account_type_expense,FALSE
-61038,61038,Present (Product),61000,other,account_type_expense,FALSE
-61039,61039,Promotion (Product),61000,other,account_type_expense,FALSE
-61040,61040,Lucky Draw (Product),61000,other,account_type_expense,FALSE
-62000,62000,Exp For Dep; Of Fixed Assets,6,other,account_type_expense,FALSE
-62100,62100,Loss On Disposal,6,other,account_type_expense,FALSE
-62200,62200,Assets Under One Year,6,view,account_type_view,FALSE
-62201,62201,Tools & Accessories,62200,other,account_type_expense,FALSE
-62202,62202,Furniture & Fitting,62200,other,account_type_expense,FALSE
-62203,62203,Office Equipment,62200,other,account_type_expense,FALSE
-62204,62204,Computer & Computer Accessorie,62200,other,account_type_expense,FALSE
-62205,62205,"Phone, Fax & Accessories",62200,other,account_type_expense,FALSE
-62206,62206,Electric Equipment,62200,other,account_type_expense,FALSE
+0,0,MYANMAR DISTRIBUTION GROUP,,view,account_type_view,FALSE
+100000,100000,ASSETS,0,view,account_type_view,FALSE
+110000,110000,Current Assets,100000,view,account_type_view,FALSE
+111000,111000,Cash and Cash Equivalents,110000,view,account_type_view,FALSE
+111100,111100,Petty Cash,111000,view,account_type_view,FALSE
+111101,111101,Petty Cash Fund,111100,other,account_type_current_assets,FALSE
+111102,111102,Cash (MMK),111100,other,account_type_current_assets,FALSE
+111103,111103,Cash (USD),111100,other,account_type_current_assets,FALSE
+111200,111200,Bank Accounts,111000,view,account_type_view,FALSE
+111201,111201,APEX Bank,111200,other,account_type_current_assets,FALSE
+111201-01,111201-01,APEX Current (MGLZ),111201,other,account_type_current_assets,FALSE
+111201-02,111201-02,APEX Current (TMW),111201,other,account_type_current_assets,FALSE
+111201-03,111201-03,APEX Smart Saving (MGLZ),111201,other,account_type_current_assets,FALSE
+111201-03,111201-03,APEX Smart Saving (TMW),111201,other,account_type_current_assets,FALSE
+111201-04,111201-04,APEX USD (Thein Phyu),111201,other,account_type_current_assets,FALSE
+111202,111202,AYWD Bank,111200,other,account_type_current_assets,FALSE
+111202-01,111202-01,AYWD Current (MGLZ),111202,other,account_type_current_assets,FALSE
+111202-02,111202-02,AYWD Saving (MGLZ),111202,other,account_type_current_assets,FALSE
+111202-03,111202-03,AYWD USD (Bo Aung Kyaw),111202,other,account_type_current_assets,FALSE
+111203,111203,CB Bank,111200,other,account_type_current_assets,FALSE
+111203-01,111203-01,CB Current (MGLZ),111203,other,account_type_current_assets,FALSE
+111203-02,111203-02,CB Saving (MGLZ),111203,other,account_type_current_assets,FALSE
+111203-03,111203-03,CB USD (IBS),111203,other,account_type_current_assets,FALSE
+111204,111204,KBZ Bank,111200,other,account_type_current_assets,FALSE
+111204-01,111204-01,KBZ Current (TMW),111204,other,account_type_current_assets,FALSE
+111204-02,111204-02,KBZ Current (MGLZ),111204,other,account_type_current_assets,FALSE
+111204-03,111204-03,KBZ Saving (MGLZ),111204,other,account_type_current_assets,FALSE
+111204-04,111204-04,KBZ USD,111204,other,account_type_current_assets,FALSE
+111205,111205,YOMA Bank,111200,other,account_type_current_assets,FALSE
+111205-01,111205-01,YOMA Current (MGLZ),111205,other,account_type_current_assets,FALSE
+111205-02,111205-02,YOMA Saving (MGLZ),111205,other,account_type_current_assets,FALSE
+111205-03,111205-03,YOMA USD (HO),111205,other,account_type_current_assets,FALSE
+111205-04,111205-04,YOMA Call Deposit (MGLZ),111205,other,account_type_current_assets,FALSE
+112000,112000,Short-term Investment,110000,view,account_type_view,FALSE
+112100,112100,Fixed Deposit Account more than 3 months but less than 1 year,112000,receivable,account_type_receivable,FALSE
+113000,113000,Trade Accounts Receivable - Customers,110000,view,account_type_view,FALSE
+113100,113100,Trade Accounts Receivable - Customers,113000,receivable,account_type_receivable,FALSE
+113200,113200,Allowance for Doubtful Accounts - Customer,113000,receivable,account_type_receivable,FALSE
+114000,114000,Accounts Receivable,110000,view,account_type_view,FALSE
+114100,114100,Accounts Receivable - Principal,114000,view,account_type_view,FALSE
+114101,114101,Accounts Receivable - Nestle,114100,receivable,account_type_receivable,FALSE
+114101-10,114101-10,Accounts Receivable - Nestle F&B (Trade),114101,receivable,account_type_receivable,FALSE
+114101-20,114101-20,Accounts Receivable - Nestle F&B (Product),114101,receivable,account_type_receivable,FALSE
+114101-30,114101-30,Accounts Receivable - Nestle NIN (Trade),114101,receivable,account_type_receivable,FALSE
+114101-40,114101-40,Accounts Receivable - Nestle NIN (Product),114101,receivable,account_type_receivable,FALSE
+114102,114102,Accounts Receivable - Pocari,114100,receivable,account_type_receivable,FALSE
+114102-10,114102-10,Accounts Receivable - Pocari (Trade),114102,receivable,account_type_receivable,FALSE
+114102-20,114102-20,Accounts Receivable - Pocari (Product),114102,receivable,account_type_receivable,FALSE
+114103,114103,Accounts Receivable - MBC,114100,receivable,account_type_receivable,FALSE
+114103-10,114103-10,Accounts Receivable - MBC CSD (Trade),114103,receivable,account_type_receivable,FALSE
+114103-20,114103-20,Accounts Receivable - MBC CSD (Product),114103,receivable,account_type_receivable,FALSE
+114103-30,114103-30,Accounts Receivable - MBC Non-CSD (Trade),114103,receivable,account_type_receivable,FALSE
+114103-40,114103-40,Accounts Receivable - MBC Non-CSD (Product),114103,receivable,account_type_receivable,FALSE
+114104,114104,Accounts Receivable - Air Soda,114100,receivable,account_type_receivable,FALSE
+114104-10,114104-10,Accounts Receivable - Air Soda (Trade),114104,receivable,account_type_receivable,FALSE
+114104-20,114104-20,Accounts Receivable - Air Soda (Product),114104,receivable,account_type_receivable,FALSE
+114105,114105,Accounts Receivable - Myanmar Lion,114100,receivable,account_type_receivable,FALSE
+114105-10,114105-10,Accounts Receivable - Myanmar Lion (Trade),114105,receivable,account_type_receivable,FALSE
+114105-20,114105-20,Accounts Receivable - Myanmar Lion (Product),114105,receivable,account_type_receivable,FALSE
+114105-30,114105-30,Accounts Receivable - Myanmar Lion (Other),114105,receivable,account_type_receivable,FALSE
+114200,114200,Allowance for Doubtful Accounts - Principal,114000,view,account_type_view,FALSE
+114201,114201,Allowance for Doubtful Accounts - Nestle,114200,receivable,account_type_receivable,FALSE
+114202,114202,Allowance for Doubtful Accounts - Pocari,114200,receivable,account_type_receivable,FALSE
+114203,114203,Allowance for Doubtful Accounts - MBC,114200,receivable,account_type_receivable,FALSE
+114204,114204,Allowance for Doubtful Accounts - Air Soda,114200,receivable,account_type_receivable,FALSE
+114205,114205,Allowance for Doubtful Accounts - Myanmar Lion,114200,receivable,account_type_receivable,FALSE
+114300,114300,Other Accounts Receivable - Other Parties,114000,view,account_type_view,FALSE
+114301,114301,Other Accounts Receivable - MDG Mobile,114300,receivable,account_type_receivable,FALSE
+114302,114302,Other Accounts Receivable - Fine Wine,114300,receivable,account_type_receivable,FALSE
+114303,114303,Other Accounts Receivable - InHaus,114300,receivable,account_type_receivable,FALSE
+114304,114304,Other Accounts Receivable - Wine & Dine,114300,receivable,account_type_receivable,FALSE
+114305,114305,Other Accounts Receivable - Transview,114300,receivable,account_type_receivable,FALSE
+114306,114306,Other Accounts Receivable - BOC,114300,receivable,account_type_receivable,FALSE
+114307,114307,Other Accounts Receivable - JDM,114300,receivable,account_type_receivable,FALSE
+114308,114308,Other Accounts Receivable - MD,114300,receivable,account_type_receivable,FALSE
+114400,114400,Allowance for Doubtful Accounts - Other Parties,114000,view,account_type_view,FALSE
+114401,114401,Allowance for Doubtful Accounts - MDG Mobile,114400,receivable,account_type_receivable,FALSE
+114402,114402,Allowance for Doubtful Accounts - Fine Wine,114400,receivable,account_type_receivable,FALSE
+114403,114403,Allowance for Doubtful Accounts - InHaus,114400,receivable,account_type_receivable,FALSE
+114404,114404,Allowance for Doubtful Accounts - Wine & Dine,114400,receivable,account_type_receivable,FALSE
+114405,114405,Allowance for Doubtful Accounts - Transview,114400,receivable,account_type_receivable,FALSE
+114406,114406,Allowance for Doubtful Accounts - BOC,114400,receivable,account_type_receivable,FALSE
+114407,114407,Allowance for Doubtful Accounts - JDM,114400,receivable,account_type_receivable,FALSE
+115000,115000,Inventories ,110000,view,account_type_view,FALSE
+115100,115100,Inventories - Nestle,115000,view,account_type_view,FALSE
+115110,115110,Finished Goods - Nestle,115100,other,account_type_current_assets,FALSE
+115111,115111,Finished Goods - Nestle F&B,115110,other,account_type_current_assets,FALSE
+115112,115112,Finished Goods - Nestle NIN,115110,other,account_type_current_assets,FALSE
+115120,115120,Transit - Nestle,115100,view,account_type_view,FALSE
+115121,115121,Transit - Nestle F&B,115120,other,account_type_current_assets,FALSE
+115122,115122,Transit  - Nestle NIN,115120,other,account_type_current_assets,FALSE
+115130,115130,Allowance for Damaged Goods - Nestle,115100,other,account_type_current_assets,FALSE
+115131,115131,Allowance for Damaged Goods - Nestle F&B,115130,other,account_type_current_assets,FALSE
+115132,115132,Allowance for Damaged Goods - Nestle NIN,115130,other,account_type_current_assets,FALSE
+115140,115140,Allowance For Slow Moving - Nestle,115100,other,account_type_current_assets,FALSE
+115141,115141,Allowance For Slow Moving - Nestle F&B,115140,other,account_type_current_assets,FALSE
+115142,115142,Allowance For Slow Moving - Nestle NIN,115140,other,account_type_current_assets,FALSE
+115200,115200,Inventories - Pocari,115000,view,account_type_view,FALSE
+115210,115210,Finished Goods - Pocari,115200,other,account_type_current_assets,FALSE
+115220,115220,Transit - Pocari,115200,other,account_type_current_assets,FALSE
+115230,115230,Allowance for Damaged Goods - Pocari,115200,other,account_type_current_assets,FALSE
+115240,115240,Allowance For Slow Moving - Pocari,115200,other,account_type_current_assets,FALSE
+115300,115300,Inventories - MBC,115000,view,account_type_view,FALSE
+115310,115310,Finished Goods - MBC,115300,view,account_type_view,FALSE
+115311,115311,Finished Goods - MBC CSD,115310,other,account_type_current_assets,FALSE
+115312,115312,Finished Goods - MBC Non CSD,115310,other,account_type_current_assets,FALSE
+115313,115313,Finished Goods - MBC Air Soda,115310,other,account_type_current_assets,FALSE
+115320,115320,Transit - MBC,115300,view,account_type_view,FALSE
+115321,115321,Transit - MBC CSD,115320,other,account_type_current_assets,FALSE
+115322,115322,Transit - MBC Non CSD,115320,other,account_type_current_assets,FALSE
+115323,115323,Transit - MBC Air Soda,115320,other,account_type_current_assets,FALSE
+115330,115330,Allowance for Damaged Goods - MBC,115300,view,account_type_view,FALSE
+115331,115331,Allowance for Damaged Goods - MBC CSD,115330,other,account_type_current_assets,FALSE
+115332,115332,Allowance for Damaged Goods - MBC Non CSD,115330,other,account_type_current_assets,FALSE
+115333,115333,Allowance for Damaged Goods - MBC Air Soda,115330,other,account_type_current_assets,FALSE
+115340,115340,Allowance For Slow Moving - MBC,115330,view,account_type_view,FALSE
+115341,115341,Allowance For Slow Moving - MBC CSD,115330,other,account_type_current_assets,FALSE
+115342,115342,Allowance For Slow Moving - MBC Non CSD,115330,other,account_type_current_assets,FALSE
+115343,115343,Allowance For Slow Moving - MBC Air Soda,115330,other,account_type_current_assets,FALSE
+115400,115400,Inventories - Myanmar Lion,115000,view,account_type_view,FALSE
+115410,115410,Finished Goods - Myanmar Lion,115400,other,account_type_current_assets,FALSE
+115420,115420,Transit - Myanmar Lion,115400,other,account_type_current_assets,FALSE
+115430,115430,Allowance for Damaged Goods - Myanmar Lion,115400,other,account_type_current_assets,FALSE
+115440,115440,Allowance For Slow Moving - Myanmar Lion,115400,other,account_type_current_assets,FALSE
+116000,116000,Other Current Assets,110000,view,account_type_view,FALSE
+116100,116100,Advance Staffs,116000,other,account_type_current_assets,FALSE
+116200,116200,Prepaid Expenses,116000,other,account_type_current_assets,FALSE
+116201,116201,Prepaid Insurance - Vehicle,116200,other,account_type_current_assets,FALSE
+116202,116202,Prepaid Insurance - Others,116200,other,account_type_current_assets,FALSE
+116300,116300,Deducted Withholding Taxes for Tax Credit,116000,other,account_type_current_assets,FALSE
+116400,116400,Prepaid Quarterly Corp Income Taxes,116000,other,account_type_current_assets,FALSE
+116500,116500,Accrued interest Receivable,116000,other,account_type_current_assets,FALSE
+116600,116600,Input Commercial Taxes ,116000,other,account_type_current_assets,FALSE
+116700,116700,Prepaid Quarterly Commercial Taxes,116000,other,account_type_current_assets,FALSE
+116800,116800,Accrued Income,116000,other,account_type_current_assets,FALSE
+130000,130000,"Property, Plant and Equipment",100000,view,account_type_view,FALSE
+131100,131100,Land,130000,view,account_type_view,FALSE
+131110,131110,Land,131100,other,account_type_fixed_assets,TRUE
+131200,131200,Building,130000,view,account_type_view,FALSE
+131210,131210,Building,131200,other,account_type_fixed_assets,TRUE
+131211,131211,Leasehold Improvement,131200,other,account_type_fixed_assets,TRUE
+131220,131220,Acc - Depre -Building,131200,other,account_type_fixed_assets,TRUE
+131221,131221,Acc - Depre -Leasehold Improvement,131200,other,account_type_fixed_assets,TRUE
+131300,131300,Vehicles,130000,view,account_type_view,FALSE
+131310,131310,Car,131300,other,account_type_fixed_assets,TRUE
+131311,131311,Motorcycle,131300,other,account_type_fixed_assets,TRUE
+131312,131312,Bicycle,131300,other,account_type_fixed_assets,TRUE
+131313,131313,Truck,131300,other,account_type_fixed_assets,TRUE
+131314,131314,Forklift & Reach Truck,131300,other,account_type_fixed_assets,TRUE
+131320,131320,Acc- Depre -Car,131300,other,account_type_fixed_assets,TRUE
+131321,131321,Acc- Depre -Motorcycle,131300,other,account_type_fixed_assets,TRUE
+131322,131322,Acc- Depre -Bicycle,131300,other,account_type_fixed_assets,TRUE
+131323,131323,Acc- Depre -Truck,131300,other,account_type_fixed_assets,TRUE
+131324,131324,Acc- Depre -Forklift & Reach Truck,131300,other,account_type_fixed_assets,TRUE
+131400,131400,Office Equipment,130000,view,account_type_view,FALSE
+131410,131410,Office Equipment,131400,other,account_type_fixed_assets,TRUE
+131420,131420,Acc - Depre -Office Equipment,131400,other,account_type_fixed_assets,TRUE
+131500,131500,Furniture & Fixtures,130000,view,account_type_view,FALSE
+131510,131510,Furniture & Fixtures,131500,other,account_type_fixed_assets,TRUE
+131511,131511,Air Conditioner,131500,other,account_type_fixed_assets,TRUE
+131520,131520,Acc - Depre -Furniture & Fixtures,131500,other,account_type_fixed_assets,TRUE
+131521,131521,Acc - Depre -Air Conditioner,131500,other,account_type_fixed_assets,TRUE
+131600,131600,Computer & Accessories,130000,view,account_type_view,FALSE
+131610,131610,Computer & Accessories,131600,other,account_type_fixed_assets,TRUE
+131620,131620,Acc - Depre -Computer & Accessories,131600,other,account_type_fixed_assets,TRUE
+131700,131700,Generator & Motor,130000,view,account_type_view,FALSE
+131710,131710,Generator & Motor,131700,other,account_type_fixed_assets,TRUE
+131720,131720,Acc - Depre -Generator & Motor,131700,other,account_type_fixed_assets,TRUE
+131800,131800,Warehouse Equipment & Accessories,130000,view,account_type_view,FALSE
+131810,131810,Warehouse Equipment  ,131800,other,account_type_fixed_assets,TRUE
+131811,131811,Warehouse Accessories,131800,other,account_type_fixed_assets,TRUE
+131820,131820,Acc - Depre -Warehouse Equipment  ,131800,other,account_type_fixed_assets,TRUE
+131821,131821,Acc - Depre -Warehouse Accessories,131800,other,account_type_fixed_assets,TRUE
+131900,131900,Tools & Accessories,130000,view,account_type_view,FALSE
+131910,131910,Tools & Accessories,131900,other,account_type_fixed_assets,TRUE
+131920,131920,Acc - Depre -Tools & Accessories,131900,other,account_type_fixed_assets,TRUE
+140000,140000,Intangible Assets,100000,view,account_type_view,FALSE
+141000,141000,Computer Software,140000,view,account_type_view,FALSE
+141100,141100,Computer Software,141000,other,account_type_fixed_assets,TRUE
+141110,141110,Acc. Amort - Computer Software,141000,other,account_type_fixed_assets,TRUE
+150000,150000,Long Term Deposit (More than 1 year),100000,view,account_type_view,FALSE
+200000,200000,Liabilities,0,view,account_type_view,FALSE
+212000,212000,Accounts Payable,200000,view,account_type_view,FALSE
+212110,212110,Trade Accounts Payable - Principal,212000,view,account_type_view,FALSE
+212111,212111,Trade Accounts Payable - Nestle,212110,Payable,account_type_payable,FALSE
+212112,212112,Trade Accounts Payable - Pocari,212110,Payable,account_type_payable,FALSE
+212113,212113,Trade Accounts Payable - MBC,212110,Payable,account_type_payable,FALSE
+212114,212114,Trade Accounts Payable - Myanmar Lion,212110,Payable,account_type_payable,FALSE
+212120,212120,Other Accounts Payable - Other Parties,212000,view,account_type_view,FALSE
+212121,212121,Other Accounts Payable - MDG Mobile,212120,Payable,account_type_payable,FALSE
+212122,212122,Other Accounts Payable - Fine Wine,212120,Payable,account_type_payable,FALSE
+212123,212123,Other Accounts Payable - InHaus,212120,Payable,account_type_payable,FALSE
+212124,212124,Other Accounts Payable - Wine & Dine,212120,Payable,account_type_payable,FALSE
+212125,212125,Other Accounts Payable - Transview,212120,Payable,account_type_payable,FALSE
+212126,212126,Other Accounts Payable - BOC,212120,Payable,account_type_payable,FALSE
+212127,212127,Other Accounts Payable - JDM,212120,Payable,account_type_payable,FALSE
+212128,212128,Other Accounts Payable - MD,212120,Payable,account_type_payable,FALSE
+213000,213000,Other Payables,200000,view,account_type_view,FALSE
+213110,213110,Other Payables ,213000,Payable,account_type_payable,FALSE
+214000,214000,Short-Term Loans,200000,view,account_type_view,FALSE
+214110,214110,Short-Term Loans From Bank,214000,other,account_type_current_liabilities,FALSE
+214120,214120,Short-Term Loans From Related Parties,214000,other,account_type_current_liabilities,FALSE
+219000,219000,Other Current Liabilities,200000,view,account_type_view,FALSE
+219200,219200,Income Tax Payable,219000,view,account_type_view,FALSE
+219201,219201,Income Tax Payable,219200,other,account_type_current_liabilities,FALSE
+219300,219300,Commercial Tax Payable,219000,view,account_type_view,FALSE
+219301,219301,Commercial Tax Payable,219300,other,account_type_current_liabilities,
+219400,219400,Accrued Expenses,219000,view,account_type_view,FALSE
+219401,219401,Accrued Expenses Salary,219400,other,account_type_current_liabilities,FALSE
+219402,219402,Accrued Expenses Bonus,219400,other,account_type_current_liabilities,FALSE
+219403,219403,Accrued Expenses Incentive / commission,219400,other,account_type_current_liabilities,FALSE
+219404,219404,Accrued Expenses - Utilities,219400,other,account_type_current_liabilities,FALSE
+219405,219405,Accrued Expenses - Insurance,219400,other,account_type_current_liabilities,FALSE
+219406,219406,Accrued Expenses - Transportation,219400,other,account_type_current_liabilities,FALSE
+219407,219407,Accrued Expenses - Advertising,219400,other,account_type_current_liabilities,FALSE
+219408,219408,Accrued Expenses - Interest,219400,other,account_type_current_liabilities,FALSE
+219409,219409,Accrued Expenses - Others,219400,other,account_type_current_liabilities,FALSE
+221000,221000,Long-Term Loans,200000,view,account_type_view,FALSE
+221110,221110,Long-Term Loan From Related Parties,221000,other,account_type_current_liabilities,FALSE
+221120,221120,Long-Term Loan From Bank,221000,other,account_type_current_liabilities,FALSE
+290000,290000,Equity,0,view,account_type_view,FALSE
+291000,291000,Capital,290000,other,account_type_equity,FALSE
+292000,292000,Retained Earnings,290000,view,account_type_view,FALSE
+292001,292001,Retained Earning (Beginning),292000,other,account_type_equity,FALSE
+300000,300000,Revenue,0,view,account_type_view,FALSE
+310000,310000,Revenue from Sales - Nestle,300000,view,account_type_view,FALSE
+311000,311000,Sales - Nestle,310000,view,account_type_view,FALSE
+311100,311100,Sales- Nestle (Domestic),311000,other,account_type_income,FALSE
+311101,311101,Sales- Nestle F&B -Cash,311100,other,account_type_income,FALSE
+311102,311102,Sales- Nestle F&B -Credit,311100,other,account_type_income,FALSE
+311103,311103,Sales- Nestle NIN -Cash,311100,other,account_type_income,FALSE
+311104,311104,Sales- Nestle NIN -Credit,311100,other,account_type_income,FALSE
+312000,312000,Sales Return - Nestle,310000,view,account_type_view,FALSE
+312100,312100,Sales Return - Nestle (Domestic),312000,other,account_type_expense,FALSE
+312101,312101,Sales Return - Nestle F&B -Cash,312100,other,account_type_expense,FALSE
+312102,312102,Sales Return - Nestle F&B -Credit,312100,other,account_type_expense,FALSE
+312103,312103,Sales Return - Nestle NIN -Cash,312100,other,account_type_expense,FALSE
+312104,312104,Sales Return - Nestle NIN -Credit,312100,other,account_type_expense,FALSE
+313000,313000,Sales Discount - Nestle,310000,view,account_type_view,FALSE
+313100,313100,Sales Discount - Nestle (Domestic),313000,other,account_type_expense,FALSE
+313101,313101,Sales Discount - Nestle F&B -Cash,313100,other,account_type_expense,FALSE
+313102,313102,Sales Discount - Nestle F&B -Credit,313100,other,account_type_expense,FALSE
+313103,313103,Sales Discount - Nestle NIN -Cash,313100,other,account_type_expense,FALSE
+313104,313104,Sales Discount - Nestle NIN -Credit,313100,other,account_type_expense,FALSE
+314000,314000,Product FOC - Nestle,310000,view,account_type_view,FALSE
+314100,314100,Product FOC - Nestle (Domestic),314000,other,account_type_expense,FALSE
+314101,314101,Product FOC - Nestle F&B -Cash,314100,other,account_type_expense,FALSE
+314102,314102,Product FOC - Nestle F&B -Credit,314100,other,account_type_expense,FALSE
+314103,314103,Product FOC - Nestle NIN -Cash,314100,other,account_type_expense,FALSE
+314104,314104,Product FOC - Nestle NIN -Credit,314100,other,account_type_expense,FALSE
+315000,315000,Rebates - Nestle,310000,view,account_type_view,FALSE
+315100,315100,Rebates - Nestle (Domestic),315000,other,account_type_expense,FALSE
+315101,315101,Rebates - Nestle F&B -Cash,315100,other,account_type_expense,FALSE
+315102,315102,Rebates - Nestle F&B -Credit,315100,other,account_type_expense,FALSE
+315103,315103,Rebates - Nestle NIN -Cash,315100,other,account_type_expense,FALSE
+315104,315104,Rebates - Nestle NIN -Credit,315100,other,account_type_expense,FALSE
+320000,320000,Revenue from Sales - Pocari,300000,view,account_type_view,FALSE
+321000,321000,Sales - Pocari,320000,view,account_type_view,FALSE
+321100,321100,Sales- Pocari (Domestic),321000,other,account_type_income,FALSE
+321101,321101,Sales- Pocari -Cash,321100,other,account_type_income,FALSE
+321102,321102,Sales- Pocari -Credit,321100,other,account_type_income,FALSE
+322000,322000,Sales Return - Pocari,320000,view,account_type_view,FALSE
+322100,322100,Sales Return - Pocari (Domestic),322000,other,account_type_expense,FALSE
+322101,322101,Sales Return - Pocari -Cash,322100,other,account_type_expense,FALSE
+322102,322102,Sales Return - Pocari -Credit,322100,other,account_type_expense,FALSE
+323000,323000,Sales Discount - Pocari,320000,view,account_type_view,FALSE
+323100,323100,Sales Discount - Pocari (Domestic),323000,other,account_type_expense,FALSE
+323101,323101,Sales Discount - Pocari -Cash,323100,other,account_type_expense,FALSE
+323102,323102,Sales Discount - Pocari -Credit,323100,other,account_type_expense,FALSE
+324000,324000,Product FOC - Pocari,320000,view,account_type_view,FALSE
+324100,324100,Product FOC - Pocari (Domestic),324000,other,account_type_expense,FALSE
+324101,324101,Product FOC - Pocari -Cash,324100,other,account_type_expense,FALSE
+324102,324102,Product FOC - Pocari -Credit,324100,other,account_type_expense,FALSE
+325000,325000,Rebates - Pocari,320000,view,account_type_view,FALSE
+325100,325100,Rebates - Pocari (Domestic),325000,other,account_type_expense,FALSE
+325101,325101,Rebates - Pocari -Cash,325100,other,account_type_expense,FALSE
+325102,325102,Rebates - Pocari -Credit,325100,other,account_type_expense,FALSE
+330000,330000,Revenue from Sales - MBC,300000,view,account_type_view,FALSE
+331000,331000,Sales - MBC,330000,view,account_type_view,FALSE
+331100,331100,Sales- MBC (Domestic),331000,other,account_type_income,FALSE
+331101,331101,Sales- MBC CSD -Cash,331100,other,account_type_income,FALSE
+331102,331102,Sales- MBC CSD -Credit,331100,other,account_type_income,FALSE
+331103,331103,Sales- MBC Non-CSD -Cash,331100,other,account_type_income,FALSE
+331104,331104,Sales- MBC Non-CSD -Credit,331100,other,account_type_income,FALSE
+332000,332000,Sales Return - MBC,330000,view,account_type_view,FALSE
+332100,332100,Sales Return - MBC (Domestic),332000,other,account_type_expense,FALSE
+332101,332101,Sales Return - MBC CSD -Cash,332100,other,account_type_expense,FALSE
+332102,332102,Sales Return - MBC CSD -Credit,332100,other,account_type_expense,FALSE
+332103,332103,Sales Return - MBC Non-CSD -Cash,332100,other,account_type_expense,FALSE
+332104,332104,Sales Return - MBC Non-CSD -Credit,332100,other,account_type_expense,FALSE
+333000,333000,Sales Discount - MBC,330000,view,account_type_view,FALSE
+333100,333100,Sales Discount - MBC (Domestic),333000,other,account_type_expense,FALSE
+333101,333101,Sales Discount - MBC CSD -Cash,333100,other,account_type_expense,FALSE
+333102,333102,Sales Discount - MBC CSD -Credit,333100,other,account_type_expense,FALSE
+333103,333103,Sales Discount - MBC Non-CSD -Cash,333100,other,account_type_expense,FALSE
+333104,333104,Sales Discount - MBC Non-CSD -Credit,333100,other,account_type_expense,FALSE
+334000,334000,Product FOC - MBC,330000,view,account_type_view,FALSE
+334100,334100,Product FOC - MBC (Domestic),334000,other,account_type_expense,FALSE
+334101,334101,Product FOC - MBC CSD -Cash,334100,other,account_type_expense,FALSE
+334102,334102,Product FOC - MBC CSD -Credit,334100,other,account_type_expense,FALSE
+334103,334103,Product FOC - MBC Non-CSD -Cash,334100,other,account_type_expense,FALSE
+334104,334104,Product FOC - MBC Non-CSD -Credit,334100,other,account_type_expense,FALSE
+335000,335000,Rebates - MBC,330000,view,account_type_view,FALSE
+335100,335100,Rebates - MBC (Domestic),335000,other,account_type_expense,FALSE
+335101,335101,Rebates - MBC CSD -Cash,335100,other,account_type_expense,FALSE
+335102,335102,Rebates - MBC CSD -Credit,335100,other,account_type_expense,FALSE
+335103,335103,Rebates - MBC Non-CSD -Cash,335100,other,account_type_expense,FALSE
+335104,335104,Rebates - MBC Non-CSD -Credit,335100,other,account_type_expense,FALSE
+340000,340000,Revenue from Sales - Air Soda,300000,view,account_type_view,FALSE
+341000,341000,Sales - Air Soda,340000,view,account_type_view,FALSE
+341100,341100,Sales- Air Soda (Domestic),341000,other,account_type_income,FALSE
+341101,341101,Sales- Air Soda -Cash,341100,other,account_type_income,FALSE
+341102,341102,Sales- Air Soda -Credit,341100,other,account_type_income,FALSE
+342000,342000,Sales Return - Air Soda,340000,view,account_type_view,FALSE
+342100,342100,Sales Return - Air Soda (Domestic),342000,other,account_type_expense,FALSE
+342101,342101,Sales Return - Air Soda -Cash,342100,other,account_type_expense,FALSE
+342102,342102,Sales Return - Air Soda -Credit,342100,other,account_type_expense,FALSE
+343000,343000,Sales Discount - Air Soda,340000,view,account_type_view,FALSE
+343100,343100,Sales Discount - Air Soda (Domestic),343000,other,account_type_expense,FALSE
+343101,343101,Sales Discount - Air Soda -Cash,343100,other,account_type_expense,FALSE
+343102,343102,Sales Discount - Air Soda -Credit,343100,other,account_type_expense,FALSE
+344000,344000,Product FOC - Air Soda,340000,view,account_type_view,FALSE
+344100,344100,Product FOC - Air Soda (Domestic),344000,other,account_type_expense,FALSE
+344101,344101,Product FOC - Air Soda -Cash,344100,other,account_type_expense,FALSE
+344102,344102,Product FOC - Air Soda -Credit,344100,other,account_type_expense,FALSE
+345000,345000,Rebates - Air Soda,340000,view,account_type_view,FALSE
+345100,345100,Rebates - Air Soda (Domestic),345000,other,account_type_expense,FALSE
+345101,345101,Rebates - Air Soda -Cash,345100,other,account_type_expense,FALSE
+345102,345102,Rebates - Air Soda -Credit,345100,other,account_type_expense,FALSE
+350000,350000,Revenue from Sales - AMT,300000,view,account_type_view,FALSE
+351000,351000,Sales - AMT,350000,view,account_type_view,FALSE
+351100,351100,Sales- AMT (Domestic),351000,other,account_type_income,FALSE
+351101,351101,Sales- AMT -Cash,351100,other,account_type_income,FALSE
+351102,351102,Sales- AMT -Credit,351100,other,account_type_income,FALSE
+352000,352000,Sales Return - AMT,350000,view,account_type_view,FALSE
+352100,352100,Sales Return - AMT (Domestic),352000,other,account_type_expense,FALSE
+352101,352101,Sales Return - AMT -Cash,352100,other,account_type_expense,FALSE
+352102,352102,Sales Return - AMT -Credit,352100,other,account_type_expense,FALSE
+353000,353000,Sales Discount - AMT,350000,view,account_type_view,FALSE
+353100,353100,Sales Discount - AMT (Domestic),353000,other,account_type_expense,FALSE
+353101,353101,Sales Discount - AMT -Cash,353100,other,account_type_expense,FALSE
+353102,353102,Sales Discount - AMT -Credit,353100,other,account_type_expense,FALSE
+354000,354000,Product FOC - AMT,350000,view,account_type_view,FALSE
+354100,354100,Product FOC - AMT (Domestic),354000,other,account_type_expense,FALSE
+354101,354101,Product FOC - AMT -Cash,354100,other,account_type_expense,FALSE
+354102,354102,Product FOC - AMT -Credit,354100,other,account_type_expense,FALSE
+355000,355000,Rebates - AMT,350000,view,account_type_view,FALSE
+355100,355100,Rebates - AMT (Domestic),355000,other,account_type_expense,FALSE
+355101,355101,Rebates - AMT -Cash,355100,other,account_type_expense,FALSE
+355102,355102,Rebates - AMT -Credit,355100,other,account_type_expense,FALSE
+390000,390000,Other Income,300000,view,account_type_view,FALSE
+391000,391000,Interest Income,390000,other,account_type_income,FALSE
+400000,400000,Cost of Goods Sold,0,view,account_type_view,FALSE
+411000,411000,Cost of Goods Sold - Nestle,400000,view,account_type_view,FALSE
+411100,411100,Cost of Goods Sold - Nestle (Domestic),411000,other,account_type_expense,FALSE
+411101,411101,Cost of Goods Sold - Nestle F&B (Domestic),411100,other,account_type_expense,FALSE
+411102,411102,Cost of Goods Sold - Nestle NIN (Domestic),411100,other,account_type_expense,FALSE
+411103,411103,Freight & Labor In - Nestle F&B (Domestic),411100,other,account_type_expense,FALSE
+411104,411104,Freight & Labor In - Nestle NIN (Domestic),411100,other,account_type_expense,FALSE
+411105,411105,COGS Adjustment - Nestle F&B (Domestic),411100,other,account_type_expense,FALSE
+411106,411106,COGS Adjustment - Nestle NIN (Domestic),411100,other,account_type_expense,FALSE
+412000,412000,Cost of Goods Sold - Pocari,400000,view,account_type_view,FALSE
+412100,412100,Cost of Goods Sold - Pocari (Domestic),412000,other,account_type_expense,FALSE
+412101,412101,Freight & Labor In - Pocari (Domestic),412000,other,account_type_expense,FALSE
+412102,412102,COGS Adjustment - Pocari (Domestic),412000,other,account_type_expense,FALSE
+413000,413000,Cost of Goods Sold - MBC,400000,view,account_type_view,FALSE
+413100,413100,Cost of Goods Sold - MBC (Domestic),413000,other,account_type_expense,FALSE
+413101,413101,Cost of Goods Sold - MBC CSD (Domestic),413100,other,account_type_expense,FALSE
+413102,413102,Cost of Goods Sold - MBC Non-CSD (Domestic),413100,other,account_type_expense,FALSE
+413103,413103,Freight & Labor In - MBC CSD (Domestic),413100,other,account_type_expense,FALSE
+413104,413104,Freight & Labor In - MBC Non-CSD (Domestic),413100,other,account_type_expense,FALSE
+413105,413105,COGS Adjustment - MBC CSD (Domestic),413100,other,account_type_expense,FALSE
+413106,413106,COGS Adjustment - MBC Non-CSD (Domestic),413100,other,account_type_expense,FALSE
+414000,414000,Cost of Goods Sold - Air Soda,400000,view,account_type_view,FALSE
+414100,414100,Cost of Goods Sold - Air Soda (Domestic),414000,other,account_type_expense,FALSE
+414101,414101,Cost of Goods Sold - Air Soda (Domestic),414100,other,account_type_expense,FALSE
+414102,414102,Freight & Labor In - Air Soda (Domestic),414100,other,account_type_expense,FALSE
+414103,414103,COGS Adjustment - Air Soda (Domestic),414100,other,account_type_expense,FALSE
+415000,415000,Cost of Goods Sold - AMT,400000,view,account_type_view,FALSE
+415100,415100,Cost of Goods Sold - AMT (Domestic),415000,other,account_type_expense,FALSE
+415101,415101,Cost of Goods Sold - AMT (Domestic),415100,other,account_type_expense,FALSE
+415102,415102,Freight & Labor In - AMT (Domestic),415100,other,account_type_expense,FALSE
+415103,415103,COGS Adjustment - AMT (Domestic),415100,other,account_type_expense,FALSE
+500000,500000,Salaries & Wages,0,view,account_type_view,FALSE
+510000,510000,Salaries & Wages - Management,500000,view,account_type_view,FALSE
+510100,510100,Salaries - Regular Base,510000,other,account_type_expense,FALSE
+510101,510101,Bonus Pay,510000,other,account_type_expense,FALSE
+510102,510102,Incentive & comission,510000,other,account_type_expense,FALSE
+510103,510103,Expat Allowance,510000,other,account_type_expense,FALSE
+520000,520000,Salaries & Wages - Sales,500000,view,account_type_view,FALSE
+520100,520100,Salaries - Regular Base,520000,other,account_type_expense,FALSE
+520101,520101,Wages,520000,other,account_type_expense,FALSE
+520102,520102,Bonus Pay,520000,other,account_type_expense,FALSE
+520103,520103,Overtime Pay,520000,other,account_type_expense,FALSE
+520104,520104,Incentive & comission,520000,other,account_type_expense,FALSE
+520105,520105,Driving Allowance,520000,other,account_type_expense,FALSE
+520106,520106,SSB Contribution,520000,other,account_type_expense,FALSE
+530000,530000,Salaries & Wages - Supporting,500000,view,account_type_view,FALSE
+530100,530100,Salaries - Regular Base,530000,other,account_type_expense,FALSE
+530101,530101,Wages,530000,other,account_type_expense,FALSE
+530102,530102,Bonus Pay,530000,other,account_type_expense,FALSE
+530103,530103,Overtime Pay,530000,other,account_type_expense,FALSE
+530104,530104,Incentive & comission,530000,other,account_type_expense,FALSE
+530105,530105,Driving Allowance,530000,other,account_type_expense,FALSE
+530106,530106,SSB Contribution,530000,other,account_type_expense,FALSE
+600000,600000,Employee Benefits,0,view,account_type_view,FALSE
+600100,600100,Maternity Allowance,600000,other,account_type_expense,FALSE
+600101,600101,Birthday Allowance,600000,other,account_type_expense,FALSE
+600102,600102,Long Service Bonus,600000,other,account_type_expense,FALSE
+600103,600103,Medical Charges,600000,other,account_type_expense,FALSE
+600104,600104,Funeral Subsidiary,600000,other,account_type_expense,FALSE
+600105,600105,Entertainment (Staff),600000,other,account_type_expense,FALSE
+600106,600106,Gift & Present (Staff),600000,other,account_type_expense,FALSE
+600107,600107,Bonus Trip ,600000,other,account_type_expense,FALSE
+600108,600108,Staff Uniform,600000,other,account_type_expense,FALSE
+600109,600109,Other employee benefits,600000,other,account_type_expense,FALSE
+700000,700000,"Selling, General, and Administrative Expenses",0,view,account_type_view,FALSE
+710000,710000,Selling Expense,700000,view,account_type_view,FALSE
+711000,711000,Promotion & Advertising Expense,710000,view,account_type_view,FALSE
+711100,711100,Promotion Expense,711000,view,account_type_view,FALSE
+711101,711101,Consumer Promotion,711100,other,account_type_expense,FALSE
+711101-01,711101-01,Consumer Promotion (Nestle),711100,other,account_type_expense,FALSE
+711101-02,711101-02,Consumer Promotion (Pocari),711100,other,account_type_expense,FALSE
+711101-03,711101-03,Consumer Promotion (MBC),711100,other,account_type_expense,FALSE
+711101-04,711101-04,Consumer Promotion (Air Soda),711100,other,account_type_expense,FALSE
+711101-05,711101-05,Consumer Promotion (AMT),711100,other,account_type_expense,FALSE
+711102,711102,Trade Promotion,711100,other,account_type_expense,FALSE
+711102-01,711102-01,Trade Promotion (Nestle),711100,other,account_type_expense,FALSE
+711102-02,711102-02,Trade Promotion (Pocari),711100,other,account_type_expense,FALSE
+711102-03,711102-03,Trade Promotion (MBC),711100,other,account_type_expense,FALSE
+711102-04,711102-04,Trade Promotion (Air Soda),711100,other,account_type_expense,FALSE
+711102-05,711102-05,Trade Promotion (AMT),711100,other,account_type_expense,FALSE
+711200,711200,Advertising Expense,711000,view,account_type_view,FALSE
+712000,712000,Transportation Expense (Sales),710000,view,account_type_view,FALSE
+712001,712001,Vehicle Taxes,712000,other,account_type_expense,FALSE
+712002,712002,Vehicle Accessories,712000,other,account_type_expense,FALSE
+712003,712003,Vehicle Repair & Maintenance,712000,other,account_type_expense,FALSE
+712004,712004,Vehicle Fuel & Lubricant,712000,other,account_type_expense,FALSE
+712005,712005,Vehicle Rental Expense,712000,other,account_type_expense,FALSE
+713000,713000,Trip Expense,710000,view,account_type_view,FALSE
+713100,713100,Trip Expense - Day Trip,713000,other,account_type_expense,FALSE
+713200,713200,Trip Expense - Long Trip,713000,other,account_type_expense,FALSE
+714000,714000,Area Dealer Expenses,710000,view,account_type_view,FALSE
+714100,714100,Area Dealer Expenses (Nestle),714000,other,account_type_expense,FALSE
+714101,714101,Area Dealer Expenses (Pocari),714000,other,account_type_expense,FALSE
+714102,714102,Area Dealer Expenses (MBC),714000,other,account_type_expense,FALSE
+714103,714103,Area Dealer Expenses (Air Soda),714000,other,account_type_expense,FALSE
+714104,714104,Area Dealer Expenses (AMT),714000,other,account_type_expense,FALSE
+715000,715000,Freight & Labor Out,710000,view,account_type_view,FALSE
+715100,715100,Freight & Labor Out - Nestle ,715000,view,account_type_view,FALSE
+715101,715101,Freight & Labor Out - Nestle F&B,715100,other,account_type_expense,FALSE
+715102,715102,Freight & Labor Out - Nestle NIN,715100,other,account_type_expense,FALSE
+715200,715200,Freight & Labor Out - Pocari,715000,view,account_type_view,FALSE
+715300,715300,Freight & Labor Out - MBC,715000,view,account_type_view,FALSE
+715301,715301,Freight & Labor Out - MBC CSD,715300,other,account_type_expense,FALSE
+715302,715302,Freight & Labor Out - MBC Non-CSD,715300,other,account_type_expense,FALSE
+715400,715400,Freight & Labor Out - Air Soda,715000,view,account_type_view,FALSE
+715500,715500,Freight & Labor Out - AMT,715000,view,account_type_view,FALSE
+716000,716000,Other Selling Expense,710000,view,account_type_view,FALSE
+720000,720000,General Expense,700000,view,account_type_view,FALSE
+721000,721000,Business Development,720000,view,account_type_view,FALSE
+721100,721100,Entertainment (Bus. Development),721000,other,account_type_expense,FALSE
+721101,721101,Gift & Present (Bus. Development),721000,other,account_type_expense,FALSE
+721102,721102,Travel (Bus. Development),721000,other,account_type_expense,FALSE
+721103,721103,Professional Fees (Bus. Development),721000,other,account_type_expense,FALSE
+722000,722000,Donation,720000,view,account_type_view,FALSE
+722100,722100,Cash Donation,722000,other,account_type_expense,FALSE
+722101,722101,Product/Event Donation,722000,other,account_type_expense,FALSE
+723000,723000,Training & Seminar,720000,view,account_type_view,FALSE
+723100,723100,In-House Training ,723000,view,account_type_view,FALSE
+723101,723101,Outside Training,723000,view,account_type_view,FALSE
+723102,723102,Seminar,723000,view,account_type_view,FALSE
+724000,724000,Procurement Expense,720000,view,account_type_view,FALSE
+724100,724100,Import Expense,724000,other,account_type_expense,FALSE
+724101,724101,FDA Expense,724000,other,account_type_expense,FALSE
+725000,725000,License Expense,720000,view,account_type_view,FALSE
+726000,726000,Recruitment Expense,720000,view,account_type_view,FALSE
+730000,730000,Administrative Expense,700000,view,account_type_view,FALSE
+731000,731000,Utilities,730000,view,account_type_view,FALSE
+731100,731100,Internet,731000,other,account_type_expense,FALSE
+731101,731101,Electricity,731000,other,account_type_expense,FALSE
+731102,731102,Telecom,731000,other,account_type_expense,FALSE
+731103,731103,CDC Tax,731000,other,account_type_expense,FALSE
+732000,732000,Office Expense,730000,view,account_type_view,FALSE
+732100,732100,Water Supplies,732000,other,account_type_expense,FALSE
+732101,732101,Stationery & Office Supplies,732000,other,account_type_expense,FALSE
+732102,732102,Printing,732000,other,account_type_expense,FALSE
+732103,732103,Cleaning,732000,other,account_type_expense,FALSE
+733000,733000,Other Administrative Expense,730000,view,account_type_view,FALSE
+733100,733100,Insurance Premium,733000,view,account_type_view,FALSE
+733200,733200,Professional Fees,733000,view,account_type_view,FALSE
+733300,733300,Transportation Expense (Office),733000,view,account_type_view,FALSE
+733301,733301,Vehicle Taxes,733300,other,account_type_expense,FALSE
+733302,733302,Vehicle Accessories,733300,other,account_type_expense,FALSE
+733303,733303,Vehicle Repair & Maintenance,733300,other,account_type_expense,FALSE
+733304,733304,Vehicle Fuel & Lubricant,733300,other,account_type_expense,FALSE
+733305,733305,Vehicle Rental Expense,733300,other,account_type_expense,FALSE
+733400,733400,Property Expense,733000,view,account_type_view,FALSE
+733401,733401,Office Rental ,733400,other,account_type_expense,FALSE
+733402,733402,Warehouse Rental,733400,other,account_type_expense,FALSE
+733403,733403,Office Building Repair & Maintenance,733400,other,account_type_expense,FALSE
+733404,733404,Warehouse Repair & Maintenance,733400,other,account_type_expense,FALSE
+733500,733500,Repair & Maintenance,733000,view,account_type_view,FALSE
+733501,733501,Office Equipment ,733500,other,account_type_fixed_assets,FALSE
+733502,733502,Office Furniture,733500,other,account_type_fixed_assets,FALSE
+733503,733503,IT Hardware,733500,other,account_type_fixed_assets,FALSE
+733600,733600,Travel Expense,733000,view,account_type_view,FALSE
+733601,733601,Travel - Management,733600,other,account_type_expense,FALSE
+733602,733602,Travel - Sales,733600,other,account_type_expense,FALSE
+733603,733603,Travel - Supporting,733600,other,account_type_expense,FALSE
+800000,800000,Depreciation Expense,0,view,account_type_view,FALSE
+810000,810000,Depreciation - Building,800000,view,account_type_view,FALSE
+810100,810100,Depreciation - Building,810000,other,account_type_expense,FALSE
+810200,810200,Depreciation - Leasehold Improvement,810000,other,account_type_expense,FALSE
+820000,820000,Depreciation - Vehicles,800000,view,account_type_view,FALSE
+820100,820100,Depreciation - Car,820000,other,account_type_expense,FALSE
+820200,820200,Depreciation - Motorcycle,820000,other,account_type_expense,FALSE
+820300,820300,Depreciation - Bicycle,820000,other,account_type_expense,FALSE
+820400,820400,Depreciation - Truck,820000,other,account_type_expense,FALSE
+820500,820500,Depreciation - Forklift & Reach Truck,820000,other,account_type_expense,FALSE
+830000,830000,Depreciation - Office Equipment,800000,view,account_type_view,FALSE
+830100,830100,Depreciation - Office Equipment,830000,other,account_type_expense,FALSE
+840000,840000,Depreciation - Furniture & Fixtures,800000,view,account_type_view,FALSE
+840100,840100,Depreciation - Furniture & Fixtures,840000,other,account_type_expense,FALSE
+840200,840200,Depreciation - Air Conditioner,840000,other,account_type_expense,FALSE
+850000,850000,Depreciation - Computer & Accessories,800000,view,account_type_view,FALSE
+850100,850100,Depreciation - Computer & Accessories,850000,other,account_type_expense,FALSE
+860000,860000,Depreciation - Generator & Motor,800000,view,account_type_view,FALSE
+860100,860100,Depreciation - Generator & Motor,860000,other,account_type_expense,FALSE
+870000,870000,Depreciation - Warehouse Equipment & Accessories,800000,view,account_type_view,FALSE
+870100,870100,Depreciation - Warehouse Equipment,870000,other,account_type_expense,FALSE
+870200,870200,Depreciation - Warehouse Accessories,870000,other,account_type_expense,FALSE
+880000,880000,Depreciation - Tools & Accessories,800000,view,account_type_view,FALSE
+880100,880100,Depreciation - Tools & Accessories,880000,other,account_type_expense,FALSE
+890000,890000,Depreciation - Computer Software,800000,view,account_type_view,FALSE
+890100,890100,Depreciation - Computer Software,890000,other,account_type_expense,FALSE
+900000,900000,Other Expenses,0,view,account_type_view,FALSE
+910000,910000,Bad Debts,900000,view,account_type_view,FALSE
+910100,910100,Bad Debts - Nestle,910000,other,account_type_expense,FALSE
+910200,910200,Bad Debts - Pocari,910000,other,account_type_expense,FALSE
+910300,910300,Bad Debts - MBC,910000,other,account_type_expense,FALSE
+910400,910400,Bad Debts - Air Soda,910000,other,account_type_expense,FALSE
+910500,910500,Bad Debts - Myanmar Lion,910000,other,account_type_expense,FALSE
+920000,920000,Loss On Damaged Goods & Slow Moving,900000,view,account_type_view,FALSE
+921000,921000,Loss On Damaged Goods ,920000,view,account_type_view,FALSE
+921100,921100,Loss On Damaged Goods - Nestle,921000,other,account_type_expense,FALSE
+921101,921101,Loss On Damaged Goods - Nestle F&B,921100,other,account_type_expense,FALSE
+921102,921102,Loss On Damaged Goods - Nestle NIN,921100,other,account_type_expense,FALSE
+921200,921200,Loss On Damaged Goods - Pocari,921000,other,account_type_expense,FALSE
+921300,921300,Loss On Damaged Goods - MBC,921000,other,account_type_expense,FALSE
+921301,921301,Loss On Damaged Goods - MBC CSD,921300,other,account_type_expense,FALSE
+921302,921302,Loss On Damaged Goods - MBC Non-CSD,921300,other,account_type_expense,FALSE
+921400,921400,Loss On Damaged Goods - Air Soda,921000,other,account_type_expense,FALSE
+921500,921500,Loss On Damaged Goods - AMT,921000,other,account_type_expense,FALSE
+922000,922000,Loss On Slow Moving,920000,view,account_type_view,FALSE
+922100,922100,Loss On Slow Moving - Nestle,922000,other,account_type_expense,FALSE
+922101,922101,Loss On Slow Moving - Nestle F&B,922100,other,account_type_expense,FALSE
+922102,922102,Loss On Slow Moving - Nestle NIN,922100,other,account_type_expense,FALSE
+922200,922200,Loss On Slow Moving - Pocari,922000,other,account_type_expense,FALSE
+922300,922300,Loss On Slow Moving - MBC,922000,other,account_type_expense,FALSE
+922301,922301,Loss On Slow Moving - MBC CSD,922300,other,account_type_expense,FALSE
+922302,922302,Loss On Slow Moving - MBC Non-CSD,922300,other,account_type_expense,FALSE
+922400,922400,Loss On Slow Moving - Air Soda,922000,other,account_type_expense,FALSE
+922500,922500,Loss On Slow Moving - AMT,922000,other,account_type_expense,FALSE
+930000,930000,Gain/Loss from Asset,900000,view,account_type_view,FALSE
+940000,940000,Gain Or Loss on Exchange,900000,view,account_type_view,FALSE
+941000,941000,Gain Or Loss on Exchange - Nestle,940000,other,account_type_expense,FALSE
+942000,942000,Gain Or Loss on Exchange - Pocari,940000,other,account_type_expense,FALSE
+943000,943000,Gain Or Loss on Exchange - Others,940000,other,account_type_expense,FALSE
+950000,950000,Financing Cost,900000,view,account_type_view,FALSE
+951000,951000,Financing Cost - Domestic,950000,other,account_type_expense,FALSE
+952000,952000,Financing Cost - International,950000,other,account_type_expense,FALSE
+960000,960000,Interest Expense,900000,view,account_type_view,FALSE
+961000,961000,Interest Expense - Domestic,960000,other,account_type_expense,FALSE
+962000,962000,Interest Expense - International,960000,other,account_type_expense,FALSE
+970000,970000,Bank Charges,900000,view,account_type_view,FALSE
+971000,971000,Bank Charges - Domestic,970000,other,account_type_expense,FALSE
+972000,972000,Bank Charges - International,970000,other,account_type_expense,FALSE
+980000,980000,Taxes,900000,view,account_type_view,FALSE
+981000,981000,Corporate Income Tax,980000,other,account_type_expense,FALSE
+982000,982000,Commercial Tax,980000,other,account_type_expense,FALSE
+990000,990000,Miscellaneous,900000,view,account_type_view,FALSE
+991000,991000,Fines & Penalties,990000,view,account_type_view,FALSE
+992000,992000,BOD Personal Expense,990000,view,account_type_view,FALSE
+992100,992100,43-Inyar Myaing Expense,992000,other,account_type_expense,FALSE
+992200,992200,34-Inyar Myaing Expense,992000,other,account_type_expense,FALSE
+992300,992300,Horse Stable Expense,992000,other,account_type_expense,FALSE
+992400,992400,Nan Myint Building Expense,992000,other,account_type_expense,FALSE
+992500,992500,Hmawbi Yard,992000,other,account_type_expense,FALSE
+992600,992600,Ahlone Factory Expense,992000,other,account_type_expense,FALSE
+992700,992700,Personal Expenses - Other,992000,other,account_type_expense,FALSE

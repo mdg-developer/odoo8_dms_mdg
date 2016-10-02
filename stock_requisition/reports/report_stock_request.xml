@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_stock_request_document">
+    <t t-call="report.external_layout">
+        <div class="page">
+            <div class="row">
+                <div class="col-xs-5 col-xs-offset-7">
+                    <address t-field="o.partner_id"
+                        t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' />
+                    <span t-field="o.partner_id.vat"/>
+                </div>
+            </div>
+
+            <h2>
+                <span t-field="o.name"/>
+            </h2>
+
+            <div class="row mt32 mb32">
+                <div class="col-xs-2" t-if="o.from_location_id.name">
+                    <strong>Request From:</strong>
+					<span t-field="o.from_location_id.location_id.name" />
+					<b>/</b>
+					<span t-field="o.from_location_id.name" />
+                </div>
+                 <div class="col-xs-2" t-if="o.issue_date">
+                    <strong>Date for Issue From:</strong>
+                    <p t-field="o.issue_date"/>
+                </div>
+                <div class="col-xs-2" t-if="o.request_by">
+                    <strong>Requested By:</strong>
+                    <p t-field="o.request_by"/>
+                </div>
+                <div class="col-xs-2" t-if="o.issue_to">
+                    <strong>Issue To:</strong>
+                    <p t-field="o.issue_to"/>
+                </div>
+                <div class="col-xs-2" t-if="o.company_id.name">
+                    <strong>Company:</strong>
+                    <p t-field="o.company_id.name"/>
+                </div>
+            </div>
+            
+            <div class="row mt32 mb32">
+                <div class="col-xs-2" t-if="o.to_location_id.name">
+                    <strong>Request To:</strong><br></br>
+					<span t-field="o.to_location_id.location_id.name" />
+					<b>/</b>
+					<span t-field="o.to_location_id.name" />
+                </div>
+                <div class="col-xs-2" t-if="o.s_issue_date">
+                    <strong>Date for Issue To:</strong>
+                    <p t-field="o.s_issue_date"/>
+                </div>
+                <div class="col-xs-2" t-if="o.approve_by">
+                    <strong>Approved By:</strong>
+                    <p t-field="o.approve_by"/>
+                </div>
+                <div class="col-xs-2" t-if="o.vehicle_id.model_id.modelname">
+                    <strong>Vehicle No:</strong><br></br>
+					<span t-field="o.vehicle_id.model_id.brand_id.name" />
+					<b>/</b>
+					<span t-field="o.vehicle_id.model_id.modelname" />
+                </div>
+                <div class="col-xs-2" t-if="o.sale_team_id.name">
+                    <strong>Delivery Team:</strong>
+                    <p t-field="o.sale_team_id.name"/>
+                </div>
+                <div class="col-xs-2" t-if="o.request_date">
+                    <strong>Date Requested:</strong>
+                    <p t-field="o.request_date"/>
+                </div>
+            </div>
+
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Bigger UOM</th>
+                        <th>Quantity</th>
+                        <th>Smaller UOM</th>
+                    </tr>
+                </thead>
+                <tbody class="invoice_tbody">
+                    <tr t-foreach="o.p_line" t-as="l">
+                        <td><span t-field="l.product_id"/></td>
+                        <td>
+                            <span t-field="l.big_req_quantity"/>
+                        </td>
+                        <td>
+                            <span t-field="l.big_uom_id.name" />
+                        </td>
+                        <td>
+                            <span t-field="l.req_quantity"/>
+                        </td>
+                        <td>
+                            <span t-field="l.product_uom.name" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </t>
+</template>
+
+<template id="stock_request">
+    <t t-call="report.html_container">
+        <t t-foreach="doc_ids" t-as="doc_id">
+            <t t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', 'stock_requisition.report_stock_request_document')"/>
+        </t>
+    </t>
+</template>
+</data>
+</openerp>

@@ -23,16 +23,26 @@
 						<group>
 							<group>
 								<field name="name" />
-								<field name="sale_team_id" attrs="{'readonly':[('state','=','approve')]}" />
+								<field name="sale_team_id" attrs="{'readonly':[('state','=','approve')]}"
+									on_change="on_change_sale_team_id(sale_team_id)" />
 								<field name="return_from" attrs="{'readonly':[('state','=','approve')]}" />
 								<field name="return_date" attrs="{'readonly':[('state','=','approve')]}" />
-
 							</group>
 							<group>
-								<field name="note_id" attrs="{'readonly':[('state','=','approve')]}" />
+								<field name="note_id" attrs="{'readonly':[('state','=','approve')]}"
+									domain="[('sale_team_id', '=',sale_team_id)]" />
 								<field name="so_no" attrs="{'readonly':[('state','=','approve')]}" />
 								<field name="vehicle_id" attrs="{'readonly':[('state','=','approve')]}" />
 								<field name="company_id" attrs="{'readonly':[('state','=','approve')]}" />
+							</group>
+						</group>
+						<group>
+							<group>
+								<button name="retrieve_data" string="Retrieve" type="object"
+									widget="statinfo" class="oe_highlight" />
+
+							</group>
+							<group>
 
 							</group>
 						</group>
@@ -41,14 +51,18 @@
 								<page string="Stock List">
 									<field name="p_line" attrs="{'readonly':[('state','=','approve')]}">
 										<tree string="Stock Return Line" editable="bottom">
-											<field name="product_id" on_change="on_change_product_id(product_id)" />
+											<field name="product_id" />
 											<field name="receive_quantity" />
 											<field name="return_quantity" />
 											<field name="sale_quantity" />
 											<field name="foc_quantity" />
 											<field name="product_uom" />
-											<field name="uom_ratio" />
-											<field name="qty_by_wh" />
+											<field name="uom_ratio" invisible="1" />
+											<!-- <field name="qty_by_wh" /> -->
+											<field name="rec_big_quantity" />
+											<field name="rec_big_uom_id" />
+											<field name="rec_small_quantity" />
+											<field name="rec_small_uom_id" />
 											<field name="expiry_date" />
 											<field name="remark" />
 										</tree>
@@ -81,6 +95,7 @@
 							context="{'group_by':'return_from'}" />
 						<filter string="Date of Return" icon="terp-partner" domain="[]"
 							context="{'group_by':'return_date'}" />
+						<filter string="Pending" domain="[('state','=','draft')]" name="state_filter"/>
 
 					</group>
 				</search>
@@ -108,7 +123,7 @@
 			<field name="name">Stock Return</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">stock.return</field>
-			<field name="context">{}</field>
+			<field name="context">{'search_default_state_filter': 1}</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" ref="stock_return_tree" />

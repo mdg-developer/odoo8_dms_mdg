@@ -3,7 +3,6 @@ from openerp.osv import fields, osv
 from openerp.tools import float_compare
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
-from pip._vendor.pkg_resources import require
 
 class account_bank_statement_line(osv.osv):
 

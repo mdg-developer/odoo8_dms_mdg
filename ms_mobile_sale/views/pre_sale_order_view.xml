@@ -43,6 +43,8 @@
 							</group>
 							<group>
 								<field name="date" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="type" attrs="{'readonly':[('m_status','=','done')]}" />
+
 								<field name="tablet_id" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="delivery_remark" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="amount_total" attrs="{'readonly':[('m_status','=','done')]}" />
@@ -147,14 +149,30 @@
 								</field>
 
 							</page>
+							<page string="Payments">
+								<field name="payment_line_ids" attrs="{'readonly':[('m_status','=','done')]}">
+									<tree string="Payment Lines" editable="bottom"
+										attrs="{'readonly':[('m_status','=','done')]}">
 
+										<field name="date" />
+										<field name="journal_id" widget="selection" />
+										<field name="amount" sum="Price" />
+										<field name="notes" />
+
+									</tree>
+								</field>
+							</page>
+							<page string="Google Map">
+								<widget type="gmap_marker" lat="mso_latitude" lng="mso_longitude"
+									description="field_descriptions" />
+							</page>
 							<!--<page string="Geoengine Map"> <field name="geo_point" widget="geo_edit_map" 
 								groups="base_geoengine.group_geoengine_user,base_geoengine.group_geoengine_admin"/> 
 								</page> -->
 
 						</notebook>
-						<widget type="gmap_marker" lat="mso_latitude" lng="mso_longitude"
-							description="field_descriptions" />
+<!-- 						<widget type="gmap_marker" lat="mso_latitude" lng="mso_longitude" -->
+<!-- 							description="field_descriptions" /> -->
 					</sheet>
 				</form>
 			</field>
@@ -167,7 +185,9 @@
 			<field name="model">pre.sale.order</field>
 			<field name="arch" type="xml">
 				<search string="Search Pre Sale Order Filters">
-
+					<filter string="Draft"
+						domain="[ ('m_status', '=', 'draft')]"
+						name="state" />
 					<group expand="0" string="Group By">
 						<filter name="tablet_id" string="Tablet Name" domain="[]"
 							context="{'group_by':'tablet_id'}" />
@@ -181,8 +201,10 @@
 							domain="[]" context="{'group_by':'sale_plan_trip_id'}" />
 						<filter name="sale_plan_day_id" string="Sale Plan Days"
 							domain="[]" context="{'group_by':'sale_plan_day_id'}" />
-					<filter name="partner_id" string="Customer"
-							domain="[]" context="{'group_by':'partner_id'}" />									
+						<filter name="partner_id" string="Customer" domain="[]"
+							context="{'group_by':'partner_id'}" />
+						<filter name="m_status" string="Status" domain="[]"
+							context="{'group_by':'m_status'}" />						
 					</group>
 				</search>
 			</field>
@@ -213,27 +235,28 @@
 			</field>
 		</record>
 
-        <record id="view_pre_sale_order_calendar" model="ir.ui.view">
-            <field name="name">pre.sale.order.calendar</field>
-            <field name="model">pre.sale.order</field>
-            <field name="arch" type="xml">
-                <calendar string="Pre Sales Orders" color="m_status"  date_start="date">
-                    <field name="partner_id"/>
-                    <field name="amount_total"/>
-                </calendar>
-            </field>
-        </record>
-        <record model="ir.ui.view" id="view_pre_sale_order_graph">
-            <field name="name">pre.sale.order.graph</field>
-            <field name="model">pre.sale.order</field>
-            <field name="arch" type="xml">
-                <graph string="Pre Sales Orders" type="bar">
-                    <field name="partner_id"  type="row"/>
-                    <field name="amount_total" type="measure"/>
-                </graph>
-            </field>
-        </record>
-        		
+		<record id="view_pre_sale_order_calendar" model="ir.ui.view">
+			<field name="name">pre.sale.order.calendar</field>
+			<field name="model">pre.sale.order</field>
+			<field name="arch" type="xml">
+				<calendar string="Pre Sales Orders" color="m_status"
+					date_start="date">
+					<field name="partner_id" />
+					<field name="amount_total" />
+				</calendar>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="view_pre_sale_order_graph">
+			<field name="name">pre.sale.order.graph</field>
+			<field name="model">pre.sale.order</field>
+			<field name="arch" type="xml">
+				<graph string="Pre Sales Orders" type="bar">
+					<field name="partner_id" type="row" />
+					<field name="amount_total" type="measure" />
+				</graph>
+			</field>
+		</record>
+
 		<record id="action_pre_sale_order" model="ir.actions.act_window">
 			<field name="name">Pre Sale Orders</field>
 			<field name="type">ir.actions.act_window</field>
@@ -242,7 +265,8 @@
 			<field name="view_mode">tree,form,calendar,graph</field>
 			<field name="view_id" ref="view_pre_sale_order_tree" />
 			<field name="search_view_id" ref="view_pre_sale_order_filter" />
-
+			<field name="context">{ 'search_default_state': 1}
+			</field>
 			<field name="help" type="html">
 				<p class="oe_view_nocontent_create">
 					Click to create new pre sale order.

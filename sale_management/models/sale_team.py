@@ -3,6 +3,7 @@ import openerp.addons.decimal_precision as dp
 from datetime import datetime, timedelta
 import calendar
 from openerp import tools
+
 OE_DATEFORMAT = "%Y-%m-%d"
 class crm_case_section(osv.osv):
     _inherit = 'crm.case.section'
@@ -196,10 +197,13 @@ class crm_case_section(osv.osv):
                 'product_ids':fields.many2many('product.product'),
                 'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True),
                 'location_id': fields.many2one('stock.location', 'Location', required=True),
+                'issue_location_id': fields.many2one('stock.location', 'Issue location', required=True),
+                
                 'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
                 'sale_channel_id':fields.many2many('sale.channel', 'sale_team_channel_rel', 'sale_team_id', 'sale_channel_id', string='Sale Channel'),
                 'demarcation_ids':fields.many2many('sale.demarcation'),
                 'van_id':fields.char('Vehicle No'),
+                'pricelist_ids':fields.many2many('product.pricelist'),
                 'vehicle_id':fields.many2one('fleet.vehicle', 'Vehicle No'),
                 'main_group_id': fields.many2many('product.maingroup'),
                                 'date':fields.date('Date'),
@@ -244,7 +248,8 @@ class crm_case_section(osv.osv):
                 string='Daily Average'),
                 'credit_sale': fields.function(_get_credit_sale, digits_compute=dp.get_precision('Product Price'),
                 type='float', readonly=True,
-                string='Credit Outstanding'),
+                string='Credit Outstanding'),                
+                 'price_list_line': fields.one2many('price.list.line', 'team_id', 'Price List', copy=True),                
         }
     _sql_constraints = [
         ('code_uniq', 'unique (code)', 'The code of the sales team must be unique !')

@@ -20,23 +20,21 @@
 ##############################################################################
 
 {
-    'name': 'MDG - Accounting',
+    'name': 'MDG- accounting',
     'version': '1.0',
     'category': 'Localization/Account Charts',
     'description': """
-Chart of Accounts for MDG Co., Ltd.
+Chart of Accounts for Myanmar Distribution Group.
 ======================================
 
-MDG Accounting chart and localization.
+MDG accounting chart and localization.
     """,
-    'author': '7th Computing Develoment Team',
+    'author': 'Yin May',
     'website': 'http://7thcomputing.com/',
     'depends': ['account_chart', 'account_accountant'],
     'data': [ 'data/account.account.type.csv',
               'data/account.account.template.csv',
               'data/account.chart.template.csv',
-			 
-			  
               ],
     'installable': True,
 }

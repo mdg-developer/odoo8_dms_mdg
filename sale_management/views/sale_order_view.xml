@@ -32,6 +32,8 @@
 			<field name="arch" type="xml">
 				<xpath expr="//search/filter[@name='my_sale_orders_filter']"
 					position="after">
+                    <filter string="Pending" domain="[('is_generate','=',False)]" name="my_generate"/>
+				    					
 					<filter name="validity_date" string="Date Confirm"
 						filter_domain="[('validity_date','ilike',self)]" />
 					<filter name="payment_type" string="Payment Type"
@@ -101,7 +103,8 @@
 				</field>
 
 				<field name="invoiced" position="before">
-					<field name="pre_order"></field>
+					<field name="pre_order"/>
+					<field name="is_generate"/>
 				</field>
 			</field>
 		</record>

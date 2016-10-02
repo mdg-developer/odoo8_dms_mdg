@@ -14,6 +14,7 @@
 								<field name="sale_team_id" on_change="on_change_sale_team_id(sale_team_id)" />
 								<field name="date" />
 								<field name="branch_id" />
+								<field name="company_id"/>
 							</group>
 							<group>
 								<field name="name" />

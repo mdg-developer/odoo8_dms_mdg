@@ -60,6 +60,7 @@ class good_issue_note(osv.osv):
                  'p_line':fields.one2many('good.issue.note.line', 'line_id', 'Product Lines',
                               copy=True),
                 'company_id':fields.many2one('res.company', 'Company'),
+                'partner_id':fields.many2one('res.partner', string='Partner')
 }
     _defaults = {
         'state' : 'draft',
@@ -92,7 +93,6 @@ class good_issue_note(osv.osv):
             location_id = note_value.to_location_id.id
             from_location_id = note_value.from_location_id.id
             origin = note_value.name
-            partner_id = 106
             cr.execute('select id from stock_picking_type where default_location_dest_id=%s and name like %s', (location_id, '%Internal Transfer%',))
             price_rec = cr.fetchone()
             if price_rec: 
@@ -155,10 +155,20 @@ class good_issue_line(osv.osv):  # #prod_pricelist_update_line
         if product_id:
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             values = {
+                      'big_uom_id':product.product_tmpl_id.uom_id and product.product_tmpl_id.uom_id.id or False,
                 'product_uom': product.product_tmpl_id.uom_id and product.product_tmpl_id.uom_id.id or False,
                 'uom_ratio': product.product_tmpl_id.uom_ratio,
             }
         return {'value': values}
+    
+    def on_change_expired_date(self, cr, uid, ids, batch_no, context=None):
+        values = {}
+        if batch_no:
+            lot_obj = self.pool.get('stock.production.lot').browse(cr, uid, batch_no, context=context)
+            values = {
+                'expiry_date': lot_obj.life_date,
+            }
+        return {'value': values}    
         
     _columns = {                
         'line_id':fields.many2one('good.issue.note', 'Line', ondelete='cascade', select=True),
