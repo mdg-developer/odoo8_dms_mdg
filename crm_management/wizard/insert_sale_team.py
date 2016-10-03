@@ -33,7 +33,9 @@ class insert_sale_team(osv.osv_memory):
                 'class_id':fields.many2one('sale.class', 'Class'),
                 'branch_id':fields.many2one('res.branch', 'Branch'),
                 'chiller':fields.boolean('Chiller'),
-        
+                'state_id':fields.many2one('res.country.state','State'),                
+                'city':fields.many2one('res.city','City'),
+                'township':fields.many2one('res.township','Township'),        
     }
 
     def print_report(self, cr, uid, ids, context=None):
@@ -54,6 +56,9 @@ class insert_sale_team(osv.osv_memory):
         class_id=data['class_id']
         branch_id=data['branch_id']
         chiller=data['chiller']
+        state_id=data['state_id']        
+        city=data['city']
+        township=data['township']
         
         print 'partner_id',partner_id
         for partner in partner_id: 
@@ -79,5 +84,10 @@ class insert_sale_team(osv.osv_memory):
                 cr.execute('update res_partner set branch_id=%s where id=%s',(branch_id[0],partner,))
             if chiller is True:
                 cr.execute('update res_partner set chiller=%s where id=%s',(True,partner,))
-                
+            if  state_id:
+                cr.execute('update res_partner set state_id=%s where id=%s',(state_id[0],partner,))
+            if  city:
+                cr.execute('update res_partner set city=%s where id=%s',(city[0],partner,))
+            if  township:
+                cr.execute('update res_partner set township=%s where id=%s',(township[0],partner,))                                                
         return True              

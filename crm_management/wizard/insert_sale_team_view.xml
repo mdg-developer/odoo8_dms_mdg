@@ -15,6 +15,9 @@
 						<field name="class_id" class="oe_inline" />
 						<field name="branch_id" class="oe_inline" />
 						<field name="chiller" class="oe_inline" />
+						<field name="state_id" class="oe_inline" />																																				
+						<field name="city" class="oe_inline" />
+						<field name="township" class="oe_inline" />
 					</group>
 					<footer>
 						<button name="print_report" string="Assign" type="object"
