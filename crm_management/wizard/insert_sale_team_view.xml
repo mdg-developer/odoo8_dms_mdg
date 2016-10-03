@@ -8,12 +8,13 @@
 			<field name="arch" type="xml">
 				<form string="Assign Sales Team">
 					<group col="4" colspan="6">
-						<label for="id" string="Sales Team" />
-						<div>
-							<div name="section_id">
-								<field name="section_id" class="oe_inline" />
-							</div>
-						</div>
+						<field name="section_id" class="oe_inline" />
+						<field name="outlet_type" class="oe_inline" />
+						<field name="sales_channel" class="oe_inline" />
+						<field name="frequency_id" class="oe_inline" />
+						<field name="class_id" class="oe_inline" />
+						<field name="branch_id" class="oe_inline" />
+						<field name="chiller" class="oe_inline" />
 					</group>
 					<footer>
 						<button name="print_report" string="Assign" type="object"

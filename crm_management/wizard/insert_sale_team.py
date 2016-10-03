@@ -26,7 +26,14 @@ class insert_sale_team(osv.osv_memory):
     _name = 'partner.sale.team'
     _description = 'Sale Team Insert'
     _columns = {
-        'section_id':fields.many2one('crm.case.section','Sales Team' ,required=True),
+        'section_id':fields.many2one('crm.case.section','Sales Team' ),
+                'outlet_type': fields.many2one('outlettype.outlettype', 'Outlet Type'),
+                'sales_channel':fields.many2one('sale.channel', 'Sale Channel'),
+                'frequency_id':fields.many2one('plan.frequency','Frequency'),
+                'class_id':fields.many2one('sale.class', 'Class'),
+                'branch_id':fields.many2one('res.branch', 'Branch'),
+                'chiller':fields.boolean('Chiller'),
+        
     }
 
     def print_report(self, cr, uid, ids, context=None):
@@ -41,16 +48,36 @@ class insert_sale_team(osv.osv_memory):
             }
         partner_id=datas['ids']
         section_id=data['section_id']
+        outlet_type=data['outlet_type']
+        sales_channel=data['sales_channel']        
+        frequency_id=data['frequency_id']
+        class_id=data['class_id']
+        branch_id=data['branch_id']
+        chiller=data['chiller']
+        
         print 'partner_id',partner_id
         for partner in partner_id: 
             partner_data=partner_obj.browse(cr,uid,partner,context=context)
-            team=team_obj.browse(cr,uid,section_id[0],context=context)
-            team_name=team.name
-            print 'partner-------------',section_id[0],partner
-            cr.execute('select sale_team_id,partner_id from sale_team_customer_rel where partner_id=%s and sale_team_id=%s',(section_id[0],partner,))
-            team_id=cr.fetchone()
-            if team_id:
-                raise osv.except_osv(_('Warning!'),_('You inserted this sales team (%s) in (%s ,%s).')%(team_name,partner_data.name,partner_data.customer_code,))                    
-            else:
-                cr.execute('INSERT INTO sale_team_customer_rel (sale_team_id,partner_id) VALUES (%s,%s)', ( partner,section_id[0],))      
+            if section_id:
+                team=team_obj.browse(cr,uid,section_id[0],context=context)
+                team_name=team.name
+                cr.execute('select sale_team_id,partner_id from sale_team_customer_rel where partner_id=%s and sale_team_id=%s',(section_id[0],partner,))
+                team_id=cr.fetchone()
+                if team_id:
+                    raise osv.except_osv(_('Warning!'),_('You inserted this sales team (%s) in (%s ,%s).')%(team_name,partner_data.name,partner_data.customer_code,))                    
+                else:
+                    cr.execute('INSERT INTO sale_team_customer_rel (sale_team_id,partner_id) VALUES (%s,%s)', ( partner,section_id[0],))
+            if  outlet_type:
+                cr.execute('update res_partner set outlet_type=%s where id=%s',(outlet_type[0],partner,))
+            if  sales_channel:
+                cr.execute('update res_partner set sales_channel=%s where id=%s',(sales_channel[0],partner,))
+            if  frequency_id:
+                cr.execute('update res_partner set frequency_id=%s where id=%s',(frequency_id[0],partner,))
+            if  class_id:
+                cr.execute('update res_partner set class_id=%s where id=%s',(class_id[0],partner,))
+            if  branch_id:
+                cr.execute('update res_partner set branch_id=%s where id=%s',(branch_id[0],partner,))
+            if chiller is True:
+                cr.execute('update res_partner set chiller=%s where id=%s',(True,partner,))
+                
         return True              
