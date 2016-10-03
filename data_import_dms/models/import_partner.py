@@ -473,7 +473,7 @@ class partner(osv.osv):
                     township = township.strip()
                     cr.execute("""select id from res_township where lower(name) = %s""", (township.lower(),))
                     data = cr.fetchall()
-                    print records;
+                   
                     if data:
                         township_id = data[0][0]
                     else:
@@ -558,6 +558,7 @@ class partner(osv.osv):
                                 value['customer_code'] = customer_code
                             records=records + 1
                             #print "record printed count:%s", records
+                            print records,shop_name
                             partner_obj.create(cr, uid, value, context)
                         except Exception, e:
                             error_log += "error running"

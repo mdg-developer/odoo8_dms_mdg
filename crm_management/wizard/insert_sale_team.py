@@ -26,7 +26,7 @@ class insert_sale_team(osv.osv_memory):
     _name = 'partner.sale.team'
     _description = 'Sale Team Insert'
     _columns = {
-        'section_id':fields.many2one('crm.case.section','Sales Team' ),
+                'section_id':fields.many2one('crm.case.section','Sales Team' ),
                 'outlet_type': fields.many2one('outlettype.outlettype', 'Outlet Type'),
                 'sales_channel':fields.many2one('sale.channel', 'Sale Channel'),
                 'frequency_id':fields.many2one('plan.frequency','Frequency'),

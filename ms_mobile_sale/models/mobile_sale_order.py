@@ -760,63 +760,52 @@ class mobile_sale_order(osv.osv):
         return datas
     # get promotion datas from database
     
-    def get_promos_datas(self, cr, uid , section_id , branch_id, state, context=None, **kwargs):
+    def get_promos_datas(self, cr, uid , branch_id, state, context=None, **kwargs):
         cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,
                         logic ,expected_logic_result ,special, special1, special2, special3 ,branch_id ,description
                         from promos_rules pr ,promos_rules_res_branch_rel pro_br_rel
-                        where pr.active = true and main_group in 
-                        (select product_maingroup_id 
-                        from crm_case_section_product_maingroup_rel mg,crm_case_section cs 
-                        where cs.id = mg.crm_case_section_id and cs.id = %s)                        
+                        where pr.active = true                     
                         and pr.id = pro_br_rel.promos_rules_id
                         and pro_br_rel.res_branch_id = %s
                         and pr.state in (%s) 
                         and  now()::date  between from_date::date and to_date::date
-                        ''', (section_id, branch_id, state,))
-        datas = cr.fetchall()
+                        ''', (branch_id, state,))
+        datas = cr.fetchall()        
         return datas
     
-    def get_promos_act_datas(self, cr, uid , section_id , branch_id, promo_id, context=None, **kwargs):
+    def get_promos_act_datas(self, cr, uid , branch_id, promo_id, context=None, **kwargs):
         cr.execute('''select act.id,act.promotion,act.sequence as act_seq ,act.arguments,act.action_type,act.product_code
                             from promos_rules r ,promos_rules_actions act,promos_rules_res_branch_rel pro_br_rel
                             where r.id = act.promotion
-                            and r.active = 't'
-                            and r.main_group in
-                            (select product_maingroup_id 
-                            from crm_case_section_product_maingroup_rel mg,crm_case_section cs 
-                            where cs.id = mg.crm_case_section_id and cs.id = %s)
+                            and r.active = 't'                            
                             and r.id = pro_br_rel.promos_rules_id
                             and pro_br_rel.res_branch_id = %s
                             and act.promotion = %s                    
-                    ''', (section_id, branch_id, promo_id,))
+                    ''', (branch_id, promo_id,))
         datas = cr.fetchall()
         cr.execute
         return datas
-    def get_promos_cond_datas(self, cr, uid , section_id , branch_id,promo_id, context=None, **kwargs):
+    def get_promos_cond_datas(self, cr, uid , branch_id,promo_id, context=None, **kwargs):
         cr.execute('''select cond.id,cond.promotion,cond.sequence as cond_seq,
                             cond.attribute as cond_attr,cond.comparator as cond_comparator,
                             cond.value as comp_value
                             from promos_rules r ,promos_rules_conditions_exps cond,promos_rules_res_branch_rel pro_br_rel
                             where r.id = cond.promotion
-                            and r.active = 't'
-                            and r.main_group in
-                            (select product_maingroup_id 
-                            from crm_case_section_product_maingroup_rel mg,crm_case_section cs 
-                            where cs.id = mg.crm_case_section_id and cs.id = %s)
+                            and r.active = 't'                           
                             and r.id = pro_br_rel.promos_rules_id
                             and pro_br_rel.res_branch_id = %s
                             and cond.promotion = %s  
-                    ''', (section_id, branch_id,promo_id,))
+                    ''', (branch_id,promo_id,))
         datas = cr.fetchall()
         cr.execute
         return datas
    
-    def get_promos_rule_partner_datas(self, cr, uid , section_id , context=None, **kwargs):
+    def get_promos_rule_partner_datas(self, cr, uid , context=None, **kwargs):
         cr.execute('''select category_id,rule_id from rule_partner_cat_rel''')
         datas = cr.fetchall()
         cr.execute
         return datas
-    def get_promos_category_datas(self, cr, uid , section_id , context=None, **kwargs):
+    def get_promos_category_datas(self, cr, uid , context=None, **kwargs):
         cr.execute('''select id,name from res_partner_category''')
         datas = cr.fetchall()
         cr.execute
@@ -855,43 +844,7 @@ class mobile_sale_order(osv.osv):
                 result = cr.fetchall()
                 list.append(result)
                 print' list', list
-        return list
-#         cr.execute("select id,product_id,product_uos_qty,price_unit,discount,sub_total,order_id from mobile_sale_order_line where create_date > %s and order_id in(%s)",(todayDateNormal,order_ids,))
-# #                             where due_date > %s''',(todayDateNormal,))
-#         datas = cr.fetchall()
-#         cr.execute
-#         return datas
-    
-    # get pricelsit datas
-#     def get_pricelist_datas(self, cr, uid , section_id, context=None, **kwargs):
-#         cr.execute('''select id,name,type,active from product_pricelist where main_group_id in (select product_maingroup_id 
-#                         from crm_case_section_product_maingroup_rel mg,crm_case_section cs 
-#                         where cs.id = mg.crm_case_section_id and cs.id = %s) 
-#                         or main_group_id is null and active = 'true' ''', (section_id,))
-#         datas = cr.fetchall()
-#         cr.execute
-#         return datas
-# 
-#     def get_pricelist_version_datas(self, cr, uid, section_id , context=None, **kwargs):
-#         cr.execute('''select pv.id,date_end,date_start,pv.active,pv.name,pv.pricelist_id 
-#                         from product_pricelist_version pv, product_pricelist pp where pv.pricelist_id = pp.id 
-#                         and (pp.main_group_id in (select product_maingroup_id 
-#                         from crm_case_section_product_maingroup_rel mg,crm_case_section cs 
-#                         where cs.id = mg.crm_case_section_id and cs.id =%s) or pp.main_group_id is null)''', (section_id,))
-#         datas = cr.fetchall()
-#         cr.execute
-#         return datas
-#     def get_pricelist_item_datas(self, cr, uid, section_id , context=None, **kwargs):
-#         cr.execute('''select pi.id,pi.price_discount,pi.sequence,pi.product_tmpl_id,pi.name,pi.base_pricelist_id,
-#                     pi.product_id,pi.base,pi.price_version_id,pi.min_quantity,
-#                     pi.categ_id,pi.price_surcharge ,pi.product_uom_id
-# 					from product_pricelist_item pi, product_pricelist_version pv, product_pricelist pp where pv.pricelist_id = pp.id 
-#                     and pv.id = pi.price_version_id and (pp.main_group_id in (select product_maingroup_id 
-#                     from crm_case_section_product_maingroup_rel mg,crm_case_section cs 
-#                     where cs.id = mg.crm_case_section_id and cs.id = %s) or pp.main_group_id is null)''', (section_id,))
-#         datas = cr.fetchall()
-#         cr.execute
-#         return datas
+        return list    
 
     def get_pricelist_datas(self, cr, uid , section_id, context=None, **kwargs):
         cr.execute('''select ppl.id,ppl.name,ppl.type, ppl.active , cpr.is_default
@@ -1051,8 +1004,8 @@ class mobile_sale_order(osv.osv):
             select id as userid,login,login_password from res_users
             )A inner join(
             select DISTINCT cr.id as id,cr.complete_name,cr.warehouse_id,cr.name,sm.member_id,cr.code,cr.location_id
-                    from crm_case_section cr, sale_member_rel sm,crm_case_section_product_product_rel pr
-                    where sm.section_id = cr.id and cr.id=pr.crm_case_section_id
+                    from crm_case_section cr, sale_member_rel sm
+                    where sm.section_id = cr.id
             ) B on A.userid = B.member_id
             )D on c.sale_team_id = D.saleTeamId
             where c.name = %s
@@ -1410,11 +1363,11 @@ class mobile_sale_order(osv.osv):
         return datas
         
     # Get Pending Delivery
-    def get_delivery_datas(self, cr, uid, saleTeamId, context=None, **kwargs):
+    def get_delivery_datas(self, cr, uid, saleTeamId,soList, context=None, **kwargs):
         
         sale_order_obj = self.pool.get('sale.order')
         list_val = None
-        list_val = sale_order_obj.search(cr, uid, [('pre_order', '=', True), ('delivery_id', '=', saleTeamId), ('shipped', '=', False), ('invoiced', '=', False)], context=context)
+        list_val = sale_order_obj.search(cr, uid, [('pre_order', '=', True), ('delivery_id', '=', saleTeamId), ('shipped', '=', False), ('invoiced', '=', False) , ('tb_ref_no', 'not in', soList)], context=context)
         print 'list_val', list_val
         list = []
         try:
@@ -1963,11 +1916,6 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()        
         return datas
     
-    def get_sale_branch(self, cr, uid , context=None):        
-        cr.execute('''select id,name from sale_branch''')
-        datas = cr.fetchall()        
-        return datas
-    
     def get_sale_demarcation(self, cr, uid , context=None):        
         cr.execute('''select id,name from sale_demarcation''')
         datas = cr.fetchall()        
@@ -2001,7 +1949,7 @@ class mobile_sale_order_line(osv.osv):
     _columns = {
         'product_id':fields.many2one('product.product', 'Products'),
         'product_uos_qty':fields.float('Quantity'),
-		'uom_id':fields.many2one('product.uom', 'UOM', readonly=False),
+        'uom_id':fields.many2one('product.uom', 'UOM', readonly=False),
 #        'uom_id':fields.function(_get_uom_from_product, type='many2one', relation='product.uom', string='UOM'),
         'price_unit':fields.float('Unit Price'),
         'discount':fields.float('Discount (%)'),
