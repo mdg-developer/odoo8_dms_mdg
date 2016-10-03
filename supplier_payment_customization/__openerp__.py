@@ -34,7 +34,7 @@
 """,
     'author': 'Seventh Computing',
     'website': 'http://www.7thcomputing.com',
-    'depends': ['base', 'account','account_check_writing'],
+    'depends': ['base', 'account'],
     'data': [
                 'views/account_voucher_view.xml',
                 ],

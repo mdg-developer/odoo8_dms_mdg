@@ -95,7 +95,14 @@ class partner(osv.osv):
             for row in range(header_row + 1, s.nrows):
                 values = []
                 for col in range(0, s.ncols):
-                    values.append(s.cell(row, col).value)
+                    cell = s.cell(row, col)
+                    cell_value= cell.value
+                    if cell.ctype in (2,3):
+                        value_str = str(cell_value)
+                        value_str = value_str.replace('.0', '') 
+                    else:
+                        value_str = str(cell.value.encode('utf-8'))
+                    values.append(value_str)
                 excel_rows.append(values)
         con_ls = []
         amls = []
@@ -403,11 +410,11 @@ class partner(osv.osv):
                     data = cr.fetchall()
                     if data:
                         class_id = data[0][0]
-                    class_res = {'name':class_val, 'class_code':class_val.upper()}
-                    if not class_id:
-                        class_ids = class_obj.create(cr, uid, class_res, context)
-                    else:
-                        class_ids = class_id
+                        class_res = {'name':class_val, 'class_code':class_val.upper()}
+                        if not class_id:
+                            class_ids = class_obj.create(cr, uid, class_res, context)
+                        else:
+                            class_ids = class_id
                         
                 if demarcation:  # no need to update
                     demarcation = demarcation.strip()
@@ -437,7 +444,7 @@ class partner(osv.osv):
                         
                 if region:  # no need to update or create
                     region = region.strip()
-                    cr.execute("""select id from res_country_state where lower(code) like %s""", (region.lower(),))
+                    cr.execute("""select id from res_country_state where lower(name) like %s""", (region.lower(),))
                     data = cr.fetchall()
                     if data:
                         state_ids = data[0][0]
@@ -550,7 +557,7 @@ class partner(osv.osv):
                             if customer_code:
                                 value['customer_code'] = customer_code
                             records=records + 1
-                            print "record printed count:%s", records
+                            #print "record printed count:%s", records
                             partner_obj.create(cr, uid, value, context)
                         except Exception, e:
                             error_log += "error running"

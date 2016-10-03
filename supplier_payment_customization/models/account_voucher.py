@@ -2,7 +2,6 @@ from openerp.osv import fields, osv
 
 class account_voucher(osv.osv):
     _inherit = 'account.voucher'
-<<<<<<< HEAD:supplier_payment_customization/models/account_voucher.py
     
     def onchange_discount(self, cr, uid, ids, context=None):
         res = {}
@@ -256,7 +255,6 @@ class account_voucher_line(osv.osv):
             'total_dis': total_discount,
             }
              return {'value': val}
-=======
      
     _columns = {
                         'state':fields.selection(
@@ -283,4 +281,3 @@ class account_voucher_line(osv.osv):
         return True
         
    
->>>>>>> 8b283d7b8438737243a5fb70a48e6ef0f0f12e02:account/account_voucher_approval/models/account_voucher.py
