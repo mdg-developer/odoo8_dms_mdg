@@ -1,0 +1,56 @@
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
+import time
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+
+class insert_sale_team(osv.osv_memory):
+    _name = 'partner.sale.team'
+    _description = 'Sale Team Insert'
+    _columns = {
+        'section_id':fields.many2one('crm.case.section','Sales Team' ,required=True),
+    }
+
+    def print_report(self, cr, uid, ids, context=None):
+        data = self.read(cr, uid, ids, context=context)[0]
+        partner_obj = self.pool.get('res.partner')
+        team_obj=self.pool.get('crm.case.section')
+        
+        datas = {
+             'ids': context.get('active_ids', []),
+             'model': 'res.partner',
+             'form': data
+            }
+        partner_id=datas['ids']
+        section_id=data['section_id']
+        print 'partner_id',partner_id
+        for partner in partner_id: 
+            partner_data=partner_obj.browse(cr,uid,partner,context=context)
+            team=team_obj.browse(cr,uid,section_id[0],context=context)
+            team_name=team.name
+            print 'partner-------------',section_id[0],partner
+            cr.execute('select sale_team_id,partner_id from sale_team_customer_rel where partner_id=%s and sale_team_id=%s',(section_id[0],partner,))
+            team_id=cr.fetchone()
+            if team_id:
+                raise osv.except_osv(_('Warning!'),_('You inserted this sales team (%s) in (%s ,%s).')%(team_name,partner_data.name,partner_data.customer_code,))                    
+            else:
+                cr.execute('INSERT INTO sale_team_customer_rel (sale_team_id,partner_id) VALUES (%s,%s)', ( partner,section_id[0],))      
+        return True              
