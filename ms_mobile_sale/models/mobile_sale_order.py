@@ -762,7 +762,7 @@ class mobile_sale_order(osv.osv):
     
     def get_promos_datas(self, cr, uid , branch_id, state, context=None, **kwargs):
         cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,
-                        logic ,expected_logic_result ,special, special1, special2, special3 ,branch_id ,description
+                        logic ,expected_logic_result ,special, special1, special2, special3 ,description
                         from promos_rules pr ,promos_rules_res_branch_rel pro_br_rel
                         where pr.active = true                     
                         and pr.id = pro_br_rel.promos_rules_id
