@@ -31,7 +31,7 @@
 
 					</xpath>
 					<xpath expr="//field[@name='temp_customer']" position="before">
-						<field name="title" />
+						<field name="title" invisible="1" />
 					</xpath>
 					<xpath expr="//field[@name='email']" position="after">
 						<field name="class_id" />
