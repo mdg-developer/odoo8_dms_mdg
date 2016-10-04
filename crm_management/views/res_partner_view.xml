@@ -19,7 +19,7 @@
 						<field name="sales_channel" attrs="{'invisible':[('customer','=',False)]}" />
 						<field name="branch_id" attrs="{'invisible':[('customer','=',False)]}" />
 						<field name="demarcation_id" attrs="{'invisible':[('customer','=',False)]}" />
-						<field name="chiller" attrs="{'invisible':[('customer','=',False)]}" />																								
+						<field name="chiller" attrs="{'invisible':[('customer','=',False)]}" />
 					</xpath>
 					<!-- <xpath expr="//field[@name='stree`t']" position="before"> <field 
 						name="address" placeholder="Address..." /> </xpath> -->
@@ -36,7 +36,7 @@
 					<xpath expr="//field[@name='email']" position="after">
 						<field name="class_id" />
 						<field name="frequency_id" attrs="{'invisible':[('customer','=',False)]}" />
-						
+
 						<field name="old_code" />
 
 						<group>
@@ -148,7 +148,7 @@
 								<form string="Asset Name">
 									<group>
 										<group>
-											<field name="partner_id"  invisible="1"/>
+											<field name="partner_id" invisible="1" />
 											<field name="name" />
 											<field name="date" />
 											<field name="type" />
@@ -157,12 +157,12 @@
 										<group>
 											<field name="asset_type" />
 											<field name="qty" />
-											<field name="image"  widget='image' class="oe_avatar" />
+											<field name="image" widget='image' class="oe_avatar" />
 										</group>
 									</group>
 								</form>
 								<tree string="Asset">
-									<field name="partner_id"  invisible="1"/>
+									<field name="partner_id" invisible="1" />
 									<field name="name" />
 									<field name="date" />
 									<field name="type" />
@@ -302,15 +302,24 @@
 				<data>
 					<xpath expr="//field[@name='display_name']" position="after">
 						<field name="customer_code" />
-					</xpath>
-					<xpath expr="//field[@name='email']" position="after">
 						<field name="outlet_type" />
 						<field name="township" />
 						<field name="street" />
-						<field name="street2" />
-						<field name="city" />
-						<field name="demarcation_id" />
-						<field name="sales_channel" />
+						<field name="branch_id" />
+						<field name="frequency_id" />
+						<field name="class_id" />
+						<field name="sales_channel"  string="Sales Channel"/>
+					</xpath>
+					<xpath expr="//field[@name='phone']" position="replace">
+						<field name="phone" invisible="1" />
+
+					</xpath>
+
+					<xpath expr="//field[@name='email']" position="replace">
+						<field name="email" invisible="1" />
+						<field name="street2" invisible="1" />
+						<field name="city" invisible="1" />
+						<field name="demarcation_id" invisible="1" />
 						<field name="pending" invisible="1" />
 						<field name="idle" invisible="1" />
 					</xpath>
@@ -338,10 +347,12 @@
 				</xpath>
 
 				<xpath expr="//filter[@string='Salesperson']" position="replace">
-                       <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by' : 'user_id'}"  invisible="1"/>
+					<filter string="Salesperson" icon="terp-personal" domain="[]"
+						context="{'group_by' : 'user_id'}" invisible="1" />
 				</xpath>
 				<xpath expr="//group/filter[@string='Country']" position="after">
-                     <filter string="Created By" icon="terp-personal" domain="[]" context="{'group_by' : 'user_id'}" />
+					<filter string="Created By" icon="terp-personal" domain="[]"
+						context="{'group_by' : 'user_id'}" />
 					<filter name="township" string="Township" domain="[]"
 						context="{'group_by':'township'}" />
 					<filter name="city" string="City" domain="[]"
@@ -350,7 +361,7 @@
 						context="{'group_by':'state_id'}" />
 					<filter name="demarcation_id" string="Demarcation" domain="[]"
 						context="{'group_by':'demarcation_id'}" />
-					<filter name="sales_channel" string="Sale Channels" domain="[]"
+					<filter name="sales_channel" string="Sales Channel" domain="[]"
 						context="{'group_by':'sales_channel'}" />
 					<filter name="outlet_type" string="Outlet Type" domain="[]"
 						context="{'group_by':'outlet_type'}" />

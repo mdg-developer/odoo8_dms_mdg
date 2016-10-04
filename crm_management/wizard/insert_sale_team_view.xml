@@ -17,7 +17,7 @@
 						<field name="chiller" class="oe_inline" />
 						<field name="state_id" class="oe_inline" widget="selection"/>																																				
 						<field name="city" class="oe_inline" widget="selection"/>
-						<field name="township" class="oe_inline" widget="selection"/>
+						<field name="township" class="oe_inline" widget="selection" default_order="name desc"/>
 						<field name="property_product_pricelist" class="oe_inline" widget="selection"/>
 												
 					</group>
