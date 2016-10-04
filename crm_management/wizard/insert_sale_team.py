@@ -26,7 +26,7 @@ class insert_sale_team(osv.osv_memory):
     _name = 'partner.sale.team'
     _description = 'Sale Team Insert'
     _columns = {
-                'section_id':fields.many2one('crm.case.section','Sales Team' ),
+        'section_id':fields.many2one('crm.case.section','Sales Team' ),
                 'outlet_type': fields.many2one('outlettype.outlettype', 'Outlet Type'),
                 'sales_channel':fields.many2one('sale.channel', 'Sale Channel'),
                 'frequency_id':fields.many2one('plan.frequency','Frequency'),
@@ -36,6 +36,8 @@ class insert_sale_team(osv.osv_memory):
                 'state_id':fields.many2one('res.country.state','State'),                
                 'city':fields.many2one('res.city','City'),
                 'township':fields.many2one('res.township','Township'),        
+        'property_product_pricelist': fields.many2one('product.pricelist', string="Sale Pricelist", domain=[('type', '=', 'sale')]),
+                
     }
 
     def print_report(self, cr, uid, ids, context=None):
@@ -59,6 +61,7 @@ class insert_sale_team(osv.osv_memory):
         state_id=data['state_id']        
         city=data['city']
         township=data['township']
+        price_list_id=data['property_product_pricelist']
         
         print 'partner_id',partner_id
         for partner in partner_id: 
@@ -89,5 +92,8 @@ class insert_sale_team(osv.osv_memory):
             if  city:
                 cr.execute('update res_partner set city=%s where id=%s',(city[0],partner,))
             if  township:
-                cr.execute('update res_partner set township=%s where id=%s',(township[0],partner,))                                                
+                cr.execute('update res_partner set township=%s where id=%s',(township[0],partner,))                 
+            if price_list_id:
+                partner_obj.write(cr, uid, partner, {'property_product_pricelist':price_list_id[0]}, context=None)
+                                               
         return True              

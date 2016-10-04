@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="view_unassign_sale_team_form" model="ir.ui.view">
+			<field name="name">partner.unassign.sale.team.form</field>
+			<field name="model">partner.unassign.sale.team</field>
+			<field name="arch" type="xml">
+				<form string="Unassign Sales Team">
+					<group col="4" colspan="6">
+						<label for="id" string="Unassign Sales Team" />
+						<div>
+							<div name="confirm">
+								<field name="confirm" class="oe_inline" />
+							</div>
+						</div>
+					</group>
+					<footer>
+						<button name="print_report" string="Confirm" type="object"
+							class="oe_highlight" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="action_unassign_sale_team" model="ir.actions.act_window">
+			<field name="name">Unassign Sales Team</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">partner.unassign.sale.team</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+
+		<record model="ir.values" id="unassign_sale_team_value">
+			<field name="name">Unassign Sales Team</field>
+			<field name="key2">client_action_multi</field>
+			<field name="value"
+				eval="'ir.actions.act_window,' + str(ref('action_unassign_sale_team'))" />
+			<field name="key">action</field>
+			<field name="model">res.partner</field>
+		</record>
+
+	</data>
+</openerp>

@@ -22,10 +22,10 @@
 							<group>
 								<group>
 									<field name="name" />
-									<field name="date" />
+									<field name="date"  invisible="1"/>
 									<field name="sale_team" string="Sale Team" />
 									<field name="principal" string="Principal"  invisible="1" />
-									<field name="main_group" string="Main Group" widget="many2many_tags" />
+									<field name="main_group" string="Main Group" widget="many2many_tags"  invisible="1"/>
 									<field name="branch_id" string="Branch" />
 									<field name="active" />
 								</group>
@@ -71,7 +71,7 @@
 					<field name="date" />
 					<field name="sale_team" string="Sale Team" />
 					<field name="principal" string="Principal"  invisible="1"/>
-					<field name="main_group" string="Main Group" />
+					<field name="main_group" string="Main Group" invisible="1"/>
 					<field name="branch_id" string="Branch" />
 					<field name="week" string="Week No" />
 					<field name="active" />

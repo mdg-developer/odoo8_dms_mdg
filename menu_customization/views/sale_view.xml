@@ -389,16 +389,19 @@
 		</record>
 
 		<!-- Asstes -->
-		<menuitem id="menu_sales_assets_menu" parent="base.menu_base_partner"
-			name="Assets" sequence="11" />
-		<menuitem id="crm_management.menu_customer_asset_form111"
-			parent="menu_sales_assets_menu" action="crm_management.open_view_customer_asset_action"
-			name="Assets" sequence="1" />
+<!-- 		<menuitem id="menu_sales_assets_menu" parent="base.menu_base_partner" -->
+<!-- 			name="Assets" sequence="11" /> -->
+<!-- 		<menuitem id="crm_management.menu_customer_asset_form111" -->
+<!-- 			parent="menu_sales_assets_menu" action="crm_management.open_view_customer_asset_action" -->
+<!-- 			name="Assets" sequence="1" /> -->
 		<!-- Space Rental -->
 		<menuitem id="menu_sales_rental_menu" parent="base.menu_base_partner"
-			name="Space Rental" sequence="12" />
+			name="Customer Assets/Rentals" sequence="12" />
+		<menuitem id="crm_management.menu_customer_asset_form111"
+			parent="menu_sales_rental_menu"  action="crm_management.open_view_customer_asset_action"
+			name="Customer Assets" sequence="1" />		
 		<menuitem id="sale_management.sales_rental" action="sale_management.action_sales_rental_view"
-			parent="menu_sales_rental_menu" name="Space Rental" sequence="1" />
+			parent="menu_sales_rental_menu" name="Space Rental" sequence="2" />
 
 		<!-- Notification -->
 		<menuitem id="menu_sales_notification_menu" parent="base.menu_base_partner"
@@ -469,7 +472,7 @@
 			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
 		</record>
 		<!-- Main Group -->
-		<record model="ir.ui.menu" id="product_product.product_maingroup_menu">
+		<record model="ir.ui.menu" id="product_product.product_principal_menu">
 			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
 		</record>
 		<!-- Division Group -->
@@ -480,7 +483,6 @@
 		<record model="ir.ui.menu" id="sale.menu_sale_quotations">
 			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
 		</record>
-		
 		<!-- Import Sale Order -->
 		<record model="ir.ui.menu" id="data_import_dms.menu_data_import_mobile_so">
 			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />

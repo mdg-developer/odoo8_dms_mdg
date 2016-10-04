@@ -8,16 +8,18 @@
 			<field name="arch" type="xml">
 				<form string="Assign Sales Team">
 					<group col="4" colspan="6">
-						<field name="section_id" class="oe_inline" />
-						<field name="outlet_type" class="oe_inline" />
-						<field name="sales_channel" class="oe_inline" />
-						<field name="frequency_id" class="oe_inline" />
-						<field name="class_id" class="oe_inline" />
-						<field name="branch_id" class="oe_inline" />
+						<field name="section_id" class="oe_inline" widget="selection"/>
+						<field name="outlet_type" class="oe_inline" widget="selection"/>
+						<field name="sales_channel" class="oe_inline" widget="selection"/>
+						<field name="frequency_id" class="oe_inline" widget="selection"/>
+						<field name="class_id" class="oe_inline" widget="selection"/>
+						<field name="branch_id" class="oe_inline" widget="selection"/>
 						<field name="chiller" class="oe_inline" />
-						<field name="state_id" class="oe_inline" />																																				
-						<field name="city" class="oe_inline" />
-						<field name="township" class="oe_inline" />
+						<field name="state_id" class="oe_inline" widget="selection"/>																																				
+						<field name="city" class="oe_inline" widget="selection"/>
+						<field name="township" class="oe_inline" widget="selection"/>
+						<field name="property_product_pricelist" class="oe_inline" widget="selection"/>
+												
 					</group>
 					<footer>
 						<button name="print_report" string="Assign" type="object"
@@ -46,6 +48,6 @@
 			<field name="key">action</field>
 			<field name="model">res.partner</field>
 		</record>
-
+		
 	</data>
 </openerp>

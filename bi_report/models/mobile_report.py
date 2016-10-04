@@ -45,7 +45,7 @@ class sale_report(osv.osv):
      'additional_discount': fields.float('Additional_discount', readonly=True),
      'deduction_amount': fields.float('Deduction_amount', readonly=True),
      'sale_channel': fields.many2one('sale.channel','Channel'),
-     'main_group':fields.many2one('product.maingroup','Main Group',readonly=True),
+     'main_group':fields.many2one('product.maingroup','Product Principle',readonly=True),
      'customer_code':fields.char('Customer Code')
     }
     _order = 'date desc'

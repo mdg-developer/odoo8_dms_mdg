@@ -7,7 +7,7 @@
 			<field name="name">prodcut.maingroup.form</field>
 			<field name="model">product.maingroup</field>
 			<field name="arch" type="xml">
-				<form string="Product MainGroup" version="7.0">
+				<form string="Product Principle" version="7.0">
 					<group>
 						<field name="name" />
 					</group>
@@ -21,7 +21,7 @@
 			<field name="name">product.maingroup.tree</field>
 			<field name="model">product.maingroup</field>
 			<field name="arch" type="xml">
-				<tree string="Product MainGroup" version="7.0">
+				<tree string="Product Principle" version="7.0">
 					<field name="name" />
 				</tree>
 			</field>
@@ -29,7 +29,7 @@
 
 		<!-- Product MainGroup Action -->
 		<record id="action_product_maingroup_view" model="ir.actions.act_window">
-			<field name="name">Product Main Group</field>
+			<field name="name">Product Principle</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">product.maingroup</field>
 			<field name="view_type">form</field>
@@ -39,7 +39,7 @@
 
 		<!-- Product MainGroup Menu -->
 		<menuitem id="product_maingroup_menu" parent="product_product.product_menu"
-			name="Product Main Group" action="action_product_maingroup_view" sequence="3"
+			name="Product Principle" action="action_product_maingroup_view" sequence="3"
 			groups="base.group_system"/>
 
 

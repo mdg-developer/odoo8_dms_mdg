@@ -337,11 +337,11 @@
 					<field name="customer_code" />
 				</xpath>
 
-				<!-- <xpath expr="//group/filter[@string='Salesperson']" position="replace"> -->
-				<!-- </xpath> -->
+				<xpath expr="//filter[@string='Salesperson']" position="replace">
+                       <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by' : 'user_id'}"  invisible="1"/>
+				</xpath>
 				<xpath expr="//group/filter[@string='Country']" position="after">
-					<!-- <filter name="section_id" string="Sales Team" domain="[]" -->
-					<!-- context="{'group_by':'section_id'}" /> -->
+                     <filter string="Created By" icon="terp-personal" domain="[]" context="{'group_by' : 'user_id'}" />
 					<filter name="township" string="Township" domain="[]"
 						context="{'group_by':'township'}" />
 					<filter name="city" string="City" domain="[]"
