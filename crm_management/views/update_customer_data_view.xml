@@ -10,7 +10,7 @@
 				<form string="Update Data" version="7.0">
 					<header>
 						<button name="update_data" string="Update" class="oe_highlight"
-							type="object"  />
+							type="object" />
 					</header>
 					<group>
 						<group>
@@ -20,7 +20,7 @@
 							<field name="class_id" />
 						</group>
 						<group>
-						    <field name="name"/>
+							<field name="name" />
 							<field name="demarcation_id" />
 							<field name="frequency_id" />
 							<field name="chiller" />
@@ -47,7 +47,7 @@
 		</record>
 
 		<record id="action_partner_update_data_view" model="ir.actions.act_window">
-			<field name="name">Update Customer Data</field>
+			<field name="name">Customer Changes</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">partner.update.data</field>
 			<field name="view_type">form</field>
