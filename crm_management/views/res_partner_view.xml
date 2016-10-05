@@ -304,7 +304,6 @@
 						<field name="customer_code" />
 					</xpath>
 						<xpath expr="//field[@name='display_name']" position="after">
-							<field name="customer_code" />
 							<field name="outlet_type" />
 							<field name="township" />
 							<field name="street" />
