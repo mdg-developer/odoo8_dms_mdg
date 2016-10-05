@@ -1930,7 +1930,61 @@ class mobile_sale_order(osv.osv):
         cr.execute('''select id,name from plan_frequency''')
         datas = cr.fetchall()        
         return datas
-    
+    #Create New Customer from Tablet by kzo
+    def create_new_customer(self, cursor, user, vals, context=None):
+        try:
+            partner_obj = self.pool.get('res.partner')
+            str = "{" + vals + "}"
+            str = str.replace("'',", "',")  # null
+            str = str.replace(":',", ":'',")  # due to order_id
+            str = str.replace("}{", "}|{")
+            str = str.replace(":'}{", ":''}")
+            new_arr = str.split('|')
+            result = []
+            for data in new_arr:
+                x = ast.literal_eval(data)
+                result.append(x)
+            new_partner = []
+            for r in result:
+                new_partner.append(r)  
+            if new_partner:
+                for partner in new_partner:
+                    partner_result = {                 
+                        'country_id':partner['country_id'],                        
+                        'state_id':partner['state_id'],
+                        'city':partner['city'],
+                        'street':partner['street'],
+                        'street2':partner['street2'],
+                        'display_name':partner['name'],
+                        'name':partner['name'],
+                        'email':partner['email'],
+                        'is_company':True,
+                        'customer':True,
+                        'employee':False,
+                        'phone':partner['phone'],
+                        'mobile':partner['mobile'],
+                        'notify_email':'always',
+                        'township':partner['township'],
+                        'partner_latitude':partner['partner_latitude'],
+                        'partner_longitude':partner['partner_longitude'],                            
+                        'branch_id':partner['branch_id'],   
+                        'outlet_type':partner['outlet_type'],
+                        'customer_code':partner['customer_code'],   
+                        'class_id':partner['class_id'],
+                        'mobile_customer':True, 
+                        'pricelist_id':partner['pricelist_id'],
+                        'chiller':partner['chiller'],
+                        'unit':partner['unit'],
+                        'image':partner['image'],
+                        'sales_channel':partner['sales_channel'],
+                        'temp_customer':partner['temp_customer'],
+                        'frequency_id':partner['frequency_id'],           
+                    }
+                    partner_id =partner_obj.create(cursor, user, partner_result, context=context)
+            return partner_id
+        except Exception, e:
+            print 'False'
+            return 0
     
     
 mobile_sale_order()
