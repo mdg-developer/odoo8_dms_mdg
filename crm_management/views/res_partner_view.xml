@@ -300,38 +300,41 @@
 			<field name="inherit_id" ref="base.view_partner_tree" />
 			<field name="arch" type="xml">
 				<data>
-					<xpath expr="//field[@name='display_name']" position="after">
+					<xpath expr="//field[@name='display_name']" position="before">
 						<field name="customer_code" />
-						<field name="outlet_type" />
-						<field name="township" />
-						<field name="street" />
-						<field name="branch_id" />
-						<field name="frequency_id" />
-						<field name="class_id" />
-						<field name="sales_channel"  string="Sales Channel"/>
 					</xpath>
-					<xpath expr="//field[@name='phone']" position="replace">
-						<field name="phone" invisible="1" />
+						<xpath expr="//field[@name='display_name']" position="after">
+							<field name="customer_code" />
+							<field name="outlet_type" />
+							<field name="township" />
+							<field name="street" />
+							<field name="branch_id" />
+							<field name="frequency_id" />
+							<field name="class_id" />
+							<field name="sales_channel" string="Sales Channel" />
+						</xpath>
+						<xpath expr="//field[@name='phone']" position="replace">
+							<field name="phone" invisible="1" />
 
-					</xpath>
+						</xpath>
 
-					<xpath expr="//field[@name='email']" position="replace">
-						<field name="email" invisible="1" />
-						<field name="street2" invisible="1" />
-						<field name="city" invisible="1" />
-						<field name="demarcation_id" invisible="1" />
-						<field name="pending" invisible="1" />
-						<field name="idle" invisible="1" />
-					</xpath>
-					<xpath expr="//field[@name='date_review_next']" position="replace">
-						<field name="date_review_next" invisible="1" />
-					</xpath>
-					<xpath expr="//field[@name='grade_id']" position="replace">
-						<field name="grade_id" invisible="1" />
-					</xpath>
-					<xpath expr="//field[@name='activation']" position="replace">
-						<field name="activation" invisible="1" />
-					</xpath>
+						<xpath expr="//field[@name='email']" position="replace">
+							<field name="email" invisible="1" />
+							<field name="street2" invisible="1" />
+							<field name="city" invisible="1" />
+							<field name="demarcation_id" invisible="1" />
+							<field name="pending" invisible="1" />
+							<field name="idle" invisible="1" />
+						</xpath>
+						<xpath expr="//field[@name='date_review_next']" position="replace">
+							<field name="date_review_next" invisible="1" />
+						</xpath>
+						<xpath expr="//field[@name='grade_id']" position="replace">
+							<field name="grade_id" invisible="1" />
+						</xpath>
+						<xpath expr="//field[@name='activation']" position="replace">
+							<field name="activation" invisible="1" />
+						</xpath>
 				</data>
 			</field>
 		</record>
