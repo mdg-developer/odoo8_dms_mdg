@@ -484,20 +484,20 @@ class res_partner(osv.osv):
         datas = cr.fetchall()
         cr.execute
         return datas
+
 # kzo Eidt
     def res_partners_return_day(self, cr, uid, section_id, day_id , context=None, **kwargs):
         cr.execute('''                    
                      select A.id,A.name,A.image,A.is_company, A.image_small,A.street,A.street2,A.city,A.website,
                      A.phone,A.township,A.mobile,A.email,A.company_id,A.customer, 
                      A.customer_code,A.mobile_customer,A.shop_name ,
-                     A.address,A.territory,A.village,A.branch_code,
+                     A.address,
                      A.zip,A.state_name,A.partner_latitude,A.partner_longitude,A.sale_plan_day_id,A.image_medium,A.credit_limit,
                      A.credit_allow,A.sales_channel,A.branch_id,A.pricelist_id,A.payment_term_id,A.outlet_type from (
                      select RP.id,RP.name,'' as image,RP.is_company,RPS.sale_plan_day_id,
                      '' as image_small,RP.street,RP.street2,RC.name as city,RP.website,
                      RP.phone,RT.name as township,RP.mobile,RP.email,RP.company_id,RP.customer, 
-                     RP.customer_code,RP.mobile_customer,OT.name as shop_name,RP.address,RP.territory,
-                     RP.village,RP.branch_code,RP.zip ,RP.partner_latitude,RP.partner_longitude,RS.name as state_name,
+                     RP.customer_code,RP.mobile_customer,OT.name as shop_name,RP.address,RP.zip ,RP.partner_latitude,RP.partner_longitude,RS.name as state_name,
                      substring(replace(cast(RP.image_medium as text),'/',''),1,5) as image_medium,RP.credit_limit,RP.credit_allow,
                      RP.sales_channel,RP.branch_id,RP.pricelist_id,RP.payment_term_id,RP.outlet_type
                      from sale_plan_day SPD ,outlettype_outlettype OT,
@@ -523,17 +523,17 @@ class res_partner(osv.osv):
                      A.image_small,A.street,A.street2,A.city,A.website,
                      A.phone,A.township,A.mobile,A.email,A.company_id,A.customer, 
                      A.customer_code,A.mobile_customer,A.shop_name ,
-                     A.address,A.territory,A.village,A.branch_code,
+                     A.address,
                      A.zip,A.state_name,A.partner_latitude,A.partner_longitude,A.sale_plan_trip_id,A.image_medium,
                      A.credit_limit,A.credit_allow,A.sales_channel,A.branch_id,A.pricelist_id,A.payment_term_id ,A.outlet_type
                       from (
                      select RP.id,RP.name,'' as image,RP.is_company,
                      '' as image_small,RP.street,RP.street2,RC.name as city,RP.website,
                      RP.phone,RT.name as township,RP.mobile,RP.email,RP.company_id,RP.customer, 
-                     RP.customer_code,RP.mobile_customer,OT.name as shop_name ,RP.address,RP.territory ,RPT.sale_plan_trip_id,
-                     RP.village,RP.branch_code,RP.zip ,RP.partner_latitude,RP.partner_longitude,RS.name as state_name
+                     RP.customer_code,RP.mobile_customer,OT.name as shop_name ,RP.address,RPT.sale_plan_trip_id,
+                     RP.zip ,RP.partner_latitude,RP.partner_longitude,RS.name as state_name
                       ,substring(replace(cast(RP.image_medium as text),'/',''),1,5) as image_medium ,RP.credit_limit,RP.credit_allow,
-                    ,RP.sales_channel,RP.branch_id,RP.pricelist_id,RP.payment_term_id,RP.outlet_type
+                     RP.sales_channel,RP.branch_id,RP.pricelist_id,RP.payment_term_id,RP.outlet_type
                      from sale_plan_trip SPT , res_partner_sale_plan_trip_rel RPT , res_partner RP ,res_country_state RS ,
                      res_city RC, res_township RT,outlettype_outlettype OT 
                      where SPT.id = RPT.sale_plan_trip_id 
