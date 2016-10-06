@@ -89,19 +89,18 @@
 		</record>
 
 		<!-- ============================== Content Tree ============================== -->
-		<record id="stock_requisition_tree" model="ir.ui.view">
+	<record id="stock_requisition_tree" model="ir.ui.view">
 			<field name="name">stock_requisition_tree</field>
 			<field name="model">stock.requisition</field>
 			<field name="arch" type="xml">
 				<tree string="Contents">
-					<field name="name" />
+					<field name="state" />
+					<field name="request_date"  string="Req Date" />				    				    
+					<field name="name"  string="Ref No."/>
 					<field name="request_by" />
 					<field name="issue_to" />
-					<field name="from_location_id" />
-					<field name="to_location_id" />
-					<field name="request_date" />
-					<field name="so_no" />
-					<field name="state" />
+					<field name="from_location_id" string="Location" />
+					<field name="to_location_id"   string="Warehouse" />				
 				</tree>
 			</field>
 		</record>

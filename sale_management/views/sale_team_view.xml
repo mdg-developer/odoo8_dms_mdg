@@ -8,8 +8,12 @@
 			<field name="inherit_id" ref="sales_team.crm_case_section_view_tree" />
 			<field name="priority" eval="20" />
 			<field name="arch" type="xml">
-				<field name="name" position="after">
-					<field name="region" />
+				<field name="code" position="after">
+					<!-- <field name="region" /> -->
+					<field name="delivery_team_id" string="Delivery" />
+					<field name="parent_id" />
+					<field name="branch_id" />
+					<field name="sale_channel_id" />
 				</field>
 			</field>
 		</record>

@@ -31,7 +31,7 @@ MDG Customization
 """,
     'author': 'Seventh Computing',
     'website': 'http://www.7thcomputing.com',
-    'depends': ['base', 'product'  ,'stock','product_pricelists'],
+    'depends': ['base', 'product'  , 'stock', 'product_pricelists'],
     'data': [        
              'views/product_view.xml',
              'views/location_view.xml',
@@ -39,7 +39,8 @@ MDG Customization
           #   'views/product_uom_view.xml',
              'views/account_invoice_view.xml',
              'views/account_journal_view.xml',
-            # 'security/sales_security.xml',
+        #     'security/sales_security.xml',
+        'views/sale_order_view.xml',
     ],
     'installable': True,
     'auto_install': False,

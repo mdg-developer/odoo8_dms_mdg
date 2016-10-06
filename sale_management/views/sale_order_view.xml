@@ -4,25 +4,25 @@
 
 
 		<!-- add tablet order ref no in sale order tree form -->
-		<record id="inherit_view_sale_order_tree" model="ir.ui.view">
-			<field name="name">sale.order.tree</field>
-			<field name="model">sale.order</field>
-			<field name="inherit_id" ref="sale.view_order_tree" />
-			<field name="arch" type="xml">
-				<field name="name" position="after">
-					<field name="tb_ref_no"></field>
-				</field>
-				<field name="state" position="after">
-					<field name="validity_date" />
-					<field name="payment_type" />
-					<field name="delivery_remark" />
-					<field name="payment_term" />
-					<field name="amount_tax" />
-					<field name="amount_untaxed" />
-					<field name="section_id" />
-				</field>
-			</field>
-		</record>
+<!-- 		<record id="inherit_view_sale_order_tree" model="ir.ui.view"> -->
+<!-- 			<field name="name">sale.order.tree</field> -->
+<!-- 			<field name="model">sale.order</field> -->
+<!-- 			<field name="inherit_id" ref="sale.view_order_tree" /> -->
+<!-- 			<field name="arch" type="xml"> -->
+<!-- 				<field name="name" position="after"> -->
+<!-- 					<field name="tb_ref_no"></field> -->
+<!-- 				</field> -->
+<!-- 				<field name="state" position="after"> -->
+<!-- 					<field name="validity_date" /> -->
+<!-- 					<field name="payment_type" /> -->
+<!-- 					<field name="delivery_remark" /> -->
+<!-- 					<field name="payment_term" /> -->
+<!-- 					<field name="amount_tax" /> -->
+<!-- 					<field name="amount_untaxed" /> -->
+<!-- 					<field name="section_id" /> -->
+<!-- 				</field> -->
+<!-- 			</field> -->
+<!-- 		</record> -->
 
 		<!-- Add the Filter and Group for RB -->
 		<record id="inherit_view_sales_order_filter" model="ir.ui.view">
@@ -123,17 +123,17 @@
 			</field>
 		</record>
 
-		<record id="inherit_view_order_tree" model="ir.ui.view">
-			<field name="name">sale.order.form</field>
-			<field name="model">sale.order</field>
-			<field name="inherit_id" ref="sale.view_order_tree" />
-			<field name="arch" type="xml">
+<!-- 		<record id="inherit_view_order_tree" model="ir.ui.view"> -->
+<!-- 			<field name="name">sale.order.form</field> -->
+<!-- 			<field name="model">sale.order</field> -->
+<!-- 			<field name="inherit_id" ref="sale.view_order_tree" /> -->
+<!-- 			<field name="arch" type="xml"> -->
 
-				<xpath expr="//field[@name='user_id']" position="replace">
-					<field name="user_id" string="Salesman Name" />
-				</xpath>
-			</field>
-		</record>
+<!-- 				<xpath expr="//field[@name='user_id']" position="replace"> -->
+<!-- 					<field name="user_id" string="Salesman Name" /> -->
+<!-- 				</xpath> -->
+<!-- 			</field> -->
+<!-- 		</record> -->
 		<record id="inherit_view_geo_form" model="ir.ui.view">
 			<field name="name">sale.order.geo</field>
 			<field name="model">sale.order</field>

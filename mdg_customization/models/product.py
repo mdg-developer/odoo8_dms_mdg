@@ -27,6 +27,9 @@ class product_template(osv.osv):
        
     }
     
+class product_pricelist(osv.osv):
+    _inherit = 'product.pricelist'
+product_pricelist()       
 class product_pricelist_version(osv.osv):
     _inherit = 'product.pricelist.version'
     _columns = {

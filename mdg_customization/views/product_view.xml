@@ -16,11 +16,49 @@
 					<field name="big_list_price" />
 					<field name='is_foc' />
 					<field name='is_posm' />
-					
+
 				</field>
 			</field>
 		</record>
-		
+		<record id="inherit_product_template_tree_view" model="ir.ui.view">
+			<field name="name">product.template.product.tree</field>
+			<field name="model">product.template</field>
+			<field name="inherit_id" ref="product.product_template_tree_view" />
+			<field name="arch" type="xml">
+				<field name="categ_id" position="replace">
+					<field name="categ_id" string="Category" />
+				</field>
+
+				<field name="categ_id" position="after">
+					<field name="uom_id" string="S.UOM" />
+					<field name="list_price" string="S.Price" />
+					<field name="big_uom_id" string="B.UOM" />
+					<field name="big_list_price" string="B.Price" />
+					<field name="uom_ratio" />
+					<field name="default_code" />
+				</field>
+				<field name="type" position="replace">
+					<field name="type" invisible="1" />
+				</field>
+				<field name="state" position="replace">
+					<field name="state" invisible="1" />
+				</field>
+
+			</field>
+		</record>
+		<record id="inherit_view_stock_product_template_tree" model="ir.ui.view">
+			<field name="name">product.template.product.tree</field>
+			<field name="model">product.template</field>
+			<field name="inherit_id" ref="stock.view_stock_product_template_tree" />
+			<field name="arch" type="xml">
+				<field name="qty_available" position="replace">
+					<field name="qty_available" invisible="1" />
+				</field>
+				<field name="virtual_available" position="replace">
+					<field name="virtual_available" invisible="1" />
+				</field>
+			</field>
+		</record>
 		<record id="product_pricelist_item_form_view" model="ir.ui.view">
 			<field name="name">product.pricelist.item.form</field>
 			<field name="model">product.pricelist.item</field>
@@ -147,5 +185,36 @@
 		<!-- parent="product.menu_product_pricelist_main" sequence="3" -->
 		<!-- groups="base.group_no_one" /> -->
 
+		<record id="product_pricelist_maingroup_view_tree" model="ir.ui.view">
+			<field name="name">product.pricelist.tree.maingroup</field>
+			<field name="model">product.pricelist</field>
+			<field name="inherit_id" ref="product.product_pricelist_view_tree" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='name']" position="replace">
+					<field name="name" string="Name" />
+					<field name="branch_id" />
+				</xpath>
+				<xpath expr="//field[@name='type']" position="replace">
+					<field name="type" string="Type" />
+				</xpath>
+			</field>
+		</record>
+
+		<record id="inherit_product_pricelist_version_tree_view" model="ir.ui.view">
+			<field name="name">product.pricelist.version.tree</field>
+			<field name="model">product.pricelist.version</field>
+			<field name="inherit_id" ref="product.product_pricelist_version_tree_view" />
+			<field name="arch" type="xml">
+				<field name="name" position="replace">
+					<field name="name" string="Version Name" />
+				</field>
+				<field name="pricelist_id" position="replace">
+					<field name="pricelist_id" string="Main Pricelist" />
+				</field>
+				<field name="date_end" position="after">
+					<field name="active" />
+				</field>
+			</field>
+		</record>
 	</data>
 </openerp>
