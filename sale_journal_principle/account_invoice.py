@@ -397,3 +397,7 @@ class account_invoice(models.Model):
             move.post()
         self._log_event()
         return True
+    
+    account_id = fields.Many2one('account.account', string='Account',
+        required=False, readonly=True, states={'draft': [('readonly', False)]},
+        help="The partner account used for this invoice.")
