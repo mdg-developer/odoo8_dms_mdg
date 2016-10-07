@@ -37,6 +37,7 @@ class insert_sale_team(osv.osv_memory):
                 'city':fields.many2one('res.city','City'),
                 'township':fields.many2one('res.township','Township'),        
         'property_product_pricelist': fields.many2one('product.pricelist', string="Sale Pricelist", domain=[('type', '=', 'sale')]),
+#                 'demarcation_id': fields.many2one('sale.demarcation', 'Demarcation'),
                 
     }
 

@@ -7,17 +7,18 @@
 			<field name="model">partner.unassign.sale.team</field>
 			<field name="arch" type="xml">
 				<form string="Unassign Sales Team">
-					<group col="4" colspan="6">
-						<label for="id" string="Unassign Sales Team" />
-						<div>
-							<div name="confirm">
-								<field name="confirm" class="oe_inline" />
-							</div>
-						</div>
+					<group>
+					    <field name="data" invisible="1"/>
+						<field name="confirm"  attrs="{'readonly': [('data','=',True)]}"/>
+						<field name="section_id"  attrs="{'readonly': [('confirm','=',True)]}" on_change="onchange_section_id(section_id)" class="oe_inline"/>
 					</group>
 					<footer>
 						<button name="print_report" string="Confirm" type="object"
 							class="oe_highlight" />
+						or
+
+						<button string="Cancel" class="oe_link" special="cancel" />
+
 					</footer>
 				</form>
 			</field>

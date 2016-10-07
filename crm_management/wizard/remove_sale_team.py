@@ -25,13 +25,26 @@ class unassign_sale_team(osv.osv_memory):
     _name = 'partner.unassign.sale.team'
     _description = 'Unassign Sale Team'
     _columns = {
-        'confirm':fields.boolean('Unassign Sale Team' ,readonly=True),
+        'confirm':fields.boolean('All' ),
+        'section_id':fields.many2one('crm.case.section','Sales Team'),
+        'data':fields.boolean('Data'),
     }
 
     _defaults = {
-         'confirm': True,         
+         'confirm': False,         
+         'data': False,         
+         
     }
 
+    def onchange_section_id(self, cr, uid, ids, section_id, context=None):
+        customer_code = False        
+        print 'section_id',section_id
+        if section_id:
+            print 'section_id',section_id
+            return {'value': {'confirm': customer_code,'data':True}}
+        else:
+            return True
+    
     def print_report(self, cr, uid, ids, context=None):
         data = self.read(cr, uid, ids, context=context)[0]
         partner_obj = self.pool.get('res.partner')
@@ -41,10 +54,14 @@ class unassign_sale_team(osv.osv_memory):
              'form': data
             }
         partner_id=datas['ids']
-        print 'mobile_id',partner_id
+        confirm=data['confirm']
+        section_id=data['section_id']
         for partner in partner_id: 
-            cr.execute('update res_partner set section_id=null where id=%s',(partner,))      
-            cr.execute('delete from sale_team_customer_rel where sale_team_id=%s',(partner,))      
+            if (confirm==True):
+                cr.execute('update res_partner set section_id=null where id=%s',(partner,))      
+                cr.execute('delete from sale_team_customer_rel where sale_team_id=%s',(partner,)) 
+            if section_id:
+                cr.execute('delete from sale_team_customer_rel where partner_id=%s',(section_id[0],)) 
         return True
                                                                                          
             
