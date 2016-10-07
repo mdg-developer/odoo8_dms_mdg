@@ -320,7 +320,7 @@ class sale_plan_for_day_setting(osv.osv):
                 'name': fields.char('Description', required=True),
                 'sale_team_id':fields.many2one('crm.case.section', 'Sale Team', required=True),
                  'date':fields.date('Apply Date', required=True),
-                 'start_date':fields.date('W1 Monday', required=True),
+                 'start_date':fields.date('W1 Monday'),
                 'state': fields.selection([
             ('draft', 'Pending'),
             ('confirm', 'Confirm'),

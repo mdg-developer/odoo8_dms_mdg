@@ -14,6 +14,6 @@ class res_users(osv.osv):
         return branch_id and branch_id[0] or False    
     
     _columns = {
-        'branch_ids':fields.many2many('res.branch','res_branch_users_rel','user_id','bid','Branches'),
+        'branch_ids':fields.many2many('res.branch','res_branch_users_rel','user_id','bid','Branches',required=True),
     }
 res_users()
