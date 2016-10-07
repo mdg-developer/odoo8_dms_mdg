@@ -45,6 +45,7 @@ class pre_sale_order(osv.osv):
      'promos_line_ids':fields.one2many('pre.promotion.line', 'promo_line_id', 'Promotion Lines'),
      'pricelist_id': fields.many2one('product.pricelist', 'Price List',select=True, ondelete='cascade'),           
        'payment_line_ids':fields.one2many('customer.payment', 'pre_order_id', 'Payment Lines'),
+      'branch_id': fields.many2one('res.branch', 'Branch',required=True),    
      
     }
     _order = 'id desc'
@@ -161,13 +162,12 @@ class pre_sale_order(osv.osv):
         if ids:
             try:
                 # default price list need in sale order form
-                cr.execute("""select id from product_pricelist""")
-                data = cr.fetchall()
-                if data:
-                    pricelist_id = data[0][0]
+#                 cr.execute("""select id from product_pricelist""")
+#                 data = cr.fetchall()
+#                 if data:
+#                     pricelist_id = data[0][0]
                 for preObj_ids in presaleorderObj.browse(cr, uid, ids[0], context=context):
                     if preObj_ids:
-                        print 'pricelist_id', pricelist_id
                         print 'Sale Team',preObj_ids.sale_team
                         cr.execute('select delivery_team_id from crm_case_section where id = %s ', (preObj_ids.sale_team.id,))
                         data = cr.fetchall()
@@ -175,6 +175,8 @@ class pre_sale_order(osv.osv):
                             delivery_id = data[0][0]
                         else:
                             delivery_id = None
+                        cr.execute('select company_id from res_users where id=%s',(preObj_ids.user_id.id,))
+                        company_id=cr.fetchone()[0]
                         
                         saleOrderResult = {'partner_id':preObj_ids.partner_id.id,
                                                         'customer_code':preObj_ids.customer_code,
@@ -193,9 +195,11 @@ class pre_sale_order(osv.osv):
 #                                                         'client_order_ref':preObj_ids.tablet_id.name,
                                                         'state':'manual',
                                                          'payment_type':preObj_ids.type,
-                                                        'pricelist_id':pricelist_id,
+                                                        'pricelist_id':preObj_ids.pricelist_id.id,
                                                         'pre_order':True,
                                                         'delivery_id':delivery_id,
+                                                        'branch_id':preObj_ids.branch_id.id,
+                                                        'company_id':company_id,
                                                          }
                         so_id = saleOrderObj.create(cr, uid, saleOrderResult, context=context)
                     if so_id and preObj_ids.order_line:
@@ -214,11 +218,13 @@ class pre_sale_order(osv.osv):
                                 detailResult = {'order_id':so_id,
                                                         'product_id':line_id.product_id.id,
                                                         'name':productName,
+                                                        'product_uom':line_id.uom_id.id,
                                                         'product_uom_qty':line_id.product_uos_qty,
                                                         'discount':line_id.discount,
                                                         'discount_amt':line_id.discount_amt,
                                                         'sale_foc':sale_foc,
                                                         'price_unit':priceUnit,
+                                                        'company_id':company_id,  # company_id,
                                                         }   
                                 saleOrderLineObj.create(cr, uid, detailResult, context=context)
                     if so_id:
