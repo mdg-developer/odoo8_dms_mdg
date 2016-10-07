@@ -71,10 +71,10 @@ class account_invoice(models.Model):
         self.write(cr, uid, ids, {'state':'fm_approve'}, context=None)
         return True   
     
-    @api.multi    
-    def invoice_validate(self):    
-        payment_type = self.payment_type
-        if payment_type =='cash':
-            return self.write({'state': 'paid'})
-        else:    
-            return self.write({'state': 'open'})
+#     @api.multi    
+#     def invoice_validate(self):    
+#         payment_type = self.payment_type
+#         if payment_type =='cash':
+#             return self.write({'state': 'paid'})
+#         else:    
+#             return self.write({'state': 'open'})

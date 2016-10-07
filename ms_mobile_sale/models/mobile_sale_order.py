@@ -23,6 +23,7 @@ class mobile_sale_order(osv.osv):
     _description = "Mobile Sales Order"
    
     _columns = {
+                
         'name': fields.char('Order Reference', size=64),
         'partner_id':fields.many2one('res.partner', 'Customer'),
         'customer_code':fields.char('Customer Code'),
@@ -72,6 +73,8 @@ class mobile_sale_order(osv.osv):
        'promos_line_ids':fields.one2many('mso.promotion.line', 'promo_line_id', 'Promotion Lines'),
        'pricelist_id': fields.many2one('product.pricelist', 'Price List', select=True, ondelete='cascade'),
        'payment_line_ids':fields.one2many('customer.payment', 'payment_id', 'Payment Lines'),
+      'branch_id': fields.many2one('res.branch', 'Branch',required=True),    
+      
    #     'journal_id'  : fields.many2one('account.journal', 'Journal' ,domain=[('type','in',('cash','bank'))]),   
     }
     _order = 'id desc'
@@ -108,6 +111,8 @@ class mobile_sale_order(osv.osv):
             
             if sale_order:
                 for so in sale_order:
+                    cursor.execute('select branch_id from crm_case_section where id=%s',(so['sale_team'],))
+                    branch_id=cursor.fetchone()[0]     
                     cursor.execute('select id From res_partner where customer_code  = %s ', (so['customer_code'],))
                     data = cursor.fetchall()                
                     if data:
@@ -152,7 +157,8 @@ class mobile_sale_order(osv.osv):
                         'mso_longitude':so['mso_longitude'],
                         'mso_latitude':so['mso_latitude'],
                         'outlet_type':outlet_type,
-                        'pricelist_id':so['pricelist_id']
+                        'pricelist_id':so['pricelist_id'],
+                        'branch_id':branch_id,
                     }
                     s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
                     print "Create Sale Order", so['name']
@@ -350,10 +356,10 @@ class mobile_sale_order(osv.osv):
         product_name = ''
         if ids:
             # default price list need in sale order form
-            cr.execute("""select id from product_pricelist where type = 'sale' """)
-            data = cr.fetchall()
-            if data:
-                pricelist_id = data[0][0]
+#             cr.execute("""select id from product_pricelist where type = 'sale' """)
+#             data = cr.fetchall()
+#             if data:
+#                 pricelist_id = data[0][0]
 # old query version 
 #                 cr.execute("select TI.sale_team_id from  mobile_sale_order msol,tablets_information TI where msol.tablet_id=TI.id and msol.id=%s", (ids[0],))
 #                 sale_team_id = cr.fetchone()
@@ -375,6 +381,8 @@ class mobile_sale_order(osv.osv):
                         so_state = 'cancel'
                     elif ms_ids.void_flag == 'none':
                         so_state = 'draft'
+                    cr.execute("select company_id from res_users where id=%s",(ms_ids.user_id.id,))
+                    company_id=cr.fetchone()[0]
                     soResult = {
                                           'date_order':ms_ids.date,
                                            'partner_id':ms_ids.partner_id.id,
@@ -384,10 +392,10 @@ class mobile_sale_order(osv.osv):
                                            'date_confirm':ms_ids.date,
                                            'amount_total':ms_ids.amount_total,
                                            'order_policy':'manual',
-                                           'company_id':1,
+                                           'company_id':company_id,
                                            'payment_term':ms_ids.payment_term.id,
                                             'state':so_state,
-                                            'pricelist_id':pricelist_id,
+                                            'pricelist_id':ms_ids.pricelist_id.id,
                                             'picking_policy':'direct',
                                             'warehouse_id':ms_ids.warehouse_id.id,
                                             'project_id':analytic_id,
@@ -405,7 +413,8 @@ class mobile_sale_order(osv.osv):
                                             'delivery_remark':ms_ids.delivery_remark,
                                             'sale_plan_day_id':ms_ids.sale_plan_day_id.id,
                                             'sale_plan_trip_id':ms_ids.sale_plan_trip_id.id,
-                                            'customer_code':ms_ids.customer_code 
+                                            'customer_code':ms_ids.customer_code,
+                                            'branch_id':ms_ids.branch_id.id, 
                                         }
                     soId = soObj.create(cr, uid, soResult, context=context)
                     if soId and ms_ids.order_line:
@@ -434,11 +443,11 @@ class mobile_sale_order(osv.osv):
                                               'product_id':line_id.product_id.id,
                                               'name':product_name,
                                               'price_unit':price_unit,
-                                              'product_uom':1,
+                                              'product_uom':line_id.uom_id.id,
                                               'product_uom_qty':line_id.product_uos_qty,
                                               'discount':line_id.discount,
                                               'discount_amt':line_id.discount_amt,
-                                              'company_id':1,  # company_id,
+                                              'company_id':company_id,  # company_id,
                                               'state':'draft',
                                               'net_total':line_id.sub_total,
                                               'sale_foc':foc
@@ -458,7 +467,8 @@ class mobile_sale_order(osv.osv):
                             soObj.action_button_confirm(cr, uid, solist, context=context)
                             # Create Invoice
                             invoice_id = self.create_invoices(cr, uid, solist, context=context)
-                            cr.execute('update account_invoice set payment_type=%s where id =%s',('cash',invoice_id,))                            
+                            print 'ms_ids.branch_id.id',ms_ids.branch_id.id
+                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s where id =%s',('cash',ms_ids.branch_id.id,invoice_id,))                            
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             if invoice_id and ms_ids.paid == True:
                                 invlist = []
@@ -541,7 +551,7 @@ class mobile_sale_order(osv.osv):
                             soObj.action_button_confirm(cr, uid, solist, context=context)
                             # Create Invoice
                             invoice_id = self.create_invoices(cr, uid, solist, context=context)
-                            cr.execute('update account_invoice set payment_type=%s where id =%s',('cash',invoice_id,))
+                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s where id =%s',('cash',ms_ids.branch_id.id,invoice_id,))                            
                             
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             if invoice_id and ms_ids.paid == True:
@@ -603,7 +613,8 @@ class mobile_sale_order(osv.osv):
                             soObj.action_button_confirm(cr, uid, solist, context=context)
                             # Create Invoice
                             invoice_id = self.create_invoices(cr, uid, solist, context=context)
-                            cr.execute('update account_invoice set payment_type=%s where id =%s',('cash',invoice_id,))                            
+                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s where id =%s',('cash',ms_ids.branch_id.id,invoice_id,))                            
+                                                   
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             if invoice_id and ms_ids.paid == True:
                                 invlist = []
@@ -665,6 +676,7 @@ class mobile_sale_order(osv.osv):
                             soObj.action_button_confirm(cr, uid, solist, context=context)
                             # invoice create at draft state
                             invoice_id = self.create_invoices(cr, uid, solist, context=context)
+                            cr.execute('update account_invoice set branch_id =%s where id =%s',(ms_ids.branch_id.id,invoice_id,))                            
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             # clicking the delivery order view button
                             stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)    
@@ -689,6 +701,8 @@ class mobile_sale_order(osv.osv):
                             soObj.action_button_confirm(cr, uid, solist, context=context)
                             # invoice create at draft state
                             invoice_id = self.create_invoices(cr, uid, solist, context=context)
+                            cr.execute('update account_invoice set branch_id =%s where id =%s',(ms_ids.branch_id.id,invoice_id,))                            
+                            
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             # clicking the delivery order view button
                             stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)  # create delivery order with draft state
@@ -698,6 +712,8 @@ class mobile_sale_order(osv.osv):
                             soObj.action_button_confirm(cr, uid, solist, context=context)
                             # invoice create at draft state
                             invoice_id = self.create_invoices(cr, uid, solist, context=context)
+                            cr.execute('update account_invoice set branch_id =%s where id =%s',(ms_ids.branch_id.id,invoice_id,))                            
+                            
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             # clicking the delivery order view button
                             stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)  # create delivery order with draft state
@@ -866,7 +882,7 @@ class mobile_sale_order(osv.osv):
     def get_pricelist_item_datas(self, cr, uid, version_id, context=None, **kwargs):
         cr.execute('''select pi.id,pi.price_discount,pi.sequence,pi.product_tmpl_id,pi.name,pp.id base_pricelist_id,
                     pi.product_id,pi.base,pi.price_version_id,pi.min_quantity,
-                    pi.categ_id,pi.price_surcharge,pi.product_uom_id
+                    pi.categ_id,pi.new_price price_surcharge,pi.product_uom_id
                     from product_pricelist_item pi, product_pricelist_version pv, product_pricelist pp
                     where pv.pricelist_id = pp.id 
                     and pv.id = pi.price_version_id
@@ -1439,6 +1455,7 @@ class mobile_sale_order(osv.osv):
                     if So_id:
                         solist = So_id       
                         journal_id = deli['journal_id']
+                        branch_id=deli['branch_id']
                         #soObj.action_button_confirm(cr, uid, solist, context=context)
                         
                         # For DO
@@ -1463,6 +1480,8 @@ class mobile_sale_order(osv.osv):
                         # Create Invoice
                         print 'Context', context
                         invoice_id = self.create_invoices(cr, uid, solist, context=context)
+                        cr.execute('update account_invoice set branch_id =%s where id =%s',(branch_id.id,invoice_id,))                            
+                        
                         invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                         if invoice_id:
                             invlist = []

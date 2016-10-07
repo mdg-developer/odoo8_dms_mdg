@@ -35,6 +35,7 @@
 								<field name="warehouse_id" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="sale_team" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="location_id" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="branch_id" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="mso_latitude" digits="(14,15)"
 									attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="mso_longitude" digits="(14,15)"
