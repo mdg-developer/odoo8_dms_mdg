@@ -8,8 +8,8 @@
 			<field name="arch" type="xml">
 				<form string="Sale Plans Setting" version="7.0">
 					<header>
-						<button name="confirm" string="Confirm" class="oe_highlight"
-							type="object" states="draft" />
+						<button name="confirm" string="Generate" class="oe_highlight"
+							type="object"  />
 <!-- 						<button name="refresh" string="Refresh Customer" class="oe_highlight" -->
 <!-- 							type="object" states="draft,confirm" /> -->
 						<field name="state" widget="statusbar" />
