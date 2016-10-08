@@ -951,14 +951,9 @@ class mobile_sale_order(osv.osv):
         return datas
 
     def sale_plan_day_return(self, cr, uid, section_id , context=None, **kwargs):
-     
-#         cr.execute('''            
-#             select p.id,p.date,p.sale_team,p.name,p.main_group from sale_plan_day p
-#             join  crm_case_section c on p.sale_team=c.id
-#             where p.sale_team=%s and p.active = true
-#             ''', (section_id, ))        
+        
         cr.execute('''            
-            select p.id,p.date,p.sale_team,p.name,p.principal from sale_plan_day p
+            select p.id,p.date,p.sale_team,p.name,p.principal,p.week from sale_plan_day p
             join  crm_case_section c on p.sale_team=c.id
             where p.sale_team=%s and p.active = true
             ''', (section_id,))
