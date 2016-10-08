@@ -37,6 +37,8 @@
 								<field name="sale_team" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="warehouse_id" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="location_id" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="branch_id" attrs="{'readonly':[('m_status','=','done')]}"
+									widget="selection" />
 								<field name="sale_plan_name" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="sale_plan_day_id" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="sale_plan_trip_id" attrs="{'readonly':[('m_status','=','done')]}" />
@@ -52,8 +54,6 @@
 								<field name="due_date" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="payment_term" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="type" attrs="{'readonly':[('m_status','=','done')]}" />
-								<!-- <field name="journal_id" attrs="{'readonly':[('m_status','=','done')]}" 
-									widget="selection" /> -->
 								<field name="tablet_id" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="delivery_remark" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="amount_total" attrs="{'readonly':[('m_status','=','done')]}" />
@@ -66,6 +66,7 @@
 								<field name="paid" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="void_flag" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="balance" attrs="{'readonly':[('m_status','=','done')]}" />
+
 							</group>
 						</group>
 
@@ -173,9 +174,9 @@
 										attrs="{'readonly':[('m_status','=','done')]}">
 
 										<field name="date" />
-										<field name="journal_id"  widget="selection"/>
+										<field name="journal_id" widget="selection" />
 										<field name="amount" sum="Price" />
-										<field name="notes"/>
+										<field name="notes" />
 
 									</tree>
 								</field>
