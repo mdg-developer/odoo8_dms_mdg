@@ -70,7 +70,7 @@ class insert_sale_team(osv.osv_memory):
             if section_id:
                 team=team_obj.browse(cr,uid,section_id[0],context=context)
                 team_name=team.name
-                cr.execute('select section_id from res_partner where  sale_team_id=%s',(section_id[0]))
+                cr.execute('select section_id from res_partner where  section_id=%s',(section_id[0],))
                 team_id=cr.fetchone()
                 if team_id:
                     raise osv.except_osv(_('Warning!'),_('You inserted this sales team (%s) in (%s ,%s).')%(team_name,partner_data.name,partner_data.customer_code,))                    
