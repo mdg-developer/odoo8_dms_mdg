@@ -85,7 +85,7 @@ class sale_order(osv.osv):
                'invoiced': fields.function(_invoiced, string='Paid',
                 fnct_search=_invoiced_search, type='boolean', help="It indicates that an invoice has been paid.", store=True),
                 'delivery_id': fields.many2one('crm.case.section', 'Delivery Team'),
-                'pre_order': fields.boolean("Pre Order" , readonly=True),
+                'pre_order': fields.boolean("Pre Order" ),
                 'is_generate':fields.boolean('RFI Generated'),
                  
                }

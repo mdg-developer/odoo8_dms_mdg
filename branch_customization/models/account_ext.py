@@ -1,4 +1,5 @@
 from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 class account_invoice(osv.osv):
     _inherit = "account.invoice"
@@ -10,7 +11,7 @@ class account_invoice(osv.osv):
         return branch_id
         
     _columns = {
-               'branch_id':fields.many2one('res.branch', 'Branch'),
+               'branch_id':fields.many2one('res.branch', 'Branch',required=True),
                }
     _defaults = {
         'branch_id': _get_default_branch,
@@ -42,7 +43,7 @@ class account_creditnote(osv.osv):
         return branch_id
         
     _columns = {
-               'branch_id':fields.many2one('res.branch', 'Branch'),
+               'branch_id':fields.many2one('res.branch', 'Branch',required=True),
                }
     _defaults = {
         'branch_id': _get_default_branch,

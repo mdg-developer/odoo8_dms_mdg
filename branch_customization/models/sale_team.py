@@ -1,5 +1,6 @@
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
+from openerp.tools.translate import _
 
 class crm_case_section(osv.osv):
     _inherit = 'crm.case.section'
@@ -11,8 +12,9 @@ class crm_case_section(osv.osv):
         return branch_id
         
     _columns = {
-               'branch_id':fields.many2one('res.branch', 'Branch',required=True),
-               }
+                'branch_id': fields.many2one('res.branch', 'Branch',required=True),    
+                }
     _defaults = {
         'branch_id': _get_default_branch,
-        }
+        }    
+    

@@ -33,6 +33,8 @@ product_pricelist()
 class product_pricelist_version(osv.osv):
     _inherit = 'product.pricelist.version'
     _columns = {
+          'branch_id': fields.related('pricelist_id','branch_id',type='many2one',
+            readonly=True, relation='res.branch', string='Branch', store=True),                         
                       'date_start': fields.date('Start Date', help="First valid date for the version.", required=True),
         'date_end': fields.date('End Date', help="Last valid date for the version.", required=True),
               }
@@ -66,6 +68,7 @@ class product_pricelist_item(osv.osv):
         'list_price': fields.float('Basic Price', digits_compute=dp.get_precision('Product Price'),readonly=True),
         'new_price': fields.float('New Price',
             digits_compute=dp.get_precision('New Price')),
+  
                 }
 
     def product_id_change(self, cr, uid, ids, product_id, context=None):

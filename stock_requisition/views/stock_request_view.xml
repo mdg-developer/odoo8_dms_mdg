@@ -89,7 +89,7 @@
 		</record>
 
 		<!-- ============================== Content Tree ============================== -->
-	<record id="stock_requisition_tree" model="ir.ui.view">
+		<record id="stock_requisition_tree" model="ir.ui.view">
 			<field name="name">stock_requisition_tree</field>
 			<field name="model">stock.requisition</field>
 			<field name="arch" type="xml">

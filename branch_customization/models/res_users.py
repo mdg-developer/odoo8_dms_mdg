@@ -1,6 +1,7 @@
 
 from openerp import tools
 from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 class res_users(osv.osv):
     _inherit = "res.users"

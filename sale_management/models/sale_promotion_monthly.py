@@ -86,6 +86,12 @@ class sale_monthly_promotion(osv.osv):
     _name = "sale.monthly.promotion"
     _description = 'Monthly Promotion'
     
+    def _get_default_branch(self, cr, uid, context=None):
+        branch_id = self.pool.get('res.users')._get_branch(cr, uid, context=context)
+        if not branch_id:
+            raise osv.except_osv(_('Error!'), _('There is no default branch for the current user!'))
+        return branch_id    
+    
     _columns = {
                             'code':fields.char('Code', required=True),
                             'name':fields.char('Description', required=True),
@@ -95,14 +101,16 @@ class sale_monthly_promotion(osv.osv):
                             'product_id':fields.many2one('product.product', string='Product'),
                             'product_categ_id':fields.many2one('product.category', string='Product Category'),
                             'sale_channel_id':fields.many2many('sale.channel', 'sale_monthly_promo_rel', 'sale_promo_id', 'sale_channel_id', string='Sales Channels'),
-                            'branch_id':fields.many2one('res.branch', string='Branch'),
+                            'branch_id':fields.many2one('res.branch', string='Branch',required=True),
                             'product_uom_id':fields.many2one('product.uom', string='Sale UOM'),
                             'sale_qty':fields.float(string='Sales Qty'),
                             'rebate_percentage':fields.float(string='Rebate Percentage'),
                             'foc_qty':fields.float('FOC Quantity'),
                             'foc_product_id':fields.many2one('product.product', string='FOC To Give Product'),
                             'rebate_amount':fields.float('Rebate Amount'),
-                            'remark':fields.text('Remark')
+                            'remark':fields.text('Remark'),
                         }
-    
+    _defaults = {
+        'branch_id': _get_default_branch,
+        }    
 sale_monthly_promotion()
