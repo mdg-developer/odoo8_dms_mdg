@@ -503,14 +503,14 @@ class res_partner(osv.osv):
                      substring(replace(cast(RP.image_medium as text),'/',''),1,5) as image_medium,RP.credit_limit,RP.credit_allow,
                      RP.sales_channel,RP.branch_id,RP.pricelist_id,RP.payment_term_id,RP.outlet_type,RP.city as city_id,RP.township as township_id,
                      RP.country_id,RP.state_id,RP.unit,RP.class_id,RP.chiller,RP.frequency_id,RP.temp_customer
-                     from sale_team_customer_rel ST ,outlettype_outlettype OT,
+                     from crm_case_session ST ,outlettype_outlettype OT,
                                              res_partner RP ,res_country_state RS, res_city RC,res_township RT
-                                            where ST.partner_id = RP.id 
+                                            where ST.id = RP.session_id 
                                             and  RS.id = RP.state_id
                                             and RP.township =RT.id
                                             and RP.city = RC.id
                                             and RP.outlet_type = OT.id
-                                            and ST.sale_team_id = %s order by RP.name                                       
+                                            and ST.id = %s order by RP.name                                       
                         )A 
                         where A.customer_code is not null
             ''', (section_id ,))

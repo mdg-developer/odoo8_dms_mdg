@@ -60,7 +60,7 @@
 								<td></td>
 								<td></td>
 								<td>
-									<b>Deliver Form</b>
+									<b>Sale Order No:</b>
 									<b>-</b>
 									<span t-field="o.origin" />
 								</td>
@@ -74,14 +74,14 @@
 									</th> -->
 									<th class="text-center" style="border:1pt solid;border-color:black;">Product
 									</th>
-									<th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th>
-									<th class="text-center" style="border:1pt solid;border-color:black;">Unit Price</th>
-									<th class="text-center" style="border:1pt solid;border-color:black;">Total Price</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Qty</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Unit Price </th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Total Price (Ks)</th>
 									<th style="border:1pt solid;border-color:black;" class="text-center"
 										groups="sale.group_discount_per_so_line">Disc.(%)</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Disc.(Amt)</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">FOC</th>
-									<th class="text-center" style="border:1pt solid;border-color:black;">Amount Total</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Amount Total (Ks)</th>
 								</tr>
 							</thead>
 							<tbody class="invoice_tbody">
@@ -179,7 +179,7 @@
 											Opening Balance Payable
 										</td>
 										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
-											<span t-field="o.deduct_amt" />
+											<span t-field="o.partner_id.credit" />
 										</td>
 									</tr> 
 									<tr class="border-black">

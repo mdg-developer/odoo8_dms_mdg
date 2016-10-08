@@ -59,7 +59,6 @@ class res_partner(osv.osv):
          'fri':fields.boolean('FRI'),
          'sat':fields.boolean('SAT'),
          'sun':fields.boolean('SUN'),
-     'section_id':fields.many2many('crm.case.section', 'sale_team_customer_rel', 'partner_id', 'sale_team_id', string='Sales Team'),
  
     }
     _defaults = {
