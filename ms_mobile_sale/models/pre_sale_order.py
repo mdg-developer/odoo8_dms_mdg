@@ -41,6 +41,7 @@ class pre_sale_order(osv.osv):
         'location_id'  : fields.many2one('stock.location', 'Location'),
         'deduction_amount':fields.float('Deduction Amount'),
         'm_status':fields.selection([('draft', 'Draft'),
+                                     
                                                       ('done', 'Complete')], string='Status'),
      'promos_line_ids':fields.one2many('pre.promotion.line', 'promo_line_id', 'Promotion Lines'),
      'pricelist_id': fields.many2one('product.pricelist', 'Price List',select=True, ondelete='cascade'),           
@@ -59,6 +60,7 @@ class pre_sale_order(osv.osv):
         print 'vals', vals
         sale_order_name_list = []
         try : 
+            saleManId = branch_id = None
             mobile_sale_order_obj = self.pool.get('pre.sale.order')
             mobile_sale_order_line_obj = self.pool.get('pre.sale.order.line')
             str = "{" + vals + "}"
@@ -83,16 +85,19 @@ class pre_sale_order(osv.osv):
             if sale_order:
                 for so in sale_order:
                     print 'Sale Man Id', so['user_id']
-                    cursor.execute('select id From res_users where partner_id  = %s ', (so['user_id'],))
+                    cursor.execute('select id,branch_id From res_users where partner_id  = %s ', (so['user_id'],))
                     data = cursor.fetchall()
+                    
                     if data:
                         saleManId = data[0][0]
+                        branch_id = data[0][1]
                     else:
                         saleManId = None
                     cursor.execute('select id From res_partner where customer_code  = %s ', (so['customer_code'],))
                     data = cursor.fetchall()                
                     if data:
                         partner_id = data[0][0]
+                       
                     else:
                         partner_id = None
 
@@ -114,7 +119,8 @@ class pre_sale_order(osv.osv):
                         'sale_plan_day_id':so['sale_plan_day_id'],
                         'mso_longitude':so['mso_longitude'],
                         'mso_latitude':so['mso_latitude'],
-                        'pricelist_id':so['pricelist_id']
+                        'pricelist_id':so['pricelist_id'],
+                        'branch_id':branch_id,
                     }
                     s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
                     print "Create Sale Order", so['name']
