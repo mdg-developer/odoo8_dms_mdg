@@ -68,9 +68,8 @@ class product_pricelist_item(osv.osv):
         'list_price': fields.float('Basic Price', digits_compute=dp.get_precision('Product Price'),readonly=True),
         'new_price': fields.float('New Price',
             digits_compute=dp.get_precision('New Price')),
-  
+        'price_discount': fields.float('Price Discount',digits_compute=dp.get_precision('Product Price')),
                 }
-
     def product_id_change(self, cr, uid, ids, product_id, context=None):
         if not product_id:
             return {}
