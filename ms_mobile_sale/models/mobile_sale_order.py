@@ -118,15 +118,7 @@ class mobile_sale_order(osv.osv):
                     if data:
                         partner_id = data[0][0]
                     else:
-                        partner_id = None
-                    
-                    cursor.execute('select id From outlettype_outlettype where name  = %s ', (so['outlet_type'],))
-                    data = cursor.fetchall()
-                    print 'outlet type data', data
-                    if data:
-                        outlet_type = data[0][0]
-                    else:
-                        outlet_type = None
+                        partner_id = None 
 
                     mso_result = {
                         'customer_code':so['customer_code'],
@@ -156,7 +148,7 @@ class mobile_sale_order(osv.osv):
                         'payment_term':so['payment_term'],
                         'mso_longitude':so['mso_longitude'],
                         'mso_latitude':so['mso_latitude'],
-                        'outlet_type':outlet_type,
+                        'outlet_type':so['outlet_type'],
                         'pricelist_id':so['pricelist_id'],
                         'branch_id':branch_id,
                     }
