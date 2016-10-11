@@ -152,7 +152,7 @@
 				</field>
 				<xpath expr="//page/field[@name='items_id']" position="replace">
 					<field name="items_id">
-						<tree string="Item List" editable="bottom">
+						<tree string="Item List" editable="bottom"  default_order="name desc">
 							<field name="product_id" on_change="product_id_change(product_id)" />
 							<field name="sequence" invisible="1" />
 							<field name="name" invisible="1" />
