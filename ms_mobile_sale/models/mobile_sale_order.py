@@ -1442,7 +1442,9 @@ class mobile_sale_order(osv.osv):
                     if So_id:
                         solist = So_id       
                         journal_id = deli['journal_id']
-                        branch_id=deli['branch_id']
+                        cr.execute('select branch_id from sale_order where tb_ref_no=%s',(deli['so_refNo'],))
+                        branch_id=cr.fetchone()[0]
+                        
                         #soObj.action_button_confirm(cr, uid, solist, context=context)
                         
                         # For DO
@@ -1467,7 +1469,7 @@ class mobile_sale_order(osv.osv):
                         # Create Invoice
                         print 'Context', context
                         invoice_id = self.create_invoices(cr, uid, solist, context=context)
-                        cr.execute('update account_invoice set branch_id =%s where id =%s',(branch_id.id,invoice_id,))                            
+                        cr.execute('update account_invoice set branch_id =%s ,payment_type=%s where id =%s',(branch_id,deli['payment_type'],invoice_id,))                            
                         
                         invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                         if invoice_id:
