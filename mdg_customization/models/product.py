@@ -47,6 +47,8 @@ class product_pricelist_version(osv.osv):
             for product in product_ids:
                 product_data=product_obj.browse(cr, uid, product, context=context)
                 uom_id=product_data.product_tmpl_id.uom_id and product_data.product_tmpl_id.uom_id.id or False,
+                big_uom_id=product_data.product_tmpl_id.big_uom_id and product_data.product_tmpl_id.big_uom_id.id or False,
+                big_price=product_data.big_list_price
                 price=product_data.list_price
                 name=product_data.product_tmpl_id.default_code
                 categ_id=product_data.product_tmpl_id.categ_id.id
@@ -59,7 +61,16 @@ class product_pricelist_version(osv.osv):
                                           'base':1,
                                           'categ_id':categ_id,
                                           'price_version_id':ids[0]}, context=context)
-                print 'item_id',item_id
+                item_2_id = item_obj.create(cr, uid, {
+                                                    'product_id':product_data.id,
+                                                    'name': name,
+                                                'new_price':big_price,
+                                          'list_price': big_price,
+                                          'product_uom_id':big_uom_id,
+                                          'base':1,
+                                          'categ_id':categ_id,
+                                          'price_version_id':ids[0]}, context=context)
+                print 'item_id',item_id ,item_2_id               
         return True
 class product_pricelist_item(osv.osv):
     _inherit = "product.pricelist.item"
