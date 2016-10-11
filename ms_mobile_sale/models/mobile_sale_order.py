@@ -1691,7 +1691,7 @@ class mobile_sale_order(osv.osv):
             
             if stock:
                 for sr in stock:                                    
-                    cursor.execute('select van_id,location_id,issue_location_id,delivery_team_id from crm_case_section where id = %s ', (sr['sale_team_id'],))
+                    cursor.execute('select vehicle_id,location_id,issue_location_id,delivery_team_id from crm_case_section where id = %s ', (sr['sale_team_id'],))
                     data = cursor.fetchall()
                     if data:
                         vehcle_no = data[0][0]
@@ -1712,7 +1712,7 @@ class mobile_sale_order(osv.osv):
                         'issue_to':sr['issue_to'],
                         'company_id':sr['company_id'],
                         'branch_id':sr['branch_id'],
-                        'vehicle_no':vehcle_no,
+                        'vehicle_id':vehcle_no,
                         'from_location_id':from_location_id,
                         'to_location_id':to_location_id,
                         'sale_team_id':delivery_id,
@@ -1720,13 +1720,15 @@ class mobile_sale_order(osv.osv):
                     stock_id = stock_request_obj.create(cursor, user, mso_result, context=context)
                     
                     for srl in stock_line:
-                        
-                            cursor.execute('select uom_ratio from product_template a, product_product b where a.id = b.product_tmpl_id and b.id = %s ', (srl['product_id'],))
+                        if (sr['rfi_no']==srl['rfi_no']):
+                            cursor.execute('select a.uom_ratio,a.big_uom_id from product_template a, product_product b where a.id = b.product_tmpl_id and b.id = %s ', (srl['product_id'],))
                             data = cursor.fetchall()
                             if data:
                                 packing_unit = data[0][0]
+                                big_uom_id= data[0][1]
                             else:
                                 packing_unit = None
+                                big_uom_id=None
                                              
                             mso_line_res = {                                                            
                                   'line_id':stock_id,
@@ -1735,6 +1737,8 @@ class mobile_sale_order(osv.osv):
                                   'product_id':srl['product_id'],
                                   'product_uom':srl['product_uom'],
                                   'uom_ratio':packing_unit ,
+                                  'big_uom_id':big_uom_id,
+                                  'big_req_quantity':0,                                  
                             }
                             stock_request_line_obj.create(cursor, user, mso_line_res, context=context)
             print 'True'
@@ -1957,6 +1961,9 @@ class mobile_sale_order(osv.osv):
                 new_partner.append(r)  
             if new_partner:
                 for partner in new_partner:
+                    chiller=False;
+                    if 'chiller' in partner:
+                        chiller=partner['chiller']
                     partner_result = {                 
                         'country_id':partner['country_id'],                        
                         'state_id':partner['state_id'],
@@ -1981,7 +1988,7 @@ class mobile_sale_order(osv.osv):
                         'class_id':partner['class_id'],
                         'mobile_customer':True, 
                         'pricelist_id':partner['pricelist_id'],
-                        'chiller':partner['chiller'],
+                        'chiller':chiller,
                         'unit':partner['unit'],
                         'image':partner['image'],
                         'sales_channel':partner['sales_channel'],
