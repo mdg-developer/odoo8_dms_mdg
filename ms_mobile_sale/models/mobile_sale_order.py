@@ -119,10 +119,7 @@ class mobile_sale_order(osv.osv):
                         partner_id = data[0][0]
                     else:
                         partner_id = None 
-                    if so['outlet_type'] == 1:
-                        outlet_type=4;
-                    else:
-                        outlet_type=so['outlet_type']
+                   
                     mso_result = {
                         'customer_code':so['customer_code'],
                         'sale_plan_day_id':so['sale_plan_day_id'],
@@ -151,7 +148,7 @@ class mobile_sale_order(osv.osv):
                         'payment_term':so['payment_term'],
                         'mso_longitude':so['mso_longitude'],
                         'mso_latitude':so['mso_latitude'],
-                        'outlet_type':outlet_type,
+                        'outlet_type':so['outlet_type'],
                         'pricelist_id':so['pricelist_id'],
                         'branch_id':branch_id,
                     }

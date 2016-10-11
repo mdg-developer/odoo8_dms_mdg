@@ -488,8 +488,8 @@ class res_partner(osv.osv):
     def res_partners_team(self, cr, uid, section_id, context=None, **kwargs):
         cr.execute('''                    
                      
-    select A.id,A.name,A.image,A.is_company, A.image_small,A.street,A.street2,A.city,A.website,
-                     A.phone,A.township,A.mobile,A.email,A.company_id,A.customer, 
+    select A.id,A.name,A.image,A.is_company, A.image_small,replace(A.street,',',';') street,replace(A.street2,',',';') street2,A.city,A.website,
+                     replace(A.phone,',',';') phone,A.township,replace(A.mobile,',',';') mobile,A.email,A.company_id,A.customer, 
                      A.customer_code,A.mobile_customer,A.shop_name ,
                      A.address,
                      A.zip,A.state_name,A.partner_latitude,A.partner_longitude,null,A.image_medium,A.credit_limit,
@@ -520,8 +520,8 @@ class res_partner(osv.osv):
 # kzo Eidt
     def res_partners_return_day(self, cr, uid, section_id, day_id , context=None, **kwargs):
         cr.execute('''                    
-                     select A.id,A.name,A.image,A.is_company, A.image_small,A.street,A.street2,A.city,A.website,
-                     A.phone,A.township,A.mobile,A.email,A.company_id,A.customer, 
+                     select A.id,A.name,A.image,A.is_company, A.image_small,replace(A.street,',',';') street, replace(A.street2,',',';') street2,A.city,A.website,
+                     replace(A.phone,',',';') phone,A.township, replace(A.mobile,',',';') mobile,A.email,A.company_id,A.customer, 
                      A.customer_code,A.mobile_customer,A.shop_name ,
                      A.address,
                      A.zip,A.state_name,A.partner_latitude,A.partner_longitude,A.sale_plan_day_id,A.image_medium,A.credit_limit,
@@ -554,8 +554,8 @@ class res_partner(osv.osv):
     def res_partners_return_trip(self, cr, uid, section_id, day_id , context=None, **kwargs):
         cr.execute('''        
                     select A.id,A.name,A.image,A.is_company,
-                     A.image_small,A.street,A.street2,A.city,A.website,
-                     A.phone,A.township,A.mobile,A.email,A.company_id,A.customer, 
+                     A.image_small,replace(A.street,',',';') street,replace(A.street2,',',';') street2,A.city,A.website,
+                     replace(A.phone,',',';') phone,A.township,A.mobile,A.email,A.company_id,A.customer, 
                      A.customer_code,A.mobile_customer,A.shop_name ,
                      A.address,
                      A.zip,A.state_name,A.partner_latitude,A.partner_longitude,A.sale_plan_trip_id,A.image_medium,
