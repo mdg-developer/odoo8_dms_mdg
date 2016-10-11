@@ -1,84 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data>
-		<template id="report_invoice_document" inherit_id="account.report_invoice_document">
+		<template id="payment_report_document" >
 			<xpath expr="//t[@t-call='report.external_layout']" position="replace">
 
 				<t t-call="sale_management.invoice_custom_layout">
 					<div class="page" style="font-size:10pt;">
 						<div class="row" style="padding-top:-2s0pt;">
 							<center>
-							<span style="align:center;font-size:20pt;">INVOICE
+							<span style="align:center;font-size:20pt;">Payment Receipt
 								</span>
 							</center>
 							
 						</div>
 						<br></br>
 						<br></br>
-
-						<table class="table"
-							style='border:solid;border-color:white;margin-top:-20pt;'>
-							<tr style='border:solid;border-color:white;'>
-								<td>
-									<b>Customer Name</b>
-									<b>-</b>
-									<span t-field="o.partner_id.name" />
-								</td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td >
-									<b>Date</b>
-									<b>-</b>
-									<span t-field="o.date_invoice"/>
-								</td>
-							</tr>
-
-							<tr style='border:solid;border-color:white;'>
-								<td>
-									<b>Customer Code</b>
-									<b>-</b>
-									<span t-field="o.partner_id.customer_code" />
-								</td>
-								<td></td>
-								<td></td>
-								<td></td>
-								
-								<td >
-									<b>Invoice No</b>
-									<b>-</b>
-									<span t-field="o.internal_number"/>
-								</td>
-							</tr>
-							<tr style='border:solid;border-color:white;'>
-								<td>
-									<b>Address</b>
-									<b>-</b>
-									<span t-field="o.partner_id.street" />
-								</td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td>
-									<b>Deliver Form</b>
-									<b>-</b>
-									<span t-field="o.origin" />
-								</td>
-							</tr>
-						</table>
+						
+						<h2>
+			                <span t-if="o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')">Invoice</span>
+			                <span t-if="o.type == 'out_invoice' and o.state == 'proforma2'">PRO-FORMA</span>
+			                <span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
+			                <span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
+			                <span t-if="o.type == 'out_refund'">Refund</span>
+			                <span t-if="o.type == 'in_refund'">Supplier Refund</span>
+			                <span t-if="o.type == 'in_invoice'">Receipt For Invoice</span>
+			                <span t-field="o.number"/>
+			            </h2>
 
 						<table class="table table-condensed" style="border:1pt solid;">
-							<thead>
+							<thead >
 								<tr style="background-color:#0052cc;color:#ffffff;" height="10pt;">
-									<!-- <th class="text-center" style="border:1pt solid;border-color:black;">No
-									</th> -->
 									<th class="text-center" style="border:1pt solid;border-color:black;">Product
 									</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Unit Price</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Total Price</th>
-									<th style="border:1pt solid;border-color:black;" class="text-center"
-										groups="sale.group_discount_per_so_line">Disc.(%)</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Disc.(Amt)</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">FOC</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Amount Total</th>
@@ -105,10 +61,6 @@
 									<td class="text-right" style="border:1pt solid;border-color:black;">
 										<span t-field="l.net_total" />
 									</td>
-									<td class="text-right" groups="sale.group_discount_per_so_line"
-										style="border:1pt solid;border-color:black;">
-										<span t-field="l.discount" />
-									</td>
 									<td class="text-right" style="border:1pt solid;border-color:black;">
 										<span t-field="l.discount_amt" />
 									</td>
@@ -128,79 +80,44 @@
 								</tr>
 							</tbody>
 						</table>
-
-						<div class="row">
-							<div class="col-xs-8 pull-left" style="padding-top: 1cm;">
-								<t t-if="o.tax_line">
-									<table class="table table-condensed">
-										<thead>
-											<tr>
-												<th>Tax</th>
-												<th class="text-right">Base</th>
-												<th class="text-right">Amount</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr t-foreach="o.tax_line" t-as="t">
-												<td>
-													<span t-field="t.name" />
-												</td>
-												<td class="text-right">
-													<span t-field="t.base" />
-												</td>
-												<td class="text-right">
-													<span t-field="t.amount" />
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</t>
-							</div>
-							<div class="col-xs-4 pull-right">
-								<table class="table">
-									<tr>
-										<td style="border-top-color:white;padding-bottom: 2mm;">
-											Invoice Amount
-										</td>
-										<td class="text-right" style="border-top-color:white;padding-bottom: 2mm;">
-											<span t-field="o.amount_untaxed" />
-										</td>
-									</tr>
-									<tr class="border-black">
-										<td style="padding-top: 2mm;padding-bottom: 2mm;">
-											Total Discount
-										</td>
-										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
-											<span t-field="o.discount_total" />
-										</td>
-									</tr>
-									<tr class="border-black">
-										<td style="padding-top: 2mm;padding-bottom: 2mm;">
-											Deduction Amount
-										</td>
-										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
-											<span t-field="o.deduct_amt" />
-										</td>
-									</tr>
-									<tr class="border-black">
-										<td style="padding-top: 2mm;padding-bottom: 2mm;">
-											Opening Balance Payable
-										</td>
-										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
-											<span t-field="o.partner_id.credit" />
-										</td>
-									</tr> 
-									<tr class="border-black">
-										<td style="padding-top: 2mm;padding-bottom: 2mm;">
-											<strong>Total Amount</strong>
-										</td>
-										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
-											<span t-field="o.amount_total" />
-										</td>
-									</tr>
-								</table>
-							</div>
-						</div>
+						<!-- For Payments -->
+						<table class="table table-condensed" style="border:1pt solid;">
+							<thead >
+								<h5>Payments:</h5>
+								<tr style="background-color:#0052cc;color:#ffffff;" height="10pt;">
+									<th class="text-center" style="border:1pt solid;border-color:black;">Sr.No
+									</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Payment Date 
+									</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Payment Reference </th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Payment Journal </th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Debit</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Credit</th>
+								</tr>
+							</thead>
+							<tbody class="invoice_tbody">
+								<tr t-foreach="o.payment_ids" t-as="m">
+									<td style="border:1pt solid;border-color:black;" align="center">
+										<t t-esc="m_index+1" />
+									</td> 
+									<td style="border:1pt solid;border-color:black;">
+										<span t-field="m.date" />
+									</td>
+									<td style="border:1pt solid;border-color:black;">
+										<span t-field="m.ref" />
+									</td>
+									<td style="border:1pt solid;border-color:black;">
+										<span t-field="m.journal_id" />
+									</td>
+									<td style="border:1pt solid;border-color:black;">
+										<span t-field="m.debit" />
+									</td>
+									<td style="border:1pt solid;border-color:black;">
+										<span t-field="m.credit" />
+									</td>
+								</tr>
+							</tbody>
+						</table>
 
 						<div class="row" style="padding-top:-2s0pt;">
 							<div class="col-xs-3 pull-left">
@@ -276,6 +193,14 @@
 					</div>
 				</t>
 			</xpath>
+		</template>
+		
+		<template id="payment_report">
+		    <t t-call="report.html_container">
+		        <t t-foreach="doc_ids" t-as="doc_id">
+		            <t t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', 'sale_management.payment_report_document')"/>
+		        </t>
+		    </t>
 		</template>
 	</data>
 </openerp>
