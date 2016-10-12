@@ -18,7 +18,7 @@
 						<field name="state_id" class="oe_inline" widget="selection" groups="base.group_no_one"/>																																				
 						<field name="city" class="oe_inline" widget="selection" groups="base.group_no_one"/>
 						<field name="township" class="oe_inline" widget="selection" default_order="name desc" groups="base.group_no_one"/>
-						<field name="property_product_pricelist" class="oe_inline" widget="selection"/>
+						<field name="property_product_pricelist" class="oe_inline" widget="selection"  groups="base.group_no_one"/>
 <!-- 						<field name="demarcation_id" widget="selection"/> -->
 					</group>
 					<footer>

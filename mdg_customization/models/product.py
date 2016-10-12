@@ -33,6 +33,8 @@ product_pricelist()
 class product_pricelist_version(osv.osv):
     _inherit = 'product.pricelist.version'
     _columns = {
+          'branch_id': fields.related('pricelist_id','branch_id',type='many2one',
+            readonly=True, relation='res.branch', string='Branch', store=True),                         
                       'date_start': fields.date('Start Date', help="First valid date for the version.", required=True),
         'date_end': fields.date('End Date', help="Last valid date for the version.", required=True),
               }
@@ -45,6 +47,8 @@ class product_pricelist_version(osv.osv):
             for product in product_ids:
                 product_data=product_obj.browse(cr, uid, product, context=context)
                 uom_id=product_data.product_tmpl_id.uom_id and product_data.product_tmpl_id.uom_id.id or False,
+                big_uom_id=product_data.product_tmpl_id.big_uom_id and product_data.product_tmpl_id.big_uom_id.id or False,
+                big_price=product_data.big_list_price
                 price=product_data.list_price
                 name=product_data.product_tmpl_id.default_code
                 categ_id=product_data.product_tmpl_id.categ_id.id
@@ -57,7 +61,16 @@ class product_pricelist_version(osv.osv):
                                           'base':1,
                                           'categ_id':categ_id,
                                           'price_version_id':ids[0]}, context=context)
-                print 'item_id',item_id
+                item_2_id = item_obj.create(cr, uid, {
+                                                    'product_id':product_data.id,
+                                                    'name': name,
+                                                'new_price':big_price,
+                                          'list_price': big_price,
+                                          'product_uom_id':big_uom_id,
+                                          'base':1,
+                                          'categ_id':categ_id,
+                                          'price_version_id':ids[0]}, context=context)
+                print 'item_id',item_id ,item_2_id               
         return True
 class product_pricelist_item(osv.osv):
     _inherit = "product.pricelist.item"
@@ -66,8 +79,8 @@ class product_pricelist_item(osv.osv):
         'list_price': fields.float('Basic Price', digits_compute=dp.get_precision('Product Price'),readonly=True),
         'new_price': fields.float('New Price',
             digits_compute=dp.get_precision('New Price')),
+        'price_discount': fields.float('Price Discount',digits_compute=dp.get_precision('Product Price')),
                 }
-
     def product_id_change(self, cr, uid, ids, product_id, context=None):
         if not product_id:
             return {}

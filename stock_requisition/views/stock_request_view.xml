@@ -12,7 +12,7 @@
 				<form string="Fine Sheet">
 					<header>
 						<button name="approve" string="Request" class="oe_highlight"
-							type="object" states="draft" groups="stock.group_stock_manager" />
+							type="object" states="draft" groups="base.group_sale_supervisor,base.group_sale_manager,base.group_sale_admin,base.group_no_one" />
 						<field name="state" widget="statusbar" />
 					</header>
 					<sheet>
@@ -89,7 +89,7 @@
 		</record>
 
 		<!-- ============================== Content Tree ============================== -->
-	<record id="stock_requisition_tree" model="ir.ui.view">
+		<record id="stock_requisition_tree" model="ir.ui.view">
 			<field name="name">stock_requisition_tree</field>
 			<field name="model">stock.requisition</field>
 			<field name="arch" type="xml">

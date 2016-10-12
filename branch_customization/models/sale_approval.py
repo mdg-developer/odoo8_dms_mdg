@@ -1,4 +1,5 @@
 from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 class sales_approval(osv.osv):
     _inherit = "sales.approval"
@@ -11,7 +12,7 @@ class sales_approval(osv.osv):
         
     _columns = {
                 
-               'branch_id':fields.many2one('res.branch', 'Branch'),
+               'branch_id':fields.many2one('res.branch', 'Branch',required=True),
                }
     _defaults = {
         'branch_id': _get_default_branch,

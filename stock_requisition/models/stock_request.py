@@ -64,6 +64,7 @@ class stock_requisition(osv.osv):
                                     'big_req_quantity':req_quantity,
                                               })
             for line in order_ids:
+                print 'lineeeeeeeeeeeeeeeeeeeeee',line
                 order = sale_order_obj.browse(cr, uid, line, context=context)
                 order_line.append({
                                     'name':order.name,
@@ -185,6 +186,7 @@ class stock_requisition(osv.osv):
             from_location_id = req_value.from_location_id.id
             vehicle_no = req_value.vehicle_id.id
             sale_team_id = req_value.sale_team_id.id
+            branch_id=req_value.branch_id.id
             for order in req_value.order_line:
                 so_name=order.name
                 order_id= sale_order_obj.search(cr, uid, [('name', '=', so_name)], context=context) 
@@ -195,7 +197,8 @@ class stock_requisition(osv.osv):
                                           'issue_date': issue_date,
                                           'request_id':request_id,
                                           'to_location_id':to_location_id,
-                                          'from_location_id':from_location_id}, context=context)
+                                          'from_location_id':from_location_id,
+                                          'branch_id':branch_id}, context=context)
             req_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
             if good_id and req_line_id:
                 
@@ -216,7 +219,7 @@ class stock_requisition(osv.osv):
                                               'issue_quantity':quantity,
                                               'big_issue_quantity':big_req_quantity}, context=context)
                     
-        return self.write(cr, uid, ids, {'state':'approve' ,'request_by':uid})    
+        return self.write(cr, uid, ids, {'state':'approve' ,'approve_by':uid})    
 
             
 class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line

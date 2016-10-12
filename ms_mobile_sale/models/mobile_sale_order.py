@@ -118,16 +118,8 @@ class mobile_sale_order(osv.osv):
                     if data:
                         partner_id = data[0][0]
                     else:
-                        partner_id = None
-                    
-                    cursor.execute('select id From outlettype_outlettype where name  = %s ', (so['outlet_type'],))
-                    data = cursor.fetchall()
-                    print 'outlet type data', data
-                    if data:
-                        outlet_type = data[0][0]
-                    else:
-                        outlet_type = None
-
+                        partner_id = None 
+ 
                     mso_result = {
                         'customer_code':so['customer_code'],
                         'sale_plan_day_id':so['sale_plan_day_id'],
@@ -156,7 +148,7 @@ class mobile_sale_order(osv.osv):
                         'payment_term':so['payment_term'],
                         'mso_longitude':so['mso_longitude'],
                         'mso_latitude':so['mso_latitude'],
-                        'outlet_type':outlet_type,
+                        'outlet_type':so['outlet_type'] ,
                         'pricelist_id':so['pricelist_id'],
                         'branch_id':branch_id,
                     }
@@ -247,10 +239,13 @@ class mobile_sale_order(osv.osv):
                     
                     for ptl in product_trans_line:
                         if ptl['transaction_id'] == pt['transaction_id']:
+                                cursor.execute('select uom_id from product_product pp,product_template pt where pp.product_tmpl_id=pt.id and pp.id=%s',(ptl['product_id'], ))
+                                uom_id=cursor.fetchone()[0]
                                 mso_line_res = {                                                            
                                   'transaction_id':s_order_id,
                                   'product_id':ptl['product_id'],
                                   'product_qty':ptl['product_qty'],
+                                  'uom_id':uom_id,
                                   'so_No':ptl['so_No'],
                                   'trans_type':ptl['trans_type'],
                                   'transaction_name':ptl['transaction_name'],
@@ -259,7 +254,7 @@ class mobile_sale_order(osv.osv):
                                   'batchno':ptl['batchno'],
                                 }
                                 product_trans_line_obj.create(cursor, user, mso_line_res, context=context)
-            print 'True'
+            print 'Truwwwwwwwwwwwwwwwwwwwwwe'
             return True       
         except Exception, e:
             print 'False'
@@ -285,8 +280,11 @@ class mobile_sale_order(osv.osv):
                 customer_visit.append(r)  
             if customer_visit:
                 for vs in customer_visit:
+                    cursor.execute('select branch_id from crm_case_section where id=%s',(vs['sale_team_id'],))
+                    branch_id=cursor.fetchone()[0]
                     visit_result = {
                         'customer_code':vs['customer_code'],
+                        'branch_id':branch_id,
                         'customer_id':vs['customer_id'],
                         'sale_plan_day_id':vs['sale_plan_day_id'],
                         'sale_plan_trip_id':vs['sale_plan_trip_id'] ,
@@ -777,6 +775,12 @@ class mobile_sale_order(osv.osv):
     # get promotion datas from database
     
     def get_promos_datas(self, cr, uid , branch_id, state, context=None, **kwargs):
+   
+        if state=='approve':
+            status = 'approve'
+        else:
+            status ='approve','draft'
+            
         cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,
                         logic ,expected_logic_result ,special, special1, special2, special3 ,description
                         from promos_rules pr ,promos_rules_res_branch_rel pro_br_rel
@@ -785,7 +789,7 @@ class mobile_sale_order(osv.osv):
                         and pro_br_rel.res_branch_id = %s
                         and pr.state in (%s) 
                         and  now()::date  between from_date::date and to_date::date
-                        ''', (branch_id, state,))
+                        ''', (branch_id, status,))
         datas = cr.fetchall()        
         return datas
     
@@ -873,10 +877,9 @@ class mobile_sale_order(osv.osv):
         return datas
     
     def get_pricelist_version_datas(self, cr, uid, pricelist_id, context=None, **kwargs):
-        cr.execute('''
-         select pv.id,date_end,date_start,pv.active,pv.name,pv.pricelist_id 
+        cr.execute('''select pv.id,date_end,date_start,pv.active,pv.name,pv.pricelist_id 
                         from product_pricelist_version pv, product_pricelist pp where pv.pricelist_id = pp.id                                                                        
-                      and current_date between date_start and date_end and pv.active=true  and pv.pricelist_id = %s''', (pricelist_id,))
+                        and pv.pricelist_id = %s''', (pricelist_id,))
         datas = cr.fetchall()
         return datas
     
@@ -1379,7 +1382,7 @@ class mobile_sale_order(osv.osv):
         
         sale_order_obj = self.pool.get('sale.order')
         list_val = None
-        list_val = sale_order_obj.search(cr, uid, [('pre_order', '=', True), ('delivery_id', '=', saleTeamId), ('shipped', '=', False), ('invoiced', '=', False) , ('tb_ref_no', 'not in', soList)], context=context)
+        list_val = sale_order_obj.search(cr, uid, [('pre_order', '=', True),('is_generate', '=', True), ('delivery_id', '=', saleTeamId), ('shipped', '=', False), ('invoiced', '=', False) , ('tb_ref_no', 'not in', soList)], context=context)
         print 'list_val', list_val
         list = []
         try:
@@ -1451,7 +1454,17 @@ class mobile_sale_order(osv.osv):
                     if So_id:
                         solist = So_id       
                         journal_id = deli['journal_id']
-                        branch_id=deli['branch_id']
+                        cr.execute('select branch_id,section_id from sale_order where tb_ref_no=%s',(deli['so_refNo'],))
+                        data=cr.fetchone()
+                        if data:
+                            branch_id=data[0]
+                            section_id=data[1]
+                        cr.execute('select delivery_team_id from crm_case_section where id=%s',(section_id,))
+                        delivery=cr.fetchone()
+                        if delivery:
+                            delivery_team_id=delivery[0]
+                        else:
+                            delivery_team_id=None
                         #soObj.action_button_confirm(cr, uid, solist, context=context)
                         
                         # For DO
@@ -1476,7 +1489,7 @@ class mobile_sale_order(osv.osv):
                         # Create Invoice
                         print 'Context', context
                         invoice_id = self.create_invoices(cr, uid, solist, context=context)
-                        cr.execute('update account_invoice set branch_id =%s where id =%s',(branch_id.id,invoice_id,))                            
+                        cr.execute('update account_invoice set branch_id =%s ,payment_type=%s,section_id=%s,user_id=%s where id =%s',(branch_id,deli['payment_type'],delivery_team_id,uid,invoice_id,))                            
                         
                         invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                         if invoice_id:
@@ -1698,7 +1711,7 @@ class mobile_sale_order(osv.osv):
             
             if stock:
                 for sr in stock:                                    
-                    cursor.execute('select van_id,location_id,issue_location_id,delivery_team_id from crm_case_section where id = %s ', (sr['sale_team_id'],))
+                    cursor.execute('select vehicle_id,location_id,issue_location_id,delivery_team_id from crm_case_section where id = %s ', (sr['sale_team_id'],))
                     data = cursor.fetchall()
                     if data:
                         vehcle_no = data[0][0]
@@ -1719,7 +1732,7 @@ class mobile_sale_order(osv.osv):
                         'issue_to':sr['issue_to'],
                         'company_id':sr['company_id'],
                         'branch_id':sr['branch_id'],
-                        'vehicle_no':vehcle_no,
+                        'vehicle_id':vehcle_no,
                         'from_location_id':from_location_id,
                         'to_location_id':to_location_id,
                         'sale_team_id':delivery_id,
@@ -1727,21 +1740,37 @@ class mobile_sale_order(osv.osv):
                     stock_id = stock_request_obj.create(cursor, user, mso_result, context=context)
                     
                     for srl in stock_line:
-                        
-                            cursor.execute('select uom_ratio from product_template a, product_product b where a.id = b.product_tmpl_id and b.id = %s ', (srl['product_id'],))
+                        if (sr['rfi_no']==srl['rfi_no']):
+                            cursor.execute('select a.uom_ratio,a.big_uom_id from product_template a, product_product b where a.id = b.product_tmpl_id and b.id = %s ', (srl['product_id'],))
                             data = cursor.fetchall()
                             if data:
                                 packing_unit = data[0][0]
+                                big_uom_id= data[0][1]
                             else:
                                 packing_unit = None
-                                             
+                                big_uom_id=None
+                            req_quantity=int(srl['req_quantity'])
+                            #print 'product_idddddddddddd',req_quantity
+                            cursor.execute("select floor(1/factor) as ratio from product_uom where active = true and id=%s",(big_uom_id,))
+                            bigger_qty=cursor.fetchone()[0]
+                            bigger_qty=int(bigger_qty)
+                            #print ' bigger_qty',sale_qty,bigger_qty,type(sale_qty),type(bigger_qty)                        
+                            big_uom_qty=divmod(req_quantity,bigger_qty)
+                            #print 'big_uom_qty',big_uom_qty
+                            if  big_uom_qty:
+                                big_req_quantity=big_uom_qty[0]
+                                req_quantity=big_uom_qty[1]
+                                #print 'big_req',big_req_quantity,req_quantity
+                                                
                             mso_line_res = {                                                            
                                   'line_id':stock_id,
                                   'remark':srl['remark'],
-                                  'req_quantity':srl['req_quantity'],
+                                  'req_quantity':req_quantity,
                                   'product_id':srl['product_id'],
                                   'product_uom':srl['product_uom'],
                                   'uom_ratio':packing_unit ,
+                                  'big_uom_id':big_uom_id,
+                                  'big_req_quantity':big_req_quantity,                                  
                             }
                             stock_request_line_obj.create(cursor, user, mso_line_res, context=context)
             print 'True'
@@ -1964,11 +1993,9 @@ class mobile_sale_order(osv.osv):
                 new_partner.append(r)  
             if new_partner:
                 for partner in new_partner:
-                    chiller= False;
+                    chiller=False;
                     if 'chiller' in partner:
-                        chiller = partner['chiller']
-                   
-                        
+                        chiller=partner['chiller']
                     partner_result = {                 
                         'country_id':partner['country_id'],                        
                         'state_id':partner['state_id'],

@@ -31,7 +31,7 @@ MDG Customization
 """,
     'author': 'Seventh Computing',
     'website': 'http://www.7thcomputing.com',
-    'depends': ['base', 'product'  , 'stock', 'product_pricelists'],
+    'depends': ['base', 'product' , 'stock', 'product_pricelists'],
     'data': [        
              'views/product_view.xml',
              'views/location_view.xml',

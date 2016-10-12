@@ -34,6 +34,8 @@ class customer_visit(osv.osv):
                 'other_reason':fields.text('Remark'),
         'm_status':fields.selection([('pending', 'Pending'), ('approved', 'Approved'),
                                                       ('reject', 'Reject')], string='Status'),
+   'branch_id': fields.many2one('res.branch', 'Branch',required=True),
+                
     }
     _defaults = {        
         'm_status' : 'pending',
