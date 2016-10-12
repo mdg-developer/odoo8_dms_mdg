@@ -873,9 +873,10 @@ class mobile_sale_order(osv.osv):
         return datas
     
     def get_pricelist_version_datas(self, cr, uid, pricelist_id, context=None, **kwargs):
-        cr.execute('''select pv.id,date_end,date_start,pv.active,pv.name,pv.pricelist_id 
+        cr.execute('''
+         select pv.id,date_end,date_start,pv.active,pv.name,pv.pricelist_id 
                         from product_pricelist_version pv, product_pricelist pp where pv.pricelist_id = pp.id                                                                        
-                        and pv.pricelist_id = %s''', (pricelist_id,))
+                      and current_date between date_start and date_end and pv.active=true  and pv.pricelist_id = %s''', (pricelist_id,))
         datas = cr.fetchall()
         return datas
     
@@ -1963,6 +1964,11 @@ class mobile_sale_order(osv.osv):
                 new_partner.append(r)  
             if new_partner:
                 for partner in new_partner:
+                    chiller= False;
+                    if 'chiller' in partner:
+                        chiller = partner['chiller']
+                   
+                        
                     partner_result = {                 
                         'country_id':partner['country_id'],                        
                         'state_id':partner['state_id'],
@@ -1987,7 +1993,7 @@ class mobile_sale_order(osv.osv):
                         'class_id':partner['class_id'],
                         'mobile_customer':True, 
                         'pricelist_id':partner['pricelist_id'],
-                        'chiller':partner['chiller'],
+                        'chiller':chiller,
                         'unit':partner['unit'],
                         'image':partner['image'],
                         'sales_channel':partner['sales_channel'],

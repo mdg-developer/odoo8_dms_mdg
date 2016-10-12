@@ -85,7 +85,7 @@ class pre_sale_order(osv.osv):
             if sale_order:
                 for so in sale_order:
                     print 'Sale Man Id', so['user_id']
-                    cursor.execute('select id,branch_id From res_users where partner_id  = %s ', (so['user_id'],))
+                    cursor.execute('select id,branch_id From res_users where id  = %s ', (so['user_id'],))
                     data = cursor.fetchall()
                     
                     if data:
