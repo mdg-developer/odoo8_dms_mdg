@@ -775,6 +775,12 @@ class mobile_sale_order(osv.osv):
     # get promotion datas from database
     
     def get_promos_datas(self, cr, uid , branch_id, state, context=None, **kwargs):
+   
+        if state=='approve':
+            status = 'approve'
+        else:
+            status ='approve','draft'
+            
         cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,
                         logic ,expected_logic_result ,special, special1, special2, special3 ,description
                         from promos_rules pr ,promos_rules_res_branch_rel pro_br_rel
@@ -783,7 +789,7 @@ class mobile_sale_order(osv.osv):
                         and pro_br_rel.res_branch_id = %s
                         and pr.state in (%s) 
                         and  now()::date  between from_date::date and to_date::date
-                        ''', (branch_id, state,))
+                        ''', (branch_id, status,))
         datas = cr.fetchall()        
         return datas
     
