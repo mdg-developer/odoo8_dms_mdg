@@ -20,6 +20,8 @@
 
 from openerp.osv import fields, osv
 from mako.runtime import _inherit_from
+import math
+from openerp.tools import amount_to_text_en, float_round
 
 class account_invoice(osv.osv):
     _inherit = 'account.invoice'
@@ -34,7 +36,12 @@ class account_invoice(osv.osv):
                 order_id = data[0]
             print 'order_id >>> ', order_id
             result[rec.id] = order_id
-        return result    
+        return result
+    
+    def convert(self, amount, currency=False):
+        check_amount_in_words = amount_to_text_en.amount_to_text(math.floor(amount), lang='en', currency='')
+        return check_amount_in_words
+    
     _columns = {
               'sale_order_id':fields.function(_get_corresponding_sale_order, type='many2one', relation='sale.order', string='Sale Order'),
               }

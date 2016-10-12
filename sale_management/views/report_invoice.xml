@@ -20,7 +20,7 @@
 							style='border:solid;border-color:white;margin-top:-20pt;'>
 							<tr style='border:solid;border-color:white;'>
 								<td>
-									<b>Customer Name</b>
+									<b>၀ယ္သူအမည္</b>
 									<b>-</b>
 									<span t-field="o.partner_id.name" />
 								</td>
@@ -36,7 +36,7 @@
 
 							<tr style='border:solid;border-color:white;'>
 								<td>
-									<b>Customer Code</b>
+									<b>၀ယ္သူနံပါတ္</b>
 									<b>-</b>
 									<span t-field="o.partner_id.customer_code" />
 								</td>
@@ -52,9 +52,21 @@
 							</tr>
 							<tr style='border:solid;border-color:white;'>
 								<td>
-									<b>Address</b>
+									<b>လိပ္ စာ </b>
 									<b>-</b>
 									<span t-field="o.partner_id.street" />
+								</td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td>
+									<b>Sale Order No.</b>
+									<b>-</b>
+									<span t-field="o.reference" />
+								</td>
+							</tr>
+							<tr style='border:solid;border-color:white;'>
+								<td>
 								</td>
 								<td></td>
 								<td></td>
@@ -70,30 +82,23 @@
 						<table class="table table-condensed" style="border:1pt solid;">
 							<thead>
 								<tr style="background-color:#0052cc;color:#ffffff;" height="10pt;">
-									<!-- <th class="text-center" style="border:1pt solid;border-color:black;">No
-									</th> -->
-									<th class="text-center" style="border:1pt solid;border-color:black;">Product
+									<th class="text-center" style="border:1pt solid;border-color:black;">စဥ္
 									</th>
-									<th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th>
-									<th class="text-center" style="border:1pt solid;border-color:black;">Unit Price</th>
-									<th class="text-center" style="border:1pt solid;border-color:black;">Total Price</th>
-									<th style="border:1pt solid;border-color:black;" class="text-center"
-										groups="sale.group_discount_per_so_line">Disc.(%)</th>
-									<th class="text-center" style="border:1pt solid;border-color:black;">Disc.(Amt)</th>
-									<th class="text-center" style="border:1pt solid;border-color:black;">FOC</th>
-									<th class="text-center" style="border:1pt solid;border-color:black;">Amount Total</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">အမ်ိဳးအမည္
+									</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">အေရအတြက္</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">ႏႈန္း</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">ေလ်ာ.ေငြ</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">သင္ .ေငြ</th>
 								</tr>
 							</thead>
 							<tbody class="invoice_tbody">
 								<tr t-foreach="o.invoice_line" t-as="l">
-									<!-- <td style="border:1pt solid;border-color:black;" align="center">
+									<td style="border:1pt solid;border-color:black;" align="center">
 										<t t-esc="l_index+1" />
-									</td> -->
+									</td> 
 									<td style="border:1pt solid;border-color:black;">
 										<span t-field="l.product_id.name" />
-										<t t-if="l.foc==True">
-											(FOC)
-										</t>
 									</td>
 									<td style="border:1pt solid;border-color:black;" align="right">
 										<span t-field="l.quantity" />
@@ -103,27 +108,10 @@
 										<span t-field="l.price_unit" />
 									</td>
 									<td class="text-right" style="border:1pt solid;border-color:black;">
-										<span t-field="l.net_total" />
-									</td>
-									<td class="text-right" groups="sale.group_discount_per_so_line"
-										style="border:1pt solid;border-color:black;">
-										<span t-field="l.discount" />
-									</td>
-									<td class="text-right" style="border:1pt solid;border-color:black;">
 										<span t-field="l.discount_amt" />
 									</td>
-									<td class="text-center" style="border:1pt solid;border-color:black;">
-										<t t-if="l.foc==True">
-											&#10003; </t>
-									</td>
 									<td class="text-right" style="border:1pt solid;border-color:black;">
-										<t t-if="l.foc==True">
-											0.00
-										</t>
-
-										<t t-if="l.foc==False">
-											<span t-field="l.price_subtotal" />
-										</t>
+										<span t-field="l.net_total" />
 									</td>
 								</tr>
 							</tbody>
@@ -156,11 +144,12 @@
 									</table>
 								</t>
 							</div>
-							<div class="col-xs-4 pull-right">
+							
+							<div class="col-xs-5 pull-right">
 								<table class="table">
 									<tr>
 										<td style="border-top-color:white;padding-bottom: 2mm;">
-											Invoice Amount
+											သင္ .ေငြ
 										</td>
 										<td class="text-right" style="border-top-color:white;padding-bottom: 2mm;">
 											<span t-field="o.amount_untaxed" />
@@ -168,54 +157,75 @@
 									</tr>
 									<tr class="border-black">
 										<td style="padding-top: 2mm;padding-bottom: 2mm;">
-											Total Discount
+											စာရင္းဖြင္.ေပးရန္က်န္ေငြ
 										</td>
 										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
-											<span t-field="o.discount_total" />
-										</td>
-									</tr>
-									<tr class="border-black">
-										<td style="padding-top: 2mm;padding-bottom: 2mm;">
-											Deduction Amount
-										</td>
-										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
-											<span t-field="o.deduct_amt" />
-										</td>
-									</tr>
-									<tr class="border-black">
-										<td style="padding-top: 2mm;padding-bottom: 2mm;">
-											Opening Balance Payable
-										</td>
-										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
-											<span t-field="o.partner_id.credit" />
+											<span t-field="o.residual" />
 										</td>
 									</tr> 
 									<tr class="border-black">
 										<td style="padding-top: 2mm;padding-bottom: 2mm;">
-											<strong>Total Amount</strong>
+											စုစုေပါင္း၀ယ္ယူေငြ
 										</td>
 										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
-											<span t-field="o.amount_total" />
+											<!-- <span t-field="o.amount_total" /> -->
+											<t t-set="total" t-value="(o.amount_untaxed)+(o.residual)"/>
+											<t t-esc="total"/>
 										</td>
 									</tr>
+									<tr class="border-black">
+										<td style="padding-top: 2mm;padding-bottom: 2mm;">
+											<strong>ေပးေခ်ေငြ
+											</strong>								
+										</td>
+										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
+											<span t-field="o.payment_ids.debit" />
+										</td>
+									</tr> 
+									<tr class="border-black">
+										<td style="padding-top: 2mm;padding-bottom: 2mm;">
+											အေရာင္းေကာ္မရွင္ေပးေငြ
+										</td>
+										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
+											<span t-field="o.deduct_amt" />
+										</td>
+									</tr> 
+									<tr class="border-black">
+										<td style="padding-top: 2mm;padding-bottom: 2mm;">
+											စုစုေပါင္းေပးရန္က်န္ေငြ
+										</td>
+										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
+											<t t-set="foo" t-value="((total)-(o.payment_ids.debit))-(o.deduct_amt)"/>
+											<t t-esc="foo"/>
+										</td>
+									</tr> 
 								</table>
 							</div>
 						</div>
-
+						
+						<!-- In Words -->
+								<p style="font-size:11pt;">
+					                <strong>In Words: (</strong>                
+					                <span t-esc="o.convert(o.payment_ids.debit)"/> 
+					                <strong> Kyats Exactly )</strong>
+					                <strong> received.</strong>
+					            </p>
+						<br></br>
+						<br></br>
 						<div class="row" style="padding-top:-2s0pt;">
 							<div class="col-xs-3 pull-left">
 								<table class="table" style='border:solid;border-color:white;'>
 									<tr style='border:solid;border-color:white;'>
 										<td style="margin-top:-10pt;" align="center">
 											<span>
-												Cash Paid By
+												------------------
 											</span>
 										</td>
 									</tr>
 									<tr style='border:solid;border-color:white;'>
 										<td style="margin-top:-10pt;" align="center">
 											<span>
-												(Customer Name)
+												(၀ယ္ယူသူ)
 											</span>
 										</td>
 									</tr>
@@ -227,14 +237,14 @@
 									<tr style='border:solid;border-color:white;'>
 										<td style="margin-top:-10pt;" align="center">
 											<span>
-												Cash Received By
+												------------------
 											</span>
 										</td>
 									</tr>
 									<tr style='border:solid;border-color:white;'>
 										<td style="margin-top:-10pt;" align="center">
 											<span>
-												(Salesman Name)
+												(အေရာင္းတာ၀န္ခံ)
 											</span>
 										</td>
 									</tr>
@@ -262,7 +272,7 @@
 											Line
 											:
 											01 685804,
-											info@ahmayhtwar.com
+											ahmayhtwar.ygn@gmail.com
 										</td>
 									</tr>
 									<tr>
