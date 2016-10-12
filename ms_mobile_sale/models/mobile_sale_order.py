@@ -1376,7 +1376,7 @@ class mobile_sale_order(osv.osv):
         
         sale_order_obj = self.pool.get('sale.order')
         list_val = None
-        list_val = sale_order_obj.search(cr, uid, [('pre_order', '=', True), ('delivery_id', '=', saleTeamId), ('shipped', '=', False), ('invoiced', '=', False) , ('tb_ref_no', 'not in', soList)], context=context)
+        list_val = sale_order_obj.search(cr, uid, [('pre_order', '=', True),('is_generate', '=', True), ('delivery_id', '=', saleTeamId), ('shipped', '=', False), ('invoiced', '=', False) , ('tb_ref_no', 'not in', soList)], context=context)
         print 'list_val', list_val
         list = []
         try:
@@ -1448,9 +1448,17 @@ class mobile_sale_order(osv.osv):
                     if So_id:
                         solist = So_id       
                         journal_id = deli['journal_id']
-                        cr.execute('select branch_id from sale_order where tb_ref_no=%s',(deli['so_refNo'],))
-                        branch_id=cr.fetchone()[0]
-                        
+                        cr.execute('select branch_id,section_id from sale_order where tb_ref_no=%s',(deli['so_refNo'],))
+                        data=cr.fetchone()
+                        if data:
+                            branch_id=data[0]
+                            section_id=data[1]
+                        cr.execute('select delivery_team_id from crm_case_section where id=%s',(section_id,))
+                        delivery=cr.fetchone()
+                        if delivery:
+                            delivery_team_id=delivery[0]
+                        else:
+                            delivery_team_id=None
                         #soObj.action_button_confirm(cr, uid, solist, context=context)
                         
                         # For DO
@@ -1475,7 +1483,7 @@ class mobile_sale_order(osv.osv):
                         # Create Invoice
                         print 'Context', context
                         invoice_id = self.create_invoices(cr, uid, solist, context=context)
-                        cr.execute('update account_invoice set branch_id =%s ,payment_type=%s where id =%s',(branch_id,deli['payment_type'],invoice_id,))                            
+                        cr.execute('update account_invoice set branch_id =%s ,payment_type=%s,section_id=%s,user_id=%s where id =%s',(branch_id,deli['payment_type'],delivery_team_id,uid,invoice_id,))                            
                         
                         invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                         if invoice_id:
