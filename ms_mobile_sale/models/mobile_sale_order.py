@@ -119,7 +119,7 @@ class mobile_sale_order(osv.osv):
                         partner_id = data[0][0]
                     else:
                         partner_id = None 
-                   
+ 
                     mso_result = {
                         'customer_code':so['customer_code'],
                         'sale_plan_day_id':so['sale_plan_day_id'],
@@ -148,7 +148,7 @@ class mobile_sale_order(osv.osv):
                         'payment_term':so['payment_term'],
                         'mso_longitude':so['mso_longitude'],
                         'mso_latitude':so['mso_latitude'],
-                        'outlet_type':so['outlet_type'],
+                        'outlet_type':so['outlet_type'] ,
                         'pricelist_id':so['pricelist_id'],
                         'branch_id':branch_id,
                     }
@@ -239,10 +239,13 @@ class mobile_sale_order(osv.osv):
                     
                     for ptl in product_trans_line:
                         if ptl['transaction_id'] == pt['transaction_id']:
+                                cursor.execute('select uom_id from product_product pp,product_template pt where pp.product_tmpl_id=pt.id and pp.id=%s',(ptl['product_id'], ))
+                                uom_id=cursor.fetchone()[0]
                                 mso_line_res = {                                                            
                                   'transaction_id':s_order_id,
                                   'product_id':ptl['product_id'],
                                   'product_qty':ptl['product_qty'],
+                                  'uom_id':uom_id,
                                   'so_No':ptl['so_No'],
                                   'trans_type':ptl['trans_type'],
                                   'transaction_name':ptl['transaction_name'],
@@ -251,7 +254,7 @@ class mobile_sale_order(osv.osv):
                                   'batchno':ptl['batchno'],
                                 }
                                 product_trans_line_obj.create(cursor, user, mso_line_res, context=context)
-            print 'True'
+            print 'Truwwwwwwwwwwwwwwwwwwwwwe'
             return True       
         except Exception, e:
             print 'False'
@@ -277,8 +280,11 @@ class mobile_sale_order(osv.osv):
                 customer_visit.append(r)  
             if customer_visit:
                 for vs in customer_visit:
+                    cursor.execute('select branch_id from crm_case_section where id=%s',(vs['sale_team_id'],))
+                    branch_id=cursor.fetchone()[0]
                     visit_result = {
                         'customer_code':vs['customer_code'],
+                        'branch_id':branch_id,
                         'customer_id':vs['customer_id'],
                         'sale_plan_day_id':vs['sale_plan_day_id'],
                         'sale_plan_trip_id':vs['sale_plan_trip_id'] ,
@@ -1729,16 +1735,28 @@ class mobile_sale_order(osv.osv):
                             else:
                                 packing_unit = None
                                 big_uom_id=None
-                                             
+                            req_quantity=int(srl['req_quantity'])
+                            #print 'product_idddddddddddd',req_quantity
+                            cursor.execute("select floor(1/factor) as ratio from product_uom where active = true and id=%s",(big_uom_id,))
+                            bigger_qty=cursor.fetchone()[0]
+                            bigger_qty=int(bigger_qty)
+                            #print ' bigger_qty',sale_qty,bigger_qty,type(sale_qty),type(bigger_qty)                        
+                            big_uom_qty=divmod(req_quantity,bigger_qty)
+                            #print 'big_uom_qty',big_uom_qty
+                            if  big_uom_qty:
+                                big_req_quantity=big_uom_qty[0]
+                                req_quantity=big_uom_qty[1]
+                                #print 'big_req',big_req_quantity,req_quantity
+                                                
                             mso_line_res = {                                                            
                                   'line_id':stock_id,
                                   'remark':srl['remark'],
-                                  'req_quantity':srl['req_quantity'],
+                                  'req_quantity':req_quantity,
                                   'product_id':srl['product_id'],
                                   'product_uom':srl['product_uom'],
                                   'uom_ratio':packing_unit ,
                                   'big_uom_id':big_uom_id,
-                                  'big_req_quantity':0,                                  
+                                  'big_req_quantity':big_req_quantity,                                  
                             }
                             stock_request_line_obj.create(cursor, user, mso_line_res, context=context)
             print 'True'
