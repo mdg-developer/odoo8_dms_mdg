@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<template id="payment_report_document" >
+			<xpath expr="//t[@t-call='report.external_layout']" position="replace">
+
+				<t t-call="sale_management.invoice_custom_layout">
+					<div class="page" style="font-size:10pt;">
+						<div class="row" style="padding-top:-2s0pt;">
+							<center>
+							<span style="align:center;font-size:20pt;">Payment Receipt
+								</span>
+							</center>
+							
+						</div>
+						<br></br>
+						<br></br>
+						
+						<h2>
+			                <span t-if="o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')">Invoice</span>
+			                <span t-if="o.type == 'out_invoice' and o.state == 'proforma2'">PRO-FORMA</span>
+			                <span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
+			                <span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
+			                <span t-if="o.type == 'out_refund'">Refund</span>
+			                <span t-if="o.type == 'in_refund'">Supplier Refund</span>
+			                <span t-if="o.type == 'in_invoice'">Receipt For Invoice</span>
+			                <span t-field="o.number"/>
+			            </h2>
+
+						<table class="table table-condensed" style="border:1pt solid;">
+							<thead >
+								<tr style="background-color:#0052cc;color:#ffffff;" height="10pt;">
+									<th class="text-center" style="border:1pt solid;border-color:black;">Product
+									</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Unit Price</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Total Price</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Disc.(Amt)</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">FOC</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Amount Total</th>
+								</tr>
+							</thead>
+							<tbody class="invoice_tbody">
+								<tr t-foreach="o.invoice_line" t-as="l">
+									<!-- <td style="border:1pt solid;border-color:black;" align="center">
+										<t t-esc="l_index+1" />
+									</td> -->
+									<td style="border:1pt solid;border-color:black;">
+										<span t-field="l.product_id.name" />
+										<t t-if="l.foc==True">
+											(FOC)
+										</t>
+									</td>
+									<td style="border:1pt solid;border-color:black;" align="right">
+										<span t-field="l.quantity" />
+										<!-- <span t-field="l.uos_id" groups="product.group_uom" /> -->
+									</td>
+									<td class="text-right" style="border:1pt solid;border-color:black;">
+										<span t-field="l.price_unit" />
+									</td>
+									<td class="text-right" style="border:1pt solid;border-color:black;">
+										<span t-field="l.net_total" />
+									</td>
+									<td class="text-right" style="border:1pt solid;border-color:black;">
+										<span t-field="l.discount_amt" />
+									</td>
+									<td class="text-center" style="border:1pt solid;border-color:black;">
+										<t t-if="l.foc==True">
+											&#10003; </t>
+									</td>
+									<td class="text-right" style="border:1pt solid;border-color:black;">
+										<t t-if="l.foc==True">
+											0.00
+										</t>
+
+										<t t-if="l.foc==False">
+											<span t-field="l.price_subtotal" />
+										</t>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<!-- For Payments -->
+						<table class="table table-condensed" style="border:1pt solid;">
+							<thead >
+								<h5>Payments:</h5>
+								<tr style="background-color:#0052cc;color:#ffffff;" height="10pt;">
+									<th class="text-center" style="border:1pt solid;border-color:black;">Sr.No
+									</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Payment Date 
+									</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Payment Reference </th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Payment Journal </th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Debit</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Credit</th>
+								</tr>
+							</thead>
+							<tbody class="invoice_tbody">
+								<tr t-foreach="o.payment_ids" t-as="m">
+									<td style="border:1pt solid;border-color:black;" align="center">
+										<t t-esc="m_index+1" />
+									</td> 
+									<td style="border:1pt solid;border-color:black;">
+										<span t-field="m.date" />
+									</td>
+									<td style="border:1pt solid;border-color:black;">
+										<span t-field="m.ref" />
+									</td>
+									<td style="border:1pt solid;border-color:black;">
+										<span t-field="m.journal_id" />
+									</td>
+									<td style="border:1pt solid;border-color:black;">
+										<span t-field="m.debit" />
+									</td>
+									<td style="border:1pt solid;border-color:black;">
+										<span t-field="m.credit" />
+									</td>
+								</tr>
+							</tbody>
+						</table>
+
+						<div class="row" style="padding-top:-2s0pt;">
+							<div class="col-xs-3 pull-left">
+								<table class="table" style='border:solid;border-color:white;'>
+									<tr style='border:solid;border-color:white;'>
+										<td style="margin-top:-10pt;" align="center">
+											<span>
+												Cash Paid By
+											</span>
+										</td>
+									</tr>
+									<tr style='border:solid;border-color:white;'>
+										<td style="margin-top:-10pt;" align="center">
+											<span>
+												(Customer Name)
+											</span>
+										</td>
+									</tr>
+								</table>
+							</div>
+
+							<div class="col-xs-3 pull-right">
+								<table class="table" style='border:solid;border-color:white;'>
+									<tr style='border:solid;border-color:white;'>
+										<td style="margin-top:-10pt;" align="center">
+											<span>
+												Cash Received By
+											</span>
+										</td>
+									</tr>
+									<tr style='border:solid;border-color:white;'>
+										<td style="margin-top:-10pt;" align="center">
+											<span>
+												(Salesman Name)
+											</span>
+										</td>
+									</tr>
+								</table>
+
+							</div>
+						</div>
+
+						<p t-if="o.comment">
+							<strong>Comment:</strong>
+							<span t-field="o.comment" />
+						</p>
+						<p t-if="o.fiscal_position.note">
+							<strong>Fiscal Position Remark:</strong>
+							<span t-field="o.fiscal_position.note" />
+						</p>
+						<div class="row" style="padding-top:-2s0pt;margin-top:20pt;">
+							<div class="col-xs-12">
+
+								<table class="table" style='border:solid;border-color:white;'>
+									<tr>
+										<td style="text-align:center;">
+											For questions concerning this invoice, please
+											contact Hot
+											Line
+											:
+											01 685804,
+											info@ahmayhtwar.com
+										</td>
+									</tr>
+									<tr>
+										<td style="text-align:center;border:solid;border-color:white;">
+											<b> THANK YOU</b>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					</div>
+				</t>
+			</xpath>
+		</template>
+		
+		<template id="payment_report">
+		    <t t-call="report.html_container">
+		        <t t-foreach="doc_ids" t-as="doc_id">
+		            <t t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', 'sale_management.payment_report_document')"/>
+		        </t>
+		    </t>
+		</template>
+	</data>
+</openerp>

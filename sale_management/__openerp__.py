@@ -53,6 +53,8 @@ Sale Management
       #  'views/account_invoice_view.xml',
         'views/sale_promotion_monthly_view.xml',
         'views/sale_target_view.xml',
+        'views/report.xml',
+        'views/payment_report.xml',
     ],
     'installable': True,
     'auto_install': False,

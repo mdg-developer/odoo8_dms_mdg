@@ -56,9 +56,15 @@
 						<table class="table" style='border:solid;border-color:white;margin-left:-25%'>
 							<tr>
 								<td style="margin-top:-10pt;">
-									<div t-field="o.company_id.partner_id" style='font-size:15pt;border-color:black;'/>
-									<div t-field="o.company_id.street" />
-									<div t-field="o.company_id.phone" />
+									<div style='font-size:15pt;border-color:black;'>
+									အေမထြားပဲ/ႏွမ္းဆီသန္.(မေကြး)၊ကုန္ေရာင္းေဘာက္ခ်ာ									
+									</div>
+									<div>
+									ရန္ကုန္စက္ရုံ-အမွတ္(၉၃-၈)၊ျမေတာင္၀န္ၾကီးဦးမႈိလမ္း၊လိႈင္သာယာစက္မႈဇုန္(၃)၊
+									</div>
+									<div>
+									ဖုန္း - ၀၁ -၆၈၅၈၀၄ ၊ ၀၉ - ၅၁၀၇၉၆၅
+									</div>
 								</td>
 							</tr>
 						</table>
