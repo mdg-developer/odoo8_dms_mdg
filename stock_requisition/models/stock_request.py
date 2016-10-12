@@ -64,6 +64,7 @@ class stock_requisition(osv.osv):
                                     'big_req_quantity':req_quantity,
                                               })
             for line in order_ids:
+                print 'lineeeeeeeeeeeeeeeeeeeeee',line
                 order = sale_order_obj.browse(cr, uid, line, context=context)
                 order_line.append({
                                     'name':order.name,
@@ -218,7 +219,7 @@ class stock_requisition(osv.osv):
                                               'issue_quantity':quantity,
                                               'big_issue_quantity':big_req_quantity}, context=context)
                     
-        return self.write(cr, uid, ids, {'state':'approve' ,'request_by':uid})    
+        return self.write(cr, uid, ids, {'state':'approve' ,'approve_by':uid})    
 
             
 class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
