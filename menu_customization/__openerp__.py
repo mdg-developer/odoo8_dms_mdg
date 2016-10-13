@@ -36,6 +36,7 @@ Menu Customization
     'data': [        
              'security/hr_security.xml',
         'views/sale_view.xml',
+        'views/sale_frequency_view.xml',
           
     ],
     'installable': True,

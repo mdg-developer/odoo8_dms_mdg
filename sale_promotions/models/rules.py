@@ -142,7 +142,7 @@ class PromotionsRules(osv.Model):
         'to_date':fields.datetime('To Date'),
         'sequence':fields.integer('Sequence'),
         'sale_channel_id':fields.many2many('sale.channel', 'promo_sale_channel_rel', 'promo_id', 'sale_channel_id', string='Sale Channel'),
-        'branch_id':fields.many2one('res.branch', 'Branch', required=False),
+        'branch_id':fields.many2one('res.branch', 'Branch', required=True),
         'logic':fields.selection([
                             ('and', 'All'),
                             ('or', 'Any'),
