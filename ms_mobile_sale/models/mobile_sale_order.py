@@ -798,7 +798,7 @@ class mobile_sale_order(osv.osv):
                         where pr.active = true                     
                         and pr.id = pro_br_rel.promos_rules_id
                         and pro_br_rel.res_branch_id = %s
-                        and pr.state in (%s) 
+                        and pr.state in %s
                         and  now()::date  between from_date::date and to_date::date
                         ''', (branch_id, status,))
         datas = cr.fetchall()        
