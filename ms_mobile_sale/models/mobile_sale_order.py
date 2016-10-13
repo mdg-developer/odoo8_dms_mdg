@@ -789,10 +789,18 @@ class mobile_sale_order(osv.osv):
    
         if state=='approve':
             status = 'approve'
+            cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,
+                        logic ,expected_logic_result ,special, special1, special2, special3 ,description
+                        from promos_rules pr ,promos_rules_res_branch_rel pro_br_rel
+                        where pr.active = true                     
+                        and pr.id = pro_br_rel.promos_rules_id
+                        and pro_br_rel.res_branch_id = %s
+                        and pr.state = %s
+                        and  now()::date  between from_date::date and to_date::date
+                        ''', (branch_id, status,))
         else:
-            status ='approve','draft'
-            
-        cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,
+            status ='approve','draft'            
+            cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,
                         logic ,expected_logic_result ,special, special1, special2, special3 ,description
                         from promos_rules pr ,promos_rules_res_branch_rel pro_br_rel
                         where pr.active = true                     
