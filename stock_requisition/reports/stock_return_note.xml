@@ -1,203 +1,204 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-<data>
-<template id="stock_return_note_document">
-    <t t-call="report.external_layout">
-        <div class="page">
-            <!-- <div class="row">
-                <div class="col-xs-5 col-xs-offset-7">
-                    <address t-field="o.partner_id"
-                        t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' />
-                    <span t-field="o.partner_id.vat"/>
-                </div>
-            </div> -->
-			
-			<h2>
-                <span t-field="o.name"/>
-            </h2>
-            <!-- <h2>
-                <span t-if="o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')">Invoice</span>
-                <span t-if="o.type == 'out_invoice' and o.state == 'proforma2'">PRO-FORMA</span>
-                <span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
-                <span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
-                <span t-if="o.type == 'out_refund'">Refund</span>
-                <span t-if="o.type == 'in_refund'">Supplier Refund</span>
-                <span t-if="o.type == 'in_invoice'">Supplier Invoice</span>
-                <span t-field="o.number"/>
-            </h2> -->
+	<data>
+		<template id="stock_return_note_document">
+			<t t-call="report.external_layout">
+				<div class="page">
+					<!-- <div class="row"> <div class="col-xs-5 col-xs-offset-7"> <address 
+						t-field="o.partner_id" t-field-options='{"widget": "contact", "fields": ["address", 
+						"name"], "no_marker": true}' /> <span t-field="o.partner_id.vat"/> </div> 
+						</div> -->
 
-            <div class="row mt32 mb32">
-                <div class="col-xs-2" t-if="o.name">
-                    <strong>(SRN)Ref;No:</strong>
-                    <p t-field="o.name"/>
-                </div>
-                <div class="col-xs-2" t-if="o.note_id">
-                    <strong>(GIN)Ref;No. :</strong>
-                    <p t-field="o.note_id"/>
-                </div>
-                <div class="col-xs-2" t-if="o.sale_team_id">
-                    <strong>Sales Team:</strong>
-                    <p t-field="o.sale_team_id"/>
-                </div>
-                <div class="col-xs-2" t-if="o.so_no">
-                    <strong>Sales Order/Inv Ref;No. :</strong>
-                    <p t-field="o.so_no"/>
-                </div>
-               <!--  <div class="col-xs-2" t-if="o.return_from">
-                    <strong>Return From :</strong>
-                    <p t-field="o.return_from"/>
-                </div> -->
-            </div>
-			
-			<div class="row mt32 mb32">
-                <div class="col-xs-2" t-if="o.name">
-                    <strong>Return From :</strong>
-                    <p t-field="o.return_from"/>
-                </div>
-                <div class="col-xs-2" t-if="o.vehicle_id">
-                    <strong>Vehicle No :</strong>
-                    <p t-field="o.vehicle_id.name"/>
-                </div>
-                <div class="col-xs-2" t-if="o.return_date">
-                    <strong>Date of Return:</strong>
-                    <p t-field="o.return_date"/>
-                </div>
-                <div class="col-xs-2" t-if="o.company_id">
-                    <strong>Company. :</strong>
-                    <p t-field="o.company_id.name"/>
-                </div>               
-            </div>
-            
-            <table class="table table-condensed">
-                <thead>
-                    <tr>                    
-                        <th>Product</th>                        
-                        <th class="text-right">Received Qty</th>
-                        <th class="text-right" >Returned Qty</th>
-                        <th class="text-right">Sales Qty</th>
-                        <th class="text-right">FOC Qty</th>
-                        <th>UoM</th>
-                        <th class="text-right">Rec Qty</th>
-                        <th >Rec Bigger UoM</th>
-                        <th class="text-right">Rec Qty</th>
-                        <th >Rec Smaller UoM</th>
-                        <th >Expiry</th>
-                        <th >Remark</th>
-                    </tr>
-                </thead>
-                <tbody class="invoice_tbody">
-                    <tr t-foreach="o.p_line" t-as="l">
-                        <td><span t-field="l.product_id.name"/></td>
-                        <td class="text-right">
-                            <span t-field="l.receive_quantity"/>                            
-                        </td>
-                        <td class="text-right">
-                            <span t-field="l.return_quantity"/>
-                        </td>
-                        <td class="text-right">
-                            <span t-field="l.sale_quantity"/>
-                        </td>
-                        <td class="text-right">
-                            <span t-field="l.foc_quantity"/>
-                        </td>
-                        <td><span t-field="l.product_uom.name"/></td>
-                                                
-                        <td class="text-right">
-                            <span t-field="l.rec_big_quantity"/>
-                        </td>
-                        
-                        <td>
-                            <span t-field="l.rec_big_uom_id.name"/>
-                        </td>
-                        
-                         <td class="text-right">
-                            <span t-field="l.rec_small_quantity"/>
-                        </td>
-                        
-                        <td><span t-field="l.rec_small_uom_id.name"/></td>
-                        
-                        <td><span t-field="l.expiry_date"/></td>
-                        
-                        <td><span t-field="l.remark"/></td>
-                    </tr>
-                </tbody>
-            </table>
+					<h2>
+						<p>Stock Return Note</p>
+					</h2>
 
-            <!-- <div class="row">
-                <div class="col-xs-4 pull-right">
-                    <table class="table table-condensed">
-                        <tr class="border-black">
-                            <td><strong>Total Without Taxes</strong></td>
-                            <td class="text-right">
-                                <span t-field="o.amount_untaxed" t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Taxes</td>
-                            <td class="text-right">
-                                <span t-field="o.amount_tax" t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
-                            </td>
-                        </tr>
-                        <tr class="border-black">
-                            <td><strong>Total</strong></td>
-                            <td class="text-right">
-                                 <span t-field="o.amount_total" t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div> -->
+					<table class="table table-condensed">
+						<tr>
+							<td>
+								<strong>(SRN)Ref;No:</strong>
+							</td>
+							<td>
+								<strong t-field="o.name"></strong>
+							</td>
 
-            <!-- <div class="row" t-if="o.tax_line">
-                <div class="col-xs-6">
-                    <table class="table table-condensed">
-                        <thead>
-                            <tr>
-                                <th>Tax</th>
-                                <th class="text-right">Base</th>
-                                <th class="text-right">Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr t-foreach="o.tax_line" t-as="t">
-                                <td><span t-field="t.name"/></td>
-                                <td class="text-right">
-                                    <span t-field="t.base"
-                                        t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
-                                </td>
-                                <td class="text-right">
-                                    <span t-field="t.amount"
-                                        t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div> -->
+							<td>
+								<strong>(GIN)Ref;No. :</strong>
+							</td>
+							<td>
+								<strong t-field="o.note_id"></strong>
+							</td>
+						</tr>
 
-            <!-- <p t-if="o.comment">
-                <strong>Comment:</strong>
-                <span t-field="o.comment"/>
-            </p>
-            <p t-if="o.payment_term.note">
-                <strong>Payment Term:</strong>
-                <span t-field="o.payment_term.note"/>
-            </p>
-            <p t-if="o.fiscal_position.note">
-                <strong>Fiscal Position Remark:</strong>
-                <span t-field="o.fiscal_position.note"/>
-            </p> -->
-        </div>
-    </t>
-</template>
+						<tr>
+							<td>
+								<strong>Sales Team:</strong>
+							</td>
+							<td>
+								<p t-field="o.sale_team_id.name" />
+							</td>
 
-<template id="stock_return_note">
-    <t t-call="report.html_container">
-        <t t-foreach="doc_ids" t-as="doc_id">
-            <t t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', 'stock_requisition.stock_return_note_document')"/>
-            
-        </t>
-    </t>
-</template>
-</data>
+							<td>
+								<strong>Sales Order/Inv Ref;No. :</strong>
+							</td>
+							<td>
+								<p t-field="o.so_no" />
+							</td>
+						</tr>
+
+						<tr>
+
+							<td>
+								<strong>Return From :</strong>
+							</td>
+							<td>
+								<p t-field="o.return_from" />
+							</td>
+
+							<td>
+								<strong>Vehicle No:</strong>
+							</td>
+							<td>
+								<span t-field="o.vehicle_id.model_id.brand_id.name" />
+								<b>/</b>
+								<span t-field="o.vehicle_id.model_id.modelname" />
+							</td>
+						</tr>
+
+						<tr>
+							<td>
+								<strong>Date of Return:</strong>
+							</td>
+							<td>
+								<p t-field="o.return_date" />
+							</td>
+
+							<td>
+								<strong>Company:</strong>
+							</td>
+							<td>
+								<p t-field="o.company_id.name" />
+							</td>
+
+						</tr>
+
+					</table>
+
+					<table class="table table-condensed">
+						<thead>
+							<tr>
+								<th>Product</th>
+								<th class="text-right">Received Qty</th>
+								<th class="text-right">Returned Qty</th>
+								<th class="text-right">Sales Qty</th>
+								<th class="text-right">FOC Qty</th>
+								<th>UoM</th>
+								<th class="text-right">Rec Qty(B/S)</th>
+								<th>Rec UoM(B/S)</th>
+								<!-- <th class="text-right">Rec Qty</th> -->
+								<!-- <th>Rec Smaller UoM</th> -->
+								<th>Expiry</th>
+								<th>Remark</th>
+							</tr>
+						</thead>
+						<tbody class="invoice_tbody">
+							<tr t-foreach="o.p_line" t-as="l">
+								<td>
+									<span t-field="l.product_id" />
+								</td>
+								<td class="text-right">
+									<span t-field="l.receive_quantity" />
+								</td>
+								<td class="text-right">
+									<span t-field="l.return_quantity" />
+								</td>
+								<td class="text-right">
+									<span t-field="l.sale_quantity" />
+								</td>
+								<td class="text-right">
+									<span t-field="l.foc_quantity" />
+								</td>
+								<td>
+									<span t-field="l.product_uom.name" />
+								</td>
+
+								<td class="text-right">
+									<span t-field="l.rec_big_quantity" />
+									/
+									<span t-field="l.rec_small_quantity" />
+								</td>
+
+								<td>
+									<span t-field="l.rec_big_uom_id.name" />
+									/
+									<span t-field="l.rec_small_uom_id.name" />
+								</td>
+
+								<!-- <td class="text-right"> -->
+								<!-- <span t-field="l.rec_small_quantity"/> -->
+								<!-- </td> -->
+
+								<!-- <td><span t-field="l.rec_small_uom_id.name"/></td> -->
+
+								<td>
+									<span t-field="l.expiry_date" />
+								</td>
+
+								<td>
+									<span t-field="l.remark" />
+								</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<table class="table table-condensed">
+						<thead>
+							<tr>
+								<th></th>
+								<th>Returned By</th>
+								<th>Checked By</th>
+								<th>Received By</th>
+
+							</tr>
+						</thead>
+						<tbody class="invoice_tbody">
+							<tr t-foreach="o" t-as="l">
+								<td>Name</td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>Position</td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>Signature</td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>Date</td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</t>
+		</template>
+
+		<template id="stock_return_note">
+			<t t-call="report.html_container">
+				<t t-foreach="doc_ids" t-as="doc_id">
+					<t
+						t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', 'stock_requisition.stock_return_note_document')" />
+				</t>
+			</t>
+		</template>
+	</data>
 </openerp>
