@@ -239,6 +239,17 @@ class mobile_sale_order(osv.osv):
                     
                     for ptl in product_trans_line:
                         if ptl['transaction_id'] == pt['transaction_id']:
+                            
+                                if ptl['exp_date'] is None:
+                                    exp_date = None
+                                else:
+                                    exp_date = ptl['exp_date']
+                                
+                                if exp_date == '' :
+                                    exp_date = None
+                                else:
+                                    exp_date = exp_date
+                                
                                 cursor.execute('select uom_id from product_product pp,product_template pt where pp.product_tmpl_id=pt.id and pp.id=%s',(ptl['product_id'], ))
                                 uom_id=cursor.fetchone()[0]
                                 mso_line_res = {                                                            
@@ -250,7 +261,7 @@ class mobile_sale_order(osv.osv):
                                   'trans_type':ptl['trans_type'],
                                   'transaction_name':ptl['transaction_name'],
                                   'note':ptl['note'],
-                                  'exp_date':ptl['exp_date'],
+                                  'exp_date':exp_date,
                                   'batchno':ptl['batchno'],
                                 }
                                 product_trans_line_obj.create(cursor, user, mso_line_res, context=context)
@@ -258,7 +269,7 @@ class mobile_sale_order(osv.osv):
             return True       
         except Exception, e:
             print 'False'
-            return False     
+            return False 
     
     def create_visit(self, cursor, user, vals, context=None):
         
