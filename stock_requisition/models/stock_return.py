@@ -47,12 +47,14 @@ class stock_return(osv.osv):
     
     def retrieve_data(self, cr, uid,ids, context=None):
         note_obj=self.pool.get('good.issue.note')
-      #  note_line_obj=self.pool.get('good.issue.note.line')
+        product_trans_obj=self.pool.get('product.transactions')
+        product_trans_line_obj=self.pool.get('product.transactions.line')
+
         mobile_obj=self.pool.get('stock.return.mobile')
-      #  mobile_line_obj=self.pool.get('stock.return.mobile.line')
         stock_return_obj=self.pool.get('stock.return.line')
         
         if ids:
+            cr.execute('delete from stock_return_line where line_id=%s',(ids[0],))
             return_data=self.browse(cr, uid, ids, context=context)
             return_date=return_data.return_date
             return_from=return_data.return_from.id            
@@ -108,6 +110,31 @@ class stock_return(osv.osv):
                                               'rec_small_uom_id':small_uom_id,
                                               'rec_big_uom_id':big_uom,                                              
                                               }, context=context)
+            trans_ids = product_trans_obj.search(cr, uid, [('date', '=', return_date), ('exchange_type','!=','Exchange'),('team_id', '=', sale_team_id)], context=context) 
+            for t_id in trans_ids:
+                trans_data=product_trans_obj.browse(cr, uid, t_id,context=context)          
+                for trans_line in trans_data.item_line:
+                    product_id= trans_line.product_id.id
+                    return_quantity=trans_line.product_qty
+                    sale_quantity= 0
+                    foc_quantity=0
+                    small_uom_id= trans_line.uom_id.id                          
+                    product_search = stock_return_obj.search(cr, uid, [('product_id', '=', product_id), ('line_id', '=', ids[0])], context=context) 
+                    if product_search:
+                        cr.execute("update stock_return_line set return_quantity=return_quantity + %s where line_id=%s and product_id=%s",(return_quantity,ids[0],product_id,))
+                    else:
+                        product=self.pool.get('product.product').browse(cr,uid,product_id,context=context)
+                        big_uom=product.product_tmpl_id.big_uom_id and product.product_tmpl_id.big_uom_id.id or False,                    
+                        stock_return_obj.create(cr, uid, {'line_id': ids[0],
+                                                  'product_id': product_id,
+                                                  'product_uom': small_uom_id,
+                                                  'receive_quantity':0,
+                                                  'return_quantity':return_quantity,
+                                                  'sale_quantity':sale_quantity,
+                                                  'foc_quantity':foc_quantity,
+                                                  'rec_small_uom_id':small_uom_id,
+                                                  'rec_big_uom_id':big_uom,                                              
+                                                  }, context=context)                                        
         return True          
     _columns = {
         'sale_team_id':fields.many2one('crm.case.section', 'Sales Team' , required=True),
@@ -115,7 +142,7 @@ class stock_return(osv.osv):
         'note_id':fields.many2one('good.issue.note', '(GIN)Ref;No.', readonly=True),
         'return_from':fields.many2one('res.users', 'Return From', required=True),
          'so_no' : fields.char('Sales Order/Inv Ref;No.'),
-         'return_date':fields.date('Date of Return'),
+         'return_date':fields.date('Date of Return',required=True),
         'vehicle_id':fields.many2one('fleet.vehicle', 'Vehicle No'),
         'state': fields.selection([
             ('draft', 'Draft'),

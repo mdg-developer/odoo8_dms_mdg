@@ -92,8 +92,8 @@ class stock_requisition(osv.osv):
         'request_by':fields.many2one('res.users', "Requested By"),
         'approve_by':fields.many2one('res.users', "Approved By"),
         'request_date' : fields.datetime('Date Requested'),
-         'issue_date':fields.datetime('Date For Issue From'),
-         's_issue_date':fields.datetime('Date For Issue To'),
+         'issue_date':fields.datetime('Date For Issue From',required=True),
+         's_issue_date':fields.datetime('Date For Issue To',required=True),
         'vehicle_id':fields.many2one('fleet.vehicle', 'Vehicle No'),
         'state': fields.selection([
             ('draft', 'Request'),
