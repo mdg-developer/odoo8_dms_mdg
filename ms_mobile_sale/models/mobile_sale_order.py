@@ -1411,7 +1411,7 @@ class mobile_sale_order(osv.osv):
                     cr.execute('''select id,date_order,partner_id,amount_tax,amount_untaxed,
                     payment_term,company_id,pricelist_id,user_id,amount_total,name as invoice_no,
                     warehouse_id,shipped,sale_plan_day_id,sale_plan_name,so_longitude,payment_type,
-                    due_date,sale_plan_trip_id,so_latitude,customer_code,tb_ref_no as so_refNo,total_dis,deduct_amt,coupon_code,
+                    due_date,sale_plan_trip_id,so_latitude,customer_code,name as so_refNo,total_dis,deduct_amt,coupon_code,
                     invoiced,branch_id,delivery_remark from sale_order  where id=%s''', (So_id,))
                     result = cr.fetchall()
                     print 'Result Sale Order', result
@@ -1431,7 +1431,7 @@ class mobile_sale_order(osv.osv):
         list = []
         if list_val:
             for val in list_val:
-                cr.execute('select id,product_id,product_uos_qty,product_uom,price_unit,order_id,discount,discount_amt from sale_order_line where id = %s', (val,))
+                cr.execute('select id,product_id,product_uom_qty,product_uom,price_unit,order_id,discount,discount_amt from sale_order_line where id = %s', (val,))
                 result = cr.fetchall()
                 list.append(result)
                 print' list', list
