@@ -31,6 +31,7 @@ class account_voucher(osv.osv):
         return res
     
     _columns = {
+                        'total_discount':fields.float('Discount'),
                         'writeoff_amount': fields.function(_get_writeoff_amount, string='Difference Amount', type='float', readonly=True, help="Computed as the difference between the amount stated in the voucher and the sum of allocation on the voucher lines."),
                         'discount_account_id': fields.related('company_id', 'discount_account_id', type="many2one",
                                                                relation='account.account', required=True,
@@ -114,7 +115,6 @@ class account_voucher(osv.osv):
             'voucher_special_currency_rate': voucher_currency.rate * voucher.payment_rate ,
             'voucher_special_currency': voucher.payment_rate_currency_id and voucher.payment_rate_currency_id.id or False, })
         prec = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
-        print 'discount account id >>>> ', total_discount_account_id
         for line in voucher.line_ids:
             if line.total_discount > 0:
                 total_discount += line.total_discount
