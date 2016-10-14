@@ -32,7 +32,6 @@ class sale_plan_for_day_setting(osv.osv):
                     else:
                         last_order_date = False
                     partner = customer_obj.browse(cr, uid, line, context=context)
-                    print 'partner.class_id.id',partner.class_id.id
                     data_line.append({
                                         'code':partner.customer_code,
                                          'class':partner.class_id.id,
@@ -939,43 +938,28 @@ class sale_plan_for_day_setting(osv.osv):
                         cr.execute('INSERT INTO product_maingroup_sale_plan_day_rel (sale_plan_day_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))                                                                                                  
         return self.write(cr, uid, ids, {'state': 'confirm' })      
     
-    def refresh_customer(self, cr, uid, ids, context=None):
-        data_line=[]
-        res=[]
-        customer_obj=self.pool.get('res.partner')
-        sale_plan_obj=self.pool.get('sale.plan.day.setting')       
-        plan_obj=self.pool.get('sale.plan.day.setting.line')
-        plan = self.browse(cr, uid, ids, context=context)
-        partner_count=plan.partner_count
-        plan_line=plan.plan_line
-        print 'customer_list',plan_line,partner_count
-        for plan_line_id in plan_line:
-            partner_id=plan_line_id.partner_id.id
-            data_line.append(partner_id)
-        sale_team_id=plan.sale_team_id.id
-        partner_ids = customer_obj.search(cr, uid, [('section_id', '=', sale_team_id),('id','not in',data_line)], context=context)
-        print 'partner_ids',partner_ids
-        if  partner_ids:
-                count=len(partner_ids)                
-                for line in partner_ids:
-                    print ' line',line,ids
-                    partner = customer_obj.browse(cr, uid, line, context=context)
-                    cr.execute("select date_order::date from sale_order  where partner_id =%s order by id desc", (partner.id,))
-                    last_order = cr.fetchone()
-                    if last_order:
-                        last_order_date = last_order[0]
-                    else:
-                        last_order_date = False                 
-                    plan_id = plan_obj.create(cr, uid, {
-                                        'code':partner.customer_code,
-                                         'class':partner.class_id.id,
-                                         'frequency':partner.frequency_id.id,
-                                         'purchase_date':last_order_date,
-                                        'partner_id': line,
-                                        'line_id':plan.id,
-                                                  }, context=context)   
-                    sale_plan_obj.write(cr, uid, ids, {'partner_count':  partner_count+count})  
-                    
+    def refresh(self, cr, uid, ids, context=None):
+        # data_line=[]
+#         res=[]
+#         customer_obj=self.pool.get('res.partner')
+#         plan = self.browse(cr, uid, ids, context=context)
+#         customer_list=plan.plan_line.partner_id.id
+#         sale_team_id=plan.sale_team_id.id
+#         partner_ids = customer_obj.search(cr, uid, [('section_id', '=', sale_team_id),('id','not in',[customer_list])], context=context)
+#         if  partner_ids:                
+#                 for line in partner_ids:
+#                     print ' line',line,ids
+#                     partner = customer_obj.browse(cr, uid, line, context=context)
+#                     plan_line={
+#                                         'code':partner.customer_code,
+#                                          'class':partner.class_id.id,
+#                                         'partner_id': line,
+#                                         'line_id':ids[0],
+#                                                   }
+#                     print 'data_line',plan_line
+# 
+#                     res.append(plan_line) 
+        # print 'res',res
         return True   
 sale_plan_for_day_setting()
     

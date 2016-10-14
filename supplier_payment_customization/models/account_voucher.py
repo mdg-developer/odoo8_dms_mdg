@@ -243,7 +243,9 @@ account_voucher()
 
 class account_voucher_line(osv.osv):
     _inherit = 'account.voucher.line'
-   
+    _columns = {
+                         'total_discount':fields.float('Discount'),
+              }
      
     
     def onchange_discount_amount(self, cr, uid, vals, total_discount, context=None):
@@ -267,7 +269,6 @@ class account_voucher_line(osv.osv):
                                     \n* The \'Pro-forma\' when voucher is in Pro-forma status,voucher does not have an voucher number. \
                                     \n* The \'Posted\' status is used when user create voucher,a voucher number is generated and voucher entries are created in account \
                                     \n* The \'Cancelled\' status is used when user cancel voucher.'),
-                         'total_discount':fields.float('Discount'),
                 
               }
     

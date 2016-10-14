@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		
+        
+        <record model="ir.ui.view" id="inherit_view_product_maingroup_form">
+            <field name="name">prodcut.maingroup.form</field>
+            <field name="model">product.maingroup</field>
+            <field name="inherit_id" ref="product_product.view_product_maingroup_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='name']" position="after">
+                       
+                       <field name="property_account_receivable" />
+                                                  
+                       <field name="property_account_payable" />
+        				 
+                    </xpath>
+                </data>
+            </field>
+        </record>                   
+		
+		<record id="inherit_partner_form_new" model="ir.ui.view">
+			<field name="name">res.partner.form</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="base.view_partner_form" />
+			<field name="arch" type="xml">
+							
+				<xpath expr="//field[@name='property_account_receivable']" position="replace">					
+
+				</xpath>
+				
+				<xpath expr="//field[@name='property_account_payable']" position="replace">					
+
+				</xpath>
+			</field>
+		</record>
+		
+		<record id="inherit_invoice_form_new" model="ir.ui.view">
+			<field name="name">account.invoice.form</field>
+			<field name="model">account.invoice</field>
+			<field name="inherit_id" ref="account.invoice_form" />
+			<field name="arch" type="xml">
+				
+				
+				<xpath expr="//field[@name='account_id']" position="attributes">
+                    <attribute name="required">0</attribute>
+                </xpath>
+                <xpath expr="//field[@name='account_id']" position="replace">
+					
+
+				</xpath>
+			</field>
+		</record>
+
+	</data>
+</openerp>
+		

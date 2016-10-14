@@ -38,41 +38,39 @@
 							<field name="start_date" />
 						</group>
 					</group>
-					    <button name="refresh_customer"  type="object"  string="Refresh Customer" class="oe_highlight"/>		    
-										
 					<notebook>
 						<page string="Plan Setting">
 							<field name="plan_line">
-								<tree default_order="create_date desc" string="Plan Line" editable="bottom" >
+								<tree string="Plan Line" editable="bottom">
 									<field name="code" />
 									<field name="partner_id" />
 									<field name="class" />
 									<field name="frequency" />
 									<field name="purchase_date" />
-									<field name="w1_mon" style="font-weight: bold;" />
-									<field name="w1_tue" />
-									<field name="w1_wed" />
-									<field name="w1_thur" />
-									<field name="w1_fri" />
-									<field name="w1_sat" />
-									<field name="w2_mon"  style="font-weight: bold;" />
-									<field name="w2_tue" />
-									<field name="w2_wed" />
-									<field name="w2_thur" />
-									<field name="w2_fri" />
-									<field name="w2_sat" />
-									<field name="w3_mon" />
-									<field name="w3_tue" />
-									<field name="w3_wed" />
-									<field name="w3_thur" />
-									<field name="w3_fri" />
-									<field name="w3_sat" />
-									<field name="w4_mon" />
-									<field name="w4_tue" />
-									<field name="w4_wed" />
-									<field name="w4_thur" />
-									<field name="w4_fri" />
-									<field name="w4_sat" />
+									<field name="w1_mon" style="background-color: lightblue;"/>
+									<field name="w1_tue" style="background-color: lightblue;"/>
+									<field name="w1_wed" style="background-color: lightblue;"/>
+									<field name="w1_thur" style="background-color: lightblue;"/>
+									<field name="w1_fri" style="background-color: lightblue;"/>
+									<field name="w1_sat" style="background-color: lightblue;"/>
+									<field name="w2_mon" style="background-color: red"/>
+									<field name="w2_tue" style="background-color: red"/>
+									<field name="w2_wed" style="background-color: red"/>
+									<field name="w2_thur" style="background-color: red"/>
+									<field name="w2_fri"  style="background-color: red"/>
+									<field name="w2_sat"  style="background-color: red"/>
+									<field name="w3_mon" style="background-color: blue;"/>
+									<field name="w3_tue" style="background-color: blue;"/>
+									<field name="w3_wed" style="background-color: blue;"/>
+									<field name="w3_thur" style="background-color: blue;"/>
+									<field name="w3_fri" style="background-color: blue;"/>
+									<field name="w3_sat" style="background-color: blue;"/>
+									<field name="w4_mon" style="background-color: green;"/>
+									<field name="w4_tue" style="background-color: green;"/>
+									<field name="w4_wed" style="background-color: green;"/>
+									<field name="w4_thur" style="background-color: green;"/>
+									<field name="w4_fri" style="background-color: green;"/>
+									<field name="w4_sat" style="background-color: green;"/>
 								</tree>
 							</field>
 							<group col="28">
