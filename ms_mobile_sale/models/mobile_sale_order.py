@@ -1469,11 +1469,11 @@ class mobile_sale_order(osv.osv):
                     print 'Payment Type', deli['payment_type']
                     print 'So Ref No', deli['so_refNo']
                     So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
-                                                   , ('tb_ref_no', '=', deli['so_refNo'])], context=context)
+                                                   , ('name', '=', deli['so_refNo'])], context=context)
                     if So_id:
                         solist = So_id       
                         journal_id = deli['journal_id']
-                        cr.execute('select branch_id,section_id from sale_order where tb_ref_no=%s',(deli['so_refNo'],))
+                        cr.execute('select branch_id,section_id from sale_order where name=%s',(deli['so_refNo'],))
                         data=cr.fetchone()
                         if data:
                             branch_id=data[0]
