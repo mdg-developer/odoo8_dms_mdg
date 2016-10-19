@@ -16,7 +16,12 @@ import openerp.addons.decimal_precision as dp
 
 class sale_order(osv.osv):
     _inherit = "sale.order"
-       
+    
+    def is_generate_RFI(self, cr, uid, ids, context=None):
+        print 'order',ids
+        sale_obj=self.pool.get('sale.order')
+        sale_obj.write(cr, uid, ids, {'is_generate': False}, context=context)
+        return True    
     def _invoiced(self, cursor, user, ids, name, arg, context=None):
         res = {}
         for sale in self.browse(cursor, user, ids, context=context):
