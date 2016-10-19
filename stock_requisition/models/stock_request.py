@@ -33,7 +33,7 @@ class stock_requisition(osv.osv):
             raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
         return company_id     
     
-    def on_change_sale_team_id(self, cr, uid, ids, sale_team_id, context=None):
+    def on_change_sale_team_id(self, cr, uid, ids, sale_team_id, pre_order,context=None):
         sale_order_obj = self.pool.get('sale.order')
         so_line_obj = self.pool.get('stock.requisition').browse(cr, uid, ids, context=context)
         print 'so_line_obj',so_line_obj
@@ -45,7 +45,7 @@ class stock_requisition(osv.osv):
         sale_qty=0
         sale_uom=0
         big_req_quantity=0
-        req_quantity=0                 
+        req_quantity=0   
         if sale_team_id:
             sale_team = self.pool.get('crm.case.section').browse(cr, uid, sale_team_id, context=context)
             location = sale_team.location_id
@@ -65,7 +65,6 @@ class stock_requisition(osv.osv):
                                     'big_req_quantity':req_quantity,
                                               })
             for line in order_ids:
-                print 'lineeeeeeeeeeeeeeeeeeeeee',line
                 order = sale_order_obj.browse(cr, uid, line, context=context)
                 date_order= order.date_order    
                 cr.execute("select (date_order+ '6 hour'::interval + '30 minutes'::interval)  from sale_order where id=%s",(order.id,))
@@ -77,12 +76,16 @@ class stock_requisition(osv.osv):
                                     'date':sale_date,
                                     'sale_team_id':order.section_id.id,
                                     'state':order.state,
-                                              })              
+                                              }) 
+            p_addtional_line = None
+            if pre_order:
+                p_addtional_line = data_line             
             values = {
                  'from_location_id':location,
                  'to_location_id':to_location_id ,
                  'vehicle_id':vehicle_id,
                 'p_line': data_line,
+                'p_addtional_line': p_addtional_line,
                 'order_line':order_line
             }
         return {'value': values}    
@@ -111,6 +114,9 @@ class stock_requisition(osv.osv):
                 'company_id':fields.many2one('res.company', 'Company'),
                  'order_line': fields.one2many('stock.requisition.order', 'stock_line_id', 'Sale Order', copy=True),
                  'pre_order':fields.boolean('Pre Order'),
+                 
+        'p_addtional_line':fields.one2many('stock.requisition.line', 'line_id', 'Additional Product Lines',
+                              copy=True),
          'partner_id':fields.many2one('res.partner', string='Partner'),
 
 }
