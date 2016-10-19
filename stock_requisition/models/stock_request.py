@@ -188,7 +188,7 @@ class stock_requisition(osv.osv):
         if ids:
             req_value = requisition_obj.browse(cr, uid, ids[0], context=context)
             request_id = req_value.id
-            issue_date = req_value.issue_date
+            request_date = req_value.request_date
             to_location_id = req_value.to_location_id.id
             from_location_id = req_value.from_location_id.id
             vehicle_no = req_value.vehicle_id.id
@@ -201,7 +201,7 @@ class stock_requisition(osv.osv):
                 print 'order',order_id
             good_id = good_obj.create(cr, uid, {'vehicle_id': vehicle_no,
                                                 'sale_team_id':sale_team_id,
-                                          'issue_date': issue_date,
+                                          'issue_date': request_date,
                                           'request_id':request_id,
                                           'to_location_id':to_location_id,
                                           'from_location_id':from_location_id,
