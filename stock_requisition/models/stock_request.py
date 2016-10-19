@@ -14,7 +14,8 @@ from openerp.osv import fields , osv
 from openerp.tools.translate import _
 import datetime
 import math
-
+from datetime import datetime, date, time
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as OE_DATETIMEFORMAT
 class stock_requisition(osv.osv):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _name = "stock.requisition"
@@ -66,11 +67,14 @@ class stock_requisition(osv.osv):
             for line in order_ids:
                 print 'lineeeeeeeeeeeeeeeeeeeeee',line
                 order = sale_order_obj.browse(cr, uid, line, context=context)
+                date_order= order.date_order    
+                cr.execute("select (date_order+ '6 hour'::interval + '30 minutes'::interval)  from sale_order where id=%s",(order.id,))
+                sale_date=cr.fetchone()[0]
                 order_line.append({
                                     'name':order.name,
                                      'ref_no':order.tb_ref_no,
                                     'amount':order.amount_total,
-                                    'date':order.date_order,
+                                    'date':sale_date,
                                     'sale_team_id':order.section_id.id,
                                     'state':order.state,
                                               })              
@@ -159,11 +163,13 @@ class stock_requisition(osv.osv):
                                         
             for line in order_ids:
                 order = sale_order_obj.browse(cr, uid, line, context=context)                
+                cr.execute("select (date_order+ '6 hour'::interval + '30 minutes'::interval)  from sale_order where id=%s",(order.id,))
+                sale_date=cr.fetchone()[0]                
                 so_line_obj.create(cr, uid, {'stock_line_id': stock_request_data.id,
                                                         'name':order.name,
                                                          'ref_no':order.tb_ref_no,
                                                         'amount':order.amount_total,
-                                                        'date':order.date_order,
+                                                        'date':sale_date,
                                                         'sale_team_id':order.section_id.id,
                                                         'state':order.state
                                          }, context=context)        
