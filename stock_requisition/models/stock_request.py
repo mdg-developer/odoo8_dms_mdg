@@ -137,11 +137,12 @@ class stock_requisition(osv.osv):
             sale_team_id = stock_request_data.sale_team_id.id
             request_date=stock_request_data.request_date
             order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False),('is_generate','=',False), ('invoiced', '=', False), ('state', 'not in', ['done', 'cancel']),('date_order','>',issue_date_from),('date_order','<',issue_date_to)], context=context) 
-            print 'order_ids',order_ids,stock_request_data.id
+            print 'order_ids',order_ids,stock_request_data.id,issue_date_from,issue_date_to
             cr.execute("delete from stock_requisition_order where  stock_line_id=%s",(stock_request_data.id,))
-            
-            if request_date:
-                    cr.execute("select sol.product_id,sum(product_uom_qty) as qty ,sol.product_uom from sale_order so,sale_order_line sol where so.id=sol.order_id and delivery_id=%s and (date_order+ '6 hour'::interval + '30 minutes'::interval)::date between %s and %s group by product_id,product_uom",(sale_team_id,issue_date_from,issue_date_to,))
+            order_list =  str(tuple(order_ids))
+            order_list= eval(order_list)
+            if request_date and order_list:
+                    cr.execute("select sol.product_id,sum(product_uom_qty) as qty ,sol.product_uom from sale_order so,sale_order_line sol where so.id=sol.order_id and so.id in %s group by product_id,product_uom",(order_list,))
                     sale_record=cr.fetchall()             
                     print 'sale_record',sale_record      
                     if sale_record:
