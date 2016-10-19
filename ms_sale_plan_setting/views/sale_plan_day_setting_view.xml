@@ -38,10 +38,11 @@
 							<field name="start_date" />
 						</group>
 					</group>
+					    <button name="refresh_customer"  type="object"  string="Refresh Customer" class="oe_highlight"/>		    
 					<notebook>
 						<page string="Plan Setting">
 							<field name="plan_line">
-								<tree string="Plan Line" editable="bottom">
+								<tree default_order="create_date desc" string="Plan Line" editable="bottom" >
 									<field name="code" />
 									<field name="partner_id" />
 									<field name="class" />

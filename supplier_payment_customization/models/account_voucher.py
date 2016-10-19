@@ -243,9 +243,9 @@ account_voucher()
 
 class account_voucher_line(osv.osv):
     _inherit = 'account.voucher.line'
-    _columns = {
-                         'total_discount':fields.float('Discount'),
-              }
+ #   _columns = {
+#                         'total_discount':fields.float('Discount'),
+#              }
      
     
     def onchange_discount_amount(self, cr, uid, vals, total_discount, context=None):
