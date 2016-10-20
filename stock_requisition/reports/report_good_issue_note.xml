@@ -13,83 +13,126 @@
             </div>
 
             <h2>
-                <span t-field="o.name"/>
+                <p>Good Issue Note</p>
             </h2>
-
-            <div class="row mt32 mb32">
-                <div class="col-xs-2" t-if="o.from_location_id.name">
-                    <strong>Issue From:</strong><br></br>
-                    <span t-field="o.from_location_id.location_id.name" />
-					<b>/</b>
-					<span t-field="o.from_location_id.name" />
-                </div>
-                <div class="col-xs-2" t-if="o.request_by">
-                    <strong>Request By:</strong>
-                    <p t-field="o.request_by"/>
-                </div>
-                <div class="col-xs-2" t-if="o.issue_by">
-                    <strong>Issue By:</strong>
-                    <p t-field="o.issue_by"/>
-                </div>
-                <div class="col-xs-2" t-if="o.company_id.name">
-                    <strong>Company:</strong>
-                    <p t-field="o.company_id.name"/>
-                </div>
-            </div>
             
-            <div class="row mt32 mb32">
-                <div class="col-xs-2" t-if="o.to_location_id.name">
-                    <strong>Issue To:</strong><br></br>
-					<span t-field="o.to_location_id.location_id.name" />
-					<b>/</b>
-					<span t-field="o.to_location_id.name" />
-                </div>
-                <div class="col-xs-2" t-if="o.receive_by">
-                    <strong>Received By:</strong>
-                    <p t-field="o.receive_by"/>
-                </div>
-                <div class="col-xs-2" t-if="o.approve_by">
-                    <strong>Approved By:</strong>
-                    <p t-field="o.approve_by"/>
-                </div>
-                <div class="col-xs-2" t-if="o.vehicle_id.model_id.modelname">
-                    <strong>Vehicle No:</strong><br></br>
-                    <span t-field="o.vehicle_id.model_id.brand_id.name" />
-					<b>/</b>
-					<span t-field="o.vehicle_id.model_id.modelname" />
-                </div>
-                <div class="col-xs-2" t-if="o.issue_date">
-                    <strong>Date for Issue:</strong>
-                    <p t-field="o.issue_date"/>
-                </div>
-            </div>
-
+            <table class="table table-condensed">
+                  <tr >
+                      <td>
+                      	<strong>(GIN)Ref;No:</strong>
+                      </td>
+                      <td>
+                          <strong t-field="o.name"></strong>
+                      </td>
+                      
+                      <td>
+                      	<strong>(RFI)Ref;No:</strong>
+                      </td>
+                      <td>
+					  	 <p t-field="o.request_id"/>
+					  </td>
+                  </tr>
+                  
+                  <tr >
+                      <td>
+                      	<strong>Issue To:</strong>
+                      </td>
+                      <td>
+					  	 <span t-field="o.to_location_id.location_id.name"/>
+						 <b>/</b>
+						 <span t-field="o.to_location_id.name"/>
+					  </td>
+                      
+                      <td>
+                      	<strong>Date for Issue:</strong>
+                      </td>
+                      <td>
+                          <span t-field="o.issue_date"/>
+                      </td>
+                  </tr>
+                  
+                  <tr >
+                      <td>
+                          <strong>Issue From:</strong>
+                      </td>
+                      <td>
+                          <span t-field="o.from_location_id.location_id.name"/>
+						  <b>/</b>
+						  <span t-field="o.from_location_id.name"/>
+                      </td>
+                      <td>
+                          <strong>Vehicle No:</strong>
+                      </td>
+                      <td>
+					  	 <span t-field="o.vehicle_id.model_id.brand_id.name"/>
+						 <b>/</b>
+						 <span t-field="o.vehicle_id.model_id.modelname"/>
+					  </td>
+                  </tr>
+                  
+                  <tr >
+                      <td>
+                          <strong>Requested By:</strong>
+                      </td>
+                      <td>
+					  	 <p t-field="o.request_by"/>
+					  </td>
+                      <td>
+                          <strong>Issue By:</strong>
+                      </td>
+                      <td>
+					  	 <p t-field="o.issue_by"/>
+					  </td>
+                  </tr>
+                  
+                  <tr >
+                      <td>
+                          <strong>Approved By:</strong>
+                      </td>
+                      <td>
+					  	 <p t-field="o.approve_by"/>
+					  </td>
+                      <td>
+                      	<strong>Company:</strong>
+                      </td>
+                      <td>
+                          <p t-field="o.company_id.name"/>
+                      </td>
+                  </tr>
+                  
+                  <tr >
+                      <td>
+                          <strong>Received By:</strong>
+                      </td>
+                      <td>
+					  	 <p t-field="o.receive_by"/>
+					  </td>
+                      <td>
+                      </td>
+                      <td>
+                      </td>
+                  </tr>
+            </table>
+            
             <table class="table table-condensed">
                 <thead>
                     <tr>
                         <th>Product</th>
-                        <th>Quantity</th>
-                        <th>Bigger UOM</th>
-                        <th>Quantity</th>
-                        <th>Smaller UOM</th>
+                        <th>Quantity(B/S)</th>
+                        <th>UOM(B/S)</th>
                         <th>Batch No</th>
                         <th>Expiry</th>
+                         <th>Remark</th>
                     </tr>
                 </thead>
                 <tbody class="invoice_tbody">
                     <tr t-foreach="o.p_line" t-as="l">
                         <td><span t-field="l.product_id"/></td>
-                        <td >
-                            <span t-field="l.big_issue_quantity"/>
+                        <td>
+                            <span t-field="l.big_issue_quantity"/> /  <span t-field="l.issue_quantity"/>
                         </td>
                         <td>
-                            <span t-field="l.big_uom_id.name" />
-                        </td>
-                        <td >
-                            <span t-field="l.issue_quantity"/>
-                        </td>
-                        <td>
-                            <span t-field="l.product_uom.name" />
+                            <span t-field="l.big_uom_id.name"/> /  <span t-field="l.product_uom.name"/>
                         </td>
                         <td>
                             <span t-field="l.batch_no.name" />
@@ -97,10 +140,48 @@
                         <td>
                             <span t-field="l.expiry_date" />
                         </td>
+                        <td><span t-field="l.remark"/></td>
                     </tr>
                 </tbody>
             </table>
-
+            
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Issued By</th>
+                        <th>Approved By</th>
+                        <th>Received By</th>
+                        
+                    </tr>
+                </thead>
+               <tbody class="invoice_tbody">
+					<tr t-foreach="o" t-as="l">
+	                    <td>Name</td>
+	                    <td><p t-field="l.issue_by"/></td>
+	                   	<td><p t-field="l.approve_by"/></td>
+	                   	<td><p t-field="l.receive_by"/></td>
+					</tr>
+					<tr>
+	                    <td>Position</td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+	                    <td>Signature</td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+	                    <td>Date</td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+                </tbody>
+			</table>
         </div>
     </t>
 </template>

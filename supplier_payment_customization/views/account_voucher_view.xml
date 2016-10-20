@@ -13,9 +13,9 @@
 						<field name="discount_account_id" />
 					</field>
 					
-					<field name="reconcile" position="after">
+					<!-- <field name="reconcile" position="after">
 						<field name="total_discount" sum="Total Discount" on_change="onchange_discount_amount(total_discount, context)"/>
-					</field>
+					</field> -->
 				</data>
 			</field>
 		</record>

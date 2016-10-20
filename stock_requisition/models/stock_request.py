@@ -14,7 +14,8 @@ from openerp.osv import fields , osv
 from openerp.tools.translate import _
 import datetime
 import math
-
+from datetime import datetime, date, time
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as OE_DATETIMEFORMAT
 class stock_requisition(osv.osv):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _name = "stock.requisition"
@@ -32,7 +33,7 @@ class stock_requisition(osv.osv):
             raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
         return company_id     
     
-    def on_change_sale_team_id(self, cr, uid, ids, sale_team_id, context=None):
+    def on_change_sale_team_id(self, cr, uid, ids, sale_team_id, pre_order,context=None):
         sale_order_obj = self.pool.get('sale.order')
         so_line_obj = self.pool.get('stock.requisition').browse(cr, uid, ids, context=context)
         print 'so_line_obj',so_line_obj
@@ -44,7 +45,7 @@ class stock_requisition(osv.osv):
         sale_qty=0
         sale_uom=0
         big_req_quantity=0
-        req_quantity=0                 
+        req_quantity=0   
         if sale_team_id:
             sale_team = self.pool.get('crm.case.section').browse(cr, uid, sale_team_id, context=context)
             location = sale_team.location_id
@@ -64,16 +65,20 @@ class stock_requisition(osv.osv):
                                     'big_req_quantity':req_quantity,
                                               })
             for line in order_ids:
-                print 'lineeeeeeeeeeeeeeeeeeeeee',line
                 order = sale_order_obj.browse(cr, uid, line, context=context)
+                date_order= order.date_order    
+                cr.execute("select (date_order+ '6 hour'::interval + '30 minutes'::interval)  from sale_order where id=%s",(order.id,))
+                sale_date=cr.fetchone()[0]
                 order_line.append({
                                     'name':order.name,
                                      'ref_no':order.tb_ref_no,
                                     'amount':order.amount_total,
-                                    'date':order.date_order,
+                                    'date':sale_date,
                                     'sale_team_id':order.section_id.id,
                                     'state':order.state,
-                                              })              
+                                              }) 
+            
+               
             values = {
                  'from_location_id':location,
                  'to_location_id':to_location_id ,
@@ -92,8 +97,8 @@ class stock_requisition(osv.osv):
         'request_by':fields.many2one('res.users', "Requested By"),
         'approve_by':fields.many2one('res.users', "Approved By"),
         'request_date' : fields.datetime('Date Requested'),
-         'issue_date':fields.datetime('Date For Issue From'),
-         's_issue_date':fields.datetime('Date For Issue To'),
+         'issue_date':fields.datetime('Date For Issue From',required=True),
+         's_issue_date':fields.datetime('Date For Issue To',required=True),
         'vehicle_id':fields.many2one('fleet.vehicle', 'Vehicle No'),
         'state': fields.selection([
             ('draft', 'Request'),
@@ -107,6 +112,8 @@ class stock_requisition(osv.osv):
                 'company_id':fields.many2one('res.company', 'Company'),
                  'order_line': fields.one2many('stock.requisition.order', 'stock_line_id', 'Sale Order', copy=True),
                  'pre_order':fields.boolean('Pre Order'),
+                 
+        
          'partner_id':fields.many2one('res.partner', string='Partner'),
 
 }
@@ -133,13 +140,12 @@ class stock_requisition(osv.osv):
             sale_team_id = stock_request_data.sale_team_id.id
             request_date=stock_request_data.request_date
             order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False),('is_generate','=',False), ('invoiced', '=', False), ('state', 'not in', ['done', 'cancel']),('date_order','>',issue_date_from),('date_order','<',issue_date_to)], context=context) 
-            print 'order_ids',order_ids,stock_request_data.id
             cr.execute("delete from stock_requisition_order where  stock_line_id=%s",(stock_request_data.id,))
-            
-            if request_date:
-                    cr.execute("select sol.product_id,sum(product_uom_qty) as qty ,sol.product_uom from sale_order so,sale_order_line sol where so.id=sol.order_id and delivery_id=%s and (date_order+ '6 hour'::interval + '30 minutes'::interval)::date between %s and %s group by product_id,product_uom",(sale_team_id,issue_date_from,issue_date_to,))
+            order_list =  str(tuple(order_ids))
+            order_list= eval(order_list)
+            if request_date and order_list:
+                    cr.execute("select sol.product_id,sum(product_uom_qty) as qty ,sol.product_uom from sale_order so,sale_order_line sol where so.id=sol.order_id and so.id in %s group by product_id,product_uom",(order_list,))
                     sale_record=cr.fetchall()             
-                    print 'sale_record',sale_record      
                     if sale_record:
                         for sale_data in sale_record:
                             product_id=int(sale_data[0])
@@ -154,16 +160,17 @@ class stock_requisition(osv.osv):
                             if  big_uom_qty:
                                 big_req_quantity=big_uom_qty[0]
                                 req_quantity=big_uom_qty[1]
-                                print 'big_req',big_req_quantity,req_quantity
                                 cr.execute("update stock_requisition_line set big_req_quantity=%s,req_quantity=%s where product_id=%s and line_id=%s",(big_req_quantity,req_quantity,product_id,stock_request_data.id,))
                                         
             for line in order_ids:
                 order = sale_order_obj.browse(cr, uid, line, context=context)                
+                cr.execute("select (date_order+ '6 hour'::interval + '30 minutes'::interval)  from sale_order where id=%s",(order.id,))
+                sale_date=cr.fetchone()[0]                
                 so_line_obj.create(cr, uid, {'stock_line_id': stock_request_data.id,
                                                         'name':order.name,
                                                          'ref_no':order.tb_ref_no,
                                                         'amount':order.amount_total,
-                                                        'date':order.date_order,
+                                                        'date':sale_date,
                                                         'sale_team_id':order.section_id.id,
                                                         'state':order.state
                                          }, context=context)        
@@ -181,7 +188,7 @@ class stock_requisition(osv.osv):
         if ids:
             req_value = requisition_obj.browse(cr, uid, ids[0], context=context)
             request_id = req_value.id
-            issue_date = req_value.issue_date
+            request_date = req_value.request_date
             to_location_id = req_value.to_location_id.id
             from_location_id = req_value.from_location_id.id
             vehicle_no = req_value.vehicle_id.id
@@ -194,11 +201,12 @@ class stock_requisition(osv.osv):
                 print 'order',order_id
             good_id = good_obj.create(cr, uid, {'vehicle_id': vehicle_no,
                                                 'sale_team_id':sale_team_id,
-                                          'issue_date': issue_date,
+                                          'issue_date': request_date,
                                           'request_id':request_id,
                                           'to_location_id':to_location_id,
                                           'from_location_id':from_location_id,
                                           'branch_id':branch_id}, context=context)
+            
             req_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
             if good_id and req_line_id:
                 
@@ -210,14 +218,19 @@ class stock_requisition(osv.osv):
                         big_uom_id = req_line_value.big_uom_id.id
                         big_req_quantity = req_line_value.big_req_quantity
                         uom_ratio = req_line_value.uom_ratio
-                        quantity = req_line_value.req_quantity                        
+                        quantity = req_line_value.req_quantity 
+                        addtional_big_req_quantity = req_line_value.addtional_big_req_quantity
+                        addtional_small_req_quantity = req_line_value.addtional_small_req_quantity                       
                         good_line_obj.create(cr, uid, {'line_id': good_id,
                                               'product_id': product_id,
                                               'product_uom': product_uom,
                                               'uom_ratio':uom_ratio,
                                              'big_uom_id':big_uom_id,
                                               'issue_quantity':quantity,
-                                              'big_issue_quantity':big_req_quantity}, context=context)
+                                              'big_issue_quantity':big_req_quantity,
+                                              'addtional_big_req_quantity':addtional_big_req_quantity,
+                                              'addtional_small_req_quantity':addtional_small_req_quantity,
+                                              }, context=context)
                     
         return self.write(cr, uid, ids, {'state':'approve' ,'approve_by':uid})    
 
@@ -246,7 +259,9 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
          'remark':fields.char('Remark'),
         'big_uom_id': fields.many2one('product.uom', 'Bigger UOM', required=True, help="Default Unit of Measure used for all stock operation."),
         'big_req_quantity' : fields.float(string='Qty', digits=(16, 0)),
-         
+        'addtional_big_req_quantity' : fields.float(string='Add Qty', digits=(16, 0)),
+        'addtional_small_req_quantity' : fields.float(string='Add Qty', digits=(16, 0)),
+
     }
         
 class stock_requisition_order(osv.osv):  # #prod_pricelist_update_line

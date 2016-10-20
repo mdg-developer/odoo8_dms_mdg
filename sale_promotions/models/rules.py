@@ -142,7 +142,6 @@ class PromotionsRules(osv.Model):
         'to_date':fields.datetime('To Date'),
         'sequence':fields.integer('Sequence'),
         'sale_channel_id':fields.many2many('sale.channel', 'promo_sale_channel_rel', 'promo_id', 'sale_channel_id', string='Sale Channel'),
-        'branch_id':fields.many2one('res.branch', 'Branch', required=False),
         'logic':fields.selection([
                             ('and', 'All'),
                             ('or', 'Any'),
@@ -170,7 +169,7 @@ class PromotionsRules(osv.Model):
               in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\nThe 'Waiting Schedule' status is set when the invoice is confirmed\
                but waiting for the scheduler to run on the order date.", select=True),
         'outlettype_id':fields.many2many('outlettype.outlettype', 'promos_rules_outlettype_rel' , 'promos_rules_id' ,'outlettype_id' , string='Outlet Type'),
-        'branch_id':fields.many2many('res.branch', string='Branch'),
+        'branch_id':fields.many2many('res.branch', string='Branch',required=True),
         'customer_ids':fields.many2many('res.partner'),
         'product_ids':fields.many2many('product.product', 'promos_rules_product_rel' , 'promos_rules_id' ,'product_id' , string='Product'),
         

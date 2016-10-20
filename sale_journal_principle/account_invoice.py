@@ -172,7 +172,66 @@ class account_invoice(models.Model):
                 'main_group': account_id,
             }
             print 'res222>>>',res
-            return res    
+            return res 
+    def line_dr_convert_account_with_principle(self, line):
+        list_one = line
+        print 'list_one>>>',list_one
+        list_group = [i['main_group'] for i in list_one if i is not None]
+        print 'i>>>',list_group
+        val = set(map(lambda x:x, list_group))
+        print 'val',val
+        arr_list = []
+        for v in val:
+            print 'v',v
+            price = 0
+            date_maturity = partner_id = name = date = debit = credit = account_id = analytic_lines = amount_currency = currency_id = tax_code_id = tax_amount = ref = quantity = product_id = product_uom_id = analytic_account_id = None
+            result = [a for a in list_one if a is not None and a['main_group'] == v]
+            print 'result>>>',result
+            for res in result:
+                price += res['debit']
+                date_maturity = res['date_maturity']
+                partner_id = res['partner_id']
+                name = '/'#res['name']
+                date = res['date']
+                debit = res['debit']
+                credit = res['credit']
+                account_id = res['main_group'] #replace with product principle AR account
+                analytic_lines = res['analytic_lines']
+                amount_currency = res['amount_currency']
+                currency_id = res['currency_id']
+                tax_code_id = res['tax_code_id']
+                tax_amount = res['tax_amount']
+                ref = res['ref']
+                quantity = res['quantity']
+                product_id = res['product_id']
+                product_uom_id = res['product_uom_id']
+                analytic_account_id = res['analytic_account_id']
+                print 'res>>>',res['debit']
+            print 'price>>',price
+            rec = {
+                        'date_maturity': date_maturity,
+                        'partner_id': partner_id,
+                        'name': name,
+                        'date': date,
+                        'debit': price,
+                        'credit': 0,
+                        'account_id': account_id,
+                        
+                        'analytic_lines': analytic_lines,
+                        'amount_currency': amount_currency,
+                        'currency_id': currency_id,
+                        'tax_code_id': tax_code_id,
+                        'tax_amount': tax_amount,
+                        'ref': ref,
+                        'quantity': quantity,
+                        'product_id': product_id,
+                        'product_uom_id': product_uom_id,
+                        'analytic_account_id': analytic_account_id,
+                       
+                    }
+            arr_list.append(rec)
+        print 'arr_list>>>',arr_list
+        return arr_list           
     def line_get_convert_accountid(self, line, product, part, date):
         account_id = None
         #print 'main>>>',line
@@ -346,12 +405,14 @@ class account_invoice(models.Model):
 
             #line = [(0, 0, self.line_get_convert(l, part.id, date)) for l in iml]
             line_cr = [self.line_get_convert_new(l, part.id, date) for l in iml]
-            
-            line_dr = [self.line_get_convert_dr(l,part.id,date)for l in iml]
+            print 'line_cr>>>',line_cr
+            line_tmp = [self.line_get_convert_dr(l,part.id,date)for l in iml]
+            line_dr = self.line_dr_convert_account_with_principle(line_tmp)
+            print 'line_dr>>>',line_dr
             #line_product = [self.line_get_product(l, part.id, date) for l in iml]
             #line_dr = [(0, 0, self.line_get_convert_accountid(l, part.id, date)) for l in line_cr]
             lines = line_cr + line_dr
-            
+            print 'lines>>>',lines
             line = [(0, 0, self.line_get_convert(l, part.id, date)) for l in lines  if l is not None]
             
             line = inv.group_lines(iml, line)

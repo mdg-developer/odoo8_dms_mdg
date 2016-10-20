@@ -270,6 +270,7 @@
 						expr="//form[@string='Contact']/sheet/group/field[@name='mobile']"
 						position="after">
 						<field name="contact_note" />
+						<field name="credit_allow" />
 					</xpath>
 				</data>
 			</field>
