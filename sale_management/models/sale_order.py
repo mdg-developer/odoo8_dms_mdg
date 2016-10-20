@@ -85,7 +85,7 @@ class sale_order(osv.osv):
                'invoiced': fields.function(_invoiced, string='Paid',
                 fnct_search=_invoiced_search, type='boolean', help="It indicates that an invoice has been paid.", store=True),
                 'delivery_id': fields.many2one('crm.case.section', 'Delivery Team'),
-                'pre_order': fields.boolean("Pre Order" ),
+                'pre_order': fields.boolean("Pre Order" , readonly=True),
                 'is_generate':fields.boolean('RFI Generated'),
                  
                }
@@ -112,8 +112,8 @@ class sale_order(osv.osv):
         val.update(delivery_onchange['value'])
         if pricelist:
             val['pricelist_id'] = pricelist
-#         if not self._get_default_section_id(cr, uid, context=context) and part.section_id:
-#             val['section_id'] = part.section_id.id
+        if not self._get_default_section_id(cr, uid, context=context) and part.section_id:
+            val['section_id'] = part.section_id.id
         sale_note = self.get_salenote(cr, uid, ids, part.id, context=context)
         if sale_note: val.update({'note': sale_note})  
         return {'value': val}

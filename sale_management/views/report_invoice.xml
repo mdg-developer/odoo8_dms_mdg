@@ -72,7 +72,7 @@
 								<td></td>
 								<td></td>
 								<td>
-									<b>Deliver Form</b>
+									<b>Deliver No.</b>
 									<b>-</b>
 									<span t-field="o.origin" />
 								</td>
@@ -89,7 +89,7 @@
 									<th class="text-center" style="border:1pt solid;border-color:black;">အေရအတြက္</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">ႏႈန္း</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">ေလ်ာ.ေငြ</th>
-									<th class="text-center" style="border:1pt solid;border-color:black;">သင္ .ေငြ</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">သင့္ေငြ</th>
 								</tr>
 							</thead>
 							<tbody class="invoice_tbody">
@@ -149,7 +149,7 @@
 								<table class="table">
 									<tr>
 										<td style="border-top-color:white;padding-bottom: 2mm;">
-											သင္ .ေငြ
+											သင့္ေငြ
 										</td>
 										<td class="text-right" style="border-top-color:white;padding-bottom: 2mm;">
 											<span t-field="o.amount_untaxed" />
