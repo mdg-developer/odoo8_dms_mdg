@@ -180,7 +180,10 @@ class good_issue_line(osv.osv):  # #prod_pricelist_update_line
                 'expiry_date':fields.date('Expiry'),
                  'remark':fields.char('Remark'),
         'big_uom_id': fields.many2one('product.uom', 'Bigger UoM', required=True, help="Default Unit of Measure used for all stock operation."),
-        'big_issue_quantity' : fields.float(string='Qty', digits=(16, 0)),               
+        'big_issue_quantity' : fields.float(string='Qty', digits=(16, 0)),    
+        'addtional_big_req_quantity' : fields.float(string='Add Qty', digits=(16, 0)),
+        'addtional_small_req_quantity' : fields.float(string='Add Qty', digits=(16, 0)),
+           
     }
         
    

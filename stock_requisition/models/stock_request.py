@@ -77,15 +77,13 @@ class stock_requisition(osv.osv):
                                     'sale_team_id':order.section_id.id,
                                     'state':order.state,
                                               }) 
-            p_addtional_line = None
-            if pre_order:
-                p_addtional_line = data_line             
+            
+               
             values = {
                  'from_location_id':location,
                  'to_location_id':to_location_id ,
                  'vehicle_id':vehicle_id,
                 'p_line': data_line,
-                'p_addtional_line': p_addtional_line,
                 'order_line':order_line
             }
         return {'value': values}    
@@ -115,8 +113,7 @@ class stock_requisition(osv.osv):
                  'order_line': fields.one2many('stock.requisition.order', 'stock_line_id', 'Sale Order', copy=True),
                  'pre_order':fields.boolean('Pre Order'),
                  
-        'p_addtional_line':fields.one2many('stock.requisition.line', 'line_id', 'Additional Product Lines',
-                              copy=True),
+        
          'partner_id':fields.many2one('res.partner', string='Partner'),
 
 }
@@ -143,14 +140,12 @@ class stock_requisition(osv.osv):
             sale_team_id = stock_request_data.sale_team_id.id
             request_date=stock_request_data.request_date
             order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False),('is_generate','=',False), ('invoiced', '=', False), ('state', 'not in', ['done', 'cancel']),('date_order','>',issue_date_from),('date_order','<',issue_date_to)], context=context) 
-            print 'order_ids',order_ids,stock_request_data.id,issue_date_from,issue_date_to
             cr.execute("delete from stock_requisition_order where  stock_line_id=%s",(stock_request_data.id,))
             order_list =  str(tuple(order_ids))
             order_list= eval(order_list)
             if request_date and order_list:
                     cr.execute("select sol.product_id,sum(product_uom_qty) as qty ,sol.product_uom from sale_order so,sale_order_line sol where so.id=sol.order_id and so.id in %s group by product_id,product_uom",(order_list,))
                     sale_record=cr.fetchall()             
-                    print 'sale_record',sale_record      
                     if sale_record:
                         for sale_data in sale_record:
                             product_id=int(sale_data[0])
@@ -165,7 +160,6 @@ class stock_requisition(osv.osv):
                             if  big_uom_qty:
                                 big_req_quantity=big_uom_qty[0]
                                 req_quantity=big_uom_qty[1]
-                                print 'big_req',big_req_quantity,req_quantity
                                 cr.execute("update stock_requisition_line set big_req_quantity=%s,req_quantity=%s where product_id=%s and line_id=%s",(big_req_quantity,req_quantity,product_id,stock_request_data.id,))
                                         
             for line in order_ids:
@@ -212,6 +206,7 @@ class stock_requisition(osv.osv):
                                           'to_location_id':to_location_id,
                                           'from_location_id':from_location_id,
                                           'branch_id':branch_id}, context=context)
+            
             req_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
             if good_id and req_line_id:
                 
@@ -223,14 +218,19 @@ class stock_requisition(osv.osv):
                         big_uom_id = req_line_value.big_uom_id.id
                         big_req_quantity = req_line_value.big_req_quantity
                         uom_ratio = req_line_value.uom_ratio
-                        quantity = req_line_value.req_quantity                        
+                        quantity = req_line_value.req_quantity 
+                        addtional_big_req_quantity = req_line_value.addtional_big_req_quantity
+                        addtional_small_req_quantity = req_line_value.addtional_small_req_quantity                       
                         good_line_obj.create(cr, uid, {'line_id': good_id,
                                               'product_id': product_id,
                                               'product_uom': product_uom,
                                               'uom_ratio':uom_ratio,
                                              'big_uom_id':big_uom_id,
                                               'issue_quantity':quantity,
-                                              'big_issue_quantity':big_req_quantity}, context=context)
+                                              'big_issue_quantity':big_req_quantity,
+                                              'addtional_big_req_quantity':addtional_big_req_quantity,
+                                              'addtional_small_req_quantity':addtional_small_req_quantity,
+                                              }, context=context)
                     
         return self.write(cr, uid, ids, {'state':'approve' ,'approve_by':uid})    
 
@@ -259,7 +259,9 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
          'remark':fields.char('Remark'),
         'big_uom_id': fields.many2one('product.uom', 'Bigger UOM', required=True, help="Default Unit of Measure used for all stock operation."),
         'big_req_quantity' : fields.float(string='Qty', digits=(16, 0)),
-         
+        'addtional_big_req_quantity' : fields.float(string='Add Qty', digits=(16, 0)),
+        'addtional_small_req_quantity' : fields.float(string='Add Qty', digits=(16, 0)),
+
     }
         
 class stock_requisition_order(osv.osv):  # #prod_pricelist_update_line

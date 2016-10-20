@@ -12,7 +12,8 @@
 				<form string="Fine Sheet">
 					<header>
 						<button name="approve" string="Request" class="oe_highlight"
-							type="object" states="draft" groups="base.group_sale_supervisor,base.group_sale_manager,base.group_sale_admin,base.group_no_one" />
+							type="object" states="draft"
+							groups="base.group_sale_supervisor,base.group_sale_manager,base.group_sale_admin,base.group_no_one" />
 						<field name="state" widget="statusbar" />
 					</header>
 					<sheet>
@@ -29,7 +30,7 @@
 								<field name="so_no" attrs="{'readonly':[('state','=','approve')]}"
 									invisible="1" />
 								<field name="company_id" attrs="{'readonly':[('state','=','approve')]}" />
-								<field name="pre_order"  invisible="1"/>
+								<field name="pre_order" invisible="1" />
 							</group>
 							<group>
 								<field name="issue_to" attrs="{'readonly':[('state','=','approve')]}" />
@@ -49,35 +50,32 @@
 						</group>
 						<group>
 							<notebook>
+
+
 								<page string="Stock">
-									<field name="p_line" attrs="{'readonly':[('state','=','approve')],
-									    'readonly':[('pre_order','=',True)]
+									<field name="p_line"
+										attrs="{'readonly':[('state','=','approve')],
 									    }">
-										<tree string="Stock Request Line" editable="bottom">
-											<field name="product_id" on_change="on_change_product_id(product_id)" 
-											    />
-											<field name="big_req_quantity" />
-											<field name="big_uom_id" />
-											<field name="req_quantity"/>
-											<field name="product_uom" />
-											<field name="uom_ratio" invisible="1" />
-											<field name="remark" />
-										</tree>
-									</field>
-								</page>
-								<page string="Addtional Stock" attrs="{'invisible':[('pre_order','=',False)]}">
-									<field name="p_addtional_line" attrs="{'readonly':[('state','=','approve')]}">
 										<tree string="Stock Request Line" editable="bottom">
 											<field name="product_id" on_change="on_change_product_id(product_id)" />
 											<field name="big_req_quantity" />
+											<field name="addtional_big_req_quantity" />
 											<field name="big_uom_id" />
+
 											<field name="req_quantity" />
+											<field name="addtional_small_req_quantity" />
 											<field name="product_uom" />
+
+
 											<field name="uom_ratio" invisible="1" />
 											<field name="remark" />
 										</tree>
 									</field>
+
 								</page>
+
+
+
 								<page string="Sales Order" attrs="{'invisible':[('pre_order','=',False)]}">
 									<field name="order_line" attrs="{'readonly':[('state','=','approve')]}">
 										<tree string="Stock Request Order Line" editable="bottom">
@@ -111,12 +109,12 @@
 			<field name="arch" type="xml">
 				<tree string="Contents">
 					<field name="state" />
-					<field name="request_date"  string="Req Date" />				    				    
-					<field name="name"  string="Ref No."/>
+					<field name="request_date" string="Req Date" />
+					<field name="name" string="Ref No." />
 					<field name="request_by" />
 					<field name="issue_to" />
 					<field name="from_location_id" string="Location" />
-					<field name="to_location_id"   string="Warehouse" />				
+					<field name="to_location_id" string="Warehouse" />
 				</tree>
 			</field>
 		</record>
@@ -137,7 +135,8 @@
 							context="{'group_by':'to_location_id'}" />
 						<filter string="Request Date" icon="terp-partner" domain="[]"
 							context="{'group_by':'request_date'}" />
-						<filter string="Pending" domain="[('state','=','draft')]" name="state_filter"/>
+						<filter string="Pending" domain="[('state','=','draft')]"
+							name="state_filter" />
 					</group>
 				</search>
 			</field>
