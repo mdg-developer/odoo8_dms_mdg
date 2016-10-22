@@ -263,14 +263,12 @@
 						expr="//page[@name='sales_purchases']/group/group/field[@name='supplier']"
 						position="replace">
 						<field name="supplier" attrs="{'invisible':[('customer','=',True)]}" />
-
 					</xpath>
 
 					<xpath
 						expr="//form[@string='Contact']/sheet/group/field[@name='mobile']"
 						position="after">
 						<field name="contact_note" />
-					</xpath>
 					</xpath>
 				</data>
 			</field>
