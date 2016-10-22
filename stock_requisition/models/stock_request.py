@@ -42,10 +42,10 @@ class stock_requisition(osv.osv):
         values = {}
         data_line = []
         order_line = []
-        sale_qty=0
-        sale_uom=0
         big_req_quantity=0
         req_quantity=0   
+        sale_req_quantity=0
+        addtional_req_quantity=0
         if sale_team_id:
             sale_team = self.pool.get('crm.case.section').browse(cr, uid, sale_team_id, context=context)
             location = sale_team.location_id
@@ -63,6 +63,8 @@ class stock_requisition(osv.osv):
                                     'req_quantity':big_req_quantity,
                                     'big_uom_id':product.product_tmpl_id.big_uom_id and product.product_tmpl_id.big_uom_id.id or False,
                                     'big_req_quantity':req_quantity,
+                                    'sale_req_quantity':sale_req_quantity,
+                                    'addtional_req_quantity':addtional_req_quantity,
                                               })
             for line in order_ids:
                 order = sale_order_obj.browse(cr, uid, line, context=context)
@@ -141,6 +143,7 @@ class stock_requisition(osv.osv):
             request_date=stock_request_data.request_date
             order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False),('is_generate','=',False), ('invoiced', '=', False), ('state', 'not in', ['done', 'cancel']),('date_order','>',issue_date_from),('date_order','<',issue_date_to)], context=context) 
             cr.execute("delete from stock_requisition_order where  stock_line_id=%s",(stock_request_data.id,))
+            cr.execute("update stock_requisition_line set sale_req_quantity=0 where line_id=%s",(stock_request_data.id,))
             order_list =  str(tuple(order_ids))
             order_list= eval(order_list)
             if request_date and order_list:
@@ -150,17 +153,14 @@ class stock_requisition(osv.osv):
                         for sale_data in sale_record:
                             product_id=int(sale_data[0])
                             sale_qty=int(sale_data[1])
-                            product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)                                                                          
-                            cr.execute("select floor(1/factor) as ratio from product_uom where active = true and id=%s",(product.product_tmpl_id.big_uom_id.id,))
-                            bigger_qty=cr.fetchone()[0]
-                            bigger_qty=int(bigger_qty)
-                            #print ' bigger_qty',sale_qty,bigger_qty,type(sale_qty),type(bigger_qty)                        
-                            big_uom_qty=divmod(sale_qty,bigger_qty)
-                            #print 'big_uom_qty',big_uom_qty
-                            if  big_uom_qty:
-                                big_req_quantity=big_uom_qty[0]
-                                req_quantity=big_uom_qty[1]
-                                cr.execute("update stock_requisition_line set big_req_quantity=%s,req_quantity=%s where product_id=%s and line_id=%s",(big_req_quantity,req_quantity,product_id,stock_request_data.id,))
+                            sale_product_uom=int(sale_data[2])
+                            product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+                            if sale_product_uom ==product.product_tmpl_id.big_uom_id.id:                                                                          
+                                cr.execute("select floor(1/factor) as ratio from product_uom where active = true and id=%s",(product.product_tmpl_id.big_uom_id.id,))
+                                bigger_qty=cr.fetchone()[0]
+                                bigger_qty=int(bigger_qty)
+                                sale_qty=bigger_qty*sale_qty
+                            cr.execute("update stock_requisition_line set sale_req_quantity=sale_req_quantity+%s where product_id=%s and line_id=%s",(sale_qty,product_id,stock_request_data.id,))
                                         
             for line in order_ids:
                 order = sale_order_obj.browse(cr, uid, line, context=context)                
@@ -182,9 +182,7 @@ class stock_requisition(osv.osv):
         sale_order_obj = self.pool.get('sale.order')
         good_obj = self.pool.get('good.issue.note')
         good_line_obj = self.pool.get('good.issue.note.line')
-        stock_so_line_obj = self.pool.get('stock.requisition.order')
-
-        req_value = req_lines = {}
+        req_value= {}
         if ids:
             req_value = requisition_obj.browse(cr, uid, ids[0], context=context)
             request_id = req_value.id
@@ -210,17 +208,15 @@ class stock_requisition(osv.osv):
             req_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
             if good_id and req_line_id:
                 
-                for id in req_line_id:
-                    req_line_value = product_line_obj.browse(cr, uid, id, context=context)
+                for data in req_line_id:
+                    req_line_value = product_line_obj.browse(cr, uid, data, context=context)
                     if (req_line_value.req_quantity + req_line_value.big_req_quantity) != 0:
                         product_id = req_line_value.product_id.id
                         product_uom = req_line_value.product_uom.id
                         big_uom_id = req_line_value.big_uom_id.id
                         big_req_quantity = req_line_value.big_req_quantity
                         uom_ratio = req_line_value.uom_ratio
-                        quantity = req_line_value.req_quantity 
-                        addtional_big_req_quantity = req_line_value.addtional_big_req_quantity
-                        addtional_small_req_quantity = req_line_value.addtional_small_req_quantity                       
+                        quantity = req_line_value.req_quantity            
                         good_line_obj.create(cr, uid, {'line_id': good_id,
                                               'product_id': product_id,
                                               'product_uom': product_uom,
@@ -228,11 +224,31 @@ class stock_requisition(osv.osv):
                                              'big_uom_id':big_uom_id,
                                               'issue_quantity':quantity,
                                               'big_issue_quantity':big_req_quantity,
-                                              'addtional_big_req_quantity':addtional_big_req_quantity,
-                                              'addtional_small_req_quantity':addtional_small_req_quantity,
                                               }, context=context)
-                    
         return self.write(cr, uid, ids, {'state':'approve' ,'approve_by':uid})    
+    
+    def update_data(self, cr, uid, ids, context=None):
+        product_line_obj = self.pool.get('stock.requisition.line')
+        req_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
+        for data in req_line_id:
+            req_line_value = product_line_obj.browse(cr, uid, data, context=context)
+            sale_req_qty=req_line_value.sale_req_quantity
+            add_req_qty=req_line_value.addtional_req_quantity
+            product_id=req_line_value.product_id.id
+            total_qty=sale_req_qty+add_req_qty
+            product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)                                                                          
+            cr.execute("select floor(1/factor) as ratio from product_uom where active = true and id=%s",(product.product_tmpl_id.big_uom_id.id,))
+            bigger_qty=cr.fetchone()[0]
+            bigger_qty=int(bigger_qty)
+            #print ' bigger_qty',sale_qty,bigger_qty,type(sale_qty),type(bigger_qty)                        
+            big_uom_qty=divmod(total_qty,bigger_qty)
+            #print 'big_uom_qty',big_uom_qty
+            if  big_uom_qty:
+                big_req_quantity=big_uom_qty[0]
+                req_quantity=big_uom_qty[1]
+                cr.execute("update stock_requisition_line set big_req_quantity=%s,req_quantity=%s where product_id=%s and line_id=%s",(big_req_quantity,req_quantity,product_id, ids[0],))
+                                    
+        return True    
 
             
 class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
@@ -259,8 +275,8 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
          'remark':fields.char('Remark'),
         'big_uom_id': fields.many2one('product.uom', 'Bigger UOM', required=True, help="Default Unit of Measure used for all stock operation."),
         'big_req_quantity' : fields.float(string='Qty', digits=(16, 0)),
-        'addtional_big_req_quantity' : fields.float(string='Add Qty', digits=(16, 0)),
-        'addtional_small_req_quantity' : fields.float(string='Add Qty', digits=(16, 0)),
+        'sale_req_quantity' : fields.float(string='Small Req Qty', digits=(16, 0)),
+        'addtional_req_quantity' : fields.float(string='Small Add Qty', digits=(16, 0)),
 
     }
         

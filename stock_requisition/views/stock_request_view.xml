@@ -48,34 +48,29 @@
 								<field name="approve_by" attrs="{'readonly':[('state','=','approve')]}" />
 							</group>
 						</group>
+						<div class="oe_subtotal_footer_separator oe_inline" attrs="{'invisible':[('pre_order','=',False)]}" groups="base.group_sale_supervisor,base.group_sale_manager,base.group_sale_admin,base.group_no_one">
+							<label string="Update Qty" class="oe_edit_only" />
+							<button name="update_data" states="draft" string="(update)"
+								type="object" class="oe_edit_only oe_link"
+								groups="base.group_sale_supervisor,base.group_sale_manager,base.group_sale_admin,base.group_no_one" />
+						</div>
 						<group>
 							<notebook>
-
-
 								<page string="Stock">
-									<field name="p_line"
-										attrs="{'readonly':[('state','=','approve')],
-									    }">
+									<field name="p_line" attrs="{'readonly':[('state','=','approve')]}">
 										<tree string="Stock Request Line" editable="bottom">
 											<field name="product_id" on_change="on_change_product_id(product_id)" />
+											<field name="sale_req_quantity" />
+											<field name="addtional_req_quantity" />
 											<field name="big_req_quantity" />
-											<field name="addtional_big_req_quantity" />
 											<field name="big_uom_id" />
-
 											<field name="req_quantity" />
-											<field name="addtional_small_req_quantity" />
 											<field name="product_uom" />
-
-
 											<field name="uom_ratio" invisible="1" />
 											<field name="remark" />
 										</tree>
 									</field>
-
 								</page>
-
-
-
 								<page string="Sales Order" attrs="{'invisible':[('pre_order','=',False)]}">
 									<field name="order_line" attrs="{'readonly':[('state','=','approve')]}">
 										<tree string="Stock Request Order Line" editable="bottom">
