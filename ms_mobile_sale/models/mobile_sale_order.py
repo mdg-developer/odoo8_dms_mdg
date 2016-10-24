@@ -1898,7 +1898,6 @@ class mobile_sale_order(osv.osv):
             if rental_collection:
                 for ar in rental_collection:            
                     cursor.execute('select id from mobile_sale_order where name = %s ', (ar['payment_id'],))
-                    cursor.execute('select id from mobile_sale_order where name = %s ',(ar['payment_id'],))
                     data = cursor.fetchall()
                     if data:
                         so_id = data[0][0]
@@ -2308,4 +2307,3 @@ class partner_photo(osv.osv):
         'image_five':fields.binary('image_five')
        }
 partner_photo()    
-
