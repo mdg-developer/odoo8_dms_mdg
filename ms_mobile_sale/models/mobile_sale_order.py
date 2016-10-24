@@ -1723,6 +1723,7 @@ class mobile_sale_order(osv.osv):
                         'request_date':sr['request_date'],
                         'request_by':sr['request_by'],
                         'issue_date':sr['issue_date'] ,
+						's_issue_date':sr['issue_date'] ,
                         'state': 'draft',
                         'issue_to':sr['issue_to'],
                         'company_id':sr['company_id'],
