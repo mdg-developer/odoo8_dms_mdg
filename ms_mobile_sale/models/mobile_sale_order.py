@@ -1874,18 +1874,20 @@ class mobile_sale_order(osv.osv):
                 rental_collection.append(r)  
             if rental_collection:
                 for ar in rental_collection:
-                                                
                     cursor.execute('select id from mobile_sale_order where name = %s ',(ar['payment_id'],))
                     data = cursor.fetchall()
                     if data:
                         so_id = data[0][0]
                     else:
                         so_id = None
-                    
+                    amount=ar['amount']
+                    cursor.execute("select replace(%s, ',', '')::float as amount",(amount,))
+                    amount_data = cursor.fetchone()[0]
+                    amount=amount_data
                     rental_result = {                    
                         'payment_id':so_id,                        
                         'journal_id':ar['journal_id'],
-                        'amount':ar['amount'],
+                        'amount':amount,
                         'date':ar['date'],
                         'notes':ar['notes'],    
                     }
