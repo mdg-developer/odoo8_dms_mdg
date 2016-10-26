@@ -14,9 +14,9 @@
 						<button name="confirm" string="Confirm" class="oe_highlight"
 							type="object" states="draft" />
 						<button name="approve" string="Approve" class="oe_highlight"
-							type="object" states="confirm" groups="stock.group_stock_manager" />
+							type="object" states="confirm" groups="stock.group_stock_manager,stock.group_stock_user" />
 						<button name="cancel" string="Cancel" class="oe_highlight"
-							type="object" states="confirm" groups="stock.group_stock_manager" />
+							type="object" states="confirm" groups="stock.group_stock_manager,stock.group_stock_user" />
 						<field name="state" widget="statusbar" />
 					</header>
 					<sheet>

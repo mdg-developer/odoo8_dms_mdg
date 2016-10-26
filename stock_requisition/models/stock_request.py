@@ -207,7 +207,11 @@ class stock_requisition(osv.osv):
             
             req_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
             if good_id and req_line_id:
-                
+                cr.execute('select sum(req_quantity+big_req_quantity) from stock_requisition_line where line_id=%s ',(ids[0],))
+                condition_data=cr.fetchone()[0]
+                if condition_data ==0.0:
+                    raise osv.except_osv(_('Warning'),
+                                     _('Please Press Update Qty Button'))                
                 for data in req_line_id:
                     req_line_value = product_line_obj.browse(cr, uid, data, context=context)
                     if (req_line_value.req_quantity + req_line_value.big_req_quantity) != 0:

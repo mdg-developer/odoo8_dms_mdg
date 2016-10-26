@@ -137,14 +137,7 @@ class good_issue_note(osv.osv):
                                           'name':name,
                                            'origin':origin,
                                           'state':'confirmed'}, context=context)     
-                    move_obj.action_done(cr, uid, move_id, context=context)                       
-#          move_obj = self.pool.get('stock.move')
-#          if ids:
-#             note_value = self.browse(cr, uid, ids[0], context=context)
-#             note_ref = note_value.name
-#             move_id = move_obj.search(cr, uid, [('origin', '=', note_ref)], context=context)
-#             for stock_id in move_id:
-#                 print 'idddddddddd', stock_id                
+                    move_obj.action_done(cr, uid, move_id, context=context)                            
         return self.write(cr, uid, ids, {'state':'approve','receive_by':uid})            
 class good_issue_line(osv.osv):  # #prod_pricelist_update_line
     _name = 'good.issue.note.line'

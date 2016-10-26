@@ -12,11 +12,11 @@
 				<form string="Good Issue Note Form">
 					<header>
 						<button name="issue" string="Issue" class="oe_highlight"
-							type="object" states="draft" groups="stock.group_stock_manager" />
+							type="object" states="draft" groups="stock.group_stock_manager,stock.group_stock_user" />
 						<button name="confirm" string="Approve" class="oe_highlight"
-							type="object" states="issue" groups="stock.group_stock_manager" />
+							type="object" states="issue" groups="stock.group_stock_manager,stock.group_stock_user" />
 						<button name="approve" string="Receive" class="oe_highlight"
-							type="object" states="confirm" groups="stock.group_stock_manager" />
+							type="object" states="confirm" groups="stock.group_stock_manager,stock.group_stock_user" />
 <!-- 						<button name="cancel" string="Cancel" class="oe_highlight" -->
 <!-- 							type="object" states="confirm" groups="stock.group_stock_manager" /> -->
 						<field name="state" widget="statusbar" />
