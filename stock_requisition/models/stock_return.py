@@ -112,7 +112,7 @@ class stock_return(osv.osv):
                                               'rec_small_uom_id':small_uom_id,
                                               'rec_big_uom_id':big_uom,                                              
                                               }, context=context)
-            trans_ids = product_trans_obj.search(cr, uid, [('date', '=', return_date), ('exchange_type','!=','Exchange'),('team_id', '=', sale_team_id)], context=context) 
+            trans_ids = product_trans_obj.search(cr, uid, [('date', '=', return_date), ('exchange_type','!=','Exchange'),('void_flag','=','none'),('team_id', '=', sale_team_id)], context=context) 
             for t_id in trans_ids:
                 trans_data=product_trans_obj.browse(cr, uid, t_id,context=context)          
                 for trans_line in trans_data.item_line:

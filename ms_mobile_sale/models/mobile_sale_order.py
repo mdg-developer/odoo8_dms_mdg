@@ -23,7 +23,6 @@ class mobile_sale_order(osv.osv):
     _description = "Mobile Sales Order"
    
     _columns = {
-                
         'name': fields.char('Order Reference', size=64),
         'partner_id':fields.many2one('res.partner', 'Customer'),
         'customer_code':fields.char('Customer Code'),
@@ -119,12 +118,17 @@ class mobile_sale_order(osv.osv):
                         partner_id = data[0][0]
                     else:
                         partner_id = None 
- 
+                        
+                    if so['type'] == 'cash':
+                        paid = True
+                    else:
+                        paid = False
+                        
                     mso_result = {
                         'customer_code':so['customer_code'],
                         'sale_plan_day_id':so['sale_plan_day_id'],
                         'sale_plan_trip_id':so['sale_plan_trip_id'] ,
-                        'paid': True,
+                        'paid': paid,
                         'warehouse_id':so['warehouse_id'],
                         'tablet_id':so['tablet_id'],
                         'delivery_remark':so['delivery_remark'],
@@ -217,8 +221,8 @@ class mobile_sale_order(osv.osv):
             
             if product_trans:
                 for pt in product_trans:
-#                     print 'Sale Man Id',so['user_id']
-#                     print 'Sale Void', so['void_flag']
+                    exchange_type=pt['exchange_type']
+                    print 'exchange_type',exchange_type
 #                     cursor.execute('select id From res_users where partner_id  = %s ',(so['user_id'],))
 #                     data = cursor.fetchall()
 #                     if data:
@@ -265,6 +269,10 @@ class mobile_sale_order(osv.osv):
                                   'batchno':ptl['batchno'],
                                 }
                                 product_trans_line_obj.create(cursor, user, mso_line_res, context=context)
+                    if exchange_type !='Exchange' and pt['void_flag']=='none':
+                        product_trans_obj.action_convert_ep(cursor, user, [s_order_id], context=context)
+
+                                    
             print 'Truwwwwwwwwwwwwwwwwwwwwwe'
             return True       
         except Exception, e:
@@ -1169,6 +1177,7 @@ class mobile_sale_order(osv.osv):
                     notes_line.append(r)
             
             if history:
+                print 'hidtory',history
                 for pt in history:
                     total_amount = float(pt['total_amount'])
                     product_amount = float(pt['product_amount'])
@@ -1187,7 +1196,6 @@ class mobile_sale_order(osv.osv):
                         'diff_amount':pt['diff_amount'],
                         'product_amount':pt['product_amount'],
                     }
-                                        
                     deno_id = history_obj.create(cursor, user, deno_result, context=context)
                     cursor.execute('''update sales_denomination set total_amount = %s where id = %s''', (total_amount, deno_id,))
                     cursor.execute('''update sales_denomination set product_amount = %s where id = %s''', (product_amount, deno_id,))                
@@ -1199,8 +1207,6 @@ class mobile_sale_order(osv.osv):
                                   'amount':ptl['amount'],
                                 }
                                 notes_line_obj.create(cursor, user, note_line_res, context=context)
-                    
-                        
                 de_date = pt['date']
                 user_id = pt['user_id']
                 mobile_sale_obj = self.pool.get('mobile.sale.order')        
@@ -1209,7 +1215,8 @@ class mobile_sale_order(osv.osv):
                 mobile_ids = cursor.fetchall()
                 if  mobile_ids:
                     line_ids = mobile_sale_order_obj.search(cursor, user, [('order_id', 'in', mobile_ids)], context=context)                        
-                    order_line_ids = mobile_sale_order_obj.browse(cursor, user, line_ids, context=context)                  
+                    order_line_ids = mobile_sale_order_obj.browse(cursor, user, line_ids, context=context)                
+                    print 'order_lineidssssssssss',  order_line_ids
                     cursor.execute('select product_id,sum(product_uos_qty),sum(sub_total) from mobile_sale_order_line where id in %s group by product_id', (tuple(order_line_ids.ids),))
                     order_line = cursor.fetchall()
                     for data in order_line:
@@ -1556,6 +1563,14 @@ class mobile_sale_order(osv.osv):
                             # Create Invoice
                             print 'Context', context
                             invoice_id = self.create_invoices(cr, uid, solist, context=context)
+                            print ' invoice_id',invoice_id
+                            #id update partner form (temporay)
+                            partner_data = invoiceObj.browse(cr, uid, invoice_id, context=context)
+                            partner_id=partner_data.partner_id.id
+                            partner_obj.write(cr,uid,partner_id,{'property_account_receivable':629}, context)
+                            partner = partner_obj.browse(cr, uid, partner_id, context=context)
+                            account_id=partner.property_account_receivable.id
+                            invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)                                    
                             cr.execute('update account_invoice set branch_id =%s ,payment_type=%s,section_id=%s,user_id=%s where id =%s',(branch_id,deli['payment_type'],delivery_team_id,uid,invoice_id,))                            
                             
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
@@ -1567,12 +1582,7 @@ class mobile_sale_order(osv.osv):
                                 print 'invoice_id', invoice_id
                                  
                                 invObj = invoiceObj.browse(cr, uid, invlist, context=context)
-                                #id update partner form (temporay)
-                                partner_id=invObj.partner_id.id
-                                partner_obj.write(cr,uid,partner_id,{'property_account_receivable':629}, context)
-                                partner = partner_obj.browse(cr, uid, partner_id, context=context)
-                                account_id=partner.property_account_receivable.id
-                                invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)
+                                
                                 #                                                                                                                            
                                 invObj.action_date_assign()
                                 invObj.action_move_create()
@@ -1581,7 +1591,7 @@ class mobile_sale_order(osv.osv):
                                 invObj.invoice_validate()
                                 #pre_order =True
                                 invoiceObj.write(cr,uid,invoice_id,{'pre_order':True}, context)                                                                                                                             
-                    print 'Sale Order Id', So_id                                                        
+                                                                        
             return True 
           
     def cancel_deliver_order(self, cr, uid, saleorderList, context=None):
@@ -1662,10 +1672,12 @@ class mobile_sale_order(osv.osv):
                     }
                     stock_id = stock_return_obj.create(cursor, user, mso_result, context=context)                  
                     for srl in stock_line:
-                            print 'FOC QTY', srl['foc_quantity']                
+                            print 'FOC QTY', srl['foc_quantity']    ,srl['sale_quantity'] ,srl['return_quantity']
+                            #return_quantity=  float(srl['return_quantity']) - (float(srl['sale_quantity'])+float(srl['foc_quantity'] ))          
+                            return_quantity=srl['return_quantity']
                             mso_line_res = {                                                            
                                   'line_id':stock_id,
-                                  'return_quantity':srl['return_quantity'],
+                                  'return_quantity':return_quantity,
                                   'sale_quantity':srl['sale_quantity'],
                                   'product_id':srl['product_id'],
                                   'product_uom':srl['product_uom'],
@@ -1723,7 +1735,7 @@ class mobile_sale_order(osv.osv):
                         'request_date':sr['request_date'],
                         'request_by':sr['request_by'],
                         'issue_date':sr['issue_date'] ,
-						's_issue_date':sr['issue_date'] ,
+                         's_issue_date':sr['issue_date'] ,
                         'state': 'draft',
                         'issue_to':sr['issue_to'],
                         'company_id':sr['company_id'],
