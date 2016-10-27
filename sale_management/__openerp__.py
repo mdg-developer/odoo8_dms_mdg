@@ -41,7 +41,7 @@ Sale Management
        'views/invoice_custom_layouts.xml',
        'views/sale_custom_layouts.xml',
         'views/report_saleorder.xml',
-         'views/report_invoice.xml',
+        'views/report_invoice.xml',
              'wizard/sale_team_date_view.xml',
       
         'views/sale_team_view.xml',
@@ -54,8 +54,6 @@ Sale Management
       #  'views/account_invoice_view.xml',
         'views/sale_promotion_monthly_view.xml',
         'views/sale_target_view.xml',
-        'views/report.xml',
-        'views/payment_report.xml',
     ],
     'installable': True,
     'auto_install': False,

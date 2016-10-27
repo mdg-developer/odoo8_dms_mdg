@@ -4,25 +4,25 @@
 
 
 		<!-- add tablet order ref no in sale order tree form -->
-<!-- 		<record id="inherit_view_sale_order_tree" model="ir.ui.view"> -->
-<!-- 			<field name="name">sale.order.tree</field> -->
-<!-- 			<field name="model">sale.order</field> -->
-<!-- 			<field name="inherit_id" ref="sale.view_order_tree" /> -->
-<!-- 			<field name="arch" type="xml"> -->
-<!-- 				<field name="name" position="after"> -->
-<!-- 					<field name="tb_ref_no"></field> -->
-<!-- 				</field> -->
-<!-- 				<field name="state" position="after"> -->
-<!-- 					<field name="validity_date" /> -->
-<!-- 					<field name="payment_type" /> -->
-<!-- 					<field name="delivery_remark" /> -->
-<!-- 					<field name="payment_term" /> -->
-<!-- 					<field name="amount_tax" /> -->
-<!-- 					<field name="amount_untaxed" /> -->
-<!-- 					<field name="section_id" /> -->
-<!-- 				</field> -->
-<!-- 			</field> -->
-<!-- 		</record> -->
+		<!-- <record id="inherit_view_sale_order_tree" model="ir.ui.view"> -->
+		<!-- <field name="name">sale.order.tree</field> -->
+		<!-- <field name="model">sale.order</field> -->
+		<!-- <field name="inherit_id" ref="sale.view_order_tree" /> -->
+		<!-- <field name="arch" type="xml"> -->
+		<!-- <field name="name" position="after"> -->
+		<!-- <field name="tb_ref_no"></field> -->
+		<!-- </field> -->
+		<!-- <field name="state" position="after"> -->
+		<!-- <field name="validity_date" /> -->
+		<!-- <field name="payment_type" /> -->
+		<!-- <field name="delivery_remark" /> -->
+		<!-- <field name="payment_term" /> -->
+		<!-- <field name="amount_tax" /> -->
+		<!-- <field name="amount_untaxed" /> -->
+		<!-- <field name="section_id" /> -->
+		<!-- </field> -->
+		<!-- </field> -->
+		<!-- </record> -->
 
 		<!-- Add the Filter and Group for RB -->
 		<record id="inherit_view_sales_order_filter" model="ir.ui.view">
@@ -32,8 +32,9 @@
 			<field name="arch" type="xml">
 				<xpath expr="//search/filter[@name='my_sale_orders_filter']"
 					position="after">
-                    <filter string="Pending" domain="[('is_generate','=',False)]" name="my_generate"/>
-				    					
+					<filter string="Pending" domain="[('is_generate','=',False)]"
+						name="my_generate" />
+
 					<filter name="validity_date" string="Date Confirm"
 						filter_domain="[('validity_date','ilike',self)]" />
 					<filter name="payment_type" string="Payment Type"
@@ -76,6 +77,13 @@
 			<field name="model">sale.order</field>
 			<field name="inherit_id" ref="sale.view_order_form" />
 			<field name="arch" type="xml">
+				<xpath expr="//button[@name='action_quotation_send']"
+					position="after">
+
+					<button name="is_generate_RFI" string="Missed Order" type="object"
+						class="oe_highlight" states="manual" groups="base.group_user" />
+				</xpath>
+
 				<field name="payment_term" position="replace">
 
 				</field>
@@ -103,8 +111,8 @@
 				</field>
 
 				<field name="invoiced" position="before">
-					<field name="pre_order"/>
-					<field name="is_generate"/>
+					<field name="pre_order" />
+					<field name="is_generate" />
 				</field>
 			</field>
 		</record>
@@ -123,17 +131,17 @@
 			</field>
 		</record>
 
-<!-- 		<record id="inherit_view_order_tree" model="ir.ui.view"> -->
-<!-- 			<field name="name">sale.order.form</field> -->
-<!-- 			<field name="model">sale.order</field> -->
-<!-- 			<field name="inherit_id" ref="sale.view_order_tree" /> -->
-<!-- 			<field name="arch" type="xml"> -->
+		<!-- <record id="inherit_view_order_tree" model="ir.ui.view"> -->
+		<!-- <field name="name">sale.order.form</field> -->
+		<!-- <field name="model">sale.order</field> -->
+		<!-- <field name="inherit_id" ref="sale.view_order_tree" /> -->
+		<!-- <field name="arch" type="xml"> -->
 
-<!-- 				<xpath expr="//field[@name='user_id']" position="replace"> -->
-<!-- 					<field name="user_id" string="Salesman Name" /> -->
-<!-- 				</xpath> -->
-<!-- 			</field> -->
-<!-- 		</record> -->
+		<!-- <xpath expr="//field[@name='user_id']" position="replace"> -->
+		<!-- <field name="user_id" string="Salesman Name" /> -->
+		<!-- </xpath> -->
+		<!-- </field> -->
+		<!-- </record> -->
 		<record id="inherit_view_geo_form" model="ir.ui.view">
 			<field name="name">sale.order.geo</field>
 			<field name="model">sale.order</field>

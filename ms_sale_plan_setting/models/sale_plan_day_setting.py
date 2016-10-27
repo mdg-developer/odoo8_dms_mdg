@@ -17,6 +17,7 @@ class sale_plan_for_day_setting(osv.osv):
         team_data=sale_team_obj.browse(cr, uid, sale_team, context=context)
         main_group=team_data.main_group_id
         branch_id=team_data.branch_id.id
+        print 'dddddddddd',branch_id,main_group
         values = {}
         data_line = []
         if sale_team_id:            
@@ -294,13 +295,7 @@ class sale_plan_for_day_setting(osv.osv):
             line_ids = setting_line_obj.search(cr, uid, [('line_id', '=', data.id), ('w4_thur', '=', True)], context=context)
             if line_ids:
                 res[data.id] = len(line_ids)
-        return res 
-    
-    def _get_default_branch(self, cr, uid, context=None):
-        branch_id = self.pool.get('res.users')._get_branch(cr, uid, context=context)
-        if not branch_id:
-            raise osv.except_osv(_('Error!'), _('There is no default branch for the current user!'))
-        return branch_id   
+        return res    
     
     def w4_fri_count(self, cr, uid, ids, field, arg, context=None):
         
@@ -367,7 +362,6 @@ class sale_plan_for_day_setting(osv.osv):
     }
     _defaults = {
                'state':'draft',
-               'branch_id':_get_default_branch,
     }
     def confirm(self, cr, uid, ids, context=None):  
         plan_obj = self.pool.get('sale.plan.day')

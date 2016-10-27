@@ -16,6 +16,7 @@
 					<field name="big_list_price" />
 					<field name='is_foc' />
 					<field name='is_posm' />
+
 				</field>
 			</field>
 		</record>
@@ -129,6 +130,8 @@
 				<field name="base" position="replace">
 					<field name="base" invisible="1" />
 				</field>
+
+
 			</field>
 		</record>
 		<menuitem action="product.product_pricelist_action2" id="product.menu_product_pricelist_action2"
@@ -149,7 +152,7 @@
 				</field>
 				<xpath expr="//page/field[@name='items_id']" position="replace">
 					<field name="items_id">
-						<tree string="Item List" editable="bottom" default_order="name desc">
+						<tree string="Item List" editable="bottom"  default_order="name desc">
 							<field name="product_id" on_change="product_id_change(product_id)" />
 							<field name="sequence" invisible="1" />
 							<field name="name" invisible="1" />

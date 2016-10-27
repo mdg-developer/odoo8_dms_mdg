@@ -49,7 +49,6 @@ class stock_return(osv.osv):
         note_obj=self.pool.get('good.issue.note')
         product_trans_obj=self.pool.get('product.transactions')
         product_trans_line_obj=self.pool.get('product.transactions.line')
-
         mobile_obj=self.pool.get('stock.return.mobile')
         stock_return_obj=self.pool.get('stock.return.line')
         
@@ -59,32 +58,33 @@ class stock_return(osv.osv):
             return_date=return_data.return_date
             return_from=return_data.return_from.id            
             sale_team_id=return_data.sale_team_id.id
+            note_id=return_data.note_id.id
             print 'sale_team_id',sale_team_id,ids                                               
-            cr.execute("select id from good_issue_note where (issue_date+ '6 hour'::interval + '30 minutes'::interval)::date =%s and sale_team_id = %s" ,(return_date,sale_team_id,))
-            note=cr.fetchone()
-            print 'note',note
-            if note:
-                note_id=note[0]
-                note_data=note_obj.browse(cr, uid, note_id,context=context)
-                for note_line in note_data.p_line:
-                    product_id=note_line.product_id.id
-                    big_uom_id=note_line.big_uom_id.id
-                    big_issue_quantity=note_line.big_issue_quantity
-                    small_issue_quantity=note_line.issue_quantity
-                    small_uom_id=note_line.product_uom.id
-                    cr.execute("select floor(1/factor) as ratio from product_uom where active = true and id=%s",(big_uom_id,))
-                    bigger_qty=cr.fetchone()[0]
-                    receive_qty=  (big_issue_quantity* bigger_qty )  + small_issue_quantity
-                    stock_return_obj.create(cr, uid, {'line_id': ids[0],
-                                              'product_id': product_id,
-                                              'product_uom': small_uom_id,
-                                              'receive_quantity':receive_qty,
-                                              'return_quantity':0,
-                                              'sale_quantity':0,
-                                              'foc_quantity':0,
-                                              'rec_small_uom_id':small_uom_id,
-                                              'rec_big_uom_id':big_uom_id,
-                                            }, context=context)
+#             cr.execute("select id from good_issue_note where (issue_date+ '6 hour'::interval + '30 minutes'::interval)::date =%s and sale_team_id = %s" ,(return_date,sale_team_id,))
+#             note=cr.fetchone()
+#             print 'note',note
+#             if note:
+#                 note_id=note[0]
+            note_data=note_obj.browse(cr, uid, note_id,context=context)
+            for note_line in note_data.p_line:
+                product_id=note_line.product_id.id
+                big_uom_id=note_line.big_uom_id.id
+                big_issue_quantity=note_line.big_issue_quantity
+                small_issue_quantity=note_line.issue_quantity
+                small_uom_id=note_line.product_uom.id
+                cr.execute("select floor(1/factor) as ratio from product_uom where active = true and id=%s",(big_uom_id,))
+                bigger_qty=cr.fetchone()[0]
+                receive_qty=  (big_issue_quantity* bigger_qty )  + small_issue_quantity
+                stock_return_obj.create(cr, uid, {'line_id': ids[0],
+                                          'product_id': product_id,
+                                          'product_uom': small_uom_id,
+                                          'receive_quantity':receive_qty,
+                                          'return_quantity':0,
+                                          'sale_quantity':0,
+                                          'foc_quantity':0,
+                                          'rec_small_uom_id':small_uom_id,
+                                          'rec_big_uom_id':big_uom_id,
+                                        }, context=context)
                                         
             mobile_ids = mobile_obj.search(cr, uid, [('return_date', '=', return_date), ('user_id', '=', return_from)], context=context) 
             return_mobile=mobile_obj.browse(cr, uid, mobile_ids,context=context)            

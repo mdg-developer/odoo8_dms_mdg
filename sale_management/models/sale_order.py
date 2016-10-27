@@ -16,7 +16,12 @@ import openerp.addons.decimal_precision as dp
 
 class sale_order(osv.osv):
     _inherit = "sale.order"
-       
+    
+    def is_generate_RFI(self, cr, uid, ids, context=None):
+        print 'order',ids
+        sale_obj=self.pool.get('sale.order')
+        sale_obj.write(cr, uid, ids, {'is_generate': False}, context=context)
+        return True    
     def _invoiced(self, cursor, user, ids, name, arg, context=None):
         res = {}
         for sale in self.browse(cursor, user, ids, context=context):
@@ -85,7 +90,7 @@ class sale_order(osv.osv):
                'invoiced': fields.function(_invoiced, string='Paid',
                 fnct_search=_invoiced_search, type='boolean', help="It indicates that an invoice has been paid.", store=True),
                 'delivery_id': fields.many2one('crm.case.section', 'Delivery Team'),
-                'pre_order': fields.boolean("Pre Order" , readonly=True),
+                'pre_order': fields.boolean("Pre Order" ),
                 'is_generate':fields.boolean('RFI Generated'),
                  
                }
@@ -112,8 +117,8 @@ class sale_order(osv.osv):
         val.update(delivery_onchange['value'])
         if pricelist:
             val['pricelist_id'] = pricelist
-        if not self._get_default_section_id(cr, uid, context=context) and part.section_id:
-            val['section_id'] = part.section_id.id
+#         if not self._get_default_section_id(cr, uid, context=context) and part.section_id:
+#             val['section_id'] = part.section_id.id
         sale_note = self.get_salenote(cr, uid, ids, part.id, context=context)
         if sale_note: val.update({'note': sale_note})  
         return {'value': val}

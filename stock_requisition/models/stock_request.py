@@ -100,7 +100,7 @@ class stock_requisition(osv.osv):
         'approve_by':fields.many2one('res.users', "Approved By"),
         'request_date' : fields.datetime('Date Requested'),
          'issue_date':fields.datetime('Date For Issue From',required=True),
-         's_issue_date':fields.datetime('Date For Issue To'),
+         's_issue_date':fields.datetime('Date For Issue To',required=True),
         'vehicle_id':fields.many2one('fleet.vehicle', 'Vehicle No'),
         'state': fields.selection([
             ('draft', 'Request'),
@@ -268,6 +268,7 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
         
     _columns = {                
         'line_id':fields.many2one('stock.requisition', 'Line', ondelete='cascade', select=True),
+        'pre_order' :fields.related('line_id', 'pre_order', type='boolean', string='Pre Order'),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'req_quantity' : fields.float(string='Qty', digits=(16, 0)),
         'product_uom': fields.many2one('product.uom', 'Smaller UOM', required=True),

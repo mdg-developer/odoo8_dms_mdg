@@ -40,8 +40,8 @@
 								<div>
 									<field name="s_issue_date" attrs="{'readonly':[('state','=','approve')]}" />
 									<button name="so_list" string="Refresh" type="object"
-										icon="terp-gtk-jump-to-ltr"
-										attrs="{'invisible':[('s_issue_date','=',None)], 'required':[('s_issue_date','!=',None)]}" />
+										icon="terp-gtk-jump-to-ltr" 
+										attrs="{'invisible':[('pre_order','=',False)]}"  />
 								</div>
 								<field name="vehicle_id" attrs="{'readonly':[('state','=','approve')]}" />
 								<field name="request_by" attrs="{'readonly':[('state','=','approve')]}" />
@@ -60,9 +60,10 @@
 									<field name="p_line" attrs="{'readonly':[('state','=','approve')]}">
 										<tree string="Stock Request Line" editable="bottom">
 											<field name="product_id" on_change="on_change_product_id(product_id)" />
-											<field name="sale_req_quantity" />
-											<field name="addtional_req_quantity" />
-											<field name="big_req_quantity" />
+											<field name ="pre_order" invisible="1"/>
+											<field name="sale_req_quantity" attrs="{'invisible': [('pre_order','=',False)]}"  />
+											<field name="addtional_req_quantity"  attrs="{'invisible': [('pre_order','=',False)]}" />
+											<field name="big_req_quantity"  />
 											<field name="big_uom_id" />
 											<field name="req_quantity" />
 											<field name="product_uom" />

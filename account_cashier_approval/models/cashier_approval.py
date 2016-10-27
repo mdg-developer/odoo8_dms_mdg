@@ -459,8 +459,7 @@ class cashier_approval(osv.osv):
                 for details in self.browse(cr, uid, ids, context=context):                
                     result[details.id] = inv_id
         return result
-    def generate_denomination(self, cr, uid, ids, context=None):
-        print 'generte_deno'
+    def generate_denomination(self, cr, uid, ids, context=None):        
         cr.execute("""delete from cashier_denomination_line where cashier_id=%s""", (ids[0],))
         result = {}
         invoice_line_data = []
@@ -477,15 +476,19 @@ class cashier_approval(osv.osv):
                 team_id = data['sale_team_id'][0]
             if to_date:
                 print 'to_date>>', to_date
-                cr.execute("""select replace(n.notes, ',', '')::float as notes,sum(n.note_qty) from sales_denomination d,sales_denomination_note_line n
+                cr.execute("""select * from 
+                (select replace(n.notes, ',', '')::float as notes,sum(n.note_qty) from sales_denomination d,sales_denomination_note_line n
                 where d.id = n.denomination_note_ids and d.sale_team_id=%s and d.user_id=%s and date::date >=%s and date::date<=%s
-                group by n.notes order by n.notes::numeric desc
+                group by n.notes )A
+                order by notes desc
                 """, (team_id,user_id, frm_date, to_date,))
             else:
                 print 'date>>', frm_date
-                cr.execute("""select replace(n.notes, ',', '')::float as notes,sum(n.note_qty) from sales_denomination d,sales_denomination_note_line n
+                cr.execute(""" select * from
+                (select replace(n.notes, ',', '')::float as notes,sum(n.note_qty) from sales_denomination d,sales_denomination_note_line n
                 where d.id = n.denomination_note_ids and d.sale_team_id=%s and d.user_id=%s and date::date=%s 
-                group by n.notes order by n.notes::numeric desc
+                group by n.notes )A
+                order by notes desc
                 """, (team_id,user_id, frm_date,))
             vals = cr.fetchall()           
         notes = [{'notes':10000, 'note_qty':False}, {'notes':5000, 'note_qty':False}, {'notes':1000, 'note_qty':False}, {'notes':500, 'note_qty':False}, {'notes':100, 'note_qty':False}, {'notes':50, 'note_qty':False}, {'notes':10, 'note_qty':False}]

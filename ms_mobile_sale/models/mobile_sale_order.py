@@ -344,6 +344,7 @@ class mobile_sale_order(osv.osv):
     # MMK   
     def action_convert_so(self, cr, uid, ids, context=None):
         msoObj = self.pool.get('mobile.sale.order')
+        partner_obj=self.pool.get('res.partner')
         soObj = self.pool.get('sale.order')
         solObj = self.pool.get('sale.order.line')
         invObj = self.pool.get("sale.advance.payment.inv")
@@ -476,6 +477,13 @@ class mobile_sale_order(osv.osv):
                             soObj.action_button_confirm(cr, uid, solist, context=context)
                             # Create Invoice
                             invoice_id = self.create_invoices(cr, uid, solist, context=context)
+                            #id update partner form (temporay)
+                            partner_data = invoiceObj.browse(cr, uid, invoice_id, context=context)
+                            partner_id=partner_data.partner_id.id
+                            partner_obj.write(cr,uid,partner_id,{'property_account_receivable':629}, context)
+                            partner = partner_obj.browse(cr, uid, partner_id, context=context)
+                            account_id=partner.property_account_receivable.id
+                            invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)                            
                             print 'ms_ids.branch_id.id',ms_ids.branch_id.id
                             cr.execute('update account_invoice set payment_type=%s ,branch_id =%s where id =%s',('cash',ms_ids.branch_id.id,invoice_id,))                            
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
@@ -538,8 +546,10 @@ class mobile_sale_order(osv.osv):
 #                                     # invoice paid status is true
 #                                     invFlag = True
                             # clicking the delivery order view button
-                            stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)    
+                            stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)
+                            
                             if stockViewResult:
+                                #cr.execute('update stock_move set location_id=%s where picking_id=%s',(ms_ids.location_id.id,stockViewResult['res_id'],))
                                 # stockViewResult is form result
                                 # stocking id =>stockViewResult['res_id']
                                 # click force_assign
@@ -560,6 +570,13 @@ class mobile_sale_order(osv.osv):
                             soObj.action_button_confirm(cr, uid, solist, context=context)
                             # Create Invoice
                             invoice_id = self.create_invoices(cr, uid, solist, context=context)
+                            #id update partner form (temporay)
+                            partner_data = invoiceObj.browse(cr, uid, invoice_id, context=context)
+                            partner_id=partner_data.partner_id.id
+                            partner_obj.write(cr,uid,partner_id,{'property_account_receivable':629}, context)
+                            partner = partner_obj.browse(cr, uid, partner_id, context=context)
+                            account_id=partner.property_account_receivable.id
+                            invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)                                    
                             cr.execute('update account_invoice set payment_type=%s ,branch_id =%s where id =%s',('cash',ms_ids.branch_id.id,invoice_id,))                            
                             
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
@@ -615,13 +632,21 @@ class mobile_sale_order(osv.osv):
 #                                     # invoice paid status is true
 #                                     invFlag = True
                             # clicking the delivery order view button
-                            soObj.action_view_delivery(cr, uid, solist, context=context)  # create the delivery with draft state
-                                    
+                            stockViewResult=soObj.action_view_delivery(cr, uid, solist, context=context)
+                            #cr.execute('update stock_move set location_id=%s where picking_id=%s',(ms_ids.location_id.id,stockViewResult['res_id'],))
+                            # create the delivery with draft state
                         if ms_ids.type == 'cash' and ms_ids.delivery_remark == 'partial':  # Payment Type=>Cash and Delivery Remark=>None
                             # SO Confirm 
                             soObj.action_button_confirm(cr, uid, solist, context=context)
                             # Create Invoice
                             invoice_id = self.create_invoices(cr, uid, solist, context=context)
+                            #id update partner form (temporay)
+                            partner_data = invoiceObj.browse(cr, uid, invoice_id, context=context)
+                            partner_id=partner_data.partner_id.id
+                            partner_obj.write(cr,uid,partner_id,{'property_account_receivable':629}, context)
+                            partner = partner_obj.browse(cr, uid, partner_id, context=context)
+                            account_id=partner.property_account_receivable.id
+                            invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)                                    
                             cr.execute('update account_invoice set payment_type=%s ,branch_id =%s where id =%s',('cash',ms_ids.branch_id.id,invoice_id,))                            
                                                    
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
@@ -677,19 +702,29 @@ class mobile_sale_order(osv.osv):
 #                                     # invoice paid status is true
 #                                     invFlag = True
                             # clicking the delivery order view button
-                            soObj.action_view_delivery(cr, uid, solist, context=context)  # create the delivery with draft state
-                            
+                            stockViewResult=soObj.action_view_delivery(cr, uid, solist, context=context)
+                            #cr.execute('update stock_move set location_id=%s where picking_id=%s',(ms_ids.location_id.id,stockViewResult['res_id'],))
+                            # create the delivery with draft state
                         if ms_ids.type == 'credit' and ms_ids.delivery_remark == 'delivered':  # Payment Type=>Credit and Delivery Remark=>Delivered
                             # so Confirm
                             print 'solist', solist
                             soObj.action_button_confirm(cr, uid, solist, context=context)
                             # invoice create at draft state
                             invoice_id = self.create_invoices(cr, uid, solist, context=context)
+                            #id update partner form (temporay)
+                            partner_data = invoiceObj.browse(cr, uid, invoice_id, context=context)
+                            partner_id=partner_data.partner_id.id
+                            partner_obj.write(cr,uid,partner_id,{'property_account_receivable':629}, context)
+                            partner = partner_obj.browse(cr, uid, partner_id, context=context)
+                            account_id=partner.property_account_receivable.id
+                            invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)                                    
                             cr.execute('update account_invoice set branch_id =%s where id =%s',(ms_ids.branch_id.id,invoice_id,))                            
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             # clicking the delivery order view button
-                            stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)    
+                            stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)
                             if stockViewResult:
+                                #cr.execute('update stock_move set location_id=%s where picking_id=%s',(ms_ids.location_id.id,stockViewResult['res_id'],))
+
                                 # stockViewResult is form result
                                 # stocking id =>stockViewResult['res_id']
                                 # click force_assign
@@ -710,22 +745,39 @@ class mobile_sale_order(osv.osv):
                             soObj.action_button_confirm(cr, uid, solist, context=context)
                             # invoice create at draft state
                             invoice_id = self.create_invoices(cr, uid, solist, context=context)
+                            #id update partner form (temporay)
+                            partner_data = invoiceObj.browse(cr, uid, invoice_id, context=context)
+                            partner_id=partner_data.partner_id.id
+                            partner_obj.write(cr,uid,partner_id,{'property_account_receivable':629}, context)
+                            partner = partner_obj.browse(cr, uid, partner_id, context=context)
+                            account_id=partner.property_account_receivable.id
+                            invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)                                    
                             cr.execute('update account_invoice set branch_id =%s where id =%s',(ms_ids.branch_id.id,invoice_id,))                            
                             
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             # clicking the delivery order view button
                             stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)  # create delivery order with draft state
-                            
+                            #cr.execute('update stock_move set location_id=%s where picking_id=%s',(ms_ids.location_id.id,stockViewResult['res_id'],))
+
                         if ms_ids.type == 'credit' and ms_ids.delivery_remark == 'partial':  # Payment Type=>Credit and Delivery Remark=>Partial
                             # so Confirm
                             soObj.action_button_confirm(cr, uid, solist, context=context)
                             # invoice create at draft state
                             invoice_id = self.create_invoices(cr, uid, solist, context=context)
+                            #id update partner form (temporay)
+                            partner_data = invoiceObj.browse(cr, uid, invoice_id, context=context)
+                            partner_id=partner_data.partner_id.id
+                            partner_obj.write(cr,uid,partner_id,{'property_account_receivable':629}, context)
+                            partner = partner_obj.browse(cr, uid, partner_id, context=context)
+                            account_id=partner.property_account_receivable.id
+                            invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)                                    
                             cr.execute('update account_invoice set branch_id =%s where id =%s',(ms_ids.branch_id.id,invoice_id,))                            
                             
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             # clicking the delivery order view button
-                            stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)  # create delivery order with draft state
+                            stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)
+                            #cr.execute('update stock_move set location_id=%s where picking_id=%s',(ms_ids.location_id.id,stockViewResult['res_id'],))
+
             self.write(cr, uid, ids[0], {'m_status':'done'}, context=context)
             if invFlag == True:
                 invoiceObj.write(cr, uid, invlist[0], {'state':'paid'}, context=context)
@@ -1440,14 +1492,12 @@ class mobile_sale_order(osv.osv):
     def update_deliver_sale_order(self, cr, uid, saleorderList, context=None):
          
             context = {'lang':'en_US', 'params':{'action':458}, 'tz': 'Asia/Rangoon', 'uid': 1}
-            soObj = self.pool.get('sale.order')
-            solObj = self.pool.get('sale.order.line')
+            soObj = self.pool.get('sale.order')        
             invObj = self.pool.get("sale.advance.payment.inv")
-            invoiceObj = self.pool.get('account.invoice')
-            voucherObj = self.pool.get('account.voucher')
-            voucherLineObj = self.pool.get('account.voucher.line')
+            invoiceObj = self.pool.get('account.invoice')                
             stockPickingObj = self.pool.get('stock.picking')
             stockDetailObj = self.pool.get('stock.transfer_details')        
+            partner_obj=self.pool.get('res.partner')
             
             str = "{" + saleorderList + "}"    
             str = str.replace("'',", "',")  # null
@@ -1464,149 +1514,75 @@ class mobile_sale_order(osv.osv):
                 deliver_data.append(r)  
             if deliver_data:
                 
-                for deli in deliver_data:            
-                    print 'Journal ID', deli['journal_id']
-                    print 'Payment Type', deli['payment_type']
-                    print 'So Ref No', deli['so_refNo']
-                    So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
-                                                   , ('name', '=', deli['so_refNo'])], context=context)
-                    if So_id:
-                        solist = So_id       
-                        journal_id = deli['journal_id']
-                        cr.execute('select branch_id,section_id from sale_order where name=%s',(deli['so_refNo'],))
-                        data=cr.fetchone()
-                        if data:
-                            branch_id=data[0]
-                            section_id=data[1]
-                        cr.execute('select delivery_team_id from crm_case_section where id=%s',(section_id,))
-                        delivery=cr.fetchone()
-                        if delivery:
-                            delivery_team_id=delivery[0]
-                        else:
-                            delivery_team_id=None
-                        #soObj.action_button_confirm(cr, uid, solist, context=context)
-                        
-                        # For DO
-                      #  self.stock_deliver(cr, uid , None , So_id, context)
-                        stockViewResult = soObj.action_view_delivery(cr, uid, So_id, context=context)    
-                        if stockViewResult:
-                            # stockViewResult is form result
-                            # stocking id =>stockViewResult['res_id']
-                            # click force_assign
-                            stockPickingObj.force_assign(cr, uid, stockViewResult['res_id'], context=context)
-                            # transfer
-                            # call the transfer wizard
-                            # change list
-                            pickList = []
-                            pickList.append(stockViewResult['res_id'])
-                            wizResult = stockPickingObj.do_enter_transfer_details(cr, uid, pickList, context=context)
-                            # pop up wizard form => wizResult
-                            detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
-                            if detailObj:
-                                detailObj.do_detailed_transfer()    
-                            print 'testing---------------',                   
-                        # Create Invoice
-                        print 'Context', context
-                        invoice_id = self.create_invoices(cr, uid, solist, context=context)
-                        cr.execute('update account_invoice set branch_id =%s ,payment_type=%s,section_id=%s,user_id=%s where id =%s',(branch_id,deli['payment_type'],delivery_team_id,uid,invoice_id,))                            
-                        
-                        invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
-                        if invoice_id:
-                            invlist = []
-                            invlist.append(invoice_id)
-                            # call the api function
-                            # invObj contain => account.invoice(1,) like that
-                            print 'invoice_id', invoice_id
-                             
-                            invObj = invoiceObj.browse(cr, uid, invlist, context=context)
-                            print 'invObj', invObj
-                            invObj.action_date_assign()
-                            invObj.action_move_create()
-                            invObj.action_number()
-                            # validate invoice
-                            invObj.invoice_validate()
-                            #pre_order =True
-                            invoiceObj.write(cr,uid,invoice_id,{'pre_order':True}, context)                           
-#                             
-#                             # register Payment
-#                             # calling the register payment pop-up
-#                             invoiceObj.invoice_pay_customer(cr, 1, invlist, context=context)
-#                             if journal_id:
-#                                 cr.execute('select default_debit_account_id from account_journal where id=%s', (journal_id,))
-#                                 data = cr.fetchall()
-#                                 if data:
-#                                     accountId = data[0]
-#                             else:
-#                                     raise osv.except_osv(_('Warning!'),_("Insert Journal for Cash Sale"))
-# #                                 cr.execute('select id from account_account where lower(name)=%s and active= %s', ('cash', True,))  # which account shall I choose. It is needed.
-# #                                 data = cr.fetchall()
-# #                                 if data:
-# #                                     accountId = data[0]
-#                             if journal_id and accountId:  # cash journal and cash account. If there no journal id or no account id, account invoice is not make payment.
-#                                 accountVResult = {
-#                                                 'partner_id':invObj.partner_id.id,
-#                                                 'amount':invObj.amount_total,
-#                                                 'journal_id':journal_id,
-#                                                 'date':invObj.date_invoice,
-#                                                 'period_id':invObj.period_id.id,
-#                                                 'account_id':accountId,
-#                                                 'pre_line':True,
-#                                                 'type':'receipt'
-#                                                 }
-#                                 # create register payment voucher
-#                                 voucherId = voucherObj.create(cr, 1, accountVResult, context=context)
-#                                 
-#                             if voucherId:
-#                                 vlist = []
-#                                 vlist.append(voucherId)
-#                                 # get the voucher lines
-#                                 context={
-#                                         'default_amount': invObj.amount_total,
-#                                          'default_reference':'',
-#                                          'uid': 1,
-#                                          'invoice_type': 'out_invoice', 
-#                                          'default_type': 'receipt',
-#                                          'date': invObj.date_invoice,
-#                                          'search_disable_custom_filters': True, 
-#                                          'default_partner_id': invObj.partner_id.id,
-#                                          'payment_expected_currency': 120, 
-#                                         'active_id': invObj.id,
-#                                          'lang':'en_US', 
-#                                         'close_after_process': True,
-#                                          'tz': 'Asia/Rangoon',
-#                                          'active_model': 'account.invoice', 
-#                                          'invoice_id':  invObj.id, 'open_invoices': True, 'params': {'action': None}, 'active_ids': [invObj.id], 'type':'receipt'}
-#                                 vlresult = voucherObj.recompute_voucher_lines(cr, 1, vlist, invObj.partner_id.id, int(journal_id), invObj.amount_total, 120, 'receipt', invObj.date_invoice, context)
-#                                                                      
-#                                 if vlresult:
-#                                     result = vlresult['value']['line_cr_ids'][0]
-#                                     result['voucher_id'] = voucherId
-#                                     # create the voucher lines
-#                                     voucherLineObj.create(cr, 1, result, context=context)
-#                                 # invoice register payment done
-#                                 voucherObj.button_proforma_voucher(cr, 1, vlist , context=context)
-#                                 invoiceObj.write(cr,uid,invoice_id,{'state':'paid'}, context)
-#                                 # invoice paid status is true
-#                                 invFlag = True
-#                         # clicking the delivery order view button
-#                         stockViewResult = soObj.action_view_delivery(cr, 1, solist, context=context)    
-#                         if stockViewResult:
-#                             # stockViewResult is form result
-#                             # stocking id =>stockViewResult['res_id']
-#                             # click force_assign
-#                             stockPickingObj.force_assign(cr, 1, stockViewResult['res_id'], context=context)
-#                             # transfer
-#                             # call the transfer wizard
-#                             # change list
-#                             pickList = []
-#                             pickList.append(stockViewResult['res_id'])
-#                             wizResult = stockPickingObj.do_enter_transfer_details(cr, 1, pickList, context=context)
-#                             # pop up wizard form => wizResult
-#                             detailObj = stockDetailObj.browse(cr, 1, wizResult['res_id'], context=context)
-#                             if detailObj:
-#                                 detailObj.do_detailed_transfer()                                                                                                       
+                for deli in deliver_data:       
+                    print 'Miss',deli['miss']
+                    if deli['miss'] == 't':
+                        cr.execute('update sale_order set is_generate = false where name=%s',(deli['so_refNo'],))
+                    else:                            
+                        So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
+                                                       , ('name', '=', deli['so_refNo'])], context=context)
+                        if So_id:
+                            solist = So_id                               
+                            cr.execute('select branch_id,section_id from sale_order where name=%s',(deli['so_refNo'],))
+                            data=cr.fetchone()
+                            if data:
+                                branch_id=data[0]
+                                section_id=data[1]
+                            cr.execute('select delivery_team_id from crm_case_section where id=%s',(section_id,))
+                            delivery=cr.fetchone()
+                            if delivery:
+                                delivery_team_id=delivery[0]
+                            else:
+                                delivery_team_id=None
+                            
+                            # For DO
+                            stockViewResult = soObj.action_view_delivery(cr, uid, So_id, context=context)    
+                            if stockViewResult:
+                                # stockViewResult is form result
+                                # stocking id =>stockViewResult['res_id']
+                                # click force_assign
+                                stockPickingObj.force_assign(cr, uid, stockViewResult['res_id'], context=context)
+                                # transfer
+                                # call the transfer wizard
+                                # change list
+                                pickList = []
+                                pickList.append(stockViewResult['res_id'])
+                                wizResult = stockPickingObj.do_enter_transfer_details(cr, uid, pickList, context=context)
+                                # pop up wizard form => wizResult
+                                detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
+                                if detailObj:
+                                    detailObj.do_detailed_transfer()    
+                                print 'testing---------------',                   
+                            # Create Invoice
+                            print 'Context', context
+                            invoice_id = self.create_invoices(cr, uid, solist, context=context)
+                            cr.execute('update account_invoice set branch_id =%s ,payment_type=%s,section_id=%s,user_id=%s where id =%s',(branch_id,deli['payment_type'],delivery_team_id,uid,invoice_id,))                            
+                            
+                            invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
+                            if invoice_id:
+                                invlist = []
+                                invlist.append(invoice_id)
+                                # call the api function
+                                # invObj contain => account.invoice(1,) like that
+                                print 'invoice_id', invoice_id
+                                 
+                                invObj = invoiceObj.browse(cr, uid, invlist, context=context)
+                                #id update partner form (temporay)
+                                partner_id=invObj.partner_id.id
+                                partner_obj.write(cr,uid,partner_id,{'property_account_receivable':629}, context)
+                                partner = partner_obj.browse(cr, uid, partner_id, context=context)
+                                account_id=partner.property_account_receivable.id
+                                invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)
+                                #                                                                                                                            
+                                invObj.action_date_assign()
+                                invObj.action_move_create()
+                                invObj.action_number()
+                                # validate invoice
+                                invObj.invoice_validate()
+                                #pre_order =True
+                                invoiceObj.write(cr,uid,invoice_id,{'pre_order':True}, context)                                                                                                                             
                     print 'Sale Order Id', So_id                                                        
-            return True    
+            return True 
           
     def cancel_deliver_order(self, cr, uid, saleorderList, context=None):
          
@@ -1747,6 +1723,7 @@ class mobile_sale_order(osv.osv):
                         'request_date':sr['request_date'],
                         'request_by':sr['request_by'],
                         'issue_date':sr['issue_date'] ,
+						's_issue_date':sr['issue_date'] ,
                         'state': 'draft',
                         'issue_to':sr['issue_to'],
                         'company_id':sr['company_id'],
@@ -1896,18 +1873,21 @@ class mobile_sale_order(osv.osv):
             for r in result:
                 rental_collection.append(r)  
             if rental_collection:
-                for ar in rental_collection:            
-                    cursor.execute('select id from mobile_sale_order where name = %s ', (ar['payment_id'],))
+                for ar in rental_collection:
+                    cursor.execute('select id from mobile_sale_order where name = %s ',(ar['payment_id'],))
                     data = cursor.fetchall()
                     if data:
                         so_id = data[0][0]
                     else:
                         so_id = None
-                    
+                    amount=ar['amount']
+                    cursor.execute("select replace(%s, ',', '')::float as amount",(amount,))
+                    amount_data = cursor.fetchone()[0]
+                    amount=amount_data
                     rental_result = {                    
                         'payment_id':so_id,                        
                         'journal_id':ar['journal_id'],
-                        'amount':ar['amount'],
+                        'amount':amount,
                         'date':ar['date'],
                         'notes':ar['notes'],    
                     }
@@ -1930,12 +1910,19 @@ class mobile_sale_order(osv.osv):
             for data in new_arr:
                 x = ast.literal_eval(data)
                 result.append(x)
-            rental_collection = []
-            for r in result:
-                rental_collection.append(r)  
-            if rental_collection:
-                for ar in rental_collection:            
-                    cursor.execute('select id from pre_sale_order where name = %s ', (ar['payment_id'],))
+#             rental_collection = []
+#             for r in result:
+#                 rental_collection.append(r)  
+            if result:
+                for ar in result:
+                    cursor.execute('select tb_ref_no from sale_order where name = %s ', (ar['payment_id'],))
+                    data = cursor.fetchall()
+                    if data:
+                        pre_no = data[0][0]
+                    else:
+                        pre_no = None
+                    
+                    cursor.execute('select id from pre_sale_order where name = %s ', (pre_no,))
                     data = cursor.fetchall()
                     if data:
                         so_id = data[0][0]
