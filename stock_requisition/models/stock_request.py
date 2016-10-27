@@ -16,6 +16,7 @@ import datetime
 import math
 from datetime import datetime, date, time
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as OE_DATETIMEFORMAT
+
 class stock_requisition(osv.osv):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _name = "stock.requisition"
@@ -99,8 +100,8 @@ class stock_requisition(osv.osv):
         'request_by':fields.many2one('res.users', "Requested By"),
         'approve_by':fields.many2one('res.users', "Approved By"),
         'request_date' : fields.datetime('Date Requested'),
-         'issue_date':fields.datetime('Date For Issue From',required=True),
-         's_issue_date':fields.datetime('Date For Issue To',required=True),
+         'issue_date':fields.date('Date For Issue From',required=True),
+         's_issue_date':fields.date('Date For Issue To',required=True),
         'vehicle_id':fields.many2one('fleet.vehicle', 'Vehicle No'),
         'state': fields.selection([
             ('draft', 'Request'),
@@ -141,7 +142,10 @@ class stock_requisition(osv.osv):
             issue_date_to = stock_request_data.s_issue_date
             sale_team_id = stock_request_data.sale_team_id.id
             request_date=stock_request_data.request_date
-            order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False),('is_generate','=',False), ('invoiced', '=', False), ('state', 'not in', ['done', 'cancel']),('date_order','>',issue_date_from),('date_order','<',issue_date_to)], context=context) 
+            cr.execute("select id from sale_order where delivery_id=%s and shipped=false and is_generate=false and invoiced=false and state not in ('done','cancel') and  (date_order+ '6 hour'::interval + '30 minutes'::interval)::date between %s and %s",(sale_team_id,issue_date_from,issue_date_to,))
+            order_ids=cr.fetchall()
+            print 'order_idsorder_idsorder_idsorder_ids',order_ids,sale_team_id
+            #order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False),('is_generate','=',False), ('invoiced', '=', False), ('state', 'not in', ['done', 'cancel']),('date_order','>=',issue_date_from),('date_order','<=',issue_date_to)], context=context) 
             cr.execute("delete from stock_requisition_order where  stock_line_id=%s",(stock_request_data.id,))
             cr.execute("update stock_requisition_line set sale_req_quantity=0 where line_id=%s",(stock_request_data.id,))
             order_list =  str(tuple(order_ids))
@@ -207,7 +211,11 @@ class stock_requisition(osv.osv):
             
             req_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
             if good_id and req_line_id:
-                
+                cr.execute('select sum(req_quantity+big_req_quantity) from stock_requisition_line where line_id=%s ',(ids[0],))
+                condition_data=cr.fetchone()[0]
+                if condition_data ==0.0:
+                    raise osv.except_osv(_('Warning'),
+                                     _('Please Press Update Qty Button'))                
                 for data in req_line_id:
                     req_line_value = product_line_obj.browse(cr, uid, data, context=context)
                     if (req_line_value.req_quantity + req_line_value.big_req_quantity) != 0:

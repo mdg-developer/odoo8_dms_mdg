@@ -250,6 +250,8 @@ class crm_case_section(osv.osv):
                 type='float', readonly=True,
                 string='Credit Outstanding'),                
                  'price_list_line': fields.one2many('price.list.line', 'team_id', 'Price List', copy=True),      
+                  'customer_line': fields.one2many('res.partner', 'section_id', 'Customer List', copy=True),      
+                
                'branch_id':fields.many2one('res.branch', 'Branch'),
                            
         }

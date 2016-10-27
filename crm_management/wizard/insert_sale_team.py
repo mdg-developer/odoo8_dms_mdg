@@ -66,16 +66,16 @@ class insert_sale_team(osv.osv_memory):
         
         print 'partner_id',partner_id
         for partner in partner_id: 
-            partner_data=partner_obj.browse(cr,uid,partner,context=context)
             if section_id:
-                team=team_obj.browse(cr,uid,section_id[0],context=context)
-                team_name=team.name
-                cr.execute('select sale_team_id,partner_id from sale_team_customer_rel where partner_id=%s and sale_team_id=%s',(partner,section_id[0]))
-                team_id=cr.fetchone()
-                if team_id:
-                    raise osv.except_osv(_('Warning!'),_('You inserted this sales team (%s) in (%s ,%s).')%(team_name,partner_data.name,partner_data.customer_code,))                    
-                else:
-                    cr.execute('INSERT INTO sale_team_customer_rel (sale_team_id,partner_id) VALUES (%s,%s)', ( section_id[0],partner))
+                cr.execute('update res_partner set section_id=%s where id=%s',(section_id[0],partner,))
+#                 team=team_obj.browse(cr,uid,section_id[0],context=context)
+#                 team_name=team.name
+#                 cr.execute('select sale_team_id,partner_id from sale_team_customer_rel where partner_id=%s and sale_team_id=%s',(partner,section_id[0]))
+#                 team_id=cr.fetchone()
+#                 if team_id:
+#                     raise osv.except_osv(_('Warning!'),_('You inserted this sales team (%s) in (%s ,%s).')%(team_name,partner_data.name,partner_data.customer_code,))                    
+#                 else:
+#                     cr.execute('INSERT INTO sale_team_customer_rel (sale_team_id,partner_id) VALUES (%s,%s)', ( section_id[0],partner))
             if  outlet_type:
                 cr.execute('update res_partner set outlet_type=%s where id=%s',(outlet_type[0],partner,))
             if  sales_channel:

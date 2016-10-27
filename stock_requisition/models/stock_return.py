@@ -51,6 +51,8 @@ class stock_return(osv.osv):
         product_trans_line_obj=self.pool.get('product.transactions.line')
         mobile_obj=self.pool.get('stock.return.mobile')
         stock_return_obj=self.pool.get('stock.return.line')
+        product_obj=self.pool.get('product.product')
+
         
         if ids:
             cr.execute('delete from stock_return_line where line_id=%s',(ids[0],))
@@ -134,12 +136,30 @@ class stock_return(osv.osv):
                                                   'foc_quantity':foc_quantity,
                                                   'rec_small_uom_id':small_uom_id,
                                                   'rec_big_uom_id':big_uom,                                              
-                                                  }, context=context)                                        
+                                                  }, context=context)     
+            return_data = stock_return_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context) 
+            for data in return_data:
+                return_record=stock_return_obj.browse(cr,uid,data,context=context)
+                product_id=return_record.product_id.id
+                return_qty=return_record.return_quantity
+                product = product_obj.browse(cr, uid, product_id, context=context)                                                                          
+                cr.execute("select floor(1/factor) as ratio from product_uom where active = true and id=%s",(product.product_tmpl_id.big_uom_id.id,))
+                bigger_qty=cr.fetchone()[0]
+                bigger_qty=int(bigger_qty)
+                #print ' bigger_qty',sale_qty,bigger_qty,type(sale_qty),type(bigger_qty)                        
+                big_uom_qty=divmod(return_qty,bigger_qty)
+                #print 'big_uom_qty',big_uom_qty
+                if  big_uom_qty:
+                    big_quantity=big_uom_qty[0]
+                    small_quantity=big_uom_qty[1]
+                    cr.execute("update stock_return_line set rec_big_quantity=%s,rec_small_quantity=%s where product_id=%s and line_id=%s",(big_quantity,small_quantity,product_id, ids[0],))
+                
+                                   
         return True          
     _columns = {
         'sale_team_id':fields.many2one('crm.case.section', 'Sales Team' , required=True),
         'name': fields.char('(SRN)Ref;No.', readonly=True),
-        'note_id':fields.many2one('good.issue.note', '(GIN)Ref;No.', readonly=True),
+        'note_id':fields.many2one('good.issue.note', '(GIN)Ref;No.', required=True),
         'return_from':fields.many2one('res.users', 'Return From', required=True),
          'so_no' : fields.char('Sales Order/Inv Ref;No.'),
          'return_date':fields.date('Date of Return',required=True),
@@ -158,6 +178,7 @@ class stock_return(osv.osv):
                 'company_id':fields.many2one('res.company', 'Company'),
 				'partner_id':fields.many2one('res.partner', 'Customer'), 
 }		
+    
     _defaults = {
         'state' : 'draft',
          'company_id': _get_default_company,

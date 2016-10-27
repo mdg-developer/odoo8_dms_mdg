@@ -357,6 +357,8 @@
 				<xpath expr="//group/filter[@string='Country']" position="after">
 					<filter string="Created By" icon="terp-personal" domain="[]"
 						context="{'group_by' : 'user_id'}" />
+					<filter string="Sales Team" icon="terp-personal" domain="[]"
+						context="{'group_by' : 'section_id'}" />					
 					<filter name="township" string="Township" domain="[]"
 						context="{'group_by':'township'}" />
 					<filter name="city" string="City" domain="[]"

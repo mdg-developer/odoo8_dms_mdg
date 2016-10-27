@@ -99,6 +99,11 @@
 							</tree>
 						</field>
 					</page>
+
+					<page string="Customers">
+						<field name="customer_line">
+						</field>
+					</page>
 					<!-- Add adding demarcation -->
 
 					<page string="Demarcations">
