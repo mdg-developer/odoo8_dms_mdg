@@ -1106,8 +1106,12 @@ class mobile_sale_order(osv.osv):
             and D.login= %s
             and d.login_password = crypt(%s, login_password)
             ''', (sale_team_id, login, pwd,))
-        datas = cr.fetchall()            
-        return datas  
+        datas = cr.fetchall()
+        if datas:
+            flag = True
+        else:
+            flag = False            
+        return flag  
        
  # Create Sync for promotion line by kzo
     def create_promotion_line(self, cursor, user, vals, context=None):
@@ -1467,11 +1471,14 @@ class mobile_sale_order(osv.osv):
             if list_val:
                 for So_id in list_val:
                     print 'Sale Order Id', So_id
-                    cr.execute('''select id,date_order,partner_id,amount_tax,amount_untaxed,
-                    payment_term,company_id,pricelist_id,user_id,amount_total,name as invoice_no,
-                    warehouse_id,shipped,sale_plan_day_id,sale_plan_name,so_longitude,payment_type,
-                    due_date,sale_plan_trip_id,so_latitude,customer_code,name as so_refNo,total_dis,deduct_amt,coupon_code,
-                    invoiced,branch_id,delivery_remark from sale_order  where id=%s''', (So_id,))
+                    cr.execute('''select so.id,so.date_order,so.partner_id,so.amount_tax,so.amount_untaxed,
+                    so.payment_term,so.company_id,so.pricelist_id,so.user_id,so.amount_total,so.name as invoice_no,
+                    so.warehouse_id,so.shipped,so.sale_plan_day_id,so.sale_plan_name,so.so_longitude,so.payment_type,
+                    so.due_date,so.sale_plan_trip_id,so.so_latitude,so.customer_code,so.name as so_refNo,so.total_dis,so.deduct_amt,so.coupon_code,
+                    so.invoiced,so.branch_id,so.delivery_remark ,team.name
+                    from sale_order so, crm_case_section team                                    
+                    where so.id= %s
+                    and  team.id = so.section_id''', (So_id,))
                     result = cr.fetchall()
                     print 'Result Sale Order', result
                     list.append(result)

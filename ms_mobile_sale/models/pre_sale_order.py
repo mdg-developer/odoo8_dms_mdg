@@ -117,6 +117,7 @@ class pre_sale_order(osv.osv):
                         'amount_total':so['amount_total'],
                         'sale_team':so['sale_team'],
                         'date':so['date'],
+						'void_flag':so['void_flag'],
                         'sale_plan_day_id':so['sale_plan_day_id'],
                         'mso_longitude':so['mso_longitude'],
                         'mso_latitude':so['mso_latitude'],
