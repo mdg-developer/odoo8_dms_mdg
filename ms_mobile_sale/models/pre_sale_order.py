@@ -44,15 +44,18 @@ class pre_sale_order(osv.osv):
                                      
                                                       ('done', 'Complete')], string='Status'),
      'promos_line_ids':fields.one2many('pre.promotion.line', 'promo_line_id', 'Promotion Lines'),
-     'pricelist_id': fields.many2one('product.pricelist', 'Price List',select=True, ondelete='cascade'),           
+     'pricelist_id': fields.many2one('product.pricelist', 'Price List', select=True, ondelete='cascade'),
        'payment_line_ids':fields.one2many('customer.payment', 'pre_order_id', 'Payment Lines'),
-      'branch_id': fields.many2one('res.branch', 'Branch',required=True),    
-     
+      'branch_id': fields.many2one('res.branch', 'Branch', required=True),
+             'void_flag':fields.selection([
+                ('voided', 'Voided'),
+                ('none', 'Unvoid')
+            ], 'Void'),
     }
     _order = 'id desc'
     _defaults = {
         'date': datetime.now(),
-        'm_status' : 'draft'
+        'm_status' : 'draft',
        
     }
     
@@ -117,6 +120,7 @@ class pre_sale_order(osv.osv):
                         'amount_total':so['amount_total'],
                         'sale_team':so['sale_team'],
                         'date':so['date'],
+						'void_flag':so['void_flag'],
                         'sale_plan_day_id':so['sale_plan_day_id'],
                         'mso_longitude':so['mso_longitude'],
                         'mso_latitude':so['mso_latitude'],
@@ -175,16 +179,20 @@ class pre_sale_order(osv.osv):
 #                     pricelist_id = data[0][0]
                 for preObj_ids in presaleorderObj.browse(cr, uid, ids[0], context=context):
                     if preObj_ids:
-                        print 'Sale Team',preObj_ids.sale_team
+                        print 'Sale Team', preObj_ids.sale_team
                         cr.execute('select delivery_team_id from crm_case_section where id = %s ', (preObj_ids.sale_team.id,))
                         data = cr.fetchall()
                         if data:
                             delivery_id = data[0][0]
                         else:
                             delivery_id = None
-                        cr.execute('select company_id from res_users where id=%s',(preObj_ids.user_id.id,))
-                        company_id=cr.fetchone()[0]
-                        
+                        cr.execute('select company_id from res_users where id=%s', (preObj_ids.user_id.id,))
+                        company_id = cr.fetchone()[0]
+                        if preObj_ids.void_flag == 'voided':  # they work while payment type not 'cash' and 'credit'
+                            so_state = 'cancel'
+                        elif preObj_ids.void_flag == 'none':
+                            so_state = 'manual'
+                        print 'so_ssssssssssssstae',so_state
                         saleOrderResult = {'partner_id':preObj_ids.partner_id.id,
                                                         'customer_code':preObj_ids.customer_code,
                                                         'sale_plan_name':preObj_ids.sale_plan_name,
@@ -200,7 +208,7 @@ class pre_sale_order(osv.osv):
                                                         'section_id':preObj_ids.sale_team.id,
                                                         'deduct_amt':preObj_ids.deduction_amount,
 #                                                         'client_order_ref':preObj_ids.tablet_id.name,
-                                                        'state':'manual',
+                                                         'state':so_state,
                                                          'payment_type':preObj_ids.type,
                                                         'pricelist_id':preObj_ids.pricelist_id.id,
                                                         'pre_order':True,
@@ -234,9 +242,9 @@ class pre_sale_order(osv.osv):
                                                         'company_id':company_id,  # company_id,
                                                         }   
                                 saleOrderLineObj.create(cr, uid, detailResult, context=context)
-                    if so_id:
+                    if so_id and  so_state != 'cancel':
                         saleOrderObj.button_dummy(cr, uid, [so_id], context=context)
-                        #Do Open
+                        # Do Open
                         saleOrderObj.action_button_confirm(cr, uid, [so_id], context=context)
                         
                         
