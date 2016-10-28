@@ -50,7 +50,9 @@
 								<field name="delivery_remark" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="amount_total" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="deduction_amount" attrs="{'readonly':[('m_status','=','done')]}" />
-								<field name="pricelist_id" />
+								<field name="pricelist_id" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="void_flag" attrs="{'readonly':[('m_status','=','done')]}" />
+								
 							</group>
 						</group>
 						<notebook>
@@ -231,7 +233,7 @@
 					<!-- <field name="paid" /> -->
 					<field name="m_status" />
 					<field name="date" />
-					<!-- <field name="void_flag" /> -->
+					<field name="void_flag" />
 				</tree>
 			</field>
 		</record>
