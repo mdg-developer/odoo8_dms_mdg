@@ -194,15 +194,17 @@ class stock_return(osv.osv):
         return self.write(cr, uid, ids, {'state': 'confirm', })
     def cancel(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'cancel', })
+    
     def approve(self, cr, uid, ids, context=None):
         picking_obj = self.pool.get('stock.picking')
-        move_obj = self.pool.get('stock.move')            
+        move_obj = self.pool.get('stock.move')           
+        note_obj=self.pool.get('good.issue.note') 
         return_obj=self.browse(cr, uid,ids,context=context )    
         origin=return_obj.name
         return_date=return_obj.return_date   
         main_location_id=return_obj.note_id.to_location_id.id    
         ven_location_id=return_obj.note_id.from_location_id.id    
-        
+        note_id=return_obj.note_id
         cr.execute('select id from stock_picking_type where default_location_dest_id=%s and name like %s', (main_location_id, '%Internal Transfer%',))
         price_rec = cr.fetchone()
         print 'price_rec',price_rec
@@ -241,7 +243,7 @@ class stock_return(osv.osv):
                                                'origin':origin,
                                               'state':'confirmed'}, context=context)     
                         move_id=move_obj.action_done(cr, uid, move_id, context=context)
-                        print 'doned',move_id                         
+        cr.execute('update good_issue_note set is_return=True where id=%s',(note_id.id,))                  
         return self.write(cr, uid, ids, {'state':'approve'})    
 
             

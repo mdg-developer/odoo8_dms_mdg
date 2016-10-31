@@ -30,7 +30,7 @@
 							</group>
 							<group>
 								<field name="note_id" attrs="{'readonly':[('state','=','approve')]}"
-									domain="[('sale_team_id', '=',sale_team_id)]" />
+									domain="[('sale_team_id', '=',sale_team_id),('is_return','=',False)]" />
 								<field name="so_no" attrs="{'readonly':[('state','=','approve')]}" />
 								<field name="vehicle_id" attrs="{'readonly':[('state','=','approve')]}" />
 								<field name="company_id" attrs="{'readonly':[('state','=','approve')]}" />

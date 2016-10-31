@@ -60,11 +60,13 @@ class good_issue_note(osv.osv):
                  'p_line':fields.one2many('good.issue.note.line', 'line_id', 'Product Lines',
                               copy=True),
                 'company_id':fields.many2one('res.company', 'Company'),
-                'partner_id':fields.many2one('res.partner', string='Partner')
+                'partner_id':fields.many2one('res.partner', string='Partner'),
+                'is_return':fields.boolean('Return'),
 }
     _defaults = {
         'state' : 'draft',
          'company_id': _get_default_company,
+         'is_return':False,
     }     
     def create(self, cursor, user, vals, context=None):
         id_code = self.pool.get('ir.sequence').get(cursor, user,

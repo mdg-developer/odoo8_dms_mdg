@@ -43,7 +43,7 @@
 								<field name="approve_by" attrs="{'readonly':[('state','=','approve')]}" />
 								<field name="receive_by" attrs="{'readonly':[('state','=','approve')]}" />
 								<field name="company_id" attrs="{'readonly':[('state','=','approve')]}" />
-
+								<field name="is_return" invisible="1"/>
 							</group>
 						</group>
 						<group>
