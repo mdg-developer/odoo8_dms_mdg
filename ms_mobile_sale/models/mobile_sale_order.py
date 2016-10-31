@@ -1774,7 +1774,13 @@ class mobile_sale_order(osv.osv):
                                 big_req_quantity=big_uom_qty[0]
                                 req_quantity=big_uom_qty[1]
                                 #print 'big_req',big_req_quantity,req_quantity
-                                                
+                            cursor.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id',(to_location_id,srl['product_id'],))
+                            qty_on_hand=cursor.fetchone()
+                            if qty_on_hand:
+                                qty_on_hand=qty_on_hand[0]
+                            else:
+                                qty_on_hand=0               
+                            print 'qty_on_hand',qty_on_hand    
                             mso_line_res = {                                                            
                                   'line_id':stock_id,
                                   'remark':srl['remark'],
@@ -1783,7 +1789,8 @@ class mobile_sale_order(osv.osv):
                                   'product_uom':srl['product_uom'],
                                   'uom_ratio':packing_unit ,
                                   'big_uom_id':big_uom_id,
-                                  'big_req_quantity':big_req_quantity,                                  
+                                  'big_req_quantity':big_req_quantity,               
+                                  'qty_on_hand':qty_on_hand,                   
                             }
                             stock_request_line_obj.create(cursor, user, mso_line_res, context=context)
             print 'True'

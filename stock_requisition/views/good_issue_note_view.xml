@@ -59,6 +59,7 @@
 											<field name="uom_ratio"  invisible="1"/>
 											<field name="batch_no" domain="[('product_id', '=',product_id)]" on_change="on_change_expired_date(batch_no)"/>
 											<field name="expiry_date" />
+											<field name="qty_on_hand"/>
 											<field name="remark" />
 										</tree>
 									</field>

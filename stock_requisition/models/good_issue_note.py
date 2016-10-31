@@ -176,6 +176,8 @@ class good_issue_line(osv.osv):  # #prod_pricelist_update_line
                  'remark':fields.char('Remark'),
         'big_uom_id': fields.many2one('product.uom', 'Bigger UoM', required=True, help="Default Unit of Measure used for all stock operation."),
         'big_issue_quantity' : fields.float(string='Qty', digits=(16, 0)),               
+         'qty_on_hand':fields.float(string='Qty On Hand', digits=(16, 0)),
+
     }
         
    

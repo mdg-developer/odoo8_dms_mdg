@@ -114,8 +114,6 @@ class stock_requisition(osv.osv):
                 'company_id':fields.many2one('res.company', 'Company'),
                  'order_line': fields.one2many('stock.requisition.order', 'stock_line_id', 'Sale Order', copy=True),
                  'pre_order':fields.boolean('Pre Order'),
-                 
-        
          'partner_id':fields.many2one('res.partner', string='Partner'),
 
 }
@@ -141,6 +139,7 @@ class stock_requisition(osv.osv):
             issue_date_to = stock_request_data.s_issue_date
             sale_team_id = stock_request_data.sale_team_id.id
             request_date=stock_request_data.request_date
+            location_id=stock_request_data.to_location_id.id
             order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False),('is_generate','=',False), ('invoiced', '=', False), ('state', 'not in', ['done', 'cancel']),('date_order','>',issue_date_from),('date_order','<',issue_date_to)], context=context) 
             cr.execute("delete from stock_requisition_order where  stock_line_id=%s",(stock_request_data.id,))
             cr.execute("update stock_requisition_line set sale_req_quantity=0 where line_id=%s",(stock_request_data.id,))
@@ -155,12 +154,18 @@ class stock_requisition(osv.osv):
                             sale_qty=int(sale_data[1])
                             sale_product_uom=int(sale_data[2])
                             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+                            cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id',(location_id,product_id,))
+                            qty_on_hand=cr.fetchone()
+                            if qty_on_hand:
+                                qty_on_hand=qty_on_hand[0]
+                            else:
+                                qty_on_hand=0
                             if sale_product_uom ==product.product_tmpl_id.big_uom_id.id:                                                                          
                                 cr.execute("select floor(1/factor) as ratio from product_uom where active = true and id=%s",(product.product_tmpl_id.big_uom_id.id,))
                                 bigger_qty=cr.fetchone()[0]
                                 bigger_qty=int(bigger_qty)
                                 sale_qty=bigger_qty*sale_qty
-                            cr.execute("update stock_requisition_line set sale_req_quantity=sale_req_quantity+%s where product_id=%s and line_id=%s",(sale_qty,product_id,stock_request_data.id,))
+                            cr.execute("update stock_requisition_line set sale_req_quantity=sale_req_quantity+%s,qty_on_hand=%s where product_id=%s and line_id=%s",(sale_qty,qty_on_hand,product_id,stock_request_data.id,))
                                         
             for line in order_ids:
                 order = sale_order_obj.browse(cr, uid, line, context=context)                
@@ -217,6 +222,7 @@ class stock_requisition(osv.osv):
                     if (req_line_value.req_quantity + req_line_value.big_req_quantity) != 0:
                         product_id = req_line_value.product_id.id
                         product_uom = req_line_value.product_uom.id
+                        qty_on_hand=req_line_value.qty_on_hand
                         big_uom_id = req_line_value.big_uom_id.id
                         big_req_quantity = req_line_value.big_req_quantity
                         uom_ratio = req_line_value.uom_ratio
@@ -228,6 +234,7 @@ class stock_requisition(osv.osv):
                                              'big_uom_id':big_uom_id,
                                               'issue_quantity':quantity,
                                               'big_issue_quantity':big_req_quantity,
+                                              'qty_on_hand':qty_on_hand,
                                               }, context=context)
         return self.write(cr, uid, ids, {'state':'approve' ,'approve_by':uid})    
     
@@ -282,7 +289,7 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
         'big_req_quantity' : fields.float(string='Qty', digits=(16, 0)),
         'sale_req_quantity' : fields.float(string='Small Req Qty', digits=(16, 0)),
         'addtional_req_quantity' : fields.float(string='Small Add Qty', digits=(16, 0)),
-
+        'qty_on_hand':fields.float(string='Qty On Hand', digits=(16, 0)),
     }
         
 class stock_requisition_order(osv.osv):  # #prod_pricelist_update_line
