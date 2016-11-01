@@ -726,8 +726,18 @@ class mobile_sale_order(osv.osv):
 #                             partner = partner_obj.browse(cr, uid, partner_id, context=context)
 #                             account_id=partner.property_account_receivable.id
 #                             invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)                                    
-                            cr.execute('update account_invoice set branch_id =%s where id =%s',(ms_ids.branch_id.id,invoice_id,))                            
+                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s where id =%s',('credit',ms_ids.branch_id.id,invoice_id,))                            
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
+                            invlist = []
+                            invlist.append(invoice_id)
+                            # call the api function
+                            # invObj contain => account.invoice(1,) like that
+                            invObj = invoiceObj.browse(cr, uid, invoice_id, context=context)
+                            invObj.action_date_assign()
+                            invObj.action_move_create()
+                            invObj.action_number()
+                            # validate invoice
+                            invObj.invoice_validate()
                             # clicking the delivery order view button
                             stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)
                             if stockViewResult:
@@ -760,9 +770,19 @@ class mobile_sale_order(osv.osv):
 #                             partner = partner_obj.browse(cr, uid, partner_id, context=context)
 #                             account_id=partner.property_account_receivable.id
 #                             invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)                                    
-                            cr.execute('update account_invoice set branch_id =%s where id =%s',(ms_ids.branch_id.id,invoice_id,))                            
+                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s where id =%s',('credit',ms_ids.branch_id.id,invoice_id,))                            
                             
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
+                            invlist = []
+                            invlist.append(invoice_id)
+                            # call the api function
+                            # invObj contain => account.invoice(1,) like that
+                            invObj = invoiceObj.browse(cr, uid, invoice_id, context=context)
+                            invObj.action_date_assign()
+                            invObj.action_move_create()
+                            invObj.action_number()
+                            # validate invoice
+                            invObj.invoice_validate()
                             # clicking the delivery order view button
                             stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)  # create delivery order with draft state
                             #cr.execute('update stock_move set location_id=%s where picking_id=%s',(ms_ids.location_id.id,stockViewResult['res_id'],))
@@ -779,9 +799,19 @@ class mobile_sale_order(osv.osv):
 #                             partner = partner_obj.browse(cr, uid, partner_id, context=context)
 #                             account_id=partner.property_account_receivable.id
 #                             invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)                                    
-                            cr.execute('update account_invoice set branch_id =%s where id =%s',(ms_ids.branch_id.id,invoice_id,))                            
+                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s where id =%s',('credit',ms_ids.branch_id.id,invoice_id,))                            
                             
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
+                            invlist = []
+                            invlist.append(invoice_id)
+                            # call the api function
+                            # invObj contain => account.invoice(1,) like that
+                            invObj = invoiceObj.browse(cr, uid, invoice_id, context=context)
+                            invObj.action_date_assign()
+                            invObj.action_move_create()
+                            invObj.action_number()
+                            # validate invoice
+                            invObj.invoice_validate()
                             # clicking the delivery order view button
                             stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)
                             #cr.execute('update stock_move set location_id=%s where picking_id=%s',(ms_ids.location_id.id,stockViewResult['res_id'],))
