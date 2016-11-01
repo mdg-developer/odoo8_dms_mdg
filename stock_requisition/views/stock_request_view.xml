@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
 	<data>
-
-
-		<!-- ============================== Content Form ============================== -->
-
+		<!-- ==============================Content Form============================== -->
 		<record id="stock_requisition_form" model="ir.ui.view">
 			<field name="name">stock_requisition_form</field>
 			<field name="model">stock.requisition</field>
@@ -105,6 +102,7 @@
 			<field name="model">stock.requisition</field>
 			<field name="arch" type="xml">
 				<tree string="Contents">
+				    <field name="sale_team_id"/>
 					<field name="state" />
 					<field name="request_date" string="Req Date" />
 					<field name="name" string="Ref No." />
@@ -124,7 +122,7 @@
 				<search string="Search Stock Request">
 					<field name="pre_order" />
 					<group expand="0" string="Group By...">
-						<filter string="Sale Team" icon="terp-partner" domain="[]"
+						<filter string="Delivery Team" icon="terp-partner" domain="[]"
 							context="{'group_by':'sale_team_id'}" />
 						<filter string="Request From" icon="terp-partner" domain="[]"
 							context="{'group_by':'from_location_id'}" />

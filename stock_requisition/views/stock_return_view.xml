@@ -89,7 +89,7 @@
 			<field name="arch" type="xml">
 				<search string="Search Stock Return">
 					<group expand="0" string="Group By...">
-						<filter string="Sale Team" icon="terp-partner" domain="[]"
+						<filter string="Sales Team" icon="terp-partner" domain="[]"
 							context="{'group_by':'sale_team_id'}" />
 						<filter string="Return From" icon="terp-partner" domain="[]"
 							context="{'group_by':'return_from'}" />
@@ -107,6 +107,7 @@
 			<field name="model">stock.return</field>
 			<field name="arch" type="xml">
 				<tree string="Contents">
+				    <field name="sale_team_id"/>
 					<field name="name" />
 					<field name="note_id" />
 					<field name="return_from" />
