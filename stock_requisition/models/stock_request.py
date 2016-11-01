@@ -79,8 +79,6 @@ class stock_requisition(osv.osv):
                                     'sale_team_id':order.section_id.id,
                                     'state':order.state,
                                               }) 
-            
-               
             values = {
                  'from_location_id':location,
                  'to_location_id':to_location_id ,
@@ -213,7 +211,7 @@ class stock_requisition(osv.osv):
             req_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
             if good_id and req_line_id:
                 cr.execute('select sum(req_quantity+big_req_quantity) from stock_requisition_line where line_id=%s ',(ids[0],))
-                condition_data=cr.fetchone()[0]
+                condition_data=cr.fetchone()[0]         
                 if condition_data ==0.0:
                     raise osv.except_osv(_('Warning'),
                                      _('Please Press Update Qty Button'))                
@@ -226,16 +224,28 @@ class stock_requisition(osv.osv):
                         big_uom_id = req_line_value.big_uom_id.id
                         big_req_quantity = req_line_value.big_req_quantity
                         uom_ratio = req_line_value.uom_ratio
-                        quantity = req_line_value.req_quantity            
-                        good_line_obj.create(cr, uid, {'line_id': good_id,
-                                              'product_id': product_id,
-                                              'product_uom': product_uom,
-                                              'uom_ratio':uom_ratio,
-                                             'big_uom_id':big_uom_id,
-                                              'issue_quantity':quantity,
-                                              'big_issue_quantity':big_req_quantity,
-                                              'qty_on_hand':qty_on_hand,
-                                              }, context=context)
+                        quantity = req_line_value.req_quantity
+                        product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)                                                                          
+                        cr.execute("select floor(1/factor) as ratio from product_uom where active = true and id=%s",(product.product_tmpl_id.big_uom_id.id,))
+                        bigger_qty=cr.fetchone()[0]
+                        bigger_qty=int(bigger_qty)
+                        if  bigger_qty:
+                            small_qty=big_req_quantity*bigger_qty
+                            ori_small_qty=quantity
+                            total=small_qty+ori_small_qty
+                        if total >qty_on_hand:
+                            raise osv.except_osv(_('Warning'),
+                                     _('Please Check Qty On Hand For (%s)')%(product.name_template,))
+                        else:          
+                            good_line_obj.create(cr, uid, {'line_id': good_id,
+                                                  'product_id': product_id,
+                                                  'product_uom': product_uom,
+                                                  'uom_ratio':uom_ratio,
+                                                 'big_uom_id':big_uom_id,
+                                                  'issue_quantity':quantity,
+                                                  'big_issue_quantity':big_req_quantity,
+                                                  'qty_on_hand':qty_on_hand,
+                                                  }, context=context)
         return self.write(cr, uid, ids, {'state':'approve' ,'approve_by':uid})    
     
     def update_data(self, cr, uid, ids, context=None):
