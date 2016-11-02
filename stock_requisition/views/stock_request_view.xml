@@ -11,6 +11,9 @@
 						<button name="approve" string="Request" class="oe_highlight"
 							type="object" states="draft"
 							groups="base.group_sale_supervisor,base.group_sale_manager,base.group_sale_admin,base.group_no_one" />
+						<button name="cancel" string="Cancel" class="oe_highlight"
+							type="object" states="draft"
+							groups="base.group_sale_supervisor,base.group_sale_manager,base.group_sale_admin,base.group_no_one" />
 						<field name="state" widget="statusbar" />
 					</header>
 					<sheet>
@@ -55,7 +58,8 @@
 							<notebook>
 								<page string="Stock">
 									<field name="p_line" attrs="{'readonly':[('state','=','approve')]}">
-										<tree string="Stock Request Line" editable="bottom">
+										<tree string="Stock Request Line" editable="bottom"  default_order="sequence asc" >
+										    <field name="sequence" invisible="1"/>
 											<field name="product_id" on_change="on_change_product_id(product_id)" />
 											<field name="pre_order" invisible="1" />
 											<field name="sale_req_quantity" attrs="{'invisible': [('pre_order','=',False)]}" />
@@ -102,7 +106,7 @@
 			<field name="model">stock.requisition</field>
 			<field name="arch" type="xml">
 				<tree string="Contents">
-				    <field name="sale_team_id"/>
+					<field name="sale_team_id" />
 					<field name="state" />
 					<field name="request_date" string="Req Date" />
 					<field name="name" string="Ref No." />
