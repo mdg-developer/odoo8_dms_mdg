@@ -229,7 +229,6 @@ class account_invoice_line(models.Model):
                     'account_id': discount_account_id,
                     'product_id': False,
                     'foc':False,
-                    'uos_id': 20,
                     'account_analytic_id': inv.invoice_line[0].account_analytic_id.id,
                     'taxes': False,
                     }
@@ -250,7 +249,6 @@ class account_invoice_line(models.Model):
                     'price':-1* total,
                     'account_id': discount_account_id,
                     'product_id': False,
-                    'uos_id':20,
                      'foc':False,
                     'account_analytic_id': inv.invoice_line[0].account_analytic_id.id,
                     'taxes': False,
@@ -265,7 +263,6 @@ class account_invoice_line(models.Model):
                             'price':-1*(deduct_amt),
                             'account_id': discount_cash_account_id,
                             'product_id': False,
-                            'uos_id': 20,
                              'foc':False,
                             'account_analytic_id': inv.invoice_line[0].account_analytic_id.id,
                             'taxes': False,

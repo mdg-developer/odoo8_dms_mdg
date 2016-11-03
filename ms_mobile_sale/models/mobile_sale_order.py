@@ -486,13 +486,7 @@ class mobile_sale_order(osv.osv):
                             # Create Invoice
                             invoice_id = self.create_invoices(cr, uid, solist, context=context)
                             #id update partner form (temporay)
-                            partner_data = invoiceObj.browse(cr, uid, invoice_id, context=context)
-                            partner_id=partner_data.partner_id.id
-                            partner_obj.write(cr,uid,partner_id,{'property_account_receivable':629}, context)
-                            partner = partner_obj.browse(cr, uid, partner_id, context=context)
-                            account_id=partner.property_account_receivable.id
-                            invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)                            
-                            print 'ms_ids.branch_id.id',ms_ids.branch_id.id
+                           
                             cr.execute('update account_invoice set payment_type=%s ,branch_id =%s where id =%s',('cash',ms_ids.branch_id.id,invoice_id,))                            
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             if invoice_id and ms_ids.paid == True:
@@ -579,12 +573,7 @@ class mobile_sale_order(osv.osv):
                             # Create Invoice
                             invoice_id = self.create_invoices(cr, uid, solist, context=context)
                             #id update partner form (temporay)
-                            partner_data = invoiceObj.browse(cr, uid, invoice_id, context=context)
-                            partner_id=partner_data.partner_id.id
-                            partner_obj.write(cr,uid,partner_id,{'property_account_receivable':629}, context)
-                            partner = partner_obj.browse(cr, uid, partner_id, context=context)
-                            account_id=partner.property_account_receivable.id
-                            invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)                                    
+                                                              
                             cr.execute('update account_invoice set payment_type=%s ,branch_id =%s where id =%s',('cash',ms_ids.branch_id.id,invoice_id,))                            
                             
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
@@ -649,12 +638,7 @@ class mobile_sale_order(osv.osv):
                             # Create Invoice
                             invoice_id = self.create_invoices(cr, uid, solist, context=context)
                             #id update partner form (temporay)
-                            partner_data = invoiceObj.browse(cr, uid, invoice_id, context=context)
-                            partner_id=partner_data.partner_id.id
-                            partner_obj.write(cr,uid,partner_id,{'property_account_receivable':629}, context)
-                            partner = partner_obj.browse(cr, uid, partner_id, context=context)
-                            account_id=partner.property_account_receivable.id
-                            invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)                                    
+                                                               
                             cr.execute('update account_invoice set payment_type=%s ,branch_id =%s where id =%s',('cash',ms_ids.branch_id.id,invoice_id,))                            
                                                    
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
@@ -720,12 +704,7 @@ class mobile_sale_order(osv.osv):
                             # invoice create at draft state
                             invoice_id = self.create_invoices(cr, uid, solist, context=context)
                             #id update partner form (temporay)
-                            partner_data = invoiceObj.browse(cr, uid, invoice_id, context=context)
-                            partner_id=partner_data.partner_id.id
-                            partner_obj.write(cr,uid,partner_id,{'property_account_receivable':629}, context)
-                            partner = partner_obj.browse(cr, uid, partner_id, context=context)
-                            account_id=partner.property_account_receivable.id
-                            invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)                                    
+                                                         
                             cr.execute('update account_invoice set branch_id =%s where id =%s',(ms_ids.branch_id.id,invoice_id,))                            
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             # clicking the delivery order view button
@@ -754,12 +733,7 @@ class mobile_sale_order(osv.osv):
                             # invoice create at draft state
                             invoice_id = self.create_invoices(cr, uid, solist, context=context)
                             #id update partner form (temporay)
-                            partner_data = invoiceObj.browse(cr, uid, invoice_id, context=context)
-                            partner_id=partner_data.partner_id.id
-                            partner_obj.write(cr,uid,partner_id,{'property_account_receivable':629}, context)
-                            partner = partner_obj.browse(cr, uid, partner_id, context=context)
-                            account_id=partner.property_account_receivable.id
-                            invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)                                    
+                                                             
                             cr.execute('update account_invoice set branch_id =%s where id =%s',(ms_ids.branch_id.id,invoice_id,))                            
                             
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
@@ -773,12 +747,7 @@ class mobile_sale_order(osv.osv):
                             # invoice create at draft state
                             invoice_id = self.create_invoices(cr, uid, solist, context=context)
                             #id update partner form (temporay)
-                            partner_data = invoiceObj.browse(cr, uid, invoice_id, context=context)
-                            partner_id=partner_data.partner_id.id
-                            partner_obj.write(cr,uid,partner_id,{'property_account_receivable':629}, context)
-                            partner = partner_obj.browse(cr, uid, partner_id, context=context)
-                            account_id=partner.property_account_receivable.id
-                            invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)                                    
+                                                              
                             cr.execute('update account_invoice set branch_id =%s where id =%s',(ms_ids.branch_id.id,invoice_id,))                            
                             
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
@@ -1572,12 +1541,7 @@ class mobile_sale_order(osv.osv):
                             invoice_id = self.create_invoices(cr, uid, solist, context=context)
                             print ' invoice_id',invoice_id
                             #id update partner form (temporay)
-                            partner_data = invoiceObj.browse(cr, uid, invoice_id, context=context)
-                            partner_id=partner_data.partner_id.id
-                            partner_obj.write(cr,uid,partner_id,{'property_account_receivable':629}, context)
-                            partner = partner_obj.browse(cr, uid, partner_id, context=context)
-                            account_id=partner.property_account_receivable.id
-                            invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)                                    
+                                                   
                             cr.execute('update account_invoice set branch_id =%s ,payment_type=%s,section_id=%s,user_id=%s where id =%s',(branch_id,deli['payment_type'],delivery_team_id,uid,invoice_id,))                            
                             
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)

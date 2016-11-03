@@ -2,7 +2,7 @@
 <openerp>
 	<data>
 		<template id="stock_return_note_document">
-			<t t-call="report.external_layout">
+			<t t-call="sale_management.invoice_custom_layout">
 				<div class="page">
 					<!-- <div class="row"> <div class="col-xs-5 col-xs-offset-7"> <address 
 						t-field="o.partner_id" t-field-options='{"widget": "contact", "fields": ["address", 

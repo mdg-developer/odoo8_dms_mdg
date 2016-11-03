@@ -2,7 +2,7 @@
 <openerp>
 	<data>
 		<template id="report_stock_request_document">
-			<t t-call="report.external_layout">
+			<t t-call="sale_management.invoice_custom_layout">
         <div class="page">
             <div class="row">
                 <div class="col-xs-5 col-xs-offset-7">

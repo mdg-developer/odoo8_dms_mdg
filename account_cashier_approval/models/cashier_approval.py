@@ -234,7 +234,7 @@ class cashier_approval(osv.osv):
                                         'journal_id':journal_id,#acc_data[0],
                                         'date':acc_data[3],
                                         'period_id':acc_data[4],
-                                        'account_id':acc_data[5],
+                                        'account_id':journal_id.default_credit_account_id.id,
                                         'pre_line':True,
                                         'type':'receipt'
                                         }
@@ -269,6 +269,7 @@ class cashier_approval(osv.osv):
         if payment_data:
             for payment in payment_data:
                 print 'test',payment[8],ids
+                print 'payment'
                 inv_id = []
                 inv_id.append(payment[8])
                 invoice = invoiceObj.browse(cr, uid, inv_id, context=context)
@@ -283,6 +284,8 @@ class cashier_approval(osv.osv):
                                         'pre_line':True,
                                         'type':'receipt',
                                         'reference':payment[7],
+                                          'payment_option': "without_writeoff",
+
                                         }
                     # create register payment voucher
                 voucherId = voucherObj.create(cr, uid, accountVResult, context=context)
@@ -296,9 +299,8 @@ class cashier_approval(osv.osv):
                                     #'name': invoice.number,
                                     'voucher_id' : voucherId,
                                     'move_line_id' : invoice.move_id.line_id[0].id,
-                                    'account_id' : invoice.account_id.id,
+                                    'account_id' : invoice.account_id.id,#invoice.move_id.line_id[0].account_id.id,
                                     'partner_id' : payment[3],
-                                    "payment_option": "without_writeoff",
                                     "amount" : payment[1],
                                     "amount_original": invoice.amount_total,
                                     'type': 'cr',
@@ -425,7 +427,6 @@ class cashier_approval(osv.osv):
         invoice_line_data = []
         cashier_approval_obj = self.pool.get('cashier.approval')
         invoice_line_obj = self.pool.get('cashier.approval.credit.line')
-        
         datas = cashier_approval_obj.read(cr, uid, ids, ['date', 'to_date', 'user_id', 'sale_team_id'], context=None)
         print 'datas>>>generte_cr', datas,
         frm_date = to_date = user_id = None
@@ -445,7 +446,7 @@ class cashier_approval(osv.osv):
                 cr.execute("""select issued_date,so_no,id,amount,customer_id from account_creditnote where m_status='used' and sale_team_id=%s and issued_date = %s  and user_id=%s 
                 """, (team_id, frm_date, user_id,))
             vals = cr.fetchall()
-            print 'vals>>>generte_cr', vals 
+            print 'vals>>>generte_cr', vals
             for val in vals:
                 print ':val[1]>>', val[1]
                 data_id = {'invoice_id':val[1],
@@ -459,7 +460,9 @@ class cashier_approval(osv.osv):
                 for details in self.browse(cr, uid, ids, context=context):                
                     result[details.id] = inv_id
         return result
-    def generate_denomination(self, cr, uid, ids, context=None):        
+    
+    def generate_denomination(self, cr, uid, ids, context=None):
+        print 'generte_deno'
         cr.execute("""delete from cashier_denomination_line where cashier_id=%s""", (ids[0],))
         result = {}
         invoice_line_data = []
@@ -570,20 +573,26 @@ class cashier_approval(osv.osv):
                 team_id = data['sale_team_id'][0]
             if to_date:
                 print 'to_date>>', to_date
-                cr.execute("""select c.journal_id,c.amount,m.type,s.partner_id,c.date,a.period_id,a.account_id,c.notes,c.id from sale_order s,account_invoice a ,mobile_sale_order m,customer_payment c
+                cr.execute("""select c.journal_id,c.amount,m.type,s.partner_id,c.date,a.period_id,a.account_id,c.notes,a.id,c.id from sale_order s,account_invoice a ,mobile_sale_order m,customer_payment c
                 where s.name=a.reference and m.name=s.tb_ref_no and m.id=c.payment_id and s.payment_type='cash' and a.state='open'  --and a.state='paid' 
-                and a.date_invoice >= %s and a.date_invoice <= %s and a.user_id=%s and c.payment_id is not null and c.id not in(select customer_payment_id from cashier_customer_payment)
+                and a.date_invoice >= %s and a.date_invoice <= %s and a.user_id=%s and c.payment_id is not null 
+				--and c.id not in(select customer_payment_id from cashier_customer_payment)
                 """, (frm_date, to_date, user_id,))
             else:
                 print 'date>>', frm_date
-                cr.execute("""select c.journal_id,c.amount,m.type,s.partner_id,c.date,a.period_id,a.account_id,c.notes,c.id from sale_order s,account_invoice a ,mobile_sale_order m,customer_payment c
+                cr.execute("""select c.journal_id,c.amount,m.type,s.partner_id,c.date,a.period_id,a.account_id,c.notes,a.id,c.id from sale_order s,account_invoice a ,mobile_sale_order m,customer_payment c
                 where s.name=a.reference and m.name=s.tb_ref_no and m.id=c.payment_id and s.payment_type='cash' and a.state='open' --and a.state='paid' 
-                and a.date_invoice = %s and a.user_id=%s and c.payment_id is not null and c.id not in(select customer_payment_id from cashier_customer_payment)
+                and a.date_invoice = %s and a.user_id=%s and c.payment_id is not null 
+				--and c.id not in(select customer_payment_id from cashier_customer_payment)
                 """, (frm_date,user_id,))
             vals = cr.fetchall()           
         
         for val in vals:
             print ':val[1]>>', val
+            cr.execute('select default_credit_account_id from account_journal where id=%s', (val[0],))
+            data = cr.fetchall()
+            if data:
+                    default_credit_account_id = data[0][0]
             data_id = {'journal_id':val[0],
                     'amount': val[1],
                     #'denomination_id':val[2],
@@ -592,7 +601,7 @@ class cashier_approval(osv.osv):
                     'partner_id': val[3],
                     'date_invoice': val[4],
                     'period_id': val[5],
-                    'account_id': val[6],                    
+                    'account_id': default_credit_account_id,                    
                     'notes':val[7],
                     'invoice_id':val[8],
                     'customer_payment_id':val[9],
@@ -617,16 +626,20 @@ class cashier_approval(osv.osv):
         print 'datas>>>generte_pre_so', datas,
         frm_date = to_date = user_id = None            
         if datas:
+            print 'datas',datas
             for data in datas:
                 frm_date = data['date']
                 to_date = data['to_date']
                 user_id = data['user_id'][0]
                 team_id = data['sale_team_id'][0]
+            print 'to_dateto_dateto_date',to_date
+                
             if to_date:
                 print 'to_date>>', to_date
-                cr.execute("""select c.journal_id,c.amount,m.type,s.partner_id,c.date,a.period_id,a.account_id,c.notes,a.id,c.id from sale_order s,account_invoice a ,pre_sale_order m,customer_payment c
-                where s.name=a.reference and m.name=s.tb_ref_no and m.id=c.pre_order_id and s.payment_type='cash' and a.state='open' --and a.state='paid' 
-                and a.date_invoice >= %s and a.date_invoice <= %s and a.user_id=%s and c.pre_order_id is not null and c.id not in(select customer_payment_id from cashier_customer_payment)
+                cr.execute("""select c.journal_id,c.amount,m.type,s.partner_id,c.date,a.period_id,a.account_id,c.notes,a.id,c.id from sale_order s,account_invoice a ,pre_sale_order m,customer_payment c,account_journal aj
+                where s.name=a.reference and m.name=s.tb_ref_no and m.id=c.pre_order_id  and c.journal_id = aj.id and s.payment_type='cash' and a.state='open' --and a.state='paid' 
+                and a.date_invoice >= %s and a.date_invoice <= %s and a.user_id=%s and c.pre_order_id is not null 
+                --and c.id not in(select customer_payment_id from cashier_customer_payment)
                 """, (frm_date, to_date,user_id, ))
             else:
                 print 'date>>', frm_date
@@ -637,16 +650,19 @@ class cashier_approval(osv.osv):
             vals = cr.fetchall()           
         
         for val in vals:
+            cr.execute('select default_credit_account_id from account_journal where id=%s', (val[0],))
+            data = cr.fetchall()
+            if data:
+                default_credit_account_id = data[0][0]            
             print ':val[1]>>', val
             data_id = {'journal_id':val[0],
                     'amount': val[1],
-                    #'denomination_id':val[2],
                     'type':val[2],
                     'cashier_id':ids[0],
                     'partner_id': val[3],
                     'date_invoice': val[4],
                     'period_id': val[5],
-                    'account_id': val[6],                    
+                    'account_id': default_credit_account_id,                    
                     'notes':val[7],
                     'invoice_id':val[8],
                     'customer_payment_id':val[9],

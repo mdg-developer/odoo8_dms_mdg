@@ -252,7 +252,7 @@ class account_voucher_line(osv.osv):
        
         if total_discount and total_discount > 0 :
              val = {
-            'total_dis': total_discount,
+            'total_discount': total_discount,
             }
              return {'value': val}
      
