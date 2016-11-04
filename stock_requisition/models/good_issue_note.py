@@ -53,6 +53,7 @@ class good_issue_note(osv.osv):
             ('issue','Issued'),
             ('confirm', 'Approved'),
             ('approve', 'Received'),
+            ('cancel', 'Cancel'),
             ], 'Status', readonly=True, copy=False, help="Gives the status of the quotation or sales order.\
               \nThe exception status is automatically set when a cancel operation occurs \
               in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\nThe 'Waiting Schedule' status is set when the invoice is confirmed\
@@ -82,6 +83,9 @@ class good_issue_note(osv.osv):
         
         return self.write(cr, uid, ids, {'state':'confirm' ,'approve_by':uid})    
     
+    def cancel(self, cr, uid, ids, context=None):
+        
+        return self.write(cr, uid, ids, {'state':'cancel' })        
     def approve(self, cr, uid, ids, context=None):
         product_line_obj = self.pool.get('good.issue.note.line')
         note_obj = self.pool.get('good.issue.note')
