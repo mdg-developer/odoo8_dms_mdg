@@ -1661,18 +1661,7 @@ class mobile_sale_order(osv.osv):
             return True  
                    
     def create_mobile_stock_return(self, cursor, user, vals, context=None):
-        print 'vals', vals
         try :
-            
-            cursor.execute('select id from stock_return_mobile where user_id = %s ', (user,))
-            data = cursor.fetchall()
-            if data:
-                stock_return_id = data[0][0]
-                cursor.execute('delete from stock_return_mobile where id = %s ', (stock_return_id,))
-                cursor.execute('delete from stock_return_mobile_line where line_id = %s ', (stock_return_id,))
-            else:
-                stock_return_id = None
-            
             stock_return_obj = self.pool.get('stock.return.mobile')
             stock_return_line_obj = self.pool.get('stock.return.mobile.line')
             str = "{" + vals + "}"
@@ -1698,17 +1687,30 @@ class mobile_sale_order(osv.osv):
             
             if stock:
                 for sr in stock:
+                    cursor.execute('select id from stock_return_mobile where user_id = %s and return_date=%s ', (user,sr['return_date'],))
+                    data = cursor.fetchall()
+                    if data:
+                        stock_return_id = data[0][0]
+                        cursor.execute('delete from stock_return_mobile where id = %s ', (stock_return_id,))
+                        cursor.execute('delete from stock_return_mobile_line where line_id = %s ', (stock_return_id,))
+                    cursor.execute("select vehicle_id from crm_case_section where id=%s",(sr['sale_team_id'],))
+                    vehicle_id=cursor.fetchone()
+                    if vehicle_id:
+                        vehicle_id=vehicle_id[0]
+                    else:
+                        vehicle_id=None
+                    print 'vehicle_id',vehicle_id
                     mso_result = {
                         'sale_team_id':sr['sale_team_id'],
                         'return_date':sr['return_date'],
                         'company_id':sr['company_id'],
                         'branch_id':sr['branch_id'],
                         'user_id':user,
+                        'vehicle_id':vehicle_id,
+
                     }
                     stock_id = stock_return_obj.create(cursor, user, mso_result, context=context)                  
-                    for srl in stock_line:
-                            print 'FOC QTY', srl['foc_quantity']    ,srl['sale_quantity'] ,srl['return_quantity']
-                            #return_quantity=  float(srl['return_quantity']) - (float(srl['sale_quantity'])+float(srl['foc_quantity'] ))          
+                    for srl in stock_line:                            #return_quantity=  float(srl['return_quantity']) - (float(srl['sale_quantity'])+float(srl['foc_quantity'] ))          
                             return_quantity=srl['return_quantity']
                             mso_line_res = {                                                            
                                   'line_id':stock_id,
@@ -1813,9 +1815,7 @@ class mobile_sale_order(osv.osv):
                                 qty_on_hand=qty_on_hand[0]
                             else:
                                 qty_on_hand=0               
-                            print 'qty_on_hand',qty_on_hand,srl['product_uom'],big_uom_id
                             if int(srl['product_uom']) ==int(big_uom_id):                                                                          
-    
                                 mso_line_res = {                                                            
                                       'line_id':stock_id,
                                       'remark':srl['remark'],
