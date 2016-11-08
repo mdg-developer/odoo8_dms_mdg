@@ -32,7 +32,7 @@ class stock_delivery(osv.osv):
 					and product.product_tmpl_id = product_temp.id
 					and product.active = true
 					and qty>0 
-					group by quant.product_id, main_group,name_template,product_temp.id  order by name_template
+					group by quant.product_id, main_group,name_template,product_temp.id,product.sequence  order by name_template
                     """, (warehouse_id,))
 
         datas = cr.fetchall()
