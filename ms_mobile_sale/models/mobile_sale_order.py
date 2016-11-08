@@ -1519,7 +1519,11 @@ class mobile_sale_order(osv.osv):
         list = []
         if list_val:
             for val in list_val:
-                cr.execute('select id,product_id,product_uom_qty,product_uom,price_unit,order_id,discount,discount_amt from sale_order_line where id = %s', (val,))
+                cr.execute('''select so.id,so.product_id,so.product_uom_qty,so.product_uom,so.price_unit,so.order_id,
+                            so.discount,so.discount_amt ,pp.sequence
+                            from sale_order_line so,product_product pp
+                            where so.id = %s 
+                            and so.product_id = pp.id''', (val,))
                 result = cr.fetchall()
                 list.append(result)
                 print' list', list
