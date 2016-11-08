@@ -838,7 +838,7 @@ class mobile_sale_order(osv.osv):
     def get_products_by_sale_team(self, cr, uid, section_id , context=None, **kwargs):
         cr.execute('''select  pp.id,pt.list_price , coalesce(replace(pt.description,',',';'), ' ') as description,pt.categ_id,pc.name as categ_name,pp.default_code, 
                          pt.name,substring(replace(cast(pt.image_small as text),'/',''),1,5) as image_small,pt.main_group,pt.uom_ratio,
-                         pp.product_tmpl_id,pt.is_foc
+                         pp.product_tmpl_id,pt.is_foc,pp.sequence
                         from crm_case_section_product_product_rel crm_real ,
                         crm_case_section ccs ,product_template pt, product_product pp , product_category pc
                         where pp.id = crm_real.product_product_id
@@ -1272,7 +1272,7 @@ class mobile_sale_order(osv.osv):
         str = str.replace("'',", "',")  # null
         str = str.replace(":',", ":'',")  # due to order_id
         str = str.replace("}{", "}|{")
-        str = str.replace(":'}{", ":''}")
+        str = str.replace(":'}{", ":''}")    
         new_arr = str.split('|')
         result = []
         for data in new_arr:
@@ -1283,17 +1283,11 @@ class mobile_sale_order(osv.osv):
             print "length", len(r)
             ar_collection.append(r)  
         if ar_collection:
-            for ar in ar_collection:            
-                cursor.execute('select id From res_partner where customer_code = %s ', (ar['customer_code'],))
-                data = cursor.fetchall()
-                if data:
-                    partner_id = data[0][0]
-                else:
-                    partner_id = None
-                
+            for ar in ar_collection:
+                cursor.execute('delete From mobile_ar_collection where date = %s and sale_team_id = %s ', (ar['date'],ar['sale_team_id'],))
                 ar_result = {
                     'customer_code':ar['customer_code'],
-                    'partner_id':partner_id,
+                    'partner_id':ar['partner_id'],
                     'credit_limit':ar['credit_limit'],
                     'date':ar['date'] ,
                     'tablet_id':ar['tablet_id'],
@@ -1301,8 +1295,8 @@ class mobile_sale_order(osv.osv):
                     'payment_amount':ar['payment_amount'],
                     'so_amount':ar['so_amount'],
                     'balance':ar['balance'],
-                    'ref_no':ar['ref_no'],
-                    'so_ref':ar['so_ref'],
+                    'ref_no':ar['ref_no'].replace('\\',""),
+                    'so_ref':ar['so_ref'].replace('\\',""),
                     'sale_team_id':ar['sale_team_id'],
                     'user_id':ar['user_id'],
                 }
@@ -2167,6 +2161,136 @@ class mobile_sale_order(osv.osv):
             return result
         except Exception, e:
             return False
+    
+    def get_credit_invoice(self, cr, uid, partner_list, branch_id ,invoiceList, context=None):    
+        data_line = []
+        if partner_list:
+            partner_list = str(tuple(partner_list))
+            partner_list = eval(partner_list)
+            
+            invoiceList = str(tuple(invoiceList))
+            invoiceList = eval(invoiceList)
+            if invoiceList:        
+                cr.execute(''' 
+                    select inv.id,inv.number,inv.partner_id,rp.name customer_name,
+                           rp.customer_code customer_code,inv.origin so_no,inv.date_invoice,
+                           inv.amount_total,inv.residual balance,inv.payment_type,
+                           inv.journal_id,crm.name,inv.date_due
+                    from account_invoice inv, res_partner rp, crm_case_section crm
+                    where inv.payment_type='credit' 
+                    and inv.state='open' 
+                    and inv.type = 'out_invoice'
+                    and inv.branch_id = %s 
+                    and residual > 0
+                    and inv.partner_id = rp.id
+                    and inv.section_id = crm.id
+                    and inv.partner_id in %s
+                    and inv.id NOT IN %s'''         
+                    , (branch_id, partner_list, invoiceList ,))
+            else:
+                cr.execute(''' 
+                    select inv.id,inv.number,inv.partner_id,rp.name customer_name,
+                           rp.customer_code customer_code,inv.origin so_no,inv.date_invoice,
+                           inv.amount_total,inv.residual balance,inv.payment_type,
+                           inv.journal_id,crm.name,inv.date_due
+                    from account_invoice inv, res_partner rp, crm_case_section crm
+                    where inv.payment_type='credit' 
+                    and inv.state='open' 
+                    and inv.type = 'out_invoice'
+                    and inv.branch_id = %s 
+                    and residual > 0
+                    and inv.partner_id = rp.id
+                    and inv.section_id = crm.id
+                    and inv.partner_id in %s
+                    '''         
+                    , (branch_id, partner_list,))            
+            data_line = cr.fetchall()                    
+        print 'data_lineeeeeeeeeeeeeee',data_line        
+        return data_line
+    
+    def get_credit_invoice_line(self, cr, uid, partner_list, branch_id,invoiceList , context=None):    
+        data_line = []
+        if partner_list:
+            partner_list = str(tuple(partner_list))
+            partner_list = eval(partner_list)
+            
+            invoiceList = str(tuple(invoiceList))
+            invoiceList = eval(invoiceList)
+            
+            if invoiceList:
+                
+                cr.execute(''' 
+                    select  inv_line.id,inv_line.invoice_id,inv_line.product_id,pp.name_template, pp.default_code,
+                            inv_line.quantity qty,inv_line.price_unit as price,inv_line.price_subtotal,
+                            inv_line.discount,inv_line.discount_amt,inv_line.uos_id
+                    from account_invoice inv, account_invoice_line inv_line, res_partner rp, product_product pp
+                    where inv.id = inv_line.invoice_id
+                    and inv.payment_type='credit' 
+                    and inv.state='open' 
+                    and inv.type = 'out_invoice'
+                    and inv.branch_id = %s
+                    and inv_line.product_id = pp.id
+                    and residual > 0
+                    and inv.partner_id = rp.id
+                    and inv.partner_id in %s
+                    and inv.id not in %s'''                       
+                    , (branch_id, partner_list,invoiceList ,))
+            else:
+                cr.execute(''' 
+                    select  inv_line.id,inv_line.invoice_id,inv_line.product_id,pp.name_template, pp.default_code,
+                            inv_line.quantity qty,inv_line.price_unit as price,inv_line.price_subtotal,
+                            inv_line.discount,inv_line.discount_amt,inv_line.uos_id
+                    from account_invoice inv, account_invoice_line inv_line, res_partner rp, product_product pp
+                    where inv.id = inv_line.invoice_id
+                    and inv.payment_type='credit' 
+                    and inv.state='open' 
+                    and inv.type = 'out_invoice'
+                    and inv.branch_id = %s
+                    and inv_line.product_id = pp.id
+                    and residual > 0
+                    and inv.partner_id = rp.id
+                    and inv.partner_id in %s
+                    '''                       
+                    , (branch_id, partner_list ,))
+                      
+            data_line = cr.fetchall()                    
+        print 'data_lineeeeeeeeeeeeeee',data_line        
+        return data_line
+    
+    def create_ar_collection_journal_payment(self, cursor, user, vals, context=None):
+        try:
+            rental_obj = self.pool.get('customer.payment')
+            str = "{" + vals + "}"
+            str = str.replace("'',", "',")  # null
+            str = str.replace(":',", ":'',")  # due to order_id
+            str = str.replace("}{", "}|{")
+            str = str.replace(":'}{", ":''}")
+            new_arr = str.split('|')
+            result = []
+            for data in new_arr:
+                x = ast.literal_eval(data)
+                result.append(x)
+            if result:
+                for ar in result:
+                    cursor.execute('select id from mobile_ar_collection where ref_no = %s ', (ar['payment_id'],))
+                    data = cursor.fetchall()
+                    if data:
+                        collection_id = data[0][0]
+                    else:
+                        collection_id = None                    
+                    
+                    rental_result = {                    
+                        'payment_id':collection_id,                        
+                        'journal_id':ar['journal_id'],
+                        'amount':ar['amount'],
+                        'date':ar['date'],
+                        'notes':ar['notes'],    
+                    }
+                    rental_obj.create(cursor, user, rental_result, context=context)
+            return True
+        except Exception, e:
+            print 'False'
+            return False  
         
 mobile_sale_order()
 
