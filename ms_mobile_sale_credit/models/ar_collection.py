@@ -1,5 +1,15 @@
 from openerp.osv import fields, osv
 
+class ar_payment(osv.osv):
+    _name = "ar.payment"
+    _columns = {               
+   'collection_id':fields.many2one('mobile.ar.collection', 'Line'),
+   'journal_id'  : fields.many2one('account.journal', 'Payment Method' ,domain=[('type','in',('cash','bank'))]),      
+   'amount':fields.float('Paid Amount'),
+   'notes':fields.char('Payment Ref'),
+   'date':fields.date('Date'),
+        }    
+    
 class mobile_ar_collection(osv.osv):
     _name = "mobile.ar.collection"
     _description = "AR Collections"
@@ -19,6 +29,7 @@ class mobile_ar_collection(osv.osv):
                 'payment_amount':fields.float('Payment'),
                 'so_amount':fields.float('Sale Order Amount'),
                 'credit_limit':fields.float('Credit Limit'),
+                'payment_line_ids':fields.one2many('ar.payment', 'collection_id', 'Payment Lines'),
                 #'state':fields.selection([('pending', 'Confirmed'), ('done', 'Done')], 'Status',readonly=True),
     }
     _defaults = {

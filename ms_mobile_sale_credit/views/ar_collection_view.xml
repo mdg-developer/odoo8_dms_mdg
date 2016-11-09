@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
 	<data>
-		
+
 		<!-- =============== AR Collection Form ============ -->
 
 		<record id="view_mobile_ar_collection_form" model="ir.ui.view">
@@ -15,11 +15,11 @@
 							<group>
 								<field name="ref_no" />
 								<!-- <field name="name" /> -->
-								<field name="partner_id"/>
+								<field name="partner_id" />
 								<field name="so_ref" />
 								<field name="sale_team_id" />
-								<field name="user_id"/>
-								<field name="tablet_id" />								
+								<field name="user_id" />
+								<field name="tablet_id" />
 							</group>
 							<group>
 								<field name="date" />
@@ -28,8 +28,20 @@
 								<field name="payment_amount" />
 								<field name="credit_limit" />
 								<!-- <field name="state" /> -->
-							</group>							
+							</group>
 						</group>
+						<notebook>
+							<page string="Payments">
+								<field name="payment_line_ids" >
+									<tree string="Payment Lines" editable="bottom">
+										<field name="date" />
+										<field name="journal_id" widget="selection" />
+										<field name="amount" sum="Price" />
+										<field name="notes" />
+									</tree>
+								</field>
+							</page>
+						</notebook>
 					</sheet>
 				</form>
 			</field>
@@ -42,7 +54,7 @@
 				<tree string="AR Collection Tree">
 					<field name="ref_no" />
 					<!-- <field name="name" /> -->
-					<field name="partner_id"/>
+					<field name="partner_id" />
 					<field name="so_ref" />
 					<field name="sale_team_id" />
 					<field name="tablet_id" />
@@ -53,7 +65,7 @@
 				</tree>
 			</field>
 		</record>
-		
+
 		<!-- stock delivery filter -->
 		<record id="view_mobile_ar_collection_filter" model="ir.ui.view">
 			<field name="name">Mobile AR Collection Filter</field>
@@ -88,12 +100,12 @@
 				</p>
 			</field>
 		</record>
-		
-		<menuitem name="Payment" id="ar_collection_menu"
-			parent="base.menu_mobile_sale" sequence="2"/>
-			
+
+		<menuitem name="Payment" id="ar_collection_menu" parent="base.menu_mobile_sale"
+			sequence="2" />
+
 		<menuitem action="action_mobile_ar_collection" id="menu_mobile_ar_collection"
-			parent="ar_collection_menu" sequence="1"/>
-			
+			parent="ar_collection_menu" sequence="1" />
+
 	</data>
 </openerp>
