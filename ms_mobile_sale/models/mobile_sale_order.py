@@ -2330,14 +2330,20 @@ class mobile_sale_order(osv.osv):
                 result.append(x)
             if result:
                 for ar in result:                            
-                    
+                    cursor.execute('select id from asset_type where name = %s ', (ar['asset_type'],))
+                    data = cursor.fetchall()
+                    if data:
+                        access_type_id = data[0][0]
+                    else:
+                        access_type_id = None                            
+                        
                     rental_result = {                    
                         'partner_id':ar['partner_id'],                        
                         'qty':ar['qty'],
                         'image':ar['image'],
                         'date':ar['date'],
                         'name':ar['name'],    
-                        'asset_type':ar['asset_type'], 
+                        'asset_type':access_type_id, 
                         'type':ar['type'], 
                     }
                     rental_obj.create(cursor, user, rental_result, context=context)
