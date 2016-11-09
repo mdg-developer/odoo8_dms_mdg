@@ -2263,7 +2263,7 @@ class mobile_sale_order(osv.osv):
     
     def create_ar_collection_journal_payment(self, cursor, user, vals, context=None):
         try:
-            rental_obj = self.pool.get('customer.payment')
+            rental_obj = self.pool.get('ar.payment')
             str = "{" + vals + "}"
             str = str.replace("'',", "',")  # null
             str = str.replace(":',", ":'',")  # due to order_id
@@ -2276,7 +2276,9 @@ class mobile_sale_order(osv.osv):
                 result.append(x)
             if result:
                 for ar in result:
-                    cursor.execute('select id from mobile_ar_collection where ref_no = %s ', (ar['payment_id'],))
+                    ref_no = ar['payment_id'].replace('\\',"")
+                    print 'Ref No',ref_no
+                    cursor.execute('select id from mobile_ar_collection where ref_no = %s ', (ref_no,))
                     data = cursor.fetchall()
                     if data:
                         collection_id = data[0][0]
@@ -2284,11 +2286,11 @@ class mobile_sale_order(osv.osv):
                         collection_id = None                    
                     
                     rental_result = {                    
-                        'payment_id':collection_id,                        
+                        'collection_id':collection_id,                        
                         'journal_id':ar['journal_id'],
                         'amount':ar['amount'],
                         'date':ar['date'],
-                        'notes':ar['notes'],    
+                        'notes':ar['notes'].replace('\\',""),    
                     }
                     rental_obj.create(cursor, user, rental_result, context=context)
             return True
@@ -2312,7 +2314,37 @@ class mobile_sale_order(osv.osv):
             """, (warehouse_id,))   
             datas = cr.fetchall()        
             return datas
-        
+    
+    def create_customer_asset(self, cursor, user, vals, context=None):
+        try:
+            rental_obj = self.pool.get('res.partner.asset')
+            str = "{" + vals + "}"
+            str = str.replace("'',", "',")  # null
+            str = str.replace(":',", ":'',")  # due to order_id
+            str = str.replace("}{", "}|{")
+            str = str.replace(":'}{", ":''}")
+            new_arr = str.split('|')
+            result = []
+            for data in new_arr:
+                x = ast.literal_eval(data)
+                result.append(x)
+            if result:
+                for ar in result:                            
+                    
+                    rental_result = {                    
+                        'partner_id':ar['partner_id'],                        
+                        'qty':ar['qty'],
+                        'image':ar['image'],
+                        'date':ar['date'],
+                        'name':ar['name'],    
+                        'asset_type':ar['asset_type'], 
+                        'type':ar['type'], 
+                    }
+                    rental_obj.create(cursor, user, rental_result, context=context)
+            return True
+        except Exception, e:
+            print 'False'
+            return False 
 mobile_sale_order()
 
 class mobile_sale_order_line(osv.osv):
