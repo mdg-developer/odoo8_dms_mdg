@@ -5,8 +5,8 @@ from openerp.tools.translate import _
 import ast
 import time
 from openerp import netsvc
-
 DEFAULT_SERVER_DATE_FORMAT = "%Y-%m-%d"
+
 class customer_payment(osv.osv):
     _name = "customer.payment"
     _columns = {               
@@ -1306,6 +1306,7 @@ class mobile_sale_order(osv.osv):
                     'so_ref':origin,
                     'sale_team_id':ar['sale_team_id'],
                     'user_id':ar['user_id'],
+                    'state':'draft',
                 }
                 ar_obj.create(cursor, user, ar_result, context=context)
         return True
@@ -2481,6 +2482,7 @@ class sale_order(osv.osv):
                 
             # self.send_message_or_not(cr, uid, order.partner_invoice_id.credit_limit, order.amount_total, inv_id, order.id, context)
         return inv_id
+    
     def send_message_or_not(self, cr, uid, credit_limit, total_amt, invoice_id, context=None):
         inv_obj = self.pool.get('account.invoice')
         

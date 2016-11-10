@@ -27,7 +27,7 @@
 								<field name="balance" />
 								<field name="payment_amount" />
 								<field name="credit_limit" />
-								<!-- <field name="state" /> -->
+								<field name="state" />
 							</group>
 						</group>
 						<notebook>
@@ -53,7 +53,6 @@
 			<field name="arch" type="xml">
 				<tree string="AR Collection Tree">
 					<field name="ref_no" />
-					<!-- <field name="name" /> -->
 					<field name="partner_id" />
 					<field name="so_ref" />
 					<field name="sale_team_id" />
@@ -62,6 +61,7 @@
 					<field name="payment_amount" />
 					<field name="balance" />
 					<field name="void_flag" />
+					<field name="state" />
 				</tree>
 			</field>
 		</record>

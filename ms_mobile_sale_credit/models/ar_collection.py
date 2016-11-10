@@ -3,11 +3,11 @@ from openerp.osv import fields, osv
 class ar_payment(osv.osv):
     _name = "ar.payment"
     _columns = {               
-   'collection_id':fields.many2one('mobile.ar.collection', 'Line'),
-   'journal_id'  : fields.many2one('account.journal', 'Payment Method' ,domain=[('type','in',('cash','bank'))]),      
-   'amount':fields.float('Paid Amount'),
-   'notes':fields.char('Payment Ref'),
-   'date':fields.date('Date'),
+                   'collection_id':fields.many2one('mobile.ar.collection', 'Line'),
+                   'journal_id'  : fields.many2one('account.journal', 'Payment Method' ,domain=[('type','in',('cash','bank'))]),      
+                   'amount':fields.float('Paid Amount'),
+                   'notes':fields.char('Payment Ref'),
+                   'date':fields.date('Date'),
         }    
     
 class mobile_ar_collection(osv.osv):
@@ -30,14 +30,14 @@ class mobile_ar_collection(osv.osv):
                 'so_amount':fields.float('Sale Order Amount'),
                 'credit_limit':fields.float('Credit Limit'),
                 'payment_line_ids':fields.one2many('ar.payment', 'collection_id', 'Payment Lines'),
-                #'state':fields.selection([('pending', 'Confirmed'), ('done', 'Done')], 'Status',readonly=True),
+                'state':fields.selection([('draft', 'Draft'), ('done', 'Done')], 'Status',readonly=True),
     }
     _defaults = {
-                 #'state' : 'pending',
+                 'state' : 'draft',
                
     }
+    
     def get_ar_collections_datas(self, cr, uid, todayDateNormal, creditPaymentList, saleOrderNoList, context=None, **kwargs):
-        print "crdit payment list", creditPaymentList
         ar_collection_obj = self.pool.get('mobile.ar.collection')
         list_val = None
         list_val = ar_collection_obj.search(cr, uid, [('date', '>', todayDateNormal), ('ref_no', 'not in', creditPaymentList), ('so_ref', 'in', saleOrderNoList)])
