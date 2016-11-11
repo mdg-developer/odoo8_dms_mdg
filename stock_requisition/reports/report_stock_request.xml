@@ -104,9 +104,9 @@
                   </tr>
             </table>
             
-            <table class="table table-condensed">
+            <table class="table table-condensed" >
                 <thead>
-                    <tr>
+                    <tr style="background-color:#0052cc;color:#ffffff;" height="10pt;">
                         <th>Product</th>
                         <th>Quantity(B/S)</th>
                      <!--   <th>Bigger UOM</th>

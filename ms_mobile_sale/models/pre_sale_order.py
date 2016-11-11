@@ -160,30 +160,12 @@ class pre_sale_order(osv.osv):
         except Exception, e:
             print 'False'
             return False 
-
-    def create_invoices(self, cr, uid, ids, context=None):
-        """ create invoices for the active sales orders """
-        print 'Sale Order ID', ids  
-        sale_obj = self.pool.get('sale.order')
-        sale_ids = ids
-        if sale_ids:
-            # create the final invoices of the active sales orders
-            print 'YOOOOOOOOOOOOO', sale_ids
-            try:
-                print 'Create Invoice Context', context
-                res = sale_obj.manual_invoice(cr, uid, sale_ids, context=context)          
-                print 'ressssssssssssss',res
-                return res['res_id']
-            except Exception, e:
-                return False
-                
+    
     def action_convert_presaleorder(self, cr, uid, ids, context=None):
-        msoObj = self.pool.get('mobile.sale.order')
         presaleorderObj = self.pool.get('pre.sale.order')
         saleOrderObj = self.pool.get('sale.order')
         saleOrderLineObj = self.pool.get('sale.order.line')
-        invObj = self.pool.get("sale.advance.payment.inv")
-        invoiceObj = self.pool.get('account.invoice')        
+        
         so_id = pricelist_id = sale_foc = productName = None
         priceUnit = 0.0
         saleOrderResult = {}
@@ -261,28 +243,9 @@ class pre_sale_order(osv.osv):
                                                         }   
                                 saleOrderLineObj.create(cr, uid, detailResult, context=context)
                     if so_id and  so_state != 'cancel':
-                        solist = []
-                        solist.append(so_id)
                         saleOrderObj.button_dummy(cr, uid, [so_id], context=context)
                         # Do Open
                         saleOrderObj.action_button_confirm(cr, uid, [so_id], context=context)
-                        print 
-                        invoice_id = self.create_invoices(cr, uid, solist, context=context)
-                            #id update partner form (temporay)
-                        cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,pre_order=True where id =%s',(preObj_ids.type,preObj_ids.branch_id.id,invoice_id,))                            
-                        invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
-                        if invoice_id :
-                            invlist = []
-                            invlist.append(invoice_id)
-                            # call the api function
-                            # invObj contain => account.invoice(1,) like that
-                            invObj = invoiceObj.browse(cr, uid, invoice_id, context=context)
-                            print 'invoice_id', invObj
-                            invObj.action_date_assign()
-                            invObj.action_move_create()
-                            invObj.action_number()
-                            # validate invoice
-                            #invObj.invoice_validate()                        
                         
                         
             except Exception, e:

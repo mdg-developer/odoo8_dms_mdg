@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+
+<data>
+    <!-- Inherited Customer For add Reporting Field --> 
+    <record model="ir.ui.view" id="view_report_partner_invoice_template">
+        <field name="name">res.partner.invoice.template.form.inherit</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='accounting']" position="after">
+                <page string="Report Configuration" name="report">
+                    <group>
+                        <group string="Invoice Template">
+                            <field name="report_template_id" domain="[('report_name', 'ilike', '%invoice_template%'')]" options="{'no_create': True}"/>
+                            <field name="report_template_id1" invisible="1"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+    
+</data>
+</openerp>

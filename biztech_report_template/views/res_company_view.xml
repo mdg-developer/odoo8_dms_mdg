@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+
+<data noupdate="1">
+    <record id="base.main_company" model="res.company">
+        <field name="invoice_logo" type="base64" file="biztech_report_template/static/src/img/company_image.png"/>
+    </record>
+</data>
+<data>
+    <!-- Inherited Customer For add Reporting Field --> 
+    <record model="ir.ui.view" id="view_report_company_invoice_template">
+        <field name="name">res.company.invoice.template.form.inherit</field>
+        <field name="inherit_id" ref="report.reporting_settings_form_inherited"/>
+        <field name="model">res.company</field>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@string='Report Configuration']/group[@string='Configuration']" position="after">
+                <group string="Default Report Settings">
+                    <group>
+                        <field name="invoice_logo" widget="image"  class="oe_avatar"/>
+                        <field name="report_template_id" domain="[('report_name', 'ilike', '%invoice_template%'')]" options="{'no_create': True}"/>
+                        <field name="report_template_id1" attrs="{'invisible':[('report_template_id','!=',False)]}"/>
+                        <field name="theme_color" placeholder=" like #d4d2d2" widget="color"/>
+                        <field name="theme_text_color" placeholder=" like #5cc2d2" widget="color"/>
+                        <field name="text_color" placeholder=" like #5bb3d2" widget="color"/>
+                        <field name="company_color" placeholder=" like #b30000" widget="color"/>
+                    </group>
+                    <group>
+                        <field name="watermark_logo" widget="image"  class="oe_avatar" invisible="1"/>
+                        <field name="odd_party_color" placeholder=" like #aea8a8" widget="color"/>
+                        <field name="even_party_color" placeholder=" like #aea8aa" widget="color"/>
+                        <field name="customer_color" placeholder=" like #2763a1" widget="color"/>
+                        <field name="customer_address_color" placeholder=" like #2763c1" widget="color"/>
+                        <field name="is_description"/>
+                        <field name="is_customer_bold"/>
+                        <field name="is_company_bold"/>
+                        <field name="company_address_color" placeholder=" like #b30010" widget="color"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+    
+</data>
+</openerp>

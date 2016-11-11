@@ -116,7 +116,7 @@
             
             <table class="table table-condensed">
                 <thead>
-                    <tr>
+                    <tr style="background-color:#0052cc;color:#ffffff;" height="10pt;">
                         <th>Product</th>
                         <th>Quantity(B/S)</th>
                         <th>UOM(B/S)</th>

@@ -86,7 +86,7 @@
 
 					<table class="table table-condensed">
 						<thead>
-							<tr>
+							<tr style="background-color:#0052cc;color:#ffffff;" height="10pt;">
 								<th>Product</th>
 								<th class="text-right">Received Qty</th>
 								<th class="text-right">Returned Qty</th>

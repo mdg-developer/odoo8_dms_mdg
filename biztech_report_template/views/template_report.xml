@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <report 
+            id="report_invoice_template_contemporary"
+            string="Contemporary"
+            model="account.invoice"
+            report_type="qweb-pdf"
+            file="biztech_report_template.report_invoice_template_custom" 
+            name="biztech_report_template.report_invoice_template_custom"
+            menu="False"
+            />
+            
+        <report 
+            id="report_invoice_template_elegant"
+            string="Elegant"
+            model="account.invoice"
+            report_type="qweb-pdf"
+            file="biztech_report_template.report_invoice_template_custom_elegant" 
+            name="biztech_report_template.report_invoice_template_custom_elegant"
+            menu="False"
+            />
+            
+        <report 
+            id="report_invoice_template_creative"
+            string="Creative"
+            model="account.invoice"
+            report_type="qweb-pdf"
+            file="biztech_report_template.report_invoice_template_custom_creative" 
+            name="biztech_report_template.report_invoice_template_custom_creative"
+            menu="False"
+            />
+           
+        <report 
+            id="report_invoice_template_professional"
+            string="Professional"
+            model="account.invoice"
+            report_type="qweb-pdf"
+            file="biztech_report_template.report_invoice_template_custom_professional" 
+            name="biztech_report_template.report_invoice_template_custom_professional"
+            menu="False"
+            />
+           
+        <report 
+            id="report_invoice_template_advanced"
+            string="Advanced"
+            model="account.invoice"
+            report_type="qweb-pdf"
+            file="biztech_report_template.report_invoice_template_custom_advanced" 
+            name="biztech_report_template.report_invoice_template_custom_advanced"
+            menu="False"
+            />
+           
+        <report 
+            id="report_invoice_template_exclusive"
+            string="Exclusive"
+            model="account.invoice"
+            report_type="qweb-pdf"
+            file="biztech_report_template.report_invoice_template_custom_exclusive" 
+            name="biztech_report_template.report_invoice_template_custom_exclusive"
+            menu="False"
+            />
+            
+           
+    </data>
+</openerp>
