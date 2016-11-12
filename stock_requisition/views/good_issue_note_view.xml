@@ -20,6 +20,11 @@
 						<button name="approve" string="Receive" class="oe_highlight"
 							type="object" states="confirm"
 							groups="stock.group_stock_manager,stock.group_stock_user" />
+
+						<button name="cancel" string="Cancel" class="oe_highlight"
+							type="object" states="confirm"
+							groups="stock.group_stock_manager,stock.group_stock_user" />
+
 						<!-- <button name="cancel" string="Cancel" class="oe_highlight" -->
 						<!-- type="object" states="confirm" groups="stock.group_stock_manager" 
 							/> -->
@@ -54,7 +59,9 @@
 							<notebook>
 								<page string="Stock List">
 									<field name="p_line" attrs="{'readonly':[('state','=','approve')]}">
-										<tree string="Good Issue Note Line" editable="bottom">
+										<tree string="Good Issue Note Line" editable="bottom"
+											default_order="sequence asc">
+											<field name="sequence" invisible="1" />
 											<field name="product_id" on_change="on_change_product_id(product_id)" />
 											<field name="big_issue_quantity" />
 											<field name="big_uom_id" />

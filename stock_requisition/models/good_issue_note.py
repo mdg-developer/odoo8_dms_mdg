@@ -53,6 +53,7 @@ class good_issue_note(osv.osv):
             ('issue','Issued'),
             ('confirm', 'Approved'),
             ('approve', 'Received'),
+            ('cancel', 'Cancel'),
             ], 'Status', readonly=True, copy=False, help="Gives the status of the quotation or sales order.\
               \nThe exception status is automatically set when a cancel operation occurs \
               in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\nThe 'Waiting Schedule' status is set when the invoice is confirmed\
@@ -82,6 +83,9 @@ class good_issue_note(osv.osv):
         
         return self.write(cr, uid, ids, {'state':'confirm' ,'approve_by':uid})    
     
+    def cancel(self, cr, uid, ids, context=None):
+        
+        return self.write(cr, uid, ids, {'state':'cancel' })        
     def approve(self, cr, uid, ids, context=None):
         product_line_obj = self.pool.get('good.issue.note.line')
         note_obj = self.pool.get('good.issue.note')
@@ -169,14 +173,15 @@ class good_issue_line(osv.osv):  # #prod_pricelist_update_line
         'line_id':fields.many2one('good.issue.note', 'Line', ondelete='cascade', select=True),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'issue_quantity' : fields.float(string='Qty', digits=(16, 0)),
-        'product_uom': fields.many2one('product.uom', 'Smaller UoM', required=True),
+        'product_uom': fields.many2one('product.uom', 'Smaller UoM', required=True,readonly=True),
                 'uom_ratio':fields.char('Packing Unit'),
                 'batch_no':fields.many2one('stock.production.lot','Batch No'),
                 'expiry_date':fields.date('Expiry'),
                  'remark':fields.char('Remark'),
-        'big_uom_id': fields.many2one('product.uom', 'Bigger UoM', required=True, help="Default Unit of Measure used for all stock operation."),
+        'big_uom_id': fields.many2one('product.uom', 'Bigger UoM', required=True,readonly=True, help="Default Unit of Measure used for all stock operation."),
         'big_issue_quantity' : fields.float(string='Qty', digits=(16, 0)),               
-         'qty_on_hand':fields.float(string='Qty On Hand', digits=(16, 0)),
+         'qty_on_hand':fields.float(string='Qty On Hand', digits=(16, 0),readonly=True),
+        'sequence':fields.integer('Sequence'),
 
     }
         
