@@ -244,7 +244,7 @@ class stock_requisition(osv.osv):
                                                  'big_uom_id':big_uom_id,
                                                   'issue_quantity':quantity,
                                                   'big_issue_quantity':big_req_quantity,
-                                                  'qty_on_hand':qty_on_hand,
+                                                  'qty_on_hand':qty_on_hand, readyonly=True,
                                                   }, context=context)
         return self.write(cr, uid, ids, {'state':'approve' ,'approve_by':uid})    
     
@@ -299,7 +299,7 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
         'big_req_quantity' : fields.float(string='Qty', digits=(16, 0)),
         'sale_req_quantity' : fields.float(string='Small Req Qty', digits=(16, 0)),
         'addtional_req_quantity' : fields.float(string='Small Add Qty', digits=(16, 0)),
-        'qty_on_hand':fields.float(string='Qty On Hand', digits=(16, 0)),
+        'qty_on_hand':fields.float(string='Qty On Hand', digits=(16, 0), readonly=True),
     }
         
 class stock_requisition_order(osv.osv):  # #prod_pricelist_update_line
