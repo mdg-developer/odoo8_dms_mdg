@@ -126,7 +126,7 @@ class cashier_approval(osv.osv):
         for line in self.pool.get('cashier.denomination.line').browse(cr, uid, ids, context=context):
             result[line.cashier_id.id] = True
         return result.keys()
-    
+   
     _columns = {
         'name': fields.char('Order Reference', size=64),
         'user_id':fields.many2one('res.users', 'Salesman',required=True),
@@ -217,52 +217,7 @@ class cashier_approval(osv.osv):
             vals = cr.fetchall()
             
             self.create_journal_ms(cr, uid, ids, context)
-            for val in vals:
-                cr.execute('select id from account_journal where type=%s', ('cash',))
-                data = cr.fetchall()
-                if data:
-                    journal_id = data[0] 
-                cr.execute("""select a.journal_id,a.origin,a.partner_id,a.date_invoice,a.period_id,a.account_id,a.amount_total from account_invoice as a,sale_order as s
-                            where a.origin=s.name and s.tb_ref_no = %s""",(val[0],))
-                account_data = cr.fetchall()
-                print 'account_data',account_data,val[0]
-
-                for acc_data in account_data:
-                    print 'jpurnal_idddddddddddddd',acc_data[0]
-                #if journal_id and accountId:  
-                # cash journal and cash account. If there no journal id or no account id, account invoice is not make payment.
-                    cr.execute('select default_credit_account_id from account_journal where id=%s', (acc_data[0],))
-                    data = cr.fetchall()
-                    if data:
-                        default_credit_account_id = data[0][0]
-                    print 'PRINT',default_credit_account_id                   
-                    accountVResult = {
-                                        'partner_id':acc_data[2],
-                                        'amount':acc_data[6],
-                                        'journal_id':acc_data[0],#acc_data[0],
-                                        'date':acc_data[3],
-                                        'period_id':acc_data[4],
-                                        'account_id':default_credit_account_id,
-                                        'pre_line':True,
-                                        'type':'receipt'
-                                        }
-                        # create register payment voucher
-                    voucherId = voucherObj.create(cr, uid, accountVResult, context=context)
-                    print 'voucherId>>>',voucherId     
-                    if voucherId:
-                        vlist = []
-                        vlist.append(voucherId)
-                        # get the voucher lines
-                        vlresult = voucherObj.recompute_voucher_lines(cr, uid, vlist, acc_data[2], acc_data[0], acc_data[6], 120, 'receipt', acc_data[3], context=None)
-                        if vlresult:
-                            result = vlresult['value']['line_cr_ids'][0]
-                            result['voucher_id'] = voucherId
-                            # create the voucher lines
-                            voucherLineObj.create(cr, uid, result, context=context)
-                            print 'voucherLineObj>>>',voucherLineObj
-                            #mobilearObj.write(cr,uid,val[1],{'state':'done'},context=context)
-#                 # invoice register payment done
-                        #voucherObj.button_proforma_voucher(cr, uid, vlist , context=context)
+            
                         
         self.write(cr, uid, ids, {'state':'done'}, context=context)
         return True   
@@ -277,10 +232,10 @@ class cashier_approval(osv.osv):
         if payment_data:
             for payment in payment_data:
                 print 'test',payment[8],ids
-                print 'payment'
                 inv_id = []
                 inv_id.append(payment[8])
                 invoice = invoiceObj.browse(cr, uid, inv_id, context=context)
+                print 'invoicenameeeeee',invoice.number
                 #invoiceObj.invoice_pay_customer(cr, uid, inv_id, context=context)
                 accountVResult = {
                                         'partner_id':payment[3],
@@ -293,16 +248,14 @@ class cashier_approval(osv.osv):
                                         'type':'receipt',
                                         'reference':payment[7],
                                           'payment_option': "without_writeoff",
+                                         'company_id':invoice.company_id.id
 
                                         }
                     # create register payment voucher
-                voucherId = voucherObj.create(cr, uid, accountVResult, context=context)
-                print 'voucherId>>>',voucherId   
-                
+                voucherId = voucherObj.create(cr, uid, accountVResult, context=context)                
                 if voucherId:
                     vlist = []
-                    vlist.append(voucherId)
-                      
+                    vlist.append(voucherId)                      
                     line_data = {
                                     #'name': invoice.number,
                                     'voucher_id' : voucherId,
@@ -319,21 +272,9 @@ class cashier_approval(osv.osv):
                     where id=%s and residual=0""",(invoice.id,))
                     cr.execute("""update sale_order set invoiced='t' from account_invoice
                     where sale_order.name=account_invoice.reference and account_invoice.residual=0 and account_invoice.id=%s""",(invoice.id,))
-#                 if voucherId:
-#                     vlist = []
-#                     vlist.append(voucherId)
-#                     # get the voucher lines
-#                     vlresult = voucherObj.recompute_voucher_lines(cr, uid, vlist, payment[3], payment[0], payment[1], 120, 'receipt', payment[5], context=None)
-#                     if vlresult:
-#                         result = vlresult['value']['line_cr_ids'][0]
-#                         result['voucher_id'] = voucherId
-#                         # create the voucher lines
-#                         voucherLineObj.create(cr, uid, result, context=context)
-#     #                 # invoice register payment done
-#                         voucherObj.button_proforma_voucher(cr, uid, vlist , context=context)
-#                         print 'voucherLineObj>>>',voucherLineObj 
+                    cr.execute("update mobile_ar_collection set state='done' where ref_no=%s",(invoice.number,))
+
     def action_generate(self, cr, uid, ids, context=None):
-        print 'test'
         cr.execute("""delete from cashier_approval_invoice_line where cashier_id=%s""", (ids[0],))
         result = {}
         invoice_line_data = []
