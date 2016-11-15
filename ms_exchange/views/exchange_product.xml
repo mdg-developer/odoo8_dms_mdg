@@ -30,7 +30,7 @@
 					<header>
 					<field name="e_status" invisible="1" />
 					<button name="action_convert_ep" string="Convert Stock Move"
-					type="object" class="oe_highlight" groups="base.group_user"
+					type="object" class="oe_highlight" groups="base.group_user"  
 					attrs="{'invisible':[('e_status', '=', 'done')]}"></button>
 					</header>
 					<sheet>
