@@ -1283,8 +1283,7 @@ class mobile_sale_order(osv.osv):
             print "length", len(r)
             ar_collection.append(r)  
         if ar_collection:
-            for ar in ar_collection:
-                #cursor.execute('delete From mobile_ar_collection where date = %s and sale_team_id = %s and partner_id=%s ', (ar['date'],ar['sale_team_id'],ar['partner_id'],))
+            for ar in ar_collection:                
                 cursor.execute('select origin from account_invoice where number=%s',(ar['ref_no'].replace('\\',""),))
                 origin=cursor.fetchone()
                 if origin:
