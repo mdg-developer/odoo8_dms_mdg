@@ -24,6 +24,7 @@ ATTRIBUTES = [
     ('prod_sub_total', 'Product SubTotal combination'),
     ('promo_already_exit', 'Promotion Already Applied'),
     ('cat_qty', 'Product Category Quantity combination'),
+    ('fix_prods_qty', 'Product Fix Quantity combination'),
 ]
 
 COMPARATORS = [
@@ -716,6 +717,7 @@ class PromotionsRulesConditionsExprs(osv.Model):
                          'prod_discount',
                          'prod_weight',
                          'prod_net_price',
+                         'fix_prods_qty',
                          ]:
             return {
                     'value':{
@@ -829,6 +831,7 @@ class PromotionsRulesConditionsExprs(osv.Model):
                          'prod_net_price',
                          'comp_sub_total',
                          'comp_sub_total_x',
+                         'fix_prods_qty',
                          ] and \
             not comparator in NUMERCIAL_COMPARATORS:
             
@@ -840,6 +843,7 @@ class PromotionsRulesConditionsExprs(osv.Model):
         if attribute in [
                          # 'prods_qty',
                          'prod_qty',
+                         'fix_prods_qty',
                          'prod_unit_price',
                          'prod_sub_total',
                          'prod_discount',
@@ -958,6 +962,7 @@ class PromotionsRulesConditionsExprs(osv.Model):
                          'prod_weight',
                          'prod_net_price',
                          'cat_qty',
+                         'fix_prods_qty',
                          ]:
             product_code, quantity = value.split(":")
             return '(%s in products) and (%s["%s"] %s %s)' % (

@@ -835,7 +835,11 @@ class mobile_sale_order(osv.osv):
                 return False
                 
     # kzo Edit
-    def get_products_by_sale_team(self, cr, uid, section_id , context=None, **kwargs):
+    def get_products_by_sale_team(self, cr, uid, section_id ,last_date, context=None, **kwargs):
+
+        lastdate = datetime.strptime(last_date, "%Y-%m-%d")
+        print 'DateTime', lastdate
+        
         cr.execute('''select  pp.id,pt.list_price , coalesce(replace(pt.description,',',';'), ' ') as description,pt.categ_id,pc.name as categ_name,pp.default_code, 
                          pt.name,substring(replace(cast(pt.image_small as text),'/',''),1,5) as image_small,pt.main_group,pt.uom_ratio,
                          pp.product_tmpl_id,pt.is_foc,pp.sequence
@@ -846,8 +850,9 @@ class mobile_sale_order(osv.osv):
                         and pt.active = true
                         and pp.active = true
                         and ccs.id = crm_real.crm_case_section_id
-                        and pc.id = pt.categ_id           
-                        and ccs.id = %s ''', (section_id,))
+                        and pc.id = pt.categ_id
+                        and pt.write_date > %s
+                        and ccs.id = %s ''', (lastdate, section_id,))
         datas = cr.fetchall()
         return datas
     
@@ -1062,11 +1067,11 @@ class mobile_sale_order(osv.osv):
         return datas
 
     def sale_plan_day_return(self, cr, uid, section_id , context=None, **kwargs):
-        
+            
         cr.execute('''            
             select p.id,p.date,p.sale_team,p.name,p.principal,p.week from sale_plan_day p
             join  crm_case_section c on p.sale_team=c.id
-            where p.sale_team=%s and p.active = true
+            where p.sale_team=%s and p.active = true            
             ''', (section_id,))
         datas = cr.fetchall()
         cr.execute      
@@ -1283,7 +1288,7 @@ class mobile_sale_order(osv.osv):
             print "length", len(r)
             ar_collection.append(r)  
         if ar_collection:
-            for ar in ar_collection:                
+            for ar in ar_collection:            
                 cursor.execute('select origin from account_invoice where number=%s',(ar['ref_no'].replace('\\',""),))
                 origin=cursor.fetchone()
                 if origin:
@@ -2285,7 +2290,7 @@ class mobile_sale_order(osv.osv):
                 for ar in result:
                     ref_no = ar['payment_id'].replace('\\',"")
                     print 'Ref No',ref_no
-                    cursor.execute('select id from mobile_ar_collection where ref_no = %s and write_date::date = now()::date ', (ref_no,))
+                    cursor.execute('select id from mobile_ar_collection where ref_no = %s and write_date::date = now()::date', (ref_no,))
                     data = cursor.fetchall()
                     if data:
                         collection_id = data[0][0]
