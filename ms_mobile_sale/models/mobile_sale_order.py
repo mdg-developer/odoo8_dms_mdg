@@ -1284,7 +1284,7 @@ class mobile_sale_order(osv.osv):
             ar_collection.append(r)  
         if ar_collection:
             for ar in ar_collection:
-                cursor.execute('delete From mobile_ar_collection where date = %s and sale_team_id = %s and partner_id=%s ', (ar['date'],ar['sale_team_id'],ar['partner_id'],))
+                #cursor.execute('delete From mobile_ar_collection where date = %s and sale_team_id = %s and partner_id=%s ', (ar['date'],ar['sale_team_id'],ar['partner_id'],))
                 cursor.execute('select origin from account_invoice where number=%s',(ar['ref_no'].replace('\\',""),))
                 origin=cursor.fetchone()
                 if origin:
@@ -2286,7 +2286,7 @@ class mobile_sale_order(osv.osv):
                 for ar in result:
                     ref_no = ar['payment_id'].replace('\\',"")
                     print 'Ref No',ref_no
-                    cursor.execute('select id from mobile_ar_collection where ref_no = %s ', (ref_no,))
+                    cursor.execute('select id from mobile_ar_collection where ref_no = %s and write_date::date = now()::date ', (ref_no,))
                     data = cursor.fetchall()
                     if data:
                         collection_id = data[0][0]
