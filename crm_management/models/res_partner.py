@@ -10,7 +10,6 @@ import openerp.addons.decimal_precision as dp
 import calendar
 from datetime import datetime
 import time
-import datetime
 from datetime import date
 from dateutil import relativedelta
 
@@ -484,20 +483,22 @@ class res_partner(osv.osv):
         datas = cr.fetchall()
         cr.execute
         return datas
-		
-    def res_partners_team(self, cr, uid, section_id, context=None, **kwargs):
-        cr.execute('''                    
-                     
-    select A.id,A.name,A.image,A.is_company, A.image_small,replace(A.street,',',';') street,replace(A.street2,',',';') street2,A.city,A.website,
+
+    def res_partners_team(self, cr, uid, section_id,late_date, context=None, **kwargs):
+        
+        lastdate = datetime.strptime(late_date, "%Y-%m-%d")
+        print 'DateTime', lastdate
+        
+        cr.execute('''                                
+        select A.id,A.name,A.image,A.is_company, A.image_small,replace(A.street,',',';') street,replace(A.street2,',',';') street2,A.city,A.website,
                      replace(A.phone,',',';') phone,A.township,replace(A.mobile,',',';') mobile,A.email,A.company_id,A.customer, 
                      A.customer_code,A.mobile_customer,A.shop_name ,
                      A.address,
                      A.zip,A.state_name,A.partner_latitude,A.partner_longitude,null,A.image_medium,A.credit_limit,
                      A.credit_allow,A.sales_channel,A.branch_id,A.pricelist_id,A.payment_term_id,A.outlet_type ,
-                     A.city_id,A.township_id,A.country_id,A.state_id,A.unit,A.class_id,A.chiller,A.frequency_id,A.temp_customer,
-                     A.is_consignment
+                     A.city_id,A.township_id,A.country_id,A.state_id,A.unit,A.class_id,A.chiller,A.frequency_id,A.temp_customer
                      from (
-                     select RP.id,RP.name,'' as image,RP.is_company,null,RP.is_consignment
+                     select RP.id,RP.name,'' as image,RP.is_company,null,
                      '' as image_small,RP.street,RP.street2,RC.name as city,RP.website,
                      RP.phone,RT.name as township,RP.mobile,RP.email,RP.company_id,RP.customer, 
                      RP.customer_code,RP.mobile_customer,OT.name as shop_name,RP.address,RP.zip ,RP.partner_latitude,RP.partner_longitude,RS.name as state_name,
@@ -510,16 +511,20 @@ class res_partner(osv.osv):
                                             and  RS.id = RP.state_id
                                             and RP.township =RT.id
                                             and RP.city = RC.id
-                                            and RP.outlet_type = OT.id
-                                            and ST.sale_team_id = %s order by RP.name                                       
+                                            and RP.write_date > $s
+                                            and RP.outlet_type = OT.id                                            
+                                            and ST.sale_team_id = %s                                   
                         )A 
                         where A.customer_code is not null
-            ''', (section_id ,))
+            ''', (lastdate ,section_id ,))
         datas = cr.fetchall()
         return datas
 
 # kzo Eidt
-    def res_partners_return_day(self, cr, uid, section_id, day_id , context=None, **kwargs):
+    def res_partners_return_day(self, cr, uid, section_id, day_id,pull_date  , context=None, **kwargs):
+    
+        lastdate = datetime.strptime(pull_date, "%Y-%m-%d")
+        print 'DateTime', lastdate
         cr.execute('''                    
                      select A.id,A.name,A.image,A.is_company, A.image_small,replace(A.street,',',';') street, replace(A.street2,',',';') street2,A.city,A.website,
                      replace(A.phone,',',';') phone,A.township, replace(A.mobile,',',';') mobile,A.email,A.company_id,A.customer, 
@@ -545,15 +550,20 @@ class res_partner(osv.osv):
                                             and RP.city = RC.id
                                             and RP.outlet_type = OT.id
                                             and RPS.partner_id = RP.id 
-                                            and SPD.sale_team = %s
-                                            and RPS.sale_plan_day_id = %s                                            
+                                            and SPD.sale_team = %s                                        
+                                            and RPS.sale_plan_day_id = %s
+                                            and RP.write_date > %s
+                                                                            
                         )A 
                         where A.customer_code is not null
-            ''', (section_id, day_id,))
+            ''', (section_id, day_id,lastdate,))
         datas = cr.fetchall()
         return datas
 # kzo Edit add Sale Plan Trip and Day ID
-    def res_partners_return_trip(self, cr, uid, section_id, day_id , context=None, **kwargs):
+    def res_partners_return_trip(self, cr, uid, section_id, day_id ,pull_date, context=None, **kwargs):
+        
+        lastdate = datetime.strptime(pull_date, "%Y-%m-%d")
+        print 'DateTime', lastdate
         cr.execute('''        
                     select A.id,A.name,A.image,A.is_company,
                      A.image_small,replace(A.street,',',';') street,replace(A.street2,',',';') street2,A.city,A.website,
@@ -583,9 +593,10 @@ class res_partner(osv.osv):
                      and RP.township = RT.id
                      and SPT.sale_team = %s
                      and RPT.sale_plan_trip_id = %s
+                     and RP.write_date > %s
                         )A 
                     where A.customer_code is not null 
-            ''', (section_id, day_id,))
+            ''', (section_id, day_id,lastdate, ))
         datas = cr.fetchall()
         return datas
     
