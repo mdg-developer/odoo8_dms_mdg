@@ -15,11 +15,12 @@
 						<field name="customer_code" placeholder="Code" />
 					</xpath>
 					<xpath expr="//field[@name='website']" position="after">
-						<field name="outlet_type" attrs="{'invisible':[('customer','=',False)]}" />
-						<field name="sales_channel" attrs="{'invisible':[('customer','=',False)]}" />
-						<field name="branch_id" attrs="{'invisible':[('customer','=',False)]}" />
+						<field name="outlet_type" attrs="{'invisible':[('customer','=',False)], 'required':[('customer', '=', True)]}"/>
+						<field name="sales_channel" attrs="{'invisible':[('customer','=',False)],'required':[('customer', '=', True)]}"/>
+						<field name="branch_id" attrs="{'invisible':[('customer','=',False)],'required':[('customer', '=', True)]}" />
 						<field name="demarcation_id" attrs="{'invisible':[('customer','=',False)]}" />
 						<field name="chiller" attrs="{'invisible':[('customer','=',False)]}" />
+						<field name="hamper" attrs="{'invisible':[('customer','=',False)]}" />
 					</xpath>
 					<!-- <xpath expr="//field[@name='stree`t']" position="before"> <field 
 						name="address" placeholder="Address..." /> </xpath> -->
