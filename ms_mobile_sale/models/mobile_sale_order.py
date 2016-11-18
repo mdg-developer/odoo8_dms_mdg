@@ -345,10 +345,7 @@ class mobile_sale_order(osv.osv):
         result['url'] = 'https://www.google.com/maps/@' + str(latitude) + ',' + str(longitude) + ',18z'
              
         return result
-  #  def action_convert_so(self, cr, uid, ids, context=None):
-  #      for saleorder in self.browse(cr, uid, ids, context=context):            
-   #         cr.execute('SELECT import_data_from_mobile_to_server(%s,%s)', (saleorder['id'], saleorder['name']))
-  #          cr.execute("update mobile_sale_order set m_status='done' where id = %s and name = %s ", (saleorder['id'], saleorder['name'],))
+ 
     # MMK   
     def action_convert_so(self, cr, uid, ids, context=None):
         msoObj = self.pool.get('mobile.sale.order')
@@ -818,6 +815,7 @@ class mobile_sale_order(osv.osv):
 
             self.write(cr, uid, ids[0], {'m_status':'done'}, context=context)
         return True   
+    
     # MMK
     def create_invoices(self, cr, uid, ids, context=None):
         """ create invoices for the active sales orders """
@@ -835,7 +833,11 @@ class mobile_sale_order(osv.osv):
                 return False
                 
     # kzo Edit
-    def get_products_by_sale_team(self, cr, uid, section_id , context=None, **kwargs):
+    def get_products_by_sale_team(self, cr, uid, section_id ,last_date, context=None, **kwargs):
+
+        lastdate = datetime.strptime(last_date, "%Y-%m-%d")
+        print 'DateTime', lastdate
+        
         cr.execute('''select  pp.id,pt.list_price , coalesce(replace(pt.description,',',';'), ' ') as description,pt.categ_id,pc.name as categ_name,pp.default_code, 
                          pt.name,substring(replace(cast(pt.image_small as text),'/',''),1,5) as image_small,pt.main_group,pt.uom_ratio,
                          pp.product_tmpl_id,pt.is_foc,pp.sequence
@@ -846,8 +848,9 @@ class mobile_sale_order(osv.osv):
                         and pt.active = true
                         and pp.active = true
                         and ccs.id = crm_real.crm_case_section_id
-                        and pc.id = pt.categ_id           
-                        and ccs.id = %s ''', (section_id,))
+                        and pc.id = pt.categ_id
+                        and pt.write_date > %s
+                        and ccs.id = %s ''', (lastdate, section_id,))
         datas = cr.fetchall()
         return datas
     
@@ -985,7 +988,8 @@ class mobile_sale_order(osv.osv):
     
     def get_pricelist_version_datas(self, cr, uid, pricelist_id, context=None, **kwargs):
         cr.execute('''select pv.id,date_end,date_start,pv.active,pv.name,pv.pricelist_id 
-                        from product_pricelist_version pv, product_pricelist pp where pv.pricelist_id = pp.id                                                                        
+                        from product_pricelist_version pv, product_pricelist pp where pv.pricelist_id = pp.id   
+                        and pv.active = true                                                         
                         and pv.pricelist_id = %s''', (pricelist_id,))
         datas = cr.fetchall()
         return datas
@@ -995,28 +999,11 @@ class mobile_sale_order(osv.osv):
                     pi.product_id,pi.base,pi.price_version_id,pi.min_quantity,
                     pi.categ_id,pi.new_price price_surcharge,pi.product_uom_id
                     from product_pricelist_item pi, product_pricelist_version pv, product_pricelist pp
-                    where pv.pricelist_id = pp.id 
+                    where pv.pricelist_id = pp.id                             
                     and pv.id = pi.price_version_id
                     and pi.price_version_id = %s''', (version_id,))
         datas = cr.fetchall()        
         return datas
-    
-#     def get_product_uoms(self, cr, uid , saleteam_id, context=None, **kwargs):
-#         cr.execute('''     
-#                 select distinct uom_id,uom_name,ratio,product_template_id,product_id from(
-#                 select  pu.id as uom_id,pu.name as uom_name ,1/pu.factor as ratio,
-#                 pur.product_template_id as  product_template_id,pp.id as product_id
-#                 from product_uom pu , product_template_product_uom_rel pur , product_template pt,
-#                 product_product pp,
-#                 crm_case_section_product_product_rel crm
-#                 where pt.id = pur.product_template_id
-#                 and crm.product_product_id = pp.id
-#                 and pu.id = pur.product_uom_id
-#                 and crm.crm_case_section_id = %s
-#                 )A''' , (saleteam_id,))
-#         datas = cr.fetchall()
-#         cr.execute
-#         return datas
 
     def get_product_uoms(self, cr, uid , saleteam_id, context=None, **kwargs):
         cr.execute('''
@@ -1061,26 +1048,44 @@ class mobile_sale_order(osv.osv):
         cr.execute
         return datas
 
-    def sale_plan_day_return(self, cr, uid, section_id , context=None, **kwargs):
+    def sale_plan_day_return(self, cr, uid, section_id, pull_date , context=None, **kwargs):
+        
+        lastdate = datetime.strptime(pull_date, "%Y-%m-%d")
+        print 'DateTime', lastdate
         
         cr.execute('''            
             select p.id,p.date,p.sale_team,p.name,p.principal,p.week from sale_plan_day p
             join  crm_case_section c on p.sale_team=c.id
-            where p.sale_team=%s and p.active = true
-            ''', (section_id,))
+            where p.sale_team=%s and p.active = true  and p.write_date > %s          
+            ''', (section_id,lastdate,))
         datas = cr.fetchall()
         cr.execute      
         return datas    
-    def sale_plan_trip_return(self, cr, uid, section_id , context=None, **kwargs):
+    def sale_plan_trip_return(self, cr, uid, section_id,pull_date , context=None, **kwargs):
      
+        lastdate = datetime.strptime(pull_date, "%Y-%m-%d")
+        print 'DateTime', lastdate
         cr.execute('''            
-            select p.id,p.date,p.sale_team,p.name,p.principal from sale_plan_trip p
-            join  crm_case_section c on p.sale_team=c.id
-            where p.sale_team=%s and p.active = true
-            ''', (section_id,))
+            select distinct p.id,p.date,p.sale_team,p.name,p.principal from sale_plan_trip p
+            ,  crm_case_section c,res_partner_sale_plan_trip_rel d, res_partner e
+            where  p.sale_team=c.id
+            and p.sale_team= %s
+            and p.active = true 
+            and p.id = d.sale_plan_trip_id
+            and e.id = d.partner_id
+            and e.write_date > %s
+            ''', (section_id,lastdate,))
         datas = cr.fetchall()
-        cr.execute
-      
+        
+        if datas:
+            print 'No Trip Plan'
+        else:
+            cr.execute('''            
+            select id from res_partner
+            where active = true and write_date > %s
+            ''', (lastdate,))
+            datas = cr.fetchall()
+              
         return datas
         
         # kzo
@@ -1283,8 +1288,7 @@ class mobile_sale_order(osv.osv):
             print "length", len(r)
             ar_collection.append(r)  
         if ar_collection:
-            for ar in ar_collection:
-                #cursor.execute('delete From mobile_ar_collection where date = %s and sale_team_id = %s and partner_id=%s ', (ar['date'],ar['sale_team_id'],ar['partner_id'],))
+            for ar in ar_collection:            
                 cursor.execute('select origin from account_invoice where number=%s',(ar['ref_no'].replace('\\',""),))
                 origin=cursor.fetchone()
                 if origin:
@@ -1401,30 +1405,32 @@ class mobile_sale_order(osv.osv):
                 customer_photo.append(r)
             if customer_photo:
                 for vs in customer_photo:
+                    code = vs['customer_code']                                
+                    
                     result = {
                         'customer_code':vs['customer_code'],
                         'customer_id':vs['customer_id'],
                         'comment':vs['comment'],
-                        'image_one':vs['image_one'],
-                        'image_two':vs['image_two'],
-                        'image_three':vs['image_three'],
-                        'image_four':vs['image_four'],
-                        'image_five':vs['image_five']
+                        'image_one':vs['image_one'].replace('\\',""),
+                        'image_two':vs['image_two'].replace('\\',""),
+                        'image_three':vs['image_three'].replace('\\',""),
+                        'image_four':vs['image_four'].replace('\\',""),
+                        'image_five':vs['image_five'].replace('\\',"")
                     }
-                    customer_photo_obj.create(cursor, user, result, context=context)
-            
-            cursor.execute('''select customer_code,image_one,image_two,image_three,image_four,
-                            image_five,comment From partner_photo''')
-            data = cursor.fetchall()
-            for r in data:
-                code = r[0]
-                print 'customer id', code
-                cursor.execute('''update partner_photo set image_one = %s, image_two = %s,
-                image_three = %s, image_four = %s, image_five = %s, comment = %s where customer_code = %s'''
-                , (r[1], r[2], r[3], r[4], r[5]
-                , r[6], code,))
-                cursor.execute('''delete from partner_photo where customer_code = %s''', (r[0],))                    
-            
+                    customer_photo_obj.create(cursor, user, result, context=context)                
+                                                                  
+                    #For Custoemr Photo temp table to Res Parnter Table for Appear
+                    cursor.execute('''select customer_code,image_one,image_two,image_three,image_four,
+                            image_five,comment From partner_photo where customer_code = %s''',(code,))
+                    data = cursor.fetchall()
+                    for r in data:
+                        code = r[0]
+                        print 'customer id', code
+                        cursor.execute('''update res_partner set image_one = %s, image_two = %s,
+                        image_three = %s, image_four = %s, image_five = %s, comment = %s where customer_code = %s'''
+                        , (r[1], r[2], r[3], r[4], r[5]
+                        , r[6], code,))
+                        cursor.execute('''delete from partner_photo where customer_code = %s''', (vs['customer_code'],))
             return True
         except Exception, e:
             print e
@@ -2286,7 +2292,7 @@ class mobile_sale_order(osv.osv):
                 for ar in result:
                     ref_no = ar['payment_id'].replace('\\',"")
                     print 'Ref No',ref_no
-                    cursor.execute('select id from mobile_ar_collection where ref_no = %s and write_date::date = now()::date ', (ref_no,))
+                    cursor.execute('''select max(id) from mobile_ar_collection where ref_no = %s and write_date::date = now()::date ''', (ref_no,))
                     data = cursor.fetchall()
                     if data:
                         collection_id = data[0][0]
@@ -2358,7 +2364,77 @@ class mobile_sale_order(osv.osv):
             return True
         except Exception, e:
             print 'False'
-            return False 
+            return False         
+        
+    def dayplan_is_update(self, cr, uid,team_id, late_date , context=None, **kwargs):
+            
+            flag = False
+            lastdate = datetime.strptime(late_date, "%Y-%m-%d")
+            print 'DateTime', lastdate
+            cr.execute('select id from sale_plan_day where write_date > %s', (lastdate,))   
+            datas = cr.fetchall()
+            if datas:
+                flag = True
+            else:
+                flag = False                     
+            return flag
+        
+    def product_is_update(self, cr, uid,team_id, late_date , context=None, **kwargs):
+            
+            flag = False
+            lastdate = datetime.strptime(late_date, "%Y-%m-%d")
+            print 'DateTime', lastdate
+            cr.execute('select id from product_template where write_date > %s', (lastdate,))   
+            datas = cr.fetchall()
+            if datas:
+                flag = True
+            else:
+                flag = False                     
+            return flag
+        
+    def customer_is_update(self, cr, uid,team_id, late_date , context=None, **kwargs):
+            
+            flag = False
+            lastdate = datetime.strptime(late_date, "%Y-%m-%d")
+            print 'DateTime', lastdate
+            cr.execute(''' select id from res_partner A ,sale_team_customer_rel B
+                    where A.id = B.partner_id
+                    And A.write_date > %s
+                    And B.sale_team_id = %s
+            ''', (lastdate,team_id,))   
+            datas = cr.fetchall()
+            if datas:
+                flag = True
+            else:
+                flag = False                     
+            return flag
+    
+    def tripplan_is_update(self, cr, uid,team_id, late_date , context=None, **kwargs):
+            
+        try:
+            flag = False
+            lastdate = datetime.strptime(late_date, "%Y-%m-%d")
+            print 'DateTime', lastdate
+            cr.execute('''
+            select p.id,p.date,p.sale_team,p.name,p.principal
+             from sale_plan_trip p
+            ,crm_case_section c,res_partner_sale_plan_trip_rel d, res_partner e
+            where  p.sale_team=c.id
+            and p.sale_team= %s
+            and p.active = true 
+            and p.id = d.sale_plan_trip_id
+            and e.id = d.partner_id
+            and (e.write_date > %s or p.write_date >  %s)
+                ''', (team_id ,lastdate,lastdate,))   
+            datas = cr.fetchall()
+            if datas:
+                flag = True
+            else:
+                flag = False                   
+            return flag
+        except Exception,e:
+            return False
+        
 mobile_sale_order()
 
 class mobile_sale_order_line(osv.osv):
