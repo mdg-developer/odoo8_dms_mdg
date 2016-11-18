@@ -462,6 +462,7 @@ class res_partner(osv.osv):
                                             res_partner_sale_plan_day_rel RPS , res_partner RP ,res_country_state RS
                                             where SPD.id = RPS.sale_plan_day_id 
                                             and  RS.id = RP.state_id
+                                            and RP.active = true
                                             and RPS.res_partner_id = RP.id 
                                             and SPD.sale_team = %s
                                             union
@@ -475,6 +476,7 @@ class res_partner(osv.osv):
                                             where SPT.id = RPT.sale_plan_trip_id 
                         and RPT.res_partner_id = RP.id 
                         and  RS.id = RP.state_id
+                        and RP.active = true
                         and SPT.sale_team = %s
                         )A 
                         where A.shop_name is not null
@@ -511,6 +513,7 @@ class res_partner(osv.osv):
                                             and  RS.id = RP.state_id
                                             and RP.township =RT.id
                                             and RP.city = RC.id
+                                            and RP.active = true
                                             and RP.write_date > $s
                                             and RP.outlet_type = OT.id                                            
                                             and ST.sale_team_id = %s                                   
@@ -548,6 +551,7 @@ class res_partner(osv.osv):
                                             and  RS.id = RP.state_id
                                             and RP.township =RT.id
                                             and RP.city = RC.id
+                                            and RP.active = true
                                             and RP.outlet_type = OT.id
                                             and RPS.partner_id = RP.id 
                                             and SPD.sale_team = %s                                        
@@ -591,6 +595,7 @@ class res_partner(osv.osv):
                      and RP.outlet_type = OT.id
                      and  RP.city = RC.id
                      and RP.township = RT.id
+                     and RP.active = true
                      and SPT.sale_team = %s
                      and RPT.sale_plan_trip_id = %s
                      and RP.write_date > %s

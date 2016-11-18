@@ -1405,30 +1405,32 @@ class mobile_sale_order(osv.osv):
                 customer_photo.append(r)
             if customer_photo:
                 for vs in customer_photo:
+                    code = vs['customer_code']                                
+                    
                     result = {
                         'customer_code':vs['customer_code'],
                         'customer_id':vs['customer_id'],
                         'comment':vs['comment'],
-                        'image_one':vs['image_one'],
-                        'image_two':vs['image_two'],
-                        'image_three':vs['image_three'],
-                        'image_four':vs['image_four'],
-                        'image_five':vs['image_five']
+                        'image_one':vs['image_one'].replace('\\',""),
+                        'image_two':vs['image_two'].replace('\\',""),
+                        'image_three':vs['image_three'].replace('\\',""),
+                        'image_four':vs['image_four'].replace('\\',""),
+                        'image_five':vs['image_five'].replace('\\',"")
                     }
-                    customer_photo_obj.create(cursor, user, result, context=context)
-            
-            cursor.execute('''select customer_code,image_one,image_two,image_three,image_four,
-                            image_five,comment From partner_photo''')
-            data = cursor.fetchall()
-            for r in data:
-                code = r[0]
-                print 'customer id', code
-                cursor.execute('''update partner_photo set image_one = %s, image_two = %s,
-                image_three = %s, image_four = %s, image_five = %s, comment = %s where customer_code = %s'''
-                , (r[1], r[2], r[3], r[4], r[5]
-                , r[6], code,))
-                cursor.execute('''delete from partner_photo where customer_code = %s''', (r[0],))                    
-            
+                    customer_photo_obj.create(cursor, user, result, context=context)                
+                                                                  
+                    #For Custoemr Photo temp table to Res Parnter Table for Appear
+                    cursor.execute('''select customer_code,image_one,image_two,image_three,image_four,
+                            image_five,comment From partner_photo where customer_code = %s''',(code,))
+                    data = cursor.fetchall()
+                    for r in data:
+                        code = r[0]
+                        print 'customer id', code
+                        cursor.execute('''update res_partner set image_one = %s, image_two = %s,
+                        image_three = %s, image_four = %s, image_five = %s, comment = %s where customer_code = %s'''
+                        , (r[1], r[2], r[3], r[4], r[5]
+                        , r[6], code,))
+                        cursor.execute('''delete from partner_photo where customer_code = %s''', (vs['customer_code'],))
             return True
         except Exception, e:
             print e
@@ -2290,7 +2292,7 @@ class mobile_sale_order(osv.osv):
                 for ar in result:
                     ref_no = ar['payment_id'].replace('\\',"")
                     print 'Ref No',ref_no
-                    cursor.execute('select id from mobile_ar_collection where ref_no = %s and write_date::date = now()::date', (ref_no,))
+                    cursor.execute('''select max(id) from mobile_ar_collection where ref_no = %s and write_date::date = now()::date ''', (ref_no,))
                     data = cursor.fetchall()
                     if data:
                         collection_id = data[0][0]
