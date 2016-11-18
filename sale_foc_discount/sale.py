@@ -146,6 +146,7 @@ class sale_order_line(osv.osv):
         'discount_amt':0.0,
         'sale_foc':False,
         'net_total':0.0}
+    
 ##to show the deduct_amt in sale_order form need to declare this field in sale_order
     def _prepare_order_line_invoice_line(self, cr, uid, line, account_id=False, context=None):
         """Prepare the dict of values to create the new invoice line for a
@@ -198,7 +199,7 @@ class sale_order_line(osv.osv):
                 'uos_id': uos_id,
                 'product_id': line.product_id.id or False,
                 'invoice_line_tax_id': [(6, 0, [x.id for x in line.tax_id])],
-                'account_analytic_id': line.order_id.project_id and line.order_id.project_id.id or False,
+             #   'account_analytic_id': line.order_id.project_id and line.order_id.project_id.id or False,
             }
             print 'res1111111111111',res
 

@@ -59,9 +59,10 @@ class unassign_sale_team(osv.osv_memory):
         for partner in partner_id: 
             if (confirm==True):
                 cr.execute('update res_partner set section_id=null where id=%s',(partner,))      
-                cr.execute('delete from sale_team_customer_rel where sale_team_id=%s',(section_id,)) 
-            if section_id:
                 cr.execute('delete from sale_team_customer_rel where partner_id=%s',(partner,)) 
+            if section_id:
+                print 'section_id',section_id
+                cr.execute('delete from sale_team_customer_rel where sale_team_id=%s',(section_id[0],)) 
         return True
                                                                                          
             

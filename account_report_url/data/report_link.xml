@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data noupdate="1">
+
+		<!-- Report Link & Report Name -->
+
+		<record model="account.report" id="account_financial_analytic_report_with_DC">
+			<field name="url_name">Account Financial Analytic Report with Department
+				Code
+			</field>
+			<field name="url_link">http://localhost:8080/birt/frameset?__report=account_financial_report_analytic_department_code.rptdesign
+			</field>
+		</record>
+		<record model="account.report"
+			id="account_financial_calculation_of_cost_of_goods_report">
+			<field name="url_name">Calculation of Cost of Goods Manufacturing Report
+			</field>
+			<field name="url_link">http://localhost:8080/birt/frameset?__report=account_financial_calculation_of_cost_of_goods_report.rptdesign
+			</field>
+		</record>
+		<record model="account.report"
+			id="account_financial_calculation_of_cost_of_goods_report">
+			<field name="url_name">Account Financial Opening And Closing Period Report
+			</field>
+			<field name="url_link">http://localhost:8080/birt/frameset?__report=account_financial_opening_and_closing_period_report.rptdesign
+			</field>
+		</record>
+		<record model="account.report" id="account_financial_analytic_horizontal_report">
+			<field name="url_name">Profit and Loss Analytic Horizontal Report</field>
+			<field name="url_link">http://localhost:8080/birt/frameset?__report=account_financial_report_analytic_horizontal.rptdesign
+			</field>
+		</record>
+		<record model="account.report"
+			id="account_financial_analytic_horizontal_multi_report">
+			<field name="url_name">Account Financial Analytic Horizontal Multi Report
+			</field>
+			<field name="url_link">http://localhost:8080/birt/frameset?__report=account_financial_report_analytic_horizontal(Multi).rptdesign
+			</field>
+		</record>
+		<record model="account.report" id="account_financial_analytic_multicurrency_report">
+			<field name="url_name">Account Financial Analytic MultiCurrency Report
+			</field>
+			<field name="url_link">http://localhost:8080/birt/frameset?__report=account_financial_report_analytic_multicurrency.rptdesign
+			</field>
+		</record>
+		<record model="account.report" id="account_financial_analytic_report">
+			<field name="url_name">Profit and Loss Analytic Vertical Report</field>
+			<field name="url_link">http://localhost:8080/birt/frameset?__report=account_financial_report_analytic.rptdesign
+			</field>
+		</record>
+		<record model="account.report" id="account_financial_analytic_multi_report">
+			<field name="url_name">Profit and Loss Analytic Multi Report</field>
+			<field name="url_link">http://localhost:8080/birt/frameset?__report=account_financial_report_analytic(Multi).rptdesign
+			</field>
+		</record>
+		<record model="account.report" id="account_financial_balance_sheet_chinese_report">
+			<field name="url_name">Balance Sheet Chinese Report</field>
+			<field name="url_link">http://localhost:8080/birt/frameset?__report=account_financial_report_balance_sheet_chinese.rptdesign
+			</field>
+		</record>
+		<record model="account.report"
+			id="account_financial_balance_sheet_sr_no_and_schedule_no_report">
+			<field name="url_name">Balance Sheet Report with Serial No: And Schedule No.
+			</field>
+			<field name="url_link">http://localhost:8080/birt/frameset?__report=account_financial_report_balance_sheet.rptdesign
+			</field>
+		</record>
+		<record model="account.report" id="account_financial_balance_sheet_report">
+			<field name="url_name">Balance Sheet Report</field>
+			<field name="url_link">http://localhost:8080/birt/frameset?__report=account_financial_report_bl.rptdesign
+			</field>
+		</record>
+		<record model="account.report" id="account_financial_chinese_report">
+			<field name="url_name">Chinese Account Financial Report</field>
+			<field name="url_link">http://localhost:8080/birt/frameset?__report=account_financial_report_chinese.rptdesign
+			</field>
+		</record>
+		<record model="account.report" id="account_financial_currency_rate_report">
+			<field name="url_name">Account Financial Currency Rate Report</field>
+			<field name="url_link">http://localhost:8080/birt/frameset?__report=account_financial_report_currency.rptdesign
+			</field>
+		</record>
+		<record model="account.report" id="account_financial_chinese_monthly_report">
+			<field name="url_name">Chinese Account Financial Monthly Report</field>
+			<field name="url_link">http://localhost:8080/birt/frameset?__report=account_financial_report_monthly_chinese.rptdesign
+			</field>
+		</record>
+		<record model="account.report" id="account_financial_chinese_monthly_report">
+			<field name="url_name"> Profit and Loss Monthly Report</field>
+			<field name="url_link">http://localhost:8080/birt/frameset?__report=account_financial_report_monthly_pl.rptdesign
+			</field>
+		</record>
+		<record model="account.report" id="account_financial_monthly_report">
+			<field name="url_name"> Profit and Loss Monthly Report</field>
+			<field name="url_link">http://localhost:8080/birt/frameset?__report=account_financial_report_monthly.rptdesign
+			</field>
+		</record>
+		<record model="account.report" id="account_financial_multicurrency_report">
+			<field name="url_name"> Account Financial MultiCurrency Report</field>
+			<field name="url_link">http://localhost:8080/birt/frameset?__report=account_financial_report_multicurrency.rptdesign
+			</field>
+		</record>
+		<record model="account.report" id="account_financial_yearly_report">
+			<field name="url_name">Account Financial Yearly Report</field>
+			<field name="url_link">http://localhost:8080/birt/frameset?__report=account_financial_report_yearly.rptdesign
+			</field>
+		</record>
+		<record model="account.report" id="account_financial_report">
+			<field name="url_name">Account Financial Report</field>
+			<field name="url_link">http://localhost:8080/birt/frameset?__report=account_financial_report.rptdesign
+			</field>
+		</record>
+		<record model="account.report" id="account_financial_schedule_report_monthly">
+			<field name="url_name">Account Financial Schedule Monthly Report</field>
+			<field name="url_link">http://localhost:8080/birt/frameset?__report=account_financial_schedule_report_monthly.rptdesign
+			</field>
+		</record>
+		<record model="account.report" id="account_financial_schedule_report_yearly">
+			<field name="url_name">Account Financial Schedule Yearly Report</field>
+			<field name="url_link">http://localhost:8080/birt/frameset?__report=account_financial_schedule_report_yearly.rptdesign
+			</field>
+		</record>
+		<record model="account.report" id="account_financial_schedule_report">
+			<field name="url_name">Account Financial Schedule Report</field>
+			<field name="url_link">http://localhost:8080/birt/frameset?__report=account_financial_schedule_report.rptdesign
+			</field>
+		</record>
+		<record model="account.report" id="account_financial_chinese_currency_report">
+			<field name="url_name">Account Financial Chinese Currency Report</field>
+			<field name="url_link">http://localhost:8080/birt/frameset?__report=account_report_chinese.rptdesign
+			</field>
+		</record>
+		<record model="account.report" id="account_financial_english_currency_report">
+			<field name="url_name">Account Financial English Currency Report</field>
+			<field name="url_link">http://localhost:8080/birt/frameset?__report=account_report.rptdesign
+			</field>
+		</record>
+		<record model="account.report" id="balance_sheet_report_horizontal_report_chinese">
+			<field name="url_name">Chinese Balance Sheet Report Horizontal Report
+			</field>
+			<field name="url_link">http://localhost:8080/birt/frameset?__report=balance_sheet_report_horizontal_report_chinese.rptdesign
+			</field>
+		</record>
+		<record model="account.report" id="balance_sheet_report_horizontal_report">
+			<field name="url_name">Chinese Balance Sheet Report Horizontal Report
+			</field>
+			<field name="url_link">http://localhost:8080/birt/frameset?__report=balance_sheet_report_horizontal_report.rptdesign
+			</field>
+		</record>
+		<record model="account.report" id="balance_sheet_report_monthly_chinese">
+			<field name="url_name">Chinese Balance Sheet Monthly Report</field>
+			<field name="url_link">http://localhost:8080/birt/frameset?__report=balance_sheet_report_monthly_chinese.rptdesign
+			</field>
+		</record>
+		<record model="account.report" id="balance_sheet_report_monthly">
+			<field name="url_name">Balance Sheet Monthly Report</field>
+			<field name="url_link">http://localhost:8080/birt/frameset?__report=balance_sheet_report_monthly.rptdesign
+			</field>
+		</record>
+		<record model="account.report" id="balance_sheet_report_yearly">
+			<field name="url_name">Balance Sheet Yearly Report</field>
+			<field name="url_link">http://localhost:8080/birt/frameset?__report=balance_sheet_report_yearly.rptdesign
+			</field>
+		</record>
+		<record model="account.report" id="balance_sheet_detail_and_trading_profits_loss">
+			<field name="url_name">Balance Sheet and Trading Profit and Loss </field>
+			<field name="url_link">http://localhost:8080/birt/frameset?__report=financial_balance_sheet_detail_and_trading_profits_loss.rptdesign
+			</field>
+		</record>
+		<record model="account.report" id="osotspa_account_financial_report_monthly">
+			<field name="url_name">Financial Report Monthly</field>
+			<field name="url_link">http://localhost:8080/birt/frameset?__report=osotspa_account_financial_report_monthly.rptdesign
+			</field>
+		</record>
+		<record model="account.report" id="osotspa_account_financial_report">
+			<field name="url_name">Financial Report Monthly</field>
+			<field name="url_link">http://localhost:8080/birt/frameset?__report=osotspa_account_financial_report.rptdesign
+			</field>
+		</record>
+		<record model="account.report" id="trail_balance_report_chinese">
+			<field name="url_name">Chinese Trail Balance Report</field>
+			<field name="url_link">http://localhost:8080/birt/frameset?__report=trail_balance_report_chinese.rptdesign
+			</field>
+		</record>
+		<record model="account.report" id="trial_balance_report_horizontal_report">
+			<field name="url_name">Trail Balance Horizontal Report</field>
+			<field name="url_link">http://localhost:8080/birt/frameset?__report=trial_balance_report_horizontal_report.rptdesign
+			</field>
+		</record>
+		<record model="account.report" id="trial_balance_report">
+			<field name="url_name">Trail Balance Report</field>
+			<field name="url_link">http://localhost:8080/birt/frameset?__report=trial_balance_report.rptdesign
+			</field>
+		</record>
+
+
+	</data>
+</openerp>

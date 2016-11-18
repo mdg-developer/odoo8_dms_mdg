@@ -271,7 +271,6 @@
 						position="after">
 						<field name="contact_note" />
 					</xpath>
-					</xpath>
 				</data>
 			</field>
 		</record>

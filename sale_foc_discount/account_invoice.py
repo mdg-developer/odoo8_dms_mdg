@@ -141,7 +141,7 @@ class account_invoice_line(models.Model):
 #         else:
 #             return self.env['ir.property'].get('property_account_expense_categ', 'product.category')
 # 
-#     @api.model
+    @api.model
     def move_line_get_item(self, line):
         return {
             'type': 'src',

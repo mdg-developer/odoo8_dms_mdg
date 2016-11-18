@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+     <!--  BOM PRODUCT -->
+        <record model="ir.actions.act_window" id="bom_product_open_bom">
+            <field name="context">{'default_product_id': active_id, 'search_default_product_id': active_id}</field>
+            <field name="name">Bill of Materials</field>
+            <field name="res_model">bom.product</field>
+            <field name="domain">[]</field> <!-- Force empty -->
+            <field name="view_type">form</field>
+        </record>
+        <record model="ir.actions.act_window" id="open_bom_product">
+            <field name="context">{'default_product_tmpl_id': active_id, 'search_default_product_tmpl_id': active_id}</field>
+            <field name="name">Bill of Materials</field>
+            <field name="res_model">bom.product</field>
+            <field name="view_type">form</field>
+        </record>
+        <record id="view_bom_product_form" model="ir.ui.view">
+            <field name="name">bom.product.form</field>
+            <field name="model">bom.product</field>
+            <field name="arch" type="xml">
+               <form string="Bill of Material">
+                    <group>
+                        <group>
+                            <field name="product_tmpl_id" on_change="onchange_product_tmpl_id(product_tmpl_id, product_qty, context)"/>
+                            <field name="product_id"/>
+                            <label for="product_qty" string="Quantity"/>
+                            <div>
+                                <field name="product_qty" class="oe_inline" on_change="onchange_product_tmpl_id(product_tmpl_id, product_qty, context)"/>
+                                <field name="product_uom" class="oe_inline" on_change="onchange_uom(product_tmpl_id, product_uom)" groups="product.group_uom"/>
+                            </div>
+                        </group>
+                        <group>
+                            <field name="name" />
+                            <field name="code" string="Reference"/>
+                         <!--    <field name="type"/> -->
+          <!--                   <p colspan="2" class="oe_grey" attrs="{'invisible': [('type','=','normal')]}">
+                                When processing a sales order for this product, the delivery order
+                                will contain the raw materials, instead of the finished product.
+                            </p> -->
+                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Components">
+                            <field name="bom_line_ids" widget="one2many_list">
+                                <tree string="Components" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="product_id" on_change="onchange_product_id(product_id, product_qty)"/>
+                                <!--     <field name="type"/> -->
+                                    <field name="product_qty"/>
+                                    <field name="product_uom" on_change="onchange_uom(product_id, product_uom)" groups="product.group_uom"/>
+                                    <field name="product_rounding"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                    <div class="oe_chatter">
+                         <field name="message_follower_ids" widget="mail_followers"/>
+                         <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
+                    </div>
+                </form>
+            </field>
+            </record>
+        <record id="view_bom_product_tree" model="ir.ui.view" >
+            <field name="name">bom.product.tree</field>
+            <field name="model">bom.product</field>
+            <field name="arch" type="xml">
+                <tree string="Bill of Material Tree">
+                    <field name="sequence" invisible="1"/>
+                    <field name="name" />
+                    <field name="product_uom" />
+                    <field name="product_qty" />
+                </tree>
+            </field>
+            </record>
+
+
+        <record id="action_bom_product_view" model="ir.actions.act_window">
+            <field name="name">Bill of Materials</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">bom.product</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_bom_product_tree"/>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem action="action_bom_product_view" id="menu_bom_product_action"
+            parent="base.menu_product" sequence="1"/>
+            
+            <!-- PRODUCT PACKING -->
+      <record id="pack_production_tree_view" model="ir.ui.view">
+            <field name="name">product.packing.tree</field>
+            <field name="model">product.packing</field>
+            <field name="arch" type="xml">
+                <tree fonts="bold:message_unread==True" colors="blue:state in ('draft','confirmed');red:date_planned&lt;current_date and state not in ('done','cancel');black:date_planned&gt;=current_date;gray:state in ('done','cancel') " string="Manufacturing Orders">
+                    <field name="message_unread" invisible="1"/>
+                    <field name="name"/>
+                    <field name="date_planned"/>
+                    <field name="product_id"/>
+                    <field name="product_qty" sum="Total Qty"/>
+                    <field name="product_uom" groups="product.group_uom"/>
+                    <field name="hour_total" sum="Total Hours"/>
+                    <field name="cycle_total" sum="Total Cycles"/>
+                    <field name="origin"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        
+            <record id="pack_production_form_view" model="ir.ui.view">
+            <field name="name">product.packing.form</field>
+            <field name="model">product.packing</field>
+            <field name="arch" type="xml">
+                <form string="Manufacturing Orders">
+                <header>
+                    <button name="button_confirm2" states="draft" string="Confirm Production" class="oe_highlight"/>
+                    <button name="%(pack_unpack.act_pack_product_produce)d" states="ready,in_production" string="Produce" type="action" class="oe_highlight"/>
+                    <button name="action_assign" states="confirmed,picking_except" string="Check Availability" type="object" class="oe_highlight"/>
+                    <button name="force_production" states="confirmed" string="Force Reservation" type="object"/>
+                    <button name="button_produce" states="ready" string="Mark as Started"/>
+                    <button name="button_cancel" states="draft,ready,in_production" string="Cancel Production"/>
+                    <button name="action_cancel" type="object" states="confirmed" string="Cancel Production"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,ready,in_production,done" statusbar_colors='{"confirmed":"blue"}'/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Packing/Unpacking<field name="name" class="oe_inline"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="product_id" on_change="product_id_change(product_id, product_qty)" domain="[('bom_product_ids','!=',False)]" class="oe_inline" context='{"default_type": "product"}'/>
+                            <label for="product_qty"/>
+                            <div>
+                                <field name="product_qty" class="oe_inline" on_change="product_id_change(product_id, product_qty)"/>
+                                <field name="product_uom" groups="product.group_uom" class="oe_inline"/>
+                                <button type="action"
+                                    name="%(pack_unpack.action_change_product_quantity)d"
+                                    string="Update" states="confirmed" class="oe_edit_only oe_link"/>
+                            </div>
+                            <label for="product_uos_qty" groups="product.group_uos"/>
+                            <div groups="product.group_uos">
+                                <field name="product_uos_qty" class="oe_inline"/>
+                                <label string="-" attrs="{'invisible':[('product_uos','=',False)]}" class="oe_inline"/>
+                                <field name="product_uos" class="oe_inline"/>
+                            </div>
+                            <field name="date_planned"/>
+                        </group>
+                        <group>
+                            <field name="bom_id"
+                                domain="['|',
+                                            ('product_id','=',product_id),
+                                            '&amp;',
+                                                ('product_tmpl_id.product_variant_ids','=',product_id),
+                                                ('product_id','=',False)]"
+                                context="{'default_product_id': product_id}" on_change="bom_id_change(bom_id)" required="1"/>
+                        <!--     <field name="routing_id" class="oe_inline" groups="product_pack_unpack.group_mrp_routings"/> -->
+                            <field name="user_id" />
+                            <field name="origin"/>
+                        </group>
+                        <group>
+                            <field name="location_src_id"   on_change="location_id_change(location_src_id,location_dest_id)"/>
+                            <field name="location_dest_id"  />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Consumed Products">
+                            <group>
+                                <group string="Products to Consume">
+                                    <field name="move_lines" nolabel="1" options="{'reload_on_button': true}">
+                                        <tree colors="blue:state == 'draft';black:state in ('ready','assigned','in_production');gray:state in ('cancel','done');red:state in ('confirmed','waiting')" string="Products to Consume">
+                                            <field name="product_id"/>
+                                            <field name="product_uom_qty"  string="Quantity"/>
+                                            <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
+                                            <field name="state" invisible="1"/>
+                                            <button name="%(pack_unpack.move_consume_product)d"
+                                                string="Consume Products" type="action"
+                                                icon="gtk-go-forward" context="{'consume': True}"
+                                                states="assigned"
+                                                 />
+                                            <button name="%(stock.move_scrap)d"
+                                                string="Scrap Products" type="action"
+                                                icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
+                                                states="draft,waiting,confirmed,assigned"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <group string="Consumed Products">
+                                    <field name="move_lines2" nolabel="1" options="{'reload_on_button': true}">
+                                       <tree colors="red:scrapped==True;blue:state == 'draft';black:state in ('confirmed','ready','in_production');gray:state == 'cancel' " string="Consumed Products" editable="bottom">
+                                           <field name="product_id" readonly="1"/>
+                                           <field name="restrict_lot_id" context="{'product_id': product_id}" groups="stock.group_production_lot"/>
+                                           <field name="product_uom_qty" readonly="1"/>
+                                           <field name="product_uom" readonly="1" string="Unit of Measure" groups="product.group_uom"/>
+                                           <field name="state" invisible="1"/>
+                                           <field name="scrapped" invisible="1"/>
+                                       </tree>
+                                    </field>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Finished Products">
+                            <group>
+                                <group string="Products to Produce">
+                                    <field name="move_created_ids" nolabel="1" options="{'reload_on_button': true}">
+                                        <tree string="Products to Finish">
+                                            <field name="product_id"/>
+                                            <field name="product_uom_qty"/>
+                                            <field name="product_uom"  string="Unit of Measure" groups="product.group_uom"/>
+                                            <field name="state" invisible="1"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <group string="Produced Products">
+                                    <field name="move_created_ids2" nolabel="1" options="{'reload_on_button': true}">
+                                        <tree colors="red:scrapped==True;blue:state == 'draft';black:state in('confirmed','ready','in_production');gray:state in('cancel','done') " string="Finished Products">
+                                            <field name="product_id" readonly="1"/>
+                                            <field name="product_uom_qty" readonly="1"/>
+                                            <field name="restrict_lot_id" groups="stock.group_production_lot"/>
+                                            <field name="product_uom" readonly="1" string="Unit of Measure" groups="product.group_uom"/>
+                                            <field name="location_dest_id"  readonly="1" string="Destination Loc." widget="selection" groups="stock.group_locations"/>
+                                            <field name="scrapped" invisible="1"/>
+                                            <field name="state" invisible="1"/>
+                                            <button name="%(stock.move_scrap)d"
+                                                string="Scrap Products" type="action" icon="terp-gtk-jump-to-ltr"
+                                                states="done,cancel"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                            </group>
+                        </page>
+                                                <page string="Scheduled Products">
+                            <button name="action_compute" states="draft"
+                                string="Compute Data" type="object"
+                                icon="terp-stock_format-scientific"/>
+                            <field name="product_lines"/>
+                        </page>
+
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+                </form>
+            </field>
+        </record>
+        
+        <record id="action_product_packing_view" model="ir.actions.act_window">
+            <field name="name">Packing</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.packing</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="pack_production_tree_view"/>
+            <field name="view_mode">tree,form</field>
+        </record>
+        
+        <menuitem action="action_product_packing_view" id="menu_product_packing_action"
+            parent="stock.menu_stock_product" sequence="1"/>
+            
+            <!-- Product Packing Lines -->
+            
+            <record id="product_packing_line_form_view" model="ir.ui.view">
+            <field name="name">product.packing.line.form</field>
+            <field name="model">product.packing.line</field>
+            <field name="arch" type="xml">
+                <form string="Scheduled Products">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="product_id"/>
+                        <field name="product_qty"/>
+                        <field name="product_uom" groups="product.group_uom"/>
+                        <field name="product_uos_qty" groups="product.group_uos"/>
+                        <field name="product_uos" groups="product.group_uos"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="product_packing_line_tree_view" model="ir.ui.view">
+            <field name="name">product.packing.line.tree</field>
+            <field name="model">product.packing.line</field>
+            <field name="arch" type="xml">
+                <tree string="Scheduled Products">
+                    <field name="product_id"/>
+                    <field name="product_qty"/>
+                    <field name="product_uom" groups="product.group_uom"/>
+                    <field name="product_uos_qty" groups="product.group_uos"/>
+                    <field name="product_uos" groups="product.group_uos"/>
+                </tree>
+            </field>
+        </record>
+    </data>
+</openerp>

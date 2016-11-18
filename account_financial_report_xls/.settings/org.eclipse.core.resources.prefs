@@ -1,0 +1,9 @@
+=\=\=\=\=\=\=
+<<<<<<<=HEAD
+>>>>>>>=d54ac3e29f807abf38a66a04c413cc0c6cffccf5
+eclipse.preferences.version=1
+encoding//report/account_finance_report_xls.py=utf-8
+encoding//report/common_report_header.py=utf-8
+encoding//wizard/account_financial_report_xls.py=utf-8
+encoding/__openerp__.py=utf-8
+encoding/account_move_line.py=utf-8

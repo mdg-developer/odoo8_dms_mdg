@@ -9,7 +9,7 @@
 			<field name="arch" type="xml">
 				<data>
 					<xpath expr="//group[@string='Allowed Companies']" position="after">
-						<group string="Allowed Branches" groups="base.group_multi_company">
+						<group string="Allowed Branches">
 							<field name="branch_ids" nolabel="1" widget="many2many_tags" />
 						</group>
 					</xpath>

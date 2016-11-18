@@ -975,6 +975,7 @@ class sale_plan_for_day_setting(osv.osv):
                                         'line_id':plan.id,
                                                   }, context=context)   
                     sale_plan_obj.write(cr, uid, ids, {'partner_count':  partner_count+count})  
+                    
         return True   
 sale_plan_for_day_setting()
     

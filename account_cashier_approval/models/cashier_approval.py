@@ -335,13 +335,13 @@ class cashier_approval(osv.osv):
                 user_id = data['user_id'][0]
                 team_id = data['sale_team_id'][0]
             if to_date:
-                cr.execute("""select m.date,a.number,m.partner_id,m.so_amount
+                cr.execute("""select m.date,a.number,m.partner_id,a.residual
                             from account_invoice as a,mobile_ar_collection as m
                             where m.ref_no = a.number and m.state='draft' and 
                             m.user_id=%s and m.sale_team_id=%s and m.date >= %s and m.date <= %s
                 """, (user_id, team_id, frm_date, to_date,))
             else:
-                cr.execute("""select m.date,a.number,m.partner_id,m.so_amount
+                cr.execute("""select m.date,a.number,m.partner_id,a.residual
                             from account_invoice as a,sale_order as s,mobile_ar_collection as m
                             where m.ref_no = a.number and  m.state='draft'  and
                             m.user_id=%s and m.sale_team_id=%s and m.date = %s  

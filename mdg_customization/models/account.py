@@ -88,6 +88,11 @@ class account_invoice(osv.osv):
     _columns = {
                 'pre_order': fields.boolean('Pre Order'),
                'branch_id':fields.many2one('res.branch', 'Branch'),
-                
+               'payment_type':fields.selection([
+                    ('credit', 'Credit'),
+                    ('cash', 'Cash'),
+                    ('consignment', 'Consignment'),
+#                     ('advanced', 'Advanced')
+                    ],string= 'Payment Type',default='credit')                
                 }
 account_invoice()   

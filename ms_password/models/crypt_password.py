@@ -31,7 +31,7 @@ class res_user(osv.osv):
 			  }
  
     def create_extension(self, cr, uid, ids=None, context = None):
-        cr.execute("CREATE EXTENSION pgcrypto;");
+        #cr.execute("CREATE EXTENSION pgcrypto;");
         return True
     
     def crypt_function(self, cr, uid, ids=None, context=None):

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+<!-- Packing -->        
+        <record id="sequence_pack_prod_type" model="ir.sequence.type">
+            <field name="name">Pack Order</field>
+            <field name="code">product.packing</field>
+        </record>
+        
+        <record id="sequence_pack_prod" model="ir.sequence">
+            <field name="name">Production order</field>
+            <field name="code">product.packing</field>
+            <field name="prefix">PK</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+<!-- Unpacking -->
+        
+        <record id="sequence_unpack_prod_type" model="ir.sequence.type">
+            <field name="name">Unpack Order</field>
+            <field name="code">product.unpacking</field>
+        </record>
+        
+        <record id="sequence_unpack_prod" model="ir.sequence">
+            <field name="name">Production order</field>
+            <field name="code">product.unpacking</field>
+            <field name="prefix">UK</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+    </data>
+</openerp>
