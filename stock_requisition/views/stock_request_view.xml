@@ -8,7 +8,7 @@
 			<field name="arch" type="xml">
 				<form string="Fine Sheet">
 					<header>
-						<button name="approve" string="Request" class="oe_highlight"
+						<button name="approve" string="Approve" class="oe_highlight"
 							type="object" states="draft"
 							groups="base.group_sale_supervisor,base.group_sale_manager,base.group_sale_admin,base.group_no_one" />
 						<button name="cancel" string="Cancel" class="oe_highlight"
@@ -18,23 +18,23 @@
 					</header>
 					<sheet>
 						<h1>
-							<label string="(RFI)Ref;No." />
+							<label string="RFI No" />
 							<field name="name" class="oe_inline" readonly="1" />
 						</h1>
 						<group>
 							<group>
 								<field name="sale_team_id" attrs="{'readonly':[('state','=','approve')]}"
-									on_change="on_change_sale_team_id(sale_team_id, pre_order)" />
-								<field name="from_location_id" attrs="{'readonly':[('state','=','approve')]}" />
-								<field name="request_date" attrs="{'readonly':[('state','=','approve')]}" />
+									on_change="on_change_sale_team_id(sale_team_id, pre_order)" widget="selection"/>
+								<field name="from_location_id" attrs="{'readonly':[('state','=','approve')]}" widget="selection"/>
+								<field name="request_date" attrs="{'readonly':[('state','=','approve')]}"  />
 								<field name="so_no" attrs="{'readonly':[('state','=','approve')]}"
 									invisible="1" />
-								<field name="company_id" attrs="{'readonly':[('state','=','approve')]}" />
+								<field name="company_id" attrs="{'readonly':[('state','=','approve')]}" invisible="1"/>
 								<field name="pre_order" invisible="1" />
 							</group>
 							<group>
 								<field name="issue_to" attrs="{'readonly':[('state','=','approve')]}" />
-								<field name="to_location_id" attrs="{'readonly':[('state','=','approve')]}" />
+								<field name="to_location_id" attrs="{'readonly':[('state','=','approve')]}" widget="selection"/>
 								<field name="issue_date" attrs="{'readonly':[('state','=','approve')]}" />
 								<label for="s_issue_date" />
 								<div>
@@ -42,9 +42,8 @@
 									<button name="so_list" string="Refresh" type="object"
 										icon="terp-gtk-jump-to-ltr" attrs="{'invisible':[('pre_order','=',False)]}" />
 								</div>
-								<field name="vehicle_id" attrs="{'readonly':[('state','=','approve')]}" />
-								<field name="request_by" attrs="{'readonly':[('state','=','approve')]}" />
-								<field name="approve_by" attrs="{'readonly':[('state','=','approve')]}" />
+								<field name="request_by" attrs="{'readonly':[('state','=','approve')]}" widget="selection"/>
+								<field name="approve_by" attrs="{'readonly':[('state','=','approve')]}" widget="selection"/>
 							</group>
 						</group>
 						<div class="oe_subtotal_footer_separator oe_inline" attrs="{'invisible':[('pre_order','=',False)]}"
@@ -62,14 +61,12 @@
 										    <field name="sequence" invisible="1"/>
 											<field name="product_id" on_change="on_change_product_id(product_id)" />
 											<field name="pre_order" invisible="1" />
-											<field name="sale_req_quantity" attrs="{'invisible': [('pre_order','=',False)]}" />
-											<field name="addtional_req_quantity" attrs="{'invisible': [('pre_order','=',False)]}" />
-											<field name="big_req_quantity" />
-											<field name="big_uom_id" />
-											<field name="req_quantity" />
-											<field name="product_uom" />
+											<field name="big_req_quantity" string="Qty(B)"/>
+											<field name="big_uom_id" invisible="1" />
+											<field name="req_quantity" string="Qty(S)"/>
+											<field name="product_uom" invisible="1" />
 											<field name="uom_ratio" invisible="1" />
-											<field name="qty_on_hand" />
+											<field name="qty_on_hand" string="Qty on Hand (S)"/>
 											<field name="remark" />
 										</tree>
 									</field>

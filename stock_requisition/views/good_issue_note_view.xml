@@ -11,20 +11,15 @@
 			<field name="arch" type="xml">
 				<form string="Good Issue Note Form">
 					<header>
-						<button name="issue" string="Issue" class="oe_highlight"
+						<button name="approve" string="Approve" class="oe_highlight"
 							type="object" states="draft"
 							groups="stock.group_stock_manager,stock.group_stock_user" />
-						<button name="confirm" string="Approve" class="oe_highlight"
-							type="object" states="issue"
+						<button name="issue" string="Issue" class="oe_highlight"
+							type="object" states="approve"
 							groups="stock.group_stock_manager,stock.group_stock_user" />
-						<button name="approve" string="Receive" class="oe_highlight"
-							type="object" states="confirm"
-							groups="stock.group_stock_manager,stock.group_stock_user" />
-
 						<button name="cancel" string="Cancel" class="oe_highlight"
-							type="object" states="confirm"
+							type="object" states="draft,approve"
 							groups="stock.group_stock_manager,stock.group_stock_user" />
-
 						<!-- <button name="cancel" string="Cancel" class="oe_highlight" -->
 						<!-- type="object" states="confirm" groups="stock.group_stock_manager" 
 							/> -->
@@ -38,40 +33,44 @@
 						<group>
 							<group>
 								<field name="name" />
-								<field name="sale_team_id" attrs="{'readonly':[('state','=','approve')]}"
-									invisible="1" />
-								<field name="to_location_id" attrs="{'readonly':[('state','=','approve')]}" />
-								<field name="from_location_id" attrs="{'readonly':[('state','=','approve')]}" />
-								<field name="request_by" attrs="{'readonly':[('state','=','approve')]}" />
+								<field name="sale_team_id" attrs="{'readonly':[('state','=','issue')]}"  widget="selection" />
+								<field name="to_location_id" attrs="{'readonly':[('state','=','issue')]}"
+									widget="selection" />
+								<field name="request_by" attrs="{'readonly':[('state','=','issue')]}"
+									widget="selection" />
+								<field name="issue_date" attrs="{'readonly':[('state','=','issue')]}" />
+								<field name="branch_id"  widget="selection"  attrs="{'readonly':[('state','=','issue')]}"/>
 							</group>
 							<group>
 								<field name="request_id" />
-								<field name="issue_date" attrs="{'readonly':[('state','=','approve')]}" />
-								<field name="vehicle_id" attrs="{'readonly':[('state','=','approve')]}" />
-								<field name="issue_by" attrs="{'readonly':[('state','=','approve')]}" />
-								<field name="approve_by" attrs="{'readonly':[('state','=','approve')]}" />
-								<field name="receive_by" attrs="{'readonly':[('state','=','approve')]}" />
-								<field name="company_id" attrs="{'readonly':[('state','=','approve')]}" />
+								<field name="from_location_id" attrs="{'readonly':[('state','=','issue')]}"
+									widget="selection" />
+								<field name="approve_by" attrs="{'readonly':[('state','=','issue')]}"
+									widget="selection" />
+								<field name="issue_by" attrs="{'readonly':[('state','=','issue')],'require':[('state','=','approve')]}"/>
+								<field name="receiver" attrs="{'readonly':[('state','=','issue')],'require':[('state','=','approve')]}"/>
+								<field name="company_id" attrs="{'readonly':[('state','=','issue')]}"
+									invisible="1" />
 								<field name="is_return" invisible="1" />
 							</group>
 						</group>
 						<group>
 							<notebook>
-								<page string="Stock List">
-									<field name="p_line" attrs="{'readonly':[('state','=','approve')]}">
+								<page string="Stock List"  attrs="{'readonly':[('state','=','issue')]}">
+									<field name="p_line" attrs="{'readonly':[('state','=','issue')]}">
 										<tree string="Good Issue Note Line" editable="bottom"
-											default_order="sequence asc">
+											default_order="sequence asc"  attrs="{'readonly':[('state','=','issue')]}">
 											<field name="sequence" invisible="1" />
 											<field name="product_id" on_change="on_change_product_id(product_id)" />
-											<field name="big_issue_quantity" />
-											<field name="big_uom_id" />
-											<field name="issue_quantity" />
-											<field name="product_uom" />
+											<field name="big_issue_quantity" string="Qty (B)"/>
+											<field name="big_uom_id" invisible="1"/>
+											<field name="issue_quantity" string="Qty (S)"/>
+											<field name="product_uom"  invisible="1"/>
 											<field name="uom_ratio" invisible="1" />
 											<field name="batch_no" domain="[('product_id', '=',product_id)]"
 												on_change="on_change_expired_date(batch_no)" />
 											<field name="expiry_date" />
-											<field name="qty_on_hand" />
+											<field name="qty_on_hand" string="Qty on Hand (S)" />
 											<field name="remark" />
 										</tree>
 									</field>

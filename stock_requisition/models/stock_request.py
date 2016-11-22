@@ -48,6 +48,7 @@ class stock_requisition(osv.osv):
         addtional_req_quantity = 0
         if sale_team_id:
             sale_team = self.pool.get('crm.case.section').browse(cr, uid, sale_team_id, context=context)
+            issue_to = sale_team.receiver
             location = sale_team.location_id
             vehicle_id = sale_team.vehicle_id
             product_line = sale_team.product_ids
@@ -85,24 +86,25 @@ class stock_requisition(osv.osv):
                  'to_location_id':to_location_id ,
                  'vehicle_id':vehicle_id,
                 'p_line': data_line,
-                'order_line':order_line
+                'order_line':order_line,
+                'issue_to':issue_to,
             }
         return {'value': values}    
     _columns = {
         'sale_team_id':fields.many2one('crm.case.section', 'Delivery Team', required=True),
-        'name': fields.char('(REI)Ref;No.', readonly=True),
+        'name': fields.char('RFI Ref', readonly=True),
         'from_location_id':fields.many2one('stock.location', 'Requesting  Location', required=True),
         'to_location_id':fields.many2one('stock.location', 'Request Warehouse'),
         'so_no' : fields.char('Sales Order/Inv Ref;No.'),
-        'issue_to':fields.many2one('res.users', "Issue To"),
+        'issue_to':fields.char("Receiver"),
         'request_by':fields.many2one('res.users', "Requested By"),
         'approve_by':fields.many2one('res.users', "Approved By"),
-        'request_date' : fields.datetime('Date Requested'),
-         'issue_date':fields.datetime('Date For Issue From', required=True),
-         's_issue_date':fields.datetime('Date For Issue To', required=True),
+        'request_date' : fields.date('Date Requested'),
+         'issue_date':fields.date('Order Date From', required=True),
+         's_issue_date':fields.date('Order Date To', required=True),
         'vehicle_id':fields.many2one('fleet.vehicle', 'Vehicle No'),
         'state': fields.selection([
-            ('draft', 'Request'),
+            ('draft', 'Draft'),
             ('approve', 'Approved'),
             ('cancel', 'Cancel'),
             ], 'Status', readonly=True, copy=False, help="Gives the status of the quotation or sales order.\
@@ -121,6 +123,10 @@ class stock_requisition(osv.osv):
         'state' : 'draft',
          'company_id': _get_default_company,
          'request_date': fields.datetime.now,
+         'issue_date':fields.datetime.now,
+         's_issue_date':fields.datetime.now,
+         'request_by':lambda obj, cr, uid, context: uid
+         
     }     
     
     def create(self, cursor, user, vals, context=None):
@@ -130,56 +136,67 @@ class stock_requisition(osv.osv):
         return super(stock_requisition, self).create(cursor, user, vals, context=context)
 
     def so_list(self, cr, uid, ids, context=None):
-        sale_order_obj = self.pool.get('sale.order')
-        so_line_obj = self.pool.get('stock.requisition.order')
-        
-        if ids:
-            stock_request_data = self.browse(cr, uid, ids[0], context=context)
-            issue_date_from = stock_request_data.issue_date
-            issue_date_to = stock_request_data.s_issue_date
-            sale_team_id = stock_request_data.sale_team_id.id
-            request_date = stock_request_data.request_date
-            location_id = stock_request_data.to_location_id.id
-            order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False), ('is_generate', '=', False), ('invoiced', '=', False), ('state', 'not in', ['done', 'cancel']), ('date_order', '>', issue_date_from), ('date_order', '<', issue_date_to)], context=context) 
-            cr.execute("delete from stock_requisition_order where  stock_line_id=%s", (stock_request_data.id,))
-            cr.execute("update stock_requisition_line set sale_req_quantity=0 where line_id=%s", (stock_request_data.id,))
-            order_list = str(tuple(order_ids))
-            order_list = eval(order_list)
-            if request_date and order_list:
-                    cr.execute("select sol.product_id,sum(product_uom_qty) as qty ,sol.product_uom from sale_order so,sale_order_line sol where so.id=sol.order_id and so.id in %s group by product_id,product_uom", (order_list,))
-                    sale_record = cr.fetchall()             
-                    if sale_record:
-                        for sale_data in sale_record:
-                            product_id = int(sale_data[0])
-                            sale_qty = int(sale_data[1])
-                            sale_product_uom = int(sale_data[2])
-                            product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-                            sequence=product.sequence
-                            cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (location_id, product_id,))
-                            qty_on_hand = cr.fetchone()
-                            if qty_on_hand:
-                                qty_on_hand = qty_on_hand[0]
-                            else:
-                                qty_on_hand = 0
-                            if sale_product_uom == product.product_tmpl_id.big_uom_id.id:                                                                          
-                                cr.execute("select floor(1/factor) as ratio from product_uom where active = true and id=%s", (product.product_tmpl_id.big_uom_id.id,))
-                                bigger_qty = cr.fetchone()[0]
-                                bigger_qty = int(bigger_qty)
-                                sale_qty = bigger_qty * sale_qty
-                            cr.execute("update stock_requisition_line set sale_req_quantity=sale_req_quantity+%s,qty_on_hand=%s,sequence=%s where product_id=%s and line_id=%s", (sale_qty, qty_on_hand, sequence,product_id, stock_request_data.id,))
-                                        
-            for line in order_ids:
-                order = sale_order_obj.browse(cr, uid, line, context=context)                
-                cr.execute("select (date_order+ '6 hour'::interval + '30 minutes'::interval)  from sale_order where id=%s", (order.id,))
-                sale_date = cr.fetchone()[0]                
-                so_line_obj.create(cr, uid, {'stock_line_id': stock_request_data.id,
-                                                        'name':order.name,
-                                                         'ref_no':order.tb_ref_no,
-                                                        'amount':order.amount_total,
-                                                        'date':sale_date,
-                                                        'sale_team_id':order.section_id.id,
-                                                        'state':order.state
-                                         }, context=context)        
+        try:
+            sale_order_obj = self.pool.get('sale.order')
+            so_line_obj = self.pool.get('stock.requisition.order')
+            
+            if ids:
+                stock_request_data = self.browse(cr, uid, ids[0], context=context)
+                issue_date_from = stock_request_data.issue_date
+                issue_date_to = stock_request_data.s_issue_date
+                sale_team_id = stock_request_data.sale_team_id.id
+                request_date = stock_request_data.request_date
+                location_id = stock_request_data.to_location_id.id
+                #sql = 'select id from sale_order where delivery_id=%s, shipped=False and is_generate=False and invoiced=False and state not in (%s,%s) and date_order between %s and %s'
+                #cr.execute(sql,(sale_team_id,issue_date_from,issue_date_to))
+                #order_ids = cr.fetchall()
+                order_ids= []
+                if issue_date_from == issue_date_to:
+                    order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False), ('is_generate', '=', False), ('invoiced', '=', False), ('state', 'not in', ['done', 'cancel']), ('date_order', '>=', issue_date_from)], context=context) 
+                else:
+                    order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False), ('is_generate', '=', False), ('invoiced', '=', False), ('state', 'not in', ['done', 'cancel']), ('date_order', '&gt;=', issue_date_from), ('date_order', '&lt;=', issue_date_to)], context=context) 
+                cr.execute("delete from stock_requisition_order where  stock_line_id=%s", (stock_request_data.id,))
+                cr.execute("update stock_requisition_line set sale_req_quantity=0 where line_id=%s", (stock_request_data.id,))
+                order_list = str(tuple(order_ids))
+                order_list = eval(order_list)
+                if request_date and order_list:
+                        cr.execute("select sol.product_id,sum(product_uom_qty) as qty ,sol.product_uom from sale_order so,sale_order_line sol where so.id=sol.order_id and so.id in %s group by product_id,product_uom", (order_list,))
+                        sale_record = cr.fetchall()             
+                        if sale_record:
+                            for sale_data in sale_record:
+                                product_id = int(sale_data[0])
+                                sale_qty = int(sale_data[1])
+                                sale_product_uom = int(sale_data[2])
+                                product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+                                sequence=product.sequence
+                                cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (location_id, product_id,))
+                                qty_on_hand = cr.fetchone()
+                                if qty_on_hand:
+                                    qty_on_hand = qty_on_hand[0]
+                                else:
+                                    qty_on_hand = 0
+                                if sale_product_uom == product.product_tmpl_id.big_uom_id.id:                                                                          
+                                    cr.execute("select floor(1/factor) as ratio from product_uom where active = true and id=%s", (product.product_tmpl_id.big_uom_id.id,))
+                                    bigger_qty = cr.fetchone()[0]
+                                    bigger_qty = int(bigger_qty)
+                                    sale_qty = bigger_qty * sale_qty
+                                cr.execute("update stock_requisition_line set sale_req_quantity=sale_req_quantity+%s,qty_on_hand=%s,sequence=%s where product_id=%s and line_id=%s", (sale_qty, qty_on_hand, sequence,product_id, stock_request_data.id,))
+                                            
+                for line in order_ids:
+                    order = sale_order_obj.browse(cr, uid, line, context=context)                
+                    cr.execute("select (date_order+ '6 hour'::interval + '30 minutes'::interval)  from sale_order where id=%s", (order.id,))
+                    sale_date = cr.fetchone()[0]                
+                    so_line_obj.create(cr, uid, {'stock_line_id': stock_request_data.id,
+                                                            'name':order.name,
+                                                             'ref_no':order.tb_ref_no,
+                                                            'amount':order.amount_total,
+                                                            'date':sale_date,
+                                                            'sale_team_id':order.section_id.id,
+                                                            'state':order.state
+                                             }, context=context) 
+        except ValueError as err: 
+            message = 'Unable to refresh sale order %s', err   
+            raise message 
         return True
     
     def approve(self, cr, uid, ids, context=None):
@@ -196,20 +213,23 @@ class stock_requisition(osv.osv):
             request_by = req_value.request_by.id
             to_location_id = req_value.to_location_id.id
             from_location_id = req_value.from_location_id.id
-            vehicle_no = req_value.vehicle_id.id
+            #vehicle_no = req_value.vehicle_id.id
             sale_team_id = req_value.sale_team_id.id
             branch_id = req_value.branch_id.id
+            receiver = req_value.issue_to
             for order in req_value.order_line:
                 so_name = order.name
                 order_id = sale_order_obj.search(cr, uid, [('name', '=', so_name)], context=context) 
                 sale_order_obj.write(cr, uid, order_id, {'is_generate':True})    
-            good_id = good_obj.create(cr, uid, {'vehicle_id': vehicle_no,
+            good_id = good_obj.create(cr, uid, {
+                                                
                                                 'sale_team_id':sale_team_id,
                                           'issue_date': request_date,
                                           'request_id':request_id,
                                           'request_by':request_by,
                                           'to_location_id':to_location_id,
                                           'from_location_id':from_location_id,
+                                          'receiver':receiver,
                                           'branch_id':branch_id}, context=context)
             
             req_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
@@ -301,10 +321,10 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
         'pre_order' :fields.related('line_id', 'pre_order', type='boolean', string='Pre Order'),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'req_quantity' : fields.float(string='Qty', digits=(16, 0)),
-        'product_uom': fields.many2one('product.uom', 'Smaller UOM', required=True,readonly=True),
+        'product_uom': fields.many2one('product.uom', 'Smaller UOM',readonly=True),
         'uom_ratio':fields.char('Packing Unit'),
          'remark':fields.char('Remark'),
-        'big_uom_id': fields.many2one('product.uom', 'Bigger UOM', required=True, help="Default Unit of Measure used for all stock operation.",readonly=True),
+        'big_uom_id': fields.many2one('product.uom', 'Bigger UOM',  help="Default Unit of Measure used for all stock operation.",readonly=True),
         'big_req_quantity' : fields.float(string='Qty', digits=(16, 0)),
         'sale_req_quantity' : fields.float(string='Small Req Qty', digits=(16, 0)),
         'addtional_req_quantity' : fields.float(string='Small Add Qty', digits=(16, 0)),
