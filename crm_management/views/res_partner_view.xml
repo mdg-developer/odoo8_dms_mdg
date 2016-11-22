@@ -15,11 +15,11 @@
 						<field name="customer_code" placeholder="Code" />
 					</xpath>
 					<xpath expr="//field[@name='website']" position="after">
-						<field name="outlet_type" attrs="{'invisible':[('customer','=',False)], 'required':[('customer', '=', True)]}"/>
-						<field name="sales_channel" attrs="{'invisible':[('customer','=',False)],'required':[('customer', '=', True)]}"/>
-						<field name="branch_id" attrs="{'invisible':[('customer','=',False)],'required':[('customer', '=', True)]}" />
+						<field name="outlet_type" attrs="{'invisible':[('customer','=',False)]}" />
+						<field name="sales_channel" attrs="{'invisible':[('customer','=',False)]}" />
+						<field name="branch_id" attrs="{'invisible':[('customer','=',False)]}" />
 						<field name="demarcation_id" attrs="{'invisible':[('customer','=',False)]}" />
-						<field name="chiller" attrs="{'invisible':[('customer','=',False)]}" />
+						<field name="chiller" attrs="{'invisible':[('customer','=',False)]}" />					
 					</xpath>
 					<!-- <xpath expr="//field[@name='stree`t']" position="before"> <field 
 						name="address" placeholder="Address..." /> </xpath> -->
@@ -38,6 +38,7 @@
 						<field name="frequency_id" attrs="{'invisible':[('customer','=',False)]}" />
 
 						<field name="old_code" />
+					
 
 						<group>
 							<button name="generate_customercode" type="object" string="Generate Code" />
@@ -50,8 +51,8 @@
 							[('customer', '=', False)]}" -->
 						<!-- icon="fa-flag"> -->
 						<!-- <field string="2 Invoie in" name="pending_customer" widget="statinfo" 
-							/> -->
-
+							/>  -->
+									
 						<!-- </button> -->
 						<!-- <button class="oe_inline oe_stat_button" type="action" -->
 						<!-- name="%(sale.act_res_partner_2_sale_order)d" attrs="{'invisible': 
@@ -131,6 +132,7 @@
 									<field name="customer" readonly="0" />
 									<field name="supplier" />
 									<field name="mobile_customer" />
+									<field name="is_consignment" />
 								</group>
 								<!-- <group> <field name="ref"/> <field name="lang"/> <field name="date"/> 
 									</group> -->
@@ -330,6 +332,7 @@
 							<field name="city" invisible="1" />
 							<field name="demarcation_id" invisible="1" />
 							<field name="pending" invisible="1" />
+							<field name="is_consignment"/>
 							<field name="idle" invisible="1" />
 						</xpath>
 						<xpath expr="//field[@name='date_review_next']" position="replace">

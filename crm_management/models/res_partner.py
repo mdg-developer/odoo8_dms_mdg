@@ -335,15 +335,15 @@ class res_partner(osv.osv):
 
     _columns = {  
                 'customer_code':fields.char('Code', required=False,readonly = True),
-                'outlet_type': fields.many2one('outlettype.outlettype', 'Outlet Type'),
+                'outlet_type': fields.many2one('outlettype.outlettype', 'Outlet Type', required=True),
                 'temp_customer':fields.char('Contact Person'),
                 'class_id':fields.many2one('sale.class', 'Class'),
                 'frequency_id':fields.many2one('plan.frequency','Frequency',required=False),
                 'chiller':fields.boolean('Chiller'),
                 'old_code': fields.char('Old Code'),
-                'sales_channel':fields.many2one('sale.channel', 'Sale Channel'),
+                'sales_channel':fields.many2one('sale.channel', 'Sale Channel',required=True),
                 'address':fields.char('Address'),
-                'branch_id':fields.many2one('res.branch', 'Branch'),
+                'branch_id':fields.many2one('res.branch', 'Branch',required=True),
                 'demarcation_id': fields.many2one('sale.demarcation', 'Demarcation'),
                 'mobile_customer': fields.boolean('Pending Customer', help="Check this box if this contact is a mobile customer. If it's not checked, purchase people will not see it when encoding a purchase order."),
                 # 'sale_order_count_by_week': fields.function(sale_order_count_by_week, string='# of Sales Order by week', type='integer'),
