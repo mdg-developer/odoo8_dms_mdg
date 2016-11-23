@@ -65,6 +65,8 @@
 				<page string="Team Members" position="after">
 					<page string="Products">
 						<separator string="Products" />
+						<button name="delete_products" string="Delete" class="oe_highlight"
+							type="object" />
 						<field name="product_ids" widget="many2many_list">
 							<kanban quick_create="false" create="true">
 								<field name="name" />
@@ -121,6 +123,9 @@
 								</templates>
 							</kanban>
 						</field>
+					</page>
+					<page string="Promotion">
+						<field name="promotion_id" nolabel="1" />
 					</page>
 					<!-- Add Product Main Group -->
 					<!-- <page string="Product Main Group"> -->

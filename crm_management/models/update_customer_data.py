@@ -5,6 +5,19 @@ from openerp.tools.translate import _
 class partner_update_data(osv.osv_memory):
     _name = 'partner.update.data'
     _description = 'Customer Update Data'
+    
+    def _get_customer_code(self, cr, uid, ids, field_name, arg, context=None):  
+          
+        res = {}
+        for line in self.browse(cr, uid, ids, context=context):     
+            if line.partner_id.id:  
+                res[line.id] = line.partner_id.customer_code
+        return res
+    
+
+
+   
+    
     _columns = {
                 'name':fields.char('Description'),
                 'partner_id':fields.many2one('res.partner', 'Customer',required=True),
@@ -14,6 +27,7 @@ class partner_update_data(osv.osv_memory):
                 'frequency_id':fields.many2one('plan.frequency', 'Frequency'),
                 'class_id':fields.many2one('sale.class', 'Class'),
                 'chiller':fields.boolean('Chiller'),
+                'customer_code':fields.function(_get_customer_code, type='char', method=True, string='Customer Code'),
     }
     _defaults = {
         'chiller': False,
@@ -40,4 +54,19 @@ class partner_update_data(osv.osv_memory):
                 partner_obj.write(cr, uid, partner_id, {'class_id':class_id.id}, context=None)
         if chiller is True:        
                 partner_obj.write(cr, uid, partner_id, {'chiller':True}, context=None)          
-        return True                                                              
+        return True   
+    
+        
+        
+    def onchange_partner_code(self, cr, uid, ids, part, context=None):
+
+        part = self.pool.get('res.partner').browse(cr, uid, part, context=context)       
+
+        val = {
+
+            'customer_code': part.customer_code,
+        } 
+        return {'value': val}      
+    
+    
+                                              

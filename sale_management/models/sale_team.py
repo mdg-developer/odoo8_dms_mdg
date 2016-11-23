@@ -190,6 +190,17 @@ class crm_case_section(osv.osv):
             res[line.id] = data
         return res
   
+    def delete_products(self, cr, uid, ids, context=None):
+                    
+        cr.execute("""select product_product_id from crm_case_section_product_product_rel where crm_case_section_id=%s""",(ids[0],))
+        product_ids=cr.fetchall()
+#         print 'product_ids',product_ids
+        if product_ids:
+            for product in product_ids:
+#                 print 'product',product[0]
+                cr.execute("""delete from crm_case_section_product_product_rel where crm_case_section_id=%s and product_product_id=%s """,(ids[0],product[0],))
+                
+                
     _columns = {
                 'region': fields.char('Region'),
                 'channel_ids':fields.many2many('sale.channel'),
@@ -202,6 +213,7 @@ class crm_case_section(osv.osv):
                 'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
                 'sale_channel_id':fields.many2many('sale.channel', 'sale_team_channel_rel', 'sale_team_id', 'sale_channel_id', string='Sale Channel'),
                 'demarcation_ids':fields.many2many('sale.demarcation'),
+                'promotion_id':fields.many2many('promos.rules'),
                 'van_id':fields.char('Vehicle No'),
                 'pricelist_ids':fields.many2many('product.pricelist'),
                 'vehicle_id':fields.many2one('fleet.vehicle', 'Vehicle No'),
