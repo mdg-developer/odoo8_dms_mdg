@@ -209,7 +209,11 @@ class cashier_approval(osv.osv):
                     invoice = invoiceObj.browse(cr, uid, invoice_id, context=context)
                     number= invoice.number
                     cr.execute("update mobile_ar_collection set unselected=True where ref_no=%s",(number,))         
-
+            cr.execute("select id from cashier_customer_payment where selected=True and cashier_id=%s",(ids[0],)) 
+            selected_data=cr.fetchone()
+            if not selected_data:
+                raise osv.except_osv(_('Warning'),
+                                     _('Please Select At Lease One Record.'))   
             self.create_journal_ms(cr, uid, ids, context)
         self.write(cr, uid, ids, {'state':'done'}, context=context)
         return True   
