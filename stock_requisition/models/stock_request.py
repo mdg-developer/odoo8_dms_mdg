@@ -54,7 +54,6 @@ class stock_requisition(osv.osv):
             product_line = sale_team.product_ids
             to_location_id = sale_team.issue_location_id
             order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False), ('is_generate', '=', False), ('invoiced', '=', False), ('state', 'not in', ['done', 'cancel'])], context=context) 
-            print 'order_ids', order_ids
             for line in product_line:                
                 product = self.pool.get('product.product').browse(cr, uid, line.id, context=context)                                                  
                 data_line.append({
