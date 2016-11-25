@@ -11,7 +11,7 @@
 			<field name="arch" type="xml">
 				<form string="Stock Return Form">
 					<header>
-						
+
 						<button name="received" string="Received" class="oe_highlight"
 							type="object" states="draft"
 							groups="stock.group_stock_manager,stock.group_stock_user" />
@@ -23,14 +23,16 @@
 								<field name="name" />
 								<field name="sale_team_id" attrs="{'readonly':[('state','=','received')]}"
 									on_change="on_change_sale_team_id(sale_team_id)" widget="selection" />
-								<field name="from_location" attrs="{'readonly':[('state','=','received')]}"  widget="selection" />
-								<field name="to_location" attrs="{'readonly':[('state','=','received')]}"  widget="selection" />
+								<field name="from_location" attrs="{'readonly':[('state','=','received')]}"
+									widget="selection" />
+								<field name="to_location" attrs="{'readonly':[('state','=','received')]}"
+									widget="selection" />
 								<field name="return_date" attrs="{'readonly':[('state','=','received')]}" />
-								<field name="branch_id"  widget="selection" />
+								<!-- <field name="branch_id" widget="selection" /> -->
 							</group>
 							<group>
-							    <field name="returner"   attrs="{'readonly':[('state','=','received')]}"/>
-							    <field name="wh_receiver"   attrs="{'readonly':[('state','=','received')]}"/>
+								<field name="returner" attrs="{'readonly':[('state','=','received')]}" />
+								<field name="wh_receiver" attrs="{'readonly':[('state','=','received')]}" />
 								<field name="company_id" attrs="{'readonly':[('state','=','received')]}"
 									invisible="1" />
 							</group>
@@ -55,9 +57,10 @@
 												attrs="{'readonly':True}" />
 											<field name="sale_quantity" string="Sales Qty" attrs="{'readonly':True}" />
 											<field name="foc_quantity" string="FOC Qty" attrs="{'readonly':True}" />
-											<field name="sale_quantity_big" string="Return Qty(B)"
+											<field name="exchange_quantity" attrs="{'readonly':True}" />
+											<field name="return_quantity_big" string="Return Qty(B)"
 												attrs="{'readonly':True}" />
-											<field name="sale_quantity" string="Return Qty(S)"
+											<field name="return_quantity" string="Return Qty(S)"
 												attrs="{'readonly':True}" />
 											<field name="product_uom" invisible="1" />
 											<field name="uom_ratio" invisible="1" />

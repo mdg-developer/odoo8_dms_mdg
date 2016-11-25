@@ -66,7 +66,7 @@
 											<field name="req_quantity" string="Qty(S)"/>
 											<field name="product_uom" invisible="1" />
 											<field name="uom_ratio" invisible="1" />
-											<field name="qty_on_hand" string="Qty on Hand (S)"/>
+											<field name="qty_on_hand" string="Qty on Hand (S)"  readonly="True"/>
 											<field name="remark" />
 										</tree>
 									</field>

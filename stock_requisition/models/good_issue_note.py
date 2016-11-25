@@ -127,7 +127,6 @@ class good_issue_note(osv.osv):
                                           'picking_type_id':picking_type_id}, context=context)
             note_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
             if note_line_id and picking_id:
-                
                 for id in note_line_id:
                     note_line_value = product_line_obj.browse(cr, uid, id, context=context)
                     product_id = note_line_value.product_id.id
@@ -140,7 +139,7 @@ class good_issue_note(osv.osv):
                     lot_id=note_line_value.batch_no.id
                     bigger_qty=0
                     if big_uom:
-                        cr.execute("select floor(1/factor) as ratio from product_uom where active = true and id=%s",(big_uom,))
+                        cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (big_uom,))
                         bigger_qty=cr.fetchone()
                         if bigger_qty:
                             bigger_qty=bigger_qty[0]*big_qty

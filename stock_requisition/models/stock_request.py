@@ -16,6 +16,7 @@ import datetime
 import math
 from datetime import datetime, date, time
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as OE_DATETIMEFORMAT
+
 class stock_requisition(osv.osv):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _name = "stock.requisition"
@@ -26,8 +27,7 @@ class stock_requisition(osv.osv):
             'stock_requisition.mt_requisition_confirm': lambda self, cr, uid, obj, ctx = None: obj.state in ['confirm'],
             'stock_requisition.mt_requisition_approve': lambda self, cr, uid, obj, ctx = None: obj.state in ['approve']
         },
-    }    
-
+    }        
     def _get_default_company(self, cr, uid, context=None):
         company_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
         if not company_id:
@@ -184,7 +184,7 @@ class stock_requisition(osv.osv):
                                 else:
                                     qty_on_hand = 0
                                 if sale_product_uom == product.product_tmpl_id.big_uom_id.id:                                                                          
-                                    cr.execute("select floor(1/factor) as ratio from product_uom where active = true and id=%s", (product.product_tmpl_id.big_uom_id.id,))
+                                    cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (product.product_tmpl_id.big_uom_id.id,))
                                     bigger_qty = cr.fetchone()[0]
                                     bigger_qty = int(bigger_qty)
                                     sale_qty = bigger_qty * sale_qty
@@ -230,8 +230,7 @@ class stock_requisition(osv.osv):
                 order_id = sale_order_obj.search(cr, uid, [('name', '=', so_name)], context=context) 
                 sale_order_obj.write(cr, uid, order_id, {'is_generate':True})    
             good_id = good_obj.create(cr, uid, {
-                                                
-                                                'sale_team_id':sale_team_id,
+                                          'sale_team_id':sale_team_id,
                                           'issue_date': request_date,
                                           'request_id':request_id,
                                           'request_by':request_by,
@@ -259,7 +258,7 @@ class stock_requisition(osv.osv):
                         quantity = req_line_value.req_quantity
                         sequence=req_line_value.sequence
                         product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)                                                                          
-                        cr.execute("select floor(1/factor) as ratio from product_uom where active = true and id=%s", (product.product_tmpl_id.big_uom_id.id,))
+                        cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (product.product_tmpl_id.big_uom_id.id,))
                         bigger_qty = cr.fetchone()[0]
                         bigger_qty = int(bigger_qty)
                         if  bigger_qty:
@@ -299,9 +298,7 @@ class stock_requisition(osv.osv):
             cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (product.product_tmpl_id.big_uom_id.id,))
             bigger_qty = cr.fetchone()[0]
             bigger_qty = int(bigger_qty)
-            print ' bigger_qty',bigger_qty,type(bigger_qty)                        
             big_uom_qty = divmod(total_qty, bigger_qty)
-            # print 'big_uom_qty',big_uom_qty
             if  big_uom_qty:
                 big_req_quantity = big_uom_qty[0]
                 req_quantity = big_uom_qty[1]
@@ -313,14 +310,24 @@ class stock_requisition(osv.osv):
 class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
     _name = 'stock.requisition.line'
     _description = 'Request Line'
-#     def write(self, cr, uid, ids, data, context=None):
-#         result = super(stock_requisition_line, self).write(cr, uid, ids, data, context=context)
-#         self.post_write(cr, uid, ids, context=context)
-#         return result    
-#     def write(self, cr, uid, ids, vals, context=None):
-#         line_data = self.browse(cr,uid,ids,context)
-#         if line_data.qty_on_hand!=0:      
-#         new_id = super(fleet_vehicle_weight_scale, self).write(cr, uid, ids, vals, context=context)              
+    
+    def create(self, cr, uid, data, context=None):
+        print 'data',data
+        requisition_obj= self.pool.get('stock.requisition')
+        line_id=data['line_id']
+        line_ids = requisition_obj.search(cr, uid, [('id', '=', line_id)], context=context)
+        requisition = requisition_obj.browse(cr,uid,line_ids,context)
+        location_id=requisition.to_location_id.id
+        product=data['product_id']
+        cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (location_id, product,))
+        qty_on_hand = cr.fetchone()
+        if qty_on_hand:
+            qty_on_hand = qty_on_hand[0]
+        else:
+            qty_on_hand = 0
+        data['qty_on_hand']=qty_on_hand
+        return super(stock_requisition_line, self).create(cr, uid, data, context=context)
+    
     def on_change_product_id(self,cr,uid,ids,product_id,to_location_id, context=None):
         values = {}
         qty_on_hand=0
@@ -354,7 +361,7 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
         'big_req_quantity' : fields.float(string='Qty', digits=(16, 0)),
         'sale_req_quantity' : fields.float(string='Small Req Qty', digits=(16, 0)),
         'addtional_req_quantity' : fields.float(string='Small Add Qty', digits=(16, 0)),
-        'qty_on_hand':fields.float(string='Qty On Hand', digits=(16, 0),readonly=True),
+        'qty_on_hand':fields.float(string='Qty On Hand', digits=(16, 0)),
         'sequence':fields.integer('Sequence'),
     }
         
