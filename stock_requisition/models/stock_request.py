@@ -27,6 +27,7 @@ class stock_requisition(osv.osv):
             'stock_requisition.mt_requisition_approve': lambda self, cr, uid, obj, ctx = None: obj.state in ['approve']
         },
     }    
+
     def _get_default_company(self, cr, uid, context=None):
         company_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
         if not company_id:
@@ -55,7 +56,13 @@ class stock_requisition(osv.osv):
             to_location_id = sale_team.issue_location_id
             order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False), ('is_generate', '=', False), ('invoiced', '=', False), ('state', 'not in', ['done', 'cancel'])], context=context) 
             for line in product_line:                
-                product = self.pool.get('product.product').browse(cr, uid, line.id, context=context)                                                  
+                product = self.pool.get('product.product').browse(cr, uid, line.id, context=context)   
+                cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (to_location_id.id, product.id,))
+                qty_on_hand = cr.fetchone()
+                if qty_on_hand:
+                    qty_on_hand = qty_on_hand[0]
+                else:
+                    qty_on_hand = 0                                               
                 data_line.append({
                                   'sequence':product.sequence,
                                     'product_id':line.id,
@@ -66,7 +73,8 @@ class stock_requisition(osv.osv):
                                     'big_req_quantity':req_quantity,
                                     'sale_req_quantity':sale_req_quantity,
                                     'addtional_req_quantity':addtional_req_quantity,
-                                              })
+                                    'qty_on_hand':qty_on_hand,
+                                      })
             for line in order_ids:
                 order = sale_order_obj.browse(cr, uid, line, context=context)
                 date_order = order.date_order    
@@ -153,7 +161,8 @@ class stock_requisition(osv.osv):
                 if issue_date_from == issue_date_to:
                     order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False), ('is_generate', '=', False), ('invoiced', '=', False), ('state', 'not in', ['done', 'cancel']), ('date_order', '>=', issue_date_from)], context=context) 
                 else:
-                    order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False), ('is_generate', '=', False), ('invoiced', '=', False), ('state', 'not in', ['done', 'cancel']), ('date_order', '&gt;=', issue_date_from), ('date_order', '&lt;=', issue_date_to)], context=context) 
+                    order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False), ('is_generate', '=', False), ('invoiced', '=', False), ('state', 'not in', ['done', 'cancel']), ('date_order', '<=', issue_date_from), ('date_order', '<=', issue_date_to)], context=context) 
+                print 'order_idsorder_ids',order_ids
                 cr.execute("delete from stock_requisition_order where  stock_line_id=%s", (stock_request_data.id,))
                 cr.execute("update stock_requisition_line set sale_req_quantity=0 where line_id=%s", (stock_request_data.id,))
                 order_list = str(tuple(order_ids))
@@ -195,7 +204,7 @@ class stock_requisition(osv.osv):
                                              }, context=context) 
         except ValueError as err: 
             message = 'Unable to refresh sale order %s', err   
-            raise message 
+            #raise message 
         return True
     
     def approve(self, cr, uid, ids, context=None):
@@ -284,12 +293,13 @@ class stock_requisition(osv.osv):
             sale_req_qty = req_line_value.sale_req_quantity
             add_req_qty = req_line_value.addtional_req_quantity
             product_id = req_line_value.product_id.id
+            print 'product_id',product_id
             total_qty = sale_req_qty + add_req_qty
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)                                                                          
-            cr.execute("select floor(1/factor) as ratio from product_uom where active = true and id=%s", (product.product_tmpl_id.big_uom_id.id,))
+            cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (product.product_tmpl_id.big_uom_id.id,))
             bigger_qty = cr.fetchone()[0]
             bigger_qty = int(bigger_qty)
-            # print ' bigger_qty',sale_qty,bigger_qty,type(sale_qty),type(bigger_qty)                        
+            print ' bigger_qty',bigger_qty,type(bigger_qty)                        
             big_uom_qty = divmod(total_qty, bigger_qty)
             # print 'big_uom_qty',big_uom_qty
             if  big_uom_qty:
@@ -303,15 +313,32 @@ class stock_requisition(osv.osv):
 class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
     _name = 'stock.requisition.line'
     _description = 'Request Line'
-
-    def on_change_product_id(self, cr, uid, ids, product_id, context=None):
+#     def write(self, cr, uid, ids, data, context=None):
+#         result = super(stock_requisition_line, self).write(cr, uid, ids, data, context=context)
+#         self.post_write(cr, uid, ids, context=context)
+#         return result    
+#     def write(self, cr, uid, ids, vals, context=None):
+#         line_data = self.browse(cr,uid,ids,context)
+#         if line_data.qty_on_hand!=0:      
+#         new_id = super(fleet_vehicle_weight_scale, self).write(cr, uid, ids, vals, context=context)              
+    def on_change_product_id(self,cr,uid,ids,product_id,to_location_id, context=None):
         values = {}
+        qty_on_hand=0
+        if to_location_id and product_id:
+            cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (to_location_id, product_id,))
+            qty_on_hand = cr.fetchone()
+            if qty_on_hand:
+                qty_on_hand = qty_on_hand[0]
+            else:
+                qty_on_hand = 0
         if product_id:
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             values = {
                 'product_uom': product.product_tmpl_id.uom_id and product.product_tmpl_id.uom_id.id or False,
                 'uom_ratio': product.product_tmpl_id.uom_ratio,
                 'big_uom_id': product.product_tmpl_id.big_uom_id and product.product_tmpl_id.big_uom_id.id or False,
+                'qty_on_hand':qty_on_hand,
+                'sequence':product.sequence,
             }
         return {'value': values}
         

@@ -71,7 +71,7 @@ class stock_return(osv.osv):
 #             print 'note',note
 #             if note:
 #                 note_id=note[0]
-            note_ids = note_obj.search(cr, uid, [('sale_team_id', '=', sale_team_id), ('issue_date', '=', return_data)])
+            note_ids = note_obj.search(cr, uid, [('sale_team_id', '=', sale_team_id), ('issue_date', '=', return_date)])
             note_id = 0
             if note_ids:
                 note_id = note_ids[0]
@@ -87,7 +87,7 @@ class stock_return(osv.osv):
                 cr.execute("select floor(1/factor) as ratio from product_uom where active = true and id=%s", (big_uom_id,))
                 bigger_qty = cr.fetchone()[0]
                 receive_qty = (big_issue_quantity * bigger_qty) + small_issue_quantity
-                cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (location_id, product_id,))
+                cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (location_id.id, product_id,))
                 qty_on_hand = cr.fetchone()
                 stock_return_obj.create(cr, uid, {'line_id': ids[0],
                                           'product_id': product_id,
