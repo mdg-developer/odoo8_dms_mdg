@@ -341,6 +341,8 @@ class res_partner(osv.osv):
                 'frequency_id':fields.many2one('plan.frequency','Frequency',required=False),
                 'chiller':fields.boolean('Chiller'),
 		       	'hamper':fields.boolean('Hamper'),
+                'is_bank':fields.boolean('IsBank'),
+                'is_cheque':fields.boolean('IsCheque'),
                 'old_code': fields.char('Old Code'),
                 'sales_channel':fields.many2one('sale.channel', 'Sale Channel'),
                 'address':fields.char('Address'),

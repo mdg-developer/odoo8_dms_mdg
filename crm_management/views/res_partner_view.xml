@@ -21,6 +21,8 @@
 						<field name="demarcation_id" attrs="{'invisible':[('customer','=',False)]}" />
 						<field name="chiller" attrs="{'invisible':[('customer','=',False)]}" />
 						<field name="hamper" attrs="{'invisible':[('customer','=',False)]}" />
+						<field name="is_bank" attrs="{'invisible':[('customer','=',False)]}" />
+						<field name="is_cheque" attrs="{'invisible':[('customer','=',False)]}" />
 					</xpath>
 					<!-- <xpath expr="//field[@name='stree`t']" position="before"> <field 
 						name="address" placeholder="Address..." /> </xpath> -->
