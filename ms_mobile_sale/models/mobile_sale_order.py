@@ -2104,7 +2104,8 @@ class mobile_sale_order(osv.osv):
                         'image':partner['image'],
                         'sales_channel':partner['sales_channel'],
                         'temp_customer':partner['temp_customer'],
-                        'frequency_id':partner['frequency_id'],           
+                        'frequency_id':partner['frequency_id'],
+                        'section_id':partner['section_id'],       
                     }
                     partner_id =partner_obj.create(cursor, user, partner_result, context=context)
             return partner_id
