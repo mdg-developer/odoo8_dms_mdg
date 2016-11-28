@@ -157,7 +157,7 @@ class stock_requisition(osv.osv):
                 #sql = 'select id from sale_order where delivery_id=%s, shipped=False and is_generate=False and invoiced=False and state not in (%s,%s) and date_order between %s and %s'
                 #cr.execute(sql,(sale_team_id,issue_date_from,issue_date_to))
                 #order_ids = cr.fetchall()
-                order_ids= []
+                #order_ids= []
                 if issue_date_from == issue_date_to:
                     order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False), ('is_generate', '=', False), ('invoiced', '=', False), ('state', 'not in', ['done', 'cancel']), ('date_order', '>=', issue_date_from)], context=context) 
                 else:

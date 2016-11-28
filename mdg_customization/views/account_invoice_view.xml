@@ -11,6 +11,10 @@
 				<field name="date_due" position='after'>
 					<field name="pre_order" />
 				</field>
+				<xpath expr="//form/sheet/notebook/page/field/tree/field[@name='name']"
+					position="replace">
+					<field name="name" invisible="1" />
+				</xpath>
 			</field>
 		</record>
 

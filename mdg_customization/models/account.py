@@ -8,7 +8,7 @@ class account_bank_statement_line(osv.osv):
     def get_currency_rate_line(self, cr, uid, st_line, currency_diff, move_id, context=None):
         if currency_diff < 0:
             account_id = st_line.partner_id.gain_account_id.id      
-           # account_id = st_line.company_id.expense_currency_exchange_account_id.id
+            # account_id = st_line.company_id.expense_currency_exchange_account_id.id
             if not account_id:
                 raise osv.except_osv(_('Insufficient Configuration!'), _("You should configure the 'Loss Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
         else:
@@ -86,7 +86,7 @@ class account_voucher(osv.osv):
 class account_invoice(osv.osv):
     _inherit = 'account.invoice'    
     _columns = {
-                'pre_order': fields.boolean('Pre Order'),
+                'pre_order': fields.boolean('Pre Order' ,readonly=True),
                'branch_id':fields.many2one('res.branch', 'Branch'),
                 
                 }

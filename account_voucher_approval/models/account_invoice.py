@@ -14,7 +14,72 @@ TYPE2JOURNAL = {
 }
 class account_invoice(models.Model):
     _inherit = "account.invoice"
-    
+    @api.multi    
+    def onchange_partner_id(self, type, partner_id, date_invoice=False,
+            payment_term=False, partner_bank_id=False, company_id=False):
+        account_id = False
+        payment_term_id = False
+        fiscal_position = False
+        bank_id = False
+        payment_type='cash'
+        if partner_id:
+            p = self.env['res.partner'].browse(partner_id)
+            rec_account = p.property_account_receivable
+            pay_account = p.property_account_payable
+            if company_id:
+                if p.property_account_receivable.company_id and \
+                        p.property_account_receivable.company_id.id != company_id and \
+                        p.property_account_payable.company_id and \
+                        p.property_account_payable.company_id.id != company_id:
+                    prop = self.env['ir.property']
+                    rec_dom = [('name', '=', 'property_account_receivable'), ('company_id', '=', company_id)]
+                    pay_dom = [('name', '=', 'property_account_payable'), ('company_id', '=', company_id)]
+                    res_dom = [('res_id', '=', 'res.partner,%s' % partner_id)]
+                    rec_prop = prop.search(rec_dom + res_dom) or prop.search(rec_dom)
+                    pay_prop = prop.search(pay_dom + res_dom) or prop.search(pay_dom)
+                    rec_account = rec_prop.get_by_record(rec_prop)
+                    pay_account = pay_prop.get_by_record(pay_prop)
+                    if not rec_account and not pay_account:
+                        action = self.env.ref('account.action_account_config')
+                        msg = _('Cannot find a chart of accounts for this company, You should configure it. \nPlease go to Account Configuration.')
+                        raise RedirectWarning(msg, action.id, _('Go to the configuration panel'))
+            if p.credit_allow ==True:
+                payment_type='credit'
+            elif p.is_consignment==True:
+                payment_type='consignment'
+            else:
+                payment_type='cash'
+            if type in ('out_invoice', 'out_refund'):
+                account_id = rec_account.id
+                payment_term_id = p.property_payment_term.id
+            else:
+                account_id = pay_account.id
+                payment_term_id = p.property_supplier_payment_term.id
+            fiscal_position = p.property_account_position.id
+            bank_id = p.bank_ids and p.bank_ids[0].id or False
+
+        result = {'value': {
+            'account_id': account_id,
+            'payment_term': payment_term_id,
+            'fiscal_position': fiscal_position,
+            'payment_type':payment_type,
+        }}
+
+        if type in ('in_invoice', 'in_refund'):
+            result['value']['partner_bank_id'] = bank_id
+
+        if payment_term != payment_term_id:
+            if payment_term_id:
+                to_update = self.onchange_payment_term_date_invoice(payment_term_id, date_invoice)
+                result['value'].update(to_update.get('value', {}))
+            else:
+                result['value']['date_due'] = False
+
+        if partner_bank_id != bank_id:
+            to_update = self.onchange_partner_bank(bank_id)
+            result['value'].update(to_update.get('value', {}))
+
+        return result        
     @api.model
     def _default_journal(self):
         print ' _default_journal'
@@ -61,7 +126,7 @@ class account_invoice(models.Model):
                     ('cash', 'Cash'),
                     ('consignment', 'Consignment'),
 #                     ('advanced', 'Advanced')
-                    ],string= 'Payment Type',default='credit')
+                    ],string= 'Payment Type',default='cash')
     
     account_id = fields.Many2one('account.account', string='Account',
         required=True, readonly=True, states={'draft': [('readonly', False)]},

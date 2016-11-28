@@ -72,8 +72,8 @@ class sale_order(osv.osv):
                     ('credit', 'Credit'),
                     ('cash', 'Cash'),
                     ('consignment', 'Consignment'),
-                    ('advanced', 'Advanced')
-                    ], 'Payment Type'),
+#                     ('advanced', 'Advanced')
+                    ], 'Payment Type',default='cash'),
                'delivery_remark':fields.selection([
                     ('partial', 'Partial'),
                     ('delivered', 'Delivered'),
@@ -90,8 +90,8 @@ class sale_order(osv.osv):
                'invoiced': fields.function(_invoiced, string='Paid',
                 fnct_search=_invoiced_search, type='boolean', help="It indicates that an invoice has been paid.", store=True),
                 'delivery_id': fields.many2one('crm.case.section', 'Delivery Team'),
-                'pre_order': fields.boolean("Pre Order" ),
-                'is_generate':fields.boolean('RFI Generated'),
+                'pre_order': fields.boolean("Pre Order" ,readonly=True),
+                'is_generate':fields.boolean('RFI Generated'  ,readonly=True),
                  
                }
     
@@ -105,6 +105,13 @@ class sale_order(osv.osv):
         pricelist = part.property_product_pricelist and part.property_product_pricelist.id or False
         invoice_part = self.pool.get('res.partner').browse(cr, uid, addr['invoice'], context=context)
         payment_term = invoice_part.property_payment_term and invoice_part.property_payment_term.id or False
+        if part.credit_allow ==True:
+            payment_type='credit'
+        elif part.is_consignment==True:
+            payment_type='consignment'
+        else:
+            payment_type='cash'
+            
         dedicated_salesman = part.user_id and part.user_id.id or uid
         val = {
             'partner_invoice_id': addr['invoice'],
@@ -112,6 +119,7 @@ class sale_order(osv.osv):
             'customer_code': part.customer_code,
             'payment_term': payment_term,
             'user_id': dedicated_salesman,
+            'payment_type':payment_type,
         }
         delivery_onchange = self.onchange_delivery_id(cr, uid, ids, False, part.id, addr['delivery'], False, context=context)
         val.update(delivery_onchange['value'])

@@ -79,11 +79,13 @@
 			<field name="arch" type="xml">
 				<xpath expr="//button[@name='action_quotation_send']"
 					position="after">
-
 					<button name="is_generate_RFI" string="Missed Order" type="object"
 						class="oe_highlight" states="manual" groups="base.group_user" />
 				</xpath>
-
+				<xpath expr="//form/sheet/notebook/page/field/tree/field[@name='name']"
+					position="replace">
+					<field name="name" invisible="1" />
+				</xpath>
 				<field name="payment_term" position="replace">
 
 				</field>
