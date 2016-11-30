@@ -101,6 +101,22 @@ class account_invoice(osv.osv):
         'state_id': fields.many2one("res.country.state", 'State', ondelete='restrict', readonly=True),
         'country_id': fields.many2one('res.country', 'Country', ondelete='restrict', readonly=True),
         'township': fields.many2one('res.township', 'Township', ondelete='restrict', readonly=True),              
-                
-                }
+         'payment_term': fields.many2one('account.payment.term', 'Payment Term',readonly=True),
+}
+    
+    
+    def on_change_payment_type(self, cr, uid, ids, partner_id,payment_type, context=None):
+        values = {}
+        print 'payment_type',payment_type
+        if payment_type =='cash':
+            payment_term= 1
+        elif payment_type =='credit':
+            partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
+            payment_term = partner.property_payment_term and partner.property_payment_term.id or False
+        else:
+            partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
+            payment_term = partner.property_payment_term and partner.property_payment_term.id or False        
+        values = {
+             'payment_term':payment_term,}
+        return {'value': values}
 account_invoice()   
