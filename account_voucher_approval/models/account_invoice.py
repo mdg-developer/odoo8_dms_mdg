@@ -14,6 +14,7 @@ TYPE2JOURNAL = {
 }
 class account_invoice(models.Model):
     _inherit = "account.invoice"
+    
     @api.multi    
     def onchange_partner_id(self, type, partner_id, date_invoice=False,
             payment_term=False, partner_bank_id=False, company_id=False):
@@ -26,6 +27,7 @@ class account_invoice(models.Model):
             p = self.env['res.partner'].browse(partner_id)
             rec_account = p.property_account_receivable
             pay_account = p.property_account_payable
+
             if company_id:
                 if p.property_account_receivable.company_id and \
                         p.property_account_receivable.company_id.id != company_id and \
@@ -57,12 +59,20 @@ class account_invoice(models.Model):
                 payment_term_id = p.property_supplier_payment_term.id
             fiscal_position = p.property_account_position.id
             bank_id = p.bank_ids and p.bank_ids[0].id or False
-
+            pricelist = p.property_product_pricelist and p.property_product_pricelist.id or False
         result = {'value': {
             'account_id': account_id,
             'payment_term': payment_term_id,
             'fiscal_position': fiscal_position,
             'payment_type':payment_type,
+            'code': p.customer_code,
+            'street': p.street,
+            'street2': p.street2,
+            'city': p.city and p.city.id or False,
+            'state_id': p.state_id and p.state_id.id or False,
+            'country_id': p.country_id and p.country_id.id or False,
+            'township': p.township and p.township.id or False,
+            'pricelist_id':pricelist,
         }}
 
         if type in ('in_invoice', 'in_refund'):

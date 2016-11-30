@@ -88,6 +88,19 @@ class account_invoice(osv.osv):
     _columns = {
                 'pre_order': fields.boolean('Pre Order' ,readonly=True),
                'branch_id':fields.many2one('res.branch', 'Branch'),
+               'delivery_remark':fields.selection([
+                    ('partial', 'Partial'),
+                    ('delivered', 'Delivered'),
+                    ('none', 'None')
+               ], 'Deliver Remark'),
+        'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Pricelist for current sales invoice."),
+         'code':fields.char('Customer ID'),
+        'street': fields.char('Street'),
+        'street2': fields.char('Street2'),
+        'city': fields.many2one('res.city', 'City', ondelete='restrict'),
+        'state_id': fields.many2one("res.country.state", 'State', ondelete='restrict'),
+        'country_id': fields.many2one('res.country', 'Country', ondelete='restrict'),
+        'township': fields.many2one('res.township', 'Township', ondelete='restrict'),              
                 
                 }
 account_invoice()   
