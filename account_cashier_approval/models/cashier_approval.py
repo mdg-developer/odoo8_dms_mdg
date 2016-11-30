@@ -735,7 +735,7 @@ class cashier_approval_invoice_line(osv.osv):
         'partner_id':fields.many2one('res.partner', 'Customer', ondelete='cascade'),
         'payment_type': fields.text('Type'),
         'amount':fields.float('Amount'),
-        'selected':fields.boolean('Selected' , default=False),
+        'selected':fields.boolean('Selected' , default=True),
 
     }
     
@@ -752,7 +752,7 @@ class cashier_approval_ar_line(osv.osv):
         # 'invoice_id':fields.one2many('account.invoice', 'id', 'Invoice No'),
         'date':fields.date('Date'),
         # 'partner_id':fields.one2many('res.partner','id','Customer'),        
-        'selected':fields.boolean('Selected' , default=False),
+        'selected':fields.boolean('Selected' , default=True),
         'partner_id':fields.many2one('res.partner', 'Customer', ondelete='cascade'),
         'payment_type': fields.text('Type'),
         'amount':fields.float('Amount'),
@@ -777,7 +777,7 @@ class cashier_approval_credit_line(osv.osv):
         'account_id':fields.many2one('account.account', 'Account', ondelete='cascade'),
         'journal_id':fields.many2one('account.journal', 'Journal', ondelete='cascade'),
         'amount':fields.float('Amount'),
-        'selected':fields.boolean('Selected' , default=False),
+        'selected':fields.boolean('Selected' , default=True),
 
     }       
         

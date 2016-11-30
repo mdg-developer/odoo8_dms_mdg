@@ -27,12 +27,12 @@ class good_issue_note(osv.osv):
             'good_issue_note.mt_note_approve': lambda self, cr, uid, obj, ctx = None: obj.state in ['approve']
         },
     }  
-    
-    def _get_default_branch(self, cr, uid, context=None):
-        branch_id = self.pool.get('res.users')._get_branch(cr, uid, context=context)
-        if not branch_id:
-            raise osv.except_osv(_('Error!'), _('There is no default branch for the current user!'))
-        return branch_id
+#     
+#     def _get_default_branch(self, cr, uid, context=None):
+#         branch_id = self.pool.get('res.users')._get_branch(cr, uid, context=context)
+#         if not branch_id:
+#             raise osv.except_osv(_('Error!'), _('There is no default branch for the current user!'))
+#         return branch_id
         
       
     def _get_default_company(self, cr, uid, context=None):
@@ -47,7 +47,7 @@ class good_issue_note(osv.osv):
         'to_location_id':fields.many2one('stock.location', 'Requesting Location', required=True),
         'from_location_id':fields.many2one('stock.location', 'Request Warehouse', required=True),
         'sale_team_id':fields.many2one('crm.case.section', 'Delivery Team'),
-        'branch_id':fields.many2one('res.branch', 'Branch',required=True),
+     #   'branch_id':fields.many2one('res.branch', 'Branch',required=True),
 #         'so_no' : fields.char('Sales Order/Inv Ref;No.'),
          'issue_by':fields.char("Issuer"),
        'request_by':fields.many2one('res.users', "Requested By"),
@@ -75,7 +75,7 @@ class good_issue_note(osv.osv):
     _defaults = {
         'state' : 'draft',
          'company_id': _get_default_company,
-         'branch_id': _get_default_branch,
+        # 'branch_id': _get_default_branch,
          'is_return':False,
     }     
     def create(self, cursor, user, vals, context=None):

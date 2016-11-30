@@ -9,11 +9,11 @@ class account_invoice(models.Model):
     _inherit = "account.invoice"
     
     
-    unselected = fields.Boolean(string='Unselected',default=False)   
+    unselected = fields.Boolean(string='Uncleared Check',default=False)   
     
 class mobile_ar_collection(models.Model):
     _inherit = "mobile.ar.collection"
      
-    unselected = fields.Boolean(string='Unselected',default=False)   
+    unselected = fields.Boolean(string='Uncleared Check',default=False)   
    
     

@@ -39,7 +39,7 @@
 								<field name="request_by" attrs="{'readonly':[('state','=','issue')]}"
 									widget="selection" />
 								<field name="issue_date" attrs="{'readonly':[('state','=','issue')]}" />
-								<field name="branch_id"  widget="selection"  attrs="{'readonly':[('state','=','issue')]}"/>
+<!-- 								<field name="branch_id"  widget="selection"  attrs="{'readonly':[('state','=','issue')]}"/> -->
 							</group>
 							<group>
 								<field name="request_id" />
