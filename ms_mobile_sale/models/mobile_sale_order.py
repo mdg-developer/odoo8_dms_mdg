@@ -876,7 +876,7 @@ class mobile_sale_order(osv.osv):
         return datas
     # get promotion datas from database
     
-    def get_promos_datas(self, cr, uid , branch_id, state, context=None, **kwargs):
+    def get_promos_datas(self, cr, uid , branch_id, state,team_id, context=None, **kwargs):
    
         if state=='approve':
             status = 'approve'
@@ -888,7 +888,13 @@ class mobile_sale_order(osv.osv):
                         and pro_br_rel.res_branch_id = %s
                         and pr.state = %s
                         and  now()::date  between from_date::date and to_date::date
-                        ''', (branch_id, status,))
+                        and pr.id in (
+                        select a.promo_id from promo_sale_channel_rel a
+                        inner join sale_team_channel_rel b
+                        on a.sale_channel_id = b.sale_channel_id
+                        where b.sale_team_id = %s
+                        )
+                        ''', (branch_id, status,team_id,))
         else:
             status ='approve','draft'            
             cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,
@@ -899,7 +905,13 @@ class mobile_sale_order(osv.osv):
                         and pro_br_rel.res_branch_id = %s
                         and pr.state in %s
                         and  now()::date  between from_date::date and to_date::date
-                        ''', (branch_id, status,))
+                        and pr.id in (
+                        select a.promo_id from promo_sale_channel_rel a
+                        inner join sale_team_channel_rel b
+                        on a.sale_channel_id = b.sale_channel_id
+                        where b.sale_team_id = %s
+                        )
+                        ''', (branch_id, status,team_id,))
         datas = cr.fetchall()        
         return datas
     
