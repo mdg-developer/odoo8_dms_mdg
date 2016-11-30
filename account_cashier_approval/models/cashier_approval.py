@@ -231,6 +231,12 @@ class cashier_approval(osv.osv):
                 inv_id = []
                 inv_id.append(payment[8])
                 invoice = invoiceObj.browse(cr, uid, inv_id, context=context)
+                cr.execute('select default_credit_account_id,type from account_journal where id=%s', (payment[0],))
+                data = cr.fetchall()
+                if data:
+                        default_credit_account_id = data[0][0]
+                        type = data[0][1]
+
                 # invoiceObj.invoice_pay_customer(cr, uid, inv_id, context=context)
                 accountVResult = {
                                         'partner_id':payment[3],
@@ -238,7 +244,7 @@ class cashier_approval(osv.osv):
                                         'journal_id':payment[0],  # acc_data[0],
                                         'date':payment[5],
                                         'period_id':payment[6],
-                                        'account_id':payment[4],
+                                        'account_id':default_credit_account_id,
                                         'pre_line':True,
                                         'type':'receipt',
                                         'reference':payment[7],
@@ -263,11 +269,11 @@ class cashier_approval(osv.osv):
                                 }
                     voucherLineObj.create(cr, uid, line_data, context=context)  
                     voucherObj.button_proforma_voucher(cr, uid, vlist , context=context)
-                    cr.execute("""update account_invoice set state='paid'
+                    cr.execute("""update account_invoice set state='paid',unselected=False
                     where id=%s and residual=0""", (invoice.id,))
                     cr.execute("""update sale_order set invoiced='t' from account_invoice
                     where sale_order.name=account_invoice.reference and account_invoice.residual=0 and account_invoice.id=%s""", (invoice.id,))
-                    cr.execute("update mobile_ar_collection set state='done' where ref_no=%s", (invoice.number,))
+                    cr.execute("update mobile_ar_collection set state='done' ,unselected=False where ref_no=%s", (invoice.number,))
 
     def action_generate(self, cr, uid, ids, context=None):
         cr.execute("""delete from cashier_approval_invoice_line where cashier_id=%s""", (ids[0],))

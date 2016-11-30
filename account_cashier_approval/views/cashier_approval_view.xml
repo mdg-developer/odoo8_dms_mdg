@@ -188,8 +188,7 @@
 										<field name="journal_id" />
 										<field name="amount" />
 										<field name="notes" />
-										<field name="selected" />
-
+										<field name="selected" invisible="1" />
 									</form>
 									<tree string="Payment Lines" editable="bottom">
 										<field name="invoice_id" />
@@ -198,8 +197,7 @@
 										<field name="journal_id" />
 										<field name="amount" />
 										<field name="notes" />
-										<field name="selected" />
-
+										<field name="selected" invisible="1" />
 									</tree>
 								</field>
 							</page>
