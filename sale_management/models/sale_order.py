@@ -18,8 +18,8 @@ class sale_order(osv.osv):
     _inherit = "sale.order"
     
     def is_generate_RFI(self, cr, uid, ids, context=None):
-        print 'order',ids
-        sale_obj=self.pool.get('sale.order')
+        print 'order', ids
+        sale_obj = self.pool.get('sale.order')
         sale_obj.write(cr, uid, ids, {'is_generate': False}, context=context)
         return True    
     def _invoiced(self, cursor, user, ids, name, arg, context=None):
@@ -73,7 +73,7 @@ class sale_order(osv.osv):
                     ('cash', 'Cash'),
                     ('consignment', 'Consignment'),
 #                     ('advanced', 'Advanced')
-                    ], 'Payment Type',default='cash'),
+                    ], 'Payment Type', default='cash'),
                'delivery_remark':fields.selection([
                     ('partial', 'Partial'),
                     ('delivered', 'Delivered'),
@@ -90,10 +90,33 @@ class sale_order(osv.osv):
                'invoiced': fields.function(_invoiced, string='Paid',
                 fnct_search=_invoiced_search, type='boolean', help="It indicates that an invoice has been paid.", store=True),
                 'delivery_id': fields.many2one('crm.case.section', 'Delivery Team'),
-                'pre_order': fields.boolean("Pre Order" ,readonly=True),
-                'is_generate':fields.boolean('RFI Generated'  ,readonly=True),
-                 
+                'pre_order': fields.boolean("Pre Order" , readonly=True),
+                'is_generate':fields.boolean('RFI Generated'  , readonly=True),
+         'code':fields.char('Customer ID' , readonly=True),
+        'street': fields.char('Street' , readonly=True),
+        'street2': fields.char('Street2' , readonly=True),
+        'city': fields.many2one('res.city', 'City', ondelete='restrict' , readonly=True),
+        'state_id': fields.many2one("res.country.state", 'State', ondelete='restrict' , readonly=True),
+        'country_id': fields.many2one('res.country', 'Country', ondelete='restrict' , readonly=True),
+        'township': fields.many2one('res.township', 'Township', ondelete='restrict' , readonly=True),
+         'payment_term': fields.many2one('account.payment.term', 'Payment Term',readonly=True),
+
                }
+    
+    def on_change_payment_type(self, cr, uid, ids, partner_id,payment_type, context=None):
+        values = {}
+        print 'payment_type',payment_type
+        if payment_type =='cash':
+            payment_term= 1
+        elif payment_type =='credit':
+            partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
+            payment_term = partner.property_payment_term and partner.property_payment_term.id or False
+        else:
+            partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
+            payment_term = partner.property_payment_term and partner.property_payment_term.id or False        
+        values = {
+             'payment_term':payment_term,}
+        return {'value': values}
     
     def onchange_partner_id(self, cr, uid, ids, part, context=None):
         
@@ -105,12 +128,12 @@ class sale_order(osv.osv):
         pricelist = part.property_product_pricelist and part.property_product_pricelist.id or False
         invoice_part = self.pool.get('res.partner').browse(cr, uid, addr['invoice'], context=context)
         payment_term = invoice_part.property_payment_term and invoice_part.property_payment_term.id or False
-        if part.credit_allow ==True:
-            payment_type='credit'
-        elif part.is_consignment==True:
-            payment_type='consignment'
+        if part.credit_allow == True:
+            payment_type = 'credit'
+        elif part.is_consignment == True:
+            payment_type = 'consignment'
         else:
-            payment_type='cash'
+            payment_type = 'cash'
             
         dedicated_salesman = part.user_id and part.user_id.id or uid
         val = {
@@ -120,6 +143,13 @@ class sale_order(osv.osv):
             'payment_term': payment_term,
             'user_id': dedicated_salesman,
             'payment_type':payment_type,
+            'code': part.customer_code,
+            'street': part.street,
+            'street2': part.street2,
+            'city': part.city and part.city.id or False,
+            'state_id': part.state_id and part.state_id.id or False,
+            'country_id': part.country_id and part.country_id.id or False,
+            'township': part.township and part.township.id or False,
         }
         delivery_onchange = self.onchange_delivery_id(cr, uid, ids, False, part.id, addr['delivery'], False, context=context)
         val.update(delivery_onchange['value'])

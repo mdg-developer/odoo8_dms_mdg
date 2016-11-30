@@ -22,6 +22,14 @@ class account_invoice(models.Model):
         payment_term_id = False
         fiscal_position = False
         bank_id = False
+        code=False
+        street= False
+        street2=False
+        city=False
+        state_id=  False
+        country_id=False
+        township=False
+        pricelist=False
         payment_type='cash'
         if partner_id:
             p = self.env['res.partner'].browse(partner_id)
@@ -60,18 +68,25 @@ class account_invoice(models.Model):
             fiscal_position = p.property_account_position.id
             bank_id = p.bank_ids and p.bank_ids[0].id or False
             pricelist = p.property_product_pricelist and p.property_product_pricelist.id or False
+            code=p.customer_code
+            street= p.street
+            street2=p.street2
+            city=p.city and p.city.id or False
+            state_id= p.state_id and p.state_id.id or False
+            country_id=p.country_id and p.country_id.id or False
+            township= p.township and p.township.id or False
         result = {'value': {
             'account_id': account_id,
             'payment_term': payment_term_id,
             'fiscal_position': fiscal_position,
             'payment_type':payment_type,
-            'code': p.customer_code,
-            'street': p.street,
-            'street2': p.street2,
-            'city': p.city and p.city.id or False,
-            'state_id': p.state_id and p.state_id.id or False,
-            'country_id': p.country_id and p.country_id.id or False,
-            'township': p.township and p.township.id or False,
+            'code':code,
+            'street': street,
+            'street2': street2,
+            'city': city ,
+            'state_id': state_id,
+            'country_id': country_id ,
+            'township': township,
             'pricelist_id':pricelist,
         }}
 

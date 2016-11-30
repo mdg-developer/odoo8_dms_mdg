@@ -94,13 +94,13 @@ class account_invoice(osv.osv):
                     ('none', 'None')
                ], 'Deliver Remark'),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Pricelist for current sales invoice."),
-         'code':fields.char('Customer ID'),
-        'street': fields.char('Street'),
-        'street2': fields.char('Street2'),
-        'city': fields.many2one('res.city', 'City', ondelete='restrict'),
-        'state_id': fields.many2one("res.country.state", 'State', ondelete='restrict'),
-        'country_id': fields.many2one('res.country', 'Country', ondelete='restrict'),
-        'township': fields.many2one('res.township', 'Township', ondelete='restrict'),              
+         'code':fields.char('Customer ID', readonly=True),
+        'street': fields.char('Street', readonly=True),
+        'street2': fields.char('Street2', readonly=True),
+        'city': fields.many2one('res.city', 'City', ondelete='restrict', readonly=True),
+        'state_id': fields.many2one("res.country.state", 'State', ondelete='restrict', readonly=True),
+        'country_id': fields.many2one('res.country', 'Country', ondelete='restrict', readonly=True),
+        'township': fields.many2one('res.township', 'Township', ondelete='restrict', readonly=True),              
                 
                 }
 account_invoice()   
