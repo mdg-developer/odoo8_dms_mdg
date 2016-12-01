@@ -16,7 +16,7 @@ TYPE2JOURNAL = {
 class account_invoice(models.Model):
     _inherit = "account.invoice"
     
-    def write(self, cursor, user, ids, vals, context):
+    def write(self, cursor, user, ids, vals, context=None):
         """
         Serialise before Write
         @param cursor: Database Cursor
@@ -29,13 +29,15 @@ class account_invoice(models.Model):
         if type(ids) in [list, tuple] and ids:
             ids = ids[0]
             print 'vals',vals
-            partner_id=vals['partner_id']
-            part = self.pool.get('res.partner').browse(cursor, user, partner_id, context=context)    
-            defaults=self.onchange_partner_id(cursor, user, [], 'out_invoice', partner_id)['value']
-            vals = dict(defaults, **vals)
-            ctx = dict(context or {}, mail_create_nolog=True)
-            new_id = super(account_invoice, self).write(cursor, user, ids, vals, context=context)
-            return new_id        
+            if vals.get('partner_id'):
+                partner_id=vals['partner_id']
+                part = self.pool.get('res.partner').browse(cursor, user, partner_id, context=context)    
+                defaults=self.onchange_partner_id(cursor, user, [], 'out_invoice', partner_id)['value']
+                vals = dict(defaults, **vals)
+        ctx = dict(context or {}, mail_create_nolog=True)
+        new_id = super(account_invoice, self).write(cursor, user, ids, vals, context=context)
+        print'new_iddddddddddddddddddddddddinv',new_id
+        return new_id        
     @api.multi    
     def onchange_partner_id(self, type, partner_id, date_invoice=False,
             payment_term=False, partner_bank_id=False, company_id=False):

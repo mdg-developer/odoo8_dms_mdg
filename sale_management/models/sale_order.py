@@ -17,7 +17,28 @@ import openerp.addons.decimal_precision as dp
 class sale_order(osv.osv):
     _inherit = "sale.order"
     
-    def write(self, cursor, user, ids, vals, context):
+    def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
+        if vals.get('name', '/') == '/':
+            vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'sale.order', context=context) or '/'
+        if vals.get('partner_id'):
+            defaults=self.onchange_partner_id(cr, uid, [], vals['partner_id'], context=context)['value']
+            vals = dict(defaults, **vals)            
+        if vals.get('partner_id') and any(f not in vals for f in ['partner_invoice_id', 'partner_shipping_id', 'pricelist_id', 'fiscal_position']):
+            defaults = self.onchange_partner_id(cr, uid, [], vals['partner_id'], context=context)['value']
+            if not vals.get('fiscal_position') and vals.get('partner_shipping_id'):
+                delivery_onchange = self.onchange_delivery_id(cr, uid, [], vals.get('company_id'), None, vals['partner_id'], vals.get('partner_shipping_id'), context=context)
+                defaults.update(delivery_onchange['value'])
+            vals = dict(defaults, **vals)
+
+        ctx = dict(context or {}, mail_create_nolog=True)
+        new_id = super(sale_order, self).create(cr, uid, vals, context=ctx)
+
+        self.message_post(cr, uid, [new_id], body=_("Quotation created"), context=ctx)
+        return new_id
+    
+    def write(self, cursor, user, ids, vals, context=None):
         """
         Serialise before Write
         @param cursor: Database Cursor
@@ -29,14 +50,17 @@ class sale_order(osv.osv):
         # Validate before save
         if type(ids) in [list, tuple] and ids:
             ids = ids[0]
-            print 'vals',vals
-            partner_id=vals['partner_id']
-            part = self.pool.get('res.partner').browse(cursor, user, partner_id, context=context)    
-            defaults=self.onchange_partner_id(cursor, user, [], vals['partner_id'], context=context)['value']
-            vals = dict(defaults, **vals)
-            ctx = dict(context or {}, mail_create_nolog=True)
-            new_id = super(sale_order, self).write(cursor, user, ids, vals, context=context)
-            return new_id
+            print 'vals_sale_order',vals
+
+            if vals.get('partner_id'):
+                partner_id=vals['partner_id']
+                part = self.pool.get('res.partner').browse(cursor, user, partner_id, context=context)    
+                defaults=self.onchange_partner_id(cursor, user, [], vals['partner_id'], context=context)['value']
+                vals = dict(defaults, **vals)
+        ctx = dict(context or {}, mail_create_nolog=True)
+        new_id = super(sale_order, self).write(cursor, user, ids, vals, context=context)
+        return new_id
+        
     def is_generate_RFI(self, cr, uid, ids, context=None):
         print 'order', ids
         sale_obj = self.pool.get('sale.order')
