@@ -26,7 +26,15 @@ class good_issue_note(osv.osv):
             'good_issue_note.mt_note_confirm': lambda self, cr, uid, obj, ctx = None: obj.state in ['confirm'],
             'good_issue_note.mt_note_approve': lambda self, cr, uid, obj, ctx = None: obj.state in ['approve']
         },
-    }    
+    }  
+#     
+#     def _get_default_branch(self, cr, uid, context=None):
+#         branch_id = self.pool.get('res.users')._get_branch(cr, uid, context=context)
+#         if not branch_id:
+#             raise osv.except_osv(_('Error!'), _('There is no default branch for the current user!'))
+#         return branch_id
+        
+      
     def _get_default_company(self, cr, uid, context=None):
         company_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
         if not company_id:
@@ -34,25 +42,25 @@ class good_issue_note(osv.osv):
         return company_id   
     
     _columns = {
-        'name': fields.char('(GIN)Ref;No.', readonly=True),
-        'request_id':fields.many2one('stock.requisition', '(REI)Ref;No.', readonly=True),
-        'to_location_id':fields.many2one('stock.location', 'Issue To', required=True),
-        'from_location_id':fields.many2one('stock.location', 'Issue From', required=True),
+        'name': fields.char('GIN Ref', readonly=True),
+        'request_id':fields.many2one('stock.requisition', 'RFI Ref', readonly=True),
+        'to_location_id':fields.many2one('stock.location', 'Requesting Location', required=True),
+        'from_location_id':fields.many2one('stock.location', 'Request Warehouse', required=True),
         'sale_team_id':fields.many2one('crm.case.section', 'Delivery Team'),
+     #   'branch_id':fields.many2one('res.branch', 'Branch',required=True),
 #         'so_no' : fields.char('Sales Order/Inv Ref;No.'),
-         'issue_by':fields.many2one('res.users', "Issue By"),
+         'issue_by':fields.char("Issuer"),
        'request_by':fields.many2one('res.users', "Requested By"),
         'approve_by':fields.many2one('res.users', "Approved By"),
-        'receive_by':fields.many2one('res.users', "Received By"),
+        'receiver':fields.char("Receiver"),
        
 #         'request_date' : fields.date('Date Requested'),
-         'issue_date':fields.datetime('Date for Issue'),
+         'issue_date':fields.date('Date for Issue',required=True),
         'vehicle_id':fields.many2one('fleet.vehicle', 'Vehicle No'),
         'state': fields.selection([
             ('draft', 'Pending'),
+            ('approve', 'Approved'),
             ('issue','Issued'),
-            ('confirm', 'Approved'),
-            ('approve', 'Received'),
             ('cancel', 'Cancel'),
             ], 'Status', readonly=True, copy=False, help="Gives the status of the quotation or sales order.\
               \nThe exception status is automatically set when a cancel operation occurs \
@@ -67,6 +75,7 @@ class good_issue_note(osv.osv):
     _defaults = {
         'state' : 'draft',
          'company_id': _get_default_company,
+        # 'branch_id': _get_default_branch,
          'is_return':False,
     }     
     def create(self, cursor, user, vals, context=None):
@@ -75,23 +84,29 @@ class good_issue_note(osv.osv):
         vals['name'] = id_code
         return super(good_issue_note, self).create(cursor, user, vals, context=context)
     
-    def issue(self, cr, uid, ids, context=None):
-        
-        return self.write(cr, uid, ids, {'state': 'issue','issue_by':uid })
-    
-    def confirm(self, cr, uid, ids, context=None):
-        
-        return self.write(cr, uid, ids, {'state':'confirm' ,'approve_by':uid})    
+    def approve(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state': 'approve','approve_by':uid })
     
     def cancel(self, cr, uid, ids, context=None):
-        
-        return self.write(cr, uid, ids, {'state':'cancel' })        
-    def approve(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state':'cancel' })
+    
+    def unlink(self, cr, uid, ids, context=None):
+        good_issue_notes = self.read(cr, uid, ids, ['state'], context=context)
+        unlink_ids = []
+        for s in good_issue_notes:
+            if s['state'] in ['draft','approve', 'cancel']:
+                unlink_ids.append(s['id'])
+            else:
+                raise osv.except_osv(_('Invalid Action!'), _('You cannot cancel the issued Good Issue Note!'))
+
+        return super(good_issue_notes, self).unlink(cr, uid, unlink_ids, context=context)
+
+            
+    def issue(self, cr, uid, ids, context=None):
         product_line_obj = self.pool.get('good.issue.note.line')
         note_obj = self.pool.get('good.issue.note')
         picking_obj = self.pool.get('stock.picking')
         move_obj = self.pool.get('stock.move')
-
         note_value = req_lines = {}
         if ids:
             note_value = note_obj.browse(cr, uid, ids[0], context=context)
@@ -112,7 +127,6 @@ class good_issue_note(osv.osv):
                                           'picking_type_id':picking_type_id}, context=context)
             note_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
             if note_line_id and picking_id:
-                
                 for id in note_line_id:
                     note_line_value = product_line_obj.browse(cr, uid, id, context=context)
                     product_id = note_line_value.product_id.id
@@ -125,7 +139,7 @@ class good_issue_note(osv.osv):
                     lot_id=note_line_value.batch_no.id
                     bigger_qty=0
                     if big_uom:
-                        cr.execute("select floor(1/factor) as ratio from product_uom where active = true and id=%s",(big_uom,))
+                        cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (big_uom,))
                         bigger_qty=cr.fetchone()
                         if bigger_qty:
                             bigger_qty=bigger_qty[0]*big_qty
@@ -143,8 +157,9 @@ class good_issue_note(osv.osv):
                                           'name':name,
                                            'origin':origin,
                                           'state':'confirmed'}, context=context)     
-                    move_obj.action_done(cr, uid, move_id, context=context)                            
-        return self.write(cr, uid, ids, {'state':'approve','receive_by':uid})            
+                    move_obj.action_done(cr, uid, move_id, context=context)  
+        return self.write(cr, uid, ids, {'state': 'issue'})  
+                            
 class good_issue_line(osv.osv):  # #prod_pricelist_update_line
     _name = 'good.issue.note.line'
     _description = 'Note Line'
