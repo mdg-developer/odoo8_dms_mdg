@@ -17,6 +17,26 @@ import openerp.addons.decimal_precision as dp
 class sale_order(osv.osv):
     _inherit = "sale.order"
     
+    def write(self, cursor, user, ids, vals, context):
+        """
+        Serialise before Write
+        @param cursor: Database Cursor
+        @param user: ID of User
+        @param  ids: ID of current record.
+        @param vals: Values of current record.
+        @param context: Context(no direct use).
+        """
+        # Validate before save
+        if type(ids) in [list, tuple] and ids:
+            ids = ids[0]
+            print 'vals',vals
+            partner_id=vals['partner_id']
+            part = self.pool.get('res.partner').browse(cursor, user, partner_id, context=context)    
+            defaults=self.onchange_partner_id(cursor, user, [], vals['partner_id'], context=context)['value']
+            vals = dict(defaults, **vals)
+            ctx = dict(context or {}, mail_create_nolog=True)
+            new_id = super(sale_order, self).write(cursor, user, ids, vals, context=context)
+            return new_id
     def is_generate_RFI(self, cr, uid, ids, context=None):
         print 'order', ids
         sale_obj = self.pool.get('sale.order')

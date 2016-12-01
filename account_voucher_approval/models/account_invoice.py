@@ -4,6 +4,7 @@ from openerp.osv import fields, osv
 from openerp import models, fields, api, _
 from openerp.tools import float_compare
 import openerp.addons.decimal_precision as dp
+from openerp.exceptions import except_orm, Warning, RedirectWarning
 
 # mapping invoice type to journal type
 TYPE2JOURNAL = {
@@ -15,6 +16,26 @@ TYPE2JOURNAL = {
 class account_invoice(models.Model):
     _inherit = "account.invoice"
     
+    def write(self, cursor, user, ids, vals, context):
+        """
+        Serialise before Write
+        @param cursor: Database Cursor
+        @param user: ID of User
+        @param  ids: ID of current record.
+        @param vals: Values of current record.
+        @param context: Context(no direct use).
+        """
+        # Validate before save
+        if type(ids) in [list, tuple] and ids:
+            ids = ids[0]
+            print 'vals',vals
+            partner_id=vals['partner_id']
+            part = self.pool.get('res.partner').browse(cursor, user, partner_id, context=context)    
+            defaults=self.onchange_partner_id(cursor, user, [], 'out_invoice', partner_id)['value']
+            vals = dict(defaults, **vals)
+            ctx = dict(context or {}, mail_create_nolog=True)
+            new_id = super(account_invoice, self).write(cursor, user, ids, vals, context=context)
+            return new_id        
     @api.multi    
     def onchange_partner_id(self, type, partner_id, date_invoice=False,
             payment_term=False, partner_bank_id=False, company_id=False):
