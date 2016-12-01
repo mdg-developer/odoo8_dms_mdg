@@ -15,7 +15,19 @@ TYPE2JOURNAL = {
 }
 class account_invoice(models.Model):
     _inherit = "account.invoice"
-    
+
+    def create(self, cr, uid, vals, context=None):
+        """Update the registry when a new rule is created."""
+        if vals.get('partner_id'):
+                partner_id=vals['partner_id']
+                part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)    
+                defaults=self.onchange_partner_id(cr, uid, [], 'out_invoice', partner_id)['value']
+                vals = dict(defaults, **vals)
+        res_id = super(account_invoice, self).create(
+            cr, uid, vals, context=context)
+
+        return res_id
+        
     def write(self, cursor, user, ids, vals, context=None):
         """
         Serialise before Write
