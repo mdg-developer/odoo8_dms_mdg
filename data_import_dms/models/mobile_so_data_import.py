@@ -90,12 +90,16 @@ class mobile_sale_import(osv.osv):
             for row in range(header_row + 1, s.nrows):
                 values = []
                 for col in range(0, s.ncols):
+                    print 's.cell(row, col).value',s.cell(row, col).value
                     values.append(s.cell(row, col).value)
+                    print 'values',values
                 excel_rows.append(values)
         con_ls = []
         amls = []
         count = val = head_count = 0
+        print 'excel_rows',excel_rows
         for ln in excel_rows:
+            print 'ln',ln
             # ln = [str(x).strip() for x in ln]
             if not ln or ln and ln in ['', '#']:
                 continue
@@ -155,6 +159,7 @@ class mobile_sale_import(osv.osv):
                             location_i = i
                         elif header_field == 'date':
                             date_i = i
+                            print 'date_i',date_i
                         elif header_field == 'paymenttype':
                             paymenttype_i = i
                         elif header_field == 'deliverremark':
@@ -240,6 +245,7 @@ class mobile_sale_import(osv.osv):
                     import_vals['warehouse'] = ln[warehouse_i]
                     import_vals['pricelist'] = ln[pricelist_i]
                     import_vals['location'] = ln[location_i]
+                    print 'ln[date_i]',ln[date_i]
                     import_vals['date'] = ln[date_i]
                     import_vals['paymenttype'] = ln[paymenttype_i]
                     import_vals['deliverremark'] = ln[deliverremark_i]
@@ -266,7 +272,8 @@ class mobile_sale_import(osv.osv):
                     import_vals['quantity'] = ln[quantity_i]
                     import_vals['discount'] = ln[discount_i]
                     import_vals['vochertype'] = ln[vochertype_i]
-                    import_vals['paymenttime'] = ln[paymenttime_i]         
+                    import_vals['paymenttime'] = ln[paymenttime_i]   
+                    print 'import_vals',import_vals      
                     amls.append(import_vals)
                     
         if err_log:
@@ -402,7 +409,7 @@ class mobile_sale_import(osv.osv):
                 if discount != "":
                     discount_amount = (qty_pcs * unit_price) * (discount / 100.00)
       
-                
+                print 'aml[date]',aml['date']
                 # Sale Plan Name, Sale Plan Day,Sale Plan Trip, Deliver Remark, Discount, Deduction Amount,Paid Amount, Paid,Void
                 order_value = {
                               'partner_id':partner_id,
@@ -415,9 +422,9 @@ class mobile_sale_import(osv.osv):
                               'sale_plan_trip_id':sale_plan_trip_id,
                               'section_id':section_id,
                               'payment_term':payment_term_id,
-                              'date_order':aml['Date'],
+                              'date_order':aml['date'],
                               'due_date':_duedate,
-                              'date_confirm':aml['Date'],
+                              'date_confirm':aml['date'],
                               'payment_type':payment_type.lower(),
                               'delivery_remark':delivery_remark.lower(),
                               'project_id':analytic_id,
@@ -426,7 +433,8 @@ class mobile_sale_import(osv.osv):
                               'state':_state,
                               
                               'deduct_amt':deduct_amt,
-                              'tb_ref_no':aml['OrderReference']
+#                               'tb_ref_no':aml['OrderReference']
+                              'tb_ref_no':aml['orderreference']
                               }
              
                 order_ids = order_obj.search(cr, uid, [('tb_ref_no', '=', aml['orderreference'])], context=context)
@@ -441,7 +449,7 @@ class mobile_sale_import(osv.osv):
                                   'product_id':product_id,
                                   'name':products_name,
                                   'price_unit':unit_price,
-                                  'product_uom':1,
+                                  'product_uom':20,
                                   'product_uom_qty':qty_pcs,
                                   'discount':discount,
                                   'discount_amt':discount_amount,
@@ -453,7 +461,7 @@ class mobile_sale_import(osv.osv):
                 
                                 }
           
-                    
+                   
                     order_line_id = order_line_obj.create(cr, uid, order_line_value, context)
                   
                     # Tax Filed is inserted into the sale_order_tax table
@@ -469,8 +477,8 @@ class mobile_sale_import(osv.osv):
 #                             print 'Name Tax', k[1]
 #                             _tax= k[0]
                    
-                    if aml['Tax']:
-                        val_tax = aml['Tax'].split(',')
+                    if aml['tax']:
+                        val_tax = aml['tax'].split(',')
                         for num in val_tax:
                             for  k in tax_rec:
                                 if k[2] == num:
