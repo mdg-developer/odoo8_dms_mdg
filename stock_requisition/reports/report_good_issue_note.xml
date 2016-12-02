@@ -55,8 +55,10 @@
 							<td>
 								<strong>Requesting Location:</strong>
 							</td>
-							<td>
-								<p t-field="o.to_location_id.name" />
+							<td>							
+								<span t-field="o.to_location_id.location_id.name" />
+								<b>/</b>
+								<span t-field="o.to_location_id.name" />
 							</td>
 							<td>
 								<strong>Branch:</strong>
@@ -98,14 +100,14 @@
 
 						<tr>
 							<td>
+							</td>
+							<td>
+							</td>
+							<td>
 								<strong>Receiver:</strong>
 							</td>
 							<td>
 								<p t-field="o.receiver" />
-							</td>
-							<td>
-							</td>
-							<td>
 							</td>
 						</tr>
 					</table>
@@ -155,7 +157,7 @@
 								<th></th>
 								<th>Issued By</th>
 								<th>Approved By</th>
-<!-- 								<th>Received By</th> -->
+								<!-- <th>Received By</th> -->
 
 							</tr>
 						</thead>
@@ -168,9 +170,7 @@
 								<td>
 									<p t-field="l.approve_by" />
 								</td>
-<!-- 								<td>
-									<p t-field="l.receive_by" />
-								</td> -->
+								<!-- <td> <p t-field="l.receive_by" /> </td> -->
 							</tr>
 							<tr>
 								<td>Position</td>
