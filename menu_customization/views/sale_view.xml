@@ -217,9 +217,14 @@
 			parent="menu_sale_order_menu" name="Pre-Sales Invoices" />
 		<menuitem action="action_invoice_tree_cus_2" id="menu_direct_action_invoice_tree_cus_2"
 			parent="menu_direct_sale_order_menu" name="Direct Sales Invoices" />
+
 		<!-- Quotation -->
-		<!-- <menuitem id="sale.menu_sale_quotations" action="sale.action_quotations" -->
-		<!-- parent="base.menu_sales" name="Draft Order" sequence="1" /> -->
+
+		<menuitem id="sale.menu_sale_quotations" action="sale.action_quotations" 
+			parent="base.menu_sales" name="Draft Order" sequence="1"
+			groups="base.group_sale_salesman,base.group_sale_manager"
+			/>
+
 		<!-- Sale Order -->
 		<record id="cancel_customized_action_orders1" model="ir.actions.act_window">
 			<field name="name">Cancel Orders</field>
@@ -372,12 +377,14 @@
 		<!-- Sales targets -->
 		<menuitem id="menu_sales_target_menu" parent="base.menu_base_partner"
 			name="Sales Targets" sequence="6" />
+
 		<menuitem id="sale_management.menu_sales_target" action="sale_management.action_sales_target_view"
 			parent="menu_sales_target_menu" name="Target Setting" sequence="1" />
 		<menuitem action="sale_management.action_sale_target_report"
 			id="sale_management.menu_sale_target_report" parent="menu_sales_target_menu"
 			sequence="2" name="Target Analysis" />
-
+		<menuitem id="sale_management.menu_week_setting" action="sale_management.action_week_setting"
+			parent="menu_sales_target_menu" name="Week Setting" sequence="3" />
 		<!-- Sales Reports -->
 		<menuitem id="menu_sales_report_menu" parent="base.menu_base_partner"
 			name="Sales Reports" sequence="7" />
@@ -501,9 +508,8 @@
 			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
 		</record>
 		<!-- Draft -->
-		<record model="ir.ui.menu" id="sale.menu_sale_quotations">
-			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
-		</record>
+		<!-- <record model="ir.ui.menu" id="sale.menu_sale_quotations"> <field 
+			name="groups_id" eval="[(6,0,[ref('make_invisible')])]" /> </record> -->
 		<!-- Import Sale Order -->
 		<record model="ir.ui.menu" id="data_import_dms.menu_data_import_mobile_so">
 			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
