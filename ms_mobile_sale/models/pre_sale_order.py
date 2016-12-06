@@ -201,6 +201,7 @@ class pre_sale_order(osv.osv):
                                                         'sale_plan_day_id':preObj_ids.sale_plan_day_id.id,
                                                         'sale_plan_trip_id':preObj_ids.sale_plan_trip_id.id,
                                                         'date_order':preObj_ids.date,
+														'due_date':preObj_ids.due_date,
                                                         'tb_ref_no':preObj_ids.name,
                                                         'warehouse_id':preObj_ids.warehouse_id.id,
                                                         'delivery_remark':preObj_ids.delivery_remark,
