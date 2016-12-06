@@ -1513,7 +1513,7 @@ class mobile_sale_order(osv.osv):
                     so.payment_term,so.company_id,so.pricelist_id,so.user_id,so.amount_total,so.name as invoice_no,
                     so.warehouse_id,so.shipped,so.sale_plan_day_id,so.sale_plan_name,so.so_longitude,so.payment_type,
                     so.due_date,so.sale_plan_trip_id,so.so_latitude,so.customer_code,so.name as so_refNo,so.total_dis,so.deduct_amt,so.coupon_code,
-                    so.invoiced,so.branch_id,so.delivery_remark ,team.name
+                    so.invoiced,so.branch_id,so.delivery_remark ,team.name,so.payment_term,so.due_date
                     from sale_order so, crm_case_section team                                    
                     where so.id= %s
                     and  team.id = so.section_id''', (So_id,))
@@ -1573,7 +1573,7 @@ class mobile_sale_order(osv.osv):
                 for deli in deliver_data:       
                     print 'Miss',deli['miss'],deli
                     if deli['miss'] == 't':
-                        cr.execute('update sale_order set is_generate = false where name=%s',(deli['so_refNo'],))
+                        cr.execute('update sale_order set is_generate = false, due_date = %s where name=%s',(deli['due_date'],deli['so_refNo'],))
                     else:                            
                         So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
                                                        , ('name', '=', deli['so_refNo'])], context=context)
