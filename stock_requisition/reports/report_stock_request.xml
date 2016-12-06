@@ -119,7 +119,6 @@
 						<thead>
 							<tr>
 								<th>Product</th>
-								<th>Qty(B)</th>
 								<th>Qty(S)</th>
 								<!-- <th>Bigger UOM</th> <th>Quantity</th> -->
 								<th>Qty On Hand (S)</th>
@@ -130,9 +129,6 @@
 							<tr t-foreach="o.p_line" t-as="l">
 								<td>
 									<span t-field="l.product_id" />
-								</td>
-								<td>
-									<span t-field="l.big_req_quantity" />
 								</td>
 								<td>
 									<span t-field="l.req_quantity" />

@@ -61,7 +61,7 @@
 										    <field name="sequence" invisible="1"/>
 											<field name="product_id" on_change="on_change_product_id(product_id,parent.to_location_id)" />
 											<field name="pre_order" invisible="1" />
-											<field name="big_req_quantity" string="Qty(B)"/>
+											<field name="big_req_quantity" string="Qty(B)" invisible="1"/>
 											<field name="big_uom_id" invisible="1" />
 											<field name="req_quantity" string="Qty(S)"/>
 											<field name="product_uom" invisible="1" />
