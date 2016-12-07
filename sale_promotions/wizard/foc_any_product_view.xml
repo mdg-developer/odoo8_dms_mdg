@@ -22,12 +22,13 @@
 							<field name="two_product_qty" />
 							<field name="three_product_qty" />
 						</group>
+						<group>
+						<field name="qty" string="Available Qty"/>
+						</group>
 					</group>
 					<footer>
 						<button string="Confirm"  name="create_order_line" type="object"
 							class="oe_highlight" />
-						or
-						<button string="Cancel" class="oe_link" special="cancel" />
 					</footer>
 				</form>
 
