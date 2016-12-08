@@ -336,111 +336,116 @@ from res_company
                     </structure>
                     <structure>
                         <property name="position">8</property>
+                        <property name="name">discount_amt</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
                         <property name="name">product_uos_qty</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">9</property>
+                        <property name="position">10</property>
                         <property name="name">product_name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">10</property>
+                        <property name="position">11</property>
                         <property name="name">payment_term</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">11</property>
+                        <property name="position">12</property>
                         <property name="name">price_unit</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">12</property>
+                        <property name="position">13</property>
                         <property name="name">uom</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">13</property>
+                        <property name="position">14</property>
                         <property name="name">description</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">14</property>
+                        <property name="position">15</property>
                         <property name="name">internal_note</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">15</property>
+                        <property name="position">16</property>
                         <property name="name">invoice</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">16</property>
+                        <property name="position">17</property>
                         <property name="name">receivable_account</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">17</property>
+                        <property name="position">18</property>
                         <property name="name">stocking_qty</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">18</property>
+                        <property name="position">19</property>
                         <property name="name">stocking_unit_price</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">19</property>
+                        <property name="position">20</property>
                         <property name="name">partner_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">20</property>
+                        <property name="position">21</property>
                         <property name="name">ship_to_name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">21</property>
+                        <property name="position">22</property>
                         <property name="name">ship_address</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">22</property>
+                        <property name="position">23</property>
                         <property name="name">ship_via</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">23</property>
+                        <property name="position">24</property>
                         <property name="name">gl_account</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">24</property>
+                        <property name="position">25</property>
                         <property name="name">tax_type</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">25</property>
+                        <property name="position">26</property>
                         <property name="name">id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">26</property>
+                        <property name="position">27</property>
                         <property name="name">saleman_name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">27</property>
+                        <property name="position">28</property>
                         <property name="name">no_of_distribution</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">28</property>
+                        <property name="position">29</property>
                         <property name="name">amount</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">29</property>
+                        <property name="position">30</property>
                         <property name="name">so_propo_dis</property>
                         <property name="dataType">integer</property>
                     </structure>
@@ -492,140 +497,146 @@ from res_company
                 </structure>
                 <structure>
                     <property name="position">8</property>
+                    <property name="name">discount_amt</property>
+                    <property name="nativeName">discount_amt</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
                     <property name="name">product_uos_qty</property>
                     <property name="nativeName">product_uos_qty</property>
                     <property name="dataType">integer</property>
                 </structure>
                 <structure>
-                    <property name="position">9</property>
+                    <property name="position">10</property>
                     <property name="name">product_name</property>
                     <property name="nativeName">product_name</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">10</property>
+                    <property name="position">11</property>
                     <property name="name">payment_term</property>
                     <property name="nativeName">payment_term</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">11</property>
+                    <property name="position">12</property>
                     <property name="name">price_unit</property>
                     <property name="nativeName">price_unit</property>
                     <property name="dataType">float</property>
                 </structure>
                 <structure>
-                    <property name="position">12</property>
+                    <property name="position">13</property>
                     <property name="name">uom</property>
                     <property name="nativeName">uom</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">13</property>
+                    <property name="position">14</property>
                     <property name="name">description</property>
                     <property name="nativeName">description</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">14</property>
+                    <property name="position">15</property>
                     <property name="name">internal_note</property>
                     <property name="nativeName">internal_note</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">15</property>
+                    <property name="position">16</property>
                     <property name="name">invoice</property>
                     <property name="nativeName">invoice</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">16</property>
+                    <property name="position">17</property>
                     <property name="name">receivable_account</property>
                     <property name="nativeName">receivable_account</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">17</property>
+                    <property name="position">18</property>
                     <property name="name">stocking_qty</property>
                     <property name="nativeName">stocking_qty</property>
                     <property name="dataType">integer</property>
                 </structure>
                 <structure>
-                    <property name="position">18</property>
+                    <property name="position">19</property>
                     <property name="name">stocking_unit_price</property>
                     <property name="nativeName">stocking_unit_price</property>
                     <property name="dataType">float</property>
                 </structure>
                 <structure>
-                    <property name="position">19</property>
+                    <property name="position">20</property>
                     <property name="name">partner_id</property>
                     <property name="nativeName">partner_id</property>
                     <property name="dataType">integer</property>
                 </structure>
                 <structure>
-                    <property name="position">20</property>
+                    <property name="position">21</property>
                     <property name="name">ship_to_name</property>
                     <property name="nativeName">ship_to_name</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">21</property>
+                    <property name="position">22</property>
                     <property name="name">ship_address</property>
                     <property name="nativeName">ship_address</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">22</property>
+                    <property name="position">23</property>
                     <property name="name">ship_via</property>
                     <property name="nativeName">ship_via</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">23</property>
+                    <property name="position">24</property>
                     <property name="name">gl_account</property>
                     <property name="nativeName">gl_account</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">24</property>
+                    <property name="position">25</property>
                     <property name="name">tax_type</property>
                     <property name="nativeName">tax_type</property>
                     <property name="dataType">integer</property>
                 </structure>
                 <structure>
-                    <property name="position">25</property>
+                    <property name="position">26</property>
                     <property name="name">id</property>
                     <property name="nativeName">id</property>
                     <property name="dataType">integer</property>
                 </structure>
                 <structure>
-                    <property name="position">26</property>
+                    <property name="position">27</property>
                     <property name="name">saleman_name</property>
                     <property name="nativeName">saleman_name</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">27</property>
+                    <property name="position">28</property>
                     <property name="name">no_of_distribution</property>
                     <property name="nativeName">no_of_distribution</property>
                     <property name="dataType">decimal</property>
                 </structure>
                 <structure>
-                    <property name="position">28</property>
+                    <property name="position">29</property>
                     <property name="name">amount</property>
                     <property name="nativeName">amount</property>
                     <property name="dataType">float</property>
                 </structure>
                 <structure>
-                    <property name="position">29</property>
+                    <property name="position">30</property>
                     <property name="name">so_propo_dis</property>
                     <property name="nativeName">so_propo_dis</property>
                     <property name="dataType">integer</property>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select *,(select count(msl.id) from mobile_sale_order_line msl where msl.order_id=ms_id) as no_of_distribution,(stocking_qty*stocking_unit_price)*-1 as amount,get_msol_seq(ms_id,msl_id) as so_propo_dis
-from (select ms.id as ms_id,msl.id as msl_id,ms.name,ms.customer_code,ms.date::date,ms.due_date,msl.discount,get_smaller_qty(msl.uom_id,msl.product_uos_qty,msl.product_id) product_uos_qty,
-Cast((select case when substr(name,0,2) ~ '^([0-9]+\.?[0-9]*|\.[0-9]+)$' then substr(name,4) else name end as name from crm_case_section where id=crm.id) || '-' || pp.name_template as character varying) as product_name,term.name as payment_term,msl.price_unit,uom.name as uom,pt.description_sale description,rp.comment as internal_note,ms.name as invoice,'1518-YGN'::character varying as receivable_account,get_smaller_qty(msl.uom_id,msl.product_uos_qty,msl.product_id) stocking_qty,msl.price_unit as stocking_unit_price,
+from (select ms.id as ms_id,msl.id as msl_id,ms.name,ms.customer_code,ms.date::date,ms.due_date,msl.discount,msl.discount_amt,get_smaller_qty(msl.uom_id,msl.product_uos_qty,msl.product_id) product_uos_qty,
+Cast((select case when substr(name,0,2) ~ '^([0-9]+\.?[0-9]*|\.[0-9]+)$' then substr(name,4) else name end as name from crm_case_section where id=crm.id) || '-' || pp.name_template as character varying) as product_name,term.name as payment_term,msl.price_unit,uom.name as uom,pt.description_sale description,rp.comment as internal_note,ms.name as invoice,'1518-PTN'::character varying as receivable_account,get_smaller_qty(msl.uom_id,msl.product_uos_qty,msl.product_id) stocking_qty,msl.price_unit as stocking_unit_price,
 res.partner_id as partner_id,rp.name as ship_to_name,Cast(address || ',' || rc.name || ',' || rcs.name || ',' || city.name || ',' || town.name as character varying ) as ship_address,'Vehicle'::character varying as ship_via,'1518-YGN'::character varying as gl_account,1 as tax_type
 from mobile_sale_order ms
 left join mobile_sale_order_line msl on ms.id=msl.order_id
@@ -721,7 +732,7 @@ order by A.name,A.msl_id,A.date
                         <property name="fontSize">18pt</property>
                         <property name="fontWeight">bold</property>
                         <property name="textAlign">center</property>
-                        <text-property name="text">Mobile Sale Orders Report </text-property>
+                        <text-property name="text">Sales Journal Report </text-property>
                     </label>
                 </cell>
             </row>
@@ -958,6 +969,12 @@ order by A.name,A.msl_id,A.date
                     <expression name="expression" type="javascript">dataSetRow["tax_type"]</expression>
                     <property name="dataType">integer</property>
                 </structure>
+                <structure>
+                    <property name="name">discount_amt</property>
+                    <text-property name="displayName">discount_amt</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["discount_amt"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
             </list-property>
             <column id="2659">
                 <property name="width">2.2416666666666667in</property>
@@ -965,57 +982,76 @@ order by A.name,A.msl_id,A.date
             <column id="2678">
                 <property name="width">1.0916666666666666in</property>
             </column>
+            <column id="3014">
+                <property name="width">1.667in</property>
+            </column>
+            <column id="3018">
+                <property name="width">1.667in</property>
+            </column>
+            <column id="3022">
+                <property name="width">1.8888888888888888in</property>
+            </column>
             <column id="2660">
-                <property name="width">1.275in</property>
+                <property name="width">1.0416666666666667in</property>
             </column>
             <column id="2984">
                 <property name="repeat">1</property>
                 <property name="width">1.275in</property>
             </column>
-            <column id="2701">
-                <property name="width">1in</property>
+            <column id="3026">
+                <property name="repeat">1</property>
+                <property name="width">1.275in</property>
             </column>
-            <column id="2706">
-                <property name="width">1in</property>
+            <column id="3030">
+                <property name="repeat">1</property>
+                <property name="width">1.275in</property>
             </column>
-            <column id="2991">
-                <property name="width">1in</property>
+            <column id="3034">
+                <property name="repeat">1</property>
+                <property name="width">1.275in</property>
             </column>
-            <column id="2711">
-                <property name="width">1.0166666666666666in</property>
+            <column id="3038">
+                <property name="repeat">1</property>
+                <property name="width">1.275in</property>
             </column>
-            <column id="2721">
-                <property name="width">0.85in</property>
-            </column>
-            <column id="2726">
+            <column id="3041">
                 <property name="width">1.667in</property>
             </column>
-            <column id="2735">
+            <column id="3044">
                 <property name="width">1.667in</property>
             </column>
-            <column id="2731">
+            <column id="3047">
                 <property name="width">1.667in</property>
             </column>
-            <column id="2745">
+            <column id="3050">
                 <property name="width">1.667in</property>
             </column>
-            <column id="2741">
+            <column id="3053">
                 <property name="width">1.667in</property>
             </column>
-            <column id="2751">
+            <column id="3056">
                 <property name="width">1.667in</property>
             </column>
-            <column id="2756">
+            <column id="3059">
                 <property name="width">1.667in</property>
             </column>
-            <column id="2761">
+            <column id="3062">
                 <property name="width">1.667in</property>
             </column>
-            <column id="2767">
-                <property name="width">1.083in</property>
+            <column id="3065">
+                <property name="width">1.667in</property>
             </column>
-            <column id="2662">
-                <property name="width">1.267in</property>
+            <column id="3149">
+                <property name="width">1.667in</property>
+            </column>
+            <column id="3068">
+                <property name="width">1.667in</property>
+            </column>
+            <column id="3072">
+                <property name="width">1.667in</property>
+            </column>
+            <column id="3076">
+                <property name="width">1.667in</property>
             </column>
             <column id="2783">
                 <property name="width">1.025in</property>
@@ -1044,20 +1080,41 @@ order by A.name,A.msl_id,A.date
             <column id="2823">
                 <property name="width">2.083in</property>
             </column>
+            <column id="3083">
+                <property name="width">2.083in</property>
+            </column>
             <column id="2832">
                 <property name="width">2.083in</property>
             </column>
             <column id="2828">
                 <property name="width">2.083in</property>
             </column>
+            <column id="3087">
+                <property name="width">2.083in</property>
+            </column>
+            <column id="3091">
+                <property name="width">2.083in</property>
+            </column>
+            <column id="3095">
+                <property name="width">2.083in</property>
+            </column>
             <column id="2663">
+                <property name="width">2.083in</property>
+            </column>
+            <column id="3103">
                 <property name="width">2.083in</property>
             </column>
             <column id="2664">
                 <property name="width">2.083in</property>
             </column>
+            <column id="3106">
+                <property name="width">1.5833333333333333in</property>
+            </column>
+            <column id="3110">
+                <property name="width">1.5833333333333333in</property>
+            </column>
             <column id="2665">
-                <property name="width">2.725in</property>
+                <property name="width">3.2083333333333335in</property>
             </column>
             <column id="2873">
                 <property name="width">1.442in</property>
@@ -1074,6 +1131,9 @@ order by A.name,A.msl_id,A.date
             <column id="2888">
                 <property name="width">2.083in</property>
             </column>
+            <column id="3114">
+                <property name="width">2.083in</property>
+            </column>
             <column id="2897">
                 <property name="repeat">1</property>
                 <property name="width">2.083in</property>
@@ -1088,14 +1148,31 @@ order by A.name,A.msl_id,A.date
             <column id="2913">
                 <property name="width">2.083in</property>
             </column>
-            <column id="2901">
-                <property name="repeat">1</property>
-                <property name="width">2.083in</property>
-            </column>
             <column id="2909">
                 <property name="width">2.083in</property>
             </column>
             <column id="2924">
+                <property name="width">2.083in</property>
+            </column>
+            <column id="3129">
+                <property name="width">2.083in</property>
+            </column>
+            <column id="3132">
+                <property name="width">2.083in</property>
+            </column>
+            <column id="3126">
+                <property name="width">2.083in</property>
+            </column>
+            <column id="3123">
+                <property name="width">2.083in</property>
+            </column>
+            <column id="3120">
+                <property name="width">2.083in</property>
+            </column>
+            <column id="3117">
+                <property name="width">2.083in</property>
+            </column>
+            <column id="3145">
                 <property name="width">2.083in</property>
             </column>
             <header>
@@ -1123,7 +1200,46 @@ order by A.name,A.msl_id,A.date
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="2596">
-                            <text-property name="text">Sales Order/Proposal #</text-property>
+                            <text-property name="text">Invoice/CM #</text-property>
+                        </label>
+                    </cell>
+                    <cell id="3012">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="3015">
+                            <text-property name="text">Apply to Invoice Number</text-property>
+                        </label>
+                    </cell>
+                    <cell id="3016">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="3019">
+                            <text-property name="text">Credit Memo</text-property>
+                        </label>
+                    </cell>
+                    <cell id="3020">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="3023">
+                            <text-property name="text">Progress Billing Invoice</text-property>
                         </label>
                     </cell>
                     <cell id="2575">
@@ -1136,7 +1252,7 @@ order by A.name,A.msl_id,A.date
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="2576">
-                            <text-property name="text">Order Date</text-property>
+                            <text-property name="text">Date</text-property>
                         </label>
                     </cell>
                     <cell id="2985">
@@ -1152,7 +1268,7 @@ order by A.name,A.msl_id,A.date
                             <text-property name="text">Ship By</text-property>
                         </label>
                     </cell>
-                    <cell id="2698">
+                    <cell id="3024">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -1161,11 +1277,11 @@ order by A.name,A.msl_id,A.date
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <label id="2702">
-                            <text-property name="text">Proposal</text-property>
+                        <label id="3027">
+                            <text-property name="text">Quote</text-property>
                         </label>
                     </cell>
-                    <cell id="2703">
+                    <cell id="3028">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -1174,37 +1290,24 @@ order by A.name,A.msl_id,A.date
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <label id="2707">
-                            <text-property name="text">Proposal Accepted</text-property>
-                        </label>
-                    </cell>
-                    <cell id="2989">
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <label id="2992">
-                            <text-property name="text">Closed</text-property>
-                        </label>
-                    </cell>
-                    <cell id="2708">
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <label id="2712">
+                        <label id="3031">
                             <text-property name="text">Quote #</text-property>
                         </label>
                     </cell>
-                    <cell id="2718">
+                    <cell id="3032">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="3035">
+                            <text-property name="text">Quote Good Thru Date</text-property>
+                        </label>
+                    </cell>
+                    <cell id="3036">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -1217,7 +1320,7 @@ order by A.name,A.msl_id,A.date
                             <text-property name="text">Drop Ship</text-property>
                         </label>
                     </cell>
-                    <cell id="2723">
+                    <cell id="3039">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -1230,7 +1333,7 @@ order by A.name,A.msl_id,A.date
                             <text-property name="text">Ship to Name</text-property>
                         </label>
                     </cell>
-                    <cell id="2732">
+                    <cell id="3042">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -1243,7 +1346,7 @@ order by A.name,A.msl_id,A.date
                             <text-property name="text">Ship to Address-Line One</text-property>
                         </label>
                     </cell>
-                    <cell id="2728">
+                    <cell id="3045">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -1256,7 +1359,7 @@ order by A.name,A.msl_id,A.date
                             <text-property name="text">Ship to Address-Line Two</text-property>
                         </label>
                     </cell>
-                    <cell id="2742">
+                    <cell id="3048">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -1269,7 +1372,7 @@ order by A.name,A.msl_id,A.date
                             <text-property name="text">Ship to City</text-property>
                         </label>
                     </cell>
-                    <cell id="2738">
+                    <cell id="3051">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -1282,7 +1385,7 @@ order by A.name,A.msl_id,A.date
                             <text-property name="text">Ship to State</text-property>
                         </label>
                     </cell>
-                    <cell id="2748">
+                    <cell id="3054">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -1295,7 +1398,7 @@ order by A.name,A.msl_id,A.date
                             <text-property name="text">Ship to Zipcode</text-property>
                         </label>
                     </cell>
-                    <cell id="2753">
+                    <cell id="3057">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -1308,7 +1411,7 @@ order by A.name,A.msl_id,A.date
                             <text-property name="text">Ship to Country</text-property>
                         </label>
                     </cell>
-                    <cell id="2758">
+                    <cell id="3060">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -1321,7 +1424,7 @@ order by A.name,A.msl_id,A.date
                             <text-property name="text">Customer PO</text-property>
                         </label>
                     </cell>
-                    <cell id="2764">
+                    <cell id="3063">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -1334,7 +1437,7 @@ order by A.name,A.msl_id,A.date
                             <text-property name="text">Ship Via</text-property>
                         </label>
                     </cell>
-                    <cell id="2579">
+                    <cell id="3147">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -1343,8 +1446,47 @@ order by A.name,A.msl_id,A.date
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <label id="2580">
+                        <label id="3150">
+                            <text-property name="text">Ship Date</text-property>
+                        </label>
+                    </cell>
+                    <cell id="3066">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="3069">
+                            <text-property name="text">Date Due</text-property>
+                        </label>
+                    </cell>
+                    <cell id="3070">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="3073">
                             <text-property name="text">Discount Amount</text-property>
+                        </label>
+                    </cell>
+                    <cell id="3074">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="3077">
+                            <text-property name="text">Discount Date</text-property>
                         </label>
                     </cell>
                     <cell id="2780">
@@ -1464,6 +1606,19 @@ order by A.name,A.msl_id,A.date
                             <text-property name="text">Internal Note</text-property>
                         </label>
                     </cell>
+                    <cell id="3081">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="3084">
+                            <text-property name="text">Beginning Balance Transaction</text-property>
+                        </label>
+                    </cell>
                     <cell id="2829">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1487,7 +1642,46 @@ order by A.name,A.msl_id,A.date
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="2839">
-                            <text-property name="text">SO/Proposal Distribution</text-property>
+                            <text-property name="text">Invoice/CM Distribution</text-property>
+                        </label>
+                    </cell>
+                    <cell id="3085">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="3088">
+                            <text-property name="text">Apply to Invoice Distribution</text-property>
+                        </label>
+                    </cell>
+                    <cell id="3089">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="3092">
+                            <text-property name="text">Apply To Sales Order</text-property>
+                        </label>
+                    </cell>
+                    <cell id="3093">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="3096">
+                            <text-property name="text">Apply to Proposal</text-property>
                         </label>
                     </cell>
                     <cell id="2581">
@@ -1503,6 +1697,19 @@ order by A.name,A.msl_id,A.date
                             <text-property name="text">Quantity</text-property>
                         </label>
                     </cell>
+                    <cell id="3101">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="3100">
+                            <text-property name="text">SO/Proposal Number</text-property>
+                        </label>
+                    </cell>
                     <cell id="2583">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1514,6 +1721,32 @@ order by A.name,A.msl_id,A.date
                         <property name="borderTopWidth">thin</property>
                         <label id="2584">
                             <text-property name="text">Item ID</text-property>
+                        </label>
+                    </cell>
+                    <cell id="3104">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="3107">
+                            <text-property name="text">Serial Number</text-property>
+                        </label>
+                    </cell>
+                    <cell id="3108">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="3111">
+                            <text-property name="text">SO/Proposal Distribution</text-property>
                         </label>
                     </cell>
                     <cell id="2585">
@@ -1594,6 +1827,19 @@ order by A.name,A.msl_id,A.date
                             <text-property name="text">Weight</text-property>
                         </label>
                     </cell>
+                    <cell id="3112">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="2902">
+                            <text-property name="text">Amount</text-property>
+                        </label>
+                    </cell>
                     <cell id="2894">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1646,19 +1892,6 @@ order by A.name,A.msl_id,A.date
                             <text-property name="text">Stocking Unit Price</text-property>
                         </label>
                     </cell>
-                    <cell id="2898">
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <label id="2902">
-                            <text-property name="text">Amount</text-property>
-                        </label>
-                    </cell>
                     <cell id="2906">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1683,6 +1916,97 @@ order by A.name,A.msl_id,A.date
                         <property name="borderTopWidth">thin</property>
                         <label id="2925">
                             <text-property name="text">Sales Tax Agency ID</text-property>
+                        </label>
+                    </cell>
+                    <cell id="3127">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="3136">
+                            <text-property name="text">Transaction Period</text-property>
+                        </label>
+                    </cell>
+                    <cell id="3130">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="3138">
+                            <text-property name="text">Transaction Number</text-property>
+                        </label>
+                    </cell>
+                    <cell id="3124">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="3139">
+                            <text-property name="text">Return Authorization</text-property>
+                        </label>
+                    </cell>
+                    <cell id="3121">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="3140">
+                            <text-property name="text">Voided by Transaction</text-property>
+                        </label>
+                    </cell>
+                    <cell id="3118">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="3141">
+                            <text-property name="text">Retainage Percent</text-property>
+                        </label>
+                    </cell>
+                    <cell id="3115">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="3142">
+                            <text-property name="text">Recur Number</text-property>
+                        </label>
+                    </cell>
+                    <cell id="3143">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="3146">
+                            <text-property name="text">Recur Frequency</text-property>
                         </label>
                     </cell>
                 </row>
@@ -1714,6 +2038,36 @@ order by A.name,A.msl_id,A.date
                         <data id="2631">
                             <property name="resultSetColumn">invoice</property>
                         </data>
+                    </cell>
+                    <cell id="3013">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                    </cell>
+                    <cell id="3017">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                    </cell>
+                    <cell id="3021">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
                     </cell>
                     <cell id="2610">
                         <property name="borderBottomStyle">solid</property>
@@ -1749,7 +2103,7 @@ order by A.name,A.msl_id,A.date
                             <property name="resultSetColumn">date</property>
                         </data>
                     </cell>
-                    <cell id="2699">
+                    <cell id="3025">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -1759,7 +2113,7 @@ order by A.name,A.msl_id,A.date
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                     </cell>
-                    <cell id="2704">
+                    <cell id="3029">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -1769,7 +2123,7 @@ order by A.name,A.msl_id,A.date
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                     </cell>
-                    <cell id="2990">
+                    <cell id="3033">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -1779,7 +2133,7 @@ order by A.name,A.msl_id,A.date
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                     </cell>
-                    <cell id="2709">
+                    <cell id="3037">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -1789,17 +2143,7 @@ order by A.name,A.msl_id,A.date
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                     </cell>
-                    <cell id="2719">
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                    </cell>
-                    <cell id="2724">
+                    <cell id="3040">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -1812,7 +2156,7 @@ order by A.name,A.msl_id,A.date
                             <property name="resultSetColumn">ship_to_name</property>
                         </data>
                     </cell>
-                    <cell id="2733">
+                    <cell id="3043">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -1825,7 +2169,7 @@ order by A.name,A.msl_id,A.date
                             <property name="resultSetColumn">ship_address</property>
                         </data>
                     </cell>
-                    <cell id="2729">
+                    <cell id="3046">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -1835,7 +2179,7 @@ order by A.name,A.msl_id,A.date
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                     </cell>
-                    <cell id="2743">
+                    <cell id="3049">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -1845,7 +2189,7 @@ order by A.name,A.msl_id,A.date
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                     </cell>
-                    <cell id="2739">
+                    <cell id="3052">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -1855,7 +2199,7 @@ order by A.name,A.msl_id,A.date
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                     </cell>
-                    <cell id="2749">
+                    <cell id="3055">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -1865,7 +2209,7 @@ order by A.name,A.msl_id,A.date
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                     </cell>
-                    <cell id="2754">
+                    <cell id="3058">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -1875,7 +2219,7 @@ order by A.name,A.msl_id,A.date
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                     </cell>
-                    <cell id="2759">
+                    <cell id="3061">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -1885,7 +2229,7 @@ order by A.name,A.msl_id,A.date
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                     </cell>
-                    <cell id="2765">
+                    <cell id="3064">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -1898,7 +2242,7 @@ order by A.name,A.msl_id,A.date
                             <property name="resultSetColumn">ship_via</property>
                         </data>
                     </cell>
-                    <cell id="2614">
+                    <cell id="3148">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -1907,6 +2251,59 @@ order by A.name,A.msl_id,A.date
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                    </cell>
+                    <cell id="3067">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="3152">
+                            <structure name="dateTimeFormat">
+                                <property name="category">Custom</property>
+                                <property name="pattern">dd/MM/yyyy</property>
+                            </structure>
+                            <property name="resultSetColumn">due_date</property>
+                        </data>
+                    </cell>
+                    <cell id="3071">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="3155">
+                            <property name="paddingRight">3pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">discount_amt</property>
+                        </data>
+                    </cell>
+                    <cell id="3075">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="3157">
+                            <structure name="dateTimeFormat">
+                                <property name="category">Custom</property>
+                                <property name="pattern">dd/MM/yyyy</property>
+                            </structure>
+                            <property name="resultSetColumn">date</property>
+                        </data>
                     </cell>
                     <cell id="2781">
                         <property name="borderBottomStyle">solid</property>
@@ -2007,6 +2404,16 @@ order by A.name,A.msl_id,A.date
                             <property name="resultSetColumn">internal_note</property>
                         </data>
                     </cell>
+                    <cell id="3082">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                    </cell>
                     <cell id="2830">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2030,10 +2437,36 @@ order by A.name,A.msl_id,A.date
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="3009">
-                            <property name="textAlign">center</property>
-                            <property name="resultSetColumn">so_propo_dis</property>
-                        </data>
+                    </cell>
+                    <cell id="3086">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                    </cell>
+                    <cell id="3090">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                    </cell>
+                    <cell id="3094">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
                     </cell>
                     <cell id="2616">
                         <property name="borderBottomStyle">solid</property>
@@ -2049,6 +2482,16 @@ order by A.name,A.msl_id,A.date
                             <property name="resultSetColumn">product_uos_qty</property>
                         </data>
                     </cell>
+                    <cell id="3102">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                    </cell>
                     <cell id="2618">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2060,6 +2503,30 @@ order by A.name,A.msl_id,A.date
                         <property name="borderTopWidth">thin</property>
                         <data id="2619">
                             <property name="resultSetColumn">product_name</property>
+                        </data>
+                    </cell>
+                    <cell id="3105">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                    </cell>
+                    <cell id="3109">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="3009">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">so_propo_dis</property>
                         </data>
                     </cell>
                     <cell id="2620">
@@ -2141,6 +2608,25 @@ order by A.name,A.msl_id,A.date
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                     </cell>
+                    <cell id="3113">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="3008">
+                            <property name="paddingRight">3pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">amount</property>
+                        </data>
+                    </cell>
                     <cell id="2895">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2197,25 +2683,6 @@ order by A.name,A.msl_id,A.date
                             <property name="resultSetColumn">stocking_unit_price</property>
                         </data>
                     </cell>
-                    <cell id="2899">
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <data id="3008">
-                            <property name="paddingRight">3pt</property>
-                            <structure name="numberFormat">
-                                <property name="category">Currency</property>
-                                <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=HALF_UP}</property>
-                            </structure>
-                            <property name="textAlign">right</property>
-                            <property name="resultSetColumn">amount</property>
-                        </data>
-                    </cell>
                     <cell id="2907">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2227,6 +2694,76 @@ order by A.name,A.msl_id,A.date
                         <property name="borderTopWidth">thin</property>
                     </cell>
                     <cell id="2922">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                    </cell>
+                    <cell id="3128">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                    </cell>
+                    <cell id="3131">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                    </cell>
+                    <cell id="3125">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                    </cell>
+                    <cell id="3122">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                    </cell>
+                    <cell id="3119">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                    </cell>
+                    <cell id="3116">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                    </cell>
+                    <cell id="3144">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
