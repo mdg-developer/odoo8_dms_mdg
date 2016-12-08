@@ -11,11 +11,13 @@ class customer_payment(osv.osv):
     _name = "customer.payment"
     _columns = {               
    'payment_id':fields.many2one('mobile.sale.order', 'Line'),
- 'pre_order_id'  :fields.many2one('pre.sale.order', 'Line'),
+   'pre_order_id'  :fields.many2one('pre.sale.order', 'Line'),
    'journal_id'  : fields.many2one('account.journal', 'Payment Method' ,domain=[('type','in',('cash','bank'))]),      
    'amount':fields.float('Paid Amount'),
    'notes':fields.char('Payment Ref'),
    'date':fields.date('Date'),
+   'cheque_no':fields.char('Cheque No'),
+   'partner_id':fields.many2one('res.partner', 'Customer'),
         }
 class mobile_sale_order(osv.osv):
     
@@ -1065,8 +1067,8 @@ class mobile_sale_order(osv.osv):
         cr.execute('''            
             select p.id,p.date,p.sale_team,p.name,p.principal,p.week from sale_plan_day p
             join  crm_case_section c on p.sale_team=c.id
-            where p.sale_team=%s and p.active = true  and p.write_date > %s          
-            ''', (section_id,lastdate,))
+            where p.sale_team=%s and p.active = true        
+            ''', (section_id,))
         datas = cr.fetchall()
         cr.execute      
         return datas    
@@ -1081,9 +1083,8 @@ class mobile_sale_order(osv.osv):
             and p.sale_team= %s
             and p.active = true 
             and p.id = d.sale_plan_trip_id
-            and e.id = d.partner_id
-            and e.write_date > %s
-            ''', (section_id,lastdate,))
+            and e.id = d.partner_id            
+            ''', (section_id,))
         datas = cr.fetchall()                      
         return datas
         
@@ -1972,7 +1973,9 @@ class mobile_sale_order(osv.osv):
                         'journal_id':ar['journal_id'],
                         'amount':amount,
                         'date':ar['date'],
-                        'notes':ar['notes'],    
+                        'notes':ar['notes'],
+                        'cheque_no':ar['cheque_no'],
+                        'partner_id':ar['partner_id'],
                     }
                     rental_obj.create(cursor, user, rental_result, context=context)
             return True
