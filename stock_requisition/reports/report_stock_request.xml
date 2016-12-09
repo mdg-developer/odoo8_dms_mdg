@@ -134,6 +134,9 @@
 									<span t-field="l.req_quantity" />
 								</td>
 								<td>
+									<span t-field="l.qty_on_hand" />
+								</td>
+								<td>
 									<span t-field="l.remark" />
 								</td>
 							</tr>
