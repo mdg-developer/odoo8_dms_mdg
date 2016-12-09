@@ -27,6 +27,7 @@ class sale_denomination(osv.osv):
       'total_amount':fields.float('Denomination Total'),
       'product_amount':fields.float('Invoice Total'),
       'diff_amount':fields.float('Difference'),
+      'partner_id':fields.many2one('res.partner', string='Partner'),
 
   }
     _defaults = {
