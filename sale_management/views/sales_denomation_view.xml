@@ -32,13 +32,15 @@
 												<field name="product_id" />
 												<field name="product_uom_qty" />
 												<field name="amount" sum="Invoice Total" />
+												<field name="sequence" invisible="1" />
 											</group>
 										</group>
 									</form>
-									<tree string="Multi Product" editable="bottom">
+									<tree string="Multi Product" editable="bottom" default_order="sequence asc" >
 										<field name="product_id" />
 										<field name="product_uom_qty" />
 										<field name="amount" sum="Invoice Total" />
+										<field name="sequence" invisible="1" />
 									</tree>
 								</field>
 							</page>
@@ -76,7 +78,7 @@
 												<field name="partner_id" />
 												<field name="journal_id" string="Bank" />
 												<field name="cheque_no" />
-												<field name="amount"  sum="Invoice Total" />
+												<field name="amount" sum="Invoice Total" />
 											</group>
 										</group>
 									</form>
@@ -84,7 +86,7 @@
 										<field name="partner_id" />
 										<field name="journal_id" string="Bank" />
 										<field name="cheque_no" />
-										<field name="amount"  sum="Invoice Total" />
+										<field name="amount" sum="Invoice Total" />
 									</tree>
 								</field>
 							</page>

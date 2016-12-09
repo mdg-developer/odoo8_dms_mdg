@@ -61,13 +61,16 @@ class sale_denomination(osv.osv):
                 cr.execute('select product_id,sum(product_uos_qty),sum(sub_total) from mobile_sale_order_line where id in %s group by product_id',(tuple(order_line_ids.ids),))
                 order_line=cr.fetchall()
                 for data in order_line:
+                    product = self.pool.get('product.product').browse(cr, uid, data[0], context=context)
+                    sequence=product.sequence
                     data_id={'product_id':data[0],
                                       'product_uom_qty':data[1],
+                                      'sequence':sequence,
                                       'amount':data[2]}
                     order_line_data.append(data_id)
             if  payment_ids:
                 for payment in payment_ids:
-                    payment_data = payment_obj.browse(cr, uid, payment.id, context=context)                  
+                    payment_data = payment_obj.browse(cr, uid, payment, context=context)                  
                     partner_id=payment_data.partner_id.id
                     journal_id=payment_data.journal_id.id
                     cheque_no=payment_data.cheque_no
@@ -116,7 +119,8 @@ class sale_denomination_product_line(osv.osv):
                 'denomination_product_ids': fields.many2one('sales.denomination', 'Sales denomination'),
                 'product_id':fields.many2one('product.product', 'Product', required=True),
                 'product_uom_qty':fields.integer('QTY', required=True),
-                'amount':fields.float('Amount',required=True, digits_compute= dp.get_precision('Product Price')),                
+                'amount':fields.float('Amount',required=True, digits_compute= dp.get_precision('Product Price')), 
+                'sequence':fields.integer('Sequence'),               
                 }
 sale_denomination_product_line()    
 

@@ -1264,9 +1264,12 @@ class mobile_sale_order(osv.osv):
                     cursor.execute('select product_id,sum(product_uos_qty),sum(sub_total) from mobile_sale_order_line where id in %s group by product_id', (tuple(order_line_ids.ids),))
                     order_line = cursor.fetchall()
                     for data in order_line:
+                        product = self.pool.get('product.product').browse(cursor, user, data[0], context=context)
+                        sequence=product.sequence
                         data_id = {'product_id':data[0],
                                           'product_uom_qty':data[1],
                                           'denomination_product_ids':deno_id,
+                                          'sequence':sequence,
                                           'amount':data[2]}
                         deno_product_obj.create(cursor, user, data_id, context=context)
             if  payment_ids:
