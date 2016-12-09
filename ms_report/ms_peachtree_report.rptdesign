@@ -629,11 +629,11 @@ Cast((select case when substr(name,0,2) ~ '^([0-9]+\.?[0-9]*|\.[0-9]+)$' then su
 res.partner_id as partner_id,rp.name as ship_to_name,Cast(address || ',' || rc.name || ',' || rcs.name || ',' || city.name || ',' || town.name as character varying ) as ship_address,'Vehicle'::character varying as ship_via,'1518-YGN'::character varying as gl_account,1 as tax_type
 from mobile_sale_order ms
 left join mobile_sale_order_line msl on ms.id=msl.order_id
-left join product_uom uom on uom.id=msl.uom_id
 left join account_payment_term term on ms.payment_term=term.id
 left join crm_case_section crm on ms.sale_team=crm.id
 left join product_product pp on msl.product_id=pp.id
 left join product_template pt on pp.product_tmpl_id=pt.id
+left join product_uom uom on uom.id=pt.uom_id
 left join res_partner rp on ms.partner_id=rp.id
 left join res_country rc on rc.id=rp.country_id
 left join res_country_state rcs on rcs.id=rp.state_id
@@ -642,7 +642,6 @@ left join res_township town on town.id=rp.township
 left join res_users res on ms.user_id=res.id)A join (select id,name as saleman_name from res_partner)B on A.partner_id = B.id
 and A.date::date between ? and ?
 order by A.name,A.msl_id,A.date
-
 ]]></xml-property>
         </oda-data-set>
     </data-sets>
