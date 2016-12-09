@@ -1191,7 +1191,7 @@ class mobile_sale_order(osv.osv):
             history_obj = self.pool.get('sales.denomination')
             notes_line_obj = self.pool.get('sales.denomination.note.line')
             deno_product_obj = self.pool.get('sales.denomination.product.line')
-            
+            cheque_product_obj = self.pool.get('sales.denomination.cheque.line')
             str = "{" + vals + "}"
             str = str.replace(":''", ":'")
             str = str.replace("'',", "',")
@@ -1249,6 +1249,12 @@ class mobile_sale_order(osv.osv):
                 user_id = pt['user_id']
                 mobile_sale_obj = self.pool.get('mobile.sale.order')        
                 mobile_sale_order_obj = self.pool.get('mobile.sale.order.line')
+                payment_obj=self.pool.get('customer.payment')
+                print 'user_iddddddddddddd',user_id,type(user_id)
+                cursor.execute("select default_section_id from res_users where id=%s",(user_id,))
+                team_id=cursor.fetchone()[0]            
+                print 'team_id',team_id
+                payment_ids = payment_obj.search(cursor, user,[('date', '=',de_date),('sale_team_id','=',team_id)], context=context)
                 cursor.execute("select id from mobile_sale_order where due_date=%s and user_id=%s and void_flag != 'voided'", (de_date, user_id))
                 mobile_ids = cursor.fetchall()
                 if  mobile_ids:
@@ -1263,7 +1269,19 @@ class mobile_sale_order(osv.osv):
                                           'denomination_product_ids':deno_id,
                                           'amount':data[2]}
                         deno_product_obj.create(cursor, user, data_id, context=context)
-
+            if  payment_ids:
+                for payment in payment_ids:
+                    payment_data = payment_obj.browse(cursor, user, payment, context=context)                  
+                    partner_id=payment_data.partner_id.id
+                    journal_id=payment_data.journal_id.id
+                    cheque_no=payment_data.cheque_no
+                    amount=payment_data.amount
+                    data_id={'partner_id':partner_id,
+                                      'journal_id':journal_id,
+                                      'cheque_no':cheque_no,
+                                      'amount': amount,
+                                    'denomination_cheque_ids':deno_id,}
+                    cheque_product_obj.create(cursor, user, data_id, context=context)
                         
             print 'True'
             return True       

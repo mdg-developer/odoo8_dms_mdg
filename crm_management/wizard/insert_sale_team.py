@@ -89,7 +89,9 @@ class insert_sale_team(osv.osv_memory):
             if  branch_id:
                 cr.execute('update res_partner set branch_id=%s where id=%s',(branch_id[0],partner,))
             if chiller is True:
-                cr.execute('update res_partner set hamper=%s where id=%s',(True,partner,))
+                cr.execute('update res_partner set chiller=%s where id=%s',(True,partner,))
+            if hamper is True:
+                cr.execute('update res_partner set hamper=%s where id=%s',(True,partner,))				
             if  state_id:
                 cr.execute('update res_partner set state_id=%s where id=%s',(state_id[0],partner,))
             if  city:

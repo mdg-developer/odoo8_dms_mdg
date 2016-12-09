@@ -22,6 +22,7 @@ class sale_denomination(osv.osv):
         'invoice_count':fields.integer('Invoiced' , required=True),        
        'denomination_product_line':fields.one2many('sales.denomination.product.line', 'denomination_product_ids', string='Sale denomination Product Line', copy=True , required=True),
        'denomination_note_line':fields.one2many('sales.denomination.note.line', 'denomination_note_ids', string='Sale denomination Product Line', copy=True , required=True),       
+       'denomination_cheque_line':fields.one2many('sales.denomination.cheque.line', 'denomination_cheque_ids', string='Sale denomination Cheque Line', copy=True , required=True),       
         'note':fields.text('Note'),
       'total_amount':fields.float('Denomination Total'),
       'product_amount':fields.float('Invoice Total'),
@@ -37,12 +38,19 @@ class sale_denomination(osv.osv):
         value={}
         note =[{'notes':10000,'note_qty':False},{'notes':5000,'note_qty':False},{'notes':1000,'note_qty':False},{'notes':500,'note_qty':False},{'notes':100,'note_qty':False},{'notes':50,'note_qty':False},{'notes':10,'note_qty':False},{'notes':1,'note_qty':False}]
         order_line_data=[]
+        cheque_data=[]
+
         if date:
             date = datetime.strptime(date,'%Y-%m-%d %H:%M:%S')
             de_date=date.date()
             mobile_sale_obj = self.pool.get('mobile.sale.order')        
             mobile_sale_order_obj = self.pool.get('mobile.sale.order.line') 
+            payment_obj=self.pool.get('customer.payment')
+            if user_id:
+                cr.execute("select default_section_id from res_users where id= %s ",(user_id,))
+                team_id=cr.fetchone()[0]            
             mobile_ids = mobile_sale_obj.search(cr, uid,[('due_date', '=',de_date), ('void_flag', '!=', 'voided'),('user_id','=',user_id)], context=context)
+            payment_ids = payment_obj.search(cr, uid,[('date', '=',de_date),('sale_team_id','=',team_id)], context=context)
             if  mobile_ids:
                 line_ids = mobile_sale_order_obj.search(cr, uid,[('order_id', 'in',mobile_ids)], context=context)                        
                 order_line_ids = mobile_sale_order_obj.browse(cr, uid, line_ids, context=context)                  
@@ -53,10 +61,24 @@ class sale_denomination(osv.osv):
                                       'product_uom_qty':data[1],
                                       'amount':data[2]}
                     order_line_data.append(data_id)
+            if  payment_ids:
+                for payment in payment_ids:
+                    payment_data = payment_obj.browse(cr, uid, payment.id, context=context)                  
+                    partner_id=payment_data.partner_id.id
+                    journal_id=payment_data.journal_id.id
+                    cheque_no=payment_data.cheque_no
+                    amount=payment_data.amount
+                    data_id={'partner_id':partner_id,
+                                      'journal_id':journal_id,
+                                      'cheque_no':cheque_no,
+                                      'amount': amount,}
+                    cheque_data.append(data_id)                    
                 value['value'] = {
                                             'denomination_product_line': order_line_data ,
                                             'denomination_note_line':note,
+                                            'denomination_cheque_line':cheque_data,
                                             } 
+                
         return value      
 
     def create(self, cursor, user, vals, context=None):
@@ -115,3 +137,19 @@ class sale_denomination_note_line(osv.osv):
         'amount': 0.0,
         }   
 sale_denomination_note_line()    
+
+class sale_denomination_cheque_line(osv.osv):    
+    _name = 'sales.denomination.cheque.line'
+    
+    _columns = {
+                'denomination_cheque_ids': fields.many2one('sales.denomination', 'Sales Denomination'),
+                'cheque_no':fields.char('Cheque No', required=True),
+                'partner_id':fields.many2one('res.partner','Customer', required=True),
+                'amount':fields.float('Total', digits_compute= dp.get_precision('Product Price')),       
+                'journal_id':fields.many2one('account.journal',"Journal"),         
+                }
+    _defaults = {
+        'amount': 0.0,
+        }   
+    
+sale_denomination_cheque_line()    

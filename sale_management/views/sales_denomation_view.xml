@@ -42,7 +42,6 @@
 									</tree>
 								</field>
 							</page>
-
 						</notebook>
 						<notebook>
 							<page string="Notes">
@@ -51,16 +50,41 @@
 										<group>
 											<group>
 												<field name="notes" />
-												<field name="note_qty" style="text-align: center" on_change="on_change_note_qty(notes,note_qty)" />
+												<field name="note_qty" style="text-align: center"
+													on_change="on_change_note_qty(notes,note_qty)" />
 												<field name="amount" />
 											</group>
 										</group>
 									</form>
 									<tree string="Notes" editable="bottom">
 										<field name="notes" />
-										<field name="note_qty" style="text-align: center"  on_change="on_change_note_qty(notes,note_qty)" />
-										<field name="amount"  />
+										<field name="note_qty" style="text-align: center"
+											on_change="on_change_note_qty(notes,note_qty)" />
+										<field name="amount" />
 
+									</tree>
+								</field>
+							</page>
+
+						</notebook>
+						<notebook>
+							<page string="Cheque">
+								<field name="denomination_cheque_line">
+									<form string="Cheque">
+										<group>
+											<group>
+												<field name="partner_id" />
+												<field name="journal_id" string="Bank" />
+												<field name="cheque_no" />
+												<field name="amount"  sum="Invoice Total" />
+											</group>
+										</group>
+									</form>
+									<tree string="Cheque" editable="bottom">
+										<field name="partner_id" />
+										<field name="journal_id" string="Bank" />
+										<field name="cheque_no" />
+										<field name="amount"  sum="Invoice Total" />
 									</tree>
 								</field>
 							</page>
@@ -129,7 +153,8 @@
 		</record>
 
 		<menuitem id="sales_denomination" action="action_sales_denomination_view"
-			parent="account.menu_finance_bank_and_cash" name="Cash Denomination" sequence="15" />
+			parent="account.menu_finance_bank_and_cash" name="Cash Denomination"
+			sequence="15" />
 	</data>
 </openerp>
 	    
