@@ -50,8 +50,8 @@
 													                <thead>
 													                    <tr>
 													                        <th class="text-center" style="border:1pt solid;border-color:black;">Product</th>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Total Amount</th>
+													                        <th class="text-center" style="border:1pt solid;border-color:black;">Qty</th>
+													                        <th class="text-center" style="border:1pt solid;border-color:black;">Amount</th>
 													                        <th class="text-center" style="border:1pt solid;border-color:black;">Remark</th>
 													                    </tr>
 													                </thead>
@@ -72,9 +72,9 @@
 													            <table t-if="o.denomination_note_line" class="table table-condensed" style="border:1pt solid;">
 													                <thead>
 													                    <tr>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Notes (Kyats)</th>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Total Amount</th>
+													                        <th class="text-center" style="border:1pt solid;border-color:black;">Notes</th>
+													                        <th class="text-center" style="border:1pt solid;border-color:black;">Qty</th>
+													                        <th class="text-center" style="border:1pt solid;border-color:black;">Total</th>
 													                        <th class="text-center" style="border:1pt solid;border-color:black;">Remark</th>
 													                    </tr>
 													                </thead>
@@ -95,10 +95,10 @@
 													            <table t-if="o.denomination_cheque_line" class="table table-condensed" style="border:1pt solid;">
 													                <thead>
 													                    <tr>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Customer Name</th>
+													                        <th class="text-center" style="border:1pt solid;border-color:black;">Customer</th>
 													                        <th class="text-center" style="border:1pt solid;border-color:black;">Bank</th>
 													                        <th class="text-center" style="border:1pt solid;border-color:black;">Cheque No</th>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Total Amount</th>
+													                        <th class="text-center" style="border:1pt solid;border-color:black;">Total</th>
 													                    </tr>
 													                </thead>
 													                <tbody class="invoice_tbody">
@@ -117,6 +117,24 @@
 													                    </tr>
 													                </tbody>
 													            </table>
+													            
+													            <table class="table table-condensed" style="border:0pt;">
+													                <thead>
+													                    <tr>
+													                        <td style="margin-top:-10pt;border:0pt;" align="left">
+													                        	<span>Denomination Total :</span>
+													                        	<span t-field="o.total_amount"/>
+													                        </td>
+													                    </tr>
+													                    
+													                    <tr>
+													                        <td style="margin-top:-10pt;border:0pt;" align="left">
+													                        	<span>Invoice Total :</span>
+													                        	<span t-field="o.product_amount"/>
+													                        </td>
+													                    </tr>
+													                </thead>
+																</table>
 													            
 													            <table class="table table-condensed" style="border:0pt;">
 													                <thead>
@@ -171,8 +189,8 @@
 													                <thead>
 													                    <tr>
 													                        <th class="text-center" style="border:1pt solid;border-color:black;">Product</th>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Total Amount</th>
+													                        <th class="text-center" style="border:1pt solid;border-color:black;">Qty</th>
+													                        <th class="text-center" style="border:1pt solid;border-color:black;">Amount</th>
 													                        <th class="text-center" style="border:1pt solid;border-color:black;">Remark</th>
 													                    </tr>
 													                </thead>
@@ -193,9 +211,9 @@
 											                  <table t-if="o.denomination_note_line" class="table table-condensed" style="border:1pt solid;">
 													                <thead>
 													                    <tr>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Notes (Kyats)</th>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Total Amount</th>
+													                        <th class="text-center" style="border:1pt solid;border-color:black;">Notes</th>
+													                        <th class="text-center" style="border:1pt solid;border-color:black;">Qty</th>
+													                        <th class="text-center" style="border:1pt solid;border-color:black;">Total</th>
 													                        <th class="text-center" style="border:1pt solid;border-color:black;">Remark</th>
 													                    </tr>
 													                </thead>
@@ -216,10 +234,10 @@
 													            <table t-if="o.denomination_cheque_line" class="table table-condensed" style="border:1pt solid;">
 													                <thead>
 													                    <tr>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Customer Name</th>
+													                        <th class="text-center" style="border:1pt solid;border-color:black;">Customer</th>
 													                        <th class="text-center" style="border:1pt solid;border-color:black;">Bank</th>
 													                        <th class="text-center" style="border:1pt solid;border-color:black;">Cheque No</th>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Total Amount</th>
+													                        <th class="text-center" style="border:1pt solid;border-color:black;">Total</th>
 													                    </tr>
 													                </thead>
 													                <tbody class="invoice_tbody">
@@ -237,6 +255,24 @@
 													                    </tr>
 													                </tbody>
 													            </table>
+													            
+													            <table class="table table-condensed" style="border:0pt;">
+													                <thead>
+													                    <tr>
+													                        <td style="margin-top:-10pt;border:0pt;" align="left">
+													                        	<span>Denomination Total :</span>
+													                        	<span t-field="o.total_amount"/>
+													                        </td>
+													                    </tr>
+													                    
+													                    <tr>
+													                        <td style="margin-top:-10pt;border:0pt;" align="left">
+													                        	<span>Invoice Total :</span>
+													                        	<span t-field="o.product_amount"/>
+													                        </td>
+													                    </tr>
+													                </thead>
+																</table>
 													            
 													            <table class="table table-condensed" style="border:0pt;">
 													                <thead>
