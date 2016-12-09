@@ -39,6 +39,8 @@ class sale_denomination(osv.osv):
         note =[{'notes':10000,'note_qty':False},{'notes':5000,'note_qty':False},{'notes':1000,'note_qty':False},{'notes':500,'note_qty':False},{'notes':100,'note_qty':False},{'notes':50,'note_qty':False},{'notes':10,'note_qty':False},{'notes':1,'note_qty':False}]
         order_line_data=[]
         cheque_data=[]
+        team_id=None
+        payment_ids=None
 
         if date:
             date = datetime.strptime(date,'%Y-%m-%d %H:%M:%S')
@@ -50,7 +52,8 @@ class sale_denomination(osv.osv):
                 cr.execute("select default_section_id from res_users where id= %s ",(user_id,))
                 team_id=cr.fetchone()[0]            
             mobile_ids = mobile_sale_obj.search(cr, uid,[('due_date', '=',de_date), ('void_flag', '!=', 'voided'),('user_id','=',user_id)], context=context)
-            payment_ids = payment_obj.search(cr, uid,[('date', '=',de_date),('sale_team_id','=',team_id)], context=context)
+            if team_id:
+            	payment_ids = payment_obj.search(cr, uid,[('date', '=',de_date),('sale_team_id','=',team_id)], context=context)
             if  mobile_ids:
                 line_ids = mobile_sale_order_obj.search(cr, uid,[('order_id', 'in',mobile_ids)], context=context)                        
                 order_line_ids = mobile_sale_order_obj.browse(cr, uid, line_ids, context=context)                  
