@@ -54,7 +54,10 @@ class sale_denomination(osv.osv):
                 team_id=cr.fetchone()[0]            
             mobile_ids = mobile_sale_obj.search(cr, uid,[('due_date', '=',de_date), ('void_flag', '!=', 'voided'),('user_id','=',user_id)], context=context)
             if team_id:
-            	payment_ids = payment_obj.search(cr, uid,[('date', '=',de_date),('sale_team_id','=',team_id)], context=context)
+                cr.execute("select id from customer_payment where date=%s and sale_team_id=%s and cheque_no !=''  ",(de_date,team_id,))
+                #payment_ids = payment_obj.search(cr, uid,[('date', '=',de_date),('sale_team_id','=',team_id),('cheque_no','!=',None)], context=context)
+                payment_ids=cr.fetchall()
+                print 'payyyyyyyyyyyyyyyy',payment_ids
             if  mobile_ids:
                 line_ids = mobile_sale_order_obj.search(cr, uid,[('order_id', 'in',mobile_ids)], context=context)                        
                 order_line_ids = mobile_sale_order_obj.browse(cr, uid, line_ids, context=context)                  

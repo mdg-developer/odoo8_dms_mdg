@@ -1254,7 +1254,9 @@ class mobile_sale_order(osv.osv):
                 cursor.execute("select default_section_id from res_users where id=%s",(user_id,))
                 team_id=cursor.fetchone()[0]            
                 print 'team_id',team_id
-                payment_ids = payment_obj.search(cursor, user,[('date', '=',de_date),('sale_team_id','=',team_id)], context=context)
+                cursor.execute("select id from customer_payment where date=%s and sale_team_id=%s and cheque_no !=''  ",(de_date,team_id,))
+                #payment_ids = payment_obj.search(cr, uid,[('date', '=',de_date),('sale_team_id','=',team_id),('cheque_no','!=',None)], context=context)
+                payment_ids=cursor.fetchall()
                 cursor.execute("select id from mobile_sale_order where due_date=%s and user_id=%s and void_flag != 'voided'", (de_date, user_id))
                 mobile_ids = cursor.fetchall()
                 if  mobile_ids:
