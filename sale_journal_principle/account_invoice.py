@@ -10,7 +10,29 @@ import openerp.addons.decimal_precision as dp
 class account_invoice(models.Model):
     _inherit = "account.invoice"
     
-   
+    def _compute_payments(self):
+        partial_lines = lines = self.env['account.move.line']
+        invoice_obj = self.pool.get('account.invoice')
+        cr=self._cr
+        for line in self.move_id.line_id:
+#             if line.account_id != self.account_id:
+#                 continue
+            if line.reconcile_id:
+                lines |= line.reconcile_id.line_id
+            elif line.reconcile_partial_id:
+                lines |= line.reconcile_partial_id.line_partial_ids
+            partial_lines += line
+            print 'self.residual self.residual ',self.residual 
+            if self.residual ==0.0:
+                print '(self.id(self.id',self.id
+                self.confirm_paid()
+                print '(self.id(self.id',self.confirm_paid()
+                #cr.execute("update account_invoice set state='paid' where id=%s",(self.id,))
+                if self.origin:
+                    cr.execute("update sale_order set invoiced=True where name=%s", (self.origin,))                
+        self.payment_ids = (lines - partial_lines).sorted()
+
+        
 #     account_id = fields.Many2one('account.account', string='Account',
 #                                  required=False, readonly=True, states={'draft': [('readonly', False)]},
 #                 
@@ -173,6 +195,7 @@ class account_invoice(models.Model):
             }
             print 'res222>>>',res
             return res 
+        
     def line_dr_convert_account_with_principle(self, line):
         list_one = line
         print 'list_one>>>',list_one
@@ -216,7 +239,6 @@ class account_invoice(models.Model):
                         'debit': price,
                         'credit': 0,
                         'account_id': account_id,
-                        
                         'analytic_lines': analytic_lines,
                         'amount_currency': amount_currency,
                         'currency_id': currency_id,
@@ -318,12 +340,20 @@ class account_invoice(models.Model):
                 continue
 
             ctx = dict(self._context, lang=inv.partner_id.lang)
-
+            company_currency = inv.company_id.currency_id
             if not inv.date_invoice:
+                # FORWARD-PORT UP TO SAAS-6
+                if inv.currency_id != company_currency and inv.tax_line:
+                    raise except_orm(
+                        _('Warning!'),
+                        _('No invoice date!'
+                            '\nThe invoice currency is not the same than the company currency.'
+                            ' An invoice date is required to determine the exchange rate to apply. Do not forget to update the taxes!'
+                        )
+                    )                
                 inv.with_context(ctx).write({'date_invoice': fields.Date.context_today(self)})
             date_invoice = inv.date_invoice
 
-            company_currency = inv.company_id.currency_id
             # create the analytical lines, one move line per invoice line
             iml = inv._get_analytic_lines()
             # check if taxes are all computed
@@ -462,3 +492,5 @@ class account_invoice(models.Model):
     account_id = fields.Many2one('account.account', string='Account',
         required=False, readonly=True, states={'draft': [('readonly', False)]},
         help="The partner account used for this invoice.")
+    
+    
