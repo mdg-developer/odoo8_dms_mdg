@@ -1,333 +1,457 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-<data>
-<template id="report_cashier_approval_document" >
-				<t t-call="account_cashier_approval.custom_layout">
-					<div class="page" style="font-size:10pt;">
-						<table border="0" cellspacing="0" cellpadding="0" width="100%">
-							<tbody>
-								<tr>
-									<td>
-										<center>
-											<table width="100%" border="0" cellspacing="0" cellpadding="0"
-												style="padding:0px 20px 20px 20px; margin:0; font-family: Arial,Helvetica, sans-serif;line-height: .1;">
-												<tr>
-													<td valign="top" align="left"
-														style="padding:15px; width:50%; line-height:18px;">
-														<h4 align="center">
-											                <strong>MDG Co.,Ltd</strong>
-											            </h4>
-									            		<h4 align="center">
-											                <strong>Cashier Approval Form</strong>
-											            </h4>
-											            
-											            <table class="table table-condensed" >
-											                  <tr>
-											                      <td style="border:0pt;font-size:10pt;">
-											                      	<strong>Sales Group :</strong>
-											                      </td>
-											                      <td style="border:0pt;font-size:10pt;">
-											                          <strong t-field="o.sale_team_id.name"></strong>
-											                      </td>
-											                      <td style="border:0pt;font-size:10pt;">
-											                      	<strong>Date :</strong>
-											                      </td>
-											                      <td style="border:0pt;font-size:10pt;">
-											                          <strong t-field="o.date"></strong>
-											                      </td>
-											                  </tr>
-											                  
-											                  <tr>
-											                      <td style="border:0pt;font-size:10pt;">
-											                          <strong>Name :</strong>
-											                      </td>
-											                      <td style="border:0pt;font-size:10pt;">
-																  	 <strong t-field="o.user_id.name"/>
-																  </td>
-																  <td style="border:0pt;font-size:10pt;">
-											                      	<strong>To Date :</strong>
-											                      </td>
-											                      <td style="border:0pt;font-size:10pt;">
-											                          <strong t-field="o.to_date"></strong>
-											                      </td>
-											                  </tr>
-											                  
-											                  <table class="table table-condensed" style="border:1pt solid;">
-													                <thead>
-													                    <tr>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Invoice No</th>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Date</th>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Customer</th>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Type</th>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Amount</th>
-													                    </tr>
-													                </thead>
-													                <tbody class="invoice_tbody">
-													                    <tr t-foreach="o.cashier_line" t-as="i">
-													                        <td style="border:1pt solid;border-color:black;" align="center">
-													                        	<span t-field="i.invoice_id"/>
-													                        </td>
-													                        <td style="border:1pt solid;border-color:black;" align="center">
-													                            <span t-field="i.date"/>
-													                        </td>
-													                        <td style="border:1pt solid;border-color:black;" align="center">
-													                            <span t-field="i.partner_id.name"/>
-													                        </td>
-													                        <td style="border:1pt solid;border-color:black;" align="center">
-													                            <span t-field="i.payment_type"/>
-													                        </td>
-													                        <td style="border:1pt solid;border-color:black;" align="right">
-													                            <span t-field="i.amount"/>
-													                        </td>
-													                    </tr>
-													                </tbody>
-													            </table>
-													            
-													            <table t-if="o.ar_line" class="table table-condensed" style="border:1pt solid;">
-													                <thead>
-													                    <tr>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Invoice No</th>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Date</th>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Customer</th>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Type</th>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Amount</th>
-													                    </tr>
-													                </thead>
-													                <tbody class="invoice_tbody">
-													                    <tr t-foreach="o.ar_line" t-as="ar">
-													                        <td style="border:1pt solid;border-color:black;" align="center">
-													                        	<span t-field="ar.invoice_id"/>
-													                        </td>
-													                        <td style="border:1pt solid;border-color:black;" align="center">
-													                            <span t-field="ar.date"/>
-													                        </td>
-													                        <td style="border:1pt solid;border-color:black;" align="center">
-													                            <span t-field="ar.partner_id.name"/>
-													                        </td>
-													                        <td style="border:1pt solid;border-color:black;" align="center">
-													                            <span t-field="ar.payment_type"/>
-													                        </td>
-													                        <td style="border:1pt solid;border-color:black;" align="right">
-													                            <span t-field="ar.amount"/>
-													                        </td>
-													                    </tr>
-													                </tbody>
-													            </table>
-													            
-													            <table t-if="o.credit_line" class="table table-condensed" style="border:1pt solid;">
-													                <thead>
-													                    <tr>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Credit Note</th>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Invoice No</th>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Date</th>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Customer</th>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Amount</th>
-													                    </tr>
-													                </thead>
-													                <tbody class="invoice_tbody">
-													                    <tr t-foreach="o.credit_line" t-as="cl">
-													                        <td style="border:1pt solid;border-color:black;" align="center">
-													                        	<span t-field="cl.credit_id.name"/>
-													                        </td>
-													                        <td style="border:1pt solid;border-color:black;" align="center">
-													                            <span t-field="cl.invoice_id"/>
-													                        </td>
-													                        <td style="border:1pt solid;border-color:black;" align="center">
-													                        	<span t-field="cl.date"/>
-													                        </td>
-													                        <td style="border:1pt solid;border-color:black;" align="center">
-													                            <span t-field="cl.partner_id.name"/>
-													                        </td>
-													                        <td style="border:1pt solid;border-color:black;" align="right">
-													                            <span t-field="cl.amount"/>
-													                        </td>
-													                        
-													                    </tr>
-													                </tbody>
-													            </table>
-													            
-													            <table class="table table-condensed" style="border:0pt;">
-													                <thead>
-													                    <tr>
-													                    	<td style="margin-top:-10pt;" align="left">
-													                        	<span>Paid By</span>
-													                        </td>
-													                        <td style="margin-top:-10pt;" align="right">
-													                        	<span>Received By</span>
-													                        </td>
-													                    </tr>
-													                </thead>
-																</table>
-											            </table>
-													</td>
-													
-													<td valign="top" align="right"
-														style="padding:15px; width:50%; line-height:18px;">
-														<h4 align="center">
-											                <strong>MDG Co.,Ltd</strong>
-											            </h4>
-									            		<h4 align="center">
-											                <strong>Cashier Approval Form</strong>
-											            </h4>
-											            
-											            <table class="table table-condensed" >
-											                  <tr>
-											                      <td style="border:0pt;font-size:10pt;">
-											                      	<strong>Sales Group :</strong>
-											                      </td>
-											                      <td style="border:0pt;font-size:10pt;">
-											                          <strong t-field="o.sale_team_id.name"></strong>
-											                      </td>
-											                      <td style="border:0pt;font-size:10pt;">
-											                      	<strong>Date :</strong>
-											                      </td>
-											                      <td style="border:0pt;font-size:10pt;">
-											                          <strong t-field="o.date"></strong>
-											                      </td>
-											                  </tr>
-											                  
-											                  <tr>
-											                      <td style="border:0pt;font-size:10pt;">
-											                          <strong>Name :</strong>
-											                      </td>
-											                      <td style="border:0pt;font-size:10pt;">
-																  	 <strong t-field="o.user_id.name"/>
-																  </td>
-																  <td style="border:0pt;font-size:10pt;">
-											                      	<strong>To Date :</strong>
-											                      </td>
-											                      <td style="border:0pt;font-size:10pt;">
-											                          <strong t-field="o.to_date"></strong>
-											                      </td>
-											                  </tr>
-											                  
-											                  <table class="table table-condensed" style="border:1pt solid;">
-													                <thead>
-													                    <tr>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Invoice No</th>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Date</th>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Customer</th>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Type</th>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Amount</th>
-													                    </tr>
-													                </thead>
-													                <tbody class="invoice_tbody">
-													                    <tr t-foreach="o.cashier_line" t-as="i">
-													                        <td style="border:1pt solid;border-color:black;" align="center">
-													                        	<span t-field="i.invoice_id"/>
-													                        </td>
-													                        <td style="border:1pt solid;border-color:black;" align="center">
-													                            <span t-field="i.date"/>
-													                        </td>
-													                        <td style="border:1pt solid;border-color:black;" align="center">
-													                            <span t-field="i.partner_id"/>
-													                        </td>
-													                        <td style="border:1pt solid;border-color:black;" align="center">
-													                            <span t-field="i.payment_type"/>
-													                        </td>
-													                        <td style="border:1pt solid;border-color:black;" align="right">
-													                            <span t-field="i.amount"/>
-													                        </td>
-													                    </tr>
-													                </tbody>
-													            </table>
-													            
-											                  <table t-if="o.ar_line" class="table table-condensed" style="border:1pt solid;">
-													                <thead>
-													                    <tr>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Invoice No</th>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Date</th>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Customer</th>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Type</th>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Amount</th>
-													                    </tr>
-													                </thead>
-													                <tbody class="invoice_tbody">
-													                    <tr t-foreach="o.ar_line" t-as="ar">
-													                        <td style="border:1pt solid;border-color:black;" align="center">
-													                        	<span t-field="ar.invoice_id"/>
-													                        </td>
-													                        <td style="border:1pt solid;border-color:black;" align="center">
-													                            <span t-field="ar.date"/>
-													                        </td>
-													                        <td style="border:1pt solid;border-color:black;" align="center">
-													                            <span t-field="ar.partner_id.name"/>
-													                        </td>
-													                        <td style="border:1pt solid;border-color:black;" align="center">
-													                            <span t-field="ar.payment_type"/>
-													                        </td>
-													                        <td style="border:1pt solid;border-color:black;" align="right">
-													                            <span t-field="ar.amount"/>
-													                        </td>
-													                    </tr>
-													                </tbody>
-													            </table>
-													            
-													            <table t-if="o.credit_line" class="table table-condensed" style="border:1pt solid;">
-													                <thead>
-													                    <tr>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Credit Note</th>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Invoice No</th>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Date</th>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Customer</th>
-													                        <th class="text-center" style="border:1pt solid;border-color:black;">Amount</th>
-													                    </tr>
-													                </thead>
-													                <tbody class="invoice_tbody">
-													                    <tr t-foreach="o.credit_line" t-as="cl">
-													                        <td style="border:1pt solid;border-color:black;" align="center">
-													                        	<span t-field="cl.credit_id.name"/>
-													                        </td>
-													                        <td style="border:1pt solid;border-color:black;" align="center">
-													                            <span t-field="cl.invoice_id"/>
-													                        </td>
-													                        <td style="border:1pt solid;border-color:black;" align="center">
-													                        	<span t-field="cl.date"/>
-													                        </td>
-													                        <td style="border:1pt solid;border-color:black;" align="center">
-													                            <span t-field="cl.partner_id.name"/>
-													                        </td>
-													                        <td style="border:1pt solid;border-color:black;" align="right">
-													                            <span t-field="cl.amount"/>
-													                        </td>
-													                        
-													                    </tr>
-													                </tbody>
-													            </table>
-													            
-													            <table class="table table-condensed" style="border:0pt;">
-													                <thead>
-													                    <tr>
-													                        <td style="margin-top:-10pt;" align="left">
-													                        	<span>Paid By</span>
-													                        </td>
-													                        <td style="margin-top:-10pt;" align="right">
-													                        	<span>Received By</span>
-													                        </td>
-													                    </tr>
-													                </thead>
-																</table>
-											            </table>
-													</td>
-												</tr>
-												<div class="oe_structure" />
-											</table>
-										</center>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</t>
+	<data>
+		<template id="report_cashier_approval_document">
+			<t t-call="account_cashier_approval.custom_layout">
+				<div class="page" style="font-size:10pt;">
+					<table border="0" cellspacing="0" cellpadding="0" width="100%">
+						<tbody>
+							<tr>
+								<td>
+									<center>
+										<table width="100%" border="0" cellspacing="0"
+											cellpadding="0"
+											style="padding:0px 20px 20px 20px; margin:0; font-family: Arial,Helvetica, sans-serif;line-height: .1;">
+											<tr>
+												<td valign="top" align="left"
+													style="padding:15px; width:50%; line-height:18px;">
+													<h4 align="center">
+														<strong>MDG Co.,Ltd</strong>
+													</h4>
+													<h4 align="center">
+														<strong>Cashier Approval Form</strong>
+													</h4>
+
+													<table class="table table-condensed">
+														<tr>
+															<td style="border:0pt;font-size:10pt;">
+																<strong>Sales Group :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong t-field="o.sale_team_id.name" />
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong>Date :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong t-field="o.date" />
+															</td>
+														</tr>
+
+														<tr>
+															<td style="border:0pt;font-size:10pt;">
+																<strong>Name :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong t-field="o.user_id.name" />
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong>To Date :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong t-field="o.to_date" />
+															</td>
+														</tr>
+
+														<table t-if="o.cashier_line" class="table table-condensed"
+															style="border:1pt solid;">
+															<h6 align="rignt">
+																<span class="text-right">
+																	<U>
+																		<b>Invoice</b>
+																	</U>
+																</span>
+															</h6>
+															<thead>
+																<tr>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Invoice No</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Date</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Customer</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Type</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Amount</th>
+																</tr>
+															</thead>
+															<tbody t-if="o.cashier_line" class="invoice_tbody">
+																<tr t-foreach="o.cashier_line" t-as="i">
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="i.invoice_id" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="i.date" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="i.partner_id.name" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="i.payment_type" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="right">
+																		<span t-field="i.amount" />
+																	</td>
+																</tr>
+															</tbody>
+														</table>
+														<h6  t-if="o.cash_line"  align="right">
+															<span>
+																<b>Sub Total:</b>
+															</span>
+															<b>
+																<span t-field="o.cash_sub_total" />
+															</b>
+														</h6>
+														<table t-if="o.ar_line" class="table table-condensed"
+															style="border:1pt solid;">
+															<h6 align="rignt">
+																<span>
+																	<U>
+																		<b>AR Collection</b>
+																	</U>
+																</span>
+															</h6>
+															<thead>
+																<tr>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Invoice No</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Date</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Customer</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Type</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Amount</th>
+																</tr>
+															</thead>
+															<tbody class="invoice_tbody">
+																<tr t-foreach="o.ar_line" t-as="ar">
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="ar.invoice_id" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="ar.date" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="ar.partner_id.name" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="ar.payment_type" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="right">
+																		<span t-field="ar.amount" />
+																	</td>
+																</tr>
+															</tbody>
+														</table>
+														<h6 t-if="o.ar_line" align="right">
+															<span>
+																<b>Sub Total:</b>
+															</span>
+															<b>
+																<span t-field="o.ar_sub_total" />
+															</b>
+														</h6>
+														<table t-if="o.credit_line" class="table table-condensed"
+															style="border:1pt solid;">
+															<h6 align="rignt">
+																<span>
+																	<U>
+																		<b>Credit Note</b>
+																	</U>
+																</span>
+															</h6>
+															<thead>
+																<tr>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Credit Note</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Invoice No</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Date</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Customer</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Amount</th>
+																</tr>
+															</thead>
+															<tbody class="invoice_tbody">
+																<tr t-foreach="o.credit_line" t-as="cl">
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="cl.credit_id.name" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="cl.invoice_id" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="cl.date" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="cl.partner_id.name" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="right">
+																		<span t-field="cl.amount" />
+																	</td>
+
+																</tr>
+															</tbody>
+														</table>
+														<h6  t-if="o.cashier_line" align="right">
+															<span>
+																<b>Sub Total:</b>
+															</span>
+															<b>
+																<span t-field="o.cr_sub_total" />
+															</b>
+														</h6>
+														<table class="table table-condensed" style="border:0pt;">
+															<thead>
+																<tr>
+																	<td style="margin-top:-10pt;" align="left">
+																		<span>Paid By</span>
+																	</td>
+																	<td style="margin-top:-10pt;" align="right">
+																		<span>Received By</span>
+																	</td>
+																</tr>
+															</thead>
+														</table>
+													</table>
+
+												</td>
+
+												<td valign="top" align="right"
+													style="padding:15px; width:50%; line-height:18px;">
+													<h4 align="center">
+														<strong>MDG Co.,Ltd</strong>
+													</h4>
+													<h4 align="center">
+														<strong>Cashier Approval Form</strong>
+													</h4>
+
+													<table class="table table-condensed">
+														<tr>
+															<td style="border:0pt;font-size:10pt;">
+																<strong>Sales Group :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong t-field="o.sale_team_id.name" />
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong>Date :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong t-field="o.date" />
+															</td>
+														</tr>
+
+														<tr>
+															<td style="border:0pt;font-size:10pt;">
+																<strong>Name :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong t-field="o.user_id.name" />
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong>To Date :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong t-field="o.to_date" />
+															</td>
+														</tr>
+
+														<table t-if="o.cashier_line" class="table table-condensed"
+															style="border:1pt solid;">
+															<h6 align="left">
+																<span class="text-right">
+																	<U>
+																		<b>Invoice</b>
+																	</U>
+																</span>
+															</h6>
+															<thead>
+																<tr>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Invoice No</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Date</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Customer</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Type</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Amount</th>
+																</tr>
+															</thead>
+															<tbody t-if="o.cashier_line" class="invoice_tbody">
+																<tr t-foreach="o.cashier_line" t-as="i">
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="i.invoice_id" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="i.date" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="i.partner_id" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="i.payment_type" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="right">
+																		<span t-field="i.amount" />
+																	</td>
+																</tr>
+															</tbody>
+														</table>
+														<h6 align="right">
+															<span>
+																<b>Sub Total:</b>
+															</span>
+															<b>
+																<span t-field="o.cash_sub_total" />
+															</b>
+														</h6>
+
+														<table t-if="o.ar_line" class="table table-condensed"
+															style="border:1pt solid;">
+															<h6 align="left">
+																<span>
+																	<U>
+																		<b>AR Collection</b>
+																	</U>
+																</span>
+															</h6>
+															<thead>
+																<tr>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Invoice No</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Date</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Customer</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Type</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Amount</th>
+																</tr>
+															</thead>
+															<tbody class="invoice_tbody">
+																<tr t-foreach="o.ar_line" t-as="ar">
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="ar.invoice_id" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="ar.date" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="ar.partner_id.name" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="ar.payment_type" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="right">
+																		<span t-field="ar.amount" />
+																	</td>
+																</tr>
+															</tbody>
+														</table>
+														<h6 align="right">
+															<span>
+																<b>Sub Total:</b>
+															</span>
+															<b>
+																<span t-field="o.ar_sub_total" />
+															</b>
+														</h6>
+														<table t-if="o.credit_line" class="table table-condensed"
+															style="border:1pt solid;">
+															<h6 align="left">
+																<span>
+																	<U>
+																		<b>Credit Note</b>
+																	</U>
+																</span>
+															</h6>
+															<thead>
+																<tr>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Credit Note</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Invoice No</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Date</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Customer</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Amount</th>
+																</tr>
+															</thead>
+															<tbody class="invoice_tbody">
+																<tr t-foreach="o.credit_line" t-as="cl">
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="cl.credit_id.name" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="cl.invoice_id" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="cl.date" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="cl.partner_id.name" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="right">
+																		<span t-field="cl.amount" />
+																	</td>
+
+																</tr>
+															</tbody>
+														</table>
+														<h6 align="right">
+															<span>
+																<b>Sub Total:</b>
+															</span>
+															<b>
+																<span t-field="o.cr_sub_total" />
+															</b>
+														</h6>
+														<table class="table table-condensed" style="border:0pt;">
+															<thead>
+																<tr>
+																	<td style="margin-top:-10pt;" align="left">
+																		<span>Paid By</span>
+																	</td>
+																	<td style="margin-top:-10pt;" align="right">
+																		<span>Received By</span>
+																	</td>
+																</tr>
+															</thead>
+														</table>
+													</table>
+												</td>
+											</tr>
+											<div class="oe_structure" />
+										</table>
+									</center>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</t>
 		</template>
 
 		<template id="report_cashier_approval">
-		    <t t-call="report.html_container">
-		        <t t-foreach="doc_ids" t-as="doc_id">
-		            
-		           <t t-raw="translate_doc(doc_id, doc_model, 'user_id.name', 'account_cashier_approval.report_cashier_approval_document')" />
-		        </t>
-		    </t>
+			<t t-call="report.html_container">
+				<t t-foreach="doc_ids" t-as="doc_id">
+
+					<t
+						t-raw="translate_doc(doc_id, doc_model, 'user_id.name', 'account_cashier_approval.report_cashier_approval_document')" />
+				</t>
+			</t>
 		</template>
-</data>
+	</data>
 </openerp>

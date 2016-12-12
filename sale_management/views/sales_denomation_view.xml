@@ -36,7 +36,8 @@
 											</group>
 										</group>
 									</form>
-									<tree string="Multi Product" editable="bottom" default_order="sequence asc" >
+									<tree string="Multi Product" editable="bottom"
+										default_order="sequence asc">
 										<field name="product_id" />
 										<field name="product_uom_qty" />
 										<field name="amount" sum="Invoice Total" />
@@ -98,6 +99,7 @@
 							<group>
 								<field name="total_amount" />
 								<field name="product_amount" />
+								<field name="cheque_amount"/>
 								<field name="diff_amount" />
 							</group>
 						</group>

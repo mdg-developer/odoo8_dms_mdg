@@ -26,6 +26,7 @@ class sale_denomination(osv.osv):
         'note':fields.text('Note'),
       'total_amount':fields.float('Denomination Total'),
       'product_amount':fields.float('Invoice Total'),
+      'cheque_amount':fields.float('Cheque Total'),
       'diff_amount':fields.float('Difference'),
       'partner_id':fields.many2one('res.partner', string='Partner'),
 
@@ -97,8 +98,11 @@ class sale_denomination(osv.osv):
         vals['name'] = credit_no
         total_amount=False
         deno_amount=False
+        cheque_amount=False
         denomination_note_line=vals['denomination_note_line']
         denomination_product_line=vals['denomination_product_line']
+        denomination_cheque_line=vals['denomination_cheque_line']
+        
         if denomination_product_line:
             
             for p_data in denomination_product_line:
@@ -111,7 +115,13 @@ class sale_denomination(osv.osv):
                 qty=data[2]['note_qty']
                 total_amount+=(int(note)*int(qty))
         vals['total_amount'] = total_amount
-        vals['diff_amount'] = total_amount-deno_amount
+        if denomination_cheque_line:
+            for data in denomination_cheque_line:
+                amount=data[2]['amount']
+                cheque_amount+=amount
+        print ' cheque_amount',cheque_amount
+        vals['cheque_amount'] = cheque_amount
+        vals['diff_amount'] = (total_amount+cheque_amount)-deno_amount
            
         return super(sale_denomination, self).create(cursor, user, vals, context=context)    
 sale_denomination()               

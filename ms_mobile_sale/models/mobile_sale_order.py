@@ -1275,18 +1275,21 @@ class mobile_sale_order(osv.osv):
                                           'amount':data[2]}
                         deno_product_obj.create(cursor, user, data_id, context=context)
             if  payment_ids:
+                cheque_amount=False
                 for payment in payment_ids:
                     payment_data = payment_obj.browse(cursor, user, payment, context=context)                  
                     partner_id=payment_data.partner_id.id
                     journal_id=payment_data.journal_id.id
                     cheque_no=payment_data.cheque_no
                     amount=payment_data.amount
+                    cheque_amount+=payment_data.amount
                     data_id={'partner_id':partner_id,
                                       'journal_id':journal_id,
                                       'cheque_no':cheque_no,
                                       'amount': amount,
                                     'denomination_cheque_ids':deno_id,}
                     cheque_product_obj.create(cursor, user, data_id, context=context)
+                cursor.execute("update sales_denomination set cheque_amount=%s ,diff_amount=(total_amount+%s)-product_amountwhere id=%s",(cheque_amount,cheque_amount,deno_id,))
                         
             print 'True'
             return True       
