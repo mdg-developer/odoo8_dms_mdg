@@ -18,99 +18,100 @@
             
             <table class="table table-condensed">
                   <tr >
-                      <td>
-                      	<strong>(GIN)Ref;No:</strong>
+                      <td style="border:0pt;font-size:10pt;">
+                      	<strong>GIN Ref:</strong>
                       </td>
-                      <td>
+                      <td style="border:0pt;font-size:10pt;">
                           <strong t-field="o.name"></strong>
                       </td>
                       
-                      <td>
-                      	<strong>(RFI)Ref;No:</strong>
+                      <td style="border:0pt;font-size:10pt;">
+                      	<strong>RFI Ref:</strong>
                       </td>
-                      <td>
-					  	 <p t-field="o.request_id"/>
+                      <td style="border:0pt;font-size:10pt;">
+					  	 <strong t-field="o.request_id"/>
 					  </td>
                   </tr>
                   
                   <tr >
-                      <td>
-                      	<strong>Issue To:</strong>
+                      <td style="border:0pt;font-size:10pt;">
+                      	<strong>Delivery Team:</strong>
                       </td>
-                      <td>
-					  	 <span t-field="o.to_location_id.location_id.name"/>
-						 <b>/</b>
-						 <span t-field="o.to_location_id.name"/>
+                      <td style="border:0pt;font-size:10pt;">
+					  	 <span t-field="o.sale_team_id"/>
 					  </td>
                       
-                      <td>
-                      	<strong>Date for Issue:</strong>
+                      <td style="border:0pt;font-size:10pt;">
+                      	<strong>Request Warehouse:</strong>
                       </td>
-                      <td>
-                          <span t-field="o.issue_date"/>
-                      </td>
-                  </tr>
-                  
-                  <tr >
-                      <td>
-                          <strong>Issue From:</strong>
-                      </td>
-                      <td>
+                      <td style="border:0pt;font-size:10pt;">
                           <span t-field="o.from_location_id.location_id.name"/>
 						  <b>/</b>
 						  <span t-field="o.from_location_id.name"/>
                       </td>
-                      <td>
-                          <strong>Vehicle No:</strong>
-                      </td>
-                      <td>
-					  	 <span t-field="o.vehicle_id.model_id.brand_id.name"/>
-						 <b>/</b>
-						 <span t-field="o.vehicle_id.model_id.modelname"/>
-					  </td>
                   </tr>
                   
                   <tr >
-                      <td>
+                      <td style="border:0pt;font-size:10pt;">
+                      	<strong>Requesting Location:</strong>
+                      </td>
+                      <td style="border:0pt;font-size:10pt;">
+					  	 <span t-field="o.to_location_id.location_id.name"/>
+						 <b>/</b>
+						 <span t-field="o.to_location_id.name"/>
+					  </td>
+					  
+					  <td style="border:0pt;font-size:10pt;">
+                      	<strong>Branch:</strong>
+                      </td>
+                      <td style="border:0pt;font-size:10pt;">
+                          <span t-field="o.branch_id"/>
+                      </td>
+                  </tr>
+                  
+                   <tr >
+                      <td style="border:0pt;font-size:10pt;">
                           <strong>Requested By:</strong>
                       </td>
-                      <td>
-					  	 <p t-field="o.request_by"/>
+                      <td style="border:0pt;font-size:10pt;">
+					  	 <span t-field="o.request_by"/>
 					  </td>
-                      <td>
-                          <strong>Issue By:</strong>
-                      </td>
-                      <td>
-					  	 <p t-field="o.issue_by"/>
-					  </td>
-                  </tr>
-                  
-                  <tr >
-                      <td>
+					  
+					  <td style="border:0pt;font-size:10pt;">
                           <strong>Approved By:</strong>
                       </td>
-                      <td>
-					  	 <p t-field="o.approve_by"/>
+                      <td style="border:0pt;font-size:10pt;">
+					  	 <span t-field="o.approve_by"/>
 					  </td>
-                      <td>
-                      	<strong>Company:</strong>
-                      </td>
-                      <td>
-                          <p t-field="o.company_id.name"/>
-                      </td>
                   </tr>
                   
                   <tr >
-                      <td>
-                          <strong>Received By:</strong>
+                      <td style="border:0pt;font-size:10pt;">
+                      	<strong>Date for Issue:</strong>
                       </td>
-                      <td>
-					  	 <p t-field="o.receive_by"/>
+                      <td style="border:0pt;font-size:10pt;">
+                          <span t-field="o.issue_date"/>
+                      </td>
+                      
+                      <td style="border:0pt;font-size:10pt;">
+                          <strong>Issuer:</strong>
+                      </td>
+                      <td style="border:0pt;font-size:10pt;">
+					  	 <span t-field="o.issue_by"/>
 					  </td>
-                      <td>
+                  </tr>
+                  
+                  <tr >
+                  	  <td style="border:0pt;font-size:10pt;">
                       </td>
-                      <td>
+                      <td style="border:0pt;font-size:10pt;">
                       </td>
+                      <td style="border:0pt;font-size:10pt;">
+                          <strong>Receiver:</strong>
+                      </td>
+                      <td style="border:0pt;font-size:10pt;">
+					  	 <span t-field="o.receiver"/>
+					  </td>
                   </tr>
             </table>
             
@@ -118,10 +119,10 @@
                 <thead>
                     <tr>
                         <th>Product</th>
-                        <th>Quantity(B/S)</th>
-                        <th>UOM(B/S)</th>
+                        <th>Qty(B/S)</th>
                         <th>Batch No</th>
                         <th>Expiry</th>
+                        <th>Qty on Hand(S)</th>
                          <th>Remark</th>
                     </tr>
                 </thead>
@@ -132,13 +133,13 @@
                             <span t-field="l.big_issue_quantity"/> /  <span t-field="l.issue_quantity"/>
                         </td>
                         <td>
-                            <span t-field="l.big_uom_id.name"/> /  <span t-field="l.product_uom.name"/>
-                        </td>
-                        <td>
                             <span t-field="l.batch_no.name" />
                         </td>
                         <td>
                             <span t-field="l.expiry_date" />
+                        </td>
+                        <td>
+                            <span t-field="l.qty_on_hand"/> 
                         </td>
                         <td><span t-field="l.remark"/></td>
                     </tr>
@@ -160,7 +161,7 @@
 	                    <td>Name</td>
 	                    <td><p t-field="l.issue_by"/></td>
 	                   	<td><p t-field="l.approve_by"/></td>
-	                   	<td><p t-field="l.receive_by"/></td>
+	                   	<td><p t-field="l.receiver"/></td>
 					</tr>
 					<tr>
 	                    <td>Position</td>

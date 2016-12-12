@@ -17,54 +17,54 @@
             
             <table class="table table-condensed">
                   <tr >
-                      <td>
-                      	<strong>(RFI)Ref;No:</strong>
+                      <td style="border:0pt;font-size:10pt;">
+                      	<strong>RFI No:</strong>
                       </td>
-                      <td>
+                      <td style="border:0pt;font-size:10pt;">
                           <strong t-field="o.name"></strong>
                       </td>
-                      
-                      <td>
-                          <strong>Issue To:</strong>
-                      </td>
-                      <td>
-					  	 <p t-field="o.issue_to"/>
-					  </td>
                   </tr>
                   
                   <tr >
-                      <td>
+                      <td style="border:0pt;font-size:10pt;">
                       	<strong>Delivery Team:</strong>
                       </td>
-                      <td>
-                          <p t-field="o.sale_team_id.name"/>
+                      <td style="border:0pt;font-size:10pt;">
+                          <span t-field="o.sale_team_id.name"/>
                       </td>
                       
-                      <td>
+                      <td style="border:0pt;font-size:10pt;">
+                          <strong>Receiver:</strong>
+                      </td>
+                      <td style="border:0pt;font-size:10pt;">
+					  	 <span t-field="o.issue_to"/>
+					  </td>
+					  
+                      <!-- <td>
                           <strong>Vehicle No:</strong>
                       </td>
                       <td>
 					  	 <span t-field="o.vehicle_id.model_id.brand_id.name"/>
 						 <b>/</b>
 						 <span t-field="o.vehicle_id.model_id.modelname"/>
-					  </td>
+					  </td> -->
 					  
                   </tr>
                   
                   <tr >
                   	  
-                  	  <td>
+                  	  <td style="border:0pt;font-size:10pt;">
                       	<strong>Requesting Location:</strong>
                       </td>
-                      <td>
+                      <td style="border:0pt;font-size:10pt;">
                           <span t-field="o.from_location_id.location_id.name"/>
 						  <b>/</b>
 						  <span t-field="o.from_location_id.name"/>
                       </td>
-                      <td>
+                      <td style="border:0pt;font-size:10pt;">
                           <strong>Request Warehouse:</strong>
                       </td>
-                      <td>
+                      <td style="border:0pt;font-size:10pt;">
 					  	 <span t-field="o.to_location_id.location_id.name"/>
 						 <b>/</b>
 						 <span t-field="o.to_location_id.name"/>
@@ -73,33 +73,33 @@
                   </tr>
                   
                   <tr >
-                      <td>
+                      <td style="border:0pt;font-size:10pt;">
                       	<strong>Date Requested:</strong>
                       </td>
-                      <td>
-                          <p t-field="o.request_date"/>
+                      <td style="border:0pt;font-size:10pt;">
+                          <span t-field="o.request_date"/>
                       </td>
                       
-                      <td>
+                      <td style="border:0pt;font-size:10pt;">
                           <strong>Requested By:</strong>
                       </td>
-                      <td>
-					  	 <p t-field="o.request_by"/>
+                      <td style="border:0pt;font-size:10pt;">
+					  	 <span t-field="o.request_by"/>
 					  </td>
                   </tr>
                   
                   <tr >
-                      <td>
-                      	<strong>Company:</strong>
+                      <td style="border:0pt;font-size:10pt;">
+                      	<strong>Branch:</strong>
                       </td>
-                      <td>
-                          <p t-field="o.company_id.name"/>
+                      <td style="border:0pt;font-size:10pt;">
+                          <span t-field="o.branch_id.name"/>
                       </td>
-                      <td>
+                      <td style="border:0pt;font-size:10pt;">
                           <strong>Approved By:</strong>
                       </td>
-                      <td>
-					  	 <p t-field="o.approve_by"/>
+                      <td style="border:0pt;font-size:10pt;">
+					  	 <span t-field="o.approve_by"/>
 					  </td>
                   </tr>
             </table>
@@ -108,10 +108,8 @@
                 <thead>
                     <tr>
                         <th>Product</th>
-                        <th>Quantity(B/S)</th>
-                     <!--   <th>Bigger UOM</th>
-                        <th>Quantity</th> -->
-                        <th>UOM(B/S)</th>
+                        <th>Qty(B/S)</th>
+                        <th>Qty on Hand(S)</th>
                          <th>Remark</th>
                     </tr>
                 </thead>
@@ -122,7 +120,7 @@
                             <span t-field="l.big_req_quantity"/> /  <span t-field="l.req_quantity"/>
                         </td>
                         <td>
-                            <span t-field="l.big_uom_id.name"/> /  <span t-field="l.product_uom.name"/>
+                            <span t-field="l.qty_on_hand"/>
                         </td>
                         <td><span t-field="l.remark"/></td>
                     </tr>

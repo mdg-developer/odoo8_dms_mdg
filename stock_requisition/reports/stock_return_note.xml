@@ -15,71 +15,66 @@
 
 					<table class="table table-condensed">
 						<tr>
-							<td>
-								<strong>(SRN)Ref;No:</strong>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>SRN Ref:</strong>
 							</td>
-							<td>
+							<td style="border:0pt;font-size:10pt;">
 								<strong t-field="o.name"></strong>
 							</td>
 
-							<td>
-								<strong>(GIN)Ref;No. :</strong>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Returned By:</strong>
 							</td>
-							<td>
-								<strong t-field="o.note_id"></strong>
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.returner"></span>
 							</td>
 						</tr>
 
 						<tr>
-							<td>
+							<td style="border:0pt;font-size:10pt;">
 								<strong>Sales Team:</strong>
 							</td>
-							<td>
-								<p t-field="o.sale_team_id.name" />
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.sale_team_id.name" />
 							</td>
 
-							<td>
-								<strong>Sales Order/Inv Ref;No. :</strong>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>WH Receiver:</strong>
 							</td>
-							<td>
-								<p t-field="o.so_no" />
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.wh_receiver" />
 							</td>
 						</tr>
 
 						<tr>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>From Location:</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+							  <span t-field="o.from_location"/>
+	                        </td>
 
-							<td>
-								<strong>Return From :</strong>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>To Warehouse:</strong>
 							</td>
-							<td>
-								<p t-field="o.return_from" />
-							</td>
-
-							<td>
-								<strong>Vehicle No:</strong>
-							</td>
-							<td>
-								<span t-field="o.vehicle_id.model_id.brand_id.name" />
-								<b>/</b>
-								<span t-field="o.vehicle_id.model_id.modelname" />
-							</td>
+							<td style="border:0pt;font-size:10pt;">
+							  <span t-field="o.to_location"/>
+	                        </td>
 						</tr>
 
 						<tr>
-							<td>
+							<td style="border:0pt;font-size:10pt;">
 								<strong>Date of Return:</strong>
 							</td>
-							<td>
-								<p t-field="o.return_date" />
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.return_date" />
 							</td>
-
-							<td>
-								<strong>Company:</strong>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Branch:</strong>
 							</td>
-							<td>
-								<p t-field="o.company_id.name" />
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.branch_id" />
 							</td>
-
 						</tr>
 
 					</table>
@@ -88,15 +83,11 @@
 						<thead>
 							<tr>
 								<th>Product</th>
-								<th class="text-right">Received Qty</th>
-								<th class="text-right">Returned Qty</th>
+								<th class="text-right">Issued Qty</th>
 								<th class="text-right">Sales Qty</th>
 								<th class="text-right">FOC Qty</th>
-								<th>UoM</th>
-								<th class="text-right">Rec Qty(B/S)</th>
-								<th>Rec UoM(B/S)</th>
-								<!-- <th class="text-right">Rec Qty</th> -->
-								<!-- <th>Rec Smaller UoM</th> -->
+								<th class="text-right">Returned Qty(B/S)</th>
+								<th class="text-right">Received Qty(B/S)</th>
 								<th>Expiry</th>
 								<th>Remark</th>
 							</tr>
@@ -110,40 +101,20 @@
 									<span t-field="l.receive_quantity" />
 								</td>
 								<td class="text-right">
-									<span t-field="l.return_quantity" />
-								</td>
-								<td class="text-right">
 									<span t-field="l.sale_quantity" />
 								</td>
 								<td class="text-right">
 									<span t-field="l.foc_quantity" />
 								</td>
-								<td>
-									<span t-field="l.product_uom.name" />
-								</td>
-
 								<td class="text-right">
-									<span t-field="l.rec_big_quantity" />
-									/
-									<span t-field="l.rec_small_quantity" />
-								</td>
-
-								<td>
-									<span t-field="l.rec_big_uom_id.name" />
-									/
-									<span t-field="l.rec_small_uom_id.name" />
-								</td>
-
-								<!-- <td class="text-right"> -->
-								<!-- <span t-field="l.rec_small_quantity"/> -->
-								<!-- </td> -->
-
-								<!-- <td><span t-field="l.rec_small_uom_id.name"/></td> -->
-
+		                            <span t-field="l.return_quantity_big"/> /  <span t-field="l.return_quantity"/>
+		                        </td>
+		                        <td class="text-right">
+		                            <span t-field="l.rec_big_quantity"/> /  <span t-field="l.rec_small_quantity"/>
+		                        </td>
 								<td>
 									<span t-field="l.expiry_date" />
 								</td>
-
 								<td>
 									<span t-field="l.remark" />
 								</td>
