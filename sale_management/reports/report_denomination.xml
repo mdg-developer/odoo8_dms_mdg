@@ -19,7 +19,7 @@
 														<strong>MDG Co.,Ltd</strong>
 													</h4>
 													<h4 align="center">
-														<strong>Denomination Form</strong>
+														<strong>Sale to Cash Summary Report</strong>
 													</h4>
 
 													<table class="table table-condensed">
@@ -36,6 +36,7 @@
 															<td style="border:0pt;font-size:10pt;">
 																<strong t-field="o.date"></strong>
 															</td>
+
 														</tr>
 
 														<tr>
@@ -45,13 +46,26 @@
 															<td style="border:0pt;font-size:10pt;">
 																<strong t-field="o.user_id.name" />
 															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong>Branch :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong t-field="o.branch_id.name"></strong>
+															</td>
 														</tr>
 
 														<table class="table table-condensed" style="border:1pt solid;">
+															<h6 align="rignt">
+																<span class="text-right">
+																	<U>
+																		<b>DSSR</b>
+																	</U>
+																</span>
+															</h6>
 															<thead>
 																<tr>
 																	<th class="text-center" style="border:1pt solid;border-color:black;">Product</th>
-																	<th class="text-center" style="border:1pt solid;border-color:black;">Qty</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th>
 																	<th class="text-center" style="border:1pt solid;border-color:black;">Amount</th>
 																	<th class="text-center" style="border:1pt solid;border-color:black;">Remark</th>
 																</tr>
@@ -75,13 +89,27 @@
 																</tr>
 															</tbody>
 														</table>
-
+														<h6 align="right">
+															<span>
+																<b>Sub Total:</b>
+															</span>
+															<b>
+																<span t-field="o.product_amount" />
+															</b>
+														</h6>
 														<table t-if="o.denomination_note_line" class="table table-condensed"
 															style="border:1pt solid;">
+															<h6 align="rignt">
+																<span class="text-right">
+																	<U>
+																		<b>Denomination</b>
+																	</U>
+																</span>
+															</h6>
 															<thead>
 																<tr>
 																	<th class="text-center" style="border:1pt solid;border-color:black;">Notes</th>
-																	<th class="text-center" style="border:1pt solid;border-color:black;">Qty</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th>
 																	<th class="text-center" style="border:1pt solid;border-color:black;">Total</th>
 																	<th class="text-center" style="border:1pt solid;border-color:black;">Remark</th>
 																</tr>
@@ -105,9 +133,25 @@
 																</tr>
 															</tbody>
 														</table>
+														<h6 align="right">
+															<span>
+																<b>Sub Total:</b>
+															</span>
+															<b>
+																<span t-field="o.total_amount" />
+															</b>
+														</h6>
+
 
 														<table t-if="o.denomination_cheque_line" class="table table-condensed"
 															style="border:1pt solid;">
+															<h6 align="rignt">
+																<span class="text-right">
+																	<U>
+																		<b>Cheque</b>
+																	</U>
+																</span>
+															</h6>
 															<thead>
 																<tr>
 																	<th class="text-center" style="border:1pt solid;border-color:black;">Customer</th>
@@ -137,8 +181,16 @@
 
 																</tr>
 															</tbody>
-														</table>
 
+														</table>
+														<h6 align="right">
+															<span>
+																<b>Sub Total:</b>
+															</span>
+															<b>
+																<span t-field="o.cheque_amount" />
+															</b>
+														</h6>
 														<!-- <table class="table table-condensed" style="border:0pt;"> -->
 														<!-- <thead> -->
 														<!-- <tr> -->
@@ -156,35 +208,42 @@
 														<!-- </tr> -->
 														<!-- </thead> -->
 														<!-- </table> -->
-														<table class="table table-condensed" style="border:0pt;">
-															<thead>
-																<tr>
-																	<td style="margin-top:-5pt;" align="right">
-																		<span>Invoice Total</span>
-																	</td>
-																	<td style="margin-top:-5pt;" align="right">
-																		<span t-field="o.product_amount" />
-																	</td>
-																</tr>
-																<tr>
-																	<td style="margin-top:-5pt;" align="right">
-																		<span>Denomination Total</span>
-																	</td>
-																	<td style="margin-top:-5pt;" align="right">
-																		<span t-field="o.total_amount" />
-																	</td>
-																</tr>
-																<tr>
-																	<td style="margin-top:-5pt;" align="right">
-																		<span>Cheque Total</span>
-																	</td>
-																	<td style="margin-top:-5pt;" align="right">
-																		<span t-field="o.cheque_amount" />
+														<!-- <table class="table table-condensed" style="border:0pt;"> -->
+														<!-- <thead> -->
+														<!-- <tr> -->
+														<!-- <td style="margin-top:-5pt;" align="right"> -->
+														<!-- <span>Invoice Total</span> -->
+														<!-- </td> -->
+														<!-- <td style="margin-top:-5pt;" align="right"> -->
+														<!-- <span t-field="o.product_amount" /> -->
+														<!-- </td> -->
+														<!-- </tr> -->
+														<!-- <tr> -->
+														<!-- <td style="margin-top:-5pt;" align="right"> -->
+														<!-- <span>Denomination Total</span> -->
+														<!-- </td> -->
+														<!-- <td style="margin-top:-5pt;" align="right"> -->
+														<!-- <span t-field="o.total_amount" /> -->
+														<!-- </td> -->
+														<!-- </tr> -->
+														<!-- <tr> -->
+														<!-- <td style="margin-top:-5pt;" align="right"> -->
+														<!-- <span>Cheque Total</span> -->
+														<!-- </td> -->
+														<!-- <td style="margin-top:-5pt;" align="right"> -->
+														<!-- <span t-field="o.cheque_amount" /> -->
 
-																	</td>
-																</tr>
-															</thead>
-														</table>
+														<!-- </td> -->
+														<!-- </tr> -->
+														<!-- </thead> -->
+														<!-- </table> -->
+														<h5 align="right">
+															<b>
+																<span>Grand Total :</span>
+																<t t-set="total" t-value="(o.total_amount)+(o.cheque_amount)" />
+																<t t-esc="total" />
+															</b>
+														</h5>
 														<table class="table table-condensed" style="border:0pt;">
 															<thead>
 																<tr>
@@ -206,7 +265,7 @@
 														<strong>MDG Co.,Ltd</strong>
 													</h4>
 													<h4 align="center">
-														<strong>Denomination Form</strong>
+														<strong>Sale to Cash Summary Report</strong>
 													</h4>
 
 													<table class="table table-condensed">
@@ -232,13 +291,26 @@
 															<td style="border:0pt;font-size:10pt;">
 																<strong t-field="o.user_id.name" />
 															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong>Branch :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong t-field="o.branch_id.name"></strong>
+															</td>
 														</tr>
 
 														<table class="table table-condensed" style="border:1pt solid;">
+															<h6 align="left">
+																<span>
+																	<U>
+																		<b>DSSR</b>
+																	</U>
+																</span>
+															</h6>
 															<thead>
 																<tr>
 																	<th class="text-center" style="border:1pt solid;border-color:black;">Product</th>
-																	<th class="text-center" style="border:1pt solid;border-color:black;">Qty</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th>
 																	<th class="text-center" style="border:1pt solid;border-color:black;">Amount</th>
 																	<th class="text-center" style="border:1pt solid;border-color:black;">Remark</th>
 																</tr>
@@ -261,14 +333,30 @@
 																		align="center"></td>
 																</tr>
 															</tbody>
+
 														</table>
+														<h6 align="right">
+															<span>
+																<b>Sub Total:</b>
+															</span>
+															<b>
+																<span t-field="o.product_amount" />
+															</b>
+														</h6>
 
 														<table t-if="o.denomination_note_line" class="table table-condensed"
 															style="border:1pt solid;">
+															<h6 align="left">
+																<span>
+																	<U>
+																		<b>Denomination</b>
+																	</U>
+																</span>
+															</h6>
 															<thead>
 																<tr>
 																	<th class="text-center" style="border:1pt solid;border-color:black;">Notes</th>
-																	<th class="text-center" style="border:1pt solid;border-color:black;">Qty</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th>
 																	<th class="text-center" style="border:1pt solid;border-color:black;">Total</th>
 																	<th class="text-center" style="border:1pt solid;border-color:black;">Remark</th>
 																</tr>
@@ -291,10 +379,25 @@
 																		align="center"></td>
 																</tr>
 															</tbody>
-														</table>
 
+														</table>
+														<h6 align="right">
+															<span>
+																<b>Sub Total:</b>
+															</span>
+															<b>
+																<span t-field="o.total_amount" />
+															</b>
+														</h6>
 														<table t-if="o.denomination_cheque_line" class="table table-condensed"
 															style="border:1pt solid;">
+															<h6 align="left">
+																<span>
+																	<U>
+																		<b>Cheque</b>
+																	</U>
+																</span>
+															</h6>
 															<thead>
 																<tr>
 																	<th class="text-center" style="border:1pt solid;border-color:black;">Customer</th>
@@ -324,6 +427,14 @@
 																</tr>
 															</tbody>
 														</table>
+														<h6 align="right">
+															<span>
+																<b>Sub Total:</b>
+															</span>
+															<b>
+																<span t-field="o.cheque_amount" />
+															</b>
+														</h6>
 
 														<!-- <table class="table table-condensed" style="border:0pt;"> -->
 														<!-- <thead> -->
@@ -343,35 +454,42 @@
 														<!-- </thead> -->
 														<!-- </table> -->
 
-														<table class="table table-condensed" style="border:0pt;">
-															<thead>
-																<tr>
-																	<td style="margin-top:-5pt;" align="right">
-																		<span>Invoice Total</span>
-																	</td>
-																	<td style="margin-top:-5pt;" align="right">
-																		<span t-field="o.product_amount" />
-																	</td>
-																</tr>
-																<tr>
-																	<td style="margin-top:-5pt;" align="right">
-																		<span>Denomination Total</span>
-																	</td>
-																	<td style="margin-top:-5pt;" align="right">
-																		<span t-field="o.total_amount" />
-																	</td>
-																</tr>
-																<tr>
-																	<td style="margin-top:-5pt;" align="right">
-																		<span>Cheque Total</span>
-																	</td>
-																	<td style="margin-top:-5pt;" align="right">
-																		<span t-field="o.cheque_amount" />
+														<!-- <table class="table table-condensed" style="border:0pt;"> -->
+														<!-- <thead> -->
+														<!-- <tr> -->
+														<!-- <td style="margin-top:-5pt;" align="right"> -->
+														<!-- <span>Invoice Total</span> -->
+														<!-- </td> -->
+														<!-- <td style="margin-top:-5pt;" align="right"> -->
+														<!-- <span t-field="o.product_amount" /> -->
+														<!-- </td> -->
+														<!-- </tr> -->
+														<!-- <tr> -->
+														<!-- <td style="margin-top:-5pt;" align="right"> -->
+														<!-- <span>Denomination Total</span> -->
+														<!-- </td> -->
+														<!-- <td style="margin-top:-5pt;" align="right"> -->
+														<!-- <span t-field="o.total_amount" /> -->
+														<!-- </td> -->
+														<!-- </tr> -->
+														<!-- <tr> -->
+														<!-- <td style="margin-top:-5pt;" align="right"> -->
+														<!-- <span>Cheque Total</span> -->
+														<!-- </td> -->
+														<!-- <td style="margin-top:-5pt;" align="right"> -->
+														<!-- <span t-field="o.cheque_amount" /> -->
 
-																	</td>
-																</tr>
-															</thead>
-														</table>
+														<!-- </td> -->
+														<!-- </tr> -->
+														<!-- </thead> -->
+														<!-- </table> -->
+														<h5 align="right">
+															<b>
+																<span>Grand Total :</span>
+																<t t-set="total" t-value="(o.total_amount)+(o.cheque_amount)" />
+																<t t-esc="total" />
+															</b>
+														</h5>
 														<table class="table table-condensed" style="border:0pt;">
 															<thead>
 																<tr>
