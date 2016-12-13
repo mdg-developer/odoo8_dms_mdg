@@ -54,7 +54,8 @@
 															</td>
 														</tr>
 
-														<table class="table table-condensed" style="border:1pt solid;">
+														<table t-if="o.denomination_product_line" class="table table-condensed"
+															style="border:1pt solid;">
 															<h6 align="rignt">
 																<span class="text-right">
 																	<U>
@@ -89,7 +90,8 @@
 																</tr>
 															</tbody>
 														</table>
-														<h6 align="right">
+
+														<h6 t-if="o.denomination_product_line" align="right">
 															<span>
 																<b>Sub Total:</b>
 															</span>
@@ -97,6 +99,67 @@
 																<span t-field="o.product_amount" />
 															</b>
 														</h6>
+														<table t-if="o.denomination_ar_line" class="table table-condensed"
+															style="border:1pt solid;">
+															<h6 align="rignt">
+																<span class="text-right">
+																	<U>
+																		<b>AR Collection</b>
+																	</U>
+																</span>
+															</h6>
+															<thead>
+																<tr>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Invoice No</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Date</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Customer</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Payment Type</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Amount</th>
+																</tr>
+															</thead>
+															<tbody class="invoice_tbody">
+																<tr t-foreach="o.denomination_ar_line" t-as="p">
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="p.invoice_id" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="p.date" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="p.partner_id.name" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="p.payment_type" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="right">
+																		<span t-field="p.amount" />
+																	</td>
+																</tr>
+															</tbody>
+														</table>
+
+														<h6 t-if="o.denomination_ar_line" align="right">
+															<span>
+																<b>Sub Total:</b>
+															</span>
+															<b>
+																<span t-field="o.ar_amount" />
+															</b>
+														</h6>
+
+														<h5 align="right">
+															<b>
+																<span>Grand Total :</span>
+																<span t-field="o.dssr_ar_amount" />
+
+															</b>
+														</h5>
+
 														<table t-if="o.denomination_note_line" class="table table-condensed"
 															style="border:1pt solid;">
 															<h6 align="rignt">
@@ -133,7 +196,7 @@
 																</tr>
 															</tbody>
 														</table>
-														<h6 align="right">
+														<h6 t-if="o.denomination_note_line" align="right">
 															<span>
 																<b>Sub Total:</b>
 															</span>
@@ -183,7 +246,7 @@
 															</tbody>
 
 														</table>
-														<h6 align="right">
+														<h6 t-if="o.denomination_cheque_line" align="right">
 															<span>
 																<b>Sub Total:</b>
 															</span>
@@ -191,57 +254,54 @@
 																<span t-field="o.cheque_amount" />
 															</b>
 														</h6>
-														<!-- <table class="table table-condensed" style="border:0pt;"> -->
-														<!-- <thead> -->
-														<!-- <tr> -->
-														<!-- <td style="margin-top:-10pt;border:0pt;" align="left"> -->
-														<!-- <span>Denomination Total :</span> -->
-														<!-- <span t-field="o.total_amount" /> -->
-														<!-- </td> -->
-														<!-- </tr> -->
+														<table t-if="o.denomination_bank_line" class="table table-condensed"
+															style="border:1pt solid;">
+															<h6 align="rignt">
+																<span class="text-right">
+																	<U>
+																		<b>Bank</b>
+																	</U>
+																</span>
+															</h6>
+															<thead>
+																<tr>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Customer</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Bank</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Total</th>
+																</tr>
+															</thead>
+															<tbody class="invoice_tbody">
+																<tr t-foreach="o.denomination_bank_line" t-as="c">
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="c.partner_id" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="c.journal_id" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="right">
+																		<span t-field="c.amount" />
+																	</td>
 
-														<!-- <tr> -->
-														<!-- <td style="margin-top:-10pt;border:0pt;" align="left"> -->
-														<!-- <span>Invoice Total :</span> -->
-														<!-- <span t-field="o.product_amount" /> -->
-														<!-- </td> -->
-														<!-- </tr> -->
-														<!-- </thead> -->
-														<!-- </table> -->
-														<!-- <table class="table table-condensed" style="border:0pt;"> -->
-														<!-- <thead> -->
-														<!-- <tr> -->
-														<!-- <td style="margin-top:-5pt;" align="right"> -->
-														<!-- <span>Invoice Total</span> -->
-														<!-- </td> -->
-														<!-- <td style="margin-top:-5pt;" align="right"> -->
-														<!-- <span t-field="o.product_amount" /> -->
-														<!-- </td> -->
-														<!-- </tr> -->
-														<!-- <tr> -->
-														<!-- <td style="margin-top:-5pt;" align="right"> -->
-														<!-- <span>Denomination Total</span> -->
-														<!-- </td> -->
-														<!-- <td style="margin-top:-5pt;" align="right"> -->
-														<!-- <span t-field="o.total_amount" /> -->
-														<!-- </td> -->
-														<!-- </tr> -->
-														<!-- <tr> -->
-														<!-- <td style="margin-top:-5pt;" align="right"> -->
-														<!-- <span>Cheque Total</span> -->
-														<!-- </td> -->
-														<!-- <td style="margin-top:-5pt;" align="right"> -->
-														<!-- <span t-field="o.cheque_amount" /> -->
+																</tr>
+															</tbody>
 
-														<!-- </td> -->
-														<!-- </tr> -->
-														<!-- </thead> -->
-														<!-- </table> -->
+														</table>
+														<h6 t-if="o.denomination_bank_line" align="right">
+															<span>
+																<b>Sub Total:</b>
+															</span>
+															<b>
+																<span t-field="o.bank_amount" />
+															</b>
+														</h6>
 														<h5 align="right">
 															<b>
 																<span>Grand Total :</span>
-																<t t-set="total" t-value="(o.total_amount)+(o.cheque_amount)" />
-																<t t-esc="total" />
+																<span t-field="o.trans_amount" />
+
 															</b>
 														</h5>
 														<table class="table table-condensed" style="border:0pt;">
@@ -299,9 +359,10 @@
 															</td>
 														</tr>
 
-														<table class="table table-condensed" style="border:1pt solid;">
+														<table t-if="o.denomination_product_line" class="table table-condensed"
+															style="border:1pt solid;">
 															<h6 align="left">
-																<span>
+																<span class="text-right">
 																	<U>
 																		<b>DSSR</b>
 																	</U>
@@ -333,9 +394,9 @@
 																		align="center"></td>
 																</tr>
 															</tbody>
-
 														</table>
-														<h6 align="right">
+
+														<h6 t-if="o.denomination_product_line" align="right">
 															<span>
 																<b>Sub Total:</b>
 															</span>
@@ -343,11 +404,71 @@
 																<span t-field="o.product_amount" />
 															</b>
 														</h6>
+														<table t-if="o.denomination_ar_line" class="table table-condensed"
+															style="border:1pt solid;">
+															<h6 align="left">
+																<span class="text-right">
+																	<U>
+																		<b>AR Collection</b>
+																	</U>
+																</span>
+															</h6>
+															<thead>
+																<tr>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Invoice No</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Date</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Customer</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Payment Type</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Amount</th>
+																</tr>
+															</thead>
+															<tbody class="invoice_tbody">
+																<tr t-foreach="o.denomination_ar_line" t-as="p">
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="p.invoice_id" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="p.date" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="p.partner_id.name" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="p.payment_type" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="right">
+																		<span t-field="p.amount" />
+																	</td>
+																</tr>
+															</tbody>
+														</table>
+
+														<h6 t-if="o.denomination_ar_line" align="right">
+															<span>
+																<b>Sub Total:</b>
+															</span>
+															<b>
+																<span t-field="o.ar_amount" />
+															</b>
+														</h6>
+
+														<h5 align="right">
+															<b>
+																<span>Grand Total :</span>
+																<span t-field="o.dssr_ar_amount" />
+
+															</b>
+														</h5>
 
 														<table t-if="o.denomination_note_line" class="table table-condensed"
 															style="border:1pt solid;">
 															<h6 align="left">
-																<span>
+																<span class="text-right">
 																	<U>
 																		<b>Denomination</b>
 																	</U>
@@ -379,9 +500,8 @@
 																		align="center"></td>
 																</tr>
 															</tbody>
-
 														</table>
-														<h6 align="right">
+														<h6 t-if="o.denomination_note_line" align="right">
 															<span>
 																<b>Sub Total:</b>
 															</span>
@@ -389,10 +509,12 @@
 																<span t-field="o.total_amount" />
 															</b>
 														</h6>
+
+
 														<table t-if="o.denomination_cheque_line" class="table table-condensed"
 															style="border:1pt solid;">
 															<h6 align="left">
-																<span>
+																<span class="text-right">
 																	<U>
 																		<b>Cheque</b>
 																	</U>
@@ -424,10 +546,12 @@
 																		align="right">
 																		<span t-field="c.amount" />
 																	</td>
+
 																</tr>
 															</tbody>
+
 														</table>
-														<h6 align="right">
+														<h6 t-if="o.denomination_cheque_line" align="right">
 															<span>
 																<b>Sub Total:</b>
 															</span>
@@ -435,59 +559,54 @@
 																<span t-field="o.cheque_amount" />
 															</b>
 														</h6>
+														<table t-if="o.denomination_bank_line" class="table table-condensed"
+															style="border:1pt solid;">
+															<h6 align="left">
+																<span class="text-right">
+																	<U>
+																		<b>Bank</b>
+																	</U>
+																</span>
+															</h6>
+															<thead>
+																<tr>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Customer</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Bank</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Total</th>
+																</tr>
+															</thead>
+															<tbody class="invoice_tbody">
+																<tr t-foreach="o.denomination_bank_line" t-as="c">
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="c.partner_id" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="c.journal_id" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="right">
+																		<span t-field="c.amount" />
+																	</td>
 
-														<!-- <table class="table table-condensed" style="border:0pt;"> -->
-														<!-- <thead> -->
-														<!-- <tr> -->
-														<!-- <td style="margin-top:-10pt;border:0pt;" align="left"> -->
-														<!-- <span>Denomination Total :</span> -->
-														<!-- <span t-field="o.total_amount" /> -->
-														<!-- </td> -->
-														<!-- </tr> -->
+																</tr>
+															</tbody>
 
-														<!-- <tr> -->
-														<!-- <td style="margin-top:-10pt;border:0pt;" align="left"> -->
-														<!-- <span>Invoice Total :</span> -->
-														<!-- <span t-field="o.product_amount" /> -->
-														<!-- </td> -->
-														<!-- </tr> -->
-														<!-- </thead> -->
-														<!-- </table> -->
-
-														<!-- <table class="table table-condensed" style="border:0pt;"> -->
-														<!-- <thead> -->
-														<!-- <tr> -->
-														<!-- <td style="margin-top:-5pt;" align="right"> -->
-														<!-- <span>Invoice Total</span> -->
-														<!-- </td> -->
-														<!-- <td style="margin-top:-5pt;" align="right"> -->
-														<!-- <span t-field="o.product_amount" /> -->
-														<!-- </td> -->
-														<!-- </tr> -->
-														<!-- <tr> -->
-														<!-- <td style="margin-top:-5pt;" align="right"> -->
-														<!-- <span>Denomination Total</span> -->
-														<!-- </td> -->
-														<!-- <td style="margin-top:-5pt;" align="right"> -->
-														<!-- <span t-field="o.total_amount" /> -->
-														<!-- </td> -->
-														<!-- </tr> -->
-														<!-- <tr> -->
-														<!-- <td style="margin-top:-5pt;" align="right"> -->
-														<!-- <span>Cheque Total</span> -->
-														<!-- </td> -->
-														<!-- <td style="margin-top:-5pt;" align="right"> -->
-														<!-- <span t-field="o.cheque_amount" /> -->
-
-														<!-- </td> -->
-														<!-- </tr> -->
-														<!-- </thead> -->
-														<!-- </table> -->
+														</table>
+														<h6 t-if="o.denomination_bank_line" align="right">
+															<span>
+																<b>Sub Total:</b>
+															</span>
+															<b>
+																<span t-field="o.bank_amount" />
+															</b>
+														</h6>
 														<h5 align="right">
 															<b>
 																<span>Grand Total :</span>
-																<t t-set="total" t-value="(o.total_amount)+(o.cheque_amount)" />
-																<t t-esc="total" />
+																<span t-field="o.trans_amount" />
+
 															</b>
 														</h5>
 														<table class="table table-condensed" style="border:0pt;">
