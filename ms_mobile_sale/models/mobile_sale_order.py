@@ -1725,7 +1725,7 @@ class mobile_sale_order(osv.osv):
 #                             account_id=partner.property_account_receivable.id
 #                             invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)
                                                          
-                            cr.execute('update account_invoice set date_invoice = now()::date , branch_id =%s ,payment_type=%s,delivery_remark =%s ,section_id=%s,user_id=%s where id =%s', (branch_id, deli['payment_type'], delivery_remark, delivery_team_id, uid, invoice_id,))                                                
+                            cr.execute('update account_invoice set date_invoice = now()::date , branch_id =%s ,payment_type=%s,delivery_remark =%s ,section_id=%s,user_id=%s, payment_term = %s where id =%s', (branch_id, deli['payment_type'], delivery_remark, delivery_team_id, uid, invoice_id,deli['payment_term']))                                                
                                                         
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             if invoice_id:
@@ -2129,6 +2129,10 @@ class mobile_sale_order(osv.osv):
                         'amount':ar['amount'],
                         'date':ar['date'],
                         'notes':ar['notes'],
+                        'cheque_no':ar['cheque_no'],
+                        'partner_id':ar['partner_id'],
+                        'sale_team_id':ar['sale_team_id'],
+                        'payment_code':ar['payment_code'],
                     }
                     rental_obj.create(cursor, user, rental_result, context=context)
             return True
