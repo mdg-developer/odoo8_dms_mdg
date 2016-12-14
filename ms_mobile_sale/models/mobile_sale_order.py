@@ -18,6 +18,7 @@ class customer_payment(osv.osv):
    'date':fields.date('Date'),
    'cheque_no':fields.char('Cheque No'),
    'partner_id':fields.many2one('res.partner', 'Customer'),
+   'sale_team_id':fields.many2one('crm.case.section', 'Sale Team'),
         }
 class mobile_sale_order(osv.osv):
     
@@ -1978,6 +1979,7 @@ class mobile_sale_order(osv.osv):
                         'notes':ar['notes'],
                         'cheque_no':ar['cheque_no'],
                         'partner_id':ar['partner_id'],
+                        'sale_team_id':ar['sale_team_id'],
                     }
                     rental_obj.create(cursor, user, rental_result, context=context)
             return True
