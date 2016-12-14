@@ -34,6 +34,8 @@ class stock_move_import(osv.osv):
     _name = 'stock.import'
     _description = 'Import inventory adjust product lines'
     _columns = {
+                
+                'sequence':fields.char('Reference'),
                 'name':fields.char('Description'),
                 'import_date':fields.date('Import Date', readonly=True),
                 'file': fields.binary('File', required=True),
@@ -44,7 +46,6 @@ class stock_move_import(osv.osv):
                 'picking_type':fields.selection([
                     ('receipts', 'Receipts'),
                     ('internal_transfer', 'Internal Transfers'),
-                    ('delivery_order', 'Delivery Order')
                 ], 'Picking Type', required=True),
                 'note':fields.text('Note'),
                 'state':fields.selection([
@@ -52,6 +53,7 @@ class stock_move_import(osv.osv):
                     ('pending', 'Pending'),
                   #  ('confirm', 'Confirm'),
                     ('transfered', 'Transferd'),
+                    ('deleted', 'Deleted'),
                     ('error', 'Error'),
                 ], 'States'),
                'stock_line_ids': fields.one2many('stock.import.line', 'line_id', 'Order Lines', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=True),
@@ -62,6 +64,28 @@ class stock_move_import(osv.osv):
         'date_expected':datetime.now(),
         'state':'draft'
     }
+    
+    def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
+        if vals.get('sequence', '/') == '/':
+            vals['sequence'] = self.pool.get('ir.sequence').get(cr, uid, 'stock.import') or '/'
+        ctx = dict(context or {}, mail_create_nolog=True)
+        print'vals',vals
+        new_id = super(stock_move_import, self).create(cr, uid, vals, context=ctx)
+#         self.message_post(cr, uid, [new_id], body=_("Stock Move created"), context=ctx)
+        return new_id
+    
+    def delete_stock(self, cr, uid, ids, context=None):         
+        cr.execute("""select origin from stock_import_line  where line_id=%s""",(ids[0],))
+        origin=cr.fetchall()
+        if origin:
+            for ori in origin:
+#                 print 'product',product[0]
+                cr.execute("""delete from stock_move where origin=%s  """,(ori[0],))
+                cr.execute("""delete from stock_import_line where origin=%s  """,(ori[0],))
+                self.write(cr, uid, ids[0], {'state': 'deleted'})
+                
     
     def _check_file_ext(self, cursor, user, ids):
         for import_file in self.browse(cursor, user, ids):
@@ -141,7 +165,7 @@ class stock_move_import(osv.osv):
                                 'priority':'1'}
                     picking_id = stock_picking_obj.create(cr, uid, res, context)    
                 move_val = {
-                          'name':'Import',
+                        'name':'Import',
                           'product_id':data.product_id.id,
                           'product_uom_qty':data.product_uom_qty,
                           'product_uos_qty':data.product_uom_qty,
@@ -180,6 +204,14 @@ class stock_move_import(osv.osv):
         data = self.browse(cr, uid, ids)[0]
         import_file = data.file
         import_filename = data.filename
+        
+        print 'import_id',ids[0]
+        cr.execute("""select sequence from stock_import where id=%s""",(ids[0],))
+        sequence_ids=cr.fetchall()
+        if sequence_ids:
+            tag_seq_no=sequence_ids[0][0]
+            print 'tag',tag_seq_no   
+        
 
         err_log = ''
         header_line = False
@@ -279,8 +311,10 @@ class stock_move_import(osv.osv):
                     import_vals['from location'] = ln[from_location_id_i]
                     import_vals['to location'] = ln[to_location_id_i]
                     import_vals['transfer date'] = ln[transfer_date_i]
-                    import_vals['tg_no'] = ln[tg_no_i] 
+#                     import_vals['tg_no'] = ln[tg_no_i] 
+                    import_vals['tg_no'] = sequence_ids[0][0]
                     import_vals['issue_no'] = ln[issue_no_i] 
+                    print 'import_vals',import_vals
                     amls.append(import_vals)
                   
         if err_log:
