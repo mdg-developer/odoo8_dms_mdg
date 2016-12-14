@@ -1619,8 +1619,10 @@ class mobile_sale_order(osv.osv):
 #                             partner_obj.write(cr,uid,partner_id,{'property_account_receivable':629}, context)
 #                             partner = partner_obj.browse(cr, uid, partner_id, context=context)
 #                             account_id=partner.property_account_receivable.id
-#                             invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)                                    
-                            cr.execute('update account_invoice set branch_id =%s ,payment_type=%s,delivery_remark =%s ,section_id=%s,user_id=%s where id =%s',(branch_id,deli['payment_type'],delivery_remark,delivery_team_id,uid,invoice_id,))                            
+#                             invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)
+                                                         
+                            cr.execute('update account_invoice set date_invoice = now()::date , branch_id =%s ,payment_type=%s,delivery_remark =%s ,section_id=%s,user_id=%s where id =%s',(branch_id,deli['payment_type'],delivery_remark,delivery_team_id,uid,invoice_id,))                                                
+                                                        
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             if invoice_id:
                                 invlist = []
