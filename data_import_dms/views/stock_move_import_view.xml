@@ -89,7 +89,10 @@
 			<field name="arch" type="xml">
 				<tree string="WareHouse Import Tree">
 					<field name="name" invisible="1" />
+					<field name="sequence"/>
 					<field name="company_id" />
+					<field name="inventory_date"/>
+					<field name="picking_type"/>
 					<field name="state" />
 					<field name="note" />
 				</tree>
