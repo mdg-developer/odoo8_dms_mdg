@@ -223,6 +223,7 @@ class cashier_approval(osv.osv):
         voucherObj = self.pool.get('account.voucher')
         voucherLineObj = self.pool.get('account.voucher.line')
         payment_line_obj = self.pool.get('cashier.customer.payment')
+        last_amount=0
 
         cr.execute("""select journal_id,amount,type,partner_id,account_id,date_invoice,period_id,notes,invoice_id from cashier_customer_payment where cashier_id=%s and pre_so='t' and selected=True""", (ids[0],)) 
         payment_data = cr.fetchall()
@@ -256,24 +257,79 @@ class cashier_approval(osv.osv):
                 voucherId = voucherObj.create(cr, uid, accountVResult, context=context)                
                 if voucherId:
                     vlist = []
-                    vlist.append(voucherId)                      
-                    line_data = {
-                                    # 'name': invoice.number,
-                                    'voucher_id' : voucherId,
-                                    'move_line_id' : invoice.move_id.line_id[0].id,
-                                    'account_id' : invoice.account_id.id,  # invoice.move_id.line_id[0].account_id.id,
-                                    'partner_id' : payment[3],
-                                    "amount" : payment[1],
-                                    "amount_original": invoice.amount_total,
-                                    'type': 'cr',
-                                }
-                    voucherLineObj.create(cr, uid, line_data, context=context)  
-                    voucherObj.button_proforma_voucher(cr, uid, vlist , context=context)
-                    cr.execute("""update account_invoice set state='paid',unselected=False
-                    where id=%s and residual=0""", (invoice.id,))
-                    cr.execute("""update sale_order set invoiced='t' from account_invoice
-                    where sale_order.name=account_invoice.reference and account_invoice.residual=0 and account_invoice.id=%s""", (invoice.id,))
-                    cr.execute("update mobile_ar_collection set state='done' ,unselected=False where ref_no=%s", (invoice.number,))
+                    vlist.append(voucherId)
+                    cr.execute ("select account_id,credit+debit as amount_total,id,reconcile_partial_id  from  account_move_line where move_id=%s and name='/'  and reconcile_id is null  order by credit+debit",( invoice.move_id.id,)) 
+                    move_line_data =cr.fetchall()    
+#                     cr.execute ("select sum(credit+debit) as amount_total  from  account_move_line where move_id=%s and name='/' ",( invoice.move_id.id,)) 
+#                     move_line_amount =cr.fetchone()          
+#                     if move_line_amount:
+#                         line_total_amount =move_line_amount[0]
+#                     else:
+#                         line_total_amount=0
+
+                    line_total_amount=invoice.residual
+                    for line in move_line_data:
+                        print ' line_total_moun ,pay',line_total_amount,payment[1]
+                        if line_total_amount ==payment[1]:
+                            if line[3] is not None:
+                                line_data = {
+                                                # 'name': invoice.number,
+                                                'voucher_id' : voucherId,
+                                                'move_line_id' :line[2],
+                                                'account_id' : line[0],  # invoice.move_id.line_id[0].account_id.id,
+                                                'partner_id' : payment[3],
+                                                "amount" :payment[1],
+                                                "amount_original": invoice.amount_total,
+                                                'type': 'cr',
+                                            }
+                                voucherLineObj.create(cr, uid, line_data, context=context)  
+                            else:
+                                    line_data = {
+                                                # 'name': invoice.number,
+                                                'voucher_id' : voucherId,
+                                                'move_line_id' :line[2],
+                                                'account_id' : line[0],  # invoice.move_id.line_id[0].account_id.id,
+                                                'partner_id' : payment[3],
+                                                "amount" : line[1],
+                                                "amount_original": invoice.amount_total,
+                                                'type': 'cr',
+                                            }
+                                    voucherLineObj.create(cr, uid, line_data, context=context)  
+                        else:
+                            if line[1] <=payment[1]:
+                                if last_amount ==0:
+                                    last_amount=line[1]
+                                else:
+                                    last_amount=last_amount
+                                line_data = {
+                                                # 'name': invoice.number,
+                                                'voucher_id' : voucherId,
+                                                'move_line_id' :line[2],
+                                                'account_id' : line[0],  # invoice.move_id.line_id[0].account_id.id,
+                                                'partner_id' : payment[3],
+                                                "amount" : last_amount,
+                                                "amount_original": invoice.amount_total,
+                                                'type': 'cr',
+                                            }        
+                                last_amount=payment[1]-line[1]
+                                voucherLineObj.create(cr, uid, line_data, context=context)  
+                            else:
+                                line_data = {
+                                                'voucher_id' : voucherId,
+                                                'move_line_id' :line[2],
+                                                'account_id' : line[0],  # invoice.move_id.line_id[0].account_id.id,
+                                                'partner_id' : payment[3],
+                                                "amount" : payment[1],
+                                                "amount_original": invoice.amount_total,
+                                                'type': 'cr',
+                                            }        
+                                voucherLineObj.create(cr, uid, line_data, context=context)                  
+                voucherObj.button_proforma_voucher(cr, uid, vlist , context=context)
+                cr.execute("""update account_invoice set state='paid',unselected=False
+                where id=%s and residual=0""", (invoice.id,))
+                cr.execute("""update sale_order set invoiced='t' from account_invoice
+                where sale_order.name=account_invoice.reference and account_invoice.residual=0 and account_invoice.id=%s""", (invoice.id,))
+                cr.execute("update mobile_ar_collection set state='done' ,unselected=False where ref_no=%s", (invoice.number,))
 
     def action_generate(self, cr, uid, ids, context=None):
         cr.execute("""delete from cashier_approval_invoice_line where cashier_id=%s""", (ids[0],))

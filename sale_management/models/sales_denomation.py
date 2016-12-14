@@ -20,11 +20,11 @@ class sale_denomination(osv.osv):
         'tablet_id':fields.char('Tablet ID'),
         'name':fields.char('Txn' , readonly=True),
         'invoice_count':fields.integer('Invoiced' , required=True),
-       'denomination_product_line':fields.one2many('sales.denomination.product.line', 'denomination_product_ids', string='Sale denomination Product Line', copy=True , required=True),
-       'denomination_note_line':fields.one2many('sales.denomination.note.line', 'denomination_note_ids', string='Sale denomination Product Line', copy=True , required=True),
-       'denomination_cheque_line':fields.one2many('sales.denomination.cheque.line', 'denomination_cheque_ids', string='Sale denomination Cheque Line', copy=True , required=True),
-       'denomination_ar_line':fields.one2many('sales.denomination.ar.line', 'denomination_ar_ids', string='Sale denomination AR Line', copy=True , required=True),
-       'denomination_bank_line':fields.one2many('sales.denomination.bank.line', 'denomination_bank_ids', string='Sale denomination Bank Line', copy=True , required=True),
+       'denomination_product_line':fields.one2many('sales.denomination.product.line', 'denomination_product_ids', string='Sale denomination Product Line', copy=True),
+       'denomination_note_line':fields.one2many('sales.denomination.note.line', 'denomination_note_ids', string='Sale denomination Product Line', copy=True ),
+       'denomination_cheque_line':fields.one2many('sales.denomination.cheque.line', 'denomination_cheque_ids', string='Sale denomination Cheque Line', copy=True ),
+       'denomination_ar_line':fields.one2many('sales.denomination.ar.line', 'denomination_ar_ids', string='Sale denomination AR Line', copy=True ),
+       'denomination_bank_line':fields.one2many('sales.denomination.bank.line', 'denomination_bank_ids', string='Sale denomination Bank Line', copy=True ),
 
         'note':fields.text('Note'),
       'total_amount':fields.float('Denomination Total',digits_compute=dp.get_precision('Product Price')),
@@ -34,7 +34,7 @@ class sale_denomination(osv.osv):
       'bank_amount':fields.float('Bank Total', digits_compute=dp.get_precision('Product Price')),
       'dssr_ar_amount':fields.float('Grand  Total', digits_compute=dp.get_precision('Product Price')),
       'trans_amount':fields.float('Grand  Total', digits_compute=dp.get_precision('Product Price')),
-      'diff_amount':fields.float('Difference', digits_compute=dp.get_precision('Product Price')),
+      'diff_amount':fields.float('Difference Amount', digits_compute=dp.get_precision('Product Price')),
       'partner_id':fields.many2one('res.partner', string='Partner'),
 
   }

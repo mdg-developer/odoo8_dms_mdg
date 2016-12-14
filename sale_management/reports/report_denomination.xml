@@ -104,7 +104,7 @@
 															<h6 align="rignt">
 																<span class="text-right">
 																	<U>
-																		<b>AR Collection</b>
+																		<b>Credit Collection</b>
 																	</U>
 																</span>
 															</h6>
@@ -301,6 +301,12 @@
 															<b>
 																<span>Grand Total :</span>
 																<span t-field="o.trans_amount" />
+															</b>
+														</h5>
+														<h5 align="right">
+															<b>
+																<span>Different Amount:</span>
+																<span t-field="o.diff_amount" />
 
 															</b>
 														</h5>
@@ -308,10 +314,14 @@
 															<thead>
 																<tr>
 																	<td style="margin-top:-5pt;" align="left">
-																		<span>Paid By</span>
+																		<b>
+																			<span>Paid By</span>
+																		</b>
 																	</td>
 																	<td style="margin-top:-5pt;" align="right">
-																		<span>Received By</span>
+																		<b>
+																			<span>Received By</span>
+																		</b>
 																	</td>
 																</tr>
 															</thead>
@@ -409,7 +419,7 @@
 															<h6 align="left">
 																<span class="text-right">
 																	<U>
-																		<b>AR Collection</b>
+																		<b>Credit Collection</b>
 																	</U>
 																</span>
 															</h6>
@@ -609,14 +619,25 @@
 
 															</b>
 														</h5>
+														<h5 align="right">
+															<b>
+																<span>Different Amount:</span>
+																<span t-field="o.diff_amount" />
+
+															</b>
+														</h5>
 														<table class="table table-condensed" style="border:0pt;">
 															<thead>
 																<tr>
 																	<td style="margin-top:-5pt;" align="left">
-																		<span>Paid By</span>
+																		<b>
+																			<span>Paid By</span>
+																		</b>
 																	</td>
 																	<td style="margin-top:-5pt;" align="right">
-																		<span>Received By</span>
+																		<b>
+																			<span>Received By</span>
+																		</b>
 																	</td>
 																</tr>
 															</thead>

@@ -65,9 +65,7 @@
 									</tree>
 								</field>
 							</page>
-
 						</notebook>
-
 						<notebook>
 							<page string="Notes">
 								<field name="denomination_note_line">
@@ -145,9 +143,8 @@
 								<field name="total_amount" />
 								<field name="cheque_amount" />
 								<field name="bank_amount"/>
-								<field name="diff_amount" invisible="1" />
 								<field name="trans_amount" />
-
+								<field name="diff_amount" />
 							</group>
 						</group>
 					</sheet>
