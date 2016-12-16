@@ -1260,9 +1260,10 @@ class mobile_sale_order(osv.osv):
                                 }
                                 notes_line_obj.create(cursor, user, note_line_res, context=context)
                 de_date = pt['date']
-                user_id = pt['user_id']
+                user_id = pt['user_id']      
                 mobile_sale_obj = self.pool.get('mobile.sale.order')        
                 mobile_sale_order_obj = self.pool.get('mobile.sale.order.line')
+                pre_sale_order_obj = self.pool.get('pre.sale.order.line')
                 payment_obj = self.pool.get('customer.payment')
                 print 'user_iddddddddddddd', user_id, type(user_id)
                 cursor.execute("select default_section_id from res_users where id=%s", (user_id,))
@@ -1278,6 +1279,26 @@ class mobile_sale_order(osv.osv):
                 ar_bank_ids = cursor.fetchall()                              
                 cursor.execute("select id from mobile_sale_order where due_date=%s and user_id=%s and void_flag != 'voided'", (de_date, user_id))
                 mobile_ids = cursor.fetchall()
+                cursor.execute('select id from crm_case_section where delivery_team_id=%s',(team_id,))
+                ps_team_id= cursor.fetchall()
+                if ps_team_id:
+                    cursor.execute("select id from pre_sale_order where due_date=%s and sale_team in %s and void_flag != 'voided'", (de_date, tuple(ps_team_id),))
+                    pre_mobile_ids = cursor.fetchall()        
+                    if  pre_mobile_ids:
+                        line_ids = pre_sale_order_obj.search(cursor, user, [('order_id', 'in', pre_mobile_ids)], context=context)                        
+                        order_line_ids = pre_sale_order_obj.browse(cursor, user, line_ids, context=context)                
+                        cursor.execute('select product_id,sum(product_uos_qty),sum(sub_total) from pre_sale_order_line where id in %s group by product_id', (tuple(order_line_ids.ids),))
+                        order_line = cursor.fetchall()
+                        for data in order_line:
+                            product = self.pool.get('product.product').browse(cursor, user, data[0], context=context)
+                            sequence = product.sequence
+                            product_amount+=data[2]
+                            data_id = {'product_id':data[0],
+                                              'product_uom_qty':data[1],
+                                              'denomination_product_ids':deno_id,
+                                              'sequence':sequence,
+                                              'amount':data[2]}
+                            deno_product_obj.create(cursor, user, data_id, context=context)                        
                 if  mobile_ids:
                     line_ids = mobile_sale_order_obj.search(cursor, user, [('order_id', 'in', mobile_ids)], context=context)                        
                     order_line_ids = mobile_sale_order_obj.browse(cursor, user, line_ids, context=context)                
@@ -1676,6 +1697,9 @@ class mobile_sale_order(osv.osv):
                     print 'Miss', deli['miss'], deli
                     if deli['miss'] == 't':
                         cr.execute('update sale_order set is_generate = false, due_date = %s where name=%s', (deli['due_date'], deli['so_refNo'],))
+                        cr.execute('select tb_ref_no from sale_order where name=%s',( deli['so_refNo'],))
+                        ref_no=cr.fetchone()[0]
+                        cr.execute("update pre_sale_order set void_flag = 'voided' where name=%s", ( ref_no,))
                     else:                            
                         So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
                                                        , ('name', '=', deli['so_refNo'])], context=context)
@@ -1725,7 +1749,7 @@ class mobile_sale_order(osv.osv):
 #                             account_id=partner.property_account_receivable.id
 #                             invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)
                                                          
-                            cr.execute('update account_invoice set date_invoice = now()::date , branch_id =%s ,payment_type=%s,delivery_remark =%s ,section_id=%s,user_id=%s, payment_term = %s where id =%s', (branch_id, deli['payment_type'], delivery_remark, delivery_team_id, uid, invoice_id,deli['payment_term']))                                                
+                            cr.execute('update account_invoice set date_invoice = now()::date , branch_id =%s ,payment_type=%s,delivery_remark =%s ,section_id=%s,user_id=%s, payment_term = %s where id =%s', (branch_id, deli['payment_type'], delivery_remark, delivery_team_id, uid,deli['payment_term'],invoice_id))                                                
                                                         
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             if invoice_id:
@@ -1776,7 +1800,10 @@ class mobile_sale_order(osv.osv):
                                                    , ('name', '=', deli['so_refNo'])], context=context)
                     if So_id:
                         print 'Sale Order Id', So_id[0]
-                        cr.execute('''update sale_order set state ='cancel' where id = %s ''', (So_id[0],))                                                                                                                                                                                                                                
+                        cr.execute('''update sale_order set state ='cancel' where id = %s ''', (So_id[0],))
+                        cr.execute('select tb_ref_no from sale_order where id=%s',(So_id[0],))
+                        ref_no=cr.fetchone()[0]
+                        cr.execute("update pre_sale_order set void_flag = 'voided' where name=%s", ( ref_no,))                                                                                                                                                                                                                            
             return True  
                    
     def create_mobile_stock_return(self, cursor, user, vals, context=None):
