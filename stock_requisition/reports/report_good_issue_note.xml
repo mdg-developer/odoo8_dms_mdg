@@ -122,14 +122,14 @@
                         <th>Qty(B/S)</th>
                         <th>Batch No</th>
                         <th>Expiry</th>
-                        <th>Qty on Hand(S)</th>
+                        <th class="text-center">Qty on Hand(S)</th>
                          <th>Remark</th>
                     </tr>
                 </thead>
                 <tbody class="invoice_tbody">
                     <tr t-foreach="o.p_line" t-as="l">
                         <td><span t-field="l.product_id"/></td>
-                        <td>
+                        <td >
                             <span t-field="l.big_issue_quantity"/> /  <span t-field="l.issue_quantity"/>
                         </td>
                         <td>
@@ -138,7 +138,7 @@
                         <td>
                             <span t-field="l.expiry_date" />
                         </td>
-                        <td>
+                        <td align="right" style="padding-right: 3cm;">
                             <span t-field="l.qty_on_hand"/> 
                         </td>
                         <td><span t-field="l.remark"/></td>
