@@ -19,6 +19,7 @@ class customer_payment(osv.osv):
    'cheque_no':fields.char('Cheque No'),
    'partner_id':fields.many2one('res.partner', 'Customer'),
    'sale_team_id':fields.many2one('crm.case.section', 'Sale Team'),
+   'payment_code':fields.char('Payment Code'),
         }
 class mobile_sale_order(osv.osv):
     
@@ -2006,6 +2007,7 @@ class mobile_sale_order(osv.osv):
                         'cheque_no':ar['cheque_no'],
                         'partner_id':ar['partner_id'],
                         'sale_team_id':ar['sale_team_id'],
+                        'payment_code':ar['payment_code'],
                     }
                     rental_obj.create(cursor, user, rental_result, context=context)
             return True
@@ -2351,6 +2353,10 @@ class mobile_sale_order(osv.osv):
                         'amount':ar['amount'],
                         'date':ar['date'],
                         'notes':ar['notes'].replace('\\',""),    
+                        'cheque_no':ar['cheque_no'].replace('\\',""),    
+                        'partner_id':ar['partner_id'].replace('\\',""),    
+                        'sale_team_id':ar['sale_team_id'].replace('\\',""),
+                        'payment_code':ar['payment_code'].replace('\\',""),    
                     }
                     rental_obj.create(cursor, user, rental_result, context=context)
             return True
