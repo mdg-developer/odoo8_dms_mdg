@@ -1,6 +1,7 @@
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 from openerp.osv.fields import _column
+
 class product_product(osv.osv):
     _inherit = 'product.product'
     _columns = {
@@ -33,11 +34,16 @@ product_pricelist()
 class product_pricelist_version(osv.osv):
     _inherit = 'product.pricelist.version'
     _columns = {
-          'branch_id': fields.related('pricelist_id','branch_id',type='many2one',
-            readonly=True, relation='res.branch', string='Branch', store=True),                         
-                      'date_start': fields.date('Start Date', help="First valid date for the version.", required=True),
+
+        'branch_id' : fields.related('pricelist_id', 'branch_id',
+                                       type='many2many',
+                                       readonly=True,
+                                     relation='res.branch',
+                                       string='Branch'),
+         'date_start': fields.date('Start Date', help="First valid date for the version.", required=True),
         'date_end': fields.date('End Date', help="Last valid date for the version.", required=True),
               }
+    
     def retrieve_data(self, cr, uid,ids, context=None):
         item_obj=self.pool.get('product.pricelist.item')        
         product_obj=self.pool.get('product.product')        

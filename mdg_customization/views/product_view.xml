@@ -148,7 +148,7 @@
 			<field name="inherit_id" ref="product.product_pricelist_version_form_view"></field>
 			<field name="arch" type="xml">
 				<field name="company_id" position="after">
-					<field name="branch_id" />
+					<field name="branch_id"  widget="many2many_tags"/>
 
 					<button name="retrieve_data" string="Retrieve" type="object"
 						class="oe_highlight" icon="terp-stock_effects-object-colorize" />

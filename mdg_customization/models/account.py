@@ -1,7 +1,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
-
+from openerp.exceptions import except_orm, Warning, RedirectWarning
 class account_bank_statement_line(osv.osv):
     _inherit = 'account.bank.statement.line'
     
@@ -103,8 +103,7 @@ class account_invoice(osv.osv):
         'township': fields.many2one('res.township', 'Township', ondelete='restrict', readonly=True),              
          'payment_term': fields.many2one('account.payment.term', 'Payment Term',readonly=True),
 }
-    
-    
+        
     def on_change_payment_type(self, cr, uid, ids, partner_id,payment_type, context=None):
         values = {}
         print 'payment_type',payment_type
@@ -119,4 +118,7 @@ class account_invoice(osv.osv):
         values = {
              'payment_term':payment_term,}
         return {'value': values}
+    
+
 account_invoice()   
+

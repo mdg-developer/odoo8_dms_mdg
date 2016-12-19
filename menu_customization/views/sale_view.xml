@@ -21,7 +21,8 @@
 			<field name="view_mode">tree,form,calendar,graph</field>
 			<field name="search_view_id" ref="sale.view_sales_order_filter" />
 			<field name="context">{
-				'search_default_my_generate': 1,'default_pre_order':True
+				'search_default_my_generate':
+				1,'default_pre_order':True
 				}
 			</field>
 
@@ -120,6 +121,8 @@
 			</field>
 		</record>
 
+
+
 		<record id="action_invoice_tree_cus_1" model="ir.actions.act_window">
 			<field name="name">Pre-Sales Invoices</field>
 			<field name="res_model">account.invoice</field>
@@ -166,6 +169,7 @@
 			<field name="view_id" ref="account.invoice_form" />
 			<field name="act_window_id" ref="action_invoice_tree_cus_1" />
 		</record>
+
 		<record id="action_invoice_tree_cus_2" model="ir.actions.act_window">
 			<field name="name">Direct Sales Invoices</field>
 			<field name="res_model">account.invoice</field>
@@ -201,6 +205,47 @@
 			</field>
 		</record>
 
+		<record id="action_invoice_tree_credit_2" model="ir.actions.act_window">
+			<field name="name">Credit Outstanding</field>
+			<field name="res_model">account.invoice</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form,calendar,graph</field>
+			<field eval="False" name="view_id" />
+			<field name="domain">[('type','=','out_invoice'),('state','=','open'),('payment_type','=','credit')]
+			</field>
+			<field name="context">{'default_type':'out_invoice',
+				'type':'out_invoice',
+				'journal_type':
+				'sale'}
+			</field>
+			<field name="search_view_id" ref="view_account_invoice_filter" />
+			<field name="view_id" ref="account.invoice_form" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create"> Click
+					to create a customer invoice.
+				</p>
+				<p> Odoo's electronic invoicing allows
+					to ease and fasten the
+					collection of customer payments. Your customer
+					receives
+					the invoice
+					by email and he can pay online and/or import it in his own
+					system.
+				</p>
+				<p> The discussions with your customer are automatically displayed
+					at
+					the bottom of each invoice.
+				</p>
+			</field>
+		</record>
+		<menuitem action="action_invoice_tree_credit_2" id="menu_sale_action_invoice_credit1"
+			parent="base.menu_sales" sequence="4" />
+
+		<record id="action_invoice_tree_cus_2_credit1" model="ir.actions.act_window.view">
+			<field eval="3" name="sequence" />
+			<field name="view_mode">tree</field>
+			<field name="act_window_id" ref="action_invoice_tree_credit_2" />
+		</record>
 		<record id="action_invoice_tree_cus_2_view1" model="ir.actions.act_window.view">
 			<field eval="1" name="sequence" />
 			<field name="view_mode">tree</field>
@@ -216,6 +261,7 @@
 
 		<menuitem action="action_invoice_tree_cus_1" id="menu_pre_action_invoice_tree_cus_1"
 			parent="menu_sale_order_menu" name="Pre-Sales Invoices" />
+
 		<menuitem action="action_invoice_tree_cus_2" id="menu_direct_action_invoice_tree_cus_2"
 			parent="menu_direct_sale_order_menu" name="Direct Sales Invoices" />
 		<!-- Quotation -->
@@ -234,12 +280,14 @@
 			<field name="domain">[('state','=','cancel')]
 			</field>
 		</record>
+
 		<menuitem action="sale.action_orders" id="sale.menu_sale_order"
 			parent="base.menu_sales" sequence="2"
 			groups="base.group_sale_salesman,base.group_sale_manager" />
 		<menuitem action="cancel_customized_action_orders1" id="menu_cancel_customized_sale_order"
 			parent="base.menu_sales" sequence="2"
 			groups="base.group_sale_salesman,base.group_sale_manager" />
+
 		<menuitem action="account.action_invoice_tree1" id="menu_sale_action_invoice_tree1"
 			parent="base.menu_sales" name="Sales Invoices" sequence="3" />
 
