@@ -72,7 +72,8 @@ class mobile_sale_order(osv.osv):
        'promos_line_ids':fields.one2many('mso.promotion.line', 'promo_line_id', 'Promotion Lines'),
        'pricelist_id': fields.many2one('product.pricelist', 'Price List', select=True, ondelete='cascade'),
        'payment_line_ids':fields.one2many('customer.payment', 'payment_id', 'Payment Lines'),
-      'branch_id': fields.many2one('res.branch', 'Branch',required=True),    
+      'branch_id': fields.many2one('res.branch', 'Branch',required=True), 
+      'ct_reg_no':fields.char('CT REG NO'),
       
    #     'journal_id'  : fields.many2one('account.journal', 'Journal' ,domain=[('type','in',('cash','bank'))]),   
     }
