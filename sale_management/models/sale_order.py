@@ -122,8 +122,8 @@ class sale_order(osv.osv):
                     ('partial', 'Partial'),
                     ('delivered', 'Delivered'),
                     ('none', 'None')
-               ], 'Deliver Remark'),
-               'due_date':fields.date('Due Date'),
+               ], 'Deliver Remark',readonly=True,default='none'),
+               'due_date':fields.date('Due Date',readonly=True),
                'so_latitude':fields.float('Geo Latitude'),
                'so_longitude':fields.float('Geo Longitude'),
                'customer_code':fields.char('Customer Code'),
@@ -195,6 +195,9 @@ class sale_order(osv.osv):
             'country_id': part.country_id and part.country_id.id or False,
             'township': part.township and part.township.id or False,
         }
+        print 'payment_typepayment_type',
+        domain = {'payment_type': [('payment_type', '=', payment_type)]}
+        print 'domain',domain
         delivery_onchange = self.onchange_delivery_id(cr, uid, ids, False, part.id, addr['delivery'], False, context=context)
         val.update(delivery_onchange['value'])
         if pricelist:
@@ -203,7 +206,7 @@ class sale_order(osv.osv):
 #             val['section_id'] = part.section_id.id
         sale_note = self.get_salenote(cr, uid, ids, part.id, context=context)
         if sale_note: val.update({'note': sale_note})  
-        return {'value': val}
+        return {'value': val, 'domain': domain}
   
     def action_confirm(self, cr, uid, ids, context=None):
         if not context:

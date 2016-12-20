@@ -101,11 +101,11 @@ class stock_requisition(osv.osv):
         'sale_team_id':fields.many2one('crm.case.section', 'Delivery Team', required=True),
         'name': fields.char('RFI Ref', readonly=True),
         'from_location_id':fields.many2one('stock.location', 'Requesting  Location', required=True),
-        'to_location_id':fields.many2one('stock.location', 'Request Warehouse'),
+        'to_location_id':fields.many2one('stock.location', 'Request Warehouse' ,readonly=True),
         'so_no' : fields.char('Sales Order/Inv Ref;No.'),
         'issue_to':fields.char("Receiver"),
         'request_by':fields.many2one('res.users', "Requested By"),
-        'approve_by':fields.many2one('res.users', "Approved By"),
+        'approve_by':fields.many2one('res.users', "Approved By", readonly=True),
         'request_date' : fields.date('Date Requested'),
          'issue_date':fields.date('Order Date From', required=True),
          's_issue_date':fields.date('Order Date To', required=True),
@@ -137,9 +137,14 @@ class stock_requisition(osv.osv):
     }     
     
     def create(self, cursor, user, vals, context=None):
+        if vals['sale_team_id']:
+            sale_team_id=vals['sale_team_id']
+            sale_team = self.pool.get('crm.case.section').browse(cursor, user, sale_team_id, context=context)
+            to_location_id = sale_team.issue_location_id.id            
         id_code = self.pool.get('ir.sequence').get(cursor, user,
                                                 'request.code') or '/'
         vals['name'] = id_code
+        vals['to_location_id'] = to_location_id
         return super(stock_requisition, self).create(cursor, user, vals, context=context)
 
     def so_list(self, cr, uid, ids, context=None):

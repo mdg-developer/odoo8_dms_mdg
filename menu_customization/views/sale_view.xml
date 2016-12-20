@@ -269,7 +269,7 @@
 		<!-- parent="base.menu_sales" name="Draft Order" sequence="1" /> -->
 		<!-- Sale Order -->
 		<record id="cancel_customized_action_orders1" model="ir.actions.act_window">
-			<field name="name">Cancel Orders</field>
+			<field name="name">Cancelled Orders</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">sale.order</field>
 			<field name="view_type">form</field>

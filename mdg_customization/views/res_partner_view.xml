@@ -245,9 +245,9 @@
 			<field name="inherit_id" ref="base.view_partner_form" />
 			<field name="arch" type="xml">
 				<data>
-				    <field name="fax" position="replace">
-				         <field name="fax" invisible="1"/>
-				    </field>
+					<field name="fax" position="replace">
+						<field name="fax" invisible="1" />
+					</field>
 					<!-- <field name="active" position="replace" /> <notebook position="inside"> 
 						<page string="Marketing"> <label for="active" /> <field name="active" /> 
 						<div> <label for="opt_out" /> <field name="opt_out" /> </div> </page> </notebook> -->
@@ -304,9 +304,12 @@
 					<field name="credit" position="replace">
 						<field name="credit" attrs="{'invisible':[('supplier','=',True)]}" />
 					</field>
+
 					<field name="credit_limit" position="replace">
 						<field name="credit_limit" attrs="{'invisible':[('supplier','=',True)]}" />
+
 					</field>
+
 					<field name="property_account_payable" position="after">
 						<!-- <field name="property_account_payable" groups="account.group_account_invoice" -->
 						<!-- attrs="{'invisible':[('customer','=',True)]}" /> -->
@@ -323,6 +326,19 @@
 						<field name="debit" attrs="{'invisible':[('customer','=',True)]}" />
 					</field>
 				</data>
+			</field>
+		</record>
+
+		<record id="view_res_partner_credit_limit_form" model="ir.ui.view">
+			<field name="name">res.partner.credit.limit.form</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id"
+				ref="ms_credit_limit.view_res_partner_credit_limit_form" />
+			<field name="arch" type="xml">
+				<field name="credit_allow" position="after">
+					<field name="is_bank" attrs="{'invisible':[('supplier','=',True)]}" />
+					<field name="is_cheque" attrs="{'invisible':[('supplier','=',True)]}" />
+				</field>
 			</field>
 		</record>
 

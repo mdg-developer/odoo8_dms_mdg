@@ -92,7 +92,7 @@ class account_invoice(osv.osv):
                     ('partial', 'Partial'),
                     ('delivered', 'Delivered'),
                     ('none', 'None')
-               ], 'Deliver Remark'),
+               ], 'Deliver Remark',readonly=True,default='none'),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Pricelist for current sales invoice."),
          'code':fields.char('Customer ID', readonly=True),
         'street': fields.char('Street', readonly=True),

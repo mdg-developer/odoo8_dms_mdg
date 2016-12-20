@@ -25,11 +25,13 @@ TIME_SELECTION = [
         ('21', '21'),
         ('22', '22'),
         ('23', '23'),
-        ('24', '24'),       
+        ('24', '24'),
     ]
 class res_partner(osv.osv):
     _inherit = "res.partner"
     _columns = {
+                 'is_bank':fields.boolean('IsBank'),
+                'is_cheque':fields.boolean('IsCheque'),
         'partner_latitude': fields.float('Geo Latitude', digits=(16, 5), readonly=True),
         'partner_longitude': fields.float('Geo Longitude', digits=(16, 5), readonly=True),
         'date_localization': fields.date('Geo Localization Date'),
@@ -48,9 +50,9 @@ class res_partner(osv.osv):
             string="Loss Account",
            # domain="[('type', '=', 'receivable')]",
           ),
-         'start_time':fields.selection(TIME_SELECTION,'Start Time'),
+         'start_time':fields.selection(TIME_SELECTION, 'Start Time'),
          'start_rate':fields.selection([('am', 'AM'), ('pm', 'PM')], string="Rate"),
-         'end_time':fields.selection(TIME_SELECTION,'End Time'),
+         'end_time':fields.selection(TIME_SELECTION, 'End Time'),
          'end_rate':fields.selection([('am', 'AM'), ('pm', 'PM')], string="Rate"),
          'mon':fields.boolean('MON'),
          'tue':fields.boolean('TUE'),
