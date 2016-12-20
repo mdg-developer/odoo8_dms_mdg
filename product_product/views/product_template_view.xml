@@ -8,22 +8,7 @@
 			<field name="model">product.template</field>
 			<field name="inherit_id" ref="product.product_template_only_form_view" />
 			<field name="arch" type="xml">
-              <!-- 
-              <xpath expr="//group[@name='inventory']" position="after">  -->				
-					
-					<!-- Inventory Tab --> <!-- 
-					<group name="procurement">
-							<group name="general">
-								<field name="cost_method" groups="stock_account.group_inventory_valuation" />
-								<field name="standard_price" string="Cost Price" />
-							</group>
-							<group name="procurement_uom" groups="product.group_uom"
-								string="Purchase">
-								<field name="uom_po_id" />
-							</group>
-						</group>
-						
-				</xpath> -->
+           
 				
 				<!-- "UOM" Tabs -->
 				<xpath expr="//notebook" position="inside">	
@@ -44,7 +29,11 @@
 <!-- 				</xpath> -->
 			 
 				<!-- Accounting Tab -->
-				<xpath expr="//page[@string='Accounting']/group/label[@string='Internal Category']" position="before">
+				<xpath expr="//page[@string='Accounting']/group/label[@string='Internal Category']" position="replace">
+				                          <label for="categ_id" string="Product Category"/>
+				 </xpath>
+				                                
+				<xpath expr="//page[@string='Accounting']/group/label[@string='Product Category']" position="before">
 <!-- 				<xpath expr="//group[@name='properties']" position="before"> -->					
 <!-- 					<label for="division" string="Division" /> -->
 <!-- 					<div> -->
@@ -69,6 +58,7 @@
 				</xpath>
 				
 				<xpath expr="//field[@name='default_code']" position="after">
+					<field name="sequence" />
 					<field name="uom_ratio" />
  				</xpath>
 			</field>
