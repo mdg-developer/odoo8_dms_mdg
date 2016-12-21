@@ -133,7 +133,7 @@ class sale_order(osv.osv):
                'validity_date':fields.date(string='Expiration Date', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
                'invoiced': fields.function(_invoiced, string='Paid',
                 fnct_search=_invoiced_search, type='boolean', help="It indicates that an invoice has been paid.", store=True),
-                'delivery_id': fields.many2one('crm.case.section', 'Delivery Team'),
+                'delivery_id': fields.many2one('crm.case.section', 'Delivery Team' ),
                 'pre_order': fields.boolean("Pre Order" , readonly=True),
                 'is_generate':fields.boolean('RFI Generated'  , readonly=True),
          'code':fields.char('Customer ID' , readonly=True),
