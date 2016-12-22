@@ -341,8 +341,7 @@ class res_partner(osv.osv):
                 'frequency_id':fields.many2one('plan.frequency','Frequency',required=False),
                 'chiller':fields.boolean('Chiller'),
 		       	'hamper':fields.boolean('Hamper'),
-                'is_bank':fields.boolean('IsBank'),
-                'is_cheque':fields.boolean('IsCheque'),
+
                 'old_code': fields.char('Old Code'),
                 'sales_channel':fields.many2one('sale.channel', 'Sale Channel'),
                 'address':fields.char('Address'),
@@ -518,7 +517,7 @@ class res_partner_asset(osv.Model):
     _description = 'Partner Tags'
     _name = 'res.partner.asset'
     _columns = {
-                        'partner_id': fields.many2one('res.partner', 'Partner', select=True, ondelete='cascade'),
+                        'partner_id': fields.many2one('res.partner', 'Customer', select=True, ondelete='cascade'),
                         'name':fields.char('Asset Name'),
                         'date':fields.date('Date'),
                         'type':fields.selection ([('rent', 'Rent'), ('give', 'Giving')],
@@ -537,5 +536,5 @@ class asset_type(osv.Model):
     _description = 'Asset Type'
     _name = 'asset.type'
     _columns = {
-                'name':fields.char('Asset Type Name'),
+                'name':fields.char('Name',required=True),
                 }

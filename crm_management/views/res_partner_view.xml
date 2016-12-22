@@ -15,14 +15,16 @@
 						<field name="customer_code" placeholder="Code" />
 					</xpath>
 					<xpath expr="//field[@name='website']" position="after">
-						<field name="outlet_type" attrs="{'invisible':[('customer','=',False)], 'required':[('customer', '=', True)]}"/>
-						<field name="sales_channel" attrs="{'invisible':[('customer','=',False)],'required':[('customer', '=', True)]}"/>
-						<field name="branch_id" attrs="{'invisible':[('customer','=',False)],'required':[('customer', '=', True)]}" />
+						<field name="outlet_type"
+							attrs="{'invisible':[('customer','=',False)], 'required':[('customer', '=', True)]}" />
+						<field name="sales_channel"
+							attrs="{'invisible':[('customer','=',False)],'required':[('customer', '=', True)]}" />
+						<field name="branch_id"
+							attrs="{'invisible':[('customer','=',False)],'required':[('customer', '=', True)]}" />
 						<field name="demarcation_id" attrs="{'invisible':[('customer','=',False)]}" />
 						<field name="chiller" attrs="{'invisible':[('customer','=',False)]}" />
 						<field name="hamper" attrs="{'invisible':[('customer','=',False)]}" />
-						<field name="is_bank" attrs="{'invisible':[('customer','=',False)]}" />
-						<field name="is_cheque" attrs="{'invisible':[('customer','=',False)]}" />
+
 					</xpath>
 					<!-- <xpath expr="//field[@name='stree`t']" position="before"> <field 
 						name="address" placeholder="Address..." /> </xpath> -->
@@ -84,11 +86,12 @@
 							<field string="All Invoice" name="all_invoice_amount"
 								widget="statinfo" />
 						</button>
-						<button class="oe_inline oe_stat_button"  type="action"
-							name="%(account.action_invoice_tree)d" attrs="{'invisible': ['|',('customer', '=', False),('credit_allow','=',False)]}"
-							context="{'search_default_partner_id': active_id,'default_partner_id': active_id,'default_state':'open','default_payment':'credit'}" string="Due Invoice" 
-							icon="fa-strikethrough">
-						</button>						
+						<button class="oe_inline oe_stat_button" type="action"
+							name="%(account.action_invoice_tree)d"
+							attrs="{'invisible': ['|',('customer', '=', False),('credit_allow','=',False)]}"
+							context="{'search_default_partner_id': active_id,'default_partner_id': active_id,'default_state':'open','default_payment':'credit'}"
+							string="Due Invoice" icon="fa-strikethrough">
+						</button>
 						<button class="oe_inline oe_stat_button" type="action"
 							name="%(sale.act_res_partner_2_sale_order)d" attrs="{'invisible': [('customer', '=', False)]}"
 							context="{'search_default_partner_id': active_id,'default_partner_id': active_id}"
@@ -311,39 +314,39 @@
 					<xpath expr="//field[@name='display_name']" position="before">
 						<field name="customer_code" />
 					</xpath>
-						<xpath expr="//field[@name='display_name']" position="after">
-							<field name="outlet_type" />
-							<field name="township" />
-							<field name="street" />
-							<field name="branch_id" />
-							<field name="frequency_id" />
-							<field name="class_id" />
-							<field name="sales_channel" string="Sales Channel" />
-							<field name="section_id" string="Sales Teams" />
-														
-						</xpath>
-						<xpath expr="//field[@name='phone']" position="replace">
-							<field name="phone" invisible="1" />
+					<xpath expr="//field[@name='display_name']" position="after">
+						<field name="outlet_type" />
+						<field name="township" />
+						<field name="street" />
+						<field name="branch_id" />
+						<field name="frequency_id" />
+						<field name="class_id" />
+						<field name="sales_channel" string="Sales Channel" />
+						<field name="section_id" string="Sales Teams" />
 
-						</xpath>
+					</xpath>
+					<xpath expr="//field[@name='phone']" position="replace">
+						<field name="phone" invisible="1" />
 
-						<xpath expr="//field[@name='email']" position="replace">
-							<field name="email" invisible="1" />
-							<field name="street2" invisible="1" />
-							<field name="city" invisible="1" />
-							<field name="demarcation_id" invisible="1" />
-							<field name="pending" invisible="1" />
-							<field name="idle" invisible="1" />
-						</xpath>
-						<xpath expr="//field[@name='date_review_next']" position="replace">
-							<field name="date_review_next" invisible="1" />
-						</xpath>
-						<xpath expr="//field[@name='grade_id']" position="replace">
-							<field name="grade_id" invisible="1" />
-						</xpath>
-						<xpath expr="//field[@name='activation']" position="replace">
-							<field name="activation" invisible="1" />
-						</xpath>
+					</xpath>
+
+					<xpath expr="//field[@name='email']" position="replace">
+						<field name="email" invisible="1" />
+						<field name="street2" invisible="1" />
+						<field name="city" invisible="1" />
+						<field name="demarcation_id" invisible="1" />
+						<field name="pending" invisible="1" />
+						<field name="idle" invisible="1" />
+					</xpath>
+					<xpath expr="//field[@name='date_review_next']" position="replace">
+						<field name="date_review_next" invisible="1" />
+					</xpath>
+					<xpath expr="//field[@name='grade_id']" position="replace">
+						<field name="grade_id" invisible="1" />
+					</xpath>
+					<xpath expr="//field[@name='activation']" position="replace">
+						<field name="activation" invisible="1" />
+					</xpath>
 				</data>
 			</field>
 		</record>
@@ -546,19 +549,40 @@
 		<menuitem id="menu_customer_asset_form111" parent="base.menu_sales"
 			action="open_view_customer_asset_action" sequence="11" />
 
-		<!-- <record id="view_crm_partner_assign_form_inherit" model="ir.ui.view"> -->
-		<!-- <field name="name">res.partner.gmap</field> -->
-		<!-- <field name="model">res.partner</field> -->
-		<!-- <field name="inherit_id" ref="crm_partner_assign.view_crm_partner_assign_form" 
-			/> -->
-		<!-- <field name="arch" type="xml"> -->
-		<!-- <xpath expr="//field[@name='opportunity_assigned_ids']" -->
-		<!-- position="after"> -->
-		<!-- <widget type="gmap_marker" lat="partner_latitude" lng="partner_longitude" 
-			/> -->
-		<!-- </xpath> -->
-		<!-- </field> -->
-		<!-- </record> -->
+		<record id="view_partner_asset_type_tree" model="ir.ui.view">
+			<field name="name">res.partner.asset.type</field>
+			<field name="model">asset.type</field>
+			<field name="arch" type="xml">
+				<tree string="Asset Type">
+					<field name="name" />
+				</tree>
+			</field>
+		</record>
 
+		<record id="view_partner_asset_type_form" model="ir.ui.view">
+			<field name="name">asset.type.form</field>
+			<field name="model">asset.type</field>
+			<field name="arch" type="xml">
+				<form string="Asset Type">
+					<group>
+						<field name="name" />
+					</group>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="open_view_customer_asset_type_action">
+			<field name="name">Assets Type</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">asset.type</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_partner_asset_type_tree" />
+		</record>
+
+		<menuitem id="config_asset_type_action" name="Miscellaneous"
+			parent="base.menu_base_config" sequence="20" />
+		<menuitem id="config_view_customer_asset_type_action" parent="config_asset_type_action"
+			action="open_view_customer_asset_type_action" />
 	</data>
 </openerp>
