@@ -849,8 +849,9 @@ class mobile_sale_order(osv.osv):
                         and pt.active = true
                         and pp.active = true
                         and ccs.id = crm_real.crm_case_section_id
-                        and pc.id = pt.categ_id                        
-                        and ccs.id = %s ''', (section_id,))
+                        and pc.id = pt.categ_id
+                        and pt.write_date > %s
+                        and ccs.id = %s ''', (lastdate, section_id,))
         datas = cr.fetchall()
         return datas
     
@@ -1281,7 +1282,7 @@ class mobile_sale_order(osv.osv):
                 cursor.execute('select id from crm_case_section where delivery_team_id=%s',(team_id,))
                 ps_team_id= cursor.fetchall()
                 if ps_team_id:
-                    cursor.execute("select id from pre_sale_order where due_date=%s and sale_team in %s and void_flag != 'voided'", (de_date, tuple(ps_team_id),))
+                    cursor.execute("select id from pre_sale_order where due_date=%s and sale_team in %s and void_flag != 'voided' and m_status='done' ", (de_date, tuple(ps_team_id),))
                     pre_mobile_ids = cursor.fetchall()        
                     if  pre_mobile_ids:
                         line_ids = pre_sale_order_obj.search(cursor, user, [('order_id', 'in', pre_mobile_ids)], context=context)                        
@@ -1694,17 +1695,18 @@ class mobile_sale_order(osv.osv):
                 
                 for deli in deliver_data:       
                     print 'Miss', deli['miss'], deli
+                    so_ref_no = deli['so_refNo'].replace('\\','').replace('\\','')                 
                     if deli['miss'] == 't':
-                        cr.execute('update sale_order set is_generate = false, due_date = %s where name=%s', (deli['due_date'], deli['so_refNo'],))
-                        cr.execute('select tb_ref_no from sale_order where name=%s',( deli['so_refNo'],))
+                        cr.execute('update sale_order set is_generate = false, due_date = %s where name=%s', (deli['due_date'], so_ref_no,))
+                        cr.execute('select tb_ref_no from sale_order where name=%s',( so_ref_no,))
                         ref_no=cr.fetchone()[0]
                         cr.execute("update pre_sale_order set void_flag = 'voided' where name=%s", ( ref_no,))
                     else:                            
                         So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
-                                                       , ('name', '=', deli['so_refNo'])], context=context)
+                                                       , ('name', '=', so_ref_no)], context=context)
                         if So_id:
                             solist = So_id                               
-                            cr.execute('select branch_id,section_id,delivery_remark from sale_order where name=%s', (deli['so_refNo'],))
+                            cr.execute('select branch_id,section_id,delivery_remark from sale_order where name=%s', (so_ref_no,))
                             data = cr.fetchone()
                             if data:
                                 branch_id = data[0]
@@ -1747,8 +1749,7 @@ class mobile_sale_order(osv.osv):
 #                             partner = partner_obj.browse(cr, uid, partner_id, context=context)
 #                             account_id=partner.property_account_receivable.id
 #                             invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)
-                                                         
-                            cr.execute('update account_invoice set date_invoice = now()::date , branch_id =%s ,payment_type=%s,delivery_remark =%s ,section_id=%s,user_id=%s, payment_term = %s where id =%s', (branch_id, deli['payment_type'], delivery_remark, delivery_team_id, uid,deli['payment_term'],invoice_id))                                                
+                            cr.execute('update account_invoice set date_invoice = now()::date , branch_id =%s ,payment_type=%s,delivery_remark =%s ,section_id=%s,user_id=%s, payment_term = %s where id =%s',(branch_id, deli['payment_type'], delivery_remark, delivery_team_id, uid,deli['payment_term'],invoice_id))                                                
                                                         
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             if invoice_id:
@@ -1795,8 +1796,9 @@ class mobile_sale_order(osv.osv):
                     print 'Journal ID', deli['journal_id']
                     print 'Payment Type', deli['payment_type']
                     print 'So Ref No', deli['so_refNo']
+                    so_ref_no = deli['so_refNo'].replace('||','')
                     So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
-                                                   , ('name', '=', deli['so_refNo'])], context=context)
+                                                   , ('name', '=', so_ref_no)], context=context)
                     if So_id:
                         print 'Sale Order Id', So_id[0]
                         cr.execute('''update sale_order set state ='cancel' where id = %s ''', (So_id[0],))
@@ -2135,7 +2137,8 @@ class mobile_sale_order(osv.osv):
 #                 rental_collection.append(r)  
             if result:
                 for ar in result:
-                    cursor.execute('select tb_ref_no from sale_order where name = %s ', (ar['payment_id'],))
+                    payment_id  = ar['payment_id'].replace('\\','').replace('\\','')           
+                    cursor.execute('select tb_ref_no from sale_order where name = %s ', (payment_id,))
                     data = cursor.fetchall()
                     if data:
                         pre_no = data[0][0]
@@ -2154,7 +2157,7 @@ class mobile_sale_order(osv.osv):
                         'journal_id':ar['journal_id'],
                         'amount':ar['amount'],
                         'date':ar['date'],
-                        'notes':ar['notes'],
+                        'notes':payment_id,
                         'cheque_no':ar['cheque_no'],
                         'partner_id':ar['partner_id'],
                         'sale_team_id':ar['sale_team_id'],
