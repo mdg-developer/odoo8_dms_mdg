@@ -72,9 +72,7 @@ class mobile_sale_order(osv.osv):
        'promos_line_ids':fields.one2many('mso.promotion.line', 'promo_line_id', 'Promotion Lines'),
        'pricelist_id': fields.many2one('product.pricelist', 'Price List', select=True, ondelete='cascade'),
        'payment_line_ids':fields.one2many('customer.payment', 'payment_id', 'Payment Lines'),
-      'branch_id': fields.many2one('res.branch', 'Branch',required=True), 
-      'ct_reg_no':fields.char('CT REG NO'),
-      
+      'branch_id': fields.many2one('res.branch', 'Branch',required=True),           
    #     'journal_id'  : fields.many2one('account.journal', 'Journal' ,domain=[('type','in',('cash','bank'))]),   
     }
     _order = 'id desc'
@@ -849,9 +847,8 @@ class mobile_sale_order(osv.osv):
                         and pt.active = true
                         and pp.active = true
                         and ccs.id = crm_real.crm_case_section_id
-                        and pc.id = pt.categ_id
-                        and pt.write_date > %s
-                        and ccs.id = %s ''', (lastdate, section_id,))
+                        and pc.id = pt.categ_id                        
+                        and ccs.id = %s ''', (section_id,))
         datas = cr.fetchall()
         return datas
     
@@ -877,31 +874,18 @@ class mobile_sale_order(osv.osv):
         return datas
     # get promotion datas from database
     
-    def get_promos_datas(self, cr, uid , branch_id, state, context=None, **kwargs):
-   
-        if state=='approve':
-            status = 'approve'
-            cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,
+    def get_promos_datas(self, cr, uid ,branch_id, section_id , context=None, **kwargs):
+        cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,
                         logic ,expected_logic_result ,special, special1, special2, special3 ,description
-                        from promos_rules pr ,promos_rules_res_branch_rel pro_br_rel
-                        where pr.active = true                     
-                        and pr.id = pro_br_rel.promos_rules_id
-                        and pro_br_rel.res_branch_id = %s
-                        and pr.state = %s
-                        and  now()::date  between from_date::date and to_date::date
-                        ''', (branch_id, status,))
-        else:
-            status ='approve','draft'            
-            cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,
-                        logic ,expected_logic_result ,special, special1, special2, special3 ,description
-                        from promos_rules pr ,promos_rules_res_branch_rel pro_br_rel
-                        where pr.active = true                     
-                        and pr.id = pro_br_rel.promos_rules_id
-                        and pro_br_rel.res_branch_id = %s
-                        and pr.state in %s
-                        and  now()::date  between from_date::date and to_date::date
-                        ''', (branch_id, status,))
-        datas = cr.fetchall()        
+                        from promos_rules pr ,crm_case_section_promos_rules_rel team_promo_rel,promos_rules_res_branch_rel promo_br
+                        where pr.active = true
+                        and pr.id = promo_br.promos_rules_id
+                        and promo_br.res_branch_id = %s
+                        and pr.id = team_promo_rel.promos_rules_id
+                        and team_promo_rel.crm_case_section_id = %s
+                        ''', (branch_id ,section_id,))
+        datas = cr.fetchall()
+        cr.execute
         return datas
     
     def get_promos_act_datas(self, cr, uid , branch_id, promo_id, context=None, **kwargs):
@@ -989,8 +973,10 @@ class mobile_sale_order(osv.osv):
     
     def get_pricelist_version_datas(self, cr, uid, pricelist_id, context=None, **kwargs):
         cr.execute('''select pv.id,date_end,date_start,pv.active,pv.name,pv.pricelist_id 
-                        from product_pricelist_version pv, product_pricelist pp where pv.pricelist_id = pp.id   
-                        and pv.active = true                                                         
+                        from product_pricelist_version pv, product_pricelist pp 
+                        where pv.pricelist_id = pp.id   
+                        and pv.active = true
+                        and now()::date  between pv.date_start::date and pv.date_end::date                                                 
                         and pv.pricelist_id = %s''', (pricelist_id,))
         datas = cr.fetchall()
         return datas
@@ -1057,8 +1043,8 @@ class mobile_sale_order(osv.osv):
         cr.execute('''            
             select p.id,p.date,p.sale_team,p.name,p.principal,p.week from sale_plan_day p
             join  crm_case_section c on p.sale_team=c.id
-            where p.sale_team=%s and p.active = true  and p.write_date > %s          
-            ''', (section_id,lastdate,))
+            where p.sale_team=%s and p.active = true        
+            ''', (section_id,))
         datas = cr.fetchall()
         cr.execute      
         return datas    
@@ -1073,20 +1059,9 @@ class mobile_sale_order(osv.osv):
             and p.sale_team= %s
             and p.active = true 
             and p.id = d.sale_plan_trip_id
-            and e.id = d.partner_id
-            and e.write_date > %s
-            ''', (section_id,lastdate,))
-        datas = cr.fetchall()
-        
-        if datas:
-            print 'No Trip Plan'
-        else:
-            cr.execute('''            
-            select id from res_partner
-            where active = true and write_date > %s
-            ''', (lastdate,))
-            datas = cr.fetchall()
-              
+            and e.id = d.partner_id            
+            ''', (section_id,))
+        datas = cr.fetchall()            
         return datas
         
         # kzo

@@ -513,13 +513,12 @@ class res_partner(osv.osv):
                                             and  RS.id = RP.state_id
                                             and RP.township =RT.id
                                             and RP.city = RC.id
-                                            and RP.active = true
-                                            and RP.write_date > $s
+                                            and RP.active = true                                            
                                             and RP.outlet_type = OT.id                                            
                                             and ST.sale_team_id = %s                                   
                         )A 
                         where A.customer_code is not null
-            ''', (lastdate ,section_id ,))
+            ''', (section_id ,))
         datas = cr.fetchall()
         return datas
 
@@ -555,12 +554,11 @@ class res_partner(osv.osv):
                                             and RP.outlet_type = OT.id
                                             and RPS.partner_id = RP.id 
                                             and SPD.sale_team = %s                                        
-                                            and RPS.sale_plan_day_id = %s
-                                            and RP.write_date > %s
+                                            and RPS.sale_plan_day_id = %s                                        
                                                                             
                         )A 
                         where A.customer_code is not null
-            ''', (section_id, day_id,lastdate,))
+            ''', (section_id, day_id,))
         datas = cr.fetchall()
         return datas
 # kzo Edit add Sale Plan Trip and Day ID
@@ -597,11 +595,10 @@ class res_partner(osv.osv):
                      and RP.township = RT.id
                      and RP.active = true
                      and SPT.sale_team = %s
-                     and RPT.sale_plan_trip_id = %s
-                     and RP.write_date > %s
+                     and RPT.sale_plan_trip_id = %s                     
                         )A 
                     where A.customer_code is not null 
-            ''', (section_id, day_id,lastdate, ))
+            ''', (section_id, day_id, ))
         datas = cr.fetchall()
         return datas
     

@@ -17,6 +17,7 @@ class tablet_information(osv.osv):
                 'hotline': fields.char('Hotline'),
                 'device_id': fields.char('Device ID'),
                 'is_testing': fields.boolean('Is Testing'),
+                'ct_reg_no':fields.char('CT REG NO'),
     }
     _defaults = {
                'is_testing' : False,

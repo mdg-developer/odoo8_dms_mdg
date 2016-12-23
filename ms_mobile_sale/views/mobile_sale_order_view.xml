@@ -31,8 +31,7 @@
 
 								<field name="name" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="partner_id" attrs="{'readonly':[('m_status','=','done')]}" />
-								<field name="customer_code" attrs="{'readonly':[('m_status','=','done')]}" />
-								<field name="ct_reg_no" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="customer_code" attrs="{'readonly':[('m_status','=','done')]}" />							
 								<field name="outlet_type" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="user_id" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="sale_team" attrs="{'readonly':[('m_status','=','done')]}" />
@@ -204,8 +203,7 @@
 				<tree string="Sale Order">
 					<field name="name" />
 					<field name="partner_id" />
-					<field name="customer_code" />
-					<field name="ct_reg_no" />
+					<field name="customer_code" />					
 					<field name="sale_plan_day_id" />
 					<field name="user_id" />
 					<field name="sale_team" />
