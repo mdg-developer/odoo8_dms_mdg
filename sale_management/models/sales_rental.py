@@ -45,7 +45,7 @@ class sale_rental(osv.osv):
        'from_date':fields.date('Contract Start Date'),
         'to_date':fields.date('Contract End Date'),
         'partner_id':fields.many2one('res.partner', 'Customer'  , required=True),  # 
-         'code':fields.char('Customer ID'),
+         'code':fields.char('Customer ID',readonly=True),
         'note':fields.text('Note'),
         'name':fields.char('Name'),
         'street': fields.char('Street'),

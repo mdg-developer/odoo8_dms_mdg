@@ -42,7 +42,7 @@
 									<button name="so_list" string="Refresh" type="object"
 										icon="terp-gtk-jump-to-ltr" attrs="{'invisible':[('pre_order','=',False)]}" />
 								</div>
-								<field name="request_by" attrs="{'readonly':[('state','=','approve')]}" widget="selection"/>
+								<field name="request_by"  widget="selection"/>
 								<field name="approve_by"  widget="selection"/>
 							</group>
 						</group>

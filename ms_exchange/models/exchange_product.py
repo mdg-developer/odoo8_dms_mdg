@@ -9,7 +9,7 @@ class exchange_product(osv.osv):
     _columns = {
                 'transaction_id':fields.char('ID'),
                 'customer_id':fields.many2one('res.partner', 'Customer Name'),
-                'customer_code':fields.char('Customer Code'),
+                'customer_code':fields.char('Customer Code',readonly=True),
                 'team_id'  : fields.many2one('crm.case.section', 'Sale Team'),
                 'date':fields.date('Date'),
               'exchange_type':fields.selection([('Exchange', 'Exchange'), ('Color Change', 'Color Change'), ('Sale Return', 'Sale Return'), ], 'Type'),

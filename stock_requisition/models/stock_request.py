@@ -104,7 +104,7 @@ class stock_requisition(osv.osv):
         'to_location_id':fields.many2one('stock.location', 'Request Warehouse' ,readonly=True),
         'so_no' : fields.char('Sales Order/Inv Ref;No.'),
         'issue_to':fields.char("Receiver"),
-        'request_by':fields.many2one('res.users', "Requested By"),
+        'request_by':fields.many2one('res.users', "Requested By" , readonly=True),
         'approve_by':fields.many2one('res.users', "Approved By", readonly=True),
         'request_date' : fields.date('Date Requested'),
          'issue_date':fields.date('Order Date From', required=True),
@@ -229,7 +229,7 @@ class stock_requisition(osv.osv):
             #vehicle_no = req_value.vehicle_id.id
             sale_team_id = req_value.sale_team_id.id
             branch_id = req_value.branch_id.id
-            receiver = req_value.issue_to
+            receiver = req_value.sale_team_id.receiver
             for order in req_value.order_line:
                 so_name = order.name
                 order_id = sale_order_obj.search(cr, uid, [('name', '=', so_name)], context=context) 
