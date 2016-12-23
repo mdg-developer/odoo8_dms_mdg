@@ -80,14 +80,13 @@ class cashier_approval(osv.osv):
             val = val1 = 0.0            
             for line in order.denomination_line:
                 val1 += line.notes * line.note_qty
-            print 'deno val>>>', val1
             cr.execute("""update cashier_approval set denomination_sub_total=%s where id=%s""", (val1, ids[0],))                 
             res[order.id]['denomination_sub_total'] = round(val1)  # cur_obj.round(cr, uid, cur, val1)
         return res
+    
     def _amount_total_all(self, cr, uid, ids, field_name, arg, context=None):
         cur_obj = self.pool.get('res.currency')
         res = {}
-        print 'ids', ids
         for order in self.browse(cr, uid, ids, context=context):
             res[order.id] = {                
                 'total': 0.0,
@@ -95,7 +94,6 @@ class cashier_approval(osv.osv):
             val = val1 = 0.0 
             # cur = order.pricelist_id.currency_id
             # for line in order.id:
-            print 'total', order.cash_sub_total, order.ar_sub_total, order.cr_sub_total 
             val1 += (order.cash_sub_total + order.ar_sub_total) - order.cr_sub_total 
                 # val += self._amount_line_tax(cr, uid, line, context=context)    
             cr.execute("""update cashier_approval set total=%s where id=%s""", (val1, ids[0],))       
@@ -126,11 +124,11 @@ class cashier_approval(osv.osv):
         for line in self.pool.get('cashier.denomination.line').browse(cr, uid, ids, context=context):
             result[line.cashier_id.id] = True
         return result.keys()
-    
+   
     _columns = {
         'name': fields.char('Order Reference', size=64),
-        'user_id':fields.many2one('res.users', 'Salesman',required=True),
-        'sale_team_id':fields.many2one('crm.case.section', 'Sales Team',required=True),
+        'user_id':fields.many2one('res.users', 'Salesman', required=True),
+        'sale_team_id':fields.many2one('crm.case.section', 'Sales Team', required=True),
       'date':fields.date('Date'),
       'to_date':fields.date('To Date'),
       'cashier_line': fields.one2many('cashier.approval.invoice.line', 'cashier_id', 'Cashier Approval Form'),
@@ -162,10 +160,10 @@ class cashier_approval(osv.osv):
                 'cashier.approval': (lambda self, cr, uid, ids, c={}: ids, ['denomination_line'], 10),
                 'cashier.denomination.line': (_get_denomination, ['amount'], 10),
             },
-            multi='sums', help="The credit total amount."),         
+            multi='sums', help="The credit total amount."),
        'total': fields.function(_amount_total_all, digits_compute=dp.get_precision('Account'), string='Total Net',
             multi='sums', help="The credit total amount.", store=True,),
-        'state':fields.selection([('draft', 'Draft'), ('pending', 'Confirmed'),('done', 'Done')], 'Status'),        
+        'state':fields.selection([('draft', 'Draft'), ('pending', 'Confirmed'), ('done', 'Done')], 'Status'),
                                                                
     }
     _order = 'id desc'
@@ -186,84 +184,37 @@ class cashier_approval(osv.osv):
         return True 
     def generate_report(self, cr, uid, ids, context=None):
         url = "http://localhost:8080/birt/frameset?__report=daily_sale_report.rptdesign"
-        #url = "http://10.0.1.30:8080/birt/frameset?__report=daily_sale_report.rptdesign"
+        # url = "http://10.0.1.30:8080/birt/frameset?__report=daily_sale_report.rptdesign"
         webbrowser.open(url)        
-        #webbrowser.open_new_tab(url,new=2)
+        # webbrowser.open_new_tab(url,new=2)
     def cashier_approve(self, cr, uid, ids, context=None):
-        voucherObj = self.pool.get('account.voucher')
-        voucherLineObj = self.pool.get('account.voucher.line')
-        mobilearObj = self.pool.get('mobile.ar.collection')
+        invoiceObj = self.pool.get('account.invoice')
         datas = self.read(cr, uid, ids, ['date', 'to_date', 'user_id', 'sale_team_id'], context=None)
-        print 'datas>>>generte_ar', datas,
-        frm_date = to_date = user_id = None
-            
-        if datas:
-            for data in datas:
-                frm_date = data['date']
-                to_date = data['to_date']
-                user_id = data['user_id'][0]
-                team_id = data['sale_team_id'][0]
-               
-            if to_date:
-                print 'to_date>>', to_date
-                cr.execute("""select so_ref,id from mobile_ar_collection where --state='pending' and 
-               user_id=%s and sale_team_id=%s and date >= %s and date <= %s
-                """, (user_id, team_id, frm_date, to_date,))
-            else:
-                print 'date>>', frm_date
-                cr.execute("""select so_ref,id from mobile_ar_collection where --state='pending' and 
-                user_id=%s and sale_team_id=%s and date = %s 
-                """, (user_id, team_id, frm_date,))
-            vals = cr.fetchall()
-            
+        if datas:       
+            cr.execute("select selected,invoice_id from cashier_approval_invoice_line where cashier_id=%s",(ids[0],))    
+            invoice_data=cr.fetchall()
+            for data in invoice_data:
+                select=data[0]     
+                invoice_id=data[1]
+                cr.execute("update cashier_customer_payment set selected=%s where invoice_id=%s and cashier_id=%s ",(select,invoice_id,ids[0],))
+                if select==False: 
+                    cr.execute("update account_invoice set unselected=True where id=%s",(invoice_id,))         
+            cr.execute("select selected,invoice_id from cashier_approval_ar_line where cashier_id=%s",(ids[0],))    
+            invoice_data=cr.fetchall()
+            for data in invoice_data:
+                select=data[0]     
+                invoice_id=data[1]
+                cr.execute("update cashier_customer_payment set selected=%s where invoice_id=%s and cashier_id=%s",(select,invoice_id,ids[0],))
+                if select==False: 
+                    invoice = invoiceObj.browse(cr, uid, invoice_id, context=context)
+                    number= invoice.number
+                    cr.execute("update mobile_ar_collection set unselected=True where ref_no=%s",(number,))         
+            cr.execute("select id from cashier_customer_payment where selected=True and cashier_id=%s",(ids[0],)) 
+            selected_data=cr.fetchone()
+            if not selected_data:
+                raise osv.except_osv(_('Warning'),
+                                     _('Please Select At Lease One Record.'))   
             self.create_journal_ms(cr, uid, ids, context)
-            for val in vals:
-                cr.execute('select id from account_journal where type=%s', ('cash',))
-                data = cr.fetchall()
-                if data:
-                    journal_id = data[0] 
-                cr.execute("""select a.journal_id,a.origin,a.partner_id,a.date_invoice,a.period_id,a.account_id,a.amount_total from account_invoice as a,sale_order as s
-                            where a.origin=s.name and s.tb_ref_no = %s""",(val[0],))
-                account_data = cr.fetchall()
-                print 'account_data',account_data,val[0]
-
-                for acc_data in account_data:
-                    print 'jpurnal_idddddddddddddd',acc_data[0]
-                #if journal_id and accountId:  
-                # cash journal and cash account. If there no journal id or no account id, account invoice is not make payment.
-                    cr.execute('select default_credit_account_id from account_journal where id=%s', (acc_data[0],))
-                    data = cr.fetchall()
-                    if data:
-                        default_credit_account_id = data[0][0]
-                    print 'PRINT',default_credit_account_id                   
-                    accountVResult = {
-                                        'partner_id':acc_data[2],
-                                        'amount':acc_data[6],
-                                        'journal_id':acc_data[0],#acc_data[0],
-                                        'date':acc_data[3],
-                                        'period_id':acc_data[4],
-                                        'account_id':default_credit_account_id,
-                                        'pre_line':True,
-                                        'type':'receipt'
-                                        }
-                        # create register payment voucher
-                    voucherId = voucherObj.create(cr, uid, accountVResult, context=context)
-                    print 'voucherId>>>',voucherId     
-                    if voucherId:
-                        vlist = []
-                        vlist.append(voucherId)
-                        # get the voucher lines
-                        vlresult = voucherObj.recompute_voucher_lines(cr, uid, vlist, acc_data[2], acc_data[0], acc_data[6], 120, 'receipt', acc_data[3], context=None)
-                        if vlresult:
-                            result = vlresult['value']['line_cr_ids'][0]
-                            result['voucher_id'] = voucherId
-                            # create the voucher lines
-                            voucherLineObj.create(cr, uid, result, context=context)
-                            print 'voucherLineObj>>>',voucherLineObj
-                            #mobilearObj.write(cr,uid,val[1],{'state':'done'},context=context)
-#                 # invoice register payment done
-                        #voucherObj.button_proforma_voucher(cr, uid, vlist , context=context)
-                        
         self.write(cr, uid, ids, {'state':'done'}, context=context)
         return True   
     
@@ -272,76 +223,121 @@ class cashier_approval(osv.osv):
         voucherObj = self.pool.get('account.voucher')
         voucherLineObj = self.pool.get('account.voucher.line')
         payment_line_obj = self.pool.get('cashier.customer.payment')
-        cr.execute("""select journal_id,amount,type,partner_id,account_id,date_invoice,period_id,notes,invoice_id from cashier_customer_payment where cashier_id=%s and pre_so='t'""",(ids[0], )) 
+        last_amount=0
+
+        cr.execute("""select journal_id,amount,type,partner_id,account_id,date_invoice,period_id,notes,invoice_id from cashier_customer_payment where cashier_id=%s and pre_so='t' and selected=True""", (ids[0],)) 
         payment_data = cr.fetchall()
         if payment_data:
             for payment in payment_data:
-                print 'test',payment[8],ids
-                print 'payment'
                 inv_id = []
                 inv_id.append(payment[8])
                 invoice = invoiceObj.browse(cr, uid, inv_id, context=context)
-                #invoiceObj.invoice_pay_customer(cr, uid, inv_id, context=context)
+                cr.execute('select default_credit_account_id,type from account_journal where id=%s', (payment[0],))
+                data = cr.fetchall()
+                if data:
+                        default_credit_account_id = data[0][0]
+                        type = data[0][1]
+
+                # invoiceObj.invoice_pay_customer(cr, uid, inv_id, context=context)
                 accountVResult = {
                                         'partner_id':payment[3],
                                         'amount':payment[1],
-                                        'journal_id':payment[0],#acc_data[0],
+                                        'journal_id':payment[0],  # acc_data[0],
                                         'date':payment[5],
                                         'period_id':payment[6],
-                                        'account_id':payment[4],
+                                        'account_id':default_credit_account_id,
                                         'pre_line':True,
                                         'type':'receipt',
                                         'reference':payment[7],
                                           'payment_option': "without_writeoff",
+                                         'company_id':invoice.company_id.id
 
                                         }
                     # create register payment voucher
-                voucherId = voucherObj.create(cr, uid, accountVResult, context=context)
-                print 'voucherId>>>',voucherId   
-                
+                voucherId = voucherObj.create(cr, uid, accountVResult, context=context)                
                 if voucherId:
                     vlist = []
                     vlist.append(voucherId)
-                      
-                    line_data = {
-                                    #'name': invoice.number,
-                                    'voucher_id' : voucherId,
-                                    'move_line_id' : invoice.move_id.line_id[0].id,
-                                    'account_id' : invoice.account_id.id,#invoice.move_id.line_id[0].account_id.id,
-                                    'partner_id' : payment[3],
-                                    "amount" : payment[1],
-                                    "amount_original": invoice.amount_total,
-                                    'type': 'cr',
-                                }
-                    voucherLineObj.create(cr, uid, line_data, context=context)  
-                    voucherObj.button_proforma_voucher(cr, uid, vlist , context=context)
-                    cr.execute("""update account_invoice set state='paid'
-                    where id=%s and residual=0""",(invoice.id,))
-                    cr.execute("""update sale_order set invoiced='t' from account_invoice
-                    where sale_order.name=account_invoice.reference and account_invoice.residual=0 and account_invoice.id=%s""",(invoice.id,))
-#                 if voucherId:
-#                     vlist = []
-#                     vlist.append(voucherId)
-#                     # get the voucher lines
-#                     vlresult = voucherObj.recompute_voucher_lines(cr, uid, vlist, payment[3], payment[0], payment[1], 120, 'receipt', payment[5], context=None)
-#                     if vlresult:
-#                         result = vlresult['value']['line_cr_ids'][0]
-#                         result['voucher_id'] = voucherId
-#                         # create the voucher lines
-#                         voucherLineObj.create(cr, uid, result, context=context)
-#     #                 # invoice register payment done
-#                         voucherObj.button_proforma_voucher(cr, uid, vlist , context=context)
-#                         print 'voucherLineObj>>>',voucherLineObj 
+                    cr.execute ("select account_id,credit+debit as amount_total,id,reconcile_partial_id  from  account_move_line where move_id=%s and name='/'  and reconcile_id is null  order by credit+debit",( invoice.move_id.id,)) 
+                    move_line_data =cr.fetchall()    
+#                     cr.execute ("select sum(credit+debit) as amount_total  from  account_move_line where move_id=%s and name='/' ",( invoice.move_id.id,)) 
+#                     move_line_amount =cr.fetchone()          
+#                     if move_line_amount:
+#                         line_total_amount =move_line_amount[0]
+#                     else:
+#                         line_total_amount=0
+
+                    line_total_amount=invoice.residual
+                    for line in move_line_data:
+                        print ' line_total_moun ,pay',line_total_amount,payment[1]
+                        if line_total_amount ==payment[1]:
+                            if line[3] is not None:
+                                line_data = {
+                                                # 'name': invoice.number,
+                                                'voucher_id' : voucherId,
+                                                'move_line_id' :line[2],
+                                                'account_id' : line[0],  # invoice.move_id.line_id[0].account_id.id,
+                                                'partner_id' : payment[3],
+                                                "amount" :payment[1],
+                                                "amount_original": invoice.amount_total,
+                                                'type': 'cr',
+                                            }
+                                voucherLineObj.create(cr, uid, line_data, context=context)  
+                            else:
+                                    line_data = {
+                                                # 'name': invoice.number,
+                                                'voucher_id' : voucherId,
+                                                'move_line_id' :line[2],
+                                                'account_id' : line[0],  # invoice.move_id.line_id[0].account_id.id,
+                                                'partner_id' : payment[3],
+                                                "amount" : line[1],
+                                                "amount_original": invoice.amount_total,
+                                                'type': 'cr',
+                                            }
+                                    voucherLineObj.create(cr, uid, line_data, context=context)  
+                        else:
+                            if line[1] <=payment[1]:
+                                if last_amount ==0:
+                                    last_amount=line[1]
+                                else:
+                                    last_amount=last_amount
+                                line_data = {
+                                                # 'name': invoice.number,
+                                                'voucher_id' : voucherId,
+                                                'move_line_id' :line[2],
+                                                'account_id' : line[0],  # invoice.move_id.line_id[0].account_id.id,
+                                                'partner_id' : payment[3],
+                                                "amount" : last_amount,
+                                                "amount_original": invoice.amount_total,
+                                                'type': 'cr',
+                                            }        
+                                last_amount=payment[1]-line[1]
+                                voucherLineObj.create(cr, uid, line_data, context=context)  
+                            else:
+                                line_data = {
+                                                'voucher_id' : voucherId,
+                                                'move_line_id' :line[2],
+                                                'account_id' : line[0],  # invoice.move_id.line_id[0].account_id.id,
+                                                'partner_id' : payment[3],
+                                                "amount" : payment[1],
+                                                "amount_original": invoice.amount_total,
+                                                'type': 'cr',
+                                            }        
+                                voucherLineObj.create(cr, uid, line_data, context=context)                  
+                voucherObj.button_proforma_voucher(cr, uid, vlist , context=context)
+                cr.execute("""update account_invoice set state='paid',unselected=False
+                where id=%s and residual=0""", (invoice.id,))
+                cr.execute("""update sale_order set invoiced='t' from account_invoice
+                where sale_order.name=account_invoice.reference and account_invoice.residual=0 and account_invoice.id=%s""", (invoice.id,))
+                cr.execute("update mobile_ar_collection set state='done' ,unselected=False where ref_no=%s", (invoice.number,))
+
     def action_generate(self, cr, uid, ids, context=None):
-        print 'test'
         cr.execute("""delete from cashier_approval_invoice_line where cashier_id=%s""", (ids[0],))
         result = {}
         invoice_line_data = []
         cashier_approval_obj = self.pool.get('cashier.approval')
         invoice_line_obj = self.pool.get('cashier.approval.invoice.line')
-        
         datas = cashier_approval_obj.read(cr, uid, ids, ['date', 'to_date', 'user_id', 'sale_team_id'], context=None)
-        print 'datas>>>', datas,
         frm_date = to_date = user_id = None
             
         if datas:
@@ -349,15 +345,17 @@ class cashier_approval(osv.osv):
                 frm_date = data['date']
                 to_date = data['to_date']
                 user_id = data['user_id'][0]
+                team_id = data['sale_team_id'][0]
+                
             if to_date:
-                cr.execute("""select a.id,a.date_invoice,a.partner_id,a.amount_total from sale_order s,account_invoice a 
+                cr.execute("""select a.id,a.date_invoice,a.partner_id,a.residual from sale_order s,account_invoice a 
                 where s.name=a.reference and s.payment_type='cash' and a.state='open' --and a.state='paid' 
-                and a.date_invoice >= %s and a.date_invoice <= %s and a.user_id=%s
-                """, (frm_date, to_date, user_id,))
+                and a.date_invoice >= %s and a.date_invoice <= %s and a.user_id=%s and a.section_id =%s 
+                """, (frm_date, to_date, user_id,team_id,))
             else:
-                cr.execute("""select a.id,a.date_invoice,a.partner_id,a.amount_total from sale_order s,account_invoice a 
+                cr.execute("""select a.id,a.date_invoice,a.partner_id,a.residual from sale_order s,account_invoice a 
                 where s.name=a.reference and s.payment_type='cash' and a.state='open' --and a.state='paid' 
-                and a.date_invoice = %s and a.user_id=%s""", (frm_date, user_id,))
+                and a.date_invoice = %s and a.user_id=%s  and a.section_id =%s """, (frm_date, user_id,team_id,))
             vals = cr.fetchall() 
             for val in vals:
                 data_id = {'invoice_id':val[0],
@@ -368,8 +366,20 @@ class cashier_approval(osv.osv):
                             'payment_type':'Cash'}
                 inv_id = invoice_line_obj.create(cr, uid, data_id, context=context)
                 for details in self.browse(cr, uid, ids, context=context):
-                
                     result[details.id] = inv_id
+            cr.execute("""select a.id,a.date_invoice,a.partner_id,a.residual from sale_order s,account_invoice a 
+            where s.name=a.reference and s.payment_type='cash' and a.state='open' and a.user_id=%s  and a.section_id =%s and unselected=True""",  (user_id,team_id,))
+            data = cr.fetchall() 
+            for val_data in data:
+                cr.execute("""delete from cashier_approval_invoice_line where cashier_id=%s and invoice_id=%s""", (ids[0],val_data[0],))
+                data_id = {'invoice_id':val_data[0],
+                            'date':val_data[1],
+                            'partner_id':val_data[2],
+                            'amount':val_data[3],
+                            'cashier_id':ids[0],
+                            'payment_type':'Cash'}
+                inv_id = invoice_line_obj.create(cr, uid, data_id, context=context)
+            
             self.generte_ar(cr, uid, ids, context=context)
             self.generte_cr(cr, uid, ids, context=context) 
             self.generate_denomination(cr, uid, ids, context=context)   
@@ -394,13 +404,13 @@ class cashier_approval(osv.osv):
                 user_id = data['user_id'][0]
                 team_id = data['sale_team_id'][0]
             if to_date:
-                cr.execute("""select m.date,a.number,m.partner_id,m.so_amount
+                cr.execute("""select m.date,a.id,m.partner_id,a.residual
                             from account_invoice as a,mobile_ar_collection as m
                             where m.ref_no = a.number and m.state='draft' and 
                             m.user_id=%s and m.sale_team_id=%s and m.date >= %s and m.date <= %s
                 """, (user_id, team_id, frm_date, to_date,))
             else:
-                cr.execute("""select m.date,a.number,m.partner_id,m.so_amount
+                cr.execute("""select m.date,a.id,m.partner_id,a.residual
                             from account_invoice as a,sale_order as s,mobile_ar_collection as m
                             where m.ref_no = a.number and  m.state='draft'  and
                             m.user_id=%s and m.sale_team_id=%s and m.date = %s  
@@ -413,20 +423,31 @@ class cashier_approval(osv.osv):
                             'amount':val[3],
                             'cashier_id':ids[0],
                             'payment_type':'Credit'}
-                inv_id=invoice_line_obj.create(cr, uid, data_id, context=context)
+                inv_id = invoice_line_obj.create(cr, uid, data_id, context=context)
                 for details in self.browse(cr, uid, ids, context=context):                
                     result[details.id] = inv_id
+            cr.execute("""select m.date,a.id,m.partner_id,a.residual,a.id as invoice_id
+                    from account_invoice as a,sale_order as s,mobile_ar_collection as m
+                    where m.ref_no = a.number and  m.state='draft'  and m.user_id=%s and m.sale_team_id=%s and m.unselected=True
+        """, (user_id, team_id,))
+            data = cr.fetchall()             
+            for val_data in data:
+                cr.execute("""delete from cashier_approval_ar_line where cashier_id=%s and invoice_id=%s""", (ids[0],val_data[4],))
+                data_id = {'invoice_id':val_data[1],
+                            'date':val_data[0],
+                            'partner_id':val_data[2],
+                            'amount':val_data[3],
+                            'cashier_id':ids[0],
+                            'payment_type':'Credit'}
+                inv_id = invoice_line_obj.create(cr, uid, data_id, context=context)                
         return result
     
     def generte_cr(self, cr, uid, ids, context=None):
-        print 'generte_cr'
         cr.execute("""delete from cashier_approval_credit_line where cashier_id=%s""", (ids[0],))
         result = {}
-        invoice_line_data = []
         cashier_approval_obj = self.pool.get('cashier.approval')
         invoice_line_obj = self.pool.get('cashier.approval.credit.line')
         datas = cashier_approval_obj.read(cr, uid, ids, ['date', 'to_date', 'user_id', 'sale_team_id'], context=None)
-        print 'datas>>>generte_cr', datas,
         frm_date = to_date = user_id = None
             
         if datas:
@@ -436,17 +457,13 @@ class cashier_approval(osv.osv):
                 user_id = data['user_id'][0]
                 team_id = data['sale_team_id'][0]
             if to_date:
-                print 'to_date>>', to_date
                 cr.execute("""select issued_date,so_no,id,amount,customer_id from account_creditnote where m_status='used' and sale_team_id=%s and issued_date >= %s and issued_date <= %s and user_id=%s
                 """, (team_id, frm_date, to_date, user_id,))
             else:
-                print 'date>>', frm_date
                 cr.execute("""select issued_date,so_no,id,amount,customer_id from account_creditnote where m_status='used' and sale_team_id=%s and issued_date = %s  and user_id=%s 
                 """, (team_id, frm_date, user_id,))
             vals = cr.fetchall()
-            print 'vals>>>generte_cr', vals
             for val in vals:
-                print ':val[1]>>', val[1]
                 data_id = {'invoice_id':val[1],
                             'date':val[0],
                             'credit_id':val[2],
@@ -460,14 +477,11 @@ class cashier_approval(osv.osv):
         return result
     
     def generate_denomination(self, cr, uid, ids, context=None):
-        print 'generte_deno'
         cr.execute("""delete from cashier_denomination_line where cashier_id=%s""", (ids[0],))
         result = {}
-        invoice_line_data = []
         cashier_approval_obj = self.pool.get('cashier.approval')
         invoice_line_obj = self.pool.get('cashier.denomination.line') 
         datas = cashier_approval_obj.read(cr, uid, ids, ['date', 'to_date', 'user_id', 'sale_team_id'], context=None)
-        print 'datas>>>generte_cr', datas,
         frm_date = to_date = user_id = None            
         if datas:
             for data in datas:
@@ -476,31 +490,27 @@ class cashier_approval(osv.osv):
                 user_id = data['user_id'][0]
                 team_id = data['sale_team_id'][0]
             if to_date:
-                print 'to_date>>', to_date
                 cr.execute("""select * from 
                 (select replace(n.notes, ',', '')::float as notes,sum(n.note_qty) from sales_denomination d,sales_denomination_note_line n
                 where d.id = n.denomination_note_ids and d.sale_team_id=%s and d.user_id=%s and date::date >=%s and date::date<=%s
                 group by n.notes )A
                 order by notes desc
-                """, (team_id,user_id, frm_date, to_date,))
+                """, (team_id, user_id, frm_date, to_date,))
             else:
-                print 'date>>', frm_date
                 cr.execute(""" select * from
                 (select replace(n.notes, ',', '')::float as notes,sum(n.note_qty) from sales_denomination d,sales_denomination_note_line n
                 where d.id = n.denomination_note_ids and d.sale_team_id=%s and d.user_id=%s and date::date=%s 
                 group by n.notes )A
                 order by notes desc
-                """, (team_id,user_id, frm_date,))
+                """, (team_id, user_id, frm_date,))
             vals = cr.fetchall()           
         notes = [{'notes':10000, 'note_qty':False}, {'notes':5000, 'note_qty':False}, {'notes':1000, 'note_qty':False}, {'notes':500, 'note_qty':False}, {'notes':100, 'note_qty':False}, {'notes':50, 'note_qty':False}, {'notes':10, 'note_qty':False}]
         for val in vals:
-            print ':val[1]>>', val
             data_id = {'notes':val[0],
                     'note_qty': val[1],
-                    #'denomination_id':val[2],
+                    # 'denomination_id':val[2],
                     'cashier_id':ids[0],
                     }
-            print 'data_id>>>deno', data_id
             inv_id = invoice_line_obj.create(cr, uid, data_id, context=context)
             for details in self.browse(cr, uid, ids, context=context):
                 
@@ -509,14 +519,11 @@ class cashier_approval(osv.osv):
         return result
     
     def generate_denomination_product(self, cr, uid, ids, context=None):
-        print 'generte_deno_pr'
         cr.execute("""delete from cashier_denomination_product_line where cashier_id=%s""", (ids[0],))
         result = {}
-        invoice_line_data = []
         cashier_approval_obj = self.pool.get('cashier.approval')
         invoice_line_obj = self.pool.get('cashier.denomination.product.line') 
         datas = cashier_approval_obj.read(cr, uid, ids, ['date', 'to_date', 'user_id', 'sale_team_id'], context=None)
-        print 'datas>>>generte_deno_pr', datas,
         frm_date = to_date = user_id = None            
         if datas:
             for data in datas:
@@ -525,27 +532,23 @@ class cashier_approval(osv.osv):
                 user_id = data['user_id'][0]
                 team_id = data['sale_team_id'][0]
             if to_date:
-                print 'to_date>>', to_date
                 cr.execute("""select n.product_id,sum(n.product_uom_qty),sum(n.product_uom_qty*n.amount) from sales_denomination d,sales_denomination_product_line n
                 where d.id = n.denomination_product_ids and d.sale_team_id=%s and d.user_id=%s and date::date >=%s and date::date<=%s
                 group by n.product_id
-                """, (team_id,user_id, frm_date, to_date,))
+                """, (team_id, user_id, frm_date, to_date,))
             else:
-                print 'date>>', frm_date
                 cr.execute("""select n.product_id,sum(n.product_uom_qty),sum(n.product_uom_qty*n.amount) from sales_denomination d,sales_denomination_product_line n
                 where d.id = n.denomination_product_ids and d.sale_team_id=%s and d.user_id=%s and date::date =%s 
                 group by n.product_id
-                """, (team_id,user_id, frm_date,))
+                """, (team_id, user_id, frm_date,))
             vals = cr.fetchall()           
         
         for val in vals:
-            print ':val[1]>>', val
             data_id = {'product_id':val[0],
                     'product_uom_qty': val[1],
                     'amount': val[2],
                     'cashier_id':ids[0],
                     }
-            print 'data_id>>>deno', data_id
             inv_id = invoice_line_obj.create(cr, uid, data_id, context=context)
             for details in self.browse(cr, uid, ids, context=context):
                 
@@ -566,10 +569,10 @@ class cashier_approval(osv.osv):
                 user_id = data['user_id'][0]
                 team_id = data['sale_team_id'][0]            
             if to_date:
-                cr.execute("select a.journal_id,a.amount,a.notes,a.date,m.partner_id,ai.period_id,ai.id from mobile_ar_collection m,ar_payment a ,account_invoice ai where m.id=a.collection_id and ai.number=m.ref_no and m.state='draft' and a.date between %s and %s",(frm_date,to_date,))
+                cr.execute("select a.journal_id,a.amount,a.notes,a.date,m.partner_id,ai.period_id,ai.id from mobile_ar_collection m,ar_payment a ,account_invoice ai where m.id=a.collection_id and ai.number=m.ref_no and m.state='draft' and m.sale_team_id=%s and m.user_id=%s and a.date between %s and %s", (team_id,user_id,frm_date, to_date,))
             else:
-                cr.execute("select a.journal_id,a.amount,a.notes,a.date,m.partner_id,ai.period_id,ai.id from mobile_ar_collection m,ar_payment a ,account_invoice ai where m.id=a.collection_id and ai.number=m.ref_no and m.state='draft'  and a.date =%s ",(frm_date,))
-            pament_data=cr.fetchall()
+                cr.execute("select a.journal_id,a.amount,a.notes,a.date,m.partner_id,ai.period_id,ai.id from mobile_ar_collection m,ar_payment a ,account_invoice ai where m.id=a.collection_id and ai.number=m.ref_no and m.state='draft'  and m.sale_team_id=%s and m.user_id=%s and a.date =%s ", (team_id,user_id,frm_date,))
+            pament_data = cr.fetchall()
             for payment  in pament_data:
                 cr.execute('select default_credit_account_id,type from account_journal where id=%s', (payment[0],))
                 data = cr.fetchall()
@@ -577,33 +580,56 @@ class cashier_approval(osv.osv):
                         default_credit_account_id = data[0][0]
                         type = data[0][1]
 
-                payment_data = {'journal_id':payment[0],
-                                'amount': payment[1],
-                                'type':type,
-                                'cashier_id':ids[0],
-                                'partner_id': payment[4],
-                                'date_invoice': payment[3],
-                                'period_id': payment[5],
-                                'account_id': default_credit_account_id,                    
-                                'notes':payment[2],
-                                'invoice_id':payment[6],
-                                'pre_so': 't',
+                payment_data = {
+                                        'journal_id':payment[0],
+                                        'amount': payment[1],
+                                        'type':type,
+                                        'cashier_id':ids[0],
+                                        'partner_id': payment[4],
+                                        'date_invoice': payment[3],
+                                        'period_id': payment[5],
+                                        'account_id': default_credit_account_id,
+                                        'notes':payment[2],
+                                        'invoice_id':payment[6],
+                                        'pre_so': 't',
                         }
 
-                inv_id=payment_line_obj.create(cr, uid, payment_data, context=context)
+                inv_id = payment_line_obj.create(cr, uid, payment_data, context=context)
                 for details in self.browse(cr, uid, ids, context=context):
-                    result[details.id] = inv_id                
+                    result[details.id] = inv_id
+            cr.execute("select a.journal_id,a.amount,a.notes,a.date,m.partner_id,ai.period_id,ai.id from mobile_ar_collection m,ar_payment a ,account_invoice ai where m.id=a.collection_id and ai.number=m.ref_no and m.state='draft'  and m.sale_team_id=%s and m.user_id=%s and m.unselected=True ", (team_id,user_id,))
+            data = cr.fetchall()
+            for pay_data  in data:
+                cr.execute("""delete from cashier_customer_payment where cashier_id=%s and  invoice_id=%s""", (ids[0],pay_data[6],))
+                cr.execute('select default_credit_account_id,type from account_journal where id=%s', (pay_data[0],))
+                data = cr.fetchall()
+                if data:
+                        default_credit_account_id = data[0][0]
+                        type = data[0][1]
+
+                payment_data = {
+                                        'journal_id':pay_data[0],
+                                        'amount': pay_data[1],
+                                        'type':type,
+                                        'cashier_id':ids[0],
+                                        'partner_id': pay_data[4],
+                                        'date_invoice': pay_data[3],
+                                        'period_id': pay_data[5],
+                                        'account_id': default_credit_account_id,
+                                        'notes':pay_data[2],
+                                        'invoice_id':pay_data[6],
+                                        'pre_so': 't',
+                        }
+
+                inv_id = payment_line_obj.create(cr, uid, payment_data, context=context)                   
         return result
         
     def generate_payment(self, cr, uid, ids, context=None):
-        print 'generte_deno'
         cr.execute("""delete from cashier_customer_payment where cashier_id=%s""", (ids[0],))
         result = {}
-        invoice_line_data = []
         cashier_approval_obj = self.pool.get('cashier.approval')
         invoice_line_obj = self.pool.get('cashier.customer.payment') 
         datas = cashier_approval_obj.read(cr, uid, ids, ['date', 'to_date', 'user_id', 'sale_team_id'], context=None)
-        print 'datas>>>generte_cr', datas,
         frm_date = to_date = user_id = None            
         if datas:
             for data in datas:
@@ -612,79 +638,94 @@ class cashier_approval(osv.osv):
                 user_id = data['user_id'][0]
                 team_id = data['sale_team_id'][0]
             if to_date:
-                print 'to_date>>', to_date
                 cr.execute("""select c.journal_id,c.amount,m.type,s.partner_id,c.date,a.period_id,a.account_id,c.notes,a.id,c.id from sale_order s,account_invoice a ,mobile_sale_order m,customer_payment c
                 where s.name=a.reference and m.name=s.tb_ref_no and m.id=c.payment_id and s.payment_type='cash' and a.state='open'  --and a.state='paid' 
-                and a.date_invoice >= %s and a.date_invoice <= %s and a.user_id=%s and c.payment_id is not null --and c.id not in(select customer_payment_id from cashier_customer_payment)
-                """, (frm_date, to_date, user_id,))
+                and a.date_invoice >= %s and a.date_invoice <= %s and a.user_id=%s  and a.section_id=%s and c.payment_id is not null --and c.id  not in (select customer_payment_id from cashier_customer_payment where customer_payment_id is not null)
+                """, (frm_date, to_date, user_id,team_id,))
             else:
-                print 'date>>', frm_date
                 cr.execute("""select c.journal_id,c.amount,m.type,s.partner_id,c.date,a.period_id,a.account_id,c.notes,a.id,c.id from sale_order s,account_invoice a ,mobile_sale_order m,customer_payment c
                 where s.name=a.reference and m.name=s.tb_ref_no and m.id=c.payment_id and s.payment_type='cash' and a.state='open' --and a.state='paid' 
-                and a.date_invoice = %s and a.user_id=%s and c.payment_id is not null --and c.id not in(select customer_payment_id from cashier_customer_payment)
-                """, (frm_date,user_id,))
+                and a.date_invoice = %s and a.user_id=%s  and a.section_id=%s and c.payment_id is not null --and c.id  not in (select customer_payment_id from cashier_customer_payment where customer_payment_id is not null)
+                """, (frm_date, user_id,team_id,))
             vals = cr.fetchall()           
         
-        for val in vals:
-            print ':val[1]>>', val
-            cr.execute('select default_credit_account_id from account_journal where id=%s', (val[0],))
-            data = cr.fetchall()
-            if data:
-                    default_credit_account_id = data[0][0]
-            data_id = {'journal_id':val[0],
-                    'amount': val[1],
-                    #'denomination_id':val[2],
-                    'type':val[2],
-                    'cashier_id':ids[0],
-                    'partner_id': val[3],
-                    'date_invoice': val[4],
-                    'period_id': val[5],
-                    'account_id': default_credit_account_id,                    
-                    'notes':val[7],
-                    'invoice_id':val[8],
-                    'customer_payment_id':val[9],
-                    'pre_so': 't',
-                    }
-            print 'data_id>>>deno', data_id
-            inv_id = invoice_line_obj.create(cr, uid, data_id, context=context)
-            for details in self.browse(cr, uid, ids, context=context):
-                
-                result[details.id] = inv_id
-            #self._amount_denomination_all(cr, uid, ids, ['denomination_sub_total'], None, context)
+            for val in vals:
+                cr.execute('select default_credit_account_id from account_journal where id=%s', (val[0],))
+                data = cr.fetchall()
+                if data:
+                        default_credit_account_id = data[0][0]
+                data_id = {'journal_id':val[0],
+                        'amount': val[1],
+                        # 'denomination_id':val[2],
+                        'type':val[2],
+                        'cashier_id':ids[0],
+                        'partner_id': val[3],
+                        'date_invoice': val[4],
+                        'period_id': val[5],
+                        'account_id': default_credit_account_id,
+                        'notes':val[7],
+                        'invoice_id':val[8],
+                        'customer_payment_id':val[9],
+                        'pre_so': 't',
+                        }
+                inv_id = invoice_line_obj.create(cr, uid, data_id, context=context)
+                for details in self.browse(cr, uid, ids, context=context):
+                    
+                    result[details.id] = inv_id
+            cr.execute("""select c.journal_id,c.amount,m.type,s.partner_id,c.date,a.period_id,a.account_id,c.notes,a.id,c.id from sale_order s,account_invoice a ,mobile_sale_order m,customer_payment c
+                where s.name=a.reference and m.name=s.tb_ref_no and m.id=c.payment_id and s.payment_type='cash' and a.state='open' 
+                 and a.user_id=%s and a.section_id=%s  and c.payment_id is not null and a.unselected=True
+                """, (user_id,team_id,))
+            data = cr.fetchall()           
+            for val_data in data:
+                cr.execute("""delete from cashier_customer_payment where cashier_id=%s and  invoice_id=%s""", (ids[0],val_data[8],))
+                cr.execute('select default_credit_account_id from account_journal where id=%s', (val_data[0],))
+                data = cr.fetchall()
+                if data:
+                        default_credit_account_id = data[0][0]
+                data_id = {'journal_id':val_data[0],
+                        'amount': val_data[1],
+                        # 'denomination_id':val[2],
+                        'type':val_data[2],
+                        'cashier_id':ids[0],
+                        'partner_id': val_data[3],
+                        'date_invoice': val_data[4],
+                        'period_id': val_data[5],
+                        'account_id': default_credit_account_id,
+                        'notes':val_data[7],
+                        'invoice_id':val_data[8],
+                        'customer_payment_id':val_data[9],
+                        'pre_so': 't',
+                        }
+                inv_id = invoice_line_obj.create(cr, uid, data_id, context=context)       
         return result
     
     def generate_payment_pre_so(self, cr, uid, ids, context=None):
-        print 'generte_pre_so'
-        #cr.execute("""delete from cashier_customer_payment where cashier_id=%s""", (ids[0],))
+        # cr.execute("""delete from cashier_customer_payment where cashier_id=%s""", (ids[0],))
         result = {}
         invoice_line_data = []
         cashier_approval_obj = self.pool.get('cashier.approval')
         invoice_line_obj = self.pool.get('cashier.customer.payment') 
         datas = cashier_approval_obj.read(cr, uid, ids, ['date', 'to_date', 'user_id', 'sale_team_id'], context=None)
-        print 'datas>>>generte_pre_so', datas,
         frm_date = to_date = user_id = None            
         if datas:
-            print 'datas',datas
             for data in datas:
                 frm_date = data['date']
                 to_date = data['to_date']
                 user_id = data['user_id'][0]
                 team_id = data['sale_team_id'][0]
-            print 'to_dateto_dateto_date',to_date
                 
             if to_date:
-                print 'to_date>>', to_date
                 cr.execute("""select c.journal_id,c.amount,m.type,s.partner_id,c.date,a.period_id,a.account_id,c.notes,a.id,c.id from sale_order s,account_invoice a ,pre_sale_order m,customer_payment c,account_journal aj
                 where s.name=a.reference and m.name=s.tb_ref_no and m.id=c.pre_order_id  and c.journal_id = aj.id and s.payment_type='cash' and a.state='open' --and a.state='paid' 
-                and a.date_invoice >= %s and a.date_invoice <= %s and a.user_id=%s and c.pre_order_id is not null 
-                --and c.id not in(select customer_payment_id from cashier_customer_payment)
-                """, (frm_date, to_date,user_id, ))
+                and a.date_invoice >= %s and a.date_invoice <= %s and a.user_id=%s and a.section_id=%s and c.pre_order_id is not null 
+                --and c.id  not in (select customer_payment_id from cashier_customer_payment where customer_payment_id is not null)
+                """, (frm_date, to_date, user_id,team_id,))
             else:
-                print 'date>>', frm_date
                 cr.execute("""select c.journal_id,c.amount,m.type,s.partner_id,c.date,a.period_id,a.account_id,c.notes,a.id,c.id from sale_order s,account_invoice a ,pre_sale_order m,customer_payment c
                 where s.name=a.reference and m.name=s.tb_ref_no and m.id=c.pre_order_id and s.payment_type='cash' and a.state='open' --and a.state='paid' 
-                and a.date_invoice = %s and a.user_id=%s and c.pre_order_id is not null --and c.id not in(select customer_payment_id from cashier_customer_payment)
-                """, (frm_date,user_id,))
+                and a.date_invoice = %s and a.user_id=%s and a.section_id=%s and c.pre_order_id is not null --and c.id  not in (select customer_payment_id from cashier_customer_payment where customer_payment_id is not null)
+                """, (frm_date, user_id,team_id,))
             vals = cr.fetchall()           
         
         for val in vals:
@@ -692,7 +733,6 @@ class cashier_approval(osv.osv):
             data = cr.fetchall()
             if data:
                 default_credit_account_id = data[0][0]            
-            print ':val[1]>>', val
             data_id = {'journal_id':val[0],
                     'amount': val[1],
                     'type':val[2],
@@ -700,22 +740,45 @@ class cashier_approval(osv.osv):
                     'partner_id': val[3],
                     'date_invoice': val[4],
                     'period_id': val[5],
-                    'account_id': default_credit_account_id,                    
+                    'account_id': default_credit_account_id,
                     'notes':val[7],
                     'invoice_id':val[8],
                     'customer_payment_id':val[9],
                     'pre_so': 't',
                     }
-            print 'data_id>>>pre', data_id
             inv_id = invoice_line_obj.create(cr, uid, data_id, context=context)
             for details in self.browse(cr, uid, ids, context=context):
                 
                 result[details.id] = inv_id
-            #self._amount_denomination_all(cr, uid, ids, ['denomination_sub_total'], None, context)
+        cr.execute("""select c.journal_id,c.amount,m.type,s.partner_id,c.date,a.period_id,a.account_id,c.notes,a.id,c.id from sale_order s,account_invoice a ,pre_sale_order m,customer_payment c
+                where s.name=a.reference and m.name=s.tb_ref_no and m.id=c.pre_order_id and s.payment_type='cash' and a.state='open' --and a.state='paid' 
+                and a.user_id=%s and a.section_id=%s and c.pre_order_id is not null and a.unselected=True
+                """, (user_id,team_id,))
+        data = cr.fetchall()           
+        
+        for data_val in data:
+            cr.execute('select default_credit_account_id from account_journal where id=%s', (data_val[0],))
+            data = cr.fetchall()
+            if data:
+                default_credit_account_id = data[0][0]            
+            data_id = {'journal_id':data_val[0],
+                    'amount': data_val[1],
+                    'type':data_val[2],
+                    'cashier_id':ids[0],
+                    'partner_id': data_val[3],
+                    'date_invoice': data_val[4],
+                    'period_id': data_val[5],
+                    'account_id': default_credit_account_id,
+                    'notes':data_val[7],
+                    'invoice_id':data_val[8],
+                    'customer_payment_id':data_val[9],
+                    'pre_so': 't',
+                    }
+            inv_id = invoice_line_obj.create(cr, uid, data_id, context=context)       
+            # self._amount_denomination_all(cr, uid, ids, ['denomination_sub_total'], None, context)
         return result
     
     def create(self, cr, uid, vals, context=None):
-        print 'vals>>>create', vals
         new_id = super(cashier_approval, self).create(cr, uid, vals, context=context)
         return new_id
     # {'cashier_line': {'date': '2016-06-23', 'invoice_id': 8, 'amount': 2310.0, 'partner_id': 19, 'payment_type':'Bank'}}  
@@ -734,6 +797,8 @@ class cashier_approval_invoice_line(osv.osv):
         'partner_id':fields.many2one('res.partner', 'Customer', ondelete='cascade'),
         'payment_type': fields.text('Type'),
         'amount':fields.float('Amount'),
+        'selected':fields.boolean('Selected' , default=True),
+
     }
     
     
@@ -745,10 +810,11 @@ class cashier_approval_ar_line(osv.osv):
     _description = "Cashier Approval AR Line"
     _columns = {
         'cashier_id': fields.many2one('cashier.approval', 'Cashier Approval', required=True),
-        'invoice_id':fields.char("Invoice No"),  # fields.many2one('account.invoice', 'Invoice No',ondelete='cascade'),
+        'invoice_id':fields.many2one('account.invoice', 'Invoice No', ondelete='cascade'),
         # 'invoice_id':fields.one2many('account.invoice', 'id', 'Invoice No'),
         'date':fields.date('Date'),
         # 'partner_id':fields.one2many('res.partner','id','Customer'),        
+        'selected':fields.boolean('Selected' , default=True),
         'partner_id':fields.many2one('res.partner', 'Customer', ondelete='cascade'),
         'payment_type': fields.text('Type'),
         'amount':fields.float('Amount'),
@@ -773,6 +839,8 @@ class cashier_approval_credit_line(osv.osv):
         'account_id':fields.many2one('account.account', 'Account', ondelete='cascade'),
         'journal_id':fields.many2one('account.journal', 'Journal', ondelete='cascade'),
         'amount':fields.float('Amount'),
+        'selected':fields.boolean('Selected' , default=True),
+
     }       
         
 cashier_approval_credit_line()    
@@ -781,10 +849,10 @@ class cashier_denomination_line(osv.osv):
     _name = 'cashier.denomination.line'
     _columns = {              
               'cashier_id':fields.many2one('cashier.approval', 'Cashier Approval', required=True),
-              #'notes':fields.char('Notes', required=True),
+              # 'notes':fields.char('Notes', required=True),
               'notes':fields.float('Notes', required=True),
               'note_qty':fields.integer('Qty', required=True),
-              #'denomination_id': fields.many2one('sales.denomination','Sale Denomination'),
+              # 'denomination_id': fields.many2one('sales.denomination','Sale Denomination'),
               }
 cashier_denomination_line() 
 
@@ -792,32 +860,34 @@ class cashier_denomination_product_line(osv.osv):
     _name = 'cashier.denomination.product.line'
     _columns = {              
               'cashier_id':fields.many2one('cashier.approval', 'Cashier Approval', required=True),
-              #'notes':fields.char('Notes', required=True),
+              # 'notes':fields.char('Notes', required=True),
               'product_id':fields.many2one('product.product', 'Product', required=True),
               'product_uom_qty':fields.integer('Quantity', required=True),
-              'amount':fields.float('Amount',required=True),   
+              'amount':fields.float('Amount', required=True),
               }
 cashier_denomination_product_line() 
 
 class cashier_customer_payment(osv.osv):
     _name = "cashier.customer.payment"
     _columns = {
-     'cashier_id':fields.many2one('cashier.approval', 'Cashier Approval', required=True),           
+     'cashier_id':fields.many2one('cashier.approval', 'Cashier Approval', required=True),
      'type':fields.selection([
                 ('cash', 'Cash'),
                 ('bank', 'Bank'),
 #                 ('advanced', 'Advanced')
             ], 'Payment Type'),
                 
-   #'payment_id':fields.many2one('mobile.sale.order', 'Line'),
- 'journal_id'  : fields.many2one('account.journal', 'Journal' ,domain=[('type','in',('cash','bank'))]),      
+   # 'payment_id':fields.many2one('mobile.sale.order', 'Line'),
+ 'journal_id'  : fields.many2one('account.journal', 'Journal' , domain=[('type', 'in', ('cash', 'bank'))]),
  'amount':fields.float('Amount'),
  'partner_id':fields.many2one('res.partner', 'Customer'),
- 'period_id': fields.many2one('account.period', 'Period'), 
+ 'period_id': fields.many2one('account.period', 'Period'),
  'account_id': fields.many2one('account.account', 'Account'),
  'date_invoice': fields.date('Date'),
  'notes':fields.char('Payment Ref'),
- 'invoice_id': fields.integer("Invoice ID"),
+ 'invoice_id': fields.many2one('account.invoice','Invoice ID'),
  'customer_payment_id': fields.integer("Customer Payment ID"),
  'pre_so': fields.boolean('Pre So'),
+ 'selected':fields.boolean('Selected',default=False),
         }      
+cashier_customer_payment()

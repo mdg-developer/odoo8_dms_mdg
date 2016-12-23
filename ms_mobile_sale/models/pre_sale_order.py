@@ -30,6 +30,7 @@ class pre_sale_order(osv.osv):
                 ('none', 'None')
             ], 'Deliver Remark'),
         'date':fields.datetime('Date'),
+		'due_date':fields.date('Due Date'),
         'note':fields.text('Note'),
         'order_line': fields.one2many('pre.sale.order.line', 'order_id', 'Order Lines', copy=True),
         'delivery_order_line': fields.one2many('pre.products.to.deliver', 'sale_order_id', 'Delivery Order Lines', copy=True),
@@ -120,6 +121,7 @@ class pre_sale_order(osv.osv):
                         'amount_total':so['amount_total'],
                         'sale_team':so['sale_team'],
                         'date':so['date'],
+						'due_date':so['due_date'],
 						'void_flag':so['void_flag'],
                         'sale_plan_day_id':so['sale_plan_day_id'],
                         'mso_longitude':so['mso_longitude'],
@@ -199,6 +201,7 @@ class pre_sale_order(osv.osv):
                                                         'sale_plan_day_id':preObj_ids.sale_plan_day_id.id,
                                                         'sale_plan_trip_id':preObj_ids.sale_plan_trip_id.id,
                                                         'date_order':preObj_ids.date,
+														'due_date':preObj_ids.due_date,
                                                         'tb_ref_no':preObj_ids.name,
                                                         'warehouse_id':preObj_ids.warehouse_id.id,
                                                         'delivery_remark':preObj_ids.delivery_remark,

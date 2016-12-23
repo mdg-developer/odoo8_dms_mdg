@@ -2,21 +2,21 @@
 <openerp>
 	<data>
 
-		<!-- === Sales Order Return Form === -->
 		<record id="cashier_approval_form" model="ir.ui.view">
 			<field name="name">cashier.approval.form</field>
 			<field name="model">cashier.approval</field>
 			<field name="arch" type="xml">
 				<form string="Cashier Approval" version="7.0">
 					<header>
-						<!-- <button name="generate_report" string="Generate Daily Summary Report" type="object"
-							class="oe_highlight"  /> -->
+						<!-- <button name="generate_report" string="Generate Daily Summary 
+							Report" type="object" class="oe_highlight" /> -->
 						<button name="confirm_" string="Confirm" type="object"
 							class="oe_highlight" attrs="{'invisible':[('state','not in',('draft'))]}" />
-						<button name="cashier_approve" string="Cashier Approve" type="object"
-							class="oe_highlight" attrs="{'invisible':[('state','not in',('pending'))]}" />
+						<button name="cashier_approve" string="Cashier Approve"
+							type="object" class="oe_highlight"
+							attrs="{'invisible':[('state','not in',('pending'))]}" />
 						<button name="set_to_draft" string="Set to draft" type="object"
-							class="oe_highlight" attrs="{'invisible':[('state','in',('done','draft'))]}" />	
+							class="oe_highlight" attrs="{'invisible':[('state','in',('done','draft'))]}" />
 						<field name="state" widget="statusbar" statusbar_visible="draft,pending,done" />
 					</header>
 					<sheet>
@@ -25,174 +25,183 @@
 								<group>
 									<field name="date" />
 									<field name="sale_team_id" />
-									<field name="user_id" domain="[('default_section_id', '=',sale_team_id)]"/>
+									<field name="user_id" domain="[('default_section_id', '=',sale_team_id)]" />
 								</group>
 								<group>
-									<field name="to_date"/>
-																    
+									<field name="to_date" />
+
 								</group>
 							</group>
 							<group>
-								<button name="action_generate" string="Show" attrs="{'invisible':[('state','in',('pending'))]}"
-								type="object" class="oe_highlight" groups="base.group_user"
-								></button>
+								<button name="action_generate" string="Show"
+									attrs="{'invisible':[('state','in',('pending','done'))]}" type="object"
+									class="oe_highlight" groups="base.group_user"></button>
 							</group>
-							</group>
-								<notebook>
-								 <page string="Invoice">
-								 	
-                                      <field name="cashier_line">                                          
- 											<form string="Invoice Lines">
-                                                
-                                                <field name="invoice_id"/>
-	                                            <field name="date"/>
-	                                            <field name="partner_id"/>
-	                                            <field name="payment_type"/>
-	                                            <field name="amount"/>
-	                                            
-	                                            <!-- <field name="is_foc" on_change="foc_change(sales_product_name,product_uom_qty,context)"/> -->
-	                                            
-                                            </form>                                           
-                                            <tree string="Invoice Lines" editable="bottom">
-                                                
-                                                <field name="invoice_id"/>
-	                                            <field name="date"/>
-	                                            <field name="partner_id"/>
-	                                            <field name="payment_type"/>
-	                                            <field name="amount"/>
-	                                            
-	                                            <!-- <field name="is_foc" on_change="foc_change(sales_product_name,product_uom_qty,context)"/> -->
-	                                            
-                                            </tree>
-                                      </field>
-                                      <group col="3">
-                                       <group></group>
-                                       	
-                                       <group/>
-                                       <group>
-	                                      	<label string="SubTotal" class="oe_inline"/>
-	                                      	<field name="cash_sub_total" nolabel="1" class="oe_inline"/>
-                                      	</group>
-                                      </group>
-                                      	    <group><label for="ar_line" string="AR Collection" /></group>	
-                                            <field name="ar_line">                                          
- 											<form string="AR Lines">
-                                                
-                                                <field name="invoice_id"/>
-	                                            <field name="date"/>
-	                                            <field name="partner_id"/>
-	                                            <field name="payment_type"/>
-	                                            <field name="amount"/>
-	                                            
-	                                            <!-- <field name="is_foc" on_change="foc_change(sales_product_name,product_uom_qty,context)"/> -->
-	                                            
-                                            </form>                                           
-                                            <tree string="Invoice Lines" editable="bottom">
-                                                
-                                                <field name="invoice_id"/>
-	                                            <field name="date"/>
-	                                            <field name="partner_id"/>
-	                                            <field name="payment_type"/>
-	                                            <field name="amount"/>
-	                                            
-	                                            <!-- <field name="is_foc" on_change="foc_change(sales_product_name,product_uom_qty,context)"/> -->
-	                                            
-                                            </tree>
-                                      </field>
-                                      <group col="3">
-                                       <group></group>
-                                       <group/>
-                                       <group>
-	                                      	<label string="SubTotal" class="oe_inline"/>
-	                                      	<field name="ar_sub_total" nolabel="1" class="oe_inline"/>
-                                      	</group>
-                                      </group>     
-										<group><label for="credit_line" string="Credit Note" /></group>
-   										<field name="credit_line">                                          
- 											<form string="Credit Lines">
-                                                
-                                                <field name="credit_id"/>
-                                                <field name="invoice_id"/>
-	                                            <field name="date"/>
-	                                            <field name="partner_id"/>	                                            
-	                                            <field name="amount"/>
-	                                            
-	                                            <!-- <field name="is_foc" on_change="foc_change(sales_product_name,product_uom_qty,context)"/> -->
-	                                            
-                                            </form>                                           
-                                            <tree string="Invoice Lines" editable="bottom">
-                                                <field name="credit_id"/>
-                                                <field name="invoice_id"/>
-	                                            <field name="date"/>
-	                                            <field name="partner_id"/>	                                            
-	                                            <field name="amount"/>
-	                                            
-	                                            <!-- <field name="is_foc" on_change="foc_change(sales_product_name,product_uom_qty,context)"/> -->
-	                                            
-                                            </tree>
-                                      </field> 
-                                      
-                                      <group col="3">
-                                       <group/>
-                                       <group/>
-                                       <group>
-	                                      	<label string="SubTotal" class="oe_inline"/>
-	                                      	<field name="cr_sub_total" nolabel="1" class="oe_inline"/>
-	                                      	<label string="Total Net" class="oe_inline"/>
-	                                      	
-	                                      	<field name="total" nolabel="1" class="oe_inline"/>
-			                                <div class="oe_subtotal_footer_separator oe_inline">                                	
-				                                   <!--  <label for="total"/> -->
-				                                    <button name="button_dummy" string="(update)" type="object" class="oe_edit_only oe_link"/>
-				                                    	                                   
-			                                </div>
-                                      	</group>
-                                      	
-                                      </group> 
-                                                                                                               
-                                      </page>
-                                      <page string="Denomination">                                      	
-										<field name="denomination_line">
-											<form string="Denomination Lines">                                                
-                                                <field name="notes"/>
-	                                            <field name="note_qty"/>	                                            
-                                            </form>      
-											<tree string="Denomination Lines" editable="bottom">
-												<field name="notes"/>
-	                                            <field name="note_qty"/>
-											</tree>
-										</field>										
-									    <group col="3">
-	                                       <group/>
-	                                       <group/>
-	                                       <group>
-		                                      	<label string="SubTotal" class="oe_inline"/>
-		                                      	<field name="denomination_sub_total" nolabel="1" class="oe_inline"/>
-	                                      	</group>
-	                                      </group>  
+						</group>
+						<notebook>
+							<page string="Invoice">
 
- 
-									</page>
-									
-                                     <page string="Payment">
-                                     	<field name="cashier_customer_payment_line">                                          
- 											<form string="Payment Lines">
-                                                
-                                                <field name="type"/>
-	                                            <field name="journal_id"/>
-	                                            <field name="amount"/>                                            
-	                                            <field name="notes"/>
-                                            </form>                                           
-                                            <tree string="Payment Lines" editable="bottom">
-                                                
-                                                <field name="type"/>
-	                                            <field name="journal_id"/>
-	                                            <field name="amount"/>        
-	                                            <field name="notes"/>  
-                                            </tree>
-                                      	</field>
-                                     </page> 
-								</notebook>
+								<field name="cashier_line">
+									<form string="Invoice Lines">
+
+										<field name="invoice_id" />
+										<field name="date" />
+										<field name="partner_id" />
+										<field name="payment_type" />
+										<field name="amount" />
+										<field name="selected" />
+
+									</form>
+									<tree string="Invoice Lines" editable="bottom">
+
+										<field name="invoice_id" />
+										<field name="date" />
+										<field name="partner_id" />
+										<field name="payment_type" />
+										<field name="amount" />
+										<field name="selected" />
+
+										<!-- <field name="is_foc" on_change="foc_change(sales_product_name,product_uom_qty,context)"/> -->
+
+									</tree>
+								</field>
+								<group col="3">
+									<group></group>
+
+									<group />
+									<group>
+										<label string="SubTotal" class="oe_inline" />
+										<field name="cash_sub_total" nolabel="1" class="oe_inline" />
+									</group>
+								</group>
+								<group>
+									<label for="ar_line" string="AR Collection" />
+								</group>
+								<field name="ar_line">
+									<form string="AR Lines">
+
+										<field name="invoice_id" />
+										<field name="date" />
+										<field name="partner_id" />
+										<field name="payment_type" />
+										<field name="amount" />
+										<field name="selected" />
+
+
+									</form>
+									<tree string="Invoice Lines" editable="bottom">
+
+										<field name="invoice_id" />
+										<field name="date" />
+										<field name="partner_id" />
+										<field name="payment_type" />
+										<field name="amount" />
+										<field name="selected" />
+
+
+									</tree>
+								</field>
+								<group col="3">
+									<group></group>
+									<group />
+									<group>
+										<label string="SubTotal" class="oe_inline" />
+										<field name="ar_sub_total" nolabel="1" class="oe_inline" />
+									</group>
+								</group>
+								<group>
+									<label for="credit_line" string="Credit Note" />
+								</group>
+								<field name="credit_line">
+									<form string="Credit Lines">
+
+										<field name="credit_id" />
+										<field name="invoice_id" />
+										<field name="date" />
+										<field name="partner_id" />
+										<field name="amount" />
+										<field name="selected" />
+
+
+									</form>
+									<tree string="Invoice Lines" editable="bottom">
+										<field name="credit_id" />
+										<field name="invoice_id" />
+										<field name="date" />
+										<field name="partner_id" />
+										<field name="amount" />
+										<field name="selected" />
+
+
+									</tree>
+								</field>
+
+								<group col="3">
+									<group />
+									<group />
+									<group>
+										<label string="SubTotal" class="oe_inline" />
+										<field name="cr_sub_total" nolabel="1" class="oe_inline" />
+										<label string="Total Net" class="oe_inline" />
+
+										<field name="total" nolabel="1" class="oe_inline" />
+										<div class="oe_subtotal_footer_separator oe_inline">
+											<!-- <label for="total"/> -->
+											<button name="button_dummy" string="(update)" type="object"
+												class="oe_edit_only oe_link" />
+
+										</div>
+									</group>
+
+								</group>
+
+							</page>
+							<page string="Denomination">
+								<field name="denomination_line">
+									<form string="Denomination Lines">
+										<field name="notes" />
+										<field name="note_qty" />
+									</form>
+									<tree string="Denomination Lines" editable="bottom">
+										<field name="notes" />
+										<field name="note_qty" />
+									</tree>
+								</field>
+								<group col="3">
+									<group />
+									<group />
+									<group>
+										<label string="SubTotal" class="oe_inline" />
+										<field name="denomination_sub_total" nolabel="1" class="oe_inline" />
+									</group>
+								</group>
+
+
+							</page>
+
+							<page string="Payment">
+								<field name="cashier_customer_payment_line">
+									<form string="Payment Lines">
+										<field name="invoice_id" />
+										<field name="date_invoice" />
+										<field name="type" />
+										<field name="journal_id" />
+										<field name="amount" />
+										<field name="notes" />
+										<field name="selected" invisible="1" />
+									</form>
+									<tree string="Payment Lines" editable="bottom">
+										<field name="invoice_id" />
+										<field name="date_invoice" />
+										<field name="type" />
+										<field name="journal_id" />
+										<field name="amount" />
+										<field name="notes" />
+										<field name="selected" invisible="1" />
+									</tree>
+								</field>
+							</page>
+						</notebook>
 					</sheet>
 				</form>
 			</field>
@@ -210,9 +219,9 @@
 				</tree>
 			</field>
 		</record>
-		
 
-			
+
+
 		<record id="action_cashier_approval_view" model="ir.actions.act_window">
 			<field name="name">Cashier Approval</field>
 			<field name="type">ir.actions.act_window</field>
@@ -221,9 +230,10 @@
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" eval="view_cashier_approval_tree" />
 		</record>
-		
+
 		<menuitem id="menu_cashier_approval" action="action_cashier_approval_view"
-			parent="account.menu_finance_bank_and_cash" name="Cashier Approval"  sequence="13"/>
+			parent="account.menu_finance_bank_and_cash" name="Cashier Approval"
+			sequence="13" />
 
 	</data>
 </openerp>

@@ -198,7 +198,7 @@ class crm_case_section(osv.osv):
                 'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True),
                 'location_id': fields.many2one('stock.location', 'Location', required=True),
                 'issue_location_id': fields.many2one('stock.location', 'Issue location', required=True),
-                
+                'receiver':fields.char('Receiver'),
                 'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
                 'sale_channel_id':fields.many2many('sale.channel', 'sale_team_channel_rel', 'sale_team_id', 'sale_channel_id', string='Sale Channel'),
                 'demarcation_ids':fields.many2many('sale.demarcation'),

@@ -5,6 +5,7 @@ class product_product(osv.osv):
     _inherit = 'product.product'
     _columns = {
         'default_code' : fields.char('Internal Reference', select=True, required=True),
+        'sequence': fields.integer('Sequence', size=3, default=0),
         }
 
 class product_template(osv.osv):
@@ -16,7 +17,7 @@ class product_template(osv.osv):
         'big_list_price': fields.float('Bigger Price', digits_compute=dp.get_precision('Product Price'), help="Base price to compute the customer price. Sometimes called the catalog price."),
         'list_price': fields.float('Smaller Price', digits_compute=dp.get_precision('Product Price'), help="Base price to compute the customer price. Sometimes called the catalog price."),
          'default_code': fields.related('product_variant_ids', 'default_code', type='char', string='Internal Reference', required=True),
-                
+         'sequence': fields.related('product_variant_ids', 'sequence', type='integer', string='Sequence', required=True),
                     }
     
     def _get_uom_id(self, cr, uid, *args):
@@ -24,7 +25,6 @@ class product_template(osv.osv):
     
     _defaults = {
         'big_uom_id': _get_uom_id,
-       
     }
     
 class product_pricelist(osv.osv):

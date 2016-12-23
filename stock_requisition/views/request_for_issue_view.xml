@@ -21,7 +21,7 @@
 						<group>
 							<group>
 								<h1>
-									<label string="(RFI)Ref;No." />
+									<label string="RFI No" />
 									<field name="request_id" class="oe_inline" readonly="1" />
 								</h1>
 							</group>

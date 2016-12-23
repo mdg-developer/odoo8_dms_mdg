@@ -130,11 +130,13 @@ class sale_order_line(osv.osv):
         return {'value': result, 'domain': domain}
                
     _columns= { 
+         'price_unit': fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Product Price'), readonly=True),
+        'tax_id': fields.many2many('account.tax', 'sale_order_tax', 'order_line_id', 'tax_id', 'Taxes', readonly=True, domain=['|', ('active', '=', False), ('active', '=', True)]),          
                'price_subtotal': fields.function(_amount_line1, string='Subtotal'),
                'net_total':fields.function(_amount_line, string='Total', digits_compute= dp.get_precision('Account')),
-               'discount':fields.float('Discount (%)',store=True),
-               'discount_amt':fields.float('Discount (amt)',store=True),
-               'sale_foc':fields.boolean('FOC')
+               'discount':fields.float('Discount (%)',store=True, readonly=True),
+               'discount_amt':fields.float('Discount (amt)',store=True, readonly=True),
+               'sale_foc':fields.boolean('FOC', readonly=True),
               # 'show_amt':fields.function(_amount_line2,string='Total Discount(-)',readonly=True)
                
                }
@@ -282,6 +284,7 @@ class sale_order(osv.osv):
         return None
 ## customize_model
     _columns={
+              'is_add_discount':fields.boolean('Additional Discount',default=False),
               'deduct_amt':fields.float('Deduction Amount',store=True),
               'total_dis':fields.function(_amount_all_wrapper, digits_compute=dp.get_precision('Account'), string='Total Discount',
             store={
@@ -376,7 +379,7 @@ class sale_order(osv.osv):
         if not journal_ids:
             raise osv.except_osv(_('Error!'),
                 _('Please define sales journal for this company: "%s" (id:%d).') % (order.company_id.name, order.company_id.id))
-        print 'order.partner_id.property_account_receivable.id',order.partner_id.property_account_receivable.id
+        print 'order.partner_id.property_account_receivable.id',order.partner_id.property_account_receivable.id,order.name
         invoice_vals = {
             'name': order.client_order_ref or '',
             'origin': order.name,

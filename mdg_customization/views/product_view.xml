@@ -7,6 +7,9 @@
 			<field name="arch" type="xml">
 				<field name="list_price" position="replace">
 				</field>
+				<field name="default_code" position="after">
+					<field name="sequence" />
+				</field>
 				<field name="uom_id" position="replace">
 					<field name="uom_id" on_change="product.onchange_uom(uom_id,uom_po_id)"
 						groups="product.group_uom" string="Smaller UoM" />
@@ -152,7 +155,7 @@
 				</field>
 				<xpath expr="//page/field[@name='items_id']" position="replace">
 					<field name="items_id">
-						<tree string="Item List" editable="bottom"  default_order="name desc">
+						<tree string="Item List" editable="bottom" default_order="name desc">
 							<field name="product_id" on_change="product_id_change(product_id)" />
 							<field name="sequence" invisible="1" />
 							<field name="name" invisible="1" />

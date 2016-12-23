@@ -177,6 +177,7 @@
 										<field name="journal_id" widget="selection" />
 										<field name="amount" sum="Price" />
 										<field name="notes" />
+										<field name="cheque_no"/>
 
 									</tree>
 								</field>
