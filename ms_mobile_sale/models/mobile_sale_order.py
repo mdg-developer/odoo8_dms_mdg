@@ -849,9 +849,8 @@ class mobile_sale_order(osv.osv):
                         and pt.active = true
                         and pp.active = true
                         and ccs.id = crm_real.crm_case_section_id
-                        and pc.id = pt.categ_id
-                        and pt.write_date > %s
-                        and ccs.id = %s ''', (lastdate, section_id,))
+                        and pc.id = pt.categ_id                        
+                        and ccs.id = %s ''', (section_id,))
         datas = cr.fetchall()
         return datas
     
