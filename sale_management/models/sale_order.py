@@ -115,7 +115,7 @@ class sale_order(osv.osv):
                'payment_type':fields.selection([
                     ('credit', 'Credit'),
                     ('cash', 'Cash'),
-                    ('consignment', 'Consignment'),
+                 #   ('consignment', 'Consignment'),
 #                     ('advanced', 'Advanced')
                     ], 'Payment Type', default='cash'),
                'delivery_remark':fields.selection([

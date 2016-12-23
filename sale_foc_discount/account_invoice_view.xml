@@ -37,11 +37,10 @@
 				<xpath expr="//form/sheet/notebook/page/group/field[@name='amount_tax']"
 					position="after">
 					<field name="discount_total" groups="sale.group_discount_per_so_line" />
-					<field name="deduct_amt" groups="sale.group_discount_per_so_line" />
+					<field name="deduct_amt" groups="sale.group_discount_per_so_line"  attrs="{'readonly':[('state','!=','draft')]}"/>
 				</xpath>
 			</field>
 		</record>
-
 
 		<!-- customize form for Account Invoice view -->
 		<record id="view_invoice_supplier_form3" model="ir.ui.view">
@@ -69,7 +68,7 @@
 				<xpath expr="//form/sheet/notebook/page/group/field[@name='amount_tax']"
 					position="after">
 					<field name="discount_total" groups="sale.group_discount_per_so_line" />
-					<field name="deduct_amt" groups="sale.group_discount_per_so_line" />
+					<field name="deduct_amt" groups="sale.group_discount_per_so_line"  attrs="{'readonly':[('state','!=','draft')]}"/>
 				</xpath>
 			</field>
 		</record>

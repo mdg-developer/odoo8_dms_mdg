@@ -7,7 +7,7 @@
 			<field name="inherit_id" ref="ms_mobile_sale.view_mobile_sale_order_form" />
 			<field name="arch" type="xml">
 				<field name="type" position="after">
-					<field name="payment_ref" attrs="{'readonly':[('m_status','=','done')]}" />
+					<field name="payment_ref"  readonly="1" />
 				</field>
 			</field>
 		</record>

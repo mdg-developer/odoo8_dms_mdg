@@ -68,7 +68,7 @@
 				<xpath expr="//form/sheet/notebook/page/group/field[@name='amount_tax']"
 					position="after">
 					<field name="total_dis"></field>
-					<field name="is_add_discount" />
+					<field name="is_add_discount" attrs="{'readonly':[('state','!=','draft')]}"/>
 					<field name="deduct_amt" widget='monetary'
 						attrs="{'invisible':[('is_add_discount','=',False)]}" options="{'currency_field': 'currency_id'}"
 						groups="sale.group_discount_per_so_line" />

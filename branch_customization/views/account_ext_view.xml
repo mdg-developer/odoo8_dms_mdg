@@ -8,7 +8,7 @@
 			<field name="inherit_id" ref="account.invoice_form" />
 			<field name="arch" type="xml">
 				<field name="section_id" position="after">
-					<field name="branch_id" />
+					<field name="branch_id"  attrs="{'readonly':[('state','!=','draft')]}"/>
 				</field>
 			</field>
 		</record>

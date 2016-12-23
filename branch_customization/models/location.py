@@ -43,7 +43,9 @@ class stock_move(osv.osv):
         return branch_id
         
     _columns = {
+                
                'branch_id':fields.many2one('res.branch', 'Branch'),
+               
                }
     _defaults = {
         'branch_id': _get_default_branch,

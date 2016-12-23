@@ -86,13 +86,13 @@ class account_voucher(osv.osv):
 class account_invoice(osv.osv):
     _inherit = 'account.invoice'    
     _columns = {
-                'pre_order': fields.boolean('Pre Order' ,readonly=True),
+                'pre_order': fields.boolean('Pre Order' , readonly=True),
                'branch_id':fields.many2one('res.branch', 'Branch'),
                'delivery_remark':fields.selection([
                     ('partial', 'Partial'),
                     ('delivered', 'Delivered'),
                     ('none', 'None')
-               ], 'Deliver Remark',readonly=True,default='none'),
+               ], 'Deliver Remark', readonly=True, default='none'),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Pricelist for current sales invoice."),
          'code':fields.char('Customer ID', readonly=True),
         'street': fields.char('Street', readonly=True),
@@ -100,23 +100,26 @@ class account_invoice(osv.osv):
         'city': fields.many2one('res.city', 'City', ondelete='restrict', readonly=True),
         'state_id': fields.many2one("res.country.state", 'State', ondelete='restrict', readonly=True),
         'country_id': fields.many2one('res.country', 'Country', ondelete='restrict', readonly=True),
-        'township': fields.many2one('res.township', 'Township', ondelete='restrict', readonly=True),              
-         'payment_term': fields.many2one('account.payment.term', 'Payment Term',readonly=True),
+        'township': fields.many2one('res.township', 'Township', ondelete='restrict', readonly=True),
+        'payment_term' : fields.many2one('account.payment.term', string='Payment Terms',readonly=True,
+        help="If you use payment terms, the due date will be computed automatically at the generation "
+             "of accounting entries. If you keep the payment term and the due date empty, it means direct payment. "
+             "The payment term may compute several due dates, for example 50% now, 50% in one month.")         
 }
         
-    def on_change_payment_type(self, cr, uid, ids, partner_id,payment_type, context=None):
+    def on_change_payment_type(self, cr, uid, ids, partner_id, payment_type, context=None):
         values = {}
-        print 'payment_type',payment_type
-        if payment_type =='cash':
-            payment_term= 1
-        elif payment_type =='credit':
+        print 'payment_type', payment_type
+        if payment_type == 'cash':
+            payment_term = 1
+        elif payment_type == 'credit':
             partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
             payment_term = partner.property_payment_term and partner.property_payment_term.id or False
         else:
             partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
             payment_term = partner.property_payment_term and partner.property_payment_term.id or False        
         values = {
-             'payment_term':payment_term,}
+             'payment_term':payment_term, }
         return {'value': values}
     
 

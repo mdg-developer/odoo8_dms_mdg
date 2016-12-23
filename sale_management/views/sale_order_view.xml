@@ -92,11 +92,11 @@
 				</field>
 
 				<field name="pricelist_id" position="after">
-					<field name="tb_ref_no"></field>
+					<field name="tb_ref_no" attrs="{'readonly':[('state','!=','draft')]}"></field>
 					<field name="delivery_remark" />
 				</field>
 				<field name="date_order" position="after">
-					<field name="payment_type" on_change="on_change_payment_type(partner_id,payment_type)" />
+					<field name="payment_type" on_change="on_change_payment_type(partner_id,payment_type)"  attrs="{'readonly': [('payment_type','=','cash')]}"/>
 					<field name="payment_term" options="{'no_create': True}" />
 					<field name="due_date"></field>
 				</field>
@@ -139,11 +139,11 @@
 				</field>
 				<field name="sale_plan_trip_id" position="after">
 					<field name="section_id" options="{'no_create': True}" required="1"
-						groups="base.group_multi_salesteams"  on_change="on_change_section_id(section_id)"/>
+						groups="base.group_multi_salesteams"  on_change="on_change_section_id(section_id)" attrs="{'readonly':[('state','!=','draft')]}"/>
 					<field name="issue_warehouse_id"  invisible="1"/>
-					<field name="user_id" domain="[('default_section_id', '=',section_id)]" required="1"
+					<field name="user_id" domain="[('default_section_id', '=',section_id)]" required="1"  attrs="{'readonly':[('state','!=','draft')]}"
 						context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'account.group_account_invoice', 'base.group_sale_salesman_all_leads']}" />
-					<field name="delivery_id"></field>
+					<field name="delivery_id" attrs="{'readonly':[('state','=','done')]}"></field>
 
 				</field>
 				<field name="invoiced" position="before">
@@ -189,7 +189,7 @@
 					<field name="issue_warehouse_id"  invisible="1"/>
 					<field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)"
 						domain="[('id', '=',issue_warehouse_id)]" options="{'no_create': True}"
-						groups="stock.group_locations" />
+						groups="stock.group_locations"   attrs="{'readonly':[('state','!=','draft')]}"/>
 				</field>
 				<field name="picking_policy" position="after">
 					<field name="so_latitude" digits="(14,15)"></field>

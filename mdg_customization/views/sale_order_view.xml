@@ -18,7 +18,7 @@
 				<xpath expr="//field[@name='user_id']" position="replace">
 				</xpath>
 				<xpath expr="//field[@name='partner_id']" position="after">
-					<field name="section_id" />
+					<field name="section_id"  />
 					<field name="delivery_id" />
 					<field name="warehouse_id" />
 				</xpath>

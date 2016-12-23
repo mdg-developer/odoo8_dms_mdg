@@ -19,7 +19,7 @@ class sale_denomination(osv.osv):
         'user_id':fields.many2one('res.users', 'Salesman Name'  , required=True, select=True, track_visibility='onchange'),
         'tablet_id':fields.char('Tablet ID'),
         'name':fields.char('Txn' , readonly=True),
-        'invoice_count':fields.integer('Invoiced' , required=True),
+        'invoice_count':fields.integer('Invoiced' ,readonly=True),
        'denomination_product_line':fields.one2many('sales.denomination.product.line', 'denomination_product_ids', string='Sale denomination Product Line', copy=True),
        'denomination_note_line':fields.one2many('sales.denomination.note.line', 'denomination_note_ids', string='Sale denomination Product Line', copy=True ),
        'denomination_cheque_line':fields.one2many('sales.denomination.cheque.line', 'denomination_cheque_ids', string='Sale denomination Cheque Line', copy=True ),

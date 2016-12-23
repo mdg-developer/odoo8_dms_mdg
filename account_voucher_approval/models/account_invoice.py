@@ -40,15 +40,15 @@ class account_invoice(models.Model):
         # Validate before save
         if type(ids) in [list, tuple] and ids:
             ids = ids[0]
-            print 'vals',vals
+            print 'valslllllllllllllllllllllllllllllllllllll',vals
             if vals.get('partner_id'):
                 partner_id=vals['partner_id']
                 part = self.pool.get('res.partner').browse(cursor, user, partner_id, context=context)    
                 defaults=self.onchange_partner_id(cursor, user, [], 'out_invoice', partner_id)['value']
                 vals = dict(defaults, **vals)
         ctx = dict(context or {}, mail_create_nolog=True)
+        print 'valssssssssssssssss',vals
         new_id = super(account_invoice, self).write(cursor, user, ids, vals, context=context)
-        print'new_iddddddddddddddddddddddddinv',new_id
         return new_id        
     @api.multi    
     def onchange_partner_id(self, type, partner_id, date_invoice=False,
@@ -88,18 +88,20 @@ class account_invoice(models.Model):
                         action = self.env.ref('account.action_account_config')
                         msg = _('Cannot find a chart of accounts for this company, You should configure it. \nPlease go to Account Configuration.')
                         raise RedirectWarning(msg, action.id, _('Go to the configuration panel'))
-            if p.credit_allow ==True:
-                payment_type='credit'
-            elif p.is_consignment==True:
-                payment_type='consignment'
-            else:
-                payment_type='cash'
+
             if type in ('out_invoice', 'out_refund'):
                 account_id = rec_account.id
                 payment_term_id = p.property_payment_term.id
             else:
                 account_id = pay_account.id
                 payment_term_id = p.property_supplier_payment_term.id
+            if p.credit_allow ==True:
+                payment_type='credit'
+            elif p.is_consignment==True:
+                payment_type='consignment'
+            else:
+                payment_type='cash'
+                payment_term_id = 1                
             fiscal_position = p.property_account_position.id
             bank_id = p.bank_ids and p.bank_ids[0].id or False
             pricelist = p.property_product_pricelist and p.property_product_pricelist.id or False
@@ -184,9 +186,11 @@ class account_invoice(models.Model):
     payment_type = fields.Selection([
                     ('credit', 'Credit'),
                     ('cash', 'Cash'),
-                    ('consignment', 'Consignment'),
+               #     ('consignment', 'Consignment'),
 #                     ('advanced', 'Advanced')
                     ],string= 'Payment Type',default='cash')
+    
+
     
     account_id = fields.Many2one('account.account', string='Account',
         required=True, readonly=True, states={'draft': [('readonly', False)]},

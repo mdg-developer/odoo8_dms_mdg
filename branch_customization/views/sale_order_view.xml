@@ -9,7 +9,7 @@
 			<field name="inherit_id" ref="sale.view_order_form" />
 			<field name="arch" type="xml">
 				<field name="pricelist_id" position="before">
-					<field name="branch_id" />
+					<field name="branch_id"   attrs="{'readonly':[('state','!=','draft')]}"/>
 				</field>
 			</field>
 		</record>
