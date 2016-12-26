@@ -814,9 +814,16 @@ class PromotionsRules(osv.Model):
         partner_id=order.partner_id
         team_id=order.section_id
         branch_id=order.section_id.branch_id.id
-        active_promos = self.search(cursor, user,
-                                    [('active', '=', True),('from_date', '<=', date_order),('to_date', '>=', date_order)],
-                                    context=context)
+        active_promos=[]
+#         active_promos = self.search(cursor, user,
+#                                     [('active', '=', True),('from_date', '<=', date_order),('to_date', '>=', date_order)],
+#                                     context=context)
+        cursor.execute("select id from promos_rules where active=True and from_date <= %s and  to_date >=%s order by sequence asc",(date_order,date_order,))
+        active_data=cursor.fetchall()
+        print 'active_promos',
+        for data_pro in active_data:
+            print ' data_pro',data_pro
+            active_promos.append(data_pro[0])
         print 'active_promos',active_promos
         for promotion_rule in self.browse(cursor, user,
                                           active_promos, context):
@@ -1426,14 +1433,7 @@ class PromotionsRulesActions(osv.Model):
                               'arguments':"0.00",
                               }
                    }          
-#kzo
-        if action_type in ['foc_any_product', ] :
-            return{
-                   'value' : {
-                              'product_code':"'product_code_x1':'product_code_x2':'product_code_x3'",
-                              'arguments':"0.00",
-                              }
-                   }
+
         if action_type in ['prod_fix_amt_disc_subtotal', ] :
             return{
                    'value' : {
@@ -1456,6 +1456,14 @@ class PromotionsRulesActions(osv.Model):
                               'arguments':"1:1;1",
                               }
                    }
+#kzo
+        if action_type in ['foc_any_product', ] :
+            return{
+                   'value' : {
+                              'product_code':"'product_code_x1':'product_code_x2':'product_code_x3'",
+                              'arguments':"0.00",
+                              }
+                   }            
         # Finally if nothing works prod_dis_double
         return {}
     
@@ -1994,97 +2002,7 @@ class PromotionsRulesActions(osv.Model):
   
             
             
-    # KM I'm just fix a little missing code
-    def action_foc_any_product(self, cursor, user,
-                             action, order, context=None):
-        
-        """
-        'FOC Any Products'
-        @param cursor: Database Cursor
-        @param user: ID of User
-        @param action: Action to be taken on sale order
-        @param order: sale order
-        @param context: Context(no direct use).
-        
-        Note: The function is too long because if it is split then there 
-                will a lot of arguments to be passed from one function to
-                another. This might cause the function to get slow and 
-                hamper the coding standards.
-        """
-        mod_obj = self.pool.get('ir.model.data')        
-        act_obj = self.pool.get('ir.actions.act_window')
-        LOGGER.info("FOC Any Products")
-        order_line_obj = self.pool.get('sale.order.line')
-        # Get Product
-        result_context = {}    
-        product_codes_str = action.product_code  # there contained array list of product code
-        product_codes_list = product_codes_str.split(':')
-        product_obj = self.pool.get('product.product')
-        temp_obj = self.pool.get('foc.any.product.temp')
-        product_x_code, product_y_code = [eval(code) \
-                                for code in action.product_code.split(":")]
-        product_xy_code='NA'
-        
-        product_x_code_id = product_obj.search(cursor, user,
-                                    [('default_code', '=', product_x_code)], context=context)
-        product_x2_code_id = product_obj.search(cursor, user,
-                                    [('default_code', '=', product_y_code)], context=context)        
-        product_xy_code_id= product_obj.search(cursor, user,
-                                    [('default_code', '=', product_xy_code)], context=context)  
-        qty_x = eval(action.arguments)              
-        if product_codes_list:
-            result = mod_obj.get_object_reference(cursor, user, 'sale_promotions', 'open_view_foc_any_product')
-            id = result and result[1] or False
-            result = act_obj.read(cursor, user, [id], context=context)[0]   
-            cursor.execute("delete from foc_any_product_temp")
-#             result['domain'] = str({'one_product_id', '=',product_x_code_id[0],\
-#                                     'two_product_id', '=',product_x2_code_id[0],\
-#                                     'three_product_id', '=',product_xy_code_id[0]})
-#             result['context'] = str({'one_product_id', '=',product_x_code_id[0],\
-#                                     'two_product_id', '=',product_x2_code_id[0],\
-#                                     'three_product_id', '=',product_xy_code_id[0]})            
-#             result['view_type'] = 'form'
-    
-#             if product_x_code_id:
-#                 result_context.update({'one_product_id': product_x_code_id[0]})
-#             if product_x2_code_id:
-#                 result_context.update({'two_product_id': product_x2_code_id[0]})
-#     
-        if product_x_code_id and product_x2_code_id :
-            temp_obj.create(cursor, user, {
-                                     'order_id':order.id,
-                                     'one_product_id':product_x_code_id[0],
-                                      'two_product_id':product_x2_code_id[0],
-                                      'three_product_id':False,
-                                      'qty':qty_x,
-                                      }, context)    
-        return result        
-#             try:
-#                 product_x_code = ([eval(x) for x in product_codes_list])
-#             except Exception, e:
-#                 LOGGER.info(e)
-#                 product_x_code = None
-#         if product_x_code:
-#             for order_line in order.order_line:
-#                 if order_line.product_id.default_code in product_x_code:
-#                     LOGGER.info("Same Default Code : %s ", order_line.product_id.default_code)
-#                     LOGGER.info("Index :: %s ", product_x_code.index(order_line.product_id.default_code))
-#                     same_product_id_list.append(order_line.product_id.id)
-#                     
-#             if same_product_id_list:  # if there contained already foc product from product list, firstly 
-#                 for check_product_id in same_product_id_list:
-#                     foc_product_id = check_product_id
-#                     existing_id = order_line_obj.search(cursor, user, [('order_id', '=', order.id), ('product_id', '=', check_product_id), ('price_unit', '=', 0), ('sale_foc', '=', True)], context)
-#                     if existing_id:
-#                         order_line_obj.unlink(cursor, user, existing_id, context)
-#                 if foc_product_id:
-#                     LOGGER.info("Default Code :: %s ", foc_product_id)
-#                 # get Quantity
-#                     qty_x = eval(action.arguments)
-#                     LOGGER.info("FOC : %s ", qty_x)
-#                     self.create_x_line(cursor, user, action,
-#                                        order, qty_x, [foc_product_id], context)  
-#        return True  
+
         
     # MMK I'm just fix a little missing code
     def action_prod_x_get_x(self, cursor, user,
@@ -2400,6 +2318,97 @@ class PromotionsRulesActions(osv.Model):
         """
         return True
     
+    # KM I'm just fix a little missing code
+    def action_foc_any_product(self, cursor, user,
+                             action, order, context=None):
+        
+        """
+        'FOC Any Products'
+        @param cursor: Database Cursor
+        @param user: ID of User
+        @param action: Action to be taken on sale order
+        @param order: sale order
+        @param context: Context(no direct use).
+        
+        Note: The function is too long because if it is split then there 
+                will a lot of arguments to be passed from one function to
+                another. This might cause the function to get slow and 
+                hamper the coding standards.
+        """
+        mod_obj = self.pool.get('ir.model.data')        
+        act_obj = self.pool.get('ir.actions.act_window')
+        LOGGER.info("FOC Any Products")
+        order_line_obj = self.pool.get('sale.order.line')
+        # Get Product
+        result_context = {}    
+        product_codes_str = action.product_code  # there contained array list of product code
+        product_codes_list = product_codes_str.split(':')
+        product_obj = self.pool.get('product.product')
+        temp_obj = self.pool.get('foc.any.product.temp')
+        product_x_code, product_y_code = [eval(code) \
+                                for code in action.product_code.split(":")]
+        product_xy_code='NA'
+        
+        product_x_code_id = product_obj.search(cursor, user,
+                                    [('default_code', '=', product_x_code)], context=context)
+        product_x2_code_id = product_obj.search(cursor, user,
+                                    [('default_code', '=', product_y_code)], context=context)        
+        product_xy_code_id= product_obj.search(cursor, user,
+                                    [('default_code', '=', product_xy_code)], context=context)  
+        qty_x = eval(action.arguments)              
+        if product_codes_list:
+            result = mod_obj.get_object_reference(cursor, user, 'sale_promotions', 'open_view_foc_any_product')
+            id = result and result[1] or False
+            result = act_obj.read(cursor, user, [id], context=context)[0]   
+            cursor.execute("delete from foc_any_product_temp")
+#             result['domain'] = str({'one_product_id', '=',product_x_code_id[0],\
+#                                     'two_product_id', '=',product_x2_code_id[0],\
+#                                     'three_product_id', '=',product_xy_code_id[0]})
+#             result['context'] = str({'one_product_id', '=',product_x_code_id[0],\
+#                                     'two_product_id', '=',product_x2_code_id[0],\
+#                                     'three_product_id', '=',product_xy_code_id[0]})            
+#             result['view_type'] = 'form'
+    
+#             if product_x_code_id:
+#                 result_context.update({'one_product_id': product_x_code_id[0]})
+#             if product_x2_code_id:
+#                 result_context.update({'two_product_id': product_x2_code_id[0]})
+#     
+        if product_x_code_id and product_x2_code_id :
+            temp_obj.create(cursor, user, {
+                                     'order_id':order.id,
+                                     'one_product_id':product_x_code_id[0],
+                                      'two_product_id':product_x2_code_id[0],
+                                      'three_product_id':False,
+                                      'qty':qty_x,
+                                      }, context)    
+        return result        
+#             try:
+#                 product_x_code = ([eval(x) for x in product_codes_list])
+#             except Exception, e:
+#                 LOGGER.info(e)
+#                 product_x_code = None
+#         if product_x_code:
+#             for order_line in order.order_line:
+#                 if order_line.product_id.default_code in product_x_code:
+#                     LOGGER.info("Same Default Code : %s ", order_line.product_id.default_code)
+#                     LOGGER.info("Index :: %s ", product_x_code.index(order_line.product_id.default_code))
+#                     same_product_id_list.append(order_line.product_id.id)
+#                     
+#             if same_product_id_list:  # if there contained already foc product from product list, firstly 
+#                 for check_product_id in same_product_id_list:
+#                     foc_product_id = check_product_id
+#                     existing_id = order_line_obj.search(cursor, user, [('order_id', '=', order.id), ('product_id', '=', check_product_id), ('price_unit', '=', 0), ('sale_foc', '=', True)], context)
+#                     if existing_id:
+#                         order_line_obj.unlink(cursor, user, existing_id, context)
+#                 if foc_product_id:
+#                     LOGGER.info("Default Code :: %s ", foc_product_id)
+#                 # get Quantity
+#                     qty_x = eval(action.arguments)
+#                     LOGGER.info("FOC : %s ", qty_x)
+#                     self.create_x_line(cursor, user, action,
+#                                        order, qty_x, [foc_product_id], context)  
+#        return True  
     
     def execute(self, cursor, user, action_id,
                                    order, context=None):

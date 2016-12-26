@@ -32,12 +32,14 @@ class insert_sale_team(osv.osv_memory):
                 'frequency_id':fields.many2one('plan.frequency','Frequency'),
                 'class_id':fields.many2one('sale.class', 'Class'),
                 'branch_id':fields.many2one('res.branch', 'Branch'),
-                'chiller':fields.boolean('Chiller'),
-                'hamper':fields.boolean('Hamper'),
+                'chiller':fields.boolean('Chiller True'),
+                'hamper':fields.boolean('Hamper True'),
                 'state_id':fields.many2one('res.country.state','State'),                
                 'city':fields.many2one('res.city','City'),
                 'township':fields.many2one('res.township','Township'),        
         'property_product_pricelist': fields.many2one('product.pricelist', string="Sale Pricelist", domain=[('type', '=', 'sale')]),
+        'chiller_false':fields.boolean('Chiller False',),
+        'hamper_false':fields.boolean("Hamper False"),
 #                 'demarcation_id': fields.many2one('sale.demarcation', 'Demarcation'),
                 
     }
@@ -61,6 +63,8 @@ class insert_sale_team(osv.osv_memory):
         branch_id=data['branch_id']
         chiller=data['chiller']
         hamper = data['hamper']
+        chiller_false=data['chiller_false']
+        hamper_false = data['hamper_false']        
         state_id=data['state_id']        
         city=data['city']
         township=data['township']
@@ -91,7 +95,11 @@ class insert_sale_team(osv.osv_memory):
             if chiller is True:
                 cr.execute('update res_partner set chiller=%s where id=%s',(True,partner,))
             if hamper is True:
-                cr.execute('update res_partner set hamper=%s where id=%s',(True,partner,))				
+                cr.execute('update res_partner set hamper=%s where id=%s',(True,partner,))			
+            if chiller_false is True:
+                cr.execute('update res_partner set chiller=%s where id=%s',(False,partner,))
+            if hamper_false is True:
+                cr.execute('update res_partner set hamper=%s where id=%s',(False,partner,))                                	
             if  state_id:
                 cr.execute('update res_partner set state_id=%s where id=%s',(state_id[0],partner,))
             if  city:

@@ -182,11 +182,11 @@ class sale_target_report(osv.osv):
  
     def _select(self):
         select_str = """
-              select min(st.id) AS id,
+            select min(st.id) AS id,
                st.sale_team_id,
                st.branch_id,
                stl.product_id,
-               stl.product_uom,
+               u.id as product_uom,
                stl.product_uom_qty,
                st.amount_total,
                stl.price_unit,
@@ -194,29 +194,27 @@ class sale_target_report(osv.osv):
                st.date,
                st.month,
                st.year 
- 
         """
         return select_str
  
     def _from(self):
         from_str = """
-                   sales_target st ,sales_target_line stl 
-                   where st.id=stl.sale_ids
+                    sales_target st
+                   left join sales_target_line stl on (st.id=stl.sale_ids)
+                   left join product_uom u on (u.id= stl.product_uom)
         """
         return from_str
  
     def _group_by(self):
         group_by_str = """
-              GROUP BY 
-             product_id,
+                GROUP BY   product_id,
              sale_team_id,
              month,
-             product_uom,
-             product_uom_qty,
              amount_total,
              price_unit,
              date,
-             year,branch_id
+             year,branch_id,
+             u.id,product_uom_qty
                      
         """
         return group_by_str
@@ -225,8 +223,8 @@ class sale_target_report(osv.osv):
         # self._table = sale_report
         tools.drop_view_if_exists(cr, self._table)
         cr.execute("""CREATE or REPLACE VIEW %s as (
-                       %s
-            FROM  %s 
+            %s
+            FROM ( %s )
             %s
             )""" % (self._table, self._select(), self._from(), self._group_by()))
  

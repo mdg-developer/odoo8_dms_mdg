@@ -24,7 +24,7 @@
 						</group>
 
 						<notebook>
-							<page string="Product">
+							<page string="Product" readonly="1">
 								<field name="denomination_product_line">
 									<form string="Multi Product">
 										<group>
@@ -47,7 +47,7 @@
 							</page>
 						</notebook>
 						<notebook>
-							<page string="AR Collection">
+							<page string="AR Collection" readonly="1">
 								<field name="denomination_ar_line">
 									<form string="AR Collection">
 										<field name="invoice_id" />
@@ -67,7 +67,7 @@
 							</page>
 						</notebook>
 						<notebook>
-							<page string="Notes">
+							<page string="Notes" readonly="1">
 								<field name="denomination_note_line">
 									<form string="Notes">
 										<group>
@@ -91,7 +91,7 @@
 
 						</notebook>
 						<notebook>
-							<page string="Cheque">
+							<page string="Cheque" readonly="1">
 								<field name="denomination_cheque_line">
 									<form string="Cheque">
 										<group>
@@ -113,7 +113,7 @@
 							</page>
 						</notebook>
 						<notebook>
-							<page string="Bank">
+							<page string="Bank" readonly="1">
 								<field name="denomination_bank_line">
 									<form string="Bank">
 										<group>
@@ -137,14 +137,14 @@
 								<field name="note" class="oe_inline" placeholder="Note..." />
 							</group>
 							<group>
-								<field name="product_amount" />
-								<field name="ar_amount" />
-								<field name="dssr_ar_amount" />
-								<field name="total_amount" />
-								<field name="cheque_amount" />
-								<field name="bank_amount"/>
-								<field name="trans_amount" />
-								<field name="diff_amount" />
+								<field name="product_amount" readonly="1"/>
+								<field name="ar_amount"  readonly="1"/>
+								<field name="dssr_ar_amount" readonly="1"/>
+								<field name="total_amount" readonly="1"/>
+								<field name="cheque_amount" readonly="1"/>
+								<field name="bank_amount" readonly="1"/>
+								<field name="trans_amount" readonly="1"/>
+								<field name="diff_amount" readonly="1"/>
 							</group>
 						</group>
 					</sheet>

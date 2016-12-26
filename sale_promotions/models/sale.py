@@ -42,11 +42,16 @@ class SaleOrder(osv.osv):
         """
         data=True
         promotions_obj = self.pool.get('promos.rules')
+        sale_obj = self.pool.get('sale.order')
+
         for order_id in ids:
             data=promotions_obj.apply_promotions(cursor, user,
                                             order_id, context=None)
+
         if data!=True:
             return data
+        sale_obj.button_dummy(cursor, user, [order_id], context=context)
+        sale_obj.action_button_confirm(cursor, user, [order_id], context=context)
         return True
             
 SaleOrder()

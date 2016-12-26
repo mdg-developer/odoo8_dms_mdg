@@ -134,9 +134,9 @@
 										options="{'no_create': True}" />
 								</group>
 								<group>
-									<field name="customer" readonly="0" />
+									<field name="customer"  readonly="1"  />
 									<field name="supplier" />
-									<field name="mobile_customer" />
+									<field name="mobile_customer"  readonly="1" />
 								</group>
 								<!-- <group> <field name="ref"/> <field name="lang"/> <field name="date"/> 
 									</group> -->
@@ -582,6 +582,7 @@
 
 		<menuitem id="config_asset_type_action" name="Miscellaneous"
 			parent="base.menu_base_config" sequence="20" />
+		
 		<menuitem id="config_view_customer_asset_type_action" parent="config_asset_type_action"
 			action="open_view_customer_asset_type_action" />
 	</data>

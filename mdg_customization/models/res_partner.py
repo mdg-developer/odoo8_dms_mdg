@@ -30,8 +30,8 @@ TIME_SELECTION = [
 class res_partner(osv.osv):
     _inherit = "res.partner"
     _columns = {
-                 'is_bank':fields.boolean('IsBank'),
-                'is_cheque':fields.boolean('IsCheque'),
+                 'is_bank':fields.boolean('Bank Transfer'),
+                'is_cheque':fields.boolean('Cheque'),
         'partner_latitude': fields.float('Geo Latitude', digits=(16, 5), readonly=True),
         'partner_longitude': fields.float('Geo Longitude', digits=(16, 5), readonly=True),
         'date_localization': fields.date('Geo Localization Date'),
@@ -62,7 +62,6 @@ class res_partner(osv.osv):
          'sat':fields.boolean('SAT'),
          'sun':fields.boolean('SUN'),
      'section_id':fields.many2many('crm.case.section', 'sale_team_customer_rel', 'partner_id', 'sale_team_id', string='Sales Team'),
- 
     }
     _defaults = {
                'start_time':'01',

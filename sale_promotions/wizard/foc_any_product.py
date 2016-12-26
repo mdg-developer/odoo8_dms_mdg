@@ -89,8 +89,12 @@ class foc_any_product(osv.osv):
                                       'promotion_line':True,
                                       'sale_foc':True,  # sale_foc_discount
                                       'product_uom_qty':three_product_qty,
-                                      'product_uom':product_x.uom_id.id
+                                      'product_uom':product_x.uom_id.id,
                                       }, context)
+                cr.execute("update sale_order_line set state='confirmed' where order_id=%s",(order_id[0],))
+                sale_order_obj.button_dummy(cr, uid, [order_id[0]], context=context)
+                sale_order_obj.action_button_confirm(cr, uid, [order_id[0]], context=context)
+
             return True                                    
                          
     

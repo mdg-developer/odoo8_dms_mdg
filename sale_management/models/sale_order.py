@@ -16,7 +16,14 @@ import openerp.addons.decimal_precision as dp
 
 class sale_order(osv.osv):
     _inherit = "sale.order"
-    
+
+    def _get_default_warehouse(self, cr, uid, context=None):
+        company_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
+        warehouse_ids = self.pool.get('stock.warehouse').search(cr, uid, [('company_id', '=', company_id)], context=context)
+        if not warehouse_ids:
+            return False
+        return False
+        
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
@@ -167,13 +174,17 @@ class sale_order(osv.osv):
         print 'payment_type', section_id
         issue_warehouse_id=False
         delivery_id=False
+        branch_id=False
         if section_id:
             team = self.pool.get('crm.case.section').browse(cr, uid, section_id, context=context)
             issue_warehouse_id = team.issue_warehouse_id and  team.issue_warehouse_id.id or False
             delivery_id = team.delivery_team_id and  team.delivery_team_id.id or False
+            branch_id = team.branch_id and  team.branch_id.id or False
         values = {
              'issue_warehouse_id':issue_warehouse_id,
              'delivery_id':delivery_id,
+             'warehouse_id':issue_warehouse_id,
+             'branch_id':branch_id,
               }
         return {'value': values}
     
@@ -510,8 +521,11 @@ class sale_order(osv.osv):
 
 
 
-sale_order()   
+    _defaults = {
+        'warehouse_id': _get_default_warehouse,
 
+    }
+sale_order()   
 
 class sale_order_line(osv.osv):
 

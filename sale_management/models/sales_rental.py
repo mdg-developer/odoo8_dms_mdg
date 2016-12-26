@@ -14,7 +14,16 @@ class sale_rental(osv.osv):
     _name = "sales.rental"
     _description = "Sales rental"
     _inherit = ['mail.thread', 'ir.needaction_mixin']    
- 
+    
+    def create(self, cr, uid, vals, context=None):
+        if vals.get('partner_id'):
+            defaults = self.on_change_partner_id(cr, uid, [], vals['partner_id'], context=context)['value']
+            vals = dict(defaults, **vals)            
+        ctx = dict(context or {}, mail_create_nolog=True)
+        new_id = super(sale_rental, self).create(cr, uid, vals, context=ctx)
+        self.message_post(cr, uid, [new_id], context=ctx)
+        return new_id
+    
 
     def on_change_partner_id(self, cr, uid, ids, partner_id, context=None):
         values = {}
@@ -28,7 +37,6 @@ class sale_rental(osv.osv):
                 'state_id': partner.state_id and partner.state_id.id or False,
                 'country_id': partner.country_id and partner.country_id.id or False,
                 'township': partner.township and partner.township.id or False,
-                'outlet_type': partner.outlet_type and partner.outlet_type.id or False,
             }
         return {'value': values}
         
@@ -48,12 +56,12 @@ class sale_rental(osv.osv):
          'code':fields.char('Customer ID',readonly=True),
         'note':fields.text('Note'),
         'name':fields.char('Name'),
-        'street': fields.char('Street'),
-        'street2': fields.char('Street2'),
-        'city': fields.many2one('res.city', 'City', ondelete='restrict'),
-        'state_id': fields.many2one("res.country.state", 'State', ondelete='restrict'),
-        'country_id': fields.many2one('res.country', 'Country', ondelete='restrict'),
-        'township': fields.many2one('res.township', 'Township', ondelete='restrict'),
+        'street': fields.char('Street',readonly=True),
+        'street2': fields.char('Street2',readonly=True),
+        'city': fields.many2one('res.city', 'City', ondelete='restrict',readonly=True),
+        'state_id': fields.many2one("res.country.state", 'State', ondelete='restrict',readonly=True),
+        'country_id': fields.many2one('res.country', 'Country', ondelete='restrict',readonly=True),
+        'township': fields.many2one('res.township', 'Township', ondelete='restrict',readonly=True),
         'total_amt':fields.float('Total'  , required=True),
      #   'image': fields.binary("Location Photo"),
         'latitude':fields.float('Geo Latitude'),

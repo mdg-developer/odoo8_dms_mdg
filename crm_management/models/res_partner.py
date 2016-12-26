@@ -509,7 +509,8 @@ class res_partner(osv.osv):
                                 code = codeObj.generateCode(cr, uid, codeId, context=context)
                 if code:
                     from datetime import datetime
-                    self.write(cr, uid, ids, {'customer_code':code,'date_partnership':datetime.now().date(),'mobile_customer':False}, context=context)
+                    cr.execute("update res_partner set customer_code=%s ,date_partnership=now()::date ,mobile_customer=False where id=%s",(code,ids[0], ))
+                    #self.write(cr, uid, ids, {'customer_code':code,'date_partnership':datetime.now().date(),'mobile_customer':False}, context=context)
             return True
 res_partner()
 class res_partner_asset(osv.Model):
@@ -517,13 +518,13 @@ class res_partner_asset(osv.Model):
     _description = 'Partner Tags'
     _name = 'res.partner.asset'
     _columns = {
-                        'partner_id': fields.many2one('res.partner', 'Customer', select=True, ondelete='cascade'),
-                        'name':fields.char('Asset Name'),
-                        'date':fields.date('Date'),
+                        'partner_id': fields.many2one('res.partner', 'Customer', select=True, ondelete='cascade',required=True),
+                        'name':fields.char('Asset Name',required=True),
+                        'date':fields.date('Date',required=True),
                         'type':fields.selection ([('rent', 'Rent'), ('give', 'Giving')],
                                                     'Type', required=True, default='rent'),
-                        'asset_type':fields.many2one('asset.type', 'Asset Type'),
-                       'qty':fields.integer('Qty'),
+                        'asset_type':fields.many2one('asset.type', 'Asset Type',required=True),
+                       'qty':fields.integer('Qty',required=True),
                         'image': fields.binary("Image"),
                         'note':fields.text('Note'),
   }
