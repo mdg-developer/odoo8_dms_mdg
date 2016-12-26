@@ -41,7 +41,7 @@ class product_template(osv.osv):
     
     _columns = {
                 # copy from product.py of odoo9
-                # 'default_code': fields.char('Product Code'),
+                'default_code': fields.related('product_variant_ids', 'default_code', type='char', string='Internal Reference'),
                 # new column add
                 'product_principal_ids':fields.many2one('product.principal', 'Product Principal'),
                 #################
@@ -76,8 +76,8 @@ class product_template(osv.osv):
     _defaults = {
         'valuation': 'manual_periodic',
     }
-#     _sql_constraints = [('default_code_uniq', 'unique(default_code)',
-#                                   'Product Code should not be same to others!')
-#                     ]
+    _sql_constraints = [('default_code_uniq', 'unique(default_code)',
+                                  'Product Code should not be same to others!')
+                    ]
      
 product_template()
