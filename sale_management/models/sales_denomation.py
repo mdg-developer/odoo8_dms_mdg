@@ -25,7 +25,6 @@ class sale_denomination(osv.osv):
        'denomination_cheque_line':fields.one2many('sales.denomination.cheque.line', 'denomination_cheque_ids', string='Sale denomination Cheque Line', copy=True ),
        'denomination_ar_line':fields.one2many('sales.denomination.ar.line', 'denomination_ar_ids', string='Sale denomination AR Line', copy=True ),
        'denomination_bank_line':fields.one2many('sales.denomination.bank.line', 'denomination_bank_ids', string='Sale denomination Bank Line', copy=True ),
-
         'note':fields.text('Note'),
       'total_amount':fields.float('Denomination Total',digits_compute=dp.get_precision('Product Price')),
       'product_amount':fields.float('Invoice Total', digits_compute=dp.get_precision('Product Price')),
@@ -213,9 +212,9 @@ class sale_denomination_product_line(osv.osv):
     _name = 'sales.denomination.product.line'
     _columns = {
                 'denomination_product_ids': fields.many2one('sales.denomination', 'Sales denomination'),
-                'product_id':fields.many2one('product.product', 'Product', required=True),
-                'product_uom_qty':fields.integer('QTY', required=True),
-                'amount':fields.float('Amount', required=True, digits_compute=dp.get_precision('Product Price')),
+                'product_id':fields.many2one('product.product', 'Product', required=False),
+                'product_uom_qty':fields.integer('QTY', required=False),
+                'amount':fields.float('Amount', required=False, digits_compute=dp.get_precision('Product Price')),
                 'sequence':fields.integer('Sequence'),
                 }
 sale_denomination_product_line()    
