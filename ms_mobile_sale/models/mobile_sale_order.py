@@ -1195,6 +1195,7 @@ class mobile_sale_order(osv.osv):
             ar_coll_obj = self.pool.get('sales.denomination.ar.line')
             bank_transfer_obj = self.pool.get('sales.denomination.bank.line')
             ar_obj = self.pool.get('ar.payment')
+            invoice_obj = self.pool.get('account.invoice.line')
             ar_amount=0.0
             product_amount=0.0
             deno_amount=0.0
@@ -1267,7 +1268,7 @@ class mobile_sale_order(osv.osv):
                 print 'user_iddddddddddddd', user_id, type(user_id)
                 cursor.execute("select default_section_id from res_users where id=%s", (user_id,))
                 team_id = cursor.fetchone()[0]            
-                print 'team_id', team_id
+                print 'team_id', team_id,de_date
                 cursor.execute("select id from customer_payment where date=%s and sale_team_id=%s and cheque_no !=''  ", (de_date, team_id,))
                 payment_ids = cursor.fetchall()
                 cursor.execute("select id from ar_payment where date=%s and sale_team_id=%s and payment_code='CHEQ' ", (de_date, team_id,))
@@ -1278,26 +1279,23 @@ class mobile_sale_order(osv.osv):
                 ar_bank_ids = cursor.fetchall()                              
                 cursor.execute("select id from mobile_sale_order where due_date=%s and user_id=%s and void_flag != 'voided'", (de_date, user_id))
                 mobile_ids = cursor.fetchall()
-                cursor.execute('select id from crm_case_section where delivery_team_id=%s',(team_id,))
-                ps_team_id= cursor.fetchall()
-                if ps_team_id:
-                    cursor.execute("select id from pre_sale_order where due_date=%s and sale_team in %s and void_flag != 'voided' and m_status='done' ", (de_date, tuple(ps_team_id),))
-                    pre_mobile_ids = cursor.fetchall()        
-                    if  pre_mobile_ids:
-                        line_ids = pre_sale_order_obj.search(cursor, user, [('order_id', 'in', pre_mobile_ids)], context=context)                        
-                        order_line_ids = pre_sale_order_obj.browse(cursor, user, line_ids, context=context)                
-                        cursor.execute('select product_id,sum(product_uos_qty),sum(sub_total) from pre_sale_order_line where id in %s group by product_id', (tuple(order_line_ids.ids),))
-                        order_line = cursor.fetchall()
-                        for data in order_line:
-                            product = self.pool.get('product.product').browse(cursor, user, data[0], context=context)
-                            sequence = product.sequence
-                            product_amount+=data[2]
-                            data_id = {'product_id':data[0],
-                                              'product_uom_qty':data[1],
-                                              'denomination_product_ids':deno_id,
-                                              'sequence':sequence,
-                                              'amount':data[2]}
-                            deno_product_obj.create(cursor, user, data_id, context=context)                        
+                cursor.execute("select id from account_invoice where date_invoice=%s and section_id =%s and state='open' ", (de_date, team_id,))
+                pre_mobile_ids = cursor.fetchall()        
+                if  pre_mobile_ids:
+                    line_ids = invoice_obj.search(cursor, user, [('invoice_id', 'in', pre_mobile_ids)], context=context)         
+                    order_line_ids = invoice_obj.browse(cursor, user, line_ids, context=context)                
+                    cursor.execute(' select product_id,sum(quantity) as quantity,sum(price_subtotal) as  sub_total from account_invoice_line where id in %s group by product_id', (tuple(order_line_ids.ids),))
+                    order_line = cursor.fetchall()
+                    for data in order_line:
+                        product = self.pool.get('product.product').browse(cursor, user, data[0], context=context)
+                        sequence = product.sequence
+                        product_amount+=data[2]
+                        data_id = {'product_id':data[0],
+                                          'product_uom_qty':data[1],
+                                          'denomination_product_ids':deno_id,
+                                          'sequence':sequence,
+                                          'amount':data[2]}
+                        deno_product_obj.create(cursor, user, data_id, context=context)                        
                 if  mobile_ids:
                     line_ids = mobile_sale_order_obj.search(cursor, user, [('order_id', 'in', mobile_ids)], context=context)                        
                     order_line_ids = mobile_sale_order_obj.browse(cursor, user, line_ids, context=context)                
