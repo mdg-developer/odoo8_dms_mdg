@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+ <data>
+    
+    <record id="seq_type_product_categories" model="ir.sequence.type">
+            <field name="name">Product</field>
+            <field name="code">product.category.code</field>
+    </record>
+    <record id="seq_product_categories" model="ir.sequence">
+        <field name="name">Product</field>
+        <field name="code">product.category.code</field>
+        <field name="prefix">PC</field>
+        <field name="padding">1</field>
+    </record>
+
+ </data>
+</openerp>
