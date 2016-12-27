@@ -141,10 +141,12 @@ class stock_requisition(osv.osv):
             sale_team_id=vals['sale_team_id']
             sale_team = self.pool.get('crm.case.section').browse(cursor, user, sale_team_id, context=context)
             to_location_id = sale_team.issue_location_id.id            
+            from_location_id=sale_team.location_id.id
         id_code = self.pool.get('ir.sequence').get(cursor, user,
                                                 'request.code') or '/'
         vals['name'] = id_code
         vals['to_location_id'] = to_location_id
+        vals['from_location_id'] = from_location_id
         return super(stock_requisition, self).create(cursor, user, vals, context=context)
 
     def so_list(self, cr, uid, ids, context=None):
@@ -159,6 +161,7 @@ class stock_requisition(osv.osv):
                 sale_team_id = stock_request_data.sale_team_id.id
                 request_date = stock_request_data.request_date
                 location_id = stock_request_data.to_location_id.id
+                
                 #sql = 'select id from sale_order where delivery_id=%s, shipped=False and is_generate=False and invoiced=False and state not in (%s,%s) and date_order between %s and %s'
                 #cr.execute(sql,(sale_team_id,issue_date_from,issue_date_to))
                 #order_ids = cr.fetchall()
