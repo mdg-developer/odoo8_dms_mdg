@@ -23,10 +23,8 @@
 								<field name="name" />
 								<field name="sale_team_id" attrs="{'readonly':[('state','=','received')]}"
 									on_change="on_change_sale_team_id(sale_team_id)" widget="selection" />
-								<field name="from_location" attrs="{'readonly':[('state','=','received')]}"
-									widget="selection" />
-								<field name="to_location" attrs="{'readonly':[('state','=','received')]}"
-									widget="selection" />
+								<field name="from_location"  widget="selection" />
+								<field name="to_location"  widget="selection" />
 								<field name="return_date" attrs="{'readonly':[('state','=','received')]}" />
 								<!-- <field name="branch_id" widget="selection" /> -->
 							</group>

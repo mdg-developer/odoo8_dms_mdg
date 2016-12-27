@@ -10,28 +10,28 @@
 					<group col="4" colspan="6">
 						<field name="section_id" class="oe_inline" widget="selection" />
 						<field name="outlet_type" class="oe_inline" widget="selection"
-							groups="base.group_sale_supervisor" />
+							groups="base.group_no_one" />
 						<field name="sales_channel" class="oe_inline" widget="selection"
-							groups="base.group_sale_supervisor" />
+							groups="base.group_no_one" />
 						<field name="frequency_id" class="oe_inline" widget="selection"
 							groups="base.group_sale_supervisor" />
 						<field name="class_id" class="oe_inline" widget="selection"
 							groups="base.group_sale_supervisor" />
 						<field name="branch_id" class="oe_inline" widget="selection"
-							groups="base.group_sale_supervisor" />
+							groups="base.group_no_one" />
 						<field name="state_id" class="oe_inline" widget="selection"
-							groups="base.group_sale_supervisor" />
+							groups="base.group_no_one" />
 						<field name="city" class="oe_inline" widget="selection"
-							groups="base.group_sale_supervisor" />
+							groups="base.group_no_one" />
 						<field name="township" class="oe_inline" widget="selection"
-							default_order="name desc" groups="base.group_sale_supervisor" />
+							default_order="name desc" groups="base.group_no_one" />
 						<field name="property_product_pricelist" class="oe_inline"
-							widget="selection" groups="base.group_sale_supervisor" />
+							widget="selection" groups="base.group_no_one" />
 						<!-- <field name="demarcation_id" widget="selection"/> -->
 						<field name="chiller" />
-						<field name="hamper" groups="base.group_sale_supervisor" />
+						<field name="hamper" groups="base.group_sale_supervisor,base.group_no_one" />
 						<field name="chiller_false" />
-						<field name="hamper_false" groups="base.group_sale_supervisor" />
+						<field name="hamper_false" groups="base.group_sale_supervisor,base.group_no_one" />
 					</group>
 					<footer>
 						<button name="print_report" string="Assign" type="object"
