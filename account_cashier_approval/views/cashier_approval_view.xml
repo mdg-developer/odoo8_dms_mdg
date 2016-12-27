@@ -8,15 +8,14 @@
 			<field name="arch" type="xml">
 				<form string="Cashier Approval" version="7.0">
 					<header>
-						<!-- <button name="generate_report" string="Generate Daily Summary 
-							Report" type="object" class="oe_highlight" /> -->
+
 						<button name="confirm_" string="Confirm" type="object"
-							class="oe_highlight" attrs="{'invisible':[('state','not in',('draft'))]}" />
+							class="oe_highlight" attrs="{'invisible':[('state','not in',('draft'))]}"   groups="base.group_cashier_confirm"/>
 						<button name="cashier_approve" string="Cashier Approve"
-							type="object" class="oe_highlight"
+							type="object" class="oe_highlight" groups="base.group_cashier_confirm"
 							attrs="{'invisible':[('state','not in',('pending'))]}" />
 						<button name="set_to_draft" string="Set to draft" type="object"
-							class="oe_highlight" attrs="{'invisible':[('state','in',('done','draft'))]}" />
+							class="oe_highlight" attrs="{'invisible':[('state','in',('done','draft'))]}"  groups="base.group_cashier_confirm"/>
 						<field name="state" widget="statusbar" statusbar_visible="draft,pending,done" />
 					</header>
 					<sheet>

@@ -10,10 +10,10 @@
 					<header>
 						<button name="approve" string="Approve" class="oe_highlight"
 							type="object" states="draft"
-							groups="base.group_sale_supervisor,base.group_sale_manager,base.group_sale_admin,base.group_no_one" />
+							groups="base.group_sale_manager,base.group_no_one" />
 						<button name="cancel" string="Cancel" class="oe_highlight"
 							type="object" states="draft"
-							groups="base.group_sale_supervisor,base.group_sale_manager,base.group_sale_admin,base.group_no_one" />
+							groups="base.group_sale_manager,base.group_no_one" />
 						<field name="state" widget="statusbar" />
 					</header>
 					<sheet>
@@ -72,7 +72,7 @@
 									</field>
 								</page>
 								<page string="Sales Order" attrs="{'invisible':[('pre_order','=',False)]}">
-									<field name="order_line" attrs="{'readonly':[('state','=','approve')]}">
+									<field name="order_line"  readonly="1">
 										<tree string="Stock Request Order Line" editable="bottom">
 											<field name="name" />
 											<field name="ref_no" />
