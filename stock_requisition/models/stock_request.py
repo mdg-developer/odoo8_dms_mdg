@@ -100,7 +100,7 @@ class stock_requisition(osv.osv):
     _columns = {
         'sale_team_id':fields.many2one('crm.case.section', 'Delivery Team', required=True),
         'name': fields.char('RFI Ref', readonly=True),
-        'from_location_id':fields.many2one('stock.location', 'Requesting  Location', required=True),
+        'from_location_id':fields.many2one('stock.location', 'Requesting  Location', readonly=True),
         'to_location_id':fields.many2one('stock.location', 'Request Warehouse' ,readonly=True),
         'so_no' : fields.char('Sales Order/Inv Ref;No.'),
         'issue_to':fields.char("Receiver"),
