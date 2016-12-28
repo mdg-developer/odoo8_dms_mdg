@@ -23,8 +23,8 @@ ATTRIBUTES = [
     # ('prod_unit_price', 'Product UnitPrice combination'),
     ('prod_sub_total', 'Product SubTotal combination'),
     ('promo_already_exit', 'Promotion Already Applied'),
-    ('cat_qty', 'Product Category Quantity combination'),
-    ('fix_prods_qty', 'Product Fix Quantity combination'),
+    ('cat_qty', 'Product Category Quantity combination'),    
+    ('fix_prods_qty', 'Fix Quantity Total combination'),
 
 ]
 
@@ -912,8 +912,7 @@ class PromotionsRulesConditionsExprs(osv.Model):
                          'prod_sub_total',
                          'prod_discount',
                          'prod_weight',
-                         'prod_net_price',
-                          'fix_prods_qty',
+                         'prod_net_price',                          
 
                          ]:
             return {
@@ -977,7 +976,14 @@ class PromotionsRulesConditionsExprs(osv.Model):
                     'value':{
                              'value':"'category_code':0.00"
                              }
-                    }                   
+                    }
+            
+        if attribute == 'fix_prods_qty':
+            return {
+                    'value':{
+                             'value':"'product_code1';'product_code2':0.00|'product_code3':0.00"
+                             }
+                    }                  
             
         return {}
     _columns = {
