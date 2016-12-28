@@ -327,6 +327,7 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
         requisition = requisition_obj.browse(cr,uid,line_ids,context)
         location_id=requisition.to_location_id.id
         product=data['product_id']
+        product_data= self.pool.get('product.product').browse(cr, uid, product, context=context)
         cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (location_id, product,))
         qty_on_hand = cr.fetchone()
         if qty_on_hand:
@@ -334,6 +335,9 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
         else:
             qty_on_hand = 0
         data['qty_on_hand']=qty_on_hand
+        data['product_uom']= product_data.product_tmpl_id.uom_id.id
+        data['big_uom_id']=product_data.product_tmpl_id.big_uom_id.id
+        data['uom_ratio']=product_data.product_tmpl_id.uom_ratio
         return super(stock_requisition_line, self).create(cr, uid, data, context=context)
     
     def on_change_product_id(self,cr,uid,ids,product_id,to_location_id, context=None):
