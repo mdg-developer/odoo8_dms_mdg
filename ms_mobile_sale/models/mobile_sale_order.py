@@ -1899,18 +1899,20 @@ class mobile_sale_order(osv.osv):
             
             if stock:
                 for sr in stock:                                    
-                    cursor.execute('select vehicle_id,location_id,issue_location_id,delivery_team_id from crm_case_section where id = %s ', (sr['sale_team_id'],))
+                    cursor.execute('select vehicle_id,location_id,issue_location_id,delivery_team_id,receiver from crm_case_section where id = %s ', (sr['sale_team_id'],))
                     data = cursor.fetchall()
                     if data:
                         vehcle_no = data[0][0]
                         from_location_id = data[0][1]
                         to_location_id = data[0][2]
-                        delivery_id = data[0][3]                        
+                        delivery_id = data[0][3]             
+                        receiver=data[0][4]           
                     else:
                         vehcle_no = None
                         from_location_id = None
                         to_location_id = None
                         delivery_id = None          
+                        receiver=None
                     
                     mso_result = {
                         'request_date':sr['request_date'],
@@ -1918,7 +1920,7 @@ class mobile_sale_order(osv.osv):
                         'issue_date':sr['issue_date'] ,
                          's_issue_date':sr['issue_date'] ,
                         'state': 'draft',
-                        'issue_to':sr['issue_to'],
+                        'issue_to':receiver,
                         'company_id':sr['company_id'],
                         'branch_id':sr['branch_id'],
                         'vehicle_id':vehcle_no,
@@ -1964,7 +1966,7 @@ class mobile_sale_order(osv.osv):
                                       'line_id':stock_id,
                                       'remark':srl['remark'],
                                       'req_quantity':0,
-                                      'product_id':srl['product_id'],
+                                      'product_id':int(srl['product_id']),
                                       'product_uom':small_uom_id,
                                       'uom_ratio':packing_unit ,
                                       'big_uom_id':big_uom_id,
@@ -1976,7 +1978,7 @@ class mobile_sale_order(osv.osv):
                                       'line_id':stock_id,
                                       'remark':srl['remark'],
                                       'req_quantity':req_quantity,
-                                      'product_id':srl['product_id'],
+                                      'product_id':int(srl['product_id']),
                                       'product_uom':small_uom_id,
                                       'uom_ratio':packing_unit ,
                                       'big_uom_id':big_uom_id,
