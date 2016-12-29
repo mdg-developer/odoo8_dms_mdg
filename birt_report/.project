@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>sale_promotions</name>
+	<name>amh_report</name>
 	<comment></comment>
 	<projects>
-		<project>odoo</project>
+		<project>openerp-8.0</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

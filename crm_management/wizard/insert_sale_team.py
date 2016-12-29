@@ -33,7 +33,6 @@ class insert_sale_team(osv.osv_memory):
                 'class_id':fields.many2one('sale.class', 'Class'),
                 'branch_id':fields.many2one('res.branch', 'Branch'),
                 'chiller':fields.boolean('Chiller'),
-                'hamper':fields.boolean('Hamper'),
                 'state_id':fields.many2one('res.country.state','State'),                
                 'city':fields.many2one('res.city','City'),
                 'township':fields.many2one('res.township','Township'),        
@@ -60,7 +59,6 @@ class insert_sale_team(osv.osv_memory):
         class_id=data['class_id']
         branch_id=data['branch_id']
         chiller=data['chiller']
-        hamper = data['hamper']
         state_id=data['state_id']        
         city=data['city']
         township=data['township']
@@ -90,8 +88,6 @@ class insert_sale_team(osv.osv_memory):
                 cr.execute('update res_partner set branch_id=%s where id=%s',(branch_id[0],partner,))
             if chiller is True:
                 cr.execute('update res_partner set chiller=%s where id=%s',(True,partner,))
-            if hamper is True:
-                cr.execute('update res_partner set hamper=%s where id=%s',(True,partner,))				
             if  state_id:
                 cr.execute('update res_partner set state_id=%s where id=%s',(state_id[0],partner,))
             if  city:

@@ -32,39 +32,17 @@
 												<field name="product_id" />
 												<field name="product_uom_qty" />
 												<field name="amount" sum="Invoice Total" />
-												<field name="sequence" invisible="1" />
 											</group>
 										</group>
 									</form>
-									<tree string="Multi Product" editable="bottom"
-										default_order="sequence asc">
+									<tree string="Multi Product" editable="bottom">
 										<field name="product_id" />
 										<field name="product_uom_qty" />
 										<field name="amount" sum="Invoice Total" />
-										<field name="sequence" invisible="1" />
 									</tree>
 								</field>
 							</page>
-						</notebook>
-						<notebook>
-							<page string="AR Collection">
-								<field name="denomination_ar_line">
-									<form string="AR Collection">
-										<field name="invoice_id" />
-										<field name="date" />
-										<field name="partner_id" />
-										<field name="payment_type" />
-										<field name="amount" sum="Invoice Total" />
-									</form>
-									<tree string="AR Collection" editable="bottom">
-										<field name="invoice_id" />
-										<field name="date" />
-										<field name="partner_id" />
-										<field name="payment_type" />
-										<field name="amount"  sum="Invoice Total" />
-									</tree>
-								</field>
-							</page>
+
 						</notebook>
 						<notebook>
 							<page string="Notes">
@@ -73,61 +51,16 @@
 										<group>
 											<group>
 												<field name="notes" />
-												<field name="note_qty" style="text-align: center"
-													on_change="on_change_note_qty(notes,note_qty)" />
-												<field name="amount"  sum="Invoice Total" />
+												<field name="note_qty" style="text-align: center" on_change="on_change_note_qty(notes,note_qty)" />
+												<field name="amount" />
 											</group>
 										</group>
 									</form>
 									<tree string="Notes" editable="bottom">
 										<field name="notes" />
-										<field name="note_qty" style="text-align: center"
-											on_change="on_change_note_qty(notes,note_qty)" />
-										<field name="amount"  sum="Invoice Total" />
+										<field name="note_qty" style="text-align: center"  on_change="on_change_note_qty(notes,note_qty)" />
+										<field name="amount"  />
 
-									</tree>
-								</field>
-							</page>
-
-						</notebook>
-						<notebook>
-							<page string="Cheque">
-								<field name="denomination_cheque_line">
-									<form string="Cheque">
-										<group>
-											<group>
-												<field name="partner_id" />
-												<field name="journal_id" string="Bank" />
-												<field name="cheque_no" />
-												<field name="amount" sum="Invoice Total" />
-											</group>
-										</group>
-									</form>
-									<tree string="Cheque" editable="bottom">
-										<field name="partner_id" />
-										<field name="journal_id" string="Bank" />
-										<field name="cheque_no" />
-										<field name="amount" sum="Invoice Total" />
-									</tree>
-								</field>
-							</page>
-						</notebook>
-						<notebook>
-							<page string="Bank">
-								<field name="denomination_bank_line">
-									<form string="Bank">
-										<group>
-											<group>
-												<field name="partner_id" />
-												<field name="journal_id" string="Bank" />
-												<field name="amount" sum="Invoice Total" />
-											</group>
-										</group>
-									</form>
-									<tree string="Bank" editable="bottom">
-										<field name="partner_id" />
-										<field name="journal_id" string="Bank" />
-										<field name="amount" sum="Invoice Total" />
 									</tree>
 								</field>
 							</page>
@@ -137,13 +70,8 @@
 								<field name="note" class="oe_inline" placeholder="Note..." />
 							</group>
 							<group>
-								<field name="product_amount" />
-								<field name="ar_amount" />
-								<field name="dssr_ar_amount" />
 								<field name="total_amount" />
-								<field name="cheque_amount" />
-								<field name="bank_amount"/>
-								<field name="trans_amount" />
+								<field name="product_amount" />
 								<field name="diff_amount" />
 							</group>
 						</group>
@@ -180,8 +108,7 @@
 					<field name="user_id" />
 					<field name="total_amount" />
 					<field name="product_amount" />
-					<field name="diff_amount" invisible="1" />
-					<field name="trans_amount" />
+					<field name="diff_amount" />
 				</tree>
 			</field>
 		</record>
@@ -202,8 +129,7 @@
 		</record>
 
 		<menuitem id="sales_denomination" action="action_sales_denomination_view"
-			parent="account.menu_finance_bank_and_cash" name="Cash Denomination"
-			sequence="15" />
+			parent="account.menu_finance_bank_and_cash" name="Cash Denomination" sequence="15" />
 	</data>
 </openerp>
 	    

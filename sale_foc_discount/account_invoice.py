@@ -50,6 +50,7 @@ class account(osv.osv):
               'discount_amt':fields.float('Dis(amt)'),
               'discount':fields.float('Dis(%)'),
              'foc':fields.boolean('FOC')
+
               } 
 class account_invoice_line(models.Model):
     _inherit='account.invoice.line'
@@ -140,7 +141,7 @@ class account_invoice_line(models.Model):
 #         else:
 #             return self.env['ir.property'].get('property_account_expense_categ', 'product.category')
 # 
-    @api.model
+#     @api.model
     def move_line_get_item(self, line):
         return {
             'type': 'src',
@@ -171,12 +172,11 @@ class account_invoice_line(models.Model):
         res = []
         deduct_amt=inv.deduct_amt
         discount_total=inv.discount_total
-        ref=inv.origin
+        
         for line in inv.invoice_line:
             
             mres = self.move_line_get_item(line)
-            mres['ref']=ref
-            print 'mres',mres,ref
+            print 'mres',mres
             if not mres:
                 continue
             res.append(mres)
@@ -210,6 +210,7 @@ class account_invoice_line(models.Model):
             for line in inv.invoice_line:
                 
                 if line.discount:
+                    print 'this is deduct amount',line.price_unit,line.quantity,line.discount
                     dis_per+=(line.price_unit*line.quantity) *(line.discount/ 100.0)
                     #total+=dis_per
                     
@@ -227,7 +228,6 @@ class account_invoice_line(models.Model):
                     'price':-1* total,
                     'account_id': discount_account_id,
                     'product_id': False,
-                    'ref':ref,
                     'foc':False,
                     'account_analytic_id': inv.invoice_line[0].account_analytic_id.id,
                     'taxes': False,
@@ -249,7 +249,6 @@ class account_invoice_line(models.Model):
                     'price':-1* total,
                     'account_id': discount_account_id,
                     'product_id': False,
-                    'ref':ref,
                      'foc':False,
                     'account_analytic_id': inv.invoice_line[0].account_analytic_id.id,
                     'taxes': False,
@@ -264,7 +263,6 @@ class account_invoice_line(models.Model):
                             'price':-1*(deduct_amt),
                             'account_id': discount_cash_account_id,
                             'product_id': False,
-                            'ref':ref,
                              'foc':False,
                             'account_analytic_id': inv.invoice_line[0].account_analytic_id.id,
                             'taxes': False,

@@ -1,6 +1,12 @@
 eclipse.preferences.version=1
+encoding//account_cashier_approval/__openerp__.py=utf-8
 encoding//account_financial_import/financial_report_import.py=utf-8
+encoding//bi_report/__openerp__.py=utf-8
+encoding//bi_report/models/sale_report.py=utf-8
 encoding//data_import_dms/models/import_partner.py=utf-8
 encoding//hr_branch/models/res_company.py=utf-8
+encoding//product_categories_customization/__openerp__.py=utf-8
+encoding//product_categories_customization/models/product_categories.py=utf-8
 encoding//sale_management/__openerp__.py=utf-8
+encoding//stock_inventory_import/wizard/import_move_line_wizard.py=utf-8
 encoding//stock_requisition/__openerp__.py=utf-8

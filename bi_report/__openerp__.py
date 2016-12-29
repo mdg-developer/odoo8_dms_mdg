@@ -26,7 +26,7 @@
     'author': 'seventh computing',
     'website': 'http://www.7thcomputing.com',
     'category' : 'Reporting',
-    'depends' : ["base","sale","ms_mobile_sale"],
+    'depends' : ["base","sale","ms_mobile_sale","stock",],
     'description': """
     Product for OpenERP
     = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -36,8 +36,9 @@
     """,
     'data': [
         'views/mobile_report_view.xml',
-         'views/customer_visit_report_view.xml'
-
+         'views/customer_visit_report_view.xml',
+         'views/sale_report_view.xml',
+        # 'views/stock_view.xml',
                 ],
     'installable': True,
     'auto_install': False,

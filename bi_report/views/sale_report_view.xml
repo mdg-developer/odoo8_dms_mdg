@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record id="view_order_product_graph_inherit" model="ir.ui.view">
+			<field name="name">sale.report.graph.inherit</field>
+			<field name="model">sale.report</field>
+			<field name="inherit_id" ref="sale.view_order_product_graph" />
+			<field name="arch" type="xml">
+				<field name="price_total" position="after">
+					<field name="weight_viss" type="measure" />
+					<field name="weight_liter" type="measure" />
+				</field>
+			</field>
+		</record>
+	</data>
+</openerp>

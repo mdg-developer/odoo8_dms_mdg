@@ -15,14 +15,11 @@
 						<field name="customer_code" placeholder="Code" />
 					</xpath>
 					<xpath expr="//field[@name='website']" position="after">
-						<field name="outlet_type" attrs="{'invisible':[('customer','=',False)], 'required':[('customer', '=', True)]}"/>
-						<field name="sales_channel" attrs="{'invisible':[('customer','=',False)],'required':[('customer', '=', True)]}"/>
-						<field name="branch_id" attrs="{'invisible':[('customer','=',False)],'required':[('customer', '=', True)]}" />
+						<field name="outlet_type" attrs="{'invisible':[('customer','=',False)], 'required': [('customer', '=', True)]}" />
+						<field name="sales_channel" attrs="{'invisible':[('customer','=',False)], 'required': [('customer', '=', True)]}" />
+						<field name="branch_id" attrs="{'invisible':[('customer','=',False)] ,'required': [('customer', '=', True)]}" />
 						<field name="demarcation_id" attrs="{'invisible':[('customer','=',False)]}" />
 						<field name="chiller" attrs="{'invisible':[('customer','=',False)]}" />
-						<field name="hamper" attrs="{'invisible':[('customer','=',False)]}" />
-						<field name="is_bank" attrs="{'invisible':[('customer','=',False)]}" />
-						<field name="is_cheque" attrs="{'invisible':[('customer','=',False)]}" />
 					</xpath>
 					<!-- <xpath expr="//field[@name='stree`t']" position="before"> <field 
 						name="address" placeholder="Address..." /> </xpath> -->
@@ -84,11 +81,6 @@
 							<field string="All Invoice" name="all_invoice_amount"
 								widget="statinfo" />
 						</button>
-						<button class="oe_inline oe_stat_button"  type="action"
-							name="%(account.action_invoice_tree)d" attrs="{'invisible': ['|',('customer', '=', False),('credit_allow','=',False)]}"
-							context="{'search_default_partner_id': active_id,'default_partner_id': active_id,'default_state':'open','default_payment':'credit'}" string="Due Invoice" 
-							icon="fa-strikethrough">
-						</button>						
 						<button class="oe_inline oe_stat_button" type="action"
 							name="%(sale.act_res_partner_2_sale_order)d" attrs="{'invisible': [('customer', '=', False)]}"
 							context="{'search_default_partner_id': active_id,'default_partner_id': active_id}"
@@ -365,6 +357,8 @@
 				<xpath expr="//group/filter[@string='Country']" position="after">
 					<filter string="Created By" icon="terp-personal" domain="[]"
 						context="{'group_by' : 'user_id'}" />
+					<filter string="Sales Team" icon="terp-personal" domain="[]"
+						context="{'group_by' : 'section_id'}" />					
 					<filter name="township" string="Township" domain="[]"
 						context="{'group_by':'township'}" />
 					<filter name="city" string="City" domain="[]"

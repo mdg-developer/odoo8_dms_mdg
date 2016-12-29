@@ -38,7 +38,7 @@
     'data': [
                 'security/account_security.xml',
                 'views/account_voucher_view.xml',
-        #        'views/account_invoice_view.xml',
+                'views/account_invoice_view.xml',
 				'views/account_journal_view.xml',
                 'wizard/account_invoice_state_view.xml',
                 ],

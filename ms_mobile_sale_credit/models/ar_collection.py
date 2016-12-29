@@ -8,10 +8,6 @@ class ar_payment(osv.osv):
                    'amount':fields.float('Paid Amount'),
                    'notes':fields.char('Payment Ref'),
                    'date':fields.date('Date'),
-                   'cheque_no':fields.char('Cheque No'),
-                   'partner_id':fields.many2one('res.partner', 'Customer'),
-                   'sale_team_id':fields.many2one('crm.case.section', 'Sale Team'),
-                   'payment_code':fields.char('Payment Code'),
         }    
     
 class mobile_ar_collection(osv.osv):

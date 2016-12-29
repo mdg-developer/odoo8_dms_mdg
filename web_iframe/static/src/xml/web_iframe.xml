@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+	
+    <div t-name="web_iframe.iframe" style="width:100%;height:100%;position:fixed;">
+        <iframe style="position: absolute; width:100%;height: 100%; border: none"/>        
+    </div>
+
+</template>

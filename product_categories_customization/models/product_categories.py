@@ -54,4 +54,13 @@ class product_category(osv.osv):
             relation='account.account',
             string="Inventory Account",
             help="When real-time inventory valuation is enabled on a product, this account will hold the current value of the products.",),
+        'code':fields.char('Code'),
     }
+    
+    def create(self,cr,uid,vals,context=None):
+        category_code = None
+        if vals:
+            category_code = self.pool.get('ir.sequence').get(cr,uid,'product.category.code')
+            vals['code'] = category_code
+            new_id = super(product_category, self).create(cr, uid, vals, context=context)
+            return new_id
