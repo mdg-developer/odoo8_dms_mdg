@@ -35,7 +35,9 @@ class sale_denomination(osv.osv):
       'trans_amount':fields.float('Grand  Total', digits_compute=dp.get_precision('Product Price')),
       'diff_amount':fields.float('Difference Amount', digits_compute=dp.get_precision('Product Price')),
       'partner_id':fields.many2one('res.partner', string='Partner'),
-
+      'discount_amount':fields.float('Discount Amount',digits_compute=dp.get_precision('Product Price')),
+      'discount_total':fields.float('Discount Total',digits_compute=dp.get_precision('Product Price')),
+        'invoice_sub_total':fields.float('Sub Total',digits_compute=dp.get_precision('Product Price'))
   }
     _defaults = {
         'date': fields.datetime.now,
@@ -54,11 +56,15 @@ class sale_denomination(osv.osv):
         ar_payment_ids = None
         bank_ids = None
         ar_bank_ids = None        
+        discount_amount=0.0
+        discount_total=0.0
+        product_amount=0.0
         if date:
             date = datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
             de_date = date.date()
             mobile_sale_obj = self.pool.get('mobile.sale.order')        
-            mobile_sale_order_obj = self.pool.get('mobile.sale.order.line') 
+            invoice_obj=self.pool.get('account.invoice')
+            invoice_line_obj=self.pool.get('account.invoice.line')
             payment_obj = self.pool.get('customer.payment')
             ar_obj = self.pool.get('ar.payment')
             if user_id:
@@ -94,18 +100,35 @@ class sale_denomination(osv.osv):
                                 'payment_type':'Credit'}
                     ar_data.append(data_id)
             if  mobile_ids:
-                line_ids = mobile_sale_order_obj.search(cr, uid, [('order_id', 'in', mobile_ids)], context=context)                        
-                order_line_ids = mobile_sale_order_obj.browse(cr, uid, line_ids, context=context)                  
-                cr.execute('select product_id,sum(product_uos_qty),sum(sub_total) from mobile_sale_order_line where id in %s group by product_id', (tuple(order_line_ids.ids),))
-                order_line = cr.fetchall()
-                for data in order_line:
-                    product = self.pool.get('product.product').browse(cr, uid, data[0], context=context)
-                    sequence = product.sequence
-                    data_id = {'product_id':data[0],
-                                      'product_uom_qty':data[1],
-                                      'sequence':sequence,
-                                      'amount':data[2]}
-                    order_line_data.append(data_id)
+                pre_mobile_ids=[]
+                discount_amount=0.0
+                product_amount=0.0
+                discount_total=0.0
+                cr.execute("select id from account_invoice where date_invoice=%s and section_id =%s and state='open' ", (de_date, team_id,))
+                mobile_ids = cr.fetchall()       
+                for data_pro in mobile_ids:
+                    pre_mobile_ids.append(data_pro[0])
+                if  pre_mobile_ids:
+                    line_ids = invoice_line_obj.search(cr, uid, [('invoice_id', 'in', tuple(pre_mobile_ids))], context=context)   
+                    order_line_ids = invoice_line_obj.browse(cr, uid, line_ids, context=context)                
+                    cr.execute(' select product_id,sum(quantity) as quantity,sum(price_subtotal) as  sub_total from account_invoice_line where id in %s group by product_id', (tuple(order_line_ids.ids),))
+                    order_line = cr.fetchall()
+                    for data in order_line:
+                        product = self.pool.get('product.product').browse(cr, uid, data[0], context=context)
+                        sequence = product.sequence
+                        product_amount+=data[2]
+                        data_id = {'product_id':data[0],
+                                          'product_uom_qty':data[1],
+                                          'sequence':sequence,
+                                          'amount':data[2]}
+                        order_line_data.append(data_id)
+                    mobile_data=invoice_obj.browse(cr, uid, tuple(pre_mobile_ids), context=context)           
+                    for mobile in mobile_data:
+                        deduct_amt= mobile.deduct_amt
+                        #amount_total= mobile.amount_untaxed
+                        #deduct_percent=mobile.additional_discount
+                        #discount_total +=  amount_total * deduct_percent
+                        discount_amount+=deduct_amt
             if  payment_ids:
                 for payment in payment_ids:
                     payment_data = payment_obj.browse(cr, uid, payment, context=context)                  
@@ -156,6 +179,9 @@ class sale_denomination(osv.osv):
                                             'denomination_cheque_line':cheque_data,
                                             'denomination_ar_line':ar_data,
                                             'denomination_bank_line':transfer_data,
+                                            'discount_amount':discount_amount,
+                                            'discount_total':0,
+                                            'invoice_sub_total':product_amount-discount_amount,
                                             } 
                 
         return value      
@@ -169,17 +195,35 @@ class sale_denomination(osv.osv):
         cheque_amount = False
         bank_amount = False
         ar_amount = False
+        discount_amount=False
+        invoice_obj=self.pool.get('account.invoice')
+        pre_mobile_ids=[]
+        date=vals['date'] 
+        team_id=vals['sale_team_id'] 
+        date = datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
+        de_date = date.date()        
+        cursor.execute("select id from account_invoice where date_invoice=%s and section_id =%s and state='open' ", (de_date, team_id,))
+        mobile_ids = cursor.fetchall()       
+        for data_pro in mobile_ids:
+            pre_mobile_ids.append(data_pro[0])
+        if  pre_mobile_ids:
+            mobile_data=invoice_obj.browse(cursor, user, tuple(pre_mobile_ids), context=context)           
+            for mobile in mobile_data:
+                deduct_amt= mobile.deduct_amt
+                #amount_total= mobile.amount_untaxed
+                #deduct_percent=mobile.additional_discount
+                #discount_total +=  amount_total * deduct_percent
+                discount_amount+=deduct_amt 
         denomination_note_line = vals['denomination_note_line']
         denomination_product_line = vals['denomination_product_line']
         denomination_cheque_line = vals['denomination_cheque_line']
         denomination_bank_line = vals['denomination_bank_line']
         denomination_ar_line = vals['denomination_ar_line']
         if denomination_product_line:
-            
             for p_data in denomination_product_line:
                 amount = p_data[2]['amount']
                 deno_amount += amount
-        vals['product_amount'] = deno_amount
+        vals['product_amount'] = deno_amount -discount_amount
         if denomination_note_line:
             for data in denomination_note_line:
                 note = data[2]['notes']
@@ -198,13 +242,15 @@ class sale_denomination(osv.osv):
             for data in denomination_ar_line:
                 amount = data[2]['amount']
                 ar_amount += amount
-        # print ' cheque_amount',cheque_amount,bank_amount
+        print ' cheque_amount',discount_amount
         vals['cheque_amount'] = cheque_amount
+        vals['discount_amount'] = discount_amount
         vals['bank_amount'] = bank_amount
         vals['ar_amount'] = ar_amount
         vals['trans_amount'] = total_amount + cheque_amount + bank_amount
-        vals['dssr_ar_amount']=ar_amount+deno_amount
-        vals['diff_amount'] = (ar_amount+deno_amount)-( total_amount + cheque_amount + bank_amount)
+        vals['dssr_ar_amount']=ar_amount+deno_amount -discount_amount
+        vals['invoice_sub_total']=deno_amount -discount_amount
+        vals['diff_amount'] = (ar_amount+deno_amount-discount_amount)-( total_amount + cheque_amount + bank_amount)
         return super(sale_denomination, self).create(cursor, user, vals, context=context)    
 sale_denomination()               
 

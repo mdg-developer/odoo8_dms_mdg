@@ -24,8 +24,8 @@
 						</group>
 
 						<notebook>
-							<page string="Product" >
-								<field name="denomination_product_line"  readonly="1">
+							<page string="Product">
+								<field name="denomination_product_line">
 									<form string="Multi Product">
 										<group>
 											<group>
@@ -38,17 +38,27 @@
 									</form>
 									<tree string="Multi Product" editable="bottom" readonly="1"
 										default_order="sequence asc">
-										<field name="product_id" />
-										<field name="product_uom_qty" />
-										<field name="amount" sum="Invoice Total" />
+										<field name="product_id" readonly="1" />
+										<field name="product_uom_qty" readonly="1" />
+										<field name="amount" sum="Invoice Total" readonly="1" />
 										<field name="sequence" invisible="1" />
 									</tree>
 								</field>
+								<group>
+									<group>
+
+									</group>
+									<group>
+									    <field name="discount_total"  readonly="1"/>
+										<field name="discount_amount"  readonly="1"/>
+										<field name="invoice_sub_total"  readonly="1"/>
+									</group>
+								</group>
 							</page>
 						</notebook>
 						<notebook>
-							<page string="AR Collection" >
-								<field name="denomination_ar_line"  readonly="1">
+							<page string="AR Collection">
+								<field name="denomination_ar_line">
 									<form string="AR Collection">
 										<field name="invoice_id" />
 										<field name="date" />
@@ -56,12 +66,12 @@
 										<field name="payment_type" />
 										<field name="amount" sum="Invoice Total" />
 									</form>
-									<tree string="AR Collection" editable="bottom" >
-										<field name="invoice_id" />
-										<field name="date" />
-										<field name="partner_id" />
-										<field name="payment_type" />
-										<field name="amount"  sum="Invoice Total" />
+									<tree string="AR Collection" editable="bottom" readonly="1">
+										<field name="invoice_id" readonly="1" />
+										<field name="date" readonly="1" />
+										<field name="partner_id" readonly="1" />
+										<field name="payment_type" readonly="1" />
+										<field name="amount" sum="Invoice Total" readonly="1" />
 									</tree>
 								</field>
 							</page>
@@ -75,15 +85,15 @@
 												<field name="notes" />
 												<field name="note_qty" style="text-align: center"
 													on_change="on_change_note_qty(notes,note_qty)" />
-												<field name="amount"  sum="Invoice Total" />
+												<field name="amount" sum="Invoice Total" />
 											</group>
 										</group>
 									</form>
 									<tree string="Notes" editable="bottom" readonly="1">
-										<field name="notes"  readonly="1"/>
+										<field name="notes" readonly="1" />
 										<field name="note_qty" style="text-align: center"
 											on_change="on_change_note_qty(notes,note_qty)" />
-										<field name="amount"  sum="Invoice Total" readonly="1"/>
+										<field name="amount" sum="Invoice Total" />
 
 									</tree>
 								</field>
@@ -92,7 +102,7 @@
 						</notebook>
 						<notebook>
 							<page string="Cheque" readonly="1">
-								<field name="denomination_cheque_line"  readonly="1">
+								<field name="denomination_cheque_line">
 									<form string="Cheque">
 										<group>
 											<group>
@@ -103,18 +113,18 @@
 											</group>
 										</group>
 									</form>
-									<tree string="Cheque" editable="bottom"  readonly="1">
-										<field name="partner_id" />
-										<field name="journal_id" string="Bank" />
-										<field name="cheque_no" />
-										<field name="amount" sum="Invoice Total" />
+									<tree string="Cheque" editable="bottom" readonly="1">
+										<field name="partner_id" readonly="1" />
+										<field name="journal_id" string="Bank" readonly="1" />
+										<field name="cheque_no" readonly="1" />
+										<field name="amount" sum="Invoice Total" readonly="1" />
 									</tree>
 								</field>
 							</page>
 						</notebook>
 						<notebook>
 							<page string="Bank" readonly="1">
-								<field name="denomination_bank_line"  readonly="1">
+								<field name="denomination_bank_line">
 									<form string="Bank">
 										<group>
 											<group>
@@ -125,9 +135,9 @@
 										</group>
 									</form>
 									<tree string="Bank" editable="bottom" readonly="1">
-										<field name="partner_id" />
-										<field name="journal_id" string="Bank" />
-										<field name="amount" sum="Invoice Total" />
+										<field name="partner_id" readonly="1" />
+										<field name="journal_id" string="Bank" readonly="1" />
+										<field name="amount" sum="Invoice Total" readonly="1" />
 									</tree>
 								</field>
 							</page>
@@ -137,14 +147,14 @@
 								<field name="note" class="oe_inline" placeholder="Note..." />
 							</group>
 							<group>
-								<field name="product_amount" readonly="1"/>
-								<field name="ar_amount"  readonly="1"/>
-								<field name="dssr_ar_amount" readonly="1"/>
-								<field name="total_amount" readonly="1"/>
-								<field name="cheque_amount" readonly="1"/>
-								<field name="bank_amount" readonly="1"/>
-								<field name="trans_amount" readonly="1"/>
-								<field name="diff_amount" readonly="1"/>
+								<field name="product_amount" readonly="1" />
+								<field name="ar_amount" readonly="1" />
+								<field name="dssr_ar_amount" readonly="1" />
+								<field name="total_amount" readonly="1" />
+								<field name="cheque_amount" readonly="1" />
+								<field name="bank_amount" readonly="1" />
+								<field name="trans_amount" readonly="1" />
+								<field name="diff_amount" readonly="1" />
 							</group>
 						</group>
 					</sheet>

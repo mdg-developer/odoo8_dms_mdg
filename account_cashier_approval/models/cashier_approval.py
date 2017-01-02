@@ -168,8 +168,8 @@ class cashier_approval(osv.osv):
     }
     _order = 'id desc'
     _defaults = {
-        'date': datetime.now(),
-        'to_date' : datetime.now(),
+        'date': fields.datetime.now,
+        'to_date' : fields.datetime.now,
         'state' : 'draft',
        
     } 

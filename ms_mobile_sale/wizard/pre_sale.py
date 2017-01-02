@@ -45,8 +45,8 @@ class pre_sale_state(osv.osv_memory):
         for mobile in mobile_id: 
             mobile_data=mobile_obj.browse(cr,uid,mobile,context=context)
             state=mobile_data.m_status
-            print 'state',state
-            if state=='draft':
+            void_flag=mobile_data.void_flag
+            if state=='draft'  and void_flag =='none':
                 mobile_obj.action_convert_presaleorder(cr, uid, [mobile], context=context)    
                                                                                          
             
