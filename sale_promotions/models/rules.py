@@ -61,10 +61,11 @@ ACTION_TYPES = [
      ('prod_multi_uom_get_x', _('Buy Multi UOM get X free')),
     ('fix_qty_on_product_code', _('FOC Products on Qty')),
     ('prod_foc_smallest_unitprice', _('FOC Products on smallest Unitprice')),
-    ('foc_any_product', _('FOC Any Products')),
+    ('foc_any_product', _('FOC Any Products by Ratio')),
 	('prod_fix_amt_disc_subtotal', _('Product Fix Amount on Sub Total')),
     ('prod_dis_double', _('Double Discount % on SubTotal')),
     ('prod_multi_get_x_by_limit', _('Buy Multi Products get X free By Limit')),
+    ('foc_any_prod_fix', _('FOC Any Product by Fix')),
 ]
 
 
@@ -1462,8 +1463,16 @@ class PromotionsRulesActions(osv.Model):
                               'arguments':"1:1;1",
                               }
                    }
-#kzo
+#kzo 
         if action_type in ['foc_any_product', ] :
+            return{
+                   'value' : {
+                              'product_code':"'product_code_x1':'product_code_x2':'product_code_x3'",
+                              'arguments':"0.00",
+                              }
+                   }    
+            
+        if action_type in ['foc_any_prod_fix', ] :
             return{
                    'value' : {
                               'product_code':"'product_code_x1':'product_code_x2':'product_code_x3'",
