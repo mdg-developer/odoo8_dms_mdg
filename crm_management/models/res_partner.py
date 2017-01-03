@@ -10,6 +10,7 @@ import openerp.addons.decimal_precision as dp
 import calendar
 from datetime import datetime
 import time
+import datetime
 from datetime import date
 from dateutil import relativedelta
 
@@ -335,18 +336,15 @@ class res_partner(osv.osv):
 
     _columns = {  
                 'customer_code':fields.char('Code', required=False,readonly = True),
-                'outlet_type': fields.many2one('outlettype.outlettype', 'Outlet Type'),
+                'outlet_type': fields.many2one('outlettype.outlettype', 'Outlet Type', required=True),
                 'temp_customer':fields.char('Contact Person'),
                 'class_id':fields.many2one('sale.class', 'Class'),
                 'frequency_id':fields.many2one('plan.frequency','Frequency',required=False),
                 'chiller':fields.boolean('Chiller'),
-		       	'hamper':fields.boolean('Hamper'),
-                'is_bank':fields.boolean('IsBank'),
-                'is_cheque':fields.boolean('IsCheque'),
                 'old_code': fields.char('Old Code'),
-                'sales_channel':fields.many2one('sale.channel', 'Sale Channel'),
+                'sales_channel':fields.many2one('sale.channel', 'Sale Channel',required=True),
                 'address':fields.char('Address'),
-                'branch_id':fields.many2one('res.branch', 'Branch'),
+                'branch_id':fields.many2one('res.branch', 'Branch',required=True),
                 'demarcation_id': fields.many2one('sale.demarcation', 'Demarcation'),
                 'mobile_customer': fields.boolean('Pending Customer', help="Check this box if this contact is a mobile customer. If it's not checked, purchase people will not see it when encoding a purchase order."),
                 # 'sale_order_count_by_week': fields.function(sale_order_count_by_week, string='# of Sales Order by week', type='integer'),
@@ -454,9 +452,9 @@ class res_partner(osv.osv):
                      A.phone,A.township,A.mobile,A.email,A.company_id,A.customer, 
                      A.customer_code,A.mobile_customer,A.shop_name ,
                      A.address,A.territory,A.village,A.branch_code,
-                     A.zip,A.state_name,A.partner_latitude,A.partner_longitude,is_consignment  from (
+                     A.zip,A.state_name,A.partner_latitude,A.partner_longitude  from (
 
-                     select RP.id,RP.name,RP.image,RP.is_company,RP.is_consignment,
+                     select RP.id,RP.name,RP.image,RP.is_company,
                      RP.image_small,RP.street,RP.street2,RP.city,RP.website,
                      RP.phone,RP.township,RP.mobile,RP.email,RP.company_id,RP.customer, 
                      RP.customer_code,RP.mobile_customer,RP.shop_name ,RP.address,RP.territory,
@@ -465,7 +463,6 @@ class res_partner(osv.osv):
                                             res_partner_sale_plan_day_rel RPS , res_partner RP ,res_country_state RS
                                             where SPD.id = RPS.sale_plan_day_id 
                                             and  RS.id = RP.state_id
-                                            and RP.active = true
                                             and RPS.res_partner_id = RP.id 
                                             and SPD.sale_team = %s
                                             union
@@ -479,7 +476,6 @@ class res_partner(osv.osv):
                                             where SPT.id = RPT.sale_plan_trip_id 
                         and RPT.res_partner_id = RP.id 
                         and  RS.id = RP.state_id
-                        and RP.active = true
                         and SPT.sale_team = %s
                         )A 
                         where A.shop_name is not null
@@ -487,6 +483,106 @@ class res_partner(osv.osv):
             ''', (section_id, section_id,))
         datas = cr.fetchall()
         cr.execute
+        return datas
+		
+    def res_partners_team(self, cr, uid, section_id, context=None, **kwargs):
+        cr.execute('''                    
+                     
+    select A.id,A.name,A.image,A.is_company, A.image_small,replace(A.street,',',';') street,replace(A.street2,',',';') street2,A.city,A.website,
+                     replace(A.phone,',',';') phone,A.township,replace(A.mobile,',',';') mobile,A.email,A.company_id,A.customer, 
+                     A.customer_code,A.mobile_customer,A.shop_name ,
+                     A.address,
+                     A.zip,A.state_name,A.partner_latitude,A.partner_longitude,null,A.image_medium,A.credit_limit,
+                     A.credit_allow,A.sales_channel,A.branch_id,A.pricelist_id,A.payment_term_id,A.outlet_type ,
+                     A.city_id,A.township_id,A.country_id,A.state_id,A.unit,A.class_id,A.chiller,A.frequency_id,A.temp_customer
+                     from (
+                     select RP.id,RP.name,'' as image,RP.is_company,null,
+                     '' as image_small,RP.street,RP.street2,RC.name as city,RP.website,
+                     RP.phone,RT.name as township,RP.mobile,RP.email,RP.company_id,RP.customer, 
+                     RP.customer_code,RP.mobile_customer,OT.name as shop_name,RP.address,RP.zip ,RP.partner_latitude,RP.partner_longitude,RS.name as state_name,
+                     substring(replace(cast(RP.image_medium as text),'/',''),1,5) as image_medium,RP.credit_limit,RP.credit_allow,
+                     RP.sales_channel,RP.branch_id,RP.pricelist_id,RP.payment_term_id,RP.outlet_type,RP.city as city_id,RP.township as township_id,
+                     RP.country_id,RP.state_id,RP.unit,RP.class_id,RP.chiller,RP.frequency_id,RP.temp_customer
+                     from outlettype_outlettype OT,
+                                             res_partner RP ,res_country_state RS, res_city RC,res_township RT
+                                            where  RS.id = RP.state_id
+                                            and RP.township =RT.id
+                                            and RP.city = RC.id
+                                            and RP.outlet_type = OT.id
+                                            and  RP.section_id = %s order by RP.name                                       
+                        )A 
+                        where A.customer_code is not null
+            ''', (section_id ,))
+        datas = cr.fetchall()
+        return datas
+
+# kzo Eidt
+    def res_partners_return_day(self, cr, uid, section_id, day_id , context=None, **kwargs):
+        cr.execute('''                    
+                     select A.id,A.name,A.image,A.is_company, A.image_small,replace(A.street,',',';') street, replace(A.street2,',',';') street2,A.city,A.website,
+                     replace(A.phone,',',';') phone,A.township, replace(A.mobile,',',';') mobile,A.email,A.company_id,A.customer, 
+                     A.customer_code,A.mobile_customer,A.shop_name ,
+                     A.address,
+                     A.zip,A.state_name,A.partner_latitude,A.partner_longitude,A.sale_plan_day_id,A.image_medium,A.credit_limit,
+                     A.credit_allow,A.sales_channel,A.branch_id,A.pricelist_id,A.payment_term_id,A.outlet_type ,
+                     A.city_id,A.township_id,A.country_id,A.state_id,A.unit,A.class_id,A.chiller,A.frequency_id,A.temp_customer
+                     from (
+                     select RP.id,RP.name,'' as image,RP.is_company,RPS.sale_plan_day_id,
+                     '' as image_small,RP.street,RP.street2,RC.name as city,RP.website,
+                     RP.phone,RT.name as township,RP.mobile,RP.email,RP.company_id,RP.customer, 
+                     RP.customer_code,RP.mobile_customer,OT.name as shop_name,RP.address,RP.zip ,RP.partner_latitude,RP.partner_longitude,RS.name as state_name,
+                     substring(replace(cast(RP.image_medium as text),'/',''),1,5) as image_medium,RP.credit_limit,RP.credit_allow,
+                     RP.sales_channel,RP.branch_id,RP.pricelist_id,RP.payment_term_id,RP.outlet_type,RP.city as city_id,RP.township as township_id,
+                     RP.country_id,RP.state_id,RP.unit,RP.class_id,RP.chiller,RP.frequency_id,RP.temp_customer
+                     from sale_plan_day SPD ,outlettype_outlettype OT,
+                                            res_partner_sale_plan_day_rel RPS , res_partner RP ,res_country_state RS, res_city RC,res_township RT
+                                            where SPD.id = RPS.sale_plan_day_id 
+                                            and  RS.id = RP.state_id
+                                            and RP.township =RT.id
+                                            and RP.city = RC.id
+                                            and RP.outlet_type = OT.id
+                                            and RPS.partner_id = RP.id 
+                                            and SPD.sale_team = %s
+                                            and RPS.sale_plan_day_id = %s                                            
+                        )A 
+                        where A.customer_code is not null
+            ''', (section_id, day_id,))
+        datas = cr.fetchall()
+        return datas
+# kzo Edit add Sale Plan Trip and Day ID
+    def res_partners_return_trip(self, cr, uid, section_id, day_id , context=None, **kwargs):
+        cr.execute('''        
+                    select A.id,A.name,A.image,A.is_company,
+                     A.image_small,replace(A.street,',',';') street,replace(A.street2,',',';') street2,A.city,A.website,
+                     replace(A.phone,',',';') phone,A.township,A.mobile,A.email,A.company_id,A.customer, 
+                     A.customer_code,A.mobile_customer,A.shop_name ,
+                     A.address,
+                     A.zip,A.state_name,A.partner_latitude,A.partner_longitude,A.sale_plan_trip_id,A.image_medium,
+                     A.credit_limit,A.credit_allow,A.sales_channel,A.branch_id,A.pricelist_id,A.payment_term_id ,A.outlet_type,
+                    A.city_id,A.township_id,A.country_id,A.state_id,A.unit,A.class_id,A.chiller,A.frequency_id,A.temp_customer
+                      from (
+                     select RP.id,RP.name,'' as image,RP.is_company,
+                     '' as image_small,RP.street,RP.street2,RC.name as city,RP.website,
+                     RP.phone,RT.name as township,RP.mobile,RP.email,RP.company_id,RP.customer, 
+                     RP.customer_code,RP.mobile_customer,OT.name as shop_name ,RP.address,RPT.sale_plan_trip_id,
+                     RP.zip ,RP.partner_latitude,RP.partner_longitude,RS.name as state_name
+                      ,substring(replace(cast(RP.image_medium as text),'/',''),1,5) as image_medium ,RP.credit_limit,RP.credit_allow,
+                     RP.sales_channel,RP.branch_id,RP.pricelist_id,RP.payment_term_id,RP.outlet_type,RP.city as city_id,RP.township as township_id,
+                     RP.country_id,RP.state_id,RP.unit,RP.class_id,RP.chiller,RP.frequency_id,RP.temp_customer
+                     from sale_plan_trip SPT , res_partner_sale_plan_trip_rel RPT , res_partner RP ,res_country_state RS ,
+                     res_city RC, res_township RT,outlettype_outlettype OT 
+                     where SPT.id = RPT.sale_plan_trip_id 
+                     and RPT.partner_id = RP.id 
+                     and  RS.id = RP.state_id
+                     and RP.outlet_type = OT.id
+                     and  RP.city = RC.id
+                     and RP.township = RT.id
+                     and SPT.sale_team = %s
+                     and RPT.sale_plan_trip_id = %s
+                        )A 
+                    where A.customer_code is not null 
+            ''', (section_id, day_id,))
+        datas = cr.fetchall()
         return datas
     
     # MMK

@@ -40,13 +40,11 @@ class SaleOrder(osv.osv):
         @param ids: ID of current record.
         @param context: Context(no direct use).
         """
-        data=True
         promotions_obj = self.pool.get('promos.rules')
         for order_id in ids:
-            data=promotions_obj.apply_promotions(cursor, user,
+            promotions_obj.apply_promotions(cursor, user,
                                             order_id, context=None)
-        if data!=True:
-            return data
+            
         return True
             
 SaleOrder()

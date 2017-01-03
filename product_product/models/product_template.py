@@ -39,6 +39,7 @@ class product_template(osv.osv):
             res.append(('product_variant_ids', 'in', ids))
         return res
     
+    
     _columns = {
                 # copy from product.py of odoo9
                 # 'default_code': fields.char('Product Code'),
@@ -68,14 +69,15 @@ class product_template(osv.osv):
                  "or any of its children.\n"
                  "Otherwise, this includes goods stored in any Stock Location "
                  "with 'internal' type."),
-                'uom_ratio':fields.char('Packing Size')
+                'uom_ratio':fields.char('Packing Size'),
+                'weight_liter': fields.float('Net Weight (Liter)', digits_compute=dp.get_precision('Stock Weight'), help="The net weight in Kg."),
+                'weight_net': fields.float('Net Weight(Viss)', digits_compute=dp.get_precision('Stock Weight'), help="The net weight in Kg."),
                 }
      
     _defaults = {
         'valuation': 'manual_periodic',
     }
-    _sql_constraints = [('default_code_uniq', 'unique(default_code)',
-                                  'Product Code should not be same to others!')
-                    ]
+    
      
 product_template()
+

@@ -11,30 +11,29 @@
 			<field name="arch" type="xml">
 				<form string="Stock Return Form">
 					<header>
-
-						<button name="received" string="Received" class="oe_highlight"
-							type="object" states="draft"
-							groups="stock.group_stock_manager,stock.group_stock_user" />
+						<button name="confirm" string="Confirm" class="oe_highlight"
+							type="object" states="draft" />
+						<button name="approve" string="Approve" class="oe_highlight"
+							type="object" states="confirm" groups="stock.group_stock_manager,stock.group_stock_user" />
+						<button name="cancel" string="Cancel" class="oe_highlight"
+							type="object" states="confirm" groups="stock.group_stock_manager,stock.group_stock_user" />
 						<field name="state" widget="statusbar" />
 					</header>
 					<sheet>
 						<group>
 							<group>
 								<field name="name" />
-								<field name="sale_team_id" attrs="{'readonly':[('state','=','received')]}"
-									on_change="on_change_sale_team_id(sale_team_id)" widget="selection" />
-								<field name="from_location" attrs="{'readonly':[('state','=','received')]}"
-									widget="selection" />
-								<field name="to_location" attrs="{'readonly':[('state','=','received')]}"
-									widget="selection" />
-								<field name="return_date" attrs="{'readonly':[('state','=','received')]}" />
-								<!-- <field name="branch_id" widget="selection" /> -->
+								<field name="sale_team_id" attrs="{'readonly':[('state','=','approve')]}"
+									on_change="on_change_sale_team_id(sale_team_id)" />
+								<field name="return_from" attrs="{'readonly':[('state','=','approve')]}" />
+								<field name="return_date" attrs="{'readonly':[('state','=','approve')]}" />
 							</group>
 							<group>
-								<field name="returner" attrs="{'readonly':[('state','=','received')]}" />
-								<field name="wh_receiver" attrs="{'readonly':[('state','=','received')]}" />
-								<field name="company_id" attrs="{'readonly':[('state','=','received')]}"
-									invisible="1" />
+								<field name="note_id" attrs="{'readonly':[('state','=','approve')]}"
+									domain="[('sale_team_id', '=',sale_team_id)]" />
+								<field name="so_no" attrs="{'readonly':[('state','=','approve')]}" />
+								<field name="vehicle_id" attrs="{'readonly':[('state','=','approve')]}" />
+								<field name="company_id" attrs="{'readonly':[('state','=','approve')]}" />
 							</group>
 						</group>
 						<group>
@@ -51,27 +50,21 @@
 							<notebook>
 								<page string="Stock List">
 									<field name="p_line" attrs="{'readonly':[('state','=','approve')]}">
-										<tree string="Stock Return Line" editable="bottom"
-											default_order="sequence asc">
-											<field name="sequence" invisible="1" />
-											<field name="product_id" attrs="{'readonly':True}" />
-											<field name="receive_quantity" string="Issued Qty"
-												attrs="{'readonly':True}" />
-											<field name="sale_quantity" string="Sales Qty" attrs="{'readonly':True}" />
-											<field name="foc_quantity" string="FOC Qty" attrs="{'readonly':True}" />
-											<!-- <field name="exchange_quantity" attrs="{'readonly':True}" 
-												/> -->
-											<field name="return_quantity_big" string="Return Qty(B)"
-												attrs="{'readonly':True}" />
-											<field name="return_quantity" string="Return Qty(S)"
-												attrs="{'readonly':True}" />
-											<field name="product_uom" invisible="1" />
+										<tree string="Stock Return Line" editable="bottom">
+											<field name="product_id" />
+											<field name="receive_quantity" />
+											<field name="return_quantity" />
+											<field name="sale_quantity" />
+											<field name="foc_quantity" />
+											<field name="product_uom" />
 											<field name="uom_ratio" invisible="1" />
 											<!-- <field name="qty_by_wh" /> -->
-											<field name="rec_big_quantity" string="Received Qty(B)" />
-											<field name="rec_small_quantity" string="Received Qty(S)" />
-											<field name="expiry_date" string="Expiry" attrs="{'readonly':True}" />
-											<field name="remark" string="Remark" />
+											<field name="rec_big_quantity" />
+											<field name="rec_big_uom_id" />
+											<field name="rec_small_quantity" />
+											<field name="rec_small_uom_id" />
+											<field name="expiry_date" />
+											<field name="remark" />
 										</tree>
 									</field>
 								</page>
@@ -96,14 +89,13 @@
 			<field name="arch" type="xml">
 				<search string="Search Stock Return">
 					<group expand="0" string="Group By...">
-						<filter string="Sales Team" icon="terp-partner" domain="[]"
+						<filter string="Sale Team" icon="terp-partner" domain="[]"
 							context="{'group_by':'sale_team_id'}" />
 						<filter string="Return From" icon="terp-partner" domain="[]"
 							context="{'group_by':'return_from'}" />
 						<filter string="Date of Return" icon="terp-partner" domain="[]"
 							context="{'group_by':'return_date'}" />
-						<filter string="Pending" domain="[('state','=','draft')]"
-							name="state_filter" />
+						<filter string="Pending" domain="[('state','=','draft')]" name="state_filter"/>
 
 					</group>
 				</search>
@@ -115,7 +107,6 @@
 			<field name="model">stock.return</field>
 			<field name="arch" type="xml">
 				<tree string="Contents">
-					<field name="sale_team_id" />
 					<field name="name" />
 					<field name="note_id" />
 					<field name="return_from" />

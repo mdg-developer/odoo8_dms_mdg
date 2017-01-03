@@ -27,7 +27,7 @@
     'description': """
 
 Request For Issue And Good Issue Note Module
-===============================
+=========================
 
     """,
     'website': 'https://www.odoo.com/page/warehouse',

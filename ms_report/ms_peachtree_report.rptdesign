@@ -55,7 +55,7 @@
                 </ex-property>
             </list-property>
             <property name="odaDriverClass">org.postgresql.Driver</property>
-            <property name="odaURL">jdbc:postgresql://localhost:5432/MDG_7_12_16</property>
+            <property name="odaURL">jdbc:postgresql://localhost:5432/MDG_UAT</property>
             <property name="odaUser">openerp</property>
             <encrypted-property name="odaPassword" encryptionID="base64">b3BlbnBncHdk</encrypted-property>
         </oda-data-source>
@@ -110,7 +110,7 @@
             </list-property>
             <xml-property name="queryText"><![CDATA[select logo_web,name
 from res_company
-]]></xml-property>
+where id=1]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -277,22 +277,16 @@ from res_company
                 <structure>
                     <property name="name">from_date</property>
                     <property name="paramName">From Date</property>
-                    <property name="nativeName"></property>
                     <property name="dataType">date</property>
-                    <property name="nativeDataType">0</property>
                     <property name="position">1</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">to_date</property>
                     <property name="paramName">To Date</property>
-                    <property name="nativeName"></property>
                     <property name="dataType">date</property>
-                    <property name="nativeDataType">0</property>
                     <property name="position">2</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -337,7 +331,7 @@ from res_company
                     <structure>
                         <property name="position">8</property>
                         <property name="name">product_uos_qty</property>
-                        <property name="dataType">integer</property>
+                        <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">9</property>
@@ -382,7 +376,7 @@ from res_company
                     <structure>
                         <property name="position">17</property>
                         <property name="name">stocking_qty</property>
-                        <property name="dataType">integer</property>
+                        <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">18</property>
@@ -494,7 +488,7 @@ from res_company
                     <property name="position">8</property>
                     <property name="name">product_uos_qty</property>
                     <property name="nativeName">product_uos_qty</property>
-                    <property name="dataType">integer</property>
+                    <property name="dataType">float</property>
                 </structure>
                 <structure>
                     <property name="position">9</property>
@@ -548,7 +542,7 @@ from res_company
                     <property name="position">17</property>
                     <property name="name">stocking_qty</property>
                     <property name="nativeName">stocking_qty</property>
-                    <property name="dataType">integer</property>
+                    <property name="dataType">float</property>
                 </structure>
                 <structure>
                     <property name="position">18</property>
@@ -624,16 +618,16 @@ from res_company
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select *,(select count(msl.id) from mobile_sale_order_line msl where msl.order_id=ms_id) as no_of_distribution,(stocking_qty*stocking_unit_price)*-1 as amount,get_msol_seq(ms_id,msl_id) as so_propo_dis
-from (select ms.id as ms_id,msl.id as msl_id,ms.name,ms.customer_code,ms.date::date,ms.due_date,msl.discount,get_smaller_qty(msl.uom_id,msl.product_uos_qty,msl.product_id) product_uos_qty,
-Cast((select case when substr(name,0,2) ~ '^([0-9]+\.?[0-9]*|\.[0-9]+)$' then substr(name,4) else name end as name from crm_case_section where id=crm.id) || '-' || pp.name_template as character varying) as product_name,term.name as payment_term,msl.price_unit,uom.name as uom,pt.description_sale description,rp.comment as internal_note,ms.name as invoice,'1518-YGN'::character varying as receivable_account,get_smaller_qty(msl.uom_id,msl.product_uos_qty,msl.product_id) stocking_qty,msl.price_unit as stocking_unit_price,
+from (select ms.id as ms_id,msl.id as msl_id,ms.name,Cast(ms.customer_code || ' ' || rp.name as character varying ) as customer_code,ms.date::date,ms.due_date,msl.discount,msl.product_uos_qty,
+Cast(crm.name || '-' || pp.name_template as character varying) as product_name,term.name as payment_term,msl.price_unit,uom.name as uom,pt.description,rp.comment as internal_note,ms.name as invoice,'1518-YGN'::character varying as receivable_account,msl.product_uos_qty as stocking_qty,msl.price_unit as stocking_unit_price,
 res.partner_id as partner_id,rp.name as ship_to_name,Cast(address || ',' || rc.name || ',' || rcs.name || ',' || city.name || ',' || town.name as character varying ) as ship_address,'Vehicle'::character varying as ship_via,'1518-YGN'::character varying as gl_account,1 as tax_type
 from mobile_sale_order ms
 left join mobile_sale_order_line msl on ms.id=msl.order_id
+left join product_uom uom on uom.id=msl.uom_id
 left join account_payment_term term on ms.payment_term=term.id
 left join crm_case_section crm on ms.sale_team=crm.id
 left join product_product pp on msl.product_id=pp.id
 left join product_template pt on pp.product_tmpl_id=pt.id
-left join product_uom uom on uom.id=pt.uom_id
 left join res_partner rp on ms.partner_id=rp.id
 left join res_country rc on rc.id=rp.country_id
 left join res_country_state rcs on rcs.id=rp.state_id
@@ -642,6 +636,7 @@ left join res_township town on town.id=rp.township
 left join res_users res on ms.user_id=res.id)A join (select id,name as saleman_name from res_partner)B on A.partner_id = B.id
 and A.date::date between ? and ?
 order by A.name,A.msl_id,A.date
+
 ]]></xml-property>
         </oda-data-set>
     </data-sets>

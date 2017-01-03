@@ -43,7 +43,6 @@
 				</field>
 				<field name="location_id" position="after">
 					<field name="issue_location_id" />
-					<field name="receiver"/>
 					<field name="analytic_account_id" />
 					<field name="van_id" invisible="1" />
 					<field name="vehicle_id" />

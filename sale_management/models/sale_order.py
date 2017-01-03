@@ -17,53 +17,9 @@ import openerp.addons.decimal_precision as dp
 class sale_order(osv.osv):
     _inherit = "sale.order"
     
-    def create(self, cr, uid, vals, context=None):
-        if context is None:
-            context = {}
-        if vals.get('name', '/') == '/':
-            vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'sale.order', context=context) or '/'
-        if vals.get('partner_id'):
-            defaults=self.onchange_partner_id(cr, uid, [], vals['partner_id'], context=context)['value']
-            vals = dict(defaults, **vals)            
-        if vals.get('partner_id') and any(f not in vals for f in ['partner_invoice_id', 'partner_shipping_id', 'pricelist_id', 'fiscal_position']):
-            defaults = self.onchange_partner_id(cr, uid, [], vals['partner_id'], context=context)['value']
-            if not vals.get('fiscal_position') and vals.get('partner_shipping_id'):
-                delivery_onchange = self.onchange_delivery_id(cr, uid, [], vals.get('company_id'), None, vals['partner_id'], vals.get('partner_shipping_id'), context=context)
-                defaults.update(delivery_onchange['value'])
-            vals = dict(defaults, **vals)
-
-        ctx = dict(context or {}, mail_create_nolog=True)
-        new_id = super(sale_order, self).create(cr, uid, vals, context=ctx)
-
-        self.message_post(cr, uid, [new_id], body=_("Quotation created"), context=ctx)
-        return new_id
-    
-    def write(self, cursor, user, ids, vals, context=None):
-        """
-        Serialise before Write
-        @param cursor: Database Cursor
-        @param user: ID of User
-        @param  ids: ID of current record.
-        @param vals: Values of current record.
-        @param context: Context(no direct use).
-        """
-        # Validate before save
-        if type(ids) in [list, tuple] and ids:
-            ids = ids[0]
-            print 'vals_sale_order',vals
-
-            if vals.get('partner_id'):
-                partner_id=vals['partner_id']
-                part = self.pool.get('res.partner').browse(cursor, user, partner_id, context=context)    
-                defaults=self.onchange_partner_id(cursor, user, [], vals['partner_id'], context=context)['value']
-                vals = dict(defaults, **vals)
-        ctx = dict(context or {}, mail_create_nolog=True)
-        new_id = super(sale_order, self).write(cursor, user, ids, vals, context=context)
-        return new_id
-        
     def is_generate_RFI(self, cr, uid, ids, context=None):
-        print 'order', ids
-        sale_obj = self.pool.get('sale.order')
+        print 'order',ids
+        sale_obj=self.pool.get('sale.order')
         sale_obj.write(cr, uid, ids, {'is_generate': False}, context=context)
         return True    
     def _invoiced(self, cursor, user, ids, name, arg, context=None):
@@ -116,8 +72,8 @@ class sale_order(osv.osv):
                     ('credit', 'Credit'),
                     ('cash', 'Cash'),
                     ('consignment', 'Consignment'),
-#                     ('advanced', 'Advanced')
-                    ], 'Payment Type', default='cash'),
+                    ('advanced', 'Advanced')
+                    ], 'Payment Type'),
                'delivery_remark':fields.selection([
                     ('partial', 'Partial'),
                     ('delivered', 'Delivered'),
@@ -134,33 +90,10 @@ class sale_order(osv.osv):
                'invoiced': fields.function(_invoiced, string='Paid',
                 fnct_search=_invoiced_search, type='boolean', help="It indicates that an invoice has been paid.", store=True),
                 'delivery_id': fields.many2one('crm.case.section', 'Delivery Team'),
-                'pre_order': fields.boolean("Pre Order" , readonly=True),
-                'is_generate':fields.boolean('RFI Generated'  , readonly=True),
-         'code':fields.char('Customer ID' , readonly=True),
-        'street': fields.char('Street' , readonly=True),
-        'street2': fields.char('Street2' , readonly=True),
-        'city': fields.many2one('res.city', 'City', ondelete='restrict' , readonly=True),
-        'state_id': fields.many2one("res.country.state", 'State', ondelete='restrict' , readonly=True),
-        'country_id': fields.many2one('res.country', 'Country', ondelete='restrict' , readonly=True),
-        'township': fields.many2one('res.township', 'Township', ondelete='restrict' , readonly=True),
-         'payment_term': fields.many2one('account.payment.term', 'Payment Term',readonly=True),
-
+                'pre_order': fields.boolean("Pre Order" ),
+                'is_generate':fields.boolean('RFI Generated'),
+                 
                }
-    
-    def on_change_payment_type(self, cr, uid, ids, partner_id,payment_type, context=None):
-        values = {}
-        print 'payment_type',payment_type
-        if payment_type =='cash':
-            payment_term= 1
-        elif payment_type =='credit':
-            partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
-            payment_term = partner.property_payment_term and partner.property_payment_term.id or False
-        else:
-            partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
-            payment_term = partner.property_payment_term and partner.property_payment_term.id or False        
-        values = {
-             'payment_term':payment_term,}
-        return {'value': values}
     
     def onchange_partner_id(self, cr, uid, ids, part, context=None):
         
@@ -172,13 +105,6 @@ class sale_order(osv.osv):
         pricelist = part.property_product_pricelist and part.property_product_pricelist.id or False
         invoice_part = self.pool.get('res.partner').browse(cr, uid, addr['invoice'], context=context)
         payment_term = invoice_part.property_payment_term and invoice_part.property_payment_term.id or False
-        if part.credit_allow == True:
-            payment_type = 'credit'
-        elif part.is_consignment == True:
-            payment_type = 'consignment'
-        else:
-            payment_type = 'cash'
-            
         dedicated_salesman = part.user_id and part.user_id.id or uid
         val = {
             'partner_invoice_id': addr['invoice'],
@@ -186,14 +112,6 @@ class sale_order(osv.osv):
             'customer_code': part.customer_code,
             'payment_term': payment_term,
             'user_id': dedicated_salesman,
-            'payment_type':payment_type,
-            'code': part.customer_code,
-            'street': part.street,
-            'street2': part.street2,
-            'city': part.city and part.city.id or False,
-            'state_id': part.state_id and part.state_id.id or False,
-            'country_id': part.country_id and part.country_id.id or False,
-            'township': part.township and part.township.id or False,
         }
         delivery_onchange = self.onchange_delivery_id(cr, uid, ids, False, part.id, addr['delivery'], False, context=context)
         val.update(delivery_onchange['value'])

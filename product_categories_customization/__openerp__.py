@@ -34,9 +34,9 @@ Product Categories
     'website': 'http://www.7thcomputing.com',
     'depends': ['base','product','account','account_anglo_saxon'
     ],
-    'data': [ 
-    		'views/product_categories_view.xml', 
-            'views/sequence.xml',       
+    'data': [
+             'views/product_categories_view.xml', 
+             'views/sequence.xml',
     ],
     'installable': True,
     'auto_install': False,

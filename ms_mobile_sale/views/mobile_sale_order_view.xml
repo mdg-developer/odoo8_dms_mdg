@@ -61,7 +61,7 @@
 								<field name="deduction_amount" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="net_amount" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="paid_amount" attrs="{'readonly':[('m_status','=','done')]}" />
-								<!--<field name="change_amount" attrs="{'readonly':[('m_status','=','done')]}" />-->
+								<field name="change_amount" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="remaining_amount" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="paid" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="void_flag" attrs="{'readonly':[('m_status','=','done')]}" />
@@ -177,7 +177,6 @@
 										<field name="journal_id" widget="selection" />
 										<field name="amount" sum="Price" />
 										<field name="notes" />
-										<field name="cheque_no"/>
 
 									</tree>
 								</field>
