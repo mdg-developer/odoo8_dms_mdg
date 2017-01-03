@@ -1,4 +1,5 @@
 from openerp.osv import fields, osv
+from openerp.tools import float_compare
 
 class account_voucher(osv.osv):
     _inherit = 'account.voucher'
@@ -24,7 +25,6 @@ class account_voucher(osv.osv):
             for l in voucher.line_cr_ids:
                 credit += l.amount - l.total_discount
                 print 'credit', credit
-                
             currency = voucher.currency_id or voucher.company_id.currency_id
             print 'currency', currency
             res[voucher.id] = currency_obj.round(cr, uid, currency, (voucher.amount - total_discount) - sign * (credit - debit))
