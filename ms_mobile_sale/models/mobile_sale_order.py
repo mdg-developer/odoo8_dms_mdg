@@ -21,6 +21,7 @@ class customer_payment(osv.osv):
    'sale_team_id':fields.many2one('crm.case.section', 'Sale Team'),
    'payment_code':fields.char('Payment Code'),
         }
+    
 class mobile_sale_order(osv.osv):
     
     _name = "mobile.sale.order"
@@ -161,7 +162,6 @@ class mobile_sale_order(osv.osv):
                         'branch_id':branch_id,
                     }
                     s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
-                    print "Create Sale Order", so['name']
                     for sol in sale_order_line:
                         if sol['so_name'] == so['name']:
                                 cursor.execute('select id From product_product where id  = %s ', (sol['product_id'],))
@@ -188,7 +188,6 @@ class mobile_sale_order(osv.osv):
                                   'uom_id':sol['uom_id']
                                 }
                                 mobile_sale_order_line_obj.create(cursor, user, mso_line_res, context=context) 
-                                print 'Create Order line', sol['so_name']                     
                     sale_order_name_list.append(so['name'])
             print 'True'
             return True       
@@ -402,6 +401,8 @@ class mobile_sale_order(osv.osv):
                         so_state = 'draft'
                     cr.execute("select company_id from res_users where id=%s", (ms_ids.user_id.id,))
                     company_id = cr.fetchone()[0]
+                    date = datetime.strptime(ms_ids.date, '%Y-%m-%d %H:%M:%S')
+                    de_date = date.date()       
                     soResult = {
                                           'date_order':ms_ids.date,
                                            'partner_id':ms_ids.partner_id.id,
@@ -427,7 +428,7 @@ class mobile_sale_order(osv.osv):
                                             'due_date':ms_ids.due_date,
                                             'so_latitude':ms_ids.mso_latitude,
                                             'so_longitude':ms_ids.mso_longitude,
-                                            # 'total_dis':additional_discount,
+                                             'additional_discount':ms_ids.additional_discount*100,
                                             'deduct_amt':ms_ids.deduction_amount,
                                             'delivery_remark':ms_ids.delivery_remark,
                                             'sale_plan_day_id':ms_ids.sale_plan_day_id.id,
@@ -493,8 +494,7 @@ class mobile_sale_order(osv.osv):
 #                             partner = partner_obj.browse(cr, uid, partner_id, context=context)
 #                             account_id=partner.property_account_receivable.id
 #                             invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)                            
-                            print 'ms_ids.branch_id.id', ms_ids.branch_id.id
-                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s where id =%s', ('cash', ms_ids.branch_id.id, ms_ids.delivery_remark, invoice_id,))                            
+                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s,date_invoice=%s where id =%s', ('cash', ms_ids.branch_id.id, ms_ids.delivery_remark,de_date, invoice_id,))                            
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             if invoice_id and ms_ids.paid == True:
                                 invlist = []
@@ -586,7 +586,7 @@ class mobile_sale_order(osv.osv):
 #                             partner = partner_obj.browse(cr, uid, partner_id, context=context)
 #                             account_id=partner.property_account_receivable.id
 #                             invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)                                    
-                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s where id =%s', ('cash', ms_ids.branch_id.id, ms_ids.delivery_remark, invoice_id,))                            
+                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s ,date_invoice =%s where id =%s', ('cash', ms_ids.branch_id.id, ms_ids.delivery_remark,de_date, invoice_id,))                            
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             if invoice_id and ms_ids.paid == True:
                                 invlist = []
@@ -655,7 +655,7 @@ class mobile_sale_order(osv.osv):
 #                             partner = partner_obj.browse(cr, uid, partner_id, context=context)
 #                             account_id=partner.property_account_receivable.id
 #                             invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)                                    
-                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s where id =%s', ('cash', ms_ids.branch_id.id, ms_ids.delivery_remark, invoice_id,))                            
+                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s,date_invoice=%s  where id =%s', ('cash', ms_ids.branch_id.id, ms_ids.delivery_remark,de_date, invoice_id,))                            
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             if invoice_id and ms_ids.paid == True:
                                 invlist = []
@@ -725,7 +725,7 @@ class mobile_sale_order(osv.osv):
 #                             partner = partner_obj.browse(cr, uid, partner_id, context=context)
 #                             account_id=partner.property_account_receivable.id
 #                             invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)                                    
-                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s where id =%s', ('credit', ms_ids.branch_id.id, ms_ids.delivery_remark, invoice_id,))                            
+                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s ,date_invoice=%s where id =%s', ('credit', ms_ids.branch_id.id, ms_ids.delivery_remark,de_date, invoice_id,))                            
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             invlist = []
                             invlist.append(invoice_id)
@@ -769,7 +769,7 @@ class mobile_sale_order(osv.osv):
 #                             partner = partner_obj.browse(cr, uid, partner_id, context=context)
 #                             account_id=partner.property_account_receivable.id
 #                             invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)                                    
-                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s where id =%s', ('credit', ms_ids.branch_id.id, ms_ids.delivery_remark, invoice_id,))                            
+                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s,date_invoice=%s  where id =%s', ('credit', ms_ids.branch_id.id, ms_ids.delivery_remark,de_date, invoice_id,))                            
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             invlist = []
                             invlist.append(invoice_id)
@@ -797,7 +797,7 @@ class mobile_sale_order(osv.osv):
 #                             partner = partner_obj.browse(cr, uid, partner_id, context=context)
 #                             account_id=partner.property_account_receivable.id
 #                             invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)                                    
-                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s where id =%s', ('credit', ms_ids.branch_id.id, ms_ids.delivery_remark, invoice_id,))                            
+                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s ,date_invoice=%s where id =%s', ('credit', ms_ids.branch_id.id, ms_ids.delivery_remark,de_date,invoice_id,))                            
                             
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             invlist = []
@@ -1195,6 +1195,7 @@ class mobile_sale_order(osv.osv):
             ar_coll_obj = self.pool.get('sales.denomination.ar.line')
             bank_transfer_obj = self.pool.get('sales.denomination.bank.line')
             ar_obj = self.pool.get('ar.payment')
+            inv_Obj=self.pool.get('account.invoice')
             invoice_obj = self.pool.get('account.invoice.line')
             ar_amount=0.0
             product_amount=0.0
@@ -1204,7 +1205,13 @@ class mobile_sale_order(osv.osv):
             dssr_ar_amount=0.0
             trans_amount=0.0
             diff_amount=0.0
-
+            discount_amount=0.0
+            discount_total=0.0
+            invoice_sub_total=0.0
+            m_discount_total=0.0
+            m_discount_amount=0.0
+            v_discount_total=0.0
+            v_discount_amount=0.0
             str = "{" + vals + "}"
             str = str.replace(":''", ":'")
             str = str.replace("'',", "',")
@@ -1230,13 +1237,13 @@ class mobile_sale_order(osv.osv):
             if history:
                 print 'hidtory', history
                 for pt in history:
-
+                    print 'dateImmmm',datetime.today().strftime('%d-%m-%Y %H:%M:%S'  )
                     deno_result = {
                         'invoice_count':pt['invoice_count'],
                         'sale_team_id':pt['sale_team_id'],
                         'company_id':pt['company_id'] ,
                         'note':pt['note'],
-                        'date':pt['date'],
+                        'date': datetime.today().strftime('%Y-%m-%d %H:%M:%S' ),
                         'tablet_id':pt['tablet_id'],
                         'user_id':pt['user_id'],
                         'denomination_note_line':False,
@@ -1248,6 +1255,9 @@ class mobile_sale_order(osv.osv):
                         'total_amount':0,
                         'diff_amount':0,
                         'product_amount':0,
+                        'discount_amount':0,
+                        'discount_total':0,
+                        'invoice_sub_total':0,
                     }
                     deno_id = history_obj.create(cursor, user, deno_result, context=context)             
                     for ptl in notes_line:
@@ -1261,6 +1271,8 @@ class mobile_sale_order(osv.osv):
                                 notes_line_obj.create(cursor, user, note_line_res, context=context)
                 de_date = pt['date']
                 user_id = pt['user_id']      
+                pre_mobile_ids=[]
+                mobile_ids=[]
                 mobile_sale_obj = self.pool.get('mobile.sale.order')        
                 mobile_sale_order_obj = self.pool.get('mobile.sale.order.line')
                 pre_sale_order_obj = self.pool.get('pre.sale.order.line')
@@ -1278,12 +1290,22 @@ class mobile_sale_order(osv.osv):
                 cursor.execute("select id from ar_payment where date=%s and sale_team_id=%s and payment_code='BNK' ", (de_date, team_id,))
                 ar_bank_ids = cursor.fetchall()                              
                 cursor.execute("select id from mobile_sale_order where due_date=%s and user_id=%s and void_flag != 'voided'", (de_date, user_id))
-                mobile_ids = cursor.fetchall()
+                m_mobile_ids = cursor.fetchall()
                 cursor.execute("select id from account_invoice where date_invoice=%s and section_id =%s and state='open' ", (de_date, team_id,))
-                pre_mobile_ids = cursor.fetchall()        
-                if  pre_mobile_ids:
+                invoice_ids = cursor.fetchall()       
+                if invoice_ids:
+                    for data_pro in invoice_ids:
+                        pre_mobile_ids.append(data_pro[0])
+                if pre_mobile_ids:
+                    invoice_data=invoice_obj.browse(cursor, user, tuple(pre_mobile_ids), context=context)           
+                    for invoice in invoice_data:
+                        deduct_amt= invoice.deduct_amt
+                        amount_total= invoice.amount_untaxed
+                        deduct_percent=invoice.additional_discount/100
+                        discount_total +=  amount_total * deduct_percent
+                        discount_amount+=deduct_amt                    
                     line_ids = invoice_obj.search(cursor, user, [('invoice_id', 'in', pre_mobile_ids)], context=context)         
-                    order_line_ids = invoice_obj.browse(cursor, user, line_ids, context=context)                
+                    order_line_ids = invoice_obj.browse(cursor, user, line_ids, context=context)         
                     cursor.execute(' select product_id,sum(quantity) as quantity,sum(price_subtotal) as  sub_total from account_invoice_line where id in %s group by product_id', (tuple(order_line_ids.ids),))
                     order_line = cursor.fetchall()
                     for data in order_line:
@@ -1296,7 +1318,17 @@ class mobile_sale_order(osv.osv):
                                           'sequence':sequence,
                                           'amount':data[2]}
                         deno_product_obj.create(cursor, user, data_id, context=context)                        
-                if  mobile_ids:
+                if  m_mobile_ids:
+                    for data_mo in m_mobile_ids:
+                        mobile_ids.append(data_mo[0])
+                    mobile_data=mobile_sale_obj.browse(cursor, user, tuple(mobile_ids), context=context)           
+                    print 'mobile_data',mobile_data
+                    for mobile in mobile_data:
+                        deduct_amt= mobile.deduction_amount
+                        amount_total= mobile.amount_total
+                        deduct_percent=mobile.additional_discount
+                        discount_total +=  amount_total * deduct_percent
+                        discount_amount+=deduct_amt                             
                     line_ids = mobile_sale_order_obj.search(cursor, user, [('order_id', 'in', mobile_ids)], context=context)                        
                     order_line_ids = mobile_sale_order_obj.browse(cursor, user, line_ids, context=context)                
                     cursor.execute('select product_id,sum(product_uos_qty),sum(sub_total) from mobile_sale_order_line where id in %s group by product_id', (tuple(order_line_ids.ids),))
@@ -1380,16 +1412,18 @@ class mobile_sale_order(osv.osv):
                             'payment_type':'Credit',
                          'denomination_ar_ids':deno_id, }
                 ar_coll_obj.create(cursor, user, data_id, context=context)
-            dssr_ar_amount=ar_amount+product_amount
+            dssr_ar_amount=ar_amount+product_amount- discount_amount-discount_total
             trans_amount= deno_amount + cheque_amount + bank_amount
-            diff_amount= (ar_amount+product_amount)-( deno_amount + cheque_amount + bank_amount)                
-            cursor.execute("update sales_denomination set product_amount=%s,ar_amount=%s,bank_amount=%s,total_amount=%s,cheque_amount=%s ,dssr_ar_amount=%s,trans_amount=%s ,diff_amount=%s where id=%s",
-                           (product_amount,ar_amount,bank_amount,deno_amount,cheque_amount,dssr_ar_amount,trans_amount,diff_amount,deno_id,))
+            diff_amount= (ar_amount+product_amount- discount_amount-discount_total)-( deno_amount + cheque_amount + bank_amount)             
+            invoice_sub_total=product_amount - discount_amount-discount_total
+            product_amount=product_amount-discount_amount-discount_total
+            print 'discount_total',discount_total,discount_amount
+            cursor.execute("update sales_denomination set product_amount=%s,discount_total=%s,discount_amount =%s,invoice_sub_total=%s,ar_amount=%s,bank_amount=%s,total_amount=%s,cheque_amount=%s ,dssr_ar_amount=%s,trans_amount=%s ,diff_amount=%s where id=%s",
+                           (product_amount,discount_total,discount_amount,invoice_sub_total,ar_amount,bank_amount,deno_amount,cheque_amount,dssr_ar_amount,trans_amount,diff_amount,deno_id,))
                         
             print 'True'
             return True       
         except Exception, e:
-            print 'False'
             return False
         
     def create_ar_collection(self, cursor, user, vals, context=None):

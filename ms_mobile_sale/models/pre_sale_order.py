@@ -210,6 +210,7 @@ class pre_sale_order(osv.osv):
                                                         'user_id':preObj_ids.user_id.id,
                                                         'section_id':preObj_ids.sale_team.id,
                                                         'deduct_amt':preObj_ids.deduction_amount,
+                                                        'additional_discount':0,
 #                                                         'client_order_ref':preObj_ids.tablet_id.name,
                                                          'state':so_state,
                                                          'payment_type':preObj_ids.type,

@@ -70,7 +70,7 @@ class sale_denomination(osv.osv):
             if user_id:
                 cr.execute("select default_section_id from res_users where id= %s ", (user_id,))
                 team_id = cr.fetchone()[0]            
-            mobile_ids = mobile_sale_obj.search(cr, uid, [('due_date', '=', de_date), ('void_flag', '!=', 'voided'), ('user_id', '=', user_id)], context=context)
+            mobile_ids = invoice_obj.search(cr, uid, [('date_invoice', '=', de_date), ('state', '=', 'open'), ('user_id', '=', user_id)], context=context)
             if team_id:
                 cr.execute("select id from customer_payment where date=%s and sale_team_id=%s and payment_code='CHEQ' ", (de_date, team_id,))
                 payment_ids = cr.fetchall()
@@ -122,13 +122,18 @@ class sale_denomination(osv.osv):
                                           'sequence':sequence,
                                           'amount':data[2]}
                         order_line_data.append(data_id)
-                    mobile_data=invoice_obj.browse(cr, uid, tuple(pre_mobile_ids), context=context)           
-                    for mobile in mobile_data:
+                    mobile_data = invoice_obj.search(cr, uid, [('id', 'in', tuple(pre_mobile_ids))], context=context)   
+                    print 'mobile_datamobile_data',mobile_data
+                    for mobile_id  in mobile_data:
+                        print 'mobilee_iddddddd',mobile_id
+                        mobile =invoice_obj.browse(cr, uid, mobile_id, context=context)
+                        print ' mobileeeeeeeeee',mobile
                         deduct_amt= mobile.deduct_amt
-                        #amount_total= mobile.amount_untaxed
-                        #deduct_percent=mobile.additional_discount
-                        #discount_total +=  amount_total * deduct_percent
+                        amount_total= mobile.amount_untaxed
+                        deduct_percent=mobile.additional_discount/100
+                        discount_total +=  amount_total * deduct_percent
                         discount_amount+=deduct_amt
+                    print 'data',
             if  payment_ids:
                 for payment in payment_ids:
                     payment_data = payment_obj.browse(cr, uid, payment, context=context)                  
@@ -180,8 +185,8 @@ class sale_denomination(osv.osv):
                                             'denomination_ar_line':ar_data,
                                             'denomination_bank_line':transfer_data,
                                             'discount_amount':discount_amount,
-                                            'discount_total':0,
-                                            'invoice_sub_total':product_amount-discount_amount,
+                                            'discount_total':discount_total,
+                                            'invoice_sub_total':product_amount-discount_amount-discount_total,
                                             } 
                 
         return value      
@@ -196,6 +201,7 @@ class sale_denomination(osv.osv):
         bank_amount = False
         ar_amount = False
         discount_amount=False
+        discount_total=0.0
         invoice_obj=self.pool.get('account.invoice')
         pre_mobile_ids=[]
         date=vals['date'] 
@@ -210,9 +216,9 @@ class sale_denomination(osv.osv):
             mobile_data=invoice_obj.browse(cursor, user, tuple(pre_mobile_ids), context=context)           
             for mobile in mobile_data:
                 deduct_amt= mobile.deduct_amt
-                #amount_total= mobile.amount_untaxed
-                #deduct_percent=mobile.additional_discount
-                #discount_total +=  amount_total * deduct_percent
+                amount_total= mobile.amount_untaxed
+                deduct_percent=mobile.additional_discount/100
+                discount_total +=  amount_total * deduct_percent
                 discount_amount+=deduct_amt 
         denomination_note_line = vals['denomination_note_line']
         denomination_product_line = vals['denomination_product_line']
@@ -223,7 +229,7 @@ class sale_denomination(osv.osv):
             for p_data in denomination_product_line:
                 amount = p_data[2]['amount']
                 deno_amount += amount
-        vals['product_amount'] = deno_amount -discount_amount
+        vals['product_amount'] = deno_amount -discount_amount-discount_total
         if denomination_note_line:
             for data in denomination_note_line:
                 note = data[2]['notes']
@@ -245,12 +251,13 @@ class sale_denomination(osv.osv):
         print ' cheque_amount',discount_amount
         vals['cheque_amount'] = cheque_amount
         vals['discount_amount'] = discount_amount
+        vals['discount_total'] = discount_total
         vals['bank_amount'] = bank_amount
         vals['ar_amount'] = ar_amount
         vals['trans_amount'] = total_amount + cheque_amount + bank_amount
-        vals['dssr_ar_amount']=ar_amount+deno_amount -discount_amount
-        vals['invoice_sub_total']=deno_amount -discount_amount
-        vals['diff_amount'] = (ar_amount+deno_amount-discount_amount)-( total_amount + cheque_amount + bank_amount)
+        vals['dssr_ar_amount']=ar_amount+deno_amount -discount_amount-discount_total
+        vals['invoice_sub_total']=deno_amount -discount_amount -discount_total
+        vals['diff_amount'] = (ar_amount+deno_amount-discount_amount-discount_total)-( total_amount + cheque_amount + bank_amount)
         return super(sale_denomination, self).create(cursor, user, vals, context=context)    
 sale_denomination()               
 
