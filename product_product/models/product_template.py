@@ -72,7 +72,11 @@ class product_template(osv.osv):
                 'uom_ratio':fields.char('Packing Size'),
                 'weight_liter': fields.float('Net Weight (Liter)', digits_compute=dp.get_precision('Stock Weight'), help="The net weight in Kg."),
                 'weight_net': fields.float('Net Weight(Viss)', digits_compute=dp.get_precision('Stock Weight'), help="The net weight in Kg."),
-                }
+                'property_whole_account_income': fields.property(
+                    type='many2one',
+                    relation='account.account',
+                    string="Whole Sale Income Account",
+                    help="This account will be used for invoices instead of the default one to value sales for the current product."),                }
      
     _defaults = {
         'valuation': 'manual_periodic',

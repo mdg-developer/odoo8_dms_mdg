@@ -8,11 +8,6 @@
 			<field name="model">product.template</field>
 			<field name="inherit_id" ref="product.product_template_only_form_view" />
 			<field name="arch" type="xml">
-				<xpath expr="//field[@name='weight_net']" position="after">
-					<field name="weight_liter" />
-				</xpath>
-				<!-- <xpath expr="//field[@name='weight_net']" position="replace"> <field 
-					name="weight_net" /> </xpath> -->
 				<!-- <xpath expr="//group[@name='inventory']" position="after"> -->
 
 				<!-- Inventory Tab --> <!-- <group name="procurement"> <group name="general"> <field name="cost_method" 
@@ -21,14 +16,15 @@
 					string="Purchase"> <field name="uom_po_id" /> </group> </group> </xpath> -->
 
 				<!-- "UOM" Tabs -->
-
 				<xpath expr="//notebook" position="inside">
 					<page name="uoms" string="UOM">
 						<field name="uom_lines">
 						</field>
 					</page>
 				</xpath>
-
+				<field name="property_account_income" position="after">
+					<field name="property_whole_account_income" />
+				</field>
 				<!-- General Information Tab -->
 				<!-- <xpath expr="//group[@name='group_standard_price']" position="after"> -->
 				<!-- <group colspan="2" name="description"> -->
@@ -44,15 +40,15 @@
 					expr="//page[@string='Accounting']/group/label[@string='Internal Category']"
 					position="before">
 					<!-- <xpath expr="//group[@name='properties']" position="before"> -->
-					<!-- <label for="division" string="Division" /> -->
-					<!-- <div> -->
-					<!-- <field name="division" colspan="3" nolabel="1" /> -->
-					<!-- </div> -->
-					<!-- <label for="product_principal_ids" string="Product Principal" /> -->
-					<!-- <div> -->
-					<!-- <field name="product_principal_ids" colspan="3" nolabel="1" /> -->
-					<!-- </div> -->
-					<label for="main_group" string="Product Principal" />
+					<label for="division" string="Division" />
+					<div>
+						<field name="division" colspan="3" nolabel="1" />
+					</div>
+					<label for="product_principal_ids" string="Product Principal" />
+					<div>
+						<field name="product_principal_ids" colspan="3" nolabel="1" />
+					</div>
+					<label for="main_group" string="Main Group" />
 					<div>
 						<field name="main_group" colspan="3" nolabel="1" />
 					</div>
@@ -80,20 +76,10 @@
 				<xpath expr="//filter[@string='Type']" position="after">
 					<filter string='Division' icon="terp-mrp" domain="[]"
 						context="{'group_by' : 'division'}" />
-					<filter string='Product Principle' icon="terp-mrp" domain="[]"
+					<filter string='Main Group' icon="terp-mrp" domain="[]"
 						context="{'group_by' : 'main_group'}" />
 					<filter string='Internal Category' icon="terp-mrp" domain="[]"
 						context="{'group_by' : 'categ_id'}" />
-				</xpath>
-			</field>
-		</record>
-		<record id="product_template_form_view_inherit" model="ir.ui.view">
-			<field name="name">product.template.search.inherit</field>
-			<field name="model">product.template</field>
-			<field name="inherit_id" ref="product.product_template_form_view" />
-			<field name="arch" type="xml">
-				<xpath expr="//field[@name='weight_net']" position="after">
-					<field name="weight_liter" />
 				</xpath>
 			</field>
 		</record>

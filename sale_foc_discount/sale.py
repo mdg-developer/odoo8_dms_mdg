@@ -162,7 +162,10 @@ class sale_order_line(osv.osv):
         if not line.invoiced:
             if not account_id:
                 if line.product_id:
-                    account_id = line.product_id.property_account_income.id
+                    if  line.order_id.pricelist_id.whole_sale==True:
+                        account_id = line.product_id.property_whole_account_income.id
+                    else:
+                        account_id = line.product_id.property_account_income.id
                     if not account_id:
                         account_id = line.product_id.categ_id.property_account_income_categ.id
                     if not account_id:

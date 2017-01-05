@@ -25,6 +25,9 @@
 						</group>
 					</group>
 				</xpath>
+				<field name="company_id" position="before">
+				    <field name="whole_sale"/>
+				</field>
 			</field>
 		</record>
 
