@@ -1297,8 +1297,9 @@ class mobile_sale_order(osv.osv):
                     for data_pro in invoice_ids:
                         pre_mobile_ids.append(data_pro[0])
                 if pre_mobile_ids:
-                    invoice_data=invoice_obj.browse(cursor, user, tuple(pre_mobile_ids), context=context)           
-                    for invoice in invoice_data:
+                    invoice_data = inv_Obj.search(cursor, user, [('id', 'in', tuple(pre_mobile_ids))], context=context)   
+                    for invoice_id in invoice_data:
+                        invoice =inv_Obj.browse(cursor, user, invoice_id, context=context)
                         deduct_amt= invoice.deduct_amt
                         amount_total= invoice.amount_untaxed
                         deduct_percent=invoice.additional_discount/100
@@ -1726,7 +1727,8 @@ class mobile_sale_order(osv.osv):
                 
                 for deli in deliver_data:       
                     print 'Miss', deli['miss'], deli
-                    so_ref_no = deli['so_refNo'].replace('\\','').replace('\\','')                 
+                    so_ref_no = deli['so_refNo'].replace('\\','').replace('\\','')          
+                    print       'so_ref_noso_ref_no',so_ref_no
                     if deli['miss'] == 't':
                         cr.execute('update sale_order set is_generate = false, due_date = %s where name=%s', (deli['due_date'], so_ref_no,))
                         cr.execute('select tb_ref_no from sale_order where name=%s',( so_ref_no,))
@@ -2131,14 +2133,6 @@ class mobile_sale_order(osv.osv):
                         so_id = data[0][0]
                     else:
                         so_id = None
-                    
-                    cursor.execute('select id from res_partner where customer_code = %s ', (ar['partner_id'],))
-                    data = cursor.fetchall()
-                    if data:
-                        parnter_id = data[0][0]
-                    else:
-                        parnter_id = None
-
                     amount = ar['amount']
                     cursor.execute("select replace(%s, ',', '')::float as amount", (amount,))
                     amount_data = cursor.fetchone()[0]
@@ -2150,7 +2144,7 @@ class mobile_sale_order(osv.osv):
                         'date':ar['date'],
                         'notes':ar['notes'],
                         'cheque_no':ar['cheque_no'],
-                        'partner_id':parnter_id,
+                        'partner_id':ar['partner_id'],
                         'sale_team_id':ar['sale_team_id'],
                         'payment_code':ar['payment_code'],
                     }
