@@ -840,7 +840,7 @@ class mobile_sale_order(osv.osv):
     def get_products_by_sale_team(self, cr, uid, section_id , context=None, **kwargs):
         cr.execute('''select  pp.id,pt.list_price , coalesce(replace(pt.description,',',';'), ' ') as description,pt.categ_id,pc.name as categ_name,pp.default_code, 
                          pt.name,substring(replace(cast(pt.image_small as text),'/',''),1,5) as image_small,pt.main_group,pt.uom_ratio,
-                         pp.product_tmpl_id,pt.is_foc
+                         pp.product_tmpl_id,pt.is_foc,pt.weight_net viss
                         from crm_case_section_product_product_rel crm_real ,
                         crm_case_section ccs ,product_template pt, product_product pp , product_category pc
                         where pp.id = crm_real.product_product_id
@@ -1905,22 +1905,34 @@ class mobile_sale_order(osv.osv):
                 rental_collection.append(r)  
             if rental_collection:
                 for ar in rental_collection:
-                    cursor.execute('select id from mobile_sale_order where name = %s ',(ar['payment_id'],))
+                    cursor.execute('select id from mobile_sale_order where name = %s ', (ar['payment_id'],))
                     data = cursor.fetchall()
                     if data:
                         so_id = data[0][0]
                     else:
                         so_id = None
-                    amount=ar['amount']
-                    cursor.execute("select replace(%s, ',', '')::float as amount",(amount,))
+                    
+                    cursor.execute('select id from res_partner where customer_code = %s ', (ar['partner_id'],))
+                    data = cursor.fetchall()
+                    if data:
+                        parnter_id = data[0][0]
+                    else:
+                        parnter_id = None
+
+                    amount = ar['amount']
+                    cursor.execute("select replace(%s, ',', '')::float as amount", (amount,))
                     amount_data = cursor.fetchone()[0]
-                    amount=amount_data
+                    amount = amount_data
                     rental_result = {                    
-                        'payment_id':so_id,                        
+                        'payment_id':so_id,
                         'journal_id':ar['journal_id'],
                         'amount':amount,
                         'date':ar['date'],
-                        'notes':ar['notes'],    
+                        'notes':ar['notes'],
+                        'cheque_no':ar['cheque_no'],
+                        'partner_id':parnter_id,
+                        'sale_team_id':ar['sale_team_id'],
+                        'payment_code':ar['payment_code'],
                     }
                     rental_obj.create(cursor, user, rental_result, context=context)
             return True

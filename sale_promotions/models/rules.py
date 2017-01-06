@@ -24,6 +24,7 @@ ATTRIBUTES = [
     ('prod_sub_total', 'Product SubTotal combination'),
     ('promo_already_exit', 'Promotion Already Applied'),
     ('cat_qty', 'Product Category Quantity combination'),
+    ('prod_viss_conbin', 'Product Viss  combination'),
 ]
 
 COMPARATORS = [
@@ -63,6 +64,7 @@ ACTION_TYPES = [
 	('prod_fix_amt_disc_subtotal', _('Product Fix Amount on Sub Total')),
     ('prod_dis_double', _('Double Discount % on SubTotal')),
     ('prod_multi_get_x_by_limit', _('Buy Multi Products get X free By Limit')),
+    ('fix_amt_on_grand_total_ratio', _('Fix Amount on Grand Total by ratio')),
 ]
 
 
@@ -778,7 +780,17 @@ class PromotionsRulesConditionsExprs(osv.Model):
                     'value':{
                              'value':"'category_code':0.00"
                              }
-                    }                   
+                    }    
+        
+        if attribute in [
+                         'prod_viss_conbin',
+                        
+                         ]:
+            return {
+                    'value':{
+                             'value':"viss_total"
+                             }
+                    }               
             
         return {}
     _columns = {
@@ -1260,6 +1272,13 @@ class PromotionsRulesActions(osv.Model):
                    'value' : {
                               'product_code':"'product_code_x1';'product_code_x2':'product_code_x'",
                               'arguments':"1:1;1",
+                              }
+                   }
+            
+        if action_type in ['fix_amt_on_grand_total_ratio', ] :
+            return{
+                   'value' : {
+                              'arguments':"1:0.00",
                               }
                    }
         # Finally if nothing works prod_dis_double
