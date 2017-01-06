@@ -8,6 +8,7 @@ class product_pricelist(osv.osv):
     _columns = {
                 'main_group_id':fields.many2one('product.maingroup', 'Main Group'),
          'branch_id':fields.many2many('res.branch', 'pricelist_branch_rel', 'pricelist_id', 'branch_id', string='Branch'),
+         'whole_sale':fields.boolean('Whole Sale'),
                
         'state': fields.selection([
             ('draft', 'Draft'),
