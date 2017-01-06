@@ -2133,6 +2133,14 @@ class mobile_sale_order(osv.osv):
                         so_id = data[0][0]
                     else:
                         so_id = None
+                    
+                    cursor.execute('select id from res_partner where customer_code = %s ', (ar['partner_id'],))
+                    data = cursor.fetchall()
+                    if data:
+                        parnter_id = data[0][0]
+                    else:
+                        parnter_id = None
+
                     amount = ar['amount']
                     cursor.execute("select replace(%s, ',', '')::float as amount", (amount,))
                     amount_data = cursor.fetchone()[0]
@@ -2144,7 +2152,7 @@ class mobile_sale_order(osv.osv):
                         'date':ar['date'],
                         'notes':ar['notes'],
                         'cheque_no':ar['cheque_no'],
-                        'partner_id':ar['partner_id'],
+                        'partner_id':parnter_id,
                         'sale_team_id':ar['sale_team_id'],
                         'payment_code':ar['payment_code'],
                     }
