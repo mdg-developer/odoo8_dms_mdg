@@ -287,7 +287,6 @@
             <list-property name="columnHints">
                 <structure>
                     <property name="columnName">result</property>
-                    <property name="analysis">measure</property>
                     <text-property name="displayName">closing_balance</text-property>
                 </structure>
             </list-property>
@@ -341,7 +340,7 @@
                     <property name="dataType">decimal</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[{call cash_report_closing(?,?,?)} ]]></xml-property>
+            <xml-property name="queryText"><![CDATA[{call calculate_closing_balance_new(?,?,?)} ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -452,7 +451,7 @@
                     <property name="dataType">decimal</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[{call calculate_opening_balance(?,?,?)} ]]></xml-property>
+            <xml-property name="queryText"><![CDATA[{call calculate_opening_balance_new(?,?,?)} ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -920,7 +919,7 @@
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="879">
+                        <data id="880">
                             <property name="fontFamily">"Arial"</property>
                             <property name="fontSize">11pt</property>
                             <property name="fontWeight">normal</property>
@@ -956,6 +955,12 @@
             </header>
             <detail>
                 <row id="834">
+                    <list-property name="visibility">
+                        <structure>
+                            <property name="format">all</property>
+                            <expression name="valueExpr" type="javascript">row["debit"]==0 &amp; row["credit"]==0</expression>
+                        </structure>
+                    </list-property>
                     <cell id="835">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1135,7 +1140,7 @@
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="876">
+                        <data id="881">
                             <property name="fontFamily">"Arial"</property>
                             <property name="fontSize">11pt</property>
                             <property name="paddingRight">3pt</property>
