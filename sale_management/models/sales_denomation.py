@@ -123,11 +123,8 @@ class sale_denomination(osv.osv):
                                           'amount':data[2]}
                         order_line_data.append(data_id)
                     mobile_data = invoice_obj.search(cr, uid, [('id', 'in', tuple(pre_mobile_ids))], context=context)   
-                    print 'mobile_datamobile_data',mobile_data
                     for mobile_id  in mobile_data:
-                        print 'mobilee_iddddddd',mobile_id
                         mobile =invoice_obj.browse(cr, uid, mobile_id, context=context)
-                        print ' mobileeeeeeeeee',mobile
                         deduct_amt= mobile.deduct_amt
                         amount_total= mobile.amount_untaxed
                         deduct_percent=mobile.additional_discount/100
