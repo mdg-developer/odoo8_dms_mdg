@@ -100,18 +100,22 @@
 									<td style="border:1pt solid;border-color:black;">
 										<span t-field="l.product_id.name" />
 									</td>
-									<td style="border:1pt solid;border-color:black;" align="right">
-										<span t-field="l.quantity" />
+									<td style="border:1pt solid;border-color:black;" align="right" >
+										<!-- <span t-field="l.quantity" /> -->
+										<span t-esc="'%.0f'% l.quantity"/>
 										<!-- <span t-field="l.uos_id" groups="product.group_uom" /> -->
 									</td>
-									<td class="text-right" style="border:1pt solid;border-color:black;">
-										<span t-field="l.price_unit" />
+									<td class="text-right" style="border:1pt solid;border-color:black;" >
+										<!-- <span t-field="l.price_unit" /> -->
+										<span t-esc="'%.0f'% l.price_unit"/>
 									</td>
 									<td class="text-right" style="border:1pt solid;border-color:black;">
-										<span t-field="l.discount_amt" />
+										<!-- <span t-field="l.discount_amt" /> -->
+										<span t-esc="'%.0f'% l.discount_amt"/>
 									</td>
-									<td class="text-right" style="border:1pt solid;border-color:black;">
-										<span t-field="l.net_total" />
+									<td class="text-right" style="border:1pt solid;border-color:black;" >
+										<!-- <span t-field="l.net_total" /> -->
+										<span t-esc="'%.0f'% l.net_total"/>
 									</td>
 								</tr>
 							</tbody>
@@ -136,8 +140,9 @@
 												<td class="text-right">
 													<span t-field="t.base" />
 												</td>
-												<td class="text-right">
-													<span t-field="t.amount" />
+												<td class="text-right" >
+													<!-- <span t-field="t.amount" /> -->
+													<span t-esc="'%.0f'% t.amount"/>
 												</td>
 											</tr>
 										</tbody>
@@ -152,7 +157,8 @@
 											သင့္ေငြ
 										</td>
 										<td class="text-right" style="border-top-color:white;padding-bottom: 2mm;">
-											<span t-field="o.amount_untaxed" />
+											<!-- <span t-field="o.amount_untaxed" /> -->
+											<span t-esc="'%.0f'% o.amount_untaxed"/>
 										</td>
 									</tr>
 									<tr class="border-black">
@@ -160,7 +166,8 @@
 											စာရင္းဖြင္.ေပးရန္က်န္ေငြ
 										</td>
 										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
-											<span t-field="o.residual" />
+											<!-- <span t-field="o.residual" /> -->
+											<span t-esc="'%.0f'% o.residual"/>
 										</td>
 									</tr> 
 									<tr class="border-black">
@@ -170,7 +177,7 @@
 										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
 											<!-- <span t-field="o.amount_total" /> -->
 											<t t-set="total" t-value="(o.amount_untaxed)+(o.residual)"/>
-											<t t-esc="total"/>
+											<t t-esc="'%.0f'%total" />
 										</td>
 									</tr>
 									<tr class="border-black">
@@ -179,7 +186,8 @@
 											</strong>								
 										</td>
 										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
-											<span t-field="o.payment_ids.debit" />
+											<!-- <span t-field="o.payment_ids.debit" /> -->
+											<span t-esc="'%.0f'% o.payment_ids.debit"/>
 										</td>
 									</tr> 
 									<tr class="border-black">
@@ -187,7 +195,8 @@
 											အေရာင္းေကာ္မရွင္ေပးေငြ
 										</td>
 										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
-											<span t-field="o.deduct_amt" />
+											<!-- <span t-field="'%.2f'% o.deduct_amt" /> -->
+											<span t-esc="'%.0f'% o.deduct_amt"/>
 										</td>
 									</tr> 
 									<tr class="border-black">
@@ -196,7 +205,7 @@
 										</td>
 										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
 											<t t-set="foo" t-value="((total)-(o.payment_ids.debit))-(o.deduct_amt)"/>
-											<t t-esc="foo"/>
+											<t t-esc="'%.0f'%foo"/>
 										</td>
 									</tr> 
 								</table>

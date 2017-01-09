@@ -52,17 +52,21 @@
 										</t>
 									</td>
 									<td style="border:1pt solid;border-color:black;" align="right">
-										<span t-field="l.quantity" />
+										<!-- <span t-field="l.quantity" /> -->
+										<span t-esc="'%.0f'% l.quantity"/>
 										<!-- <span t-field="l.uos_id" groups="product.group_uom" /> -->
 									</td>
 									<td class="text-right" style="border:1pt solid;border-color:black;">
-										<span t-field="l.price_unit" />
+										<!-- <span t-field="l.price_unit" /> -->
+										<span t-esc="'%.0f'% l.price_unit"/>
 									</td>
 									<td class="text-right" style="border:1pt solid;border-color:black;">
-										<span t-field="l.net_total" />
+										<!-- <span t-field="l.net_total" /> -->
+										<span t-esc="'%.0f'% l.net_total"/>
 									</td>
 									<td class="text-right" style="border:1pt solid;border-color:black;">
-										<span t-field="l.discount_amt" />
+										<!-- <span t-field="l.discount_amt" /> -->
+										<span t-esc="'%.0f'% l.discount_amt"/>
 									</td>
 									<td class="text-center" style="border:1pt solid;border-color:black;">
 										<t t-if="l.foc==True">
@@ -70,11 +74,12 @@
 									</td>
 									<td class="text-right" style="border:1pt solid;border-color:black;">
 										<t t-if="l.foc==True">
-											0.00
+											0
 										</t>
 
 										<t t-if="l.foc==False">
-											<span t-field="l.price_subtotal" />
+											<!-- <span t-field="l.price_subtotal" /> -->
+											<span t-esc="'%.0f'% l.price_subtotal"/>
 										</t>
 									</td>
 								</tr>
@@ -110,10 +115,12 @@
 										<span t-field="m.journal_id" />
 									</td>
 									<td style="border:1pt solid;border-color:black;">
-										<span t-field="m.debit" />
+										<!-- <span t-field="m.debit" /> -->
+										<span t-esc="'%.0f'% m.debit"/>
 									</td>
 									<td style="border:1pt solid;border-color:black;">
-										<span t-field="m.credit" />
+										<!-- <span t-field="m.credit" /> -->
+										<span t-esc="'%.0f'% m.credit"/>
 									</td>
 								</tr>
 							</tbody>
