@@ -101,7 +101,7 @@
 										<t t-esc="m_index+1" />
 									</td> 
 									<td style="border:1pt solid;border-color:black;">
-										<span t-field="m.date" />
+										<span t-field="m.date" t-field-options='{"format": "dd/MM/y"}'/>
 									</td>
 									<td style="border:1pt solid;border-color:black;">
 										<span t-field="m.ref" />

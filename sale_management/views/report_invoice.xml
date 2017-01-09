@@ -30,7 +30,7 @@
 								<td >
 									<b>Date</b>
 									<b>-</b>
-									<span t-field="o.date_invoice"/>
+									<span t-field="o.date_invoice" t-field-options='{"format": "dd/MM/y"}'/>
 								</td>
 							</tr>
 
