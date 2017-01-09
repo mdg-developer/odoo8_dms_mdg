@@ -55,6 +55,7 @@ Sale Management
         'views/sale_promotion_monthly_view.xml',
         'views/sale_target_view.xml',
 		'views/payment_report.xml',
+		'views/report.xml,
     ],
     'installable': True,
     'auto_install': False,
