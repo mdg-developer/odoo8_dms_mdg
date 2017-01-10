@@ -64,6 +64,7 @@
 
 				<xpath expr="//field[@name='default_code']" position="after">
 					<field name="uom_ratio" />
+					<field name="sequence" />
 				</xpath>
 			</field>
 		</record>

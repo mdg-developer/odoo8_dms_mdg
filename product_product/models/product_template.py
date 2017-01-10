@@ -76,7 +76,9 @@ class product_template(osv.osv):
                     type='many2one',
                     relation='account.account',
                     string="Whole Sale Income Account",
-                    help="This account will be used for invoices instead of the default one to value sales for the current product."),                }
+                    help="This account will be used for invoices instead of the default one to value sales for the current product."),          
+                'sequence': fields.related('product_variant_ids', 'sequence', type='integer', string='Sequence', required=True),
+                      }
      
     _defaults = {
         'valuation': 'manual_periodic',
