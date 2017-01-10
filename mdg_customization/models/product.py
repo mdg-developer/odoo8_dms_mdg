@@ -4,9 +4,11 @@ from openerp.osv.fields import _column
 class product_product(osv.osv):
     _inherit = 'product.product'
     _columns = {
-        'default_code' : fields.char('Internal Reference', select=True, required=True),
+        'default_code' : fields.char('Internal Reference', select=True),
         }
-
+    _sql_constraints = [('default_code_uniq', 'unique(default_code)',
+                                  'Product Code should not be same to others!')
+                    ]
 class product_template(osv.osv):
     _inherit = 'product.template'
     _columns = {
@@ -26,7 +28,9 @@ class product_template(osv.osv):
         'big_uom_id': _get_uom_id,
        
     }
-    
+    _sql_constraints = [('default_code_uniq', 'unique(default_code)',
+                                  'Product Code should not be same to others!')
+                    ]    
 class product_pricelist(osv.osv):
     _inherit = 'product.pricelist'
 product_pricelist()       
