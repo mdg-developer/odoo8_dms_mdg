@@ -7,7 +7,8 @@ class res_code(osv.osv):
                'township_id':fields.many2one('res.township', string='Township'),
                'sale_channel_id':fields.many2one('sale.channel', string='Channel'),
                'nextnumber':fields.integer(string='Next Number'),
-               'padding':fields.integer(string='Padding')
+               'padding':fields.integer(string='Padding'),
+               'is_flag':fields.char(string='Is Flag'),
                }
     
     def generateCode(self, cr, uid, ids, context=None):
@@ -19,16 +20,23 @@ class res_code(osv.osv):
                 sale_channel = obj.sale_channel_id.code
                 nextNumber = obj.nextnumber
                 padding = obj.padding
+                is_flag=obj.is_flag
                 code = None
-                if city and township and sale_channel and nextNumber and padding:
-                    code = city + '-' + township + '-' + sale_channel
+#                if city and township and sale_channel and nextNumber and padding:
+                if city and nextNumber and padding:
+#                    code = city + '-' + township + '-' + sale_channel
+                    code = city
                     result = None
                     while(len(str(nextNumber)) <= padding - 1):
                         nextNumber = '0' + str(nextNumber)
                         result = nextNumber
                     if len(str(nextNumber)) > padding - 1:
                         result = str(nextNumber)
-                    code = code + '-' + result
+                    print 'is_flag',is_flag
+                    if is_flag == 'supplier':
+                        code = code + '-' + 'S' +'-' +result
+                    else:
+                        code = code + '-' + result
                     updateNumber = obj.nextnumber + 1
                     self.write(cr, uid, ids, {'nextnumber':updateNumber}, context=context)
         return code

@@ -585,7 +585,6 @@ class res_partner(osv.osv):
         datas = cr.fetchall()
         return datas
     
-    # MMK
     def generate_customercode(self, cr, uid, ids, val, context=None):
             codeObj = self.pool.get('res.code')
             cityId = townshipId = channelId = codeId = code = None
@@ -596,18 +595,25 @@ class res_partner(osv.osv):
                         cityId = resVal.city
                         townshipId = resVal.township
                         channelId = resVal.sales_channel
-                        if cityId and townshipId and channelId:
-                            codeId = codeObj.search(cr, uid, [('city_id', '=', cityId.id), ('township_id', '=', townshipId.id), ('sale_channel_id', '=', channelId.id)])
+                        customer=resVal.customer
+                        supplier=resVal.supplier
+                        if customer is True:
+                            is_flag='customer'
+                        if supplier is True:
+                            is_flag='supplier'
+                        if cityId:
+                            codeId = codeObj.search(cr, uid, [('city_id', '=', cityId.id),('is_flag', '=', is_flag)])
                             if codeId:
                                 code = codeObj.generateCode(cr, uid, codeId[0], context=context)
                             else:
-                                codeResult = {'city_id':cityId.id, 'township_id':townshipId.id, 'sale_channel_id':channelId.id, 'nextnumber':1, 'padding':6}
+                                codeResult = {'city_id':cityId.id, 'nextnumber':1, 'padding':4,'is_flag':is_flag}
                                 codeId = codeObj.create(cr, uid, codeResult, context=context)
                                 code = codeObj.generateCode(cr, uid, codeId, context=context)
                 if code:
                     from datetime import datetime
                     self.write(cr, uid, ids, {'customer_code':code,'date_partnership':datetime.now().date(),'mobile_customer':False}, context=context)
             return True
+			
 res_partner()
 class res_partner_asset(osv.Model):
 
