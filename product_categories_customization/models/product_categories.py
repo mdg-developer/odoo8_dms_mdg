@@ -25,12 +25,15 @@ class product_category(osv.osv):
     _inherit = "product.category"
     _columns = {
         'code':fields.char('Code'),
-    }
-    
-    def create(self,cr,uid,vals,context=None):
+        'property_whole_account_income_categ': fields.property(
+                    type='many2one',
+                    relation='account.account',
+                    string="Whole Sale Income Account",
+                    help="This account will be used for invoices instead of the default one to value sales for the current product."), }
+    def create(self, cr, uid, vals, context=None):
         category_code = None
         if vals:
-            category_code = self.pool.get('ir.sequence').get(cr,uid,'product.category.code')
+            category_code = self.pool.get('ir.sequence').get(cr, uid, 'product.category.code')
             vals['code'] = category_code
             new_id = super(product_category, self).create(cr, uid, vals, context=context)
             return new_id

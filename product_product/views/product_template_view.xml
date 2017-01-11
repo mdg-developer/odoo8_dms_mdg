@@ -22,9 +22,7 @@
 						</field>
 					</page>
 				</xpath>
-				<field name="property_account_income" position="after">
-					<field name="property_whole_account_income" />
-				</field>
+
 				<!-- General Information Tab -->
 				<!-- <xpath expr="//group[@name='group_standard_price']" position="after"> -->
 				<!-- <group colspan="2" name="description"> -->
