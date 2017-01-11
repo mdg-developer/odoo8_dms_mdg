@@ -13,6 +13,11 @@
 			<field name="implied_ids" eval="[(4, ref('base.group_cashier_create'))]" />
 		</record>
 
+		<record id="base.group_allow_active" model="res.groups">
+			<field name="name">Allow To Active</field>
+			<field name="category_id" ref="base.module_category_sales_management" />
+			<field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+		</record>
 
 	</data>
 </openerp>
