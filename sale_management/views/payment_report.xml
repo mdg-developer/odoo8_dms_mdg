@@ -29,7 +29,7 @@
 
 						<table class="table table-condensed" style="border:1pt solid;">
 							<thead >
-								<tr style="background-color:#0052cc;color:#ffffff;" height="10pt;">
+								<tr height="10pt;">
 									<th class="text-center" style="border:1pt solid;border-color:black;">Product
 									</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th>
@@ -89,7 +89,7 @@
 						<table class="table table-condensed" style="border:1pt solid;">
 							<thead >
 								<h5>Payments:</h5>
-								<tr style="background-color:#0052cc;color:#ffffff;" height="10pt;">
+								<tr height="10pt;">
 									<th class="text-center" style="border:1pt solid;border-color:black;">Sr.No
 									</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Payment Date 
@@ -175,7 +175,7 @@
 							<strong>Fiscal Position Remark:</strong>
 							<span t-field="o.fiscal_position.note" />
 						</p>
-						<div class="row" style="padding-top:-2s0pt;margin-top:20pt;">
+						<!-- <div class="row" style="padding-top:-2s0pt;margin-top:20pt;">
 							<div class="col-xs-12">
 
 								<table class="table" style='border:solid;border-color:white;'>
@@ -196,7 +196,7 @@
 									</tr>
 								</table>
 							</div>
-						</div>
+						</div> -->
 					</div>
 				</t>
 			</xpath>

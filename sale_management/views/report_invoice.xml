@@ -8,6 +8,13 @@
 					<div class="page" style="font-size:10pt;">
 						<div class="row" style="padding-top:-2s0pt;">
 							<center>
+								<img src="/sale_management/static/description/Header.png"
+									style="max-height: 250pt;width:500px;" />
+							</center>
+							
+						</div>
+						<div class="row" style="padding-top:-2s0pt;">
+							<center>
 							<span style="align:center;font-size:20pt;">INVOICE
 								</span>
 							</center>
@@ -20,7 +27,11 @@
 							style='border:solid;border-color:white;margin-top:-20pt;'>
 							<tr style='border:solid;border-color:white;'>
 								<td>
-									<b>၀ယ္သူအမည္</b>
+									<!-- <b>၀ယ္သူအမည္</b> -->
+									<span>
+										<img src="/sale_management/static/description/2.png"
+												style="max-height: 50pt;width:90px;" />
+									</span>
 									<b>-</b>
 									<span t-field="o.partner_id.name" />
 								</td>
@@ -36,7 +47,11 @@
 
 							<tr style='border:solid;border-color:white;'>
 								<td>
-									<b>၀ယ္သူနံပါတ္</b>
+									<!-- <b>၀ယ္သူနံပါတ္</b> -->
+									<span>
+										<img src="/sale_management/static/description/3.png"
+												style="max-height: 35pt;width:90px;" />
+									</span>
 									<b>-</b>
 									<span t-field="o.partner_id.customer_code" />
 								</td>
@@ -52,7 +67,11 @@
 							</tr>
 							<tr style='border:solid;border-color:white;'>
 								<td>
-									<b>လိပ္ စာ </b>
+									<!-- <b>လိပ္ စာ </b> -->
+									<span>
+										<img src="/sale_management/static/description/4.png"
+												style="max-height: 15pt;width:45px;" />
+									</span>
 									<b>-</b>
 									<span t-field="o.partner_id.street" />
 								</td>
@@ -74,22 +93,50 @@
 								<td>
 									<b>Deliver No.</b>
 									<b>-</b>
-									<span t-field="o.origin" />
+									<span t-field="o.do_no" />
 								</td>
 							</tr>
 						</table>
 
 						<table class="table table-condensed" style="border:1pt solid;">
 							<thead>
-								<tr style="background-color:#0052cc;color:#ffffff;" height="10pt;">
-									<th class="text-center" style="border:1pt solid;border-color:black;">စဥ္
+								<tr height="10pt;">
+									<th class="text-center" style="border:1pt solid;border-color:black;">
+										<span>
+											<img src="/sale_management/static/description/5.png"
+													style="max-height: 25pt;width:40px;" />
+										</span>
 									</th>
-									<th class="text-center" style="border:1pt solid;border-color:black;">အမ်ိဳးအမည္
+									<th class="text-center" style="border:1pt solid;border-color:black;">
+										<strong>
+											<img src="/sale_management/static/description/6.png"
+													style="max-height: 85pt;width:120px;" />
+										</strong>
 									</th>
-									<th class="text-center" style="border:1pt solid;border-color:black;">အေရအတြက္</th>
-									<th class="text-center" style="border:1pt solid;border-color:black;">ႏႈန္း</th>
-									<th class="text-center" style="border:1pt solid;border-color:black;">ေလ်ာ.ေငြ</th>
-									<th class="text-center" style="border:1pt solid;border-color:black;">သင့္ေငြ</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">
+										<strong>
+											<img src="/sale_management/static/description/7.png"
+													style="max-height: 85pt;width:122px;" />
+										</strong>
+									</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">
+										<span>
+											<img src="/sale_management/static/description/8.png"
+													style="max-height: 25pt;width:40px;" />
+										</span>
+									</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">
+										<strong>
+											<img src="/sale_management/static/description/9.png"
+													style="max-height: 50pt;width:80px;" />
+										</strong>
+									</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">
+										<span>
+											<img src="/sale_management/static/description/10.png"
+													style="max-height: 35pt;width:70px;" />
+										</span>
+									</th>
 								</tr>
 							</thead>
 							<tbody class="invoice_tbody">
@@ -154,7 +201,10 @@
 								<table class="table">
 									<tr>
 										<td style="border-top-color:white;padding-bottom: 2mm;">
-											သင့္ေငြ
+											<span>
+												<img src="/sale_management/static/description/10.png"
+														style="max-height: 25pt;width:60px;" />
+											</span>
 										</td>
 										<td class="text-right" style="border-top-color:white;padding-bottom: 2mm;">
 											<!-- <span t-field="o.amount_untaxed" /> -->
@@ -163,7 +213,10 @@
 									</tr>
 									<tr class="border-black">
 										<td style="padding-top: 2mm;padding-bottom: 2mm;">
-											စာရင္းဖြင္.ေပးရန္က်န္ေငြ
+											<span>
+												<img src="/sale_management/static/description/11.png"
+														style="max-height: 250pt;width:200px;" />
+											</span>
 										</td>
 										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
 											<!-- <span t-field="o.residual" /> -->
@@ -172,7 +225,10 @@
 									</tr> 
 									<tr class="border-black">
 										<td style="padding-top: 2mm;padding-bottom: 2mm;">
-											စုစုေပါင္း၀ယ္ယူေငြ
+											<span>
+												<img src="/sale_management/static/description/12.png"
+														style="max-height: 150pt;width:150px;" />
+											</span>
 										</td>
 										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
 											<!-- <span t-field="o.amount_total" /> -->
@@ -182,8 +238,10 @@
 									</tr>
 									<tr class="border-black">
 										<td style="padding-top: 2mm;padding-bottom: 2mm;">
-											<strong>ေပးေခ်ေငြ
-											</strong>								
+											<span>
+												<img src="/sale_management/static/description/13.png"
+														style="max-height: 55pt;width:80px;" />
+											</span>
 										</td>
 										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
 											<!-- <span t-field="o.payment_ids.debit" /> -->
@@ -192,7 +250,10 @@
 									</tr> 
 									<tr class="border-black">
 										<td style="padding-top: 2mm;padding-bottom: 2mm;">
-											အေရာင္းေကာ္မရွင္ေပးေငြ
+											<span>
+												<img src="/sale_management/static/description/14.png"
+														style="max-height: 300pt;width:200px;" />
+											</span>
 										</td>
 										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
 											<!-- <span t-field="'%.2f'% o.deduct_amt" /> -->
@@ -201,7 +262,10 @@
 									</tr> 
 									<tr class="border-black">
 										<td style="padding-top: 2mm;padding-bottom: 2mm;">
-											စုစုေပါင္းေပးရန္က်န္ေငြ
+											<span>
+												<img src="/sale_management/static/description/15.png"
+														style="max-height: 330pt;width:180px;" />
+											</span>
 										</td>
 										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
 											<t t-set="foo" t-value="((total)-(o.payment_ids.debit))-(o.deduct_amt)"/>
@@ -234,7 +298,10 @@
 									<tr style='border:solid;border-color:white;'>
 										<td style="margin-top:-10pt;" align="center">
 											<span>
-												(၀ယ္ယူသူ)
+												<span>
+													<img src="/sale_management/static/description/16.png"
+															style="max-height: 90pt;width:90px;" />
+												</span>
 											</span>
 										</td>
 									</tr>
@@ -253,7 +320,10 @@
 									<tr style='border:solid;border-color:white;'>
 										<td style="margin-top:-10pt;" align="center">
 											<span>
-												(အေရာင္းတာ၀န္ခံ)
+												<span>
+													<img src="/sale_management/static/description/17.png"
+															style="max-height: 160pt;width:140px;" />
+												</span>
 											</span>
 										</td>
 									</tr>
@@ -270,7 +340,7 @@
 							<strong>Fiscal Position Remark:</strong>
 							<span t-field="o.fiscal_position.note" />
 						</p>
-						<div class="row" style="padding-top:-2s0pt;margin-top:20pt;">
+						<!-- <div class="row" style="padding-top:-2s0pt;margin-top:20pt;">
 							<div class="col-xs-12">
 
 								<table class="table" style='border:solid;border-color:white;'>
@@ -291,7 +361,7 @@
 									</tr>
 								</table>
 							</div>
-						</div>
+						</div> -->
 					</div>
 				</t>
 			</xpath>
