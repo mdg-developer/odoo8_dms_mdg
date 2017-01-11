@@ -11,7 +11,7 @@
 
 						<button name="confirm_" string="Confirm" type="object"
 							class="oe_highlight" attrs="{'invisible':[('state','not in',('draft'))]}" />
-						<button name="cashier_approve" string="Cashier Approve"
+						<button name="cashier_approve" string="Cash Receive"
 							type="object" class="oe_highlight" 
 							attrs="{'invisible':[('state','not in',('pending'))]}" />
 						<button name="set_to_draft" string="Set to draft" type="object"
