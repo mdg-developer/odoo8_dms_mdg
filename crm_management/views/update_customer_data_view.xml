@@ -25,7 +25,14 @@
 							<field name="name" />
 							<field name="demarcation_id" />
 							<field name="frequency_id" />
-							<field name="chiller" />
+							<group>
+								<field name="chiller_true" />
+								<field name="chiller_false" />
+							</group>
+							<group>
+								<field name="hamper_true" />
+								<field name="hamper_false" />
+							</group>
 						</group>
 					</group>
 				</form>
@@ -43,7 +50,6 @@
 					<field name="class_id" />
 					<field name="demarcation_id" />
 					<field name="frequency_id" />
-					<field name="chiller" />
 				</tree>
 			</field>
 		</record>

@@ -14,7 +14,7 @@
 								<field name="sale_team_id" on_change="on_change_sale_team_id(sale_team_id)" />
 								<field name="date" />
 								<field name="branch_id" />
-								<field name="company_id"/>
+								<field name="company_id" />
 							</group>
 							<group>
 								<field name="name" />
@@ -143,41 +143,24 @@
 
 
 		<!-- Sale Target Analysis -->
-
 		<record id="view_sale_target_graph" model="ir.ui.view">
-			<field name="name">sale.target.graph</field>
+			<field name="name">sale.target.report.graph</field>
 			<field name="model">sale.target.report</field>
 			<field name="arch" type="xml">
 				<graph string="Sale Target Analysis" type="pivot" stacked="True">
 					<field name="product_id" type="row" />
-					<field name="sale_team_id" type="col" />
-					<field name="product_uom_qty" type="measure" />
+					<field name="date" interval="month" type="col" />
 					<field name="amount_total" type="measure" />
 				</graph>
 			</field>
 		</record>
-
-		<record id="filter_sale_target" model="ir.filters">
-			<field name="name">By SaleTeam</field>
-			<field name="model_id">sale.target.report</field>
-			<field name="user_id" eval="False" />
-			<field name="context">{'group_by': ['product_id]}</field>
-		</record>
+		
 
 		<record id="view_sale_target_search" model="ir.ui.view">
 			<field name="name">sale.team.search</field>
 			<field name="model">sale.target.report</field>
 			<field name="arch" type="xml">
 				<search string="Sale Target Analysis">
-					<field name="date" />
-					<filter string="This Year" name="year" invisible="1"
-						domain="[('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]" />
-					<separator />
-					<field name="sale_team_id" />
-					<group expand="0" string="Extended Filters">
-						<field name="product_uom_qty" />
-						<field name="amount_total" />
-					</group>
 					<group expand="1" string="Group By">
 						<filter string="Product" name="Product" context="{'group_by':'product_id'}" />
 						<filter string="Sale Team" name="Sale Team"

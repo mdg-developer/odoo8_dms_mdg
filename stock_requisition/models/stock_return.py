@@ -228,9 +228,16 @@ class stock_return(osv.osv):
     }     
     
     def create(self, cursor, user, vals, context=None):
+        if vals['sale_team_id']:
+            sale_team_id=vals['sale_team_id']
+            sale_team = self.pool.get('crm.case.section').browse(cursor, user, sale_team_id, context=context)
+            to_location_id = sale_team.issue_location_id.id            
+            from_location_id=sale_team.location_id.id
         id_code = self.pool.get('ir.sequence').get(cursor, user,
                                                 'stock.return.code') or '/'
         vals['name'] = id_code
+        vals['to_location'] = to_location_id
+        vals['from_location'] = from_location_id        
         return super(stock_return, self).create(cursor, user, vals, context=context)
     
     def confirm(self, cr, uid, ids, context=None):        

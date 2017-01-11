@@ -16,15 +16,15 @@ class product_template(osv.osv):
                 "outgoing_qty": sum([p.outgoing_qty for p in product.product_variant_ids]),
             }
         return res
+    
     def _search_product_quantity(self, cr, uid, obj, name, domain, context):
         prod = self.pool.get("product.product")
         res = []
         for field, operator, value in domain:
             # to prevent sql injections
             assert field in ('qty_available', 'virtual_available', 'incoming_qty', 'outgoing_qty'), 'Invalid domain left operand'
-            assert operator in ('<', '>', '=', '<=', '>='), 'Invalid domain operator'
+            assert operator in ('<', '>', '=', '!=', '<=', '>='), 'Invalid domain operator'
             assert isinstance(value, (float, int)), 'Invalid domain right operand'
-
             if operator == '=':
                 operator = '=='
 
@@ -41,7 +41,7 @@ class product_template(osv.osv):
     
     _columns = {
                 # copy from product.py of odoo9
-                # 'default_code': fields.char('Product Code'),
+                'default_code': fields.related('product_variant_ids', 'default_code', type='char', string='Internal Reference'),
                 # new column add
                 'product_principal_ids':fields.many2one('product.principal', 'Product Principal'),
                 #################
@@ -68,7 +68,9 @@ class product_template(osv.osv):
                  "or any of its children.\n"
                  "Otherwise, this includes goods stored in any Stock Location "
                  "with 'internal' type."),
-                'uom_ratio':fields.char('Packing Size')
+                'uom_ratio':fields.char('Packing Size'),
+        'categ_id': fields.many2one('product.category','Product Category', required=True, change_default=True, domain="[('type','=','normal')]" ,help="Select category for the current product"),
+         'sequence': fields.related('product_variant_ids', 'sequence', type='integer', string='Sequence', required=True),
                 }
      
     _defaults = {

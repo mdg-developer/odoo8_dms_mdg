@@ -1,204 +1,198 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-	<data>
-		<template id="report_good_issue_note_document">
-			<t t-call="report.external_layout">
-				<div class="page">
-					<div class="row">
-						<div class="col-xs-5 col-xs-offset-7">
-							<address t-field="o.partner_id"
-								t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' />
-							<span t-field="o.partner_id.vat" />
-						</div>
-					</div>
+<data>
+<template id="report_good_issue_note_document">
+    <t t-call="report.external_layout">
+        <div class="page">
+            <div class="row">
+                <div class="col-xs-5 col-xs-offset-7">
+                    <address t-field="o.partner_id"
+                        t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' />
+                    <span t-field="o.partner_id.vat"/>
+                </div>
+            </div>
 
-					<h2>
-						<p>Good Issue Note</p>
-					</h2>
+            <h2>
+                <p>Good Issue Note</p>
+            </h2>
+            
+            <table class="table table-condensed">
+                  <tr >
+                      <td style="border:0pt;font-size:10pt;">
+                      	<strong>GIN Ref:</strong>
+                      </td>
+                      <td style="border:0pt;font-size:10pt;">
+                          <strong t-field="o.name"></strong>
+                      </td>
+                      
+                      <td style="border:0pt;font-size:10pt;">
+                      	<strong>RFI Ref:</strong>
+                      </td>
+                      <td style="border:0pt;font-size:10pt;">
+					  	 <strong t-field="o.request_id"/>
+					  </td>
+                  </tr>
+                  
+                  <tr >
+                      <td style="border:0pt;font-size:10pt;">
+                      	<strong>Delivery Team:</strong>
+                      </td>
+                      <td style="border:0pt;font-size:10pt;">
+					  	 <span t-field="o.sale_team_id"/>
+					  </td>
+                      
+                      <td style="border:0pt;font-size:10pt;">
+                      	<strong>Request Warehouse:</strong>
+                      </td>
+                      <td style="border:0pt;font-size:10pt;">
+                          <span t-field="o.from_location_id.location_id.name"/>
+						  <b>/</b>
+						  <span t-field="o.from_location_id.name"/>
+                      </td>
+                  </tr>
+                  
+                  <tr >
+                      <td style="border:0pt;font-size:10pt;">
+                      	<strong>Requesting Location:</strong>
+                      </td>
+                      <td style="border:0pt;font-size:10pt;">
+					  	 <span t-field="o.to_location_id.location_id.name"/>
+						 <b>/</b>
+						 <span t-field="o.to_location_id.name"/>
+					  </td>
+					  
+					  <td style="border:0pt;font-size:10pt;">
+                      	<strong>Branch:</strong>
+                      </td>
+                      <td style="border:0pt;font-size:10pt;">
+                          <span t-field="o.branch_id"/>
+                      </td>
+                  </tr>
+                  
+                   <tr >
+                      <td style="border:0pt;font-size:10pt;">
+                          <strong>Requested By:</strong>
+                      </td>
+                      <td style="border:0pt;font-size:10pt;">
+					  	 <span t-field="o.request_by"/>
+					  </td>
+					  
+					  <td style="border:0pt;font-size:10pt;">
+                          <strong>Approved By:</strong>
+                      </td>
+                      <td style="border:0pt;font-size:10pt;">
+					  	 <span t-field="o.approve_by"/>
+					  </td>
+                  </tr>
+                  
+                  <tr >
+                      <td style="border:0pt;font-size:10pt;">
+                      	<strong>Date for Issue:</strong>
+                      </td>
+                      <td style="border:0pt;font-size:10pt;">
+                          <span t-field="o.issue_date"/>
+                      </td>
+                      
+                      <td style="border:0pt;font-size:10pt;">
+                          <strong>Issuer:</strong>
+                      </td>
+                      <td style="border:0pt;font-size:10pt;">
+					  	 <span t-field="o.issue_by"/>
+					  </td>
+                  </tr>
+                  
+                  <tr >
+                  	  <td style="border:0pt;font-size:10pt;">
+                      </td>
+                      <td style="border:0pt;font-size:10pt;">
+                      </td>
+                      <td style="border:0pt;font-size:10pt;">
+                          <strong>Receiver:</strong>
+                      </td>
+                      <td style="border:0pt;font-size:10pt;">
+					  	 <span t-field="o.receiver"/>
+					  </td>
+                  </tr>
+            </table>
+            
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Qty(B/S)</th>
+                        <th>Batch No</th>
+                        <th>Expiry</th>
+                        <th class="text-center">Qty on Hand(S)</th>
+                         <th>Remark</th>
+                    </tr>
+                </thead>
+                <tbody class="invoice_tbody">
+                    <tr t-foreach="o.p_line" t-as="l">
+                        <td><span t-field="l.product_id"/></td>
+                        <td >
+                            <span t-field="l.big_issue_quantity"/> /  <span t-field="l.issue_quantity"/>
+                        </td>
+                        <td>
+                            <span t-field="l.batch_no.name" />
+                        </td>
+                        <td>
+                            <span t-field="l.expiry_date" />
+                        </td>
+                        <td align="right" style="padding-right: 3cm;">
+                            <span t-field="l.qty_on_hand"/> 
+                        </td>
+                        <td><span t-field="l.remark"/></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Issued By</th>
+                        <th>Approved By</th>
+                        <th>Received By</th>
+                        
+                    </tr>
+                </thead>
+               <tbody class="invoice_tbody">
+					<tr t-foreach="o" t-as="l">
+	                    <td>Name</td>
+	                    <td><p t-field="l.issue_by"/></td>
+	                   	<td><p t-field="l.approve_by"/></td>
+	                   	<td><p t-field="l.receiver"/></td>
+					</tr>
+					<tr>
+	                    <td>Position</td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+	                    <td>Signature</td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+	                    <td>Date</td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+                </tbody>
+			</table>
+        </div>
+    </t>
+</template>
 
-					<table class="table table-condensed">
-						<tr>
-							<td>
-								<strong>(GIN)Ref;No:</strong>
-							</td>
-							<td>
-								<strong t-field="o.name"></strong>
-							</td>
-
-							<td>
-								<strong>(RFI)Ref;No:</strong>
-							</td>
-							<td>
-								<p t-field="o.request_id" />
-							</td>
-						</tr>
-
-						<tr>
-							<td>
-								<strong>Delivery Team:</strong>
-							</td>
-							<td>
-								<p t-field="o.sale_team_id.name" />
-							</td>
-
-							<td>
-								<strong>Request Warehouse:</strong>
-							</td>
-							<td>
-								<span t-field="o.from_location_id.location_id.name" />
-								<b>/</b>
-								<span t-field="o.from_location_id.name" />
-							</td>
-						</tr>
-
-						<tr>
-							<td>
-								<strong>Requesting Location:</strong>
-							</td>
-							<td>							
-								<span t-field="o.to_location_id.location_id.name" />
-								<b>/</b>
-								<span t-field="o.to_location_id.name" />
-							</td>
-							<td>
-								<strong>Branch:</strong>
-							</td>
-							<td>
-								<p t-field="o.branch_id.name" />
-							</td>
-						</tr>
-
-						<tr>
-							<td>
-								<strong>Requested By:</strong>
-							</td>
-							<td>
-								<p t-field="o.request_by" />
-							</td>
-							<td>
-								<strong>Approved By:</strong>
-							</td>
-							<td>
-								<p t-field="o.approve_by" />
-							</td>
-						</tr>
-
-						<tr>
-							<td>
-								<strong>Date for Issue:</strong>
-							</td>
-							<td>
-								<p t-field="o.issue_date" />
-							</td>
-							<td>
-								<strong>Issuer:</strong>
-							</td>
-							<td>
-								<p t-field="o.issue_by" />
-							</td>
-						</tr>
-
-						<tr>
-							<td>
-							</td>
-							<td>
-							</td>
-							<td>
-								<strong>Receiver:</strong>
-							</td>
-							<td>
-								<p t-field="o.receiver" />
-							</td>
-						</tr>
-					</table>
-
-					<table class="table table-condensed">
-						<thead>
-							<tr>
-								<th>Product</th>
-								<th>Qty(S)</th>
-								<th>Batch No</th>
-								<th>Expiry</th>
-								<th>Qty on Hand (S)</th>
-								<th>Remark</th>
-							</tr>
-						</thead>
-						<tbody class="invoice_tbody">
-							<tr t-foreach="o.p_line" t-as="l">
-								<td>
-									<span t-field="l.product_id" />
-								</td>
-								<td>
-									<span t-field="l.issue_quantity" />
-								</td>
-								<td>
-									<span t-field="l.batch_no.name" />
-								</td>
-								<td>
-									<span t-field="l.expiry_date" />
-								</td>
-								<td>
-									<span t-field="l.qty_on_hand" />
-								</td>
-								<td>
-									<span t-field="l.remark" />
-								</td>
-							</tr>
-						</tbody>
-					</table>
-
-					<table class="table table-condensed">
-						<thead>
-							<tr>
-								<th></th>
-								<th>Issued By</th>
-								<th>Approved By</th>
-								<!-- <th>Received By</th> -->
-
-							</tr>
-						</thead>
-						<tbody class="invoice_tbody">
-							<tr t-foreach="o" t-as="l">
-								<td>Name</td>
-								<td>
-									<p t-field="l.issue_by" />
-								</td>
-								<td>
-									<p t-field="l.approve_by" />
-								</td>
-								<!-- <td> <p t-field="l.receive_by" /> </td> -->
-							</tr>
-							<tr>
-								<td>Position</td>
-								<td></td>
-								<td></td>
-								<td></td>
-							</tr>
-							<tr>
-								<td>Signature</td>
-								<td></td>
-								<td></td>
-								<td></td>
-							</tr>
-							<tr>
-								<td>Date</td>
-								<td></td>
-								<td></td>
-								<td></td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</t>
-		</template>
-
-		<template id="good_issue_note">
-			<t t-call="report.html_container">
-				<t t-foreach="doc_ids" t-as="doc_id">
-					<t
-						t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', 'stock_requisition.report_good_issue_note_document')" />
-				</t>
-			</t>
-		</template>
-	</data>
+<template id="good_issue_note">
+    <t t-call="report.html_container">
+        <t t-foreach="doc_ids" t-as="doc_id">
+            <t t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', 'stock_requisition.report_good_issue_note_document')"/>
+        </t>
+    </t>
+</template>
+</data>
 </openerp>

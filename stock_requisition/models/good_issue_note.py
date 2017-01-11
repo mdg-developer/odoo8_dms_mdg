@@ -85,21 +85,23 @@ class good_issue_note(osv.osv):
         return super(good_issue_note, self).create(cursor, user, vals, context=context)
     
     def approve(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state': 'approve','approve_by':uid })
+        from datetime import datetime
+        issue_date=datetime.now().date()
+        return self.write(cr, uid, ids, {'state': 'approve','approve_by':uid,'issue_date':issue_date})
     
     def cancel(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state':'cancel' })
     
-    def unlink(self, cr, uid, ids, context=None):
-        good_issue_notes = self.read(cr, uid, ids, ['state'], context=context)
-        unlink_ids = []
-        for s in good_issue_notes:
-            if s['state'] in ['draft','approve', 'cancel']:
-                unlink_ids.append(s['id'])
-            else:
-                raise osv.except_osv(_('Invalid Action!'), _('You cannot cancel the issued Good Issue Note!'))
-
-        return super(good_issue_notes, self).unlink(cr, uid, unlink_ids, context=context)
+#     def unlink(self, cr, uid, ids, context=None):
+#         good_issue_notes = self.read(cr, uid, ids, ['state'], context=context)
+#         unlink_ids = []
+#         for s in good_issue_notes:
+#             if s['state'] in ['draft','approve', 'cancel']:
+#                 unlink_ids.append(s['id'])
+#             else:
+#                 raise osv.except_osv(_('Invalid Action!'), _('You cannot cancel the issued Good Issue Note!'))
+# 
+#         return super(good_issue_notes, self).unlink(cr, uid, unlink_ids, context=context)
 
             
     def issue(self, cr, uid, ids, context=None):

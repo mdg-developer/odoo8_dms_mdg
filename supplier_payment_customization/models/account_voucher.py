@@ -1,4 +1,5 @@
 from openerp.osv import fields, osv
+from openerp.tools import float_compare
 
 class account_voucher(osv.osv):
     _inherit = 'account.voucher'
@@ -24,7 +25,6 @@ class account_voucher(osv.osv):
             for l in voucher.line_cr_ids:
                 credit += l.amount - l.total_discount
                 print 'credit', credit
-                
             currency = voucher.currency_id or voucher.company_id.currency_id
             print 'currency', currency
             res[voucher.id] = currency_obj.round(cr, uid, currency, (voucher.amount - total_discount) - sign * (credit - debit))
@@ -242,32 +242,32 @@ class account_voucher(osv.osv):
 account_voucher()
 
 class account_voucher_line(osv.osv):
-    _inherit = 'account.voucher.line'
+    _inherit = 'account.voucher.line'    
     
     def onchange_discount_amount(self, cr, uid, vals, total_discount, context=None):
        
         if total_discount and total_discount > 0 :
-             val = {
-            'total_dis': total_discount,
+            val = {
+            'total_discount': total_discount,
             }
-             return {'value': val}
+            return {'value': val}
      
     _columns = {
-#                     'state':fields.selection(
-#                     [('draft', 'Draft'),
-#                      ('cancel', 'Cancelled'),
-#                      ('finance_approve', 'Finance Approved'),
-#                      ('cashier_approve', 'Cashier Approved'),
-#                      ('proforma', 'Pro-forma'),
-#                      ('posted', 'Posted')
-#                     ], 'Status', readonly=True, track_visibility='onchange', copy=False,
-#                     help=' * The \'Draft\' status is used when a user is encoding a new and unconfirmed Voucher. \
-#                                 \n* The \'Pro-forma\' when voucher is in Pro-forma status,voucher does not have an voucher number. \
-#                                 \n* The \'Posted\' status is used when user create voucher,a voucher number is generated and voucher entries are created in account \
-#                                 \n* The \'Cancelled\' status is used when user cancel voucher.'),
-                    'total_discount':fields.float('Discount'),
-            
-          }
+                        'state':fields.selection(
+                        [('draft', 'Draft'),
+                         ('cancel', 'Cancelled'),
+                         ('finance_approve', 'Finance Approved'),
+                         ('cashier_approve', 'Cashier Approved'),
+                         ('proforma', 'Pro-forma'),
+                         ('posted', 'Posted')
+                        ], 'Status', readonly=True, track_visibility='onchange', copy=False,
+                        help=' * The \'Draft\' status is used when a user is encoding a new and unconfirmed Voucher. \
+                                    \n* The \'Pro-forma\' when voucher is in Pro-forma status,voucher does not have an voucher number. \
+                                    \n* The \'Posted\' status is used when user create voucher,a voucher number is generated and voucher entries are created in account \
+                                    \n* The \'Cancelled\' status is used when user cancel voucher.'),
+                        'total_discount':fields.float('Discount'),
+                
+              }
     
     def finance_approve(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'finance_approve'}, context=None)

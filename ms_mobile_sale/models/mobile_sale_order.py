@@ -11,12 +11,17 @@ class customer_payment(osv.osv):
     _name = "customer.payment"
     _columns = {               
    'payment_id':fields.many2one('mobile.sale.order', 'Line'),
- 'pre_order_id'  :fields.many2one('pre.sale.order', 'Line'),
-   'journal_id'  : fields.many2one('account.journal', 'Payment Method' ,domain=[('type','in',('cash','bank'))]),      
+   'pre_order_id'  :fields.many2one('pre.sale.order', 'Line'),
+   'journal_id'  : fields.many2one('account.journal', 'Payment Method' , domain=[('type', 'in', ('cash', 'bank'))]),
    'amount':fields.float('Paid Amount'),
    'notes':fields.char('Payment Ref'),
    'date':fields.date('Date'),
+   'cheque_no':fields.char('Cheque No'),
+   'partner_id':fields.many2one('res.partner', 'Customer'),
+   'sale_team_id':fields.many2one('crm.case.section', 'Sale Team'),
+   'payment_code':fields.char('Payment Code'),
         }
+    
 class mobile_sale_order(osv.osv):
     
     _name = "mobile.sale.order"
@@ -72,7 +77,8 @@ class mobile_sale_order(osv.osv):
        'promos_line_ids':fields.one2many('mso.promotion.line', 'promo_line_id', 'Promotion Lines'),
        'pricelist_id': fields.many2one('product.pricelist', 'Price List', select=True, ondelete='cascade'),
        'payment_line_ids':fields.one2many('customer.payment', 'payment_id', 'Payment Lines'),
-      'branch_id': fields.many2one('res.branch', 'Branch',required=True),           
+      'branch_id': fields.many2one('res.branch', 'Branch', required=True),
+      
    #     'journal_id'  : fields.many2one('account.journal', 'Journal' ,domain=[('type','in',('cash','bank'))]),   
     }
     _order = 'id desc'
@@ -109,8 +115,8 @@ class mobile_sale_order(osv.osv):
             
             if sale_order:
                 for so in sale_order:
-                    cursor.execute('select branch_id from crm_case_section where id=%s',(so['sale_team'],))
-                    branch_id=cursor.fetchone()[0]     
+                    cursor.execute('select branch_id from crm_case_section where id=%s', (so['sale_team'],))
+                    branch_id = cursor.fetchone()[0]     
                     cursor.execute('select id From res_partner where customer_code  = %s ', (so['customer_code'],))
                     data = cursor.fetchall()                
                     if data:
@@ -156,7 +162,6 @@ class mobile_sale_order(osv.osv):
                         'branch_id':branch_id,
                     }
                     s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
-                    print "Create Sale Order", so['name']
                     for sol in sale_order_line:
                         if sol['so_name'] == so['name']:
                                 cursor.execute('select id From product_product where id  = %s ', (sol['product_id'],))
@@ -183,7 +188,6 @@ class mobile_sale_order(osv.osv):
                                   'uom_id':sol['uom_id']
                                 }
                                 mobile_sale_order_line_obj.create(cursor, user, mso_line_res, context=context) 
-                                print 'Create Order line', sol['so_name']                     
                     sale_order_name_list.append(so['name'])
             print 'True'
             return True       
@@ -220,8 +224,8 @@ class mobile_sale_order(osv.osv):
             
             if product_trans:
                 for pt in product_trans:
-                    exchange_type=pt['exchange_type']
-                    print 'exchange_type',exchange_type
+                    exchange_type = pt['exchange_type']
+                    print 'exchange_type', exchange_type
 #                     cursor.execute('select id From res_users where partner_id  = %s ',(so['user_id'],))
 #                     data = cursor.fetchall()
 #                     if data:
@@ -253,8 +257,8 @@ class mobile_sale_order(osv.osv):
                                 else:
                                     exp_date = exp_date
                                 
-                                cursor.execute('select uom_id from product_product pp,product_template pt where pp.product_tmpl_id=pt.id and pp.id=%s',(ptl['product_id'], ))
-                                uom_id=cursor.fetchone()[0]
+                                cursor.execute('select uom_id from product_product pp,product_template pt where pp.product_tmpl_id=pt.id and pp.id=%s', (ptl['product_id'],))
+                                uom_id = cursor.fetchone()[0]
                                 mso_line_res = {                                                            
                                   'transaction_id':s_order_id,
                                   'product_id':ptl['product_id'],
@@ -268,7 +272,7 @@ class mobile_sale_order(osv.osv):
                                   'batchno':ptl['batchno'],
                                 }
                                 product_trans_line_obj.create(cursor, user, mso_line_res, context=context)
-                    if exchange_type !='Exchange' and pt['void_flag']=='none':
+                    if exchange_type != 'Exchange' and pt['void_flag'] == 'none':
                         product_trans_obj.action_convert_ep(cursor, user, [s_order_id], context=context)
 
                                     
@@ -298,8 +302,8 @@ class mobile_sale_order(osv.osv):
                 customer_visit.append(r)  
             if customer_visit:
                 for vs in customer_visit:
-                    cursor.execute('select branch_id from crm_case_section where id=%s',(vs['sale_team_id'],))
-                    branch_id=cursor.fetchone()[0]
+                    cursor.execute('select branch_id from crm_case_section where id=%s', (vs['sale_team_id'],))
+                    branch_id = cursor.fetchone()[0]
                     visit_result = {
                         'customer_code':vs['customer_code'],
                         'branch_id':branch_id,
@@ -348,7 +352,7 @@ class mobile_sale_order(osv.osv):
     # MMK   
     def action_convert_so(self, cr, uid, ids, context=None):
         msoObj = self.pool.get('mobile.sale.order')
-        partner_obj=self.pool.get('res.partner')
+        partner_obj = self.pool.get('res.partner')
         soObj = self.pool.get('sale.order')
         solObj = self.pool.get('sale.order.line')
         invObj = self.pool.get("sale.advance.payment.inv")
@@ -395,8 +399,10 @@ class mobile_sale_order(osv.osv):
                         so_state = 'cancel'
                     elif ms_ids.void_flag == 'none':
                         so_state = 'draft'
-                    cr.execute("select company_id from res_users where id=%s",(ms_ids.user_id.id,))
-                    company_id=cr.fetchone()[0]
+                    cr.execute("select company_id from res_users where id=%s", (ms_ids.user_id.id,))
+                    company_id = cr.fetchone()[0]
+                    date = datetime.strptime(ms_ids.date, '%Y-%m-%d %H:%M:%S')
+                    de_date = date.date()       
                     soResult = {
                                           'date_order':ms_ids.date,
                                            'partner_id':ms_ids.partner_id.id,
@@ -422,13 +428,13 @@ class mobile_sale_order(osv.osv):
                                             'due_date':ms_ids.due_date,
                                             'so_latitude':ms_ids.mso_latitude,
                                             'so_longitude':ms_ids.mso_longitude,
-                                            # 'total_dis':additional_discount,
+                                             'additional_discount':ms_ids.additional_discount*100,
                                             'deduct_amt':ms_ids.deduction_amount,
                                             'delivery_remark':ms_ids.delivery_remark,
                                             'sale_plan_day_id':ms_ids.sale_plan_day_id.id,
                                             'sale_plan_trip_id':ms_ids.sale_plan_trip_id.id,
                                             'customer_code':ms_ids.customer_code,
-                                            'branch_id':ms_ids.branch_id.id, 
+                                            'branch_id':ms_ids.branch_id.id,
                                         }
                     soId = soObj.create(cr, uid, soResult, context=context)
                     if soId and ms_ids.order_line:
@@ -477,19 +483,18 @@ class mobile_sale_order(osv.osv):
                         # type > cash and delivery_remark > delivered
                         if ms_ids.type == 'cash' and ms_ids.delivery_remark == 'delivered':  # Payment Type=>Cash and Delivery Remark=>Delivered
                             # SO Confirm 
-                            #journal_id = ms_ids.journal_id.id
+                            # journal_id = ms_ids.journal_id.id
                             soObj.action_button_confirm(cr, uid, solist, context=context)
                             # Create Invoice
                             invoice_id = self.create_invoices(cr, uid, solist, context=context)
-                            #id update partner form (temporay)
+                            # id update partner form (temporay)
 #                             partner_data = invoiceObj.browse(cr, uid, invoice_id, context=context)
 #                             partner_id=partner_data.partner_id.id
 #                             partner_obj.write(cr,uid,partner_id,{'property_account_receivable':629}, context)
 #                             partner = partner_obj.browse(cr, uid, partner_id, context=context)
 #                             account_id=partner.property_account_receivable.id
 #                             invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)                            
-                            print 'ms_ids.branch_id.id',ms_ids.branch_id.id
-                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s where id =%s',('cash',ms_ids.branch_id.id,invoice_id,))                            
+                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s,date_invoice=%s where id =%s', ('cash', ms_ids.branch_id.id, ms_ids.delivery_remark,de_date, invoice_id,))                            
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             if invoice_id and ms_ids.paid == True:
                                 invlist = []
@@ -553,7 +558,7 @@ class mobile_sale_order(osv.osv):
                             stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)
                             
                             if stockViewResult:
-                                #cr.execute('update stock_move set location_id=%s where picking_id=%s',(ms_ids.location_id.id,stockViewResult['res_id'],))
+                                # cr.execute('update stock_move set location_id=%s where picking_id=%s',(ms_ids.location_id.id,stockViewResult['res_id'],))
                                 # stockViewResult is form result
                                 # stocking id =>stockViewResult['res_id']
                                 # click force_assign
@@ -581,8 +586,7 @@ class mobile_sale_order(osv.osv):
 #                             partner = partner_obj.browse(cr, uid, partner_id, context=context)
 #                             account_id=partner.property_account_receivable.id
 #                             invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)                                    
-                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s where id =%s',('cash',ms_ids.branch_id.id,invoice_id,))                            
-                            
+                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s ,date_invoice =%s where id =%s', ('cash', ms_ids.branch_id.id, ms_ids.delivery_remark,de_date, invoice_id,))                            
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             if invoice_id and ms_ids.paid == True:
                                 invlist = []
@@ -636,23 +640,22 @@ class mobile_sale_order(osv.osv):
 #                                     # invoice paid status is true
 #                                     invFlag = True
                             # clicking the delivery order view button
-                            stockViewResult=soObj.action_view_delivery(cr, uid, solist, context=context)
-                            #cr.execute('update stock_move set location_id=%s where picking_id=%s',(ms_ids.location_id.id,stockViewResult['res_id'],))
+                            stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)
+                            # cr.execute('update stock_move set location_id=%s where picking_id=%s',(ms_ids.location_id.id,stockViewResult['res_id'],))
                             # create the delivery with draft state
                         if ms_ids.type == 'cash' and ms_ids.delivery_remark == 'partial':  # Payment Type=>Cash and Delivery Remark=>None
                             # SO Confirm 
                             soObj.action_button_confirm(cr, uid, solist, context=context)
                             # Create Invoice
                             invoice_id = self.create_invoices(cr, uid, solist, context=context)
-                            #id update partner form (temporay)
+                            # id update partner form (temporay)
 #                             partner_data = invoiceObj.browse(cr, uid, invoice_id, context=context)
 #                             partner_id=partner_data.partner_id.id
 #                             partner_obj.write(cr,uid,partner_id,{'property_account_receivable':629}, context)
 #                             partner = partner_obj.browse(cr, uid, partner_id, context=context)
 #                             account_id=partner.property_account_receivable.id
 #                             invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)                                    
-                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s where id =%s',('cash',ms_ids.branch_id.id,invoice_id,))                            
-                                                   
+                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s,date_invoice=%s  where id =%s', ('cash', ms_ids.branch_id.id, ms_ids.delivery_remark,de_date, invoice_id,))                            
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             if invoice_id and ms_ids.paid == True:
                                 invlist = []
@@ -706,8 +709,8 @@ class mobile_sale_order(osv.osv):
 #                                     # invoice paid status is true
 #                                     invFlag = True
                             # clicking the delivery order view button
-                            stockViewResult=soObj.action_view_delivery(cr, uid, solist, context=context)
-                            #cr.execute('update stock_move set location_id=%s where picking_id=%s',(ms_ids.location_id.id,stockViewResult['res_id'],))
+                            stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)
+                            # cr.execute('update stock_move set location_id=%s where picking_id=%s',(ms_ids.location_id.id,stockViewResult['res_id'],))
                             # create the delivery with draft state
                         if ms_ids.type == 'credit' and ms_ids.delivery_remark == 'delivered':  # Payment Type=>Credit and Delivery Remark=>Delivered
                             # so Confirm
@@ -715,14 +718,14 @@ class mobile_sale_order(osv.osv):
                             soObj.action_button_confirm(cr, uid, solist, context=context)
                             # invoice create at draft state
                             invoice_id = self.create_invoices(cr, uid, solist, context=context)
-                            #id update partner form (temporay)
+                            # id update partner form (temporay)
 #                             partner_data = invoiceObj.browse(cr, uid, invoice_id, context=context)
 #                             partner_id=partner_data.partner_id.id
 #                             partner_obj.write(cr,uid,partner_id,{'property_account_receivable':629}, context)
 #                             partner = partner_obj.browse(cr, uid, partner_id, context=context)
 #                             account_id=partner.property_account_receivable.id
 #                             invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)                                    
-                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s where id =%s',('credit',ms_ids.branch_id.id,invoice_id,))                            
+                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s ,date_invoice=%s where id =%s', ('credit', ms_ids.branch_id.id, ms_ids.delivery_remark,de_date, invoice_id,))                            
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             invlist = []
                             invlist.append(invoice_id)
@@ -737,7 +740,7 @@ class mobile_sale_order(osv.osv):
                             # clicking the delivery order view button
                             stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)
                             if stockViewResult:
-                                #cr.execute('update stock_move set location_id=%s where picking_id=%s',(ms_ids.location_id.id,stockViewResult['res_id'],))
+                                # cr.execute('update stock_move set location_id=%s where picking_id=%s',(ms_ids.location_id.id,stockViewResult['res_id'],))
 
                                 # stockViewResult is form result
                                 # stocking id =>stockViewResult['res_id']
@@ -759,15 +762,14 @@ class mobile_sale_order(osv.osv):
                             soObj.action_button_confirm(cr, uid, solist, context=context)
                             # invoice create at draft state
                             invoice_id = self.create_invoices(cr, uid, solist, context=context)
-                            #id update partner form (temporay)
+                            # id update partner form (temporay)
 #                             partner_data = invoiceObj.browse(cr, uid, invoice_id, context=context)
 #                             partner_id=partner_data.partner_id.id
 #                             partner_obj.write(cr,uid,partner_id,{'property_account_receivable':629}, context)
 #                             partner = partner_obj.browse(cr, uid, partner_id, context=context)
 #                             account_id=partner.property_account_receivable.id
 #                             invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)                                    
-                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s where id =%s',('credit',ms_ids.branch_id.id,invoice_id,))                            
-                            
+                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s,date_invoice=%s  where id =%s', ('credit', ms_ids.branch_id.id, ms_ids.delivery_remark,de_date, invoice_id,))                            
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             invlist = []
                             invlist.append(invoice_id)
@@ -781,21 +783,21 @@ class mobile_sale_order(osv.osv):
                             invObj.invoice_validate()
                             # clicking the delivery order view button
                             stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)  # create delivery order with draft state
-                            #cr.execute('update stock_move set location_id=%s where picking_id=%s',(ms_ids.location_id.id,stockViewResult['res_id'],))
+                            # cr.execute('update stock_move set location_id=%s where picking_id=%s',(ms_ids.location_id.id,stockViewResult['res_id'],))
 
                         if ms_ids.type == 'credit' and ms_ids.delivery_remark == 'partial':  # Payment Type=>Credit and Delivery Remark=>Partial
                             # so Confirm
                             soObj.action_button_confirm(cr, uid, solist, context=context)
                             # invoice create at draft state
                             invoice_id = self.create_invoices(cr, uid, solist, context=context)
-                            #id update partner form (temporay)
+                            # id update partner form (temporay)
 #                             partner_data = invoiceObj.browse(cr, uid, invoice_id, context=context)
 #                             partner_id=partner_data.partner_id.id
 #                             partner_obj.write(cr,uid,partner_id,{'property_account_receivable':629}, context)
 #                             partner = partner_obj.browse(cr, uid, partner_id, context=context)
 #                             account_id=partner.property_account_receivable.id
 #                             invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)                                    
-                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s where id =%s',('credit',ms_ids.branch_id.id,invoice_id,))                            
+                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s ,date_invoice=%s where id =%s', ('credit', ms_ids.branch_id.id, ms_ids.delivery_remark,de_date,invoice_id,))                            
                             
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             invlist = []
@@ -810,7 +812,7 @@ class mobile_sale_order(osv.osv):
                             invObj.invoice_validate()
                             # clicking the delivery order view button
                             stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)
-                            #cr.execute('update stock_move set location_id=%s where picking_id=%s',(ms_ids.location_id.id,stockViewResult['res_id'],))
+                            # cr.execute('update stock_move set location_id=%s where picking_id=%s',(ms_ids.location_id.id,stockViewResult['res_id'],))
 
             self.write(cr, uid, ids[0], {'m_status':'done'}, context=context)
         return True   
@@ -832,7 +834,7 @@ class mobile_sale_order(osv.osv):
                 return False
                 
     # kzo Edit
-    def get_products_by_sale_team(self, cr, uid, section_id ,last_date, context=None, **kwargs):
+    def get_products_by_sale_team(self, cr, uid, section_id , last_date, context=None, **kwargs):
 
         lastdate = datetime.strptime(last_date, "%Y-%m-%d")
         print 'DateTime', lastdate
@@ -874,18 +876,43 @@ class mobile_sale_order(osv.osv):
         return datas
     # get promotion datas from database
     
-    def get_promos_datas(self, cr, uid ,branch_id, section_id , context=None, **kwargs):
-        cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,
+    def get_promos_datas(self, cr, uid , branch_id, state, team_id, context=None, **kwargs):
+   
+        if state == 'approve':
+            status = 'approve'
+            cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,
                         logic ,expected_logic_result ,special, special1, special2, special3 ,description
-                        from promos_rules pr ,crm_case_section_promos_rules_rel team_promo_rel,promos_rules_res_branch_rel promo_br
-                        where pr.active = true
-                        and pr.id = promo_br.promos_rules_id
-                        and promo_br.res_branch_id = %s
-                        and pr.id = team_promo_rel.promos_rules_id
-                        and team_promo_rel.crm_case_section_id = %s
-                        ''', (branch_id ,section_id,))
-        datas = cr.fetchall()
-        cr.execute
+                        from promos_rules pr ,promos_rules_res_branch_rel pro_br_rel
+                        where pr.active = true                     
+                        and pr.id = pro_br_rel.promos_rules_id
+                        and pro_br_rel.res_branch_id = %s
+                        and pr.state = %s
+                        and  now()::date  between from_date::date and to_date::date
+                        and pr.id in (
+                        select a.promo_id from promo_sale_channel_rel a
+                        inner join sale_team_channel_rel b
+                        on a.sale_channel_id = b.sale_channel_id
+                        where b.sale_team_id = %s
+                        )
+                        ''', (branch_id, status, team_id,))
+        else:
+            status = 'approve', 'draft'            
+            cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,
+                        logic ,expected_logic_result ,special, special1, special2, special3 ,description
+                        from promos_rules pr ,promos_rules_res_branch_rel pro_br_rel
+                        where pr.active = true                     
+                        and pr.id = pro_br_rel.promos_rules_id
+                        and pro_br_rel.res_branch_id = %s
+                        and pr.state in %s
+                        and  now()::date  between from_date::date and to_date::date
+                        and pr.id in (
+                        select a.promo_id from promo_sale_channel_rel a
+                        inner join sale_team_channel_rel b
+                        on a.sale_channel_id = b.sale_channel_id
+                        where b.sale_team_id = %s
+                        )
+                        ''', (branch_id, status, team_id,))
+        datas = cr.fetchall()        
         return datas
     
     def get_promos_act_datas(self, cr, uid , branch_id, promo_id, context=None, **kwargs):
@@ -900,7 +927,7 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()
         cr.execute
         return datas
-    def get_promos_cond_datas(self, cr, uid , branch_id,promo_id, context=None, **kwargs):
+    def get_promos_cond_datas(self, cr, uid , branch_id, promo_id, context=None, **kwargs):
         cr.execute('''select cond.id,cond.promotion,cond.sequence as cond_seq,
                             cond.attribute as cond_attr,cond.comparator as cond_comparator,
                             cond.value as comp_value
@@ -910,7 +937,7 @@ class mobile_sale_order(osv.osv):
                             and r.id = pro_br_rel.promos_rules_id
                             and pro_br_rel.res_branch_id = %s
                             and cond.promotion = %s  
-                    ''', (branch_id,promo_id,))
+                    ''', (branch_id, promo_id,))
         datas = cr.fetchall()
         cr.execute
         return datas
@@ -973,10 +1000,8 @@ class mobile_sale_order(osv.osv):
     
     def get_pricelist_version_datas(self, cr, uid, pricelist_id, context=None, **kwargs):
         cr.execute('''select pv.id,date_end,date_start,pv.active,pv.name,pv.pricelist_id 
-                        from product_pricelist_version pv, product_pricelist pp 
-                        where pv.pricelist_id = pp.id   
-                        and pv.active = true
-                        and now()::date  between pv.date_start::date and pv.date_end::date                                                 
+                        from product_pricelist_version pv, product_pricelist pp where pv.pricelist_id = pp.id   
+                        and pv.active = true                                                         
                         and pv.pricelist_id = %s''', (pricelist_id,))
         datas = cr.fetchall()
         return datas
@@ -1048,7 +1073,7 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()
         cr.execute      
         return datas    
-    def sale_plan_trip_return(self, cr, uid, section_id,pull_date , context=None, **kwargs):
+    def sale_plan_trip_return(self, cr, uid, section_id, pull_date , context=None, **kwargs):
      
         lastdate = datetime.strptime(pull_date, "%Y-%m-%d")
         print 'DateTime', lastdate
@@ -1061,7 +1086,7 @@ class mobile_sale_order(osv.osv):
             and p.id = d.sale_plan_trip_id
             and e.id = d.partner_id            
             ''', (section_id,))
-        datas = cr.fetchall()            
+        datas = cr.fetchall()                      
         return datas
         
         # kzo
@@ -1166,7 +1191,27 @@ class mobile_sale_order(osv.osv):
             history_obj = self.pool.get('sales.denomination')
             notes_line_obj = self.pool.get('sales.denomination.note.line')
             deno_product_obj = self.pool.get('sales.denomination.product.line')
-            
+            cheque_product_obj = self.pool.get('sales.denomination.cheque.line')
+            ar_coll_obj = self.pool.get('sales.denomination.ar.line')
+            bank_transfer_obj = self.pool.get('sales.denomination.bank.line')
+            ar_obj = self.pool.get('ar.payment')
+            inv_Obj=self.pool.get('account.invoice')
+            invoice_obj = self.pool.get('account.invoice.line')
+            ar_amount=0.0
+            product_amount=0.0
+            deno_amount=0.0
+            cheque_amount = 0.0
+            bank_amount=0.0
+            dssr_ar_amount=0.0
+            trans_amount=0.0
+            diff_amount=0.0
+            discount_amount=0.0
+            discount_total=0.0
+            invoice_sub_total=0.0
+            m_discount_total=0.0
+            m_discount_amount=0.0
+            v_discount_total=0.0
+            v_discount_amount=0.0
             str = "{" + vals + "}"
             str = str.replace(":''", ":'")
             str = str.replace("'',", "',")
@@ -1190,29 +1235,33 @@ class mobile_sale_order(osv.osv):
                     notes_line.append(r)
             
             if history:
-                print 'hidtory',history
+                print 'hidtory', history
                 for pt in history:
-                    total_amount = float(pt['total_amount'])
-                    product_amount = float(pt['product_amount'])
+                    print 'dateImmmm',datetime.today().strftime('%d-%m-%Y %H:%M:%S'  )
                     deno_result = {
                         'invoice_count':pt['invoice_count'],
                         'sale_team_id':pt['sale_team_id'],
                         'company_id':pt['company_id'] ,
                         'note':pt['note'],
-                        'date':pt['date'],
+                        'date': datetime.today().strftime('%Y-%m-%d %H:%M:%S' ),
                         'tablet_id':pt['tablet_id'],
                         'user_id':pt['user_id'],
                         'denomination_note_line':False,
                         'denomination_product_line':False,
+                        'denomination_ar_line':False,
+                        'denomination_cheque_line':False,
+                        'denomination_bank_line':False,
                         'branch_id':pt['branch_id'],
-                        'total_amount':pt['total_amount'],
-                        'diff_amount':pt['diff_amount'],
-                        'product_amount':pt['product_amount'],
+                        'total_amount':0,
+                        'diff_amount':0,
+                        'product_amount':0,
+                        'discount_amount':0,
+                        'discount_total':0,
+                        'invoice_sub_total':0,
                     }
-                    deno_id = history_obj.create(cursor, user, deno_result, context=context)
-                    cursor.execute('''update sales_denomination set total_amount = %s where id = %s''', (total_amount, deno_id,))
-                    cursor.execute('''update sales_denomination set product_amount = %s where id = %s''', (product_amount, deno_id,))                
+                    deno_id = history_obj.create(cursor, user, deno_result, context=context)             
                     for ptl in notes_line:
+                                deno_amount+= float(ptl['amount'])
                                 note_line_res = {                                                            
                                   'denomination_note_ids':deno_id,
                                   'note_qty':ptl['note_qty'],
@@ -1221,29 +1270,161 @@ class mobile_sale_order(osv.osv):
                                 }
                                 notes_line_obj.create(cursor, user, note_line_res, context=context)
                 de_date = pt['date']
-                user_id = pt['user_id']
+                user_id = pt['user_id']      
+                pre_mobile_ids=[]
+                mobile_ids=[]
                 mobile_sale_obj = self.pool.get('mobile.sale.order')        
                 mobile_sale_order_obj = self.pool.get('mobile.sale.order.line')
+                pre_sale_order_obj = self.pool.get('pre.sale.order.line')
+                payment_obj = self.pool.get('customer.payment')
+                print 'user_iddddddddddddd', user_id, type(user_id)
+                cursor.execute("select default_section_id from res_users where id=%s", (user_id,))
+                team_id = cursor.fetchone()[0]            
+                print 'team_id', team_id,de_date
+                cursor.execute("select id from customer_payment where date=%s and sale_team_id=%s and cheque_no !=''  ", (de_date, team_id,))
+                payment_ids = cursor.fetchall()
+                cursor.execute("select id from ar_payment where date=%s and sale_team_id=%s and payment_code='CHEQ' ", (de_date, team_id,))
+                ar_payment_ids = cursor.fetchall()
+                cursor.execute("select id from customer_payment where date=%s and sale_team_id=%s and payment_code='BNK' ", (de_date, team_id,))
+                bank_ids = cursor.fetchall()
+                cursor.execute("select id from ar_payment where date=%s and sale_team_id=%s and payment_code='BNK' ", (de_date, team_id,))
+                ar_bank_ids = cursor.fetchall()                              
                 cursor.execute("select id from mobile_sale_order where due_date=%s and user_id=%s and void_flag != 'voided'", (de_date, user_id))
-                mobile_ids = cursor.fetchall()
-                if  mobile_ids:
-                    line_ids = mobile_sale_order_obj.search(cursor, user, [('order_id', 'in', mobile_ids)], context=context)                        
-                    order_line_ids = mobile_sale_order_obj.browse(cursor, user, line_ids, context=context)                
-                    print 'order_lineidssssssssss',  order_line_ids
-                    cursor.execute('select product_id,sum(product_uos_qty),sum(sub_total) from mobile_sale_order_line where id in %s group by product_id', (tuple(order_line_ids.ids),))
+                m_mobile_ids = cursor.fetchall()
+                cursor.execute("select id from account_invoice where date_invoice=%s and section_id =%s and state='open' ", (de_date, team_id,))
+                invoice_ids = cursor.fetchall()       
+                if invoice_ids:
+                    for data_pro in invoice_ids:
+                        pre_mobile_ids.append(data_pro[0])
+                if pre_mobile_ids:
+                    invoice_data = inv_Obj.search(cursor, user, [('id', 'in', tuple(pre_mobile_ids))], context=context)   
+                    for invoice_id in invoice_data:
+                        invoice =inv_Obj.browse(cursor, user, invoice_id, context=context)
+                        deduct_amt= invoice.deduct_amt
+                        amount_total= invoice.amount_untaxed
+                        deduct_percent=invoice.additional_discount/100
+                        discount_total +=  amount_total * deduct_percent
+                        discount_amount+=deduct_amt                    
+                    line_ids = invoice_obj.search(cursor, user, [('invoice_id', 'in', pre_mobile_ids)], context=context)         
+                    order_line_ids = invoice_obj.browse(cursor, user, line_ids, context=context)         
+                    cursor.execute(' select product_id,sum(quantity) as quantity,sum(price_subtotal) as  sub_total from account_invoice_line where id in %s group by product_id', (tuple(order_line_ids.ids),))
                     order_line = cursor.fetchall()
                     for data in order_line:
+                        product = self.pool.get('product.product').browse(cursor, user, data[0], context=context)
+                        sequence = product.sequence
+                        product_amount+=data[2]
                         data_id = {'product_id':data[0],
                                           'product_uom_qty':data[1],
                                           'denomination_product_ids':deno_id,
+                                          'sequence':sequence,
+                                          'amount':data[2]}
+                        deno_product_obj.create(cursor, user, data_id, context=context)                        
+                if  m_mobile_ids:
+                    for data_mo in m_mobile_ids:
+                        mobile_ids.append(data_mo[0])
+                    mobile_data=mobile_sale_obj.browse(cursor, user, tuple(mobile_ids), context=context)           
+                    print 'mobile_data',mobile_data
+                    for mobile in mobile_data:
+                        deduct_amt= mobile.deduction_amount
+                        amount_total= mobile.amount_total
+                        deduct_percent=mobile.additional_discount
+                        discount_total +=  amount_total * deduct_percent
+                        discount_amount+=deduct_amt                             
+                    line_ids = mobile_sale_order_obj.search(cursor, user, [('order_id', 'in', mobile_ids)], context=context)                        
+                    order_line_ids = mobile_sale_order_obj.browse(cursor, user, line_ids, context=context)                
+                    cursor.execute('select product_id,sum(product_uos_qty),sum(sub_total) from mobile_sale_order_line where id in %s group by product_id', (tuple(order_line_ids.ids),))
+                    order_line = cursor.fetchall()
+                    for data in order_line:
+                        product = self.pool.get('product.product').browse(cursor, user, data[0], context=context)
+                        sequence = product.sequence
+                        product_amount+=data[2]
+                        data_id = {'product_id':data[0],
+                                          'product_uom_qty':data[1],
+                                          'denomination_product_ids':deno_id,
+                                          'sequence':sequence,
                                           'amount':data[2]}
                         deno_product_obj.create(cursor, user, data_id, context=context)
-
+            if  payment_ids:
+                for payment in payment_ids:
+                    payment_data = payment_obj.browse(cursor, user, payment, context=context)                  
+                    partner_id = payment_data.partner_id.id
+                    journal_id = payment_data.journal_id.id
+                    cheque_no = payment_data.cheque_no
+                    amount = payment_data.amount
+                    cheque_amount += payment_data.amount
+                    data_id = {'partner_id':partner_id,
+                                      'journal_id':journal_id,
+                                      'cheque_no':cheque_no,
+                                      'amount': amount,
+                                    'denomination_cheque_ids':deno_id, }
+                    cheque_product_obj.create(cursor, user, data_id, context=context)
+            if  ar_payment_ids:
+                for payment in ar_payment_ids:
+                    payment_data = ar_obj.browse(cursor, user, payment, context=context)                  
+                    partner_id = payment_data.partner_id.id
+                    journal_id = payment_data.journal_id.id
+                    cheque_no = payment_data.cheque_no
+                    amount = payment_data.amount
+                    cheque_amount += payment_data.amount
+                    data_id = {'partner_id':partner_id,
+                                      'journal_id':journal_id,
+                                      'cheque_no':cheque_no,
+                                      'amount': amount,
+                                     'denomination_cheque_ids':deno_id,
+                                      }
+                    cheque_product_obj.create(cursor, user, data_id, context=context)
+            if  bank_ids:
+                for bank in bank_ids:
+                    bank_data = payment_obj.browse(cursor, user, bank, context=context)                  
+                    partner_id = bank_data.partner_id.id
+                    journal_id = bank_data.journal_id.id
+                    amount = bank_data.amount
+                    bank_amount += bank_data.amount
+                    data_id = {'partner_id':partner_id,
+                                      'journal_id':journal_id,
+                                      'amount': amount,
+                                        'denomination_bank_ids':deno_id, }
+                    bank_transfer_obj.create(cursor, user, data_id, context=context)
+            if  ar_bank_ids:
+                for bank in ar_bank_ids:
+                    bank_data = ar_obj.browse(cursor, user, bank, context=context)                  
+                    partner_id = bank_data.partner_id.id
+                    journal_id = bank_data.journal_id.id
+                    amount = bank_data.amount
+                    bank_amount += bank_data.amount
+                    data_id = {'partner_id':partner_id,
+                                      'journal_id':journal_id,
+                                      'amount': amount,
+                                        'denomination_bank_ids':deno_id, }
+                    bank_transfer_obj.create(cursor, user, data_id, context=context)
+            cursor.execute("""select m.date,a.id,m.partner_id,m.payment_amount
+                                from account_invoice as a,mobile_ar_collection as m
+                                where m.ref_no = a.number and  m.state='draft'  and
+                                m.user_id=%s and m.sale_team_id=%s and m.date = %s  
+                    """, (user_id, team_id, de_date,))
+            vals = cursor.fetchall()             
+            print 'vals', vals
+            for val in vals:
+                ar_amount +=val[3]
+                data_id = {'invoice_id':val[1],
+                            'date':val[0],
+                            'partner_id':val[2],
+                            'amount':val[3],
+                            'payment_type':'Credit',
+                         'denomination_ar_ids':deno_id, }
+                ar_coll_obj.create(cursor, user, data_id, context=context)
+            dssr_ar_amount=ar_amount+product_amount- discount_amount-discount_total
+            trans_amount= deno_amount + cheque_amount + bank_amount
+            diff_amount= (ar_amount+product_amount- discount_amount-discount_total)-( deno_amount + cheque_amount + bank_amount)             
+            invoice_sub_total=product_amount - discount_amount-discount_total
+            product_amount=product_amount-discount_amount-discount_total
+            print 'discount_total',discount_total,discount_amount
+            cursor.execute("update sales_denomination set product_amount=%s,discount_total=%s,discount_amount =%s,invoice_sub_total=%s,ar_amount=%s,bank_amount=%s,total_amount=%s,cheque_amount=%s ,dssr_ar_amount=%s,trans_amount=%s ,diff_amount=%s where id=%s",
+                           (product_amount,discount_total,discount_amount,invoice_sub_total,ar_amount,bank_amount,deno_amount,cheque_amount,dssr_ar_amount,trans_amount,diff_amount,deno_id,))
                         
             print 'True'
             return True       
         except Exception, e:
-            print 'False'
             return False
         
     def create_ar_collection(self, cursor, user, vals, context=None):
@@ -1265,12 +1446,12 @@ class mobile_sale_order(osv.osv):
             ar_collection.append(r)  
         if ar_collection:
             for ar in ar_collection:            
-                cursor.execute('select origin from account_invoice where number=%s',(ar['ref_no'].replace('\\',""),))
-                origin=cursor.fetchone()
+                cursor.execute('select origin from account_invoice where number=%s', (ar['ref_no'].replace('\\', ""),))
+                origin = cursor.fetchone()
                 if origin:
-                    origin=origin[0]
+                    origin = origin[0]
                 else:
-                    origin=None
+                    origin = None
                     
                 ar_result = {
                     'customer_code':ar['customer_code'],
@@ -1282,7 +1463,7 @@ class mobile_sale_order(osv.osv):
                     'payment_amount':ar['payment_amount'],
                     'so_amount':ar['so_amount'],
                     'balance':ar['balance'],
-                    'ref_no':ar['ref_no'].replace('\\',""),
+                    'ref_no':ar['ref_no'].replace('\\', ""),
                     'so_ref':origin,
                     'sale_team_id':ar['sale_team_id'],
                     'user_id':ar['user_id'],
@@ -1387,17 +1568,17 @@ class mobile_sale_order(osv.osv):
                         'customer_code':vs['customer_code'],
                         'customer_id':vs['customer_id'],
                         'comment':vs['comment'],
-                        'image_one':vs['image_one'].replace('\\',""),
-                        'image_two':vs['image_two'].replace('\\',""),
-                        'image_three':vs['image_three'].replace('\\',""),
-                        'image_four':vs['image_four'].replace('\\',""),
-                        'image_five':vs['image_five'].replace('\\',"")
+                        'image_one':vs['image_one'].replace('\\', ""),
+                        'image_two':vs['image_two'].replace('\\', ""),
+                        'image_three':vs['image_three'].replace('\\', ""),
+                        'image_four':vs['image_four'].replace('\\', ""),
+                        'image_five':vs['image_five'].replace('\\', "")
                     }
                     customer_photo_obj.create(cursor, user, result, context=context)                
                                                                   
-                    #For Custoemr Photo temp table to Res Parnter Table for Appear
+                    # For Custoemr Photo temp table to Res Parnter Table for Appear
                     cursor.execute('''select customer_code,image_one,image_two,image_three,image_four,
-                            image_five,comment From partner_photo where customer_code = %s''',(code,))
+                            image_five,comment From partner_photo where customer_code = %s''', (code,))
                     data = cursor.fetchall()
                     for r in data:
                         code = r[0]
@@ -1472,11 +1653,11 @@ class mobile_sale_order(osv.osv):
         return datas
         
     # Get Pending Delivery
-    def get_delivery_datas(self, cr, uid, saleTeamId,soList, context=None, **kwargs):
+    def get_delivery_datas(self, cr, uid, saleTeamId, soList, context=None, **kwargs):
         
         sale_order_obj = self.pool.get('sale.order')
         list_val = None
-        list_val = sale_order_obj.search(cr, uid, [('pre_order', '=', True),('is_generate', '=', True), ('delivery_id', '=', saleTeamId), ('shipped', '=', False), ('invoiced', '=', False) , ('tb_ref_no', 'not in', soList)], context=context)
+        list_val = sale_order_obj.search(cr, uid, [('pre_order', '=', True), ('is_generate', '=', True), ('delivery_id', '=', saleTeamId), ('shipped', '=', False), ('invoiced', '=', False) , ('tb_ref_no', 'not in', soList)], context=context)
         print 'list_val', list_val
         list = []
         try:
@@ -1487,7 +1668,7 @@ class mobile_sale_order(osv.osv):
                     so.payment_term,so.company_id,so.pricelist_id,so.user_id,so.amount_total,so.name as invoice_no,
                     so.warehouse_id,so.shipped,so.sale_plan_day_id,so.sale_plan_name,so.so_longitude,so.payment_type,
                     so.due_date,so.sale_plan_trip_id,so.so_latitude,so.customer_code,so.name as so_refNo,so.total_dis,so.deduct_amt,so.coupon_code,
-                    so.invoiced,so.branch_id,so.delivery_remark ,team.name
+                    so.invoiced,so.branch_id,so.delivery_remark ,team.name,so.payment_term,so.due_date
                     from sale_order so, crm_case_section team                                    
                     where so.id= %s
                     and  team.id = so.section_id''', (So_id,))
@@ -1527,7 +1708,7 @@ class mobile_sale_order(osv.osv):
             invoiceObj = self.pool.get('account.invoice')                
             stockPickingObj = self.pool.get('stock.picking')
             stockDetailObj = self.pool.get('stock.transfer_details')        
-            partner_obj=self.pool.get('res.partner')
+            partner_obj = self.pool.get('res.partner')
             
             str = "{" + saleorderList + "}"    
             str = str.replace("'',", "',")  # null
@@ -1545,25 +1726,32 @@ class mobile_sale_order(osv.osv):
             if deliver_data:
                 
                 for deli in deliver_data:       
-                    print 'Miss',deli['miss'],deli
+                    print 'Miss', deli['miss'], deli
+                    so_ref_no = deli['so_refNo'].replace('\\','').replace('\\','')          
+                    print       'so_ref_noso_ref_no',so_ref_no
                     if deli['miss'] == 't':
-                        cr.execute('update sale_order set is_generate = false where name=%s',(deli['so_refNo'],))
+                        cr.execute('update sale_order set is_generate = false, due_date = %s where name=%s', (deli['due_date'], so_ref_no,))
+                        cr.execute('select tb_ref_no from sale_order where name=%s',( so_ref_no,))
+                        ref_no=cr.fetchone()[0]
+                        cr.execute("update pre_sale_order set void_flag = 'voided' where name=%s", ( ref_no,))
                     else:                            
                         So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
-                                                       , ('name', '=', deli['so_refNo'])], context=context)
+                                                       , ('name', '=', so_ref_no)], context=context)
                         if So_id:
                             solist = So_id                               
-                            cr.execute('select branch_id,section_id from sale_order where name=%s',(deli['so_refNo'],))
-                            data=cr.fetchone()
+                            cr.execute('select branch_id,section_id,delivery_remark from sale_order where name=%s', (so_ref_no,))
+                            data = cr.fetchone()
                             if data:
-                                branch_id=data[0]
-                                section_id=data[1]
-                            cr.execute('select delivery_team_id from crm_case_section where id=%s',(section_id,))
-                            delivery=cr.fetchone()
+                                branch_id = data[0]
+                                section_id = data[1]
+                                delivery_remark = data[2]
+
+                            cr.execute('select delivery_team_id from crm_case_section where id=%s', (section_id,))
+                            delivery = cr.fetchone()
                             if delivery:
-                                delivery_team_id=delivery[0]
+                                delivery_team_id = delivery[0]
                             else:
-                                delivery_team_id=None
+                                delivery_team_id = None
                             
                             # For DO
                             stockViewResult = soObj.action_view_delivery(cr, uid, So_id, context=context)    
@@ -1582,20 +1770,20 @@ class mobile_sale_order(osv.osv):
                                 detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
                                 if detailObj:
                                     detailObj.do_detailed_transfer()    
-                                print 'testing---------------',                   
+                                print 'testing---------------',
                             # Create Invoice
                             print 'Context', context
                             invoice_id = self.create_invoices(cr, uid, solist, context=context)
-                            print ' invoice_id',invoice_id
-                            #id update partner form (temporay)
+                            print ' invoice_id', invoice_id
+                            # id update partner form (temporay)
 #                             partner_data = invoiceObj.browse(cr, uid, invoice_id, context=context)
 #                             partner_id=partner_data.partner_id.id
 #                             partner_obj.write(cr,uid,partner_id,{'property_account_receivable':629}, context)
 #                             partner = partner_obj.browse(cr, uid, partner_id, context=context)
 #                             account_id=partner.property_account_receivable.id
-#                             invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)                                    
-                            cr.execute('update account_invoice set branch_id =%s ,payment_type=%s,section_id=%s,user_id=%s where id =%s',(branch_id,deli['payment_type'],delivery_team_id,uid,invoice_id,))                            
-                            
+#                             invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)
+                            cr.execute('update account_invoice set date_invoice = now()::date , branch_id =%s ,payment_type=%s,delivery_remark =%s ,section_id=%s,user_id=%s, payment_term = %s where id =%s',(branch_id, deli['payment_type'], delivery_remark, delivery_team_id, uid,deli['payment_term'],invoice_id))                                                
+                                                        
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             if invoice_id:
                                 invlist = []
@@ -1612,8 +1800,8 @@ class mobile_sale_order(osv.osv):
                                 invObj.action_number()
                                 # validate invoice
                                 invObj.invoice_validate()
-                                #pre_order =True
-                                invoiceObj.write(cr,uid,invoice_id,{'pre_order':True}, context)                                                                                                                             
+                                # pre_order =True
+                                invoiceObj.write(cr, uid, invoice_id, {'pre_order':True}, context)                                                                                                                             
                                                                         
             return True 
           
@@ -1641,11 +1829,15 @@ class mobile_sale_order(osv.osv):
                     print 'Journal ID', deli['journal_id']
                     print 'Payment Type', deli['payment_type']
                     print 'So Ref No', deli['so_refNo']
+                    so_ref_no = deli['so_refNo'].replace('||','')
                     So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
-                                                   , ('name', '=', deli['so_refNo'])], context=context)
+                                                   , ('name', '=', so_ref_no)], context=context)
                     if So_id:
                         print 'Sale Order Id', So_id[0]
-                        cr.execute('''update sale_order set state ='cancel' where id = %s ''', (So_id[0],))                                                                                                                                                                                                                                
+                        cr.execute('''update sale_order set state ='cancel' where id = %s ''', (So_id[0],))
+                        cr.execute('select tb_ref_no from sale_order where id=%s',(So_id[0],))
+                        ref_no=cr.fetchone()[0]
+                        cr.execute("update pre_sale_order set void_flag = 'voided' where name=%s", ( ref_no,))                                                                                                                                                                                                                            
             return True  
                    
     def create_mobile_stock_return(self, cursor, user, vals, context=None):
@@ -1675,19 +1867,19 @@ class mobile_sale_order(osv.osv):
             
             if stock:
                 for sr in stock:
-                    cursor.execute('select id from stock_return_mobile where user_id = %s and return_date=%s ', (user,sr['return_date'],))
+                    cursor.execute('select id from stock_return_mobile where user_id = %s and return_date=%s ', (user, sr['return_date'],))
                     data = cursor.fetchall()
                     if data:
                         stock_return_id = data[0][0]
                         cursor.execute('delete from stock_return_mobile where id = %s ', (stock_return_id,))
                         cursor.execute('delete from stock_return_mobile_line where line_id = %s ', (stock_return_id,))
-                    cursor.execute("select vehicle_id from crm_case_section where id=%s",(sr['sale_team_id'],))
-                    vehicle_id=cursor.fetchone()
+                    cursor.execute("select vehicle_id from crm_case_section where id=%s", (sr['sale_team_id'],))
+                    vehicle_id = cursor.fetchone()
                     if vehicle_id:
-                        vehicle_id=vehicle_id[0]
+                        vehicle_id = vehicle_id[0]
                     else:
-                        vehicle_id=None
-                    print 'vehicle_id',vehicle_id
+                        vehicle_id = None
+                    print 'vehicle_id', vehicle_id
                     mso_result = {
                         'sale_team_id':sr['sale_team_id'],
                         'return_date':sr['return_date'],
@@ -1698,8 +1890,8 @@ class mobile_sale_order(osv.osv):
 
                     }
                     stock_id = stock_return_obj.create(cursor, user, mso_result, context=context)                  
-                    for srl in stock_line:                            #return_quantity=  float(srl['return_quantity']) - (float(srl['sale_quantity'])+float(srl['foc_quantity'] ))          
-                            return_quantity=srl['return_quantity']
+                    for srl in stock_line:  # return_quantity=  float(srl['return_quantity']) - (float(srl['sale_quantity'])+float(srl['foc_quantity'] ))          
+                            return_quantity = srl['return_quantity']
                             mso_line_res = {                                                            
                                   'line_id':stock_id,
                                   'return_quantity':return_quantity,
@@ -1743,18 +1935,20 @@ class mobile_sale_order(osv.osv):
             
             if stock:
                 for sr in stock:                                    
-                    cursor.execute('select vehicle_id,location_id,issue_location_id,delivery_team_id from crm_case_section where id = %s ', (sr['sale_team_id'],))
+                    cursor.execute('select vehicle_id,location_id,issue_location_id,delivery_team_id,receiver from crm_case_section where id = %s ', (sr['sale_team_id'],))
                     data = cursor.fetchall()
                     if data:
                         vehcle_no = data[0][0]
                         from_location_id = data[0][1]
                         to_location_id = data[0][2]
-                        delivery_id = data[0][3]                        
+                        delivery_id = data[0][3]             
+                        receiver=data[0][4]           
                     else:
                         vehcle_no = None
                         from_location_id = None
                         to_location_id = None
                         delivery_id = None          
+                        receiver=None
                     
                     mso_result = {
                         'request_date':sr['request_date'],
@@ -1762,7 +1956,7 @@ class mobile_sale_order(osv.osv):
                         'issue_date':sr['issue_date'] ,
                          's_issue_date':sr['issue_date'] ,
                         'state': 'draft',
-                        'issue_to':sr['issue_to'],
+                        'issue_to':receiver,
                         'company_id':sr['company_id'],
                         'branch_id':sr['branch_id'],
                         'vehicle_id':vehcle_no,
@@ -1773,59 +1967,59 @@ class mobile_sale_order(osv.osv):
                     stock_id = stock_request_obj.create(cursor, user, mso_result, context=context)
                     
                     for srl in stock_line:
-                        if (sr['rfi_no']==srl['rfi_no']):
+                        if (sr['rfi_no'] == srl['rfi_no']):
                             cursor.execute('select a.uom_ratio,a.big_uom_id,a.uom_id from product_template a, product_product b where a.id = b.product_tmpl_id and b.id = %s ', (srl['product_id'],))
                             data = cursor.fetchall()
                             if data:
                                 packing_unit = data[0][0]
-                                big_uom_id= data[0][1]
-                                small_uom_id=data[0][2]
+                                big_uom_id = data[0][1]
+                                small_uom_id = data[0][2]
                             else:
                                 packing_unit = None
-                                big_uom_id=None
-                                small_uom_id=None
+                                big_uom_id = None
+                                small_uom_id = None
 
-                            ori_req_quantity=int(srl['req_quantity'])
-                            #print 'product_idddddddddddd',req_quantity
-                            cursor.execute("select floor(1/factor) as ratio from product_uom where active = true and id=%s",(big_uom_id,))
-                            bigger_qty=cursor.fetchone()[0]
-                            bigger_qty=int(bigger_qty)
-                            #print ' bigger_qty',sale_qty,bigger_qty,type(sale_qty),type(bigger_qty)                        
-                            big_uom_qty=divmod(ori_req_quantity,bigger_qty)
-                            #print 'big_uom_qty',big_uom_qty
+                            ori_req_quantity = int(srl['req_quantity'])
+                            # print 'product_idddddddddddd',req_quantity
+                            cursor.execute("select floor(1/factor) as ratio from product_uom where active = true and id=%s", (big_uom_id,))
+                            bigger_qty = cursor.fetchone()[0]
+                            bigger_qty = int(bigger_qty)
+                            # print ' bigger_qty',sale_qty,bigger_qty,type(sale_qty),type(bigger_qty)                        
+                            big_uom_qty = divmod(ori_req_quantity, bigger_qty)
+                            # print 'big_uom_qty',big_uom_qty
                             if  big_uom_qty:
-                                big_req_quantity=big_uom_qty[0]
-                                req_quantity=big_uom_qty[1]
-                                #print 'big_req',big_req_quantity,req_quantity
-                            cursor.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id',(to_location_id,srl['product_id'],))
-                            qty_on_hand=cursor.fetchone()
+                                big_req_quantity = big_uom_qty[0]
+                                req_quantity = big_uom_qty[1]
+                                # print 'big_req',big_req_quantity,req_quantity
+                            cursor.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (to_location_id, srl['product_id'],))
+                            qty_on_hand = cursor.fetchone()
                             if qty_on_hand:
-                                qty_on_hand=qty_on_hand[0]
+                                qty_on_hand = qty_on_hand[0]
                             else:
-                                qty_on_hand=0               
-                            if int(srl['product_uom']) ==int(big_uom_id):                                                                          
+                                qty_on_hand = 0               
+                            if int(srl['product_uom']) == int(big_uom_id):                                                                          
                                 mso_line_res = {                                                            
                                       'line_id':stock_id,
                                       'remark':srl['remark'],
                                       'req_quantity':0,
-                                      'product_id':srl['product_id'],
+                                      'product_id':int(srl['product_id']),
                                       'product_uom':small_uom_id,
                                       'uom_ratio':packing_unit ,
                                       'big_uom_id':big_uom_id,
-                                      'big_req_quantity':ori_req_quantity,               
-                                      'qty_on_hand':qty_on_hand,                   
+                                      'big_req_quantity':ori_req_quantity,
+                                      'qty_on_hand':qty_on_hand,
                                       }
                             else:
                                 mso_line_res = {                                                            
                                       'line_id':stock_id,
                                       'remark':srl['remark'],
                                       'req_quantity':req_quantity,
-                                      'product_id':srl['product_id'],
+                                      'product_id':int(srl['product_id']),
                                       'product_uom':small_uom_id,
                                       'uom_ratio':packing_unit ,
                                       'big_uom_id':big_uom_id,
-                                      'big_req_quantity':big_req_quantity,               
-                                      'qty_on_hand':qty_on_hand,                   
+                                      'big_req_quantity':big_req_quantity,
+                                      'qty_on_hand':qty_on_hand,
                                       }
                             stock_request_line_obj.create(cursor, user, mso_line_res, context=context)
             print 'True'
@@ -1933,22 +2127,34 @@ class mobile_sale_order(osv.osv):
                 rental_collection.append(r)  
             if rental_collection:
                 for ar in rental_collection:
-                    cursor.execute('select id from mobile_sale_order where name = %s ',(ar['payment_id'],))
+                    cursor.execute('select id from mobile_sale_order where name = %s ', (ar['payment_id'],))
                     data = cursor.fetchall()
                     if data:
                         so_id = data[0][0]
                     else:
                         so_id = None
-                    amount=ar['amount']
-                    cursor.execute("select replace(%s, ',', '')::float as amount",(amount,))
+                    
+                    cursor.execute('select id from res_partner where customer_code = %s ', (ar['partner_id'],))
+                    data = cursor.fetchall()
+                    if data:
+                        parnter_id = data[0][0]
+                    else:
+                        parnter_id = None
+
+                    amount = ar['amount']
+                    cursor.execute("select replace(%s, ',', '')::float as amount", (amount,))
                     amount_data = cursor.fetchone()[0]
-                    amount=amount_data
+                    amount = amount_data
                     rental_result = {                    
-                        'payment_id':so_id,                        
+                        'payment_id':so_id,
                         'journal_id':ar['journal_id'],
                         'amount':amount,
                         'date':ar['date'],
-                        'notes':ar['notes'],    
+                        'notes':ar['notes'],
+                        'cheque_no':ar['cheque_no'],
+                        'partner_id':parnter_id,
+                        'sale_team_id':ar['sale_team_id'],
+                        'payment_code':ar['payment_code'],
                     }
                     rental_obj.create(cursor, user, rental_result, context=context)
             return True
@@ -1974,7 +2180,8 @@ class mobile_sale_order(osv.osv):
 #                 rental_collection.append(r)  
             if result:
                 for ar in result:
-                    cursor.execute('select tb_ref_no from sale_order where name = %s ', (ar['payment_id'],))
+                    payment_id  = ar['payment_id'].replace('\\','').replace('\\','')           
+                    cursor.execute('select tb_ref_no from sale_order where name = %s ', (payment_id,))
                     data = cursor.fetchall()
                     if data:
                         pre_no = data[0][0]
@@ -1989,11 +2196,15 @@ class mobile_sale_order(osv.osv):
                         so_id = None
                     
                     rental_result = {                    
-                        'pre_order_id':so_id,                        
+                        'pre_order_id':so_id,
                         'journal_id':ar['journal_id'],
                         'amount':ar['amount'],
                         'date':ar['date'],
-                        'notes':ar['notes'],    
+                        'notes':payment_id,
+                        'cheque_no':ar['cheque_no'],
+                        'partner_id':ar['partner_id'],
+                        'sale_team_id':ar['sale_team_id'],
+                        'payment_code':ar['payment_code'],
                     }
                     rental_obj.create(cursor, user, rental_result, context=context)
             return True
@@ -2039,7 +2250,7 @@ class mobile_sale_order(osv.osv):
         cr.execute('''select id,name from plan_frequency''')
         datas = cr.fetchall()        
         return datas
-    #Create New Customer from Tablet by kzo
+    # Create New Customer from Tablet by kzo
     def create_new_customer(self, cursor, user, vals, context=None):
         try:
             partner_obj = self.pool.get('res.partner')
@@ -2058,11 +2269,11 @@ class mobile_sale_order(osv.osv):
                 new_partner.append(r)  
             if new_partner:
                 for partner in new_partner:
-                    chiller=False;
+                    chiller = False;
                     if 'chiller' in partner:
-                        chiller=partner['chiller']
+                        chiller = partner['chiller']
                     partner_result = {                 
-                        'country_id':partner['country_id'],                        
+                        'country_id':partner['country_id'],
                         'state_id':partner['state_id'],
                         'city':partner['city'],
                         'street':partner['street'],
@@ -2078,38 +2289,49 @@ class mobile_sale_order(osv.osv):
                         'notify_email':'always',
                         'township':partner['township'],
                         'partner_latitude':partner['partner_latitude'],
-                        'partner_longitude':partner['partner_longitude'],                            
-                        'branch_id':partner['branch_id'],   
+                        'partner_longitude':partner['partner_longitude'],
+                        'branch_id':partner['branch_id'],
                         'outlet_type':partner['outlet_type'],
-                        'customer_code':partner['customer_code'],   
+                        'customer_code':partner['customer_code'],
                         'class_id':partner['class_id'],
-                        'mobile_customer':True, 
+                        'mobile_customer':True,
                         'pricelist_id':partner['pricelist_id'],
                         'chiller':chiller,
                         'unit':partner['unit'],
                         'image':partner['image'],
                         'sales_channel':partner['sales_channel'],
                         'temp_customer':partner['temp_customer'],
-                        'frequency_id':partner['frequency_id'],           
+                        'frequency_id':partner['frequency_id'],
+                        'section_id':partner['section_id'],
                     }
-                    partner_id =partner_obj.create(cursor, user, partner_result, context=context)
+                    partner_id = partner_obj.create(cursor, user, partner_result, context=context)
             return partner_id
         except Exception, e:
             print 'False'
             return 0
     
-    #GET Pending DELIVER CUSTOMER
-    def get_deliver_customer(self, cr, uid,saleTeamId, parnterList, context=None, **kwargs):    
+    # GET Pending DELIVER CUSTOMER
+    def get_deliver_customer(self, cr, uid, saleTeamId, parnterList, context=None, **kwargs):    
         
         partner_list = None
         parnterList = str(tuple(parnterList))
         parnterList = eval(parnterList)
         print 'Param Customer List', parnterList
         
-        cr.execute('''select PARTNER_ID from sale_order WHERE pre_order = TRUE AND delivery_id = %s 
-            AND shipped = False
-            AND invoiced = False
-            AND PARTNER_ID NOT IN %s''', (saleTeamId, parnterList,))
+        if parnterList:
+                cr.execute('''select PARTNER_ID from sale_order WHERE pre_order = TRUE AND delivery_id = %s 
+                AND shipped = False
+                AND invoiced = False
+                AND PARTNER_ID NOT IN %s''', (saleTeamId, parnterList,))
+            
+        else:
+            cr.execute('''select PARTNER_ID from sale_order 
+                WHERE pre_order = TRUE 
+                AND delivery_id = %s 
+                AND shipped = False
+                AND invoiced = False
+                ''', (saleTeamId,))
+            
         data = cr.fetchall()
         if data:
             partner_list = data
@@ -2129,7 +2351,8 @@ class mobile_sale_order(osv.osv):
                      A.address,
                      A.zip,A.state_name,A.partner_latitude,A.partner_longitude,null,A.image_medium,A.credit_limit,
                      A.credit_allow,A.sales_channel,A.branch_id,A.pricelist_id,A.payment_term_id,A.outlet_type ,
-                     A.city_id,A.township_id,A.country_id,A.state_id,A.unit,A.class_id,A.chiller,A.frequency_id,A.temp_customer
+                     A.city_id,A.township_id,A.country_id,A.state_id,A.unit,A.class_id,A.chiller,A.frequency_id,A.temp_customer,
+                     A.is_consignment,A.hamper,A.is_bank,A.is_cheque
                      from (
 
                      select RP.id,RP.name,'' as image,RP.is_company,null,
@@ -2138,9 +2361,10 @@ class mobile_sale_order(osv.osv):
                      RP.customer_code,RP.mobile_customer,OT.name as shop_name,RP.address,RP.zip ,RP.partner_latitude,RP.partner_longitude,RS.name as state_name,
                      substring(replace(cast(RP.image_medium as text),'/',''),1,5) as image_medium,RP.credit_limit,RP.credit_allow,
                      RP.sales_channel,RP.branch_id,RP.pricelist_id,RP.payment_term_id,RP.outlet_type,RP.city as city_id,RP.township as township_id,
-                     RP.country_id,RP.state_id,RP.unit,RP.class_id,RP.chiller,RP.frequency_id,RP.temp_customer
+                     RP.country_id,RP.state_id,RP.unit,RP.class_id,RP.chiller,RP.frequency_id,RP.temp_customer,RP.is_consignment,
+                     RP.hamper,RP.is_bank,RP.is_cheque
 
-                     from   res_partner RP ,res_country_state RS, res_city RC,res_township RT,
+                     from  res_partner RP ,res_country_state RS, res_city RC,res_township RT,
                              outlettype_outlettype OT
                                             where RS.id = RP.state_id
                                             and RP.township =RT.id
@@ -2156,7 +2380,7 @@ class mobile_sale_order(osv.osv):
         except Exception, e:
             return False
     
-    def get_credit_invoice(self, cr, uid, partner_list, branch_id ,invoiceList, context=None):    
+    def get_credit_invoice(self, cr, uid, partner_list, branch_id , invoiceList, context=None):    
         data_line = []
         if partner_list:
             partner_list = str(tuple(partner_list))
@@ -2199,10 +2423,10 @@ class mobile_sale_order(osv.osv):
                     '''         
                     , (branch_id, partner_list,))            
             data_line = cr.fetchall()                    
-        print 'data_lineeeeeeeeeeeeeee',data_line        
+        print 'data_lineeeeeeeeeeeeeee', data_line        
         return data_line
     
-    def get_credit_invoice_line(self, cr, uid, partner_list, branch_id,invoiceList , context=None):    
+    def get_credit_invoice_line(self, cr, uid, partner_list, branch_id, invoiceList , context=None):    
         data_line = []
         if partner_list:
             partner_list = str(tuple(partner_list))
@@ -2228,7 +2452,7 @@ class mobile_sale_order(osv.osv):
                     and inv.partner_id = rp.id
                     and inv.partner_id in %s
                     and inv.id not in %s'''                       
-                    , (branch_id, partner_list,invoiceList ,))
+                    , (branch_id, partner_list, invoiceList ,))
             else:
                 cr.execute(''' 
                     select  inv_line.id,inv_line.invoice_id,inv_line.product_id,pp.name_template, pp.default_code,
@@ -2248,7 +2472,7 @@ class mobile_sale_order(osv.osv):
                     , (branch_id, partner_list ,))
                       
             data_line = cr.fetchall()                    
-        print 'data_lineeeeeeeeeeeeeee',data_line        
+        print 'data_lineeeeeeeeeeeeeee', data_line        
         return data_line
     
     def create_ar_collection_journal_payment(self, cursor, user, vals, context=None):
@@ -2266,8 +2490,8 @@ class mobile_sale_order(osv.osv):
                 result.append(x)
             if result:
                 for ar in result:
-                    ref_no = ar['payment_id'].replace('\\',"")
-                    print 'Ref No',ref_no
+                    ref_no = ar['payment_id'].replace('\\', "")
+                    print 'Ref No', ref_no
                     cursor.execute('''select max(id) from mobile_ar_collection where ref_no = %s and write_date::date = now()::date ''', (ref_no,))
                     data = cursor.fetchall()
                     if data:
@@ -2276,11 +2500,15 @@ class mobile_sale_order(osv.osv):
                         collection_id = None                    
                     
                     rental_result = {                    
-                        'collection_id':collection_id,                        
+                        'collection_id':collection_id,
                         'journal_id':ar['journal_id'],
                         'amount':ar['amount'],
                         'date':ar['date'],
-                        'notes':ar['notes'].replace('\\',""),    
+                        'notes':ar['notes'].replace('\\', ""),
+                        'cheque_no':ar['cheque_no'].replace('\\', ""),
+                        'partner_id':ar['partner_id'].replace('\\', ""),
+                        'sale_team_id':ar['sale_team_id'].replace('\\', ""),
+                        'payment_code':ar['payment_code'].replace('\\', ""),
                     }
                     rental_obj.create(cursor, user, rental_result, context=context)
             return True
@@ -2328,13 +2556,13 @@ class mobile_sale_order(osv.osv):
                         access_type_id = None                            
                         
                     rental_result = {                    
-                        'partner_id':ar['partner_id'],                        
+                        'partner_id':ar['partner_id'],
                         'qty':ar['qty'],
                         'image':ar['image'],
                         'date':ar['date'],
-                        'name':ar['name'],    
-                        'asset_type':access_type_id, 
-                        'type':ar['type'], 
+                        'name':ar['name'],
+                        'asset_type':access_type_id,
+                        'type':ar['type'],
                     }
                     rental_obj.create(cursor, user, rental_result, context=context)
             return True
@@ -2342,7 +2570,7 @@ class mobile_sale_order(osv.osv):
             print 'False'
             return False         
         
-    def dayplan_is_update(self, cr, uid,team_id, late_date , context=None, **kwargs):
+    def dayplan_is_update(self, cr, uid, team_id, late_date , context=None, **kwargs):
             
             flag = False
             lastdate = datetime.strptime(late_date, "%Y-%m-%d")
@@ -2355,7 +2583,7 @@ class mobile_sale_order(osv.osv):
                 flag = False                     
             return flag
         
-    def product_is_update(self, cr, uid,team_id, late_date , context=None, **kwargs):
+    def product_is_update(self, cr, uid, team_id, late_date , context=None, **kwargs):
             
             flag = False
             lastdate = datetime.strptime(late_date, "%Y-%m-%d")
@@ -2368,7 +2596,7 @@ class mobile_sale_order(osv.osv):
                 flag = False                     
             return flag
         
-    def customer_is_update(self, cr, uid,team_id, late_date , context=None, **kwargs):
+    def customer_is_update(self, cr, uid, team_id, late_date , context=None, **kwargs):
             
             flag = False
             lastdate = datetime.strptime(late_date, "%Y-%m-%d")
@@ -2377,7 +2605,7 @@ class mobile_sale_order(osv.osv):
                     where A.id = B.partner_id
                     And A.write_date > %s
                     And B.sale_team_id = %s
-            ''', (lastdate,team_id,))   
+            ''', (lastdate, team_id,))   
             datas = cr.fetchall()
             if datas:
                 flag = True
@@ -2385,7 +2613,7 @@ class mobile_sale_order(osv.osv):
                 flag = False                     
             return flag
     
-    def tripplan_is_update(self, cr, uid,team_id, late_date , context=None, **kwargs):
+    def tripplan_is_update(self, cr, uid, team_id, late_date , context=None, **kwargs):
             
         try:
             flag = False
@@ -2401,16 +2629,139 @@ class mobile_sale_order(osv.osv):
             and p.id = d.sale_plan_trip_id
             and e.id = d.partner_id
             and (e.write_date > %s or p.write_date >  %s)
-                ''', (team_id ,lastdate,lastdate,))   
+                ''', (team_id , lastdate, lastdate,))   
             datas = cr.fetchall()
             if datas:
                 flag = True
             else:
                 flag = False                   
             return flag
-        except Exception,e:
+        except Exception, e:
             return False
+    
+    def res_partners_team(self, cr, uid, section_id, late_date, context=None, **kwargs):
         
+        lastdate = datetime.strptime(late_date, "%Y-%m-%d")
+        print 'DateTime', lastdate
+        
+        cr.execute('''                                
+        select A.id,A.name,A.image,A.is_company, A.image_small,replace(A.street,',',';') street,replace(A.street2,',',';') street2,A.city,A.website,
+                     replace(A.phone,',',';') phone,A.township,replace(A.mobile,',',';') mobile,A.email,A.company_id,A.customer, 
+                     A.customer_code,A.mobile_customer,A.shop_name ,
+                     A.address,
+                     A.zip,A.state_name,A.partner_latitude,A.partner_longitude,null,A.image_medium,A.credit_limit,
+                     A.credit_allow,A.sales_channel,A.branch_id,A.pricelist_id,A.payment_term_id,A.outlet_type ,
+                     A.city_id,A.township_id,A.country_id,A.state_id,A.unit,A.class_id,A.chiller,A.frequency_id,A.temp_customer,
+                     A.is_consignment,A.hamper,A.is_bank,A.is_cheque
+                     
+                     from (
+                     select RP.id,RP.name,'' as image,RP.is_company,null,
+                     '' as image_small,RP.street,RP.street2,RC.name as city,RP.website,
+                     RP.phone,RT.name as township,RP.mobile,RP.email,RP.company_id,RP.customer, 
+                     RP.customer_code,RP.mobile_customer,OT.name as shop_name,RP.address,RP.zip ,RP.partner_latitude,RP.partner_longitude,RS.name as state_name,
+                     substring(replace(cast(RP.image_medium as text),'/',''),1,5) as image_medium,RP.credit_limit,RP.credit_allow,
+                     RP.sales_channel,RP.branch_id,RP.pricelist_id,RP.payment_term_id,RP.outlet_type,RP.city as city_id,RP.township as township_id,
+                     RP.country_id,RP.state_id,RP.unit,RP.class_id,RP.chiller,RP.frequency_id,RP.temp_customer,RP.is_consignment,RP.hamper,
+                     RP.is_bank,RP.is_cheque
+                     from sale_team_customer_rel ST ,outlettype_outlettype OT,
+                                             res_partner RP ,res_country_state RS, res_city RC,res_township RT
+                                            where ST.partner_id = RP.id 
+                                            and  RS.id = RP.state_id
+                                            and RP.township =RT.id
+                                            and RP.city = RC.id
+                                            and RP.active = true                                            
+                                            and RP.outlet_type = OT.id                                            
+                                            and ST.sale_team_id = %s                                   
+                        )A 
+                        where A.customer_code is not null
+            ''', (section_id ,))
+        datas = cr.fetchall()
+        return datas
+
+# kzo Eidt
+    def res_partners_return_day(self, cr, uid, section_id, day_id, pull_date  , context=None, **kwargs):
+    
+        lastdate = datetime.strptime(pull_date, "%Y-%m-%d")
+        print 'DateTime', lastdate
+        cr.execute('''                    
+                     select A.id,A.name,A.image,A.is_company, A.image_small,replace(A.street,',',';') street, replace(A.street2,',',';') street2,A.city,A.website,
+                     replace(A.phone,',',';') phone,A.township, replace(A.mobile,',',';') mobile,A.email,A.company_id,A.customer, 
+                     A.customer_code,A.mobile_customer,A.shop_name ,
+                     A.address,
+                     A.zip,A.state_name,A.partner_latitude,A.partner_longitude,A.sale_plan_day_id,A.image_medium,A.credit_limit,
+                     A.credit_allow,A.sales_channel,A.branch_id,A.pricelist_id,A.payment_term_id,A.outlet_type ,
+                     A.city_id,A.township_id,A.country_id,A.state_id,A.unit,A.class_id,A.chiller,A.frequency_id,A.temp_customer,
+                     A.is_consignment,A.hamper,A.is_bank,A.is_cheque
+                     from (
+                     select RP.id,RP.name,'' as image,RP.is_company,RPS.sale_plan_day_id,
+                     '' as image_small,RP.street,RP.street2,RC.name as city,RP.website,
+                     RP.phone,RT.name as township,RP.mobile,RP.email,RP.company_id,RP.customer, 
+                     RP.customer_code,RP.mobile_customer,OT.name as shop_name,RP.address,RP.zip ,RP.partner_latitude,RP.partner_longitude,RS.name as state_name,
+                     substring(replace(cast(RP.image_medium as text),'/',''),1,5) as image_medium,RP.credit_limit,RP.credit_allow,
+                     RP.sales_channel,RP.branch_id,RP.pricelist_id,RP.payment_term_id,RP.outlet_type,RP.city as city_id,RP.township as township_id,
+                     RP.country_id,RP.state_id,RP.unit,RP.class_id,RP.chiller,RP.frequency_id,RP.temp_customer,RP.is_consignment,RP.hamper,
+                     RP.is_bank,RP.is_cheque
+                     from sale_plan_day SPD ,outlettype_outlettype OT,
+                                            res_partner_sale_plan_day_rel RPS , res_partner RP ,res_country_state RS, res_city RC,res_township RT
+                                            where SPD.id = RPS.sale_plan_day_id 
+                                            and  RS.id = RP.state_id
+                                            and RP.township =RT.id
+                                            and RP.city = RC.id
+                                            and RP.active = true
+                                            and RP.outlet_type = OT.id
+                                            and RPS.partner_id = RP.id 
+                                            and SPD.sale_team = %s                                        
+                                            and RPS.sale_plan_day_id = %s
+                                            
+                                                                            
+                        )A 
+                        where A.customer_code is not null
+            ''', (section_id, day_id,))
+        datas = cr.fetchall()
+        return datas
+# kzo Edit add Sale Plan Trip and Day ID
+    def res_partners_return_trip(self, cr, uid, section_id, day_id , pull_date, context=None, **kwargs):
+        
+        lastdate = datetime.strptime(pull_date, "%Y-%m-%d")
+        print 'DateTime', lastdate
+        cr.execute('''        
+                    select A.id,A.name,A.image,A.is_company,
+                     A.image_small,replace(A.street,',',';') street,replace(A.street2,',',';') street2,A.city,A.website,
+                     replace(A.phone,',',';') phone,A.township,A.mobile,A.email,A.company_id,A.customer, 
+                     A.customer_code,A.mobile_customer,A.shop_name ,
+                     A.address,
+                     A.zip,A.state_name,A.partner_latitude,A.partner_longitude,A.sale_plan_trip_id,A.image_medium,
+                     A.credit_limit,A.credit_allow,A.sales_channel,A.branch_id,A.pricelist_id,A.payment_term_id ,A.outlet_type,
+                    A.city_id,A.township_id,A.country_id,A.state_id,A.unit,A.class_id,A.chiller,A.frequency_id,A.temp_customer,
+                    A.is_consignment,A.hamper,A.is_bank,A.is_cheque
+                      from (
+                     select RP.id,RP.name,'' as image,RP.is_company,
+                     '' as image_small,RP.street,RP.street2,RC.name as city,RP.website,
+                     RP.phone,RT.name as township,RP.mobile,RP.email,RP.company_id,RP.customer, 
+                     RP.customer_code,RP.mobile_customer,OT.name as shop_name ,RP.address,RPT.sale_plan_trip_id,
+                     RP.zip ,RP.partner_latitude,RP.partner_longitude,RS.name as state_name
+                      ,substring(replace(cast(RP.image_medium as text),'/',''),1,5) as image_medium ,RP.credit_limit,RP.credit_allow,
+                     RP.sales_channel,RP.branch_id,RP.pricelist_id,RP.payment_term_id,RP.outlet_type,RP.city as city_id,RP.township as township_id,
+                     RP.country_id,RP.state_id,RP.unit,RP.class_id,RP.chiller,RP.frequency_id,RP.temp_customer ,RP.is_consignment,RP.hamper,
+                     RP.is_bank,RP.is_cheque
+                     from sale_plan_trip SPT , res_partner_sale_plan_trip_rel RPT , res_partner RP ,res_country_state RS ,
+                     res_city RC, res_township RT,outlettype_outlettype OT 
+                     where SPT.id = RPT.sale_plan_trip_id 
+                     and RPT.partner_id = RP.id 
+                     and  RS.id = RP.state_id
+                     and RP.outlet_type = OT.id
+                     and  RP.city = RC.id
+                     and RP.township = RT.id
+                     and RP.active = true
+                     and SPT.sale_team = %s
+                     and RPT.sale_plan_trip_id = %s
+                     
+                        )A 
+                    where A.customer_code is not null 
+            ''', (section_id, day_id,))
+        datas = cr.fetchall()
+        return datas
+    
 mobile_sale_order()
 
 class mobile_sale_order_line(osv.osv):

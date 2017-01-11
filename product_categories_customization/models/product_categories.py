@@ -49,6 +49,7 @@ class product_category(osv.osv):
             help="When doing real-time inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account, unless "
                  "there is a specific valuation account set on the destination location. This is the default value for all products in this category. It "
                  "can also directly be set on each product"),
+                
         'property_stock_valuation_account_id': fields.property(
             type='many2one',
             relation='account.account',

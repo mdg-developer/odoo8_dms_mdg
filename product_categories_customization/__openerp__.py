@@ -35,6 +35,7 @@ Product Categories
     'depends': ['base','product','account','account_anglo_saxon'
     ],
     'data': [        
+             'view/product_view.xml',
     ],
     'installable': True,
     'auto_install': False,

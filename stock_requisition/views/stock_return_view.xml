@@ -23,10 +23,8 @@
 								<field name="name" />
 								<field name="sale_team_id" attrs="{'readonly':[('state','=','received')]}"
 									on_change="on_change_sale_team_id(sale_team_id)" widget="selection" />
-								<field name="from_location" attrs="{'readonly':[('state','=','received')]}"
-									widget="selection" />
-								<field name="to_location" attrs="{'readonly':[('state','=','received')]}"
-									widget="selection" />
+								<field name="from_location"  readonly="1" widget="selection" />
+								<field name="to_location"  readonly="1"   widget="selection" />
 								<field name="return_date" attrs="{'readonly':[('state','=','received')]}" />
 								<!-- <field name="branch_id" widget="selection" /> -->
 							</group>
@@ -68,7 +66,7 @@
 											<field name="product_uom" invisible="1" />
 											<field name="uom_ratio" invisible="1" />
 											<!-- <field name="qty_by_wh" /> -->
-											<field name="rec_big_quantity" string="Received Qty(B)" />
+											<field name="rec_big_quantity" string="Received Qty(B)"  />
 											<field name="rec_small_quantity" string="Received Qty(S)" />
 											<field name="expiry_date" string="Expiry" attrs="{'readonly':True}" />
 											<field name="remark" string="Remark" />

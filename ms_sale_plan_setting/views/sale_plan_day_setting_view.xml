@@ -31,7 +31,7 @@
 							<field name="sale_team_id" on_change="on_change_sale_team_id(sale_team_id)" />
 							<field name="principal" string="Principal"   invisible="1"/>
 							<field name="main_group" string="Main Group" widget="many2many_tags"  invisible="1"/>
-							<field name="branch_id" string="Branch" />
+							<field name="branch_id" string="Branch"  required="1"/>
 						</group>
 						<group>
 							<field name="date" />

@@ -18,127 +18,116 @@
 
 					<table class="table table-condensed">
 						<tr>
-							<td>
-								<strong>(RFI)Ref;No:</strong>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>RFI No:</strong>
 							</td>
-							<td>
+							<td style="border:0pt;font-size:10pt;">
 								<strong t-field="o.name"></strong>
 							</td>
-
-							<td>
-								<strong>Receiver:</strong>
-							</td>
-							<td>
-								<p t-field="o.issue_to" />
-							</td>
 						</tr>
 
 						<tr>
-							<td>
+							<td style="border:0pt;font-size:10pt;">
 								<strong>Delivery Team:</strong>
 							</td>
-							<td>
-								<p t-field="o.sale_team_id.name" />
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.sale_team_id.name" />
 							</td>
-							<td>
-								<strong>Request Warehouse:</strong>
+
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Receiver:</strong>
 							</td>
-							<td>
-								<span t-field="o.to_location_id.location_id.name" />
-								<b>/</b>
-								<span t-field="o.to_location_id.name" />
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.issue_to" />
 							</td>
+
+							<!-- <td> <strong>Vehicle No:</strong> </td> <td> <span t-field="o.vehicle_id.model_id.brand_id.name"/> 
+								<b>/</b> <span t-field="o.vehicle_id.model_id.modelname"/> </td> -->
+
 						</tr>
 
-
 						<tr>
-							<td>
+
+							<td style="border:0pt;font-size:10pt;">
 								<strong>Requesting Location:</strong>
 							</td>
-							<td>
+							<td style="border:0pt;font-size:10pt;">
 								<span t-field="o.from_location_id.location_id.name" />
 								<b>/</b>
 								<span t-field="o.from_location_id.name" />
 							</td>
-							<td>
-								<strong>Order Date From:</strong>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Request Warehouse:</strong>
 							</td>
-							<td>
-								<p t-field="o.issue_date" />
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.to_location_id.location_id.name" />
+								<b>/</b>
+								<span t-field="o.to_location_id.name" />
 							</td>
 
 						</tr>
 
-
 						<tr>
-							<td>
+							<td style="border:0pt;font-size:10pt;">
 								<strong>Date Requested:</strong>
 							</td>
-							<td>
-								<p t-field="o.request_date" />
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.request_date" />
 							</td>
 
-							<td>
-								<strong>Order Date To:</strong>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Requested By:</strong>
 							</td>
-							<td>
-								<p t-field="o.s_issue_date" />
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.request_by" />
 							</td>
 						</tr>
 
 						<tr>
-							<td>
+							<td style="border:0pt;font-size:10pt;">
 								<strong>Branch:</strong>
 							</td>
-							<td>
-								<p t-field="o.branch_id.name" />
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.branch_id.name" />
 							</td>
-							<td>
-								<strong>Request By:</strong>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Approved By:</strong>
 							</td>
-							<td>
-								<p t-field="o.request_by" />
-							</td>
-						</tr>
-						<tr>
-							<td>
-							</td>
-							<td>
-							</td>
-							<td>
-								<strong>Approve By:</strong>
-							</td>
-							<td>
-								<p t-field="o.approve_by" />
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.approve_by" />
 							</td>
 						</tr>
-
 					</table>
 
 					<table class="table table-condensed">
 						<thead>
 							<tr>
 								<th>Product</th>
-								<th>Qty(S)</th>
-								<!-- <th>Bigger UOM</th> <th>Quantity</th> -->
-								<th>Qty On Hand (S)</th>
+								<th class="text-center">Qty(B/S)</th>
+								<th class="text-center">Qty on Hand(S)</th>
 								<th>Remark</th>
 							</tr>
 						</thead>
 						<tbody class="invoice_tbody">
 							<tr t-foreach="o.p_line" t-as="l">
-								<td>
-									<span t-field="l.product_id" />
-								</td>
-								<td>
-									<span t-field="l.req_quantity" />
-								</td>
-								<td>
-									<span t-field="l.qty_on_hand" />
-								</td>
-								<td>
-									<span t-field="l.remark" />
-								</td>
+
+								<t t-if="(l.big_req_quantity)+(l.req_quantity)!=0">
+									<td>
+										<span t-field="l.product_id" />
+									</td>
+									<td align="center" >
+										<span t-field="l.big_req_quantity" />
+										/
+										<span t-field="l.req_quantity" />
+									</td>
+									<td align="right" style="padding-right: 5cm;">
+										<span t-field="l.qty_on_hand" />
+									</td>
+									<td>
+										<span t-field="l.remark" />
+									</td>
+								</t>
+
 							</tr>
 						</tbody>
 					</table>

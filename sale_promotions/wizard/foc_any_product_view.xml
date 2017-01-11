@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- === Sales Team Date Form === -->
+
+		<record id="view_foc_any_product_form" model="ir.ui.view">
+			<field name="name">foc.any.product.form</field>
+			<field name="model">foc.any.product</field>
+			<field name="arch" type="xml">
+				<form string="FOC Any Product">
+					<h3>
+						<label string="FOC Any Product" />
+					</h3>
+					<group>
+						<group>
+							<field name="one_product_id" />
+							<field name="two_product_id" />
+							<field name="three_product_id"  invisible="1"/>
+						</group>
+						<group>
+							<field name="one_product_qty" />
+							<field name="two_product_qty" />
+							<field name="three_product_qty"   invisible="1"/>
+						</group>
+						<group>
+						<field name="qty" string="Available Qty"/>
+						</group>
+					</group>
+					<footer>
+						<button string="Confirm"  name="create_order_line" type="object"
+							class="oe_highlight" />
+					</footer>
+				</form>
+
+			</field>
+		</record>
+
+		<record id="open_view_foc_any_product" model="ir.actions.act_window">
+			<field name="name">FOC Any Product</field>
+			<field name="res_model">foc.any.product</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_foc_any_product_form" />
+			<field name="target">new</field>
+		</record>
+
+
+	</data>
+</openerp>
+	    
+	    
+	    

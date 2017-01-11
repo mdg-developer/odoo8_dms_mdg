@@ -100,12 +100,12 @@ class stock_requisition(osv.osv):
     _columns = {
         'sale_team_id':fields.many2one('crm.case.section', 'Delivery Team', required=True),
         'name': fields.char('RFI Ref', readonly=True),
-        'from_location_id':fields.many2one('stock.location', 'Requesting  Location', required=True),
-        'to_location_id':fields.many2one('stock.location', 'Request Warehouse'),
+        'from_location_id':fields.many2one('stock.location', 'Requesting  Location', readonly=True),
+        'to_location_id':fields.many2one('stock.location', 'Request Warehouse' ,readonly=True),
         'so_no' : fields.char('Sales Order/Inv Ref;No.'),
         'issue_to':fields.char("Receiver"),
-        'request_by':fields.many2one('res.users', "Requested By"),
-        'approve_by':fields.many2one('res.users', "Approved By"),
+        'request_by':fields.many2one('res.users', "Requested By" , readonly=True),
+        'approve_by':fields.many2one('res.users', "Approved By", readonly=True),
         'request_date' : fields.date('Date Requested'),
          'issue_date':fields.date('Order Date From', required=True),
          's_issue_date':fields.date('Order Date To', required=True),
@@ -137,9 +137,16 @@ class stock_requisition(osv.osv):
     }     
     
     def create(self, cursor, user, vals, context=None):
+        if vals['sale_team_id']:
+            sale_team_id=vals['sale_team_id']
+            sale_team = self.pool.get('crm.case.section').browse(cursor, user, sale_team_id, context=context)
+            to_location_id = sale_team.issue_location_id.id            
+            from_location_id=sale_team.location_id.id
         id_code = self.pool.get('ir.sequence').get(cursor, user,
                                                 'request.code') or '/'
         vals['name'] = id_code
+        vals['to_location_id'] = to_location_id
+        vals['from_location_id'] = from_location_id
         return super(stock_requisition, self).create(cursor, user, vals, context=context)
 
     def so_list(self, cr, uid, ids, context=None):
@@ -154,6 +161,7 @@ class stock_requisition(osv.osv):
                 sale_team_id = stock_request_data.sale_team_id.id
                 request_date = stock_request_data.request_date
                 location_id = stock_request_data.to_location_id.id
+                
                 #sql = 'select id from sale_order where delivery_id=%s, shipped=False and is_generate=False and invoiced=False and state not in (%s,%s) and date_order between %s and %s'
                 #cr.execute(sql,(sale_team_id,issue_date_from,issue_date_to))
                 #order_ids = cr.fetchall()
@@ -224,7 +232,7 @@ class stock_requisition(osv.osv):
             #vehicle_no = req_value.vehicle_id.id
             sale_team_id = req_value.sale_team_id.id
             branch_id = req_value.branch_id.id
-            receiver = req_value.issue_to
+            receiver = req_value.sale_team_id.receiver
             for order in req_value.order_line:
                 so_name = order.name
                 order_id = sale_order_obj.search(cr, uid, [('name', '=', so_name)], context=context) 
@@ -319,6 +327,7 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
         requisition = requisition_obj.browse(cr,uid,line_ids,context)
         location_id=requisition.to_location_id.id
         product=data['product_id']
+        product_data= self.pool.get('product.product').browse(cr, uid, product, context=context)
         cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (location_id, product,))
         qty_on_hand = cr.fetchone()
         if qty_on_hand:
@@ -326,6 +335,9 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
         else:
             qty_on_hand = 0
         data['qty_on_hand']=qty_on_hand
+        data['product_uom']= product_data.product_tmpl_id.uom_id.id
+        data['big_uom_id']=product_data.product_tmpl_id.big_uom_id.id
+        data['uom_ratio']=product_data.product_tmpl_id.uom_ratio
         return super(stock_requisition_line, self).create(cr, uid, data, context=context)
     
     def on_change_product_id(self,cr,uid,ids,product_id,to_location_id, context=None):
