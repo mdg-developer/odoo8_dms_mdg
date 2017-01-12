@@ -835,9 +835,6 @@ class mobile_sale_order(osv.osv):
                 
     # kzo Edit
     def get_products_by_sale_team(self, cr, uid, section_id , last_date, context=None, **kwargs):
-
-        lastdate = datetime.strptime(last_date, "%Y-%m-%d")
-        print 'DateTime', lastdate
         
         cr.execute('''select  pp.id,pt.list_price , coalesce(replace(pt.description,',',';'), ' ') as description,pt.categ_id,pc.name as categ_name,pp.default_code, 
                          pt.name,substring(replace(cast(pt.image_small as text),'/',''),1,5) as image_small,pt.main_group,pt.uom_ratio,
@@ -2256,6 +2253,7 @@ class mobile_sale_order(osv.osv):
     def create_new_customer(self, cursor, user, vals, context=None):
         try:
             partner_obj = self.pool.get('res.partner')
+            parnter_tag_obj = self.pool.get('res.partner.res.partner.category.rel')
             str = "{" + vals + "}"
             str = str.replace("'',", "',")  # null
             str = str.replace(":',", ":'',")  # due to order_id
@@ -2306,7 +2304,11 @@ class mobile_sale_order(osv.osv):
                         'frequency_id':partner['frequency_id'],
                         'section_id':partner['section_id'],
                     }
-                    partner_id = partner_obj.create(cursor, user, partner_result, context=context)
+                    partner_id = partner_obj.create(cursor, user, partner_result, context=context)                    
+                    
+                    cursor.execute(''' insert into res_partner_res_partner_category_rel(category_id,partner_id) 
+                    values(2,%s)''', (partner_id,))
+                    
             return partner_id
         except Exception, e:
             print 'False'
