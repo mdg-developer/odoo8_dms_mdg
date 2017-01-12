@@ -111,24 +111,29 @@ class account_invoice(models.Model):
     def line_get_convert_new(self, line, part, date):
         account_id = None
         cr=self._cr
+        type='out_invoice' 
         print 'line_get_convert_newline_get_convert_new',line,part
         origin=line.get('ref', False)
         print 'originoriginorigin',origin
-        
-        cr.execute("select type from account_invoice where origin=%s",(origin,))
-        type=cr.fetchone()
-        if type:
-            type=type[0]
-        else:
-            type=None
+        if origin:
+            cr.execute("select type from account_invoice where origin=%s",(origin,))
+            type=cr.fetchone()
+            if type:
+                type=type[0]
+            else:
+                type=None
         print 'typeeeeeeeee',type
         if type=='out_invoice' :
             if line['price']<0:
                 product = self.env['product.product'].browse(line.get('product_id', False))
                 print 'product>>>',product.id
                 print 'line.get>>>',line.get('product_id', False)
-                account_id = product.product_tmpl_id.main_group.property_account_receivable.id
-                #acount_id= product.product_tmpl_id.main_group.property_account_payable.id
+                if  line['name']=='Discount':
+                    account_id = product.product_tmpl_id.main_group.property_account_discount.id
+                    line['price']= -1* line['price']
+                else:
+                    account_id = product.product_tmpl_id.main_group.property_account_receivable.id
+                                    #acount_id= product.product_tmpl_id.main_group.property_account_payable.id
                 print 'account_id>>>',account_id        
     
                 print 'line>>>',line
@@ -194,8 +199,10 @@ class account_invoice(models.Model):
                 product = self.env['product.product'].browse(line.get('product_id', False))
                 print 'product>>>',product.id
                 print 'line.get>>>',line.get('product_id', False)
-                account_id = product.product_tmpl_id.main_group.property_account_receivable.id
-
+                if  line['name']=='Discount':
+                    account_id = product.product_tmpl_id.main_group.property_account_discount.id
+                else:
+                    account_id = product.product_tmpl_id.main_group.property_account_receivable.id
                 res= {
                     'date_maturity': line.get('date_maturity', False),
                     'partner_id': part,
@@ -224,7 +231,10 @@ class account_invoice(models.Model):
                 product = self.env['product.product'].browse(line.get('product_id', False))
                 print 'product>>>',product.id
                 print 'line.get>>>',line.get('product_id', False)
-                account_id = product.product_tmpl_id.main_group.property_account_payable.id
+                if  line['name']=='Discount':
+                    account_id = product.product_tmpl_id.main_group.property_account_discount.id
+                else:
+                    account_id = product.product_tmpl_id.main_group.property_account_payable.id                
 
                 res= {
                     'date_maturity': line.get('date_maturity', False),
@@ -253,27 +263,36 @@ class account_invoice(models.Model):
     def line_get_convert_dr(self, line, part, date):
         account_id = None
         cr=self._cr
-        print 'line_get_convert_newline_get_convert_new',line,part
+        type='out_invoice' 
+        print 'line_get_convert_newline_get_convert_new',line,part, self.id
         origin=line.get('ref', False)
-        cr.execute("select type from account_invoice where origin=%s",(origin,))
-        type=cr.fetchone()
-        if type:
-            type=type[0]
-        else:
-            type=None
-        print 'typeeeeeeeeeeee',type
+        if origin:
+            cr.execute("select type from account_invoice where origin=%s",(origin,))
+            type=cr.fetchone()
+            if type:
+                type=type[0]
+            else:
+                type=None
         if type=='out_invoice' :
-            if line['price']<0:
+            if line['price']<0 or line['name']=='Discount' :
                 product = self.env['product.product'].browse(line.get('product_id', False))
                 print 'product>>>',product.id
                 print 'line.get>>>',line.get('product_id', False)
-                account_id = product.product_tmpl_id.main_group.property_account_receivable.id
+                if origin and line['name']!='Discount':
+                    cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s",(origin,product.id,))
+                    discount_amt=cr.fetchone()[0]      
+                    if discount_amt:     
+                            line['price'] = line['price']+discount_amt                
+                if  line['name']=='Discount':
+                    account_id = product.product_tmpl_id.main_group.property_account_discount.id
+                else:
+                    account_id = product.product_tmpl_id.main_group.property_account_receivable.id
                 print 'account_id>>>',account_id        
     
                 print 'line>>>',line
                 print 'line[price]',line['price']
-                line['price'] = -line['price']
-                print 'after>>>',line['price']
+                if line['price']<0 :
+                    line['price'] = -line['price']
                 res= {
                     'date_maturity': line.get('date_maturity', False),
                     'partner_id': part,
@@ -333,11 +352,20 @@ class account_invoice(models.Model):
                 print 'res111111>>>',res
                 return res            
         if type=='out_refund' :
-            if line['price']>0:
+            if line['price']>0 or line['name']=='Discount':
                 product = self.env['product.product'].browse(line.get('product_id', False))
                 print 'product>>>',product.id
                 print 'line.get>>>',line.get('product_id', False)
-                account_id = product.product_tmpl_id.main_group.property_account_receivable.id
+                if origin and line['name']!='Discount':
+                    cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s",(origin,product.id,))
+                    discount_amt=cr.fetchone()[0]      
+                    if discount_amt:     
+                            line['price'] = line['price']-discount_amt
+                if  line['name']=='Discount':
+                    account_id = product.product_tmpl_id.main_group.property_account_discount.id
+                    line['price']=-1* line['price']
+                else:
+                    account_id = product.product_tmpl_id.main_group.property_account_receivable.id
                 print 'account_id>>>',account_id        
                 print 'line>>>',line
                 print 'line[price]',line['price']
@@ -367,11 +395,20 @@ class account_invoice(models.Model):
                 print 'res111111>>>',res
                 return res
         if type=='in_invoice' :
-            if line['price']>0:
+            if line['price']>0 or line['name']=='Discount' :
                 product = self.env['product.product'].browse(line.get('product_id', False))
                 print 'product>>>',product.id
                 print 'line.get>>>',line.get('product_id', False)
-                account_id = product.product_tmpl_id.main_group.property_account_payable.id
+                if origin and line['name']!='Discount':
+                    cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s",(origin,product.id,))
+                    discount_amt=cr.fetchone()[0]      
+                    if discount_amt:     
+                            line['price'] = line['price']-discount_amt
+                if  line['name']=='Discount':
+                    account_id = product.product_tmpl_id.main_group.property_account_discount.id
+                    line['price']=-1* line['price']
+                else:
+                    account_id = product.product_tmpl_id.main_group.property_account_payable.id                
                 print 'account_id>>>',account_id        
                 print 'line>>>',line
                 print 'line[price]',line['price']
@@ -401,81 +438,84 @@ class account_invoice(models.Model):
                 print 'res111111>>>',res
                 return res
         
-    def line_get_product(self, line, part, date):
-        account_id = None
-        cr=self._cr
-        print 'line_get_convert_newline_get_convert_new',line,part
-        origin=line.get('ref', False)
-        cr.execute("select type from account_invoice where origin=%s",(origin,))
-        type=cr.fetchone()
-        if type:
-            type=type[0]
-        else:
-            type=None
-        if type=='out_invoice' :
-            if line['price']<0:
-                product = self.env['product.product'].browse(line.get('product_id', False))
-                print 'product>>>',product.id
-                print 'line.get>>>',line.get('product_id', False)
-                account_id = product.product_tmpl_id.main_group.property_account_receivable.id
-                print 'account_id>>>',account_id        
-    
-                print 'line>>>',line
-                res= {
-                    
-                    'product_id': line.get('product_id', False),                
-                    'main_group': account_id,
-                }
-                print 'res222>>>',res
-                return res 
-        if type=='in_refund' :
-            if line['price']<0:
-                product = self.env['product.product'].browse(line.get('product_id', False))
-                print 'product>>>',product.id
-                print 'line.get>>>',line.get('product_id', False)
-                account_id = product.product_tmpl_id.main_group.property_account_payable.id
-                print 'account_id>>>',account_id        
-    
-                print 'line>>>',line
-                res= {
-                    
-                    'product_id': line.get('product_id', False),                
-                    'main_group': account_id,
-                }
-                print 'res222>>>',res
-                return res            
-        if type=='out_refund' :
-            if line['price']>0:
-                product = self.env['product.product'].browse(line.get('product_id', False))
-                print 'product>>>',product.id
-                print 'line.get>>>',line.get('product_id', False)
-                account_id = product.product_tmpl_id.main_group.property_account_receivable.id
-                print 'account_id>>>',account_id        
-    
-                print 'line>>>',line
-                res= {
-                    
-                    'product_id': line.get('product_id', False),                
-                    'main_group': account_id,
-                }
-                print 'res222>>>',res
-                return res           
-        if type=='in_invoice' :
-            if line['price']>0:
-                product = self.env['product.product'].browse(line.get('product_id', False))
-                print 'product>>>',product.id
-                print 'line.get>>>',line.get('product_id', False)
-                account_id = product.product_tmpl_id.main_group.property_account_payable.id
-                print 'account_id>>>',account_id        
-    
-                print 'line>>>',line
-                res= {
-                    
-                    'product_id': line.get('product_id', False),                
-                    'main_group': account_id,
-                }
-                print 'res222>>>',res
-                return res         
+#     def line_get_product(self, line, part, date):
+#         account_id = None
+#         cr=self._cr
+#         type='out_invoice' 
+#         print 'line_get_convert_newline_get_convert_new',line,part
+#         origin=line.get('ref', False)
+#         print 'originoriginoriginoriginorigin',origin
+#         if origin:
+#             cr.execute("select type from account_invoice where origin=%s",(origin,))
+#             type=cr.fetchone()
+#             if type:
+#                 type=type[0]
+#             else:
+#                 type='out_invoice' 
+#         if type=='out_invoice' :
+#             if line['price']<0:
+#                 product = self.env['product.product'].browse(line.get('product_id', False))
+#                 print 'product>>>',product.id
+#                 print 'line.get>>>',line.get('product_id', False)
+#                 account_id = product.product_tmpl_id.main_group.property_account_receivable.id
+#                 print 'account_id>>>',account_id        
+#     
+#                 print 'line>>>',line
+#                 res= {
+#                     
+#                     'product_id': line.get('product_id', False),                
+#                     'main_group': account_id,
+#                 }
+#                 print 'res222>>>',res
+#                 return res 
+#         if type=='in_refund' :
+#             if line['price']<0:
+#                 product = self.env['product.product'].browse(line.get('product_id', False))
+#                 print 'product>>>',product.id
+#                 print 'line.get>>>',line.get('product_id', False)
+#                 account_id = product.product_tmpl_id.main_group.property_account_payable.id
+#                 print 'account_id>>>',account_id        
+#     
+#                 print 'line>>>',line
+#                 res= {
+#                     
+#                     'product_id': line.get('product_id', False),                
+#                     'main_group': account_id,
+#                 }
+#                 print 'res222>>>',res
+#                 return res            
+#         if type=='out_refund' :
+#             if line['price']>0:
+#                 product = self.env['product.product'].browse(line.get('product_id', False))
+#                 print 'product>>>',product.id
+#                 print 'line.get>>>',line.get('product_id', False)
+#                 account_id = product.product_tmpl_id.main_group.property_account_receivable.id
+#                 print 'account_id>>>',account_id        
+#     
+#                 print 'line>>>',line
+#                 res= {
+#                     
+#                     'product_id': line.get('product_id', False),                
+#                     'main_group': account_id,
+#                 }
+#                 print 'res222>>>',res
+#                 return res           
+#         if type=='in_invoice' :
+#             if line['price']>0:
+#                 product = self.env['product.product'].browse(line.get('product_id', False))
+#                 print 'product>>>',product.id
+#                 print 'line.get>>>',line.get('product_id', False)
+#                 account_id = product.product_tmpl_id.main_group.property_account_payable.id
+#                 print 'account_id>>>',account_id        
+#     
+#                 print 'line>>>',line
+#                 res= {
+#                     
+#                     'product_id': line.get('product_id', False),                
+#                     'main_group': account_id,
+#                 }
+#                 print 'res222>>>',res
+#                 return res         
             
     def line_dr_convert_account_with_principle(self, line):
         list_one = line
@@ -493,16 +533,16 @@ class account_invoice(models.Model):
             result = [a for a in list_one if a is not None and a['main_group'] == v]
             print 'result>>>',result
             cr=self._cr
+
             for res in result:
                 origin=res['ref']
-                print 'originnnnnnnnnnn',origin
-                cr.execute("select type from account_invoice where origin=%s",(origin,))
-                type=cr.fetchone()
-                if type:
-                    type=type[0]
-                else:
-                    type=None   
-                print 'originnnnnnnnnnn',type
+                if origin:
+                    cr.execute("select type from account_invoice where origin=%s",(origin,))
+                    type=cr.fetchone()
+                    if type:
+                        type=type[0]
+                    else:
+                        type=None   
                 if type=='out_invoice':
                     debit += res['debit']
                 if type=='in_invoice':             
@@ -511,10 +551,9 @@ class account_invoice(models.Model):
                     credit += res['credit']       
                 if type=='in_refund':             
                     debit += res['debit']                                             
-                print '  debit,credit',   debit ,credit
                 date_maturity = res['date_maturity']
                 partner_id = res['partner_id']
-                name = '/'#res['name']
+                name = res['name']
                 date = res['date']
                 account_id = res['main_group'] #replace with product principle AR account
                 analytic_lines = res['analytic_lines']
@@ -527,8 +566,6 @@ class account_invoice(models.Model):
                 product_id = res['product_id']
                 product_uom_id = res['product_uom_id']
                 analytic_account_id = res['analytic_account_id']
-                print 'res>>>',res['debit']
-            print 'price>>',price,credit,debit
             price=credit+debit
             if price!=0.0:
                 rec = {
@@ -552,7 +589,6 @@ class account_invoice(models.Model):
                            
                         }
                 arr_list.append(rec)
-        print 'arr_list>>>',arr_list
         return arr_list           
     
 #     def line_get_convert_accountid(self, line, product, part, date):
@@ -740,16 +776,12 @@ class account_invoice(models.Model):
                 res['ref']=inv.origin
                 data.append(res)
             iml=data
-            print 'imllllllllllllllllll',iml
             line_cr = [self.line_get_convert_new(l, part.id, date) for l in iml]
-            print 'line_cr>>>',line_cr
-            line_tmp = [self.line_get_convert_dr(l,part.id,date)for l in iml]
+            line_tmp = [self.line_get_convert_dr(l,part.id,date) for l in iml]
             line_dr = self.line_dr_convert_account_with_principle(line_tmp)
-            print 'line_dr>>>',line_dr
             #line_product = [self.line_get_product(l, part.id, date) for l in iml]
             #line_dr = [(0, 0, self.line_get_convert_accountid(l, part.id, date)) for l in line_cr]
             lines = line_cr + line_dr
-            print 'lines>>>',lines
             line = [(0, 0, self.line_get_convert(l, part.id, date)) for l in lines  if l is not None]
             
             line = inv.group_lines(iml, line)
