@@ -9,6 +9,7 @@
 				<form string="Assign Sales Team">
 					<group col="4" colspan="6">
 						<field name="section_id" class="oe_inline" widget="selection" />
+						<field name="category_ids" class="oe_inline" widget="selection" />
 						<field name="outlet_type" class="oe_inline" widget="selection"
 							groups="base.group_no_one" />
 						<field name="sales_channel" class="oe_inline" widget="selection"

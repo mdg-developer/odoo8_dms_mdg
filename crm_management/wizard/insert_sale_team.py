@@ -27,6 +27,7 @@ class insert_sale_team(osv.osv_memory):
     _description = 'Sale Team Insert'
     _columns = {
         'section_id':fields.many2one('crm.case.section','Sales Team' ),
+        'category_ids': fields.many2one('res.partner.category', 'Customer Tags'),
                 'outlet_type': fields.many2one('outlettype.outlettype', 'Outlet Type'),
                 'sales_channel':fields.many2one('sale.channel', 'Sale Channel'),
                 'frequency_id':fields.many2one('plan.frequency','Frequency'),
@@ -69,6 +70,7 @@ class insert_sale_team(osv.osv_memory):
         city=data['city']
         township=data['township']
         price_list_id=data['property_product_pricelist']
+        category_ids=data['category_ids']
         
         print 'partner_id',partner_id
         for partner in partner_id: 
@@ -108,5 +110,7 @@ class insert_sale_team(osv.osv_memory):
                 cr.execute('update res_partner set township=%s where id=%s',(township[0],partner,))                 
             if price_list_id:
                 partner_obj.write(cr, uid, partner, {'property_product_pricelist':price_list_id[0]}, context=None)
+            if category_ids:
+                cr.execute('INSERT INTO res_partner_res_partner_category_rel (category_id,partner_id) VALUES (%s,%s)', (category_ids[0],partner))
                                                
         return True              
