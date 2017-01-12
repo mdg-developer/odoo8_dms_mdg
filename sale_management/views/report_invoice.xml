@@ -245,7 +245,7 @@
 										</td>
 										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
 											<!-- <span t-field="o.payment_ids.debit" /> -->
-											<span t-esc="'%.0f'% o.payment_ids.debit"/>
+											<span t-esc="'%.0f'% o.payment_ids.credit"/>
 										</td>
 									</tr> 
 									<tr class="border-black">
@@ -268,7 +268,7 @@
 											</span>
 										</td>
 										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
-											<t t-set="foo" t-value="((total)-(o.payment_ids.debit))-(o.deduct_amt)"/>
+											<t t-set="foo" t-value="((total)-(o.payment_ids.credit))-(o.deduct_amt)"/>
 											<t t-esc="'%.0f'%foo"/>
 										</td>
 									</tr> 
