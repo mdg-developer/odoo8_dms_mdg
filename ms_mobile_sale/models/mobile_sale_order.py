@@ -1115,10 +1115,14 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()        
         return datas
     
-    def get_res_users(self, cr, uid, sale_team_id , context=None, **kwargs):
+    def get_res_users(self, cr, uid, user_id , context=None, **kwargs):
         cr.execute('''
-            select id,active,login,password,partner_id,branch_id from res_users where id = %s
-            ''', (sale_team_id,))
+            select id,active,login,password,partner_id,branch_id ,
+            (select uid from res_groups_users_rel where gid in (select id from res_groups  
+            where name='Allow To Active') and uid= %s) allow_to_active
+            from res_users 
+            where id = %s
+            ''', (user_id,user_id,))
         datas = cr.fetchall()        
         return datas
     
@@ -2765,14 +2769,20 @@ class mobile_sale_order(osv.osv):
             ''', (section_id, day_id,))
         datas = cr.fetchall()
         return datas
-		
+
     def get_promo_partner_category(self, cr, uid , context=None):        
         cr.execute('''select * from promotion_rule_category_rel''')
         datas = cr.fetchall()        
         return datas
     
-    def get_partner_category_rel(self, cr, uid , context=None):        
-        cr.execute('''select * from res_partner_res_partner_category_rel''')
+    def get_partner_category_rel(self, cr, uid,section_id , context=None):        
+        cr.execute('''select a.* from res_partner_res_partner_category_rel a,
+                 res_partner_sale_plan_day_rel b
+                 , sale_plan_day p
+                where a.partner_id = b.partner_id
+                and b.sale_plan_day_id = p.id
+                and p.sale_team = %s
+                ''',(section_id,))
         datas = cr.fetchall()        
         return datas
     
