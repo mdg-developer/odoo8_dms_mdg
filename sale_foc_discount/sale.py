@@ -284,8 +284,9 @@ class sale_order(osv.osv):
         return None
 ## customize_model
     _columns={
-              'is_add_discount':fields.boolean('Additional Discount',default=False),
-              'deduct_amt':fields.float('Deduction Amount',store=True),
+              'is_add_discount':fields.boolean('Allow Discount',default=False),
+              'deduct_amt':fields.float('Discount Amount',store=True),
+              'additional_discount':fields.float('Additional Discount',store=True),
               'total_dis':fields.function(_amount_all_wrapper, digits_compute=dp.get_precision('Account'), string='Total Discount',
             store={
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
@@ -314,7 +315,6 @@ class sale_order(osv.osv):
               'amount_untaxed':0.0,
               'amount_tax':0.0,
               'amount_total':0.0
-              
               }
 
     def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):
@@ -331,33 +331,37 @@ class sale_order(osv.osv):
             if (type(ids)==int):
                 cr.execute('select sum(discount_amt) from sale_order_line where order_id=%s',(ids,))
                 total_dis_amt=cr.fetchall()[0]
-                cr.execute('select deduct_amt,amount_untaxed,amount_tax from sale_order where id=%s',(ids,))
+                cr.execute('select deduct_amt,amount_untaxed,amount_tax,additional_discount from sale_order where id=%s',(ids,))
                 result=cr.fetchall()[0]
                 deduct=result[0]
                 untax=result[1]
                 amount_tax=result[2]
+                additional_discount=result[3]
                 print result,'result and deduction',deduct,total_dis_amt
                 if deduct is None:
                     deduct=0.0
                 if amount_tax is None:
                     amount_tax=0.0           
-                total=untax+amount_tax-deduct
-                cr.execute('update sale_order so set amount_total=%s,total_dis=%s,deduct_amt=%s where so.id=%s',(total,total_dis_amt,deduct,ids))
+                total=untax+amount_tax-deduct-(untax*(additional_discount/100))
+                cr.execute('update sale_order so set amount_total=%s,total_dis=%s,deduct_amt=%s,additional_discount=%s where so.id=%s',(total,total_dis_amt,deduct,additional_discount,ids))
             else:
                 cr.execute('select sum(discount_amt) from sale_order_line where order_id=%s',(ids[0],))
                 total_dis_amt=cr.fetchall()[0]
-                cr.execute('select deduct_amt,amount_untaxed,amount_tax from sale_order where id=%s',(ids[0],))
+                cr.execute('select deduct_amt,amount_untaxed,amount_tax,additional_discount from sale_order where id=%s',(ids[0],))
                 result=cr.fetchall()[0]
                 deduct=result[0]
                 untax=result[1]
                 amount_tax=result[2]
-                print result,'result and deduction',deduct,total_dis_amt
+                additional_discount=result[3]
+                print result,'result and deduction',deduct,total_dis_amt,additional_discount
                 if deduct is None:
                     deduct=0.0
                 if amount_tax is None:
                     amount_tax=0.0           
-                total=untax+amount_tax-deduct
-                cr.execute('update sale_order so set amount_total=%s,total_dis=%s,deduct_amt=%s where so.id=%s',(total,total_dis_amt,deduct,ids[0]))
+                print    '(untax*additional_discount)',untax,additional_discount,(additional_discount/100),amount_tax
+                total=untax+amount_tax-deduct-(untax*(additional_discount/100))
+                print 'total',total
+                cr.execute('update sale_order so set amount_total=%s,total_dis=%s,deduct_amt=%s,additional_discount=%s where so.id=%s',(total,total_dis_amt,deduct,additional_discount,ids[0]))
         return True
     ## customize_model
     def _prepare_invoice(self, cr, uid, order, lines, context=None):
@@ -398,6 +402,7 @@ class sale_order(osv.osv):
             'user_id': order.user_id and order.user_id.id or False,
             'section_id' : order.section_id.id,
             'deduct_amt':order.deduct_amt,
+            'additional_discount':order.additional_discount,
             'discount_total':order.total_dis,
         }
 
