@@ -16,7 +16,7 @@
 						<group>
 							<!-- <field name="partner_id" on_change="onchange_partner_code(partner_id,context)" /> -->
 							<field name="partner_id"/>
-							<field name="customer_code" />
+							<!--  <field name="customer_code" />-->
 							<field name="outlet_type" />
 							<field name="sales_channel" />
 							<field name="class_id" />

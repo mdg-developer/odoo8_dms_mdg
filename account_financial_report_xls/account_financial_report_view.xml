@@ -36,10 +36,10 @@
 		</record>
 		
 		
-		<menuitem icon="STOCK_PRINT" id="menu_account_financial_report_2"
+		<!-- <menuitem icon="STOCK_PRINT" id="menu_account_financial_report_2"
 			name="Account Fininacial Report" action="action_account_financial_report"
 			parent="account.final_accounting_reports" />
 
-
+ -->
 	</data>
 </openerp>
