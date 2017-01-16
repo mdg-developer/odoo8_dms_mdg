@@ -74,19 +74,18 @@ class stock_return(osv.osv):
             print 'rereturn_date',return_date,sale_team_id
             note_ids = note_obj.search(cr, uid, [('sale_team_id', '=', sale_team_id), ('issue_date', '=', return_date)])
             if  note_ids:        
-                cr.execute(' select gin.from_location_id as location_id,product_id,sequence,big_uom_id,sum(big_issue_quantity) as big_issue_quantity,sum(issue_quantity) as issue_quantity,product_uom  as small_uom_id from good_issue_note gin ,good_issue_note_line  ginl where gin.id = ginl.line_id and gin.id in %s group by product_id,from_location_id,sequence,big_uom_id,product_uom', (tuple(note_ids),))
+                cr.execute(' select gin.from_location_id as location_id,product_id,sequence,big_uom_id,sum(issue_quantity) as issue_quantity,product_uom  as small_uom_id from good_issue_note gin ,good_issue_note_line  ginl where gin.id = ginl.line_id and gin.id in %s group by product_id,from_location_id,sequence,big_uom_id,product_uom', (tuple(note_ids),))
                 p_line = cr.fetchall()            
             for note_line in p_line:
                 product_id = note_line[1]
                 sequence=note_line[2]
                 big_uom_id = note_line[3]
-                big_issue_quantity = note_line[4]
                 small_issue_quantity = note_line[5]
                 small_uom_id = note_line[6]
                 location_id= note_line[0]
                 cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (big_uom_id,))
                 bigger_qty = cr.fetchone()[0]
-                receive_qty = (big_issue_quantity * bigger_qty) + small_issue_quantity
+                receive_qty =  small_issue_quantity
                 cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (location_id, product_id,))
                 qty_on_hand = cr.fetchone()
                 if qty_on_hand:
@@ -269,7 +268,7 @@ class stock_return(osv.osv):
                                       'date': return_date,
                                       'origin':origin,
                                       'picking_type_id':picking_type_id}, context=context)
-        cr.execute("select  sum(rec_small_quantity+rec_big_quantity)  from stock_return_line  where line_id=%s group by line_id",(ids[0],)) 
+        cr.execute("select  sum(rec_small_quantity)  from stock_return_line  where line_id=%s group by line_id",(ids[0],)) 
         total_qty=cr.fetchone()[0]
         if total_qty==0.0 or total_qty is None   :
             raise osv.except_osv(_('Warning'),
@@ -277,31 +276,27 @@ class stock_return(osv.osv):
         for line in return_obj.p_line:
             product_id = line.product_id.id
             rec_big_uom_id = line.rec_big_uom_id.id
-            rec_big_quantity = line.rec_big_quantity
             rec_small_quantity = line.rec_small_quantity
             rec_small_uom_id = line.rec_small_uom_id.id    
             ex_return_id =    line.ex_return_id.id    
             return_quantity=line.return_quantity
-            if (rec_small_quantity + rec_big_quantity > 0):
+            if (rec_small_quantity  > 0):
                 product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)       
                 name = line.product_id.name_template                                                                               
-                cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (rec_big_uom_id,))
-                big_qty = cr.fetchone()
-                if big_qty:
-                        bigger_qty = big_qty[0] * rec_big_quantity                        
-                        move_id = move_obj.create(cr, uid, {'picking_id': picking_id,
+                                      
+                move_id = move_obj.create(cr, uid, {'picking_id': picking_id,
                                                   'picking_type_id':picking_type_id,
                                                 #  'restrict_lot_id':lot_id,
                                               'product_id': product_id,
-                                              'product_uom_qty': rec_small_quantity + bigger_qty,
-                                              'product_uos_qty': rec_small_quantity + bigger_qty,
+                                              'product_uom_qty': rec_small_quantity,
+                                              'product_uos_qty': rec_small_quantity,
                                               'product_uom':rec_small_uom_id,
                                               'location_id':ven_location_id,
                                               'location_dest_id':main_location_id,
                                               'name':name,
                                                'origin':origin,
                                               'state':'confirmed'}, context=context)     
-                        move_id = move_obj.action_done(cr, uid, move_id, context=context)
+                move_id = move_obj.action_done(cr, uid, move_id, context=context)
             print ' ex_return_id ,return_quantity',ex_return_id ,return_quantity
             if ex_return_id and return_quantity<0:
                 product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)       
@@ -346,17 +341,13 @@ class stock_return_line(osv.osv):  # #prod_pricelist_update_line
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'receive_quantity' : fields.float(string='Received Qty', digits=(16, 0)),
         'return_quantity' : fields.float(string='Returned Qty', digits=(16, 0)),
-        'return_quantity_big' : fields.float(string='Returned Big Qty', digits=(16, 0)),
         'sale_quantity' : fields.float(string='Sales Qty', digits=(16, 0)),
-        'sale_quantity_big' : fields.float(string='Sales Qty Big', digits=(16, 0)),
         'foc_quantity' : fields.float(string='FOC Qty', digits=(16, 0)),
      #   'exchange_quantity' : fields.float(string='Sale/Exchange Qty', digits=(16, 0)),
         'product_uom': fields.many2one('product.uom', 'UOM', required=True),
         'uom_ratio':fields.char('Packing Unit'),
         'expiry_date':fields.date('Expiry'),
          'remark':fields.char('Remark'),
-        'rec_big_uom_id': fields.many2one('product.uom', 'Rec Bigger UoM',help="Default Unit of Measure used for all stock operation."),
-        'rec_big_quantity' : fields.float(string='Rec Qty', digits=(16, 0)),        
         'rec_small_quantity' : fields.float(string='Rec Small Qty', digits=(16, 0)),
         'rec_small_uom_id': fields.many2one('product.uom', 'Rec Smaller UoM'),         
         'sequence':fields.integer('Sequence'),

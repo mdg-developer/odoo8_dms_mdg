@@ -136,23 +136,13 @@ class good_issue_note(osv.osv):
                     product_uom = note_line_value.product_uom.id
                     origin = origin
                     quantity = note_line_value.issue_quantity
-                    big_qty=note_line_value.big_issue_quantity
-                    big_uom=note_line_value.big_uom_id.id
                     lot_id=note_line_value.batch_no.id
-                    bigger_qty=0
-                    if big_uom:
-                        cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (big_uom,))
-                        bigger_qty=cr.fetchone()
-                        if bigger_qty:
-                            bigger_qty=bigger_qty[0]*big_qty
-
+                    
                         
                     move_id=move_obj.create(cr, uid, {'picking_id': picking_id,
                                               'picking_type_id':picking_type_id,
                                               'restrict_lot_id':lot_id,
                                           'product_id': product_id,
-                                          'product_uom_qty': quantity+bigger_qty,
-                                          'product_uos_qty': quantity+bigger_qty,
                                           'product_uom':product_uom,
                                           'location_id':location_id,
                                           'location_dest_id':from_location_id,
@@ -171,9 +161,7 @@ class good_issue_line(osv.osv):  # #prod_pricelist_update_line
         if product_id:
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             values = {
-                      'big_uom_id':product.product_tmpl_id.uom_id and product.product_tmpl_id.uom_id.id or False,
                 'product_uom': product.product_tmpl_id.uom_id and product.product_tmpl_id.uom_id.id or False,
-                'uom_ratio': product.product_tmpl_id.uom_ratio,
             }
         return {'value': values}
     
@@ -195,8 +183,6 @@ class good_issue_line(osv.osv):  # #prod_pricelist_update_line
                 'batch_no':fields.many2one('stock.production.lot','Batch No'),
                 'expiry_date':fields.date('Expiry'),
                  'remark':fields.char('Remark'),
-        'big_uom_id': fields.many2one('product.uom', 'Bigger UoM', required=True,readonly=True, help="Default Unit of Measure used for all stock operation."),
-        'big_issue_quantity' : fields.float(string='Qty', digits=(16, 0)),               
          'qty_on_hand':fields.float(string='Qty On Hand', digits=(16, 0),readonly=True),
         'sequence':fields.integer('Sequence'),
 
