@@ -163,13 +163,14 @@ class account_invoice_line(models.Model):
         company_currency = inv.company_id.currency_id
         discount_account_id=discount_cash_account_id=None
         
-        dis_per=dis_amt=deduct_amt=total=0.0
+        dis_per=dis_amt=deduct_amt=total=additional_discount=0.0
         discount_cash_account_id=inv.company_id.discount_cash_account_id.id
         discount_account_id=inv.company_id.discount_account_id.id
         if discount_cash_account_id and discount_account_id==None:
             raise orm.except_orm(_('Error :'), _("Please select the Discount code and Cash Discount Code in Sale setting!"))
         res = []
         deduct_amt=inv.deduct_amt
+        additional_discount=(inv.amount_untaxed * (inv.additional_discount/100))
         discount_total=inv.discount_total
         ref=inv.origin
         for line in inv.invoice_line:
@@ -206,41 +207,39 @@ class account_invoice_line(models.Model):
                 res[-1]['tax_amount'] = currency.compute(tax_amount, company_currency)
         
         #print 'this is deduct amount',deduct_amt
-        if discount_cash_account_id==discount_account_id:
-            for line in inv.invoice_line:
-                
-                if line.discount:
-                    dis_per+=(line.price_unit*line.quantity) *(line.discount/ 100.0)
-                    #total+=dis_per
-                    
-                if line.discount_amt:
-                    dis_amt+=line.discount_amt
-                    #total+=dis_amt
-            
-            #print 'this is ddiscount_total',discount_total
-
-            total=deduct_amt+discount_total
-            val1={'type': 'src',
-                    'name': 'Discount',
-                    'price_unit': total,
-                    'quantity': 1,
-                    'price':-1* total,
-                    'account_id': discount_account_id,
-                    'product_id': False,
-                    'ref':ref,
-                    'foc':False,
-                    'account_analytic_id': inv.invoice_line[0].account_analytic_id.id,
-                    'taxes': False,
-                    }
-            if total>0:
-                res.append(val1)
-        else:
-            for line in inv.invoice_line:
-                if line.discount:
-                    dis_per+=(line.price_unit*line.quantity) *(line.discount / 100.0)
-                if line.discount_amt:
-                    dis_amt+=line.discount_amt
-            total=discount_total
+#         if discount_cash_account_id==discount_account_id:
+#             for line in inv.invoice_line:
+#                 
+#                 if line.discount:
+#                     dis_per+=(line.price_unit*line.quantity) *(line.discount/ 100.0)
+# 
+#                     
+#                 if line.discount_amt:
+#                     dis_amt+=line.discount_amt
+# 
+# 
+#             total=deduct_amt+discount_total+additional_discount
+#             val1={'type': 'src',
+#                     'name': 'Discount',
+#                     'price_unit': total,
+#                     'quantity': 1,
+#                     'price':-1* total,
+#                     'account_id': discount_account_id,
+#                     'product_id': line.product_id.id,
+#                     'ref':ref,
+#                     'foc':False,
+#                     'account_analytic_id': inv.invoice_line[0].account_analytic_id.id,
+#                     'taxes': False,
+#                     }
+#             if total>0:
+#                 res.append(val1)
+#         else:
+#             for line in inv.invoice_line:
+#                 if line.discount:
+#                     dis_per+=(line.price_unit*line.quantity) *(line.discount / 100.0)
+#                 if line.discount_amt:
+#                     dis_amt+=line.discount_amt
+            total=line.discount_amt
 
             val1={'type': 'src',
                     'name': 'Discount',
@@ -248,7 +247,7 @@ class account_invoice_line(models.Model):
                     'quantity': 1,
                     'price':-1* total,
                     'account_id': discount_account_id,
-                    'product_id': False,
+                    'product_id':  line.product_id.id,
                     'ref':ref,
                      'foc':False,
                     'account_analytic_id': inv.invoice_line[0].account_analytic_id.id,
@@ -256,12 +255,12 @@ class account_invoice_line(models.Model):
                     }
             if total>0:
                 res.append(val1)
-            if deduct_amt>0:
+        if deduct_amt+additional_discount>0:
                 val2={'type': 'src',
                             'name': 'Cash Discount',
-                            'price_unit': deduct_amt,
+                            'price_unit': deduct_amt+additional_discount,
                             'quantity': 1,
-                            'price':-1*(deduct_amt),
+                            'price':-1*(deduct_amt+additional_discount),
                             'account_id': discount_cash_account_id,
                             'product_id': False,
                             'ref':ref,
@@ -281,17 +280,17 @@ class account_invoice_line(models.Model):
 #     
 class account_invoice(models.Model):
     _inherit='account.invoice'
-    @api.depends('invoice_line.price_subtotal', 'invoice_line.discount_amt','tax_line.amount','deduct_amt')
+    @api.depends('invoice_line.price_subtotal', 'invoice_line.discount_amt','tax_line.amount','deduct_amt','additional_discount')
 
     def _compute_amount(self):
         self.amount_untaxed = sum(line.price_subtotal for line in self.invoice_line)
         self.amount_tax = sum(line.amount for line in self.tax_line)
         total_discount_amt=sum(line.discount_amt for line in self.invoice_line)
         self.discount_total =total_discount_amt
-
-        self.amount_total = self.amount_untaxed + self.amount_tax - self.deduct_amt
+        self.amount_total = self.amount_untaxed + self.amount_tax - self.deduct_amt -(self.amount_untaxed *(self.additional_discount/100))
          
-    _columns={'deduct_amt':fields.float('Deduction Amount'),
+    _columns={'deduct_amt':fields.float('Discount Amount'),
+                     'additional_discount':fields.float('Additional Discount'),
                   'discount_total':fields.float('Discount Total' ,digits=dp.get_precision('Account'),store=True, readonly=True, compute='_compute_amount', track_visibility='always'),
                     
                   }

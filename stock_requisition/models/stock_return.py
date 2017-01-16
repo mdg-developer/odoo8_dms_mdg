@@ -50,6 +50,7 @@ class stock_return(osv.osv):
     
     def retrieve_data(self, cr, uid, ids, context=None):
         note_obj = self.pool.get('good.issue.note')
+        note_line_obj = self.pool.get('good.issue.note.line')        
         product_trans_obj = self.pool.get('product.transactions')
         product_trans_line_obj = self.pool.get('product.transactions.line')
         mobile_obj = self.pool.get('stock.return.mobile')
@@ -70,23 +71,23 @@ class stock_return(osv.osv):
 #             print 'note',note
 #             if note:
 #                 note_id=note[0]
+            print 'rereturn_date',return_date,sale_team_id
             note_ids = note_obj.search(cr, uid, [('sale_team_id', '=', sale_team_id), ('issue_date', '=', return_date)])
-            note_id = 0
-            if note_ids:
-                note_id = note_ids[0]
-            note_data = note_obj.browse(cr, uid, note_id, context=context)
-            location_id = note_data.from_location_id
-            for note_line in note_data.p_line:
-                product_id = note_line.product_id.id
-                sequence=note_line.sequence
-                big_uom_id = note_line.big_uom_id.id
-                big_issue_quantity = note_line.big_issue_quantity
-                small_issue_quantity = note_line.issue_quantity
-                small_uom_id = note_line.product_uom.id
+            if  note_ids:        
+                cr.execute(' select gin.from_location_id as location_id,product_id,sequence,big_uom_id,sum(big_issue_quantity) as big_issue_quantity,sum(issue_quantity) as issue_quantity,product_uom  as small_uom_id from good_issue_note gin ,good_issue_note_line  ginl where gin.id = ginl.line_id and gin.id in %s group by product_id,from_location_id,sequence,big_uom_id,product_uom', (tuple(note_ids),))
+                p_line = cr.fetchall()            
+            for note_line in p_line:
+                product_id = note_line[1]
+                sequence=note_line[2]
+                big_uom_id = note_line[3]
+                big_issue_quantity = note_line[4]
+                small_issue_quantity = note_line[5]
+                small_uom_id = note_line[6]
+                location_id= note_line[0]
                 cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (big_uom_id,))
                 bigger_qty = cr.fetchone()[0]
                 receive_qty = (big_issue_quantity * bigger_qty) + small_issue_quantity
-                cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (location_id.id, product_id,))
+                cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (location_id, product_id,))
                 qty_on_hand = cr.fetchone()
                 if qty_on_hand:
                     qty_on_hand=qty_on_hand[0]

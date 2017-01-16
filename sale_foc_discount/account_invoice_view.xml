@@ -37,6 +37,7 @@
 				<xpath expr="//form/sheet/notebook/page/group/field[@name='amount_tax']"
 					position="after">
 					<field name="discount_total" groups="sale.group_discount_per_so_line" />
+					<field name="additional_discount" groups="sale.group_discount_per_so_line"  attrs="{'readonly':[('state','!=','draft')]}"/>
 					<field name="deduct_amt" groups="sale.group_discount_per_so_line"  attrs="{'readonly':[('state','!=','draft')]}"/>
 				</xpath>
 			</field>
@@ -68,6 +69,7 @@
 				<xpath expr="//form/sheet/notebook/page/group/field[@name='amount_tax']"
 					position="after">
 					<field name="discount_total" groups="sale.group_discount_per_so_line" />
+					<field name="additional_discount" groups="sale.group_discount_per_so_line"  attrs="{'readonly':[('state','!=','draft')]}"/>
 					<field name="deduct_amt" groups="sale.group_discount_per_so_line"  attrs="{'readonly':[('state','!=','draft')]}"/>
 				</xpath>
 			</field>

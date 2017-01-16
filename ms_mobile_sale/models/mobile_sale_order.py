@@ -835,9 +835,6 @@ class mobile_sale_order(osv.osv):
                 
     # kzo Edit
     def get_products_by_sale_team(self, cr, uid, section_id , last_date, context=None, **kwargs):
-
-        lastdate = datetime.strptime(last_date, "%Y-%m-%d")
-        print 'DateTime', lastdate
         
         cr.execute('''select  pp.id,pt.list_price , coalesce(replace(pt.description,',',';'), ' ') as description,pt.categ_id,pc.name as categ_name,pp.default_code, 
                          pt.name,substring(replace(cast(pt.image_small as text),'/',''),1,5) as image_small,pt.main_group,pt.uom_ratio,
@@ -881,7 +878,8 @@ class mobile_sale_order(osv.osv):
         if state == 'approve':
             status = 'approve'
             cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,
-                        logic ,expected_logic_result ,special, special1, special2, special3 ,description
+                        logic ,expected_logic_result ,special, special1, special2, special3 ,description,
+                        pr.promotion_count, pr.monthly_promotion
                         from promos_rules pr ,promos_rules_res_branch_rel pro_br_rel
                         where pr.active = true                     
                         and pr.id = pro_br_rel.promos_rules_id
@@ -898,7 +896,8 @@ class mobile_sale_order(osv.osv):
         else:
             status = 'approve', 'draft'            
             cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,
-                        logic ,expected_logic_result ,special, special1, special2, special3 ,description
+                        logic ,expected_logic_result ,special, special1, special2, special3 ,description,
+                        pr.promotion_count, pr.monthly_promotion
                         from promos_rules pr ,promos_rules_res_branch_rel pro_br_rel
                         where pr.active = true                     
                         and pr.id = pro_br_rel.promos_rules_id
@@ -1116,10 +1115,14 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()        
         return datas
     
-    def get_res_users(self, cr, uid, sale_team_id , context=None, **kwargs):
+    def get_res_users(self, cr, uid, user_id , context=None, **kwargs):
         cr.execute('''
-            select id,active,login,password,partner_id,branch_id from res_users where id = %s
-            ''', (sale_team_id,))
+            select id,active,login,password,partner_id,branch_id ,
+            (select uid from res_groups_users_rel where gid in (select id from res_groups  
+            where name='Allow To Active') and uid= %s) allow_to_active
+            from res_users 
+            where id = %s
+            ''', (user_id,user_id,))
         datas = cr.fetchall()        
         return datas
     
@@ -2254,6 +2257,7 @@ class mobile_sale_order(osv.osv):
     def create_new_customer(self, cursor, user, vals, context=None):
         try:
             partner_obj = self.pool.get('res.partner')
+            parnter_tag_obj = self.pool.get('res.partner.res.partner.category.rel')
             str = "{" + vals + "}"
             str = str.replace("'',", "',")  # null
             str = str.replace(":',", ":'',")  # due to order_id
@@ -2304,7 +2308,11 @@ class mobile_sale_order(osv.osv):
                         'frequency_id':partner['frequency_id'],
                         'section_id':partner['section_id'],
                     }
-                    partner_id = partner_obj.create(cursor, user, partner_result, context=context)
+                    partner_id = partner_obj.create(cursor, user, partner_result, context=context)                    
+                    
+                    cursor.execute(''' insert into res_partner_res_partner_category_rel(category_id,partner_id) 
+                    values(2,%s)''', (partner_id,))
+                    
             return partner_id
         except Exception, e:
             print 'False'
@@ -2761,6 +2769,60 @@ class mobile_sale_order(osv.osv):
             ''', (section_id, day_id,))
         datas = cr.fetchall()
         return datas
+
+    def get_promo_partner_category(self, cr, uid , context=None):        
+        cr.execute('''select * from promotion_rule_category_rel''')
+        datas = cr.fetchall()        
+        return datas
+    
+    def get_partner_category_rel(self, cr, uid,section_id , context=None):        
+        cr.execute('''select a.* from res_partner_res_partner_category_rel a,
+                 res_partner_sale_plan_day_rel b
+                 , sale_plan_day p
+                where a.partner_id = b.partner_id
+                and b.sale_plan_day_id = p.id
+                and p.sale_team = %s
+                ''',(section_id,))
+        datas = cr.fetchall()        
+        return datas
+    
+    def get_monthly_promotion_history(self, cr, uid, section_id , context=None, **kwargs):
+            cr.execute("""
+            select promotion_id,date, partner_id,section_id from sales_promotion_history where section_id = %s
+            and  date between date_trunc('month', current_date)::date
+            and  DATE_TRUNC('month', CURRENT_DATE) + INTERVAL '1 month'  - INTERVAL '1 day' 
+            """, (section_id,))   
+            datas = cr.fetchall()        
+            return datas
+    
+    def create_monthly_promotion_history(self, cursor, user, vals, context=None):
+                    
+            promo_his_obj = self.pool.get('sales.promotion.history')
+            str = "{" + vals + "}"    
+            str = str.replace("'',", "',")  # null
+            str = str.replace(":',", ":'',")  # due to order_id
+            str = str.replace("}{", "}|{")
+            str = str.replace(":'}{", ":''}")
+            new_arr = str.split('|')
+            result = []
+            for data in new_arr:            
+                x = ast.literal_eval(data)                
+                result.append(x)
+            month_history = []
+            for r in result:                
+                month_history.append(r)  
+            if month_history:
+                for pro in month_history:
+                                                
+                    pro_his = {
+                        'section_id':pro['section_id'],
+                        'partner_id':pro['partner_id'],
+                        'promotion_id':pro['promotion_id'],
+                        'date':pro['date'],
+                        'user_id':pro['user_id'],        
+                    }
+                    promo_his_obj.create(cursor, user, pro_his, context=context)
+            return True
     
 mobile_sale_order()
 

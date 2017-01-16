@@ -153,7 +153,6 @@ class stock_requisition(osv.osv):
         try:
             sale_order_obj = self.pool.get('sale.order')
             so_line_obj = self.pool.get('stock.requisition.order')
-            
             if ids:
                 stock_request_data = self.browse(cr, uid, ids[0], context=context)
                 issue_date_from = stock_request_data.issue_date
@@ -166,10 +165,11 @@ class stock_requisition(osv.osv):
                 #cr.execute(sql,(sale_team_id,issue_date_from,issue_date_to))
                 #order_ids = cr.fetchall()
                 #order_ids= []
+                print 'issue_date_from',issue_date_from,issue_date_to
                 if issue_date_from == issue_date_to:
-                    order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False), ('is_generate', '=', False), ('invoiced', '=', False), ('state', 'not in', ['done', 'cancel']), ('date_order', '>=', issue_date_from)], context=context) 
-                else:
                     order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False), ('is_generate', '=', False), ('invoiced', '=', False), ('state', 'not in', ['done', 'cancel']), ('date_order', '<=', issue_date_from), ('date_order', '<=', issue_date_to)], context=context) 
+                else:
+                    order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False), ('is_generate', '=', False), ('invoiced', '=', False), ('state', 'not in', ['done', 'cancel']), ('date_order', '>=', issue_date_from), ('date_order', '<=', issue_date_to)], context=context) 
                 print 'order_idsorder_ids',order_ids
                 cr.execute("delete from stock_requisition_order where  stock_line_id=%s", (stock_request_data.id,))
                 cr.execute("update stock_requisition_line set sale_req_quantity=0 where line_id=%s", (stock_request_data.id,))

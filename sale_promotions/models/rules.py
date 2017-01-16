@@ -130,7 +130,7 @@ class PromotionsRules(osv.Model):
         # 'main_group': fields.many2one('product_product.maingroup','Main Group'),
         'monthly_promotion':fields.boolean('Monthly Promotion'),
         'promotion_count':fields.integer('Number Of Promotion Count'),
-        'category_ids': fields.many2many('hr.employee.category', 'promotion_rule_category_rel', 'promotion_id', 'category_id', 'Customer Tags'),
+        'category_ids': fields.many2many('res.partner.category', 'promotion_rule_category_rel', 'promotion_id', 'category_id', 'Customer Tags'),
         'partner_categories':fields.many2many(
                   'res.partner.category',
                   'rule_partner_cat_rel',
