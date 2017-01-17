@@ -5,6 +5,16 @@ import calendar
 from openerp import tools
 
 OE_DATEFORMAT = "%Y-%m-%d"
+
+class price_list_line(osv.osv):
+    _name = 'price.list.line'
+    _description = 'Price List Line'           
+    _columns = {                
+        'team_id':fields.many2one('crm.case.section', 'Line', ondelete='cascade', select=True),
+        'property_product_pricelist': fields.many2one('product.pricelist', string="Sale Pricelist", domain=[('type', '=', 'sale')]),
+        'is_default':fields.boolean('Default'),
+        }
+    
 class crm_case_section(osv.osv):
     _inherit = 'crm.case.section'
 

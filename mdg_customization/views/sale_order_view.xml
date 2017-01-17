@@ -20,7 +20,6 @@
 				<xpath expr="//field[@name='partner_id']" position="after">
 					<field name="section_id"  />
 					<field name="delivery_id" />
-					<field name="warehouse_id" />
 				</xpath>
 				<xpath expr="//field[@name='amount_total']" position="replace">
 					<field name="amount_total" sum="Total Tax Included" string="Value" />

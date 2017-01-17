@@ -21,7 +21,7 @@ class sale_target(osv.osv):
                 print 'product_line ', line
                 product = self.pool.get('product.product').browse(cr, uid, line.id, context=context)
                 data_line.append({'product_id':line.id,
-                                     'product_uom': product.product_tmpl_id.big_uom_id and product.product_tmpl_id.big_uom_id.id or False,
+                                     'product_uom': product.product_tmpl_id.uom_id and product.product_tmpl_id.uom_id.id or False,
                                     'price_unit': product.product_tmpl_id.list_price,
                                     'product_uom_qty':0.0,
                                               })
@@ -106,7 +106,7 @@ class sale_target_line(osv.osv):
         if product_id:
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             values = {
-                'product_uom': product.product_tmpl_id.big_uom_id and product.product_tmpl_id.big_uom_id.id or False,
+                'product_uom': product.product_tmpl_id.uom_id and product.product_tmpl_id.uom_id.id or False,
                 'price_unit': product.product_tmpl_id.list_price,
             }
         return {'value': values}

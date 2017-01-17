@@ -74,17 +74,15 @@ class stock_return(osv.osv):
             print 'rereturn_date',return_date,sale_team_id
             note_ids = note_obj.search(cr, uid, [('sale_team_id', '=', sale_team_id), ('issue_date', '=', return_date)])
             if  note_ids:        
-                cr.execute(' select gin.from_location_id as location_id,product_id,sequence,big_uom_id,sum(issue_quantity) as issue_quantity,product_uom  as small_uom_id from good_issue_note gin ,good_issue_note_line  ginl where gin.id = ginl.line_id and gin.id in %s group by product_id,from_location_id,sequence,big_uom_id,product_uom', (tuple(note_ids),))
+                cr.execute(' select gin.from_location_id as location_id,product_id,sequence,sum(issue_quantity) as issue_quantity,product_uom  as small_uom_id from good_issue_note gin ,good_issue_note_line  ginl where gin.id = ginl.line_id and gin.id in %s group by product_id,from_location_id,sequence,product_uom', (tuple(note_ids),))
                 p_line = cr.fetchall()            
             for note_line in p_line:
                 product_id = note_line[1]
                 sequence=note_line[2]
-                big_uom_id = note_line[3]
-                small_issue_quantity = note_line[5]
-                small_uom_id = note_line[6]
+                small_issue_quantity = note_line[4]
+                small_uom_id = note_line[5]
                 location_id= note_line[0]
-                cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (big_uom_id,))
-                bigger_qty = cr.fetchone()[0]
+
                 receive_qty =  small_issue_quantity
                 cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (location_id, product_id,))
                 qty_on_hand = cr.fetchone()
@@ -101,7 +99,6 @@ class stock_return(osv.osv):
                                           'sale_quantity':0,
                                           'foc_quantity':0,
                                           'rec_small_uom_id':small_uom_id,
-                                          'rec_big_uom_id':big_uom_id,
                                         }, context=context)
             mobile_ids = mobile_obj.search(cr, uid, [('return_date', '=', return_date), ('sale_team_id', '=', sale_team_id)], context=context) 
             return_mobile = mobile_obj.browse(cr, uid, mobile_ids, context=context)            
@@ -118,7 +115,6 @@ class stock_return(osv.osv):
                 else:
                     product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
                     sequence=product.sequence
-                    big_uom = product.product_tmpl_id.big_uom_id and product.product_tmpl_id.big_uom_id.id or False,
                     stock_return_obj.create(cr, uid, {'line_id': ids[0],
                                                'sequence':sequence,
                                               'product_id': product_id,
@@ -128,7 +124,6 @@ class stock_return(osv.osv):
                                               'sale_quantity':sale_quantity,
                                               'foc_quantity':foc_quantity,
                                               'rec_small_uom_id':small_uom_id,
-                                              'rec_big_uom_id':big_uom,
                                               }, context=context)
             trans_ids = product_trans_obj.search(cr, uid, [('date', '=', return_date), ('void_flag', '=', 'none'), ('team_id', '=', sale_team_id)], context=context) 
             for t_id in trans_ids:
@@ -153,7 +148,6 @@ class stock_return(osv.osv):
 #                     else:
                     product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
                     sequence=product.sequence
-                    big_uom = product.product_tmpl_id.big_uom_id and product.product_tmpl_id.big_uom_id.id or False,
                     stock_return_obj.create(cr, uid, {'line_id': ids[0],
                                              'sequence':sequence,
                                               'product_id': product_id,
@@ -163,7 +157,6 @@ class stock_return(osv.osv):
                                               'sale_quantity':0,
                                               'foc_quantity':0,
                                               'rec_small_uom_id':small_uom_id,
-                                              'rec_big_uom_id':big_uom,
                                               'remark':exchange_type,
                                               'ex_return_id':t_id,
                                               }, context=context)     
@@ -174,18 +167,8 @@ class stock_return(osv.osv):
                 product_id = return_record.product_id.id
                 return_qty = return_record.return_quantity
                 product = product_obj.browse(cr, uid, product_id, context=context)
-                if return_qty >0: 
-                    cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (product.product_tmpl_id.big_uom_id.id,))
-                    bigger_qty = cr.fetchone()[0]
-                    bigger_qty = int(bigger_qty)
-                    big_uom_qty = divmod(return_qty, bigger_qty)
-                    if  big_uom_qty:
-                        big_quantity = big_uom_qty[0]
-                        small_quantity = big_uom_qty[1]
-                        cr.execute("update stock_return_line set return_quantity_big=%s,return_quantity=%s where product_id=%s and line_id=%s and id=%s", (big_quantity, small_quantity, product_id, ids[0],record_id,))
-                else:
-                        cr.execute("update stock_return_line set return_quantity_big=0,return_quantity=%s where product_id=%s and line_id=%s and id=%s", ( return_qty, product_id, ids[0],record_id,))
-
+                cr.execute("update stock_return_line set return_quantity=%s where product_id=%s and line_id=%s and id=%s", (return_qty, product_id, ids[0],record_id,))
+                
         return True 
         
     def _get_default_branch(self, cr, uid, context=None):
@@ -275,7 +258,6 @@ class stock_return(osv.osv):
                                  _('Receive Qty is Zero'))
         for line in return_obj.p_line:
             product_id = line.product_id.id
-            rec_big_uom_id = line.rec_big_uom_id.id
             rec_small_quantity = line.rec_small_quantity
             rec_small_uom_id = line.rec_small_uom_id.id    
             ex_return_id =    line.ex_return_id.id    

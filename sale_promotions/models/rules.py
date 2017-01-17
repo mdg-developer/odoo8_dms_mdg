@@ -391,13 +391,7 @@ class PromotionsRules(osv.Model):
                 con_qty = 0
                 for order_line in order.order_line:   
                     if order_line.product_id.default_code == product_code:
-                        if order_line.product_uom.id == order_line.product_id.product_tmpl_id.big_uom_id.id:                                                                          
-                            cursor.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (order_line.product_uom.id,))
-                            bigger_qty = cursor.fetchone()[0]
-                            bigger_qty = int(bigger_qty)
-                            con_qty += bigger_qty * order_line.product_uom_qty           
-                        else:             
-                            con_qty += order_line.product_uom_qty
+                        con_qty += order_line.product_uom_qty
                 LOGGER.info("Order Line qty : %s ", con_qty)
                 if comparator == '==':
                     if con_qty == product_qty:
@@ -440,13 +434,7 @@ class PromotionsRules(osv.Model):
                         cat_value = cat_value1.strip() 
                         
                         if category_name == cat_value:
-                            if order_line.product_uom.id == order_line.product_id.product_tmpl_id.big_uom_id.id:                                                                          
-                                cursor.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (order_line.product_uom.id,))
-                                bigger_qty = cursor.fetchone()[0]
-                                bigger_qty = int(bigger_qty)
-                                tota_qty += bigger_qty * order_line.product_uom_qty
-                            else:         
-                                tota_qty += order_line.product_uom_qty
+                            tota_qty += order_line.product_uom_qty
                 if comparator == '==':
                     if tota_qty == product_qty:
                         return True
@@ -508,13 +496,7 @@ class PromotionsRules(osv.Model):
                     for p_code in product_code: 
                         
                         if order_line.product_id.default_code == eval(p_code):
-                            if order_line.product_uom.id == order_line.product_id.product_tmpl_id.big_uom_id.id:                                                                          
-                                cursor.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (order_line.product_uom.id,))
-                                bigger_qty = cursor.fetchone()[0]
-                                bigger_qty = int(bigger_qty)
-                                qtys += bigger_qty * order_line.product_uom_qty
-                            else:                            
-                                qtys += order_line.product_uom_qty
+                            qtys += order_line.product_uom_qty
  
                 if comparator == '==':
                     if qtys == product_qty:
@@ -594,13 +576,7 @@ class PromotionsRules(osv.Model):
 
                     for order_line in order.order_line:  
                             if order_line.product_id.default_code ==eval(con_product_codes):
-                                if order_line.product_uom.id == order_line.product_id.product_tmpl_id.big_uom_id.id:                                                                          
-                                    cursor.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (order_line.product_uom.id,))
-                                    bigger_qty = cursor.fetchone()[0]
-                                    bigger_qty = int(bigger_qty)
-                                    qtys += bigger_qty * order_line.product_uom_qty                                
-                                else:
-                                    qtys += order_line.product_uom_qty
+                                qtys += order_line.product_uom_qty
                     result=False
                     total_result= False
                     if data_comparator == '==':
@@ -633,13 +609,8 @@ class PromotionsRules(osv.Model):
                         product_id=data[1]
                         product_uom=data[2]
                         product = self.pool.get('product.product').browse(cursor, user, product_id, context=context)
-                        if product_uom == product.product_tmpl_id.big_uom_id.id:                                                                          
-                            cursor.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (product.product_tmpl_id.big_uom_id.id,))
-                            bigger_qty = cursor.fetchone()[0]
-                            bigger_qty = int(bigger_qty)
-                            toal_prod_qty = bigger_qty * prod_qty
-                        else:                        
-                            toal_prod_qty=prod_qty
+                                              
+                        toal_prod_qty=prod_qty
 
                     if comparator == '==':
                         if toal_prod_qty == total:
@@ -663,13 +634,7 @@ class PromotionsRules(osv.Model):
                 if result ==True and total_result==True: 
                     for order_line in order.order_line:  
                             if order_line.product_id.default_code ==eval(product_code):
-                                if order_line.product_uom.id == order_line.product_id.product_tmpl_id.big_uom_id.id:                                                                          
-                                    cursor.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (product.product_tmpl_id.big_uom_id.id,))
-                                    bigger_qty = cursor.fetchone()[0]
-                                    bigger_qty = int(bigger_qty)
-                                    ori_qtys += bigger_qty * order_line.product_uom_qty      
-                                else:                                 
-                                    ori_qtys += order_line.product_uom_qty          
+                                ori_qtys += order_line.product_uom_qty          
                                     
                     if comparator == '==':
                         if ori_qtys == product_qty:

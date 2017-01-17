@@ -26,7 +26,7 @@
     'author': 'seventh computing',
     'website': 'http://www.7thcomputing.com',
     'category' : 'Product',
-    'depends' : ["base", "sale", "product", "product_product"],
+    'depends' : ["base", "sale", "product","hr_branch" ,"product_product"],
     'description': """
     Product Pricelists for OpenERP
     = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -36,7 +36,8 @@
  
     """,
     'data': [
- 'views/product_pricelist_view.xml'
+ 'views/product_pricelist_view.xml',
+ 'views/product_pricelist_item_view.xml',
                 ],
     'installable': True,
     'auto_install': False,

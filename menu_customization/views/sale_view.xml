@@ -456,8 +456,8 @@
 		<menuitem action="sale_management.action_sale_target_report"
 			id="sale_management.menu_sale_target_report" parent="menu_sales_target_menu"
 			sequence="2" name="Target Analysis" />
-		<menuitem id="sale_management.menu_week_setting" action="sale_management.action_week_setting"
-			parent="menu_sales_target_menu" name="Week Setting" sequence="3" />
+		<!--<menuitem id="sale_management.menu_week_setting" action="sale_management.action_week_setting"
+			parent="menu_sales_target_menu" name="Week Setting" sequence="3" />-->
 		<!-- Sales Reports -->
 		<menuitem id="menu_sales_report_menu" parent="base.menu_base_partner"
 			name="Sales Reports" sequence="7" />
