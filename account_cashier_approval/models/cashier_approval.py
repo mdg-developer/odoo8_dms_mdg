@@ -27,7 +27,8 @@ class cashier_approval(osv.osv):
             val = val1 = 0.0
             # cur = order.pricelist_id.currency_id
             for line in order.cashier_line:
-                val1 += line.amount
+                if line.selected==True:
+                    val1 += line.amount
                 # val += self._amount_line_tax(cr, uid, line, context=context)           
             res[order.id]['cash_sub_total'] = round(val1)  # cur_obj.round(cr, uid, cur, val1)
         return res 
@@ -45,7 +46,8 @@ class cashier_approval(osv.osv):
             }
             val = val1 = 0.0            
             for line in order.ar_line:
-                val1 += line.amount
+                if line.selected==True:
+                    val1 += line.amount
                            
             res[order.id]['ar_sub_total'] = round(val1)  # cur_obj.round(cr, uid, cur, val1)
         return res 
@@ -63,7 +65,8 @@ class cashier_approval(osv.osv):
             }
             val = val1 = 0.0            
             for line in order.credit_line:
-                val1 += line.amount
+                if line.selected==True:
+                    val1 += line.amount
                            
             res[order.id]['cr_sub_total'] = round(val1)  # cur_obj.round(cr, uid, cur, val1)
         return res
@@ -80,7 +83,7 @@ class cashier_approval(osv.osv):
             val = val1 = 0.0            
             for line in order.denomination_line:
                 val1 += line.notes * line.note_qty
-            cr.execute("""update cashier_approval set denomination_sub_total=%s where id=%s""", (val1, ids[0],))                 
+            cr.execute("""update cashier_approval set denomination_sub_total=%s where id=%s  """, (val1, ids[0],))                 
             res[order.id]['denomination_sub_total'] = round(val1)  # cur_obj.round(cr, uid, cur, val1)
         return res
     
