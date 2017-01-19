@@ -15,7 +15,7 @@ class account_invoice(models.Model):
         cr=self._cr
         uid=self._uid
         for line in self.move_id.line_id:
-            print 'line _compute_payments',line
+            print 'line_compute_payments',line
 #             if line.account_id != self.account_id:
 #                 continue
             if line.reconcile_id:
@@ -23,9 +23,9 @@ class account_invoice(models.Model):
             elif line.reconcile_partial_id:
                 lines |= line.reconcile_partial_id.line_partial_ids
             partial_lines += line
-            print 'self.residual self.residual ',self.residual 
+            print 'self.residualself.residual ',self.residual 
             if self.residual ==0.0:
-                print 'self.residual self.residual ----',self.residual 
+                print 'self.residualself.residual ----',self.residual 
                 self.confirm_paid()
                 if self.origin:
                     cr.execute("update sale_order set invoiced=True where name=%s", (self.origin,))        
@@ -273,8 +273,8 @@ class account_invoice(models.Model):
                 type=type[0]
             else:
                 type=None
-        if type=='out_invoice' :
-            if line['price']<0 or line['name']=='Discount' :
+        if type=='out_invoice'  :
+            if line['price']<0 or line['name']=='Discount' or line['name']=='Myanmar Lion Discount' or line['name']=='Nestle Discount':
                 product = self.env['product.product'].browse(line.get('product_id', False))
                 print 'product>>>',product.id
                 print 'line.get>>>',line.get('product_id', False)
@@ -317,16 +317,24 @@ class account_invoice(models.Model):
                 print 'res111111>>>',res
                 return res
         if type=='in_refund' :
-            if line['price']<0:
+            if line['price']<0 or line['name']=='Discount' or line['name']=='Myanmar Lion Discount' or line['name']=='Nestle Discount':
                 product = self.env['product.product'].browse(line.get('product_id', False))
                 print 'product>>>',product.id
                 print 'line.get>>>',line.get('product_id', False)
-                account_id = product.product_tmpl_id.main_group.property_account_payable.id
+                if origin and line['name']!='Discount':
+                    cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s",(origin,product.id,))
+                    discount_amt=cr.fetchone()[0]      
+                    if discount_amt:     
+                            line['price'] = line['price']+discount_amt                
+                if  line['name']=='Discount':
+                    account_id = product.product_tmpl_id.main_group.property_account_discount.id
+                else:
+                    account_id = product.product_tmpl_id.main_group.property_account_payable.id                
                 print 'account_id>>>',account_id        
-    
                 print 'line>>>',line
                 print 'line[price]',line['price']
-                line['price'] = -line['price']
+                if line['price']<0:
+                    line['price'] = -line['price']
                 print 'after>>>',line['price']
                 res= {
                     'date_maturity': line.get('date_maturity', False),
@@ -352,7 +360,7 @@ class account_invoice(models.Model):
                 print 'res111111>>>',res
                 return res            
         if type=='out_refund' :
-            if line['price']>0 or line['name']=='Discount':
+            if line['price']>0 or line['name']=='Discount'  or line['name']=='Myanmar Lion Discount' or line['name']=='Nestle Discount':
                 product = self.env['product.product'].browse(line.get('product_id', False))
                 print 'product>>>',product.id
                 print 'line.get>>>',line.get('product_id', False)
@@ -369,7 +377,8 @@ class account_invoice(models.Model):
                 print 'account_id>>>',account_id        
                 print 'line>>>',line
                 print 'line[price]',line['price']
-                line['price'] = -line['price']
+                if line['price']>0 :
+                    line['price'] = -line['price']
                 print 'after>>>',line['price']
                 res= {
                     'date_maturity': line.get('date_maturity', False),
@@ -395,7 +404,7 @@ class account_invoice(models.Model):
                 print 'res111111>>>',res
                 return res
         if type=='in_invoice' :
-            if line['price']>0 or line['name']=='Discount' :
+            if line['price']>0  or line['name']=='Discount'  or line['name']=='Myanmar Lion Discount' or line['name']=='Nestle Discount':
                 product = self.env['product.product'].browse(line.get('product_id', False))
                 print 'product>>>',product.id
                 print 'line.get>>>',line.get('product_id', False)
@@ -412,7 +421,8 @@ class account_invoice(models.Model):
                 print 'account_id>>>',account_id        
                 print 'line>>>',line
                 print 'line[price]',line['price']
-                line['price'] = -line['price']
+                if line['price']>0:
+                    line['price'] = -line['price']
                 print 'after>>>',line['price']
                 res= {
                     'date_maturity': line.get('date_maturity', False),
@@ -536,6 +546,9 @@ class account_invoice(models.Model):
 
             for res in result:
                 origin=res['ref']
+                if res['name']=='Myanmar Lion Discount' or res['name']=='Nestle Discount':
+                    res['debit'] = -1* res['debit']
+                    res['credit'] = -1* res['credit']
                 if origin:
                     cr.execute("select type from account_invoice where origin=%s",(origin,))
                     type=cr.fetchone()

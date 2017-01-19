@@ -205,40 +205,20 @@ class account_invoice_line(models.Model):
 
                 res[-1]['tax_code_id'] = tax_code_id
                 res[-1]['tax_amount'] = currency.compute(tax_amount, company_currency)
-        
-        #print 'this is deduct amount',deduct_amt
-#         if discount_cash_account_id==discount_account_id:
-#             for line in inv.invoice_line:
-#                 
-#                 if line.discount:
-#                     dis_per+=(line.price_unit*line.quantity) *(line.discount/ 100.0)
-# 
-#                     
-#                 if line.discount_amt:
-#                     dis_amt+=line.discount_amt
-# 
-# 
-#             total=deduct_amt+discount_total+additional_discount
-#             val1={'type': 'src',
-#                     'name': 'Discount',
-#                     'price_unit': total,
-#                     'quantity': 1,
-#                     'price':-1* total,
-#                     'account_id': discount_account_id,
-#                     'product_id': line.product_id.id,
-#                     'ref':ref,
-#                     'foc':False,
-#                     'account_analytic_id': inv.invoice_line[0].account_analytic_id.id,
-#                     'taxes': False,
-#                     }
-#             if total>0:
-#                 res.append(val1)
-#         else:
-#             for line in inv.invoice_line:
-#                 if line.discount:
-#                     dis_per+=(line.price_unit*line.quantity) *(line.discount / 100.0)
-#                 if line.discount_amt:
-#                     dis_amt+=line.discount_amt
+            if line.net_total <0:
+                val1={'type': 'src',
+                        'name': 'Discount',
+                        'price_unit':line.net_total,
+                        'quantity': 1,
+                        'price':line.net_total,
+                        'account_id': discount_account_id,
+                        'product_id':  line.product_id.id,
+                        'ref':ref,
+                         'foc':False,
+                        'account_analytic_id': inv.invoice_line[0].account_analytic_id.id,
+                        'taxes': False,
+                        }
+                res.append(val1)                
             total=line.discount_amt
 
             val1={'type': 'src',
