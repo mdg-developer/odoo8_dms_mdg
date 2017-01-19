@@ -447,7 +447,7 @@ class mobile_sale_order(osv.osv):
                                         if data:
                                             default_code = data[0][0]
                                         if default_code:
-                                            product_name = '[' + default_code + ']' + line_id.product_id.name
+                                            product_name =line_id.product_id.name
                                         else:
                                             product_name = line_id.product_id.name
                                         # FOC with price_unit or foc true, false
