@@ -1,8 +1,8 @@
--- Function: calculate_opening_balance_new(date, date, text)
+-- Function: calculate_opening_balance(date, date, text)
 
--- DROP FUNCTION calculate_opening_balance_new(date, date, text);
+-- DROP FUNCTION calculate_opening_balance(date, date, text);
 
-CREATE OR REPLACE FUNCTION calculate_opening_balance_new(date_from date, date_to date, state_cond text)
+CREATE OR REPLACE FUNCTION calculate_opening_balance(date_from date, date_to date, state_cond text)
   RETURNS numeric AS
 $BODY$
   DECLARE
@@ -10,38 +10,46 @@ $BODY$
     opening integer;
     opening_debit numeric;
     max_date date;
-    closing_balance numeric;
+    closing_balance numeric=0;
+    min_date date;
+    opening_balance numeric=0;
+    move_record record;
+    initial_balance numeric;
+    amount numeric;
   BEGIN
 
-	select id into opening
-	from account_period
-	where id in (
-		select min(id) 
-		from account_period)
-	and date_from between date_start and date_stop;
-
-	if opening is not null then
+	select date into min_date
+	from account_move
+	where journal_id in (select id from account_journal where name like 'Opening%') and date between date_from and date_to;
+	RAISE NOTICE 'min_date(%)',min_date;
+			
+	if min_date = date_from or (min_date>=date_from and min_date<=date_to) then
+	
 		if state_cond='posted' then
 			select COALESCE(sum((aml.debit)),0) into opening_debit
 			from account_move_line aml,account_move am
 			where aml.move_id = am.id                  
 			and aml.account_id in (select id from account_account where name in ('Cash (MMK)','Cash Donation'))			
-			and aml.period_id=opening
+			and am.date=min_date 
 			and am.state=state_cond;
 		else
 			select COALESCE(sum((aml.debit)),0) into opening_debit
 			from account_move_line aml,account_move am
-			where aml.move_id = am.id                  
+			where aml.move_id= am.id                  
 			and aml.account_id in (select id from account_account where name in ('Cash (MMK)','Cash Donation'))			
-			and aml.period_id=opening;			
+			and am.date=min_date;			
 		end if;	
 		balance=opening_debit;
+		RAISE NOTICE 'balance(%)',balance;
+				
+	elsif date_from < min_date then
+		balance=0;
 	else
 		select max(date) into max_date
 		from account_move
 		where date<date_from;
-
-		EXECUTE 'select * from calculate_closing_balance_new($1,$2,$3)' USING max_date,max_date,state_cond INTO closing_balance;
+		RAISE NOTICE 'max_date(%)',max_date;
+		EXECUTE 'select * from calculate_closing_balance($1,$2,$3)' USING max_date,max_date,state_cond INTO closing_balance;
 		balance=closing_balance;
 	end if;
 
@@ -89,7 +97,7 @@ DECLARE
 			and aa.name in ('Cash (MMK)','Cash Donation')
 			and aj.name='Cash'
 			group by am.date,am.name,rp.name,aj.code,am.state,am.ref
-			order by seq;
+			order by seq,move_date;
 	else
 		RETURN QUERY 		
 			select am.date as move_date,am.name as ref,rp.name as partner,aj.code as account_type,COALESCE(sum(aml.debit),0) debit,0.0 as credit,am.state,1 as seq,am.ref as reference_no
@@ -115,7 +123,7 @@ DECLARE
 			and aj.name='Cash'
 			and am.date between date_from and date_to			
 			group by am.date,am.name,rp.name,aj.code,am.state,am.ref
-			order by seq;
+			order by seq,move_date;
 	end if;
 	
 
@@ -125,20 +133,20 @@ $BODY$
   COST 100
   ROWS 1000;
   
--- Function: calculate_closing_balance_new(date, date, text)
+-- Function: calculate_closing_balance(date, date, text)
 
--- DROP FUNCTION calculate_closing_balance_new(date, date, text);
+-- DROP FUNCTION calculate_closing_balance(date, date, text);
 
-CREATE OR REPLACE FUNCTION calculate_closing_balance_new(date_from date, date_to date, state_cond text)
+CREATE OR REPLACE FUNCTION calculate_closing_balance(date_from date, date_to date, state_cond text)
   RETURNS numeric AS
 $BODY$
   DECLARE
     balance numeric;
-    initial_balance numeric;
-    amount numeric;
+    initial_balance numeric=0;
+    amount numeric=0;
   BEGIN
 
-	EXECUTE 'select * from calculate_opening_balance_new($1,$2,$3)' USING date_from,date_to,state_cond INTO initial_balance;
+	EXECUTE 'select * from calculate_opening_balance($1,$2,$3)' USING date_from,date_to,state_cond INTO initial_balance;
 	EXECUTE 'select COALESCE(sum(debit-credit),0) from cash_report($1,$2,$3)' USING date_from,date_to,state_cond INTO amount;
 	RAISE NOTICE ' amount (%)', amount;
 	balance=initial_balance+amount;

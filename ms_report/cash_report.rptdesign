@@ -1,6 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
     <property name="createdBy">Eclipse BIRT Designer Version 4.4.2.v201410272105 Build &lt;4.4.2.v20150217-1805></property>
+    <list-property name="propertyBindings">
+        <structure>
+            <property name="name">queryText</property>
+            <property name="id">886</property>
+        </structure>
+        <structure>
+            <property name="name">queryTimeOut</property>
+            <property name="id">886</property>
+        </structure>
+        <structure>
+            <property name="name">rowFetchSize</property>
+            <property name="id">886</property>
+        </structure>
+        <structure>
+            <property name="name">queryText</property>
+            <property name="id">874</property>
+        </structure>
+        <structure>
+            <property name="name">queryTimeOut</property>
+            <property name="id">874</property>
+        </structure>
+        <structure>
+            <property name="name">rowFetchSize</property>
+            <property name="id">874</property>
+        </structure>
+    </list-property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="bidiLayoutOrientation">ltr</property>
@@ -283,11 +309,21 @@
   </DataSetParameters>
 </model:DesignValues>]]></xml-property>
         </oda-data-set>
-        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.SPSelectDataSet" name="closing_balance" id="874">
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.SPSelectDataSet" name="closing_balance_debit" id="874">
             <list-property name="columnHints">
                 <structure>
                     <property name="columnName">result</property>
-                    <text-property name="displayName">closing_balance</text-property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">closing_balance_debit</text-property>
+                </structure>
+            </list-property>
+            <list-property name="filter">
+                <structure>
+                    <property name="operator">gt</property>
+                    <expression name="expr" type="javascript">row["result"]</expression>
+                    <simple-property-list name="value1">
+                        <value>0</value>
+                    </simple-property-list>
                 </structure>
             </list-property>
             <list-property name="parameters">
@@ -340,7 +376,7 @@
                     <property name="dataType">decimal</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[{call calculate_closing_balance_new(?,?,?)} ]]></xml-property>
+            <xml-property name="queryText"><![CDATA[{call calculate_closing_balance(?,?,?)} ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -393,12 +429,21 @@
   </DataSetParameters>
 </model:DesignValues>]]></xml-property>
         </oda-data-set>
-        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.SPSelectDataSet" name="opening_balance" id="877">
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.SPSelectDataSet" name="opening_balance_debit" id="877">
             <list-property name="columnHints">
                 <structure>
                     <property name="columnName">result</property>
                     <property name="analysis">measure</property>
-                    <text-property name="displayName">opening_balance</text-property>
+                    <text-property name="displayName">opening_balance_debit</text-property>
+                </structure>
+            </list-property>
+            <list-property name="filter">
+                <structure>
+                    <property name="operator">gt</property>
+                    <expression name="expr" type="javascript">row["result"]</expression>
+                    <simple-property-list name="value1">
+                        <value>0</value>
+                    </simple-property-list>
                 </structure>
             </list-property>
             <list-property name="parameters">
@@ -451,7 +496,247 @@
                     <property name="dataType">decimal</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[{call calculate_opening_balance_new(?,?,?)} ]]></xml-property>
+            <xml-property name="queryText"><![CDATA[{call calculate_opening_balance(?,?,?)} ]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>date_from</design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>date_to</design:name>
+            <design:position>2</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>state_cond</design:name>
+            <design:position>3</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.SPSelectDataSet" name="opening_balance_credit" id="883">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">result</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">opening_balance_credit</text-property>
+                </structure>
+            </list-property>
+            <list-property name="filter">
+                <structure>
+                    <property name="operator">lt</property>
+                    <expression name="expr" type="javascript">row["result"]</expression>
+                    <simple-property-list name="value1">
+                        <value>0</value>
+                    </simple-property-list>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">date_from</property>
+                    <property name="paramName">From Date</property>
+                    <property name="nativeName">date_from</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">date_to</property>
+                    <property name="paramName">To Date</property>
+                    <property name="nativeName">date_to</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">2</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">state_cond</property>
+                    <property name="paramName">target_move</property>
+                    <property name="nativeName">state_cond</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">3</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">result</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">result</property>
+                    <property name="nativeName">result</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[{call calculate_opening_balance(?,?,?)} ]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>date_from</design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>date_to</design:name>
+            <design:position>2</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>state_cond</design:name>
+            <design:position>3</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.SPSelectDataSet" name="closing_balance_credit" id="886">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">result</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">closing_balance_credit</text-property>
+                </structure>
+            </list-property>
+            <list-property name="filter">
+                <structure>
+                    <property name="operator">lt</property>
+                    <expression name="expr" type="javascript">row["result"]</expression>
+                    <simple-property-list name="value1">
+                        <value>0</value>
+                    </simple-property-list>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">date_from</property>
+                    <property name="paramName">From Date</property>
+                    <property name="nativeName">date_from</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">date_to</property>
+                    <property name="paramName">To Date</property>
+                    <property name="nativeName">date_to</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">2</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">state_cond</property>
+                    <property name="paramName">target_move</property>
+                    <property name="nativeName">state_cond</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">3</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">result</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">result</property>
+                    <property name="nativeName">result</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[{call calculate_closing_balance(?,?,?)} ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -919,7 +1204,7 @@
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="880">
+                        <data id="884">
                             <property name="fontFamily">"Arial"</property>
                             <property name="fontSize">11pt</property>
                             <property name="fontWeight">normal</property>
@@ -929,11 +1214,11 @@
                                 <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
-                            <property name="dataSet">opening_balance</property>
+                            <property name="dataSet">opening_balance_debit</property>
                             <list-property name="boundDataColumns">
                                 <structure>
                                     <property name="name">result</property>
-                                    <text-property name="displayName">opening_balance</text-property>
+                                    <text-property name="displayName">opening_balance_debit</text-property>
                                     <expression name="expression" type="javascript">dataSetRow["result"]</expression>
                                     <property name="dataType">decimal</property>
                                 </structure>
@@ -950,6 +1235,28 @@
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <data id="885">
+                            <property name="fontFamily">"Arial"</property>
+                            <property name="fontSize">11pt</property>
+                            <property name="fontWeight">normal</property>
+                            <property name="paddingRight">3pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="dataSet">opening_balance_credit</property>
+                            <list-property name="boundDataColumns">
+                                <structure>
+                                    <property name="name">result</property>
+                                    <text-property name="displayName">opening_balance_credit</text-property>
+                                    <expression name="expression" type="javascript">dataSetRow["result"]*-1</expression>
+                                    <property name="dataType">decimal</property>
+                                    <property name="allowExport">true</property>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">result</property>
+                        </data>
                     </cell>
                 </row>
             </header>
@@ -1130,6 +1437,26 @@
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <data id="888">
+                            <property name="fontFamily">"Arial"</property>
+                            <property name="fontSize">11pt</property>
+                            <property name="paddingRight">3pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="dataSet">closing_balance_debit</property>
+                            <list-property name="boundDataColumns">
+                                <structure>
+                                    <property name="name">result</property>
+                                    <text-property name="displayName">closing_balance_debit</text-property>
+                                    <expression name="expression" type="javascript">dataSetRow["result"]</expression>
+                                    <property name="dataType">decimal</property>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">result</property>
+                        </data>
                     </cell>
                     <cell id="853">
                         <property name="borderBottomStyle">solid</property>
@@ -1140,7 +1467,7 @@
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="881">
+                        <data id="887">
                             <property name="fontFamily">"Arial"</property>
                             <property name="fontSize">11pt</property>
                             <property name="paddingRight">3pt</property>
@@ -1149,13 +1476,14 @@
                                 <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
-                            <property name="dataSet">closing_balance</property>
+                            <property name="dataSet">closing_balance_credit</property>
                             <list-property name="boundDataColumns">
                                 <structure>
                                     <property name="name">result</property>
-                                    <text-property name="displayName">closing_balance</text-property>
-                                    <expression name="expression" type="javascript">dataSetRow["result"]</expression>
+                                    <text-property name="displayName">closing_balance_credit</text-property>
+                                    <expression name="expression" type="javascript">dataSetRow["result"]*-1</expression>
                                     <property name="dataType">decimal</property>
+                                    <property name="allowExport">true</property>
                                 </structure>
                             </list-property>
                             <property name="resultSetColumn">result</property>
