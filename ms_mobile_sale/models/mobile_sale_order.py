@@ -61,6 +61,7 @@ class mobile_sale_order(osv.osv):
         'balance':fields.float('Balance'),
         'paid_amount':fields.float('Paid Amount'),
         'paid':fields.boolean('Paid'),
+        'direct_credit':fields.boolean('Direct Credit'),
         'void_flag':fields.selection([
                 ('voided', 'Voided'),
                 ('none', 'Unvoid')
@@ -131,8 +132,14 @@ class mobile_sale_order(osv.osv):
                         
                     if so['type'] == 'cash':
                         paid = True
+                        direct_credit = False
                     else:
                         paid = False
+                        if so['paid_amount'] != '0':
+                            direct_credit = True
+                        else:
+                            direct_credit = False
+                            
                         
                     mso_result = {
                         'customer_code':so['customer_code'],
@@ -165,6 +172,7 @@ class mobile_sale_order(osv.osv):
                         'outlet_type':so['outlet_type'] ,
                         'pricelist_id':so['pricelist_id'],
                         'branch_id':branch_id,
+                        'direct_credit':direct_credit
                     }
                     s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
                     print "Create Sale Order", so['name']
