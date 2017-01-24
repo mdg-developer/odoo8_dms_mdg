@@ -279,7 +279,7 @@
 						<!-- In Words -->
 								<p style="font-size:11pt;">
 					                <strong>In Words: (</strong>                
-					                <span t-esc="o.convert(o.payment_ids.debit)"/> 
+					                <span t-esc="o.convert(o.payment_ids.credit)"/> 
 					                <strong> Kyats Exactly )</strong>
 					                <strong> received.</strong>
 					            </p>
