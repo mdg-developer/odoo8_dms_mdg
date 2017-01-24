@@ -587,14 +587,17 @@ class res_partner(osv.osv):
     
     def generate_customercode(self, cr, uid, ids, val, context=None):
             codeObj = self.pool.get('res.code')
+            userObj = self.pool.get('res.users')
+            companyObj = self.pool.get('res.company')
             cityId = townshipId = channelId = codeId = code = None
             codeResult = {}
             if ids:
+                user_data=userObj.browse(cr, uid, uid, context=context)
+                company_id=user_data.company_id.id
+                company_data=companyObj.browse(cr, uid, company_id, context=context)
+                cityId=company_data.city                
                 for resVal in self.browse(cr, uid, ids, context=context):
                     if resVal:
-                        cityId = resVal.city
-                        townshipId = resVal.township
-                        channelId = resVal.sales_channel
                         customer=resVal.customer
                         supplier=resVal.supplier
                         if customer is True:
