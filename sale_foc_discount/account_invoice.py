@@ -177,7 +177,10 @@ class account_invoice_line(models.Model):
             
             mres = self.move_line_get_item(line)
             mres['ref']=ref
-            print 'mres',mres,ref
+            mres['is_discount']=False
+            product = self.env['product.product'].browse(mres.get('product_id', False))
+            
+            print 'mres',mres,ref,product.default_code
             if not mres:
                 continue
             res.append(mres)
@@ -207,12 +210,13 @@ class account_invoice_line(models.Model):
                 res[-1]['tax_amount'] = currency.compute(tax_amount, company_currency)
             if line.net_total <0:
                 val1={'type': 'src',
-                        'name': 'Discount',
+                        'name': line.product_id.name_template,
                         'price_unit':line.net_total,
                         'quantity': 1,
                         'price':line.net_total,
                         'account_id': discount_account_id,
                         'product_id':  line.product_id.id,
+                        'is_discount':True,
                         'ref':ref,
                          'foc':False,
                         'account_analytic_id': inv.invoice_line[0].account_analytic_id.id,
@@ -222,12 +226,13 @@ class account_invoice_line(models.Model):
             total=line.discount_amt
 
             val1={'type': 'src',
-                    'name': 'Discount',
+                    'name': line.product_id.name_template,
                     'price_unit': total,
                     'quantity': 1,
                     'price':-1* total,
                     'account_id': discount_account_id,
                     'product_id':  line.product_id.id,
+                    'is_discount':True,
                     'ref':ref,
                      'foc':False,
                     'account_analytic_id': inv.invoice_line[0].account_analytic_id.id,
@@ -244,6 +249,7 @@ class account_invoice_line(models.Model):
                             'account_id': discount_cash_account_id,
                             'product_id': False,
                             'ref':ref,
+                            'is_discount':True,
                              'foc':False,
                             'account_analytic_id': inv.invoice_line[0].account_analytic_id.id,
                             'taxes': False,
@@ -275,6 +281,8 @@ class account_invoice(models.Model):
                     
                   }
     
-    
-
-     
+class account_move_line(osv.osv):
+    _inherit='account.move.line'
+    _columns={
+    'is_discount':fields.boolean(string='Is Discount',_default=False),
+      }

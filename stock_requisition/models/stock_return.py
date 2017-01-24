@@ -71,7 +71,7 @@ class stock_return(osv.osv):
 #             print 'note',note
 #             if note:
 #                 note_id=note[0]
-            print 'rereturn_date',return_date,sale_team_id
+#            print 'rereturn_date',return_date,sale_team_id
             note_ids = note_obj.search(cr, uid, [('sale_team_id', '=', sale_team_id), ('issue_date', '=', return_date)])
             if  note_ids:        
                 cr.execute(' select gin.from_location_id as location_id,product_id,sequence,big_uom_id,sum(big_issue_quantity) as big_issue_quantity,sum(issue_quantity) as issue_quantity,product_uom  as small_uom_id from good_issue_note gin ,good_issue_note_line  ginl where gin.id = ginl.line_id and gin.id in %s group by product_id,from_location_id,sequence,big_uom_id,product_uom', (tuple(note_ids),))
@@ -269,11 +269,11 @@ class stock_return(osv.osv):
                                       'date': return_date,
                                       'origin':origin,
                                       'picking_type_id':picking_type_id}, context=context)
-        cr.execute("select  sum(rec_small_quantity+rec_big_quantity)  from stock_return_line  where line_id=%s group by line_id",(ids[0],)) 
-        total_qty=cr.fetchone()[0]
-        if total_qty==0.0 or total_qty is None   :
-            raise osv.except_osv(_('Warning'),
-                                 _('Receive Qty is Zero'))
+#         cr.execute("select  sum(rec_small_quantity+rec_big_quantity)  from stock_return_line  where line_id=%s group by line_id",(ids[0],)) 
+#         total_qty=cr.fetchone()[0]
+#         if total_qty==0.0 or total_qty is None   :
+#             raise osv.except_osv(_('Warning'),
+#                                  _('Receive Qty is Zero'))
         for line in return_obj.p_line:
             product_id = line.product_id.id
             rec_big_uom_id = line.rec_big_uom_id.id
@@ -281,14 +281,22 @@ class stock_return(osv.osv):
             rec_small_quantity = line.rec_small_quantity
             rec_small_uom_id = line.rec_small_uom_id.id    
             ex_return_id =    line.ex_return_id.id    
+            big_return_quantity=line.return_quantity_big
             return_quantity=line.return_quantity
+            
             if (rec_small_quantity + rec_big_quantity > 0):
                 product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)       
                 name = line.product_id.name_template                                                                               
                 cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (rec_big_uom_id,))
                 big_qty = cr.fetchone()
                 if big_qty:
-                        bigger_qty = big_qty[0] * rec_big_quantity                        
+                        bigger_qty = big_qty[0] * rec_big_quantity      
+                        return_big_qty = big_qty[0] * big_return_quantity 
+                        total_return_qty=  return_big_qty +  return_quantity        
+                        total_rec_qty=  bigger_qty +  rec_small_quantity        
+                        if total_return_qty < total_rec_qty:
+                            raise osv.except_osv(_('Warning'),
+                                _('Please Check Receive Qty'))
                         move_id = move_obj.create(cr, uid, {'picking_id': picking_id,
                                                   'picking_type_id':picking_type_id,
                                                 #  'restrict_lot_id':lot_id,

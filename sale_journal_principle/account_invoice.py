@@ -12,10 +12,10 @@ class account_invoice(models.Model):
     
     def _compute_payments(self):
         partial_lines = lines = self.env['account.move.line']
-        cr=self._cr
-        uid=self._uid
+        cr = self._cr
+        uid = self._uid
         for line in self.move_id.line_id:
-            print 'line_compute_payments',line
+            print 'line_compute_payments', line
 #             if line.account_id != self.account_id:
 #                 continue
             if line.reconcile_id:
@@ -23,14 +23,14 @@ class account_invoice(models.Model):
             elif line.reconcile_partial_id:
                 lines |= line.reconcile_partial_id.line_partial_ids
             partial_lines += line
-            print 'self.residualself.residual ',self.residual 
-            if self.residual ==0.0:
-                print 'self.residualself.residual ----',self.residual 
+            print 'self.residualself.residual ', self.residual 
+            if self.residual == 0.0:
+                print 'self.residualself.residual ----', self.residual 
                 self.confirm_paid()
                 if self.origin:
                     cr.execute("update sale_order set invoiced=True where name=%s", (self.origin,))        
                     cr.execute("update sale_order set state='done' where shipped=True and invoiced=True and name=%s", (self.origin,)) 
-            if self.residual !=0.0:
+            if self.residual != 0.0:
                 if self.origin:
                     cr.execute("update account_invoice set state='open' where id=%s", (self.id,))        
         self.payment_ids = (lines - partial_lines).sorted()
@@ -85,24 +85,24 @@ class account_invoice(models.Model):
     def line_get_convert(self, line, part, date):
         print 'check>>>', line
         if line is not None:
-            print 'lineeeeeeeee', line['debit'],line['credit']
-            price= line['debit']+line['credit'],
+            print 'lineeeeeeeee', line['debit'], line['credit']
+            price = line['debit'] + line['credit'],
             return {
                 'date_maturity': line.get('date_maturity', False),
                 'partner_id': part,
                 'name': line['name'][:64],
                 'date': date,
-                'debit': line['debit'],#line['price']>0 and line['price'],
-                'credit': line['credit'],#line['price']<0 and -line['price'],
+                'debit': line['debit'],  # line['price']>0 and line['price'],
+                'credit': line['credit'],  # line['price']<0 and -line['price'],
                 'account_id': line['account_id'],
-                #'account_id': account_id,
+                # 'account_id': account_id,
                 'analytic_lines': line.get('analytic_lines', []),
-                'amount_currency': price>0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
+                'amount_currency': price > 0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
                 'currency_id': line.get('currency_id', False),
                 'tax_code_id': line.get('tax_code_id', False),
                 'tax_amount': line.get('tax_amount', False),
                 'ref': line.get('ref', False),
-                'quantity': line.get('quantity',1.00),
+                'quantity': line.get('quantity', 1.00),
                 'product_id': line.get('product_id', False),
                 'product_uom_id': line.get('uos_id', False),
                 'analytic_account_id': line.get('account_analytic_id', False),
@@ -110,342 +110,367 @@ class account_invoice(models.Model):
     
     def line_get_convert_new(self, line, part, date):
         account_id = None
-        cr=self._cr
-        type='out_invoice' 
-        print 'line_get_convert_newline_get_convert_new',line,part
-        origin=line.get('ref', False)
-        print 'originoriginorigin',origin
+        cr = self._cr
+        type = 'out_invoice' 
+        print 'line_get_convert_newline_get_convert_new', line, part
+        origin = line.get('ref', False)
+        is_discount = line.get('is_discount', False)
+        print 'originoriginorigin', origin, is_discount
         if origin:
-            cr.execute("select type from account_invoice where origin=%s",(origin,))
-            type=cr.fetchone()
+            cr.execute("select type from account_invoice where origin=%s", (origin,))
+            type = cr.fetchone()
             if type:
-                type=type[0]
+                type = type[0]
             else:
-                type=None
-        print 'typeeeeeeeee',type
-        if type=='out_invoice' :
-            if line['price']<0:
+                type = None
+        print 'typeeeeeeeee', type
+        if type == 'out_invoice' :
+            if line['price'] < 0:
                 product = self.env['product.product'].browse(line.get('product_id', False))
-                print 'product>>>',product.id
-                print 'line.get>>>',line.get('product_id', False)
-                if  line['name']=='Discount':
+                print 'product>>>', product.id
+                print 'line.get>>>', line.get('product_id', False)
+                if  line['is_discount'] == True:
                     account_id = product.product_tmpl_id.main_group.property_account_discount.id
-                    line['price']= -1* line['price']
+                    line['price'] = -1 * line['price']
                 else:
                     account_id = product.product_tmpl_id.main_group.property_account_receivable.id
-                                    #acount_id= product.product_tmpl_id.main_group.property_account_payable.id
-                print 'account_id>>>',account_id        
+                                    # acount_id= product.product_tmpl_id.main_group.property_account_payable.id
+                print 'account_id>>>', account_id        
     
-                print 'line>>>',line
-                res= {
+                print 'line>>>', line
+                res = {
                     'date_maturity': line.get('date_maturity', False),
                     'partner_id': part,
                     'name': line['name'][:64],
                     'date': date,
-                    'debit': line['price']>0 and line['price'],
-                    'credit': line['price']<0 and -line['price'],
+                    'debit': line['price'] > 0 and line['price'],
+                    'credit': line['price'] < 0 and -line['price'],
                     'account_id': line['account_id'],
-                    #'account_id': account_id,
+                    # 'account_id': account_id,
                     'analytic_lines': line.get('analytic_lines', []),
-                    'amount_currency': line['price']>0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
+                    'amount_currency': line['price'] > 0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
                     'currency_id': line.get('currency_id', False),
                     'tax_code_id': line.get('tax_code_id', False),
                     'tax_amount': line.get('tax_amount', False),
                     'ref': line.get('ref', False),
-                    'quantity': line.get('quantity',1.00),
+                    'quantity': line.get('quantity', 1.00),
                     'product_id': line.get('product_id', False),
                     'product_uom_id': line.get('uos_id', False),
                     'analytic_account_id': line.get('account_analytic_id', False),
                     'main_group': account_id,
+                    'is_discount': line.get('is_discount', False),
                 }
-                print 'res111111>>>',res
+                print 'res111111>>>', res
                 return res
-        if type=='in_refund' :
-            if line['price']<0:
+        if type == 'in_refund' :
+            if line['price'] < 0:
                 product = self.env['product.product'].browse(line.get('product_id', False))
-                print 'product>>>',product.id
-                print 'line.get>>>',line.get('product_id', False)
+                print 'product>>>', product.id
+                print 'line.get>>>', line.get('product_id', False)
                 account_id = product.product_tmpl_id.main_group.property_account_payable.id
-                #acount_id= product.product_tmpl_id.main_group.property_account_payable.id
-                print 'account_id>>>',account_id        
+                # acount_id= product.product_tmpl_id.main_group.property_account_payable.id
+                print 'account_id>>>', account_id        
     
-                print 'line>>>',line
-                res= {
+                print 'line>>>', line
+                res = {
                     'date_maturity': line.get('date_maturity', False),
                     'partner_id': part,
                     'name': line['name'][:64],
                     'date': date,
-                    'debit': line['price']>0 and line['price'],
-                    'credit': line['price']<0 and -line['price'],
+                    'debit': line['price'] > 0 and line['price'],
+                    'credit': line['price'] < 0 and -line['price'],
                     'account_id': line['account_id'],
-                    #'account_id': account_id,
+                    # 'account_id': account_id,
                     'analytic_lines': line.get('analytic_lines', []),
-                    'amount_currency': line['price']>0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
+                    'amount_currency': line['price'] > 0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
                     'currency_id': line.get('currency_id', False),
                     'tax_code_id': line.get('tax_code_id', False),
                     'tax_amount': line.get('tax_amount', False),
                     'ref': line.get('ref', False),
-                    'quantity': line.get('quantity',1.00),
+                    'quantity': line.get('quantity', 1.00),
                     'product_id': line.get('product_id', False),
                     'product_uom_id': line.get('uos_id', False),
                     'analytic_account_id': line.get('account_analytic_id', False),
                     'main_group': account_id,
+                                        'is_discount': line.get('is_discount', False),
+
                 }
-                print 'res111111>>>',res
+                print 'res111111>>>', res
                 return res            
-        if type=='out_refund' :
+        if type == 'out_refund' :
             
-            if line['price']>0:
+            if line['price'] > 0:
                 product = self.env['product.product'].browse(line.get('product_id', False))
-                print 'product>>>',product.id
-                print 'line.get>>>',line.get('product_id', False)
-                if  line['name']=='Discount':
+                print 'product>>>', product.id
+                print 'line.get>>>', line.get('product_id', False)
+                if  line['is_discount'] == True:
                     account_id = product.product_tmpl_id.main_group.property_account_discount.id
                 else:
                     account_id = product.product_tmpl_id.main_group.property_account_receivable.id
-                res= {
+                res = {
                     'date_maturity': line.get('date_maturity', False),
                     'partner_id': part,
                     'name': line['name'][:64],
                     'date': date,
-                    'debit': line['price']>0 and line['price'],
-                    'credit': line['price']<0 and -line['price'],
+                    'debit': line['price'] > 0 and line['price'],
+                    'credit': line['price'] < 0 and -line['price'],
                     'account_id': line['account_id'],
-                    #'account_id': account_id,
+                    # 'account_id': account_id,
                     'analytic_lines': line.get('analytic_lines', []),
-                    'amount_currency': line['price']>0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
+                    'amount_currency': line['price'] > 0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
                     'currency_id': line.get('currency_id', False),
                     'tax_code_id': line.get('tax_code_id', False),
                     'tax_amount': line.get('tax_amount', False),
                     'ref': line.get('ref', False),
-                    'quantity': line.get('quantity',1.00),
+                    'quantity': line.get('quantity', 1.00),
                     'product_id': line.get('product_id', False),
                     'product_uom_id': line.get('uos_id', False),
                     'analytic_account_id': line.get('account_analytic_id', False),
                     'main_group': account_id,
+                                        'is_discount': line.get('is_discount', False),
+
                 }
-                print 'res111111>>>',res
+                print 'res111111>>>', res
                 return res    
-        if type=='in_invoice' :
-            if line['price']>0:
+        if type == 'in_invoice' :
+            if line['price'] > 0:
                 product = self.env['product.product'].browse(line.get('product_id', False))
-                print 'product>>>',product.id
-                print 'line.get>>>',line.get('product_id', False)
-                if  line['name']=='Discount':
+                print 'product>>>', product.id
+                print 'line.get>>>', line.get('product_id', False)
+                if  line['is_discount'] == True:
                     account_id = product.product_tmpl_id.main_group.property_account_discount.id
                 else:
                     account_id = product.product_tmpl_id.main_group.property_account_payable.id                
 
-                res= {
+                res = {
                     'date_maturity': line.get('date_maturity', False),
                     'partner_id': part,
                     'name': line['name'][:64],
                     'date': date,
-                    'debit': line['price']>0 and line['price'],
-                    'credit': line['price']<0 and -line['price'],
+                    'debit': line['price'] > 0 and line['price'],
+                    'credit': line['price'] < 0 and -line['price'],
                     'account_id': line['account_id'],
-                    #'account_id': account_id,
+                    # 'account_id': account_id,
                     'analytic_lines': line.get('analytic_lines', []),
-                    'amount_currency': line['price']>0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
+                    'amount_currency': line['price'] > 0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
                     'currency_id': line.get('currency_id', False),
                     'tax_code_id': line.get('tax_code_id', False),
                     'tax_amount': line.get('tax_amount', False),
                     'ref': line.get('ref', False),
-                    'quantity': line.get('quantity',1.00),
+                    'quantity': line.get('quantity', 1.00),
                     'product_id': line.get('product_id', False),
                     'product_uom_id': line.get('uos_id', False),
                     'analytic_account_id': line.get('account_analytic_id', False),
                     'main_group': account_id,
+                                        'is_discount': line.get('is_discount', False),
+
                 }
-                print 'res111111>>>',res
+                print 'res111111>>>', res
                 return res    
             
     def line_get_convert_dr(self, line, part, date):
         account_id = None
-        cr=self._cr
-        type='out_invoice' 
-        print 'line_get_convert_newline_get_convert_new',line,part, self.id
-        origin=line.get('ref', False)
+        cr = self._cr
+        type = 'out_invoice' 
+        print 'line_get_convert_newline_get_convert_new', line, part, self.id
+        origin = line.get('ref', False)
         if origin:
-            cr.execute("select type from account_invoice where origin=%s",(origin,))
-            type=cr.fetchone()
+            cr.execute("select type from account_invoice where origin=%s", (origin,))
+            type = cr.fetchone()
             if type:
-                type=type[0]
+                type = type[0]
             else:
-                type=None
-        if type=='out_invoice'  :
-            if line['price']<0 or line['name']=='Discount' or line['name']=='Myanmar Lion Discount' or line['name']=='Nestle Discount':
+                type = None
+        if type == 'out_invoice'  :
+            product = self.env['product.product'].browse(line.get('product_id', False))
+            product_code=product.default_code
+            print 'product_code',product_code
+            if line['price'] < 0 or line['is_discount'] == True or product_code== 'discount1' or  product_code== 'discount2' or product_code== 'discount3' or  product_code== 'discount4' :
                 product = self.env['product.product'].browse(line.get('product_id', False))
-                print 'product>>>',product.id
-                print 'line.get>>>',line.get('product_id', False)
-                if origin and line['name']!='Discount':
-                    cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s",(origin,product.id,))
-                    discount_amt=cr.fetchone()[0]      
+                print 'product>>>', product.id
+                print 'line.get>>>', line.get('product_id', False)
+                if origin and line['is_discount'] == False:
+                    cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s", (origin, product.id,))
+                    discount_amt = cr.fetchone()[0]      
                     if discount_amt:     
-                            line['price'] = line['price']+discount_amt                
-                if  line['name']=='Discount':
+                            line['price'] = line['price'] + discount_amt                
+                if  line['is_discount'] == True:
                     account_id = product.product_tmpl_id.main_group.property_account_discount.id
                 else:
                     account_id = product.product_tmpl_id.main_group.property_account_receivable.id
-                print 'account_id>>>',account_id        
+                print 'account_id>>>', account_id        
     
-                print 'line>>>',line
-                print 'line[price]',line['price']
-                if line['price']<0 :
+                print 'line>>>', line
+                print 'line[price]', line['price']
+                if line['price'] < 0 :
                     line['price'] = -line['price']
-                res= {
+                res = {
                     'date_maturity': line.get('date_maturity', False),
                     'partner_id': part,
                     'name': line['name'][:64],
                     'date': date,
-                    'debit': line['price']>0 and line['price'],
-                    'credit': line['price']<0 and -line['price'],
+                    'debit': line['price'] > 0 and line['price'],
+                    'credit': line['price'] < 0 and -line['price'],
                     'account_id': line['account_id'],
-                    #'account_id': account_id,
+                    # 'account_id': account_id,
                     'analytic_lines': line.get('analytic_lines', []),
-                    'amount_currency': line['price']>0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
+                    'amount_currency': line['price'] > 0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
                     'currency_id': line.get('currency_id', False),
                     'tax_code_id': line.get('tax_code_id', False),
                     'tax_amount': line.get('tax_amount', False),
                     'ref': line.get('ref', False),
-                    'quantity': line.get('quantity',1.00),
+                    'quantity': line.get('quantity', 1.00),
                     'product_id': line.get('product_id', False),
                     'product_uom_id': line.get('uos_id', False),
                     'analytic_account_id': line.get('account_analytic_id', False),
                     'main_group': account_id,
+                                        'is_discount': line.get('is_discount', False),
+
                 }
-                print 'res111111>>>',res
+                print 'res111111>>>', res
                 return res
-        if type=='in_refund' :
-            if line['price']<0 or line['name']=='Discount' or line['name']=='Myanmar Lion Discount' or line['name']=='Nestle Discount':
+        if type == 'in_refund' :
+            product = self.env['product.product'].browse(line.get('product_id', False))
+            product_code=product.default_code
+            if line['price'] < 0 or line['is_discount'] == True or product_code== 'discount1' or  product_code== 'discount2' or product_code== 'discount3' or  product_code== 'discount4' :
                 product = self.env['product.product'].browse(line.get('product_id', False))
-                print 'product>>>',product.id
-                print 'line.get>>>',line.get('product_id', False)
-                if origin and line['name']!='Discount':
-                    cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s",(origin,product.id,))
-                    discount_amt=cr.fetchone()[0]      
+                print 'product>>>', product.id
+                print 'line.get>>>', line.get('product_id', False)
+                if origin and line['is_discount'] == False:
+                    cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s", (origin, product.id,))
+                    discount_amt = cr.fetchone()[0]      
                     if discount_amt:     
-                            line['price'] = line['price']+discount_amt                
-                if  line['name']=='Discount':
+                            line['price'] = line['price'] + discount_amt                
+                if  line['is_discount'] == True:
                     account_id = product.product_tmpl_id.main_group.property_account_discount.id
                 else:
                     account_id = product.product_tmpl_id.main_group.property_account_payable.id                
-                print 'account_id>>>',account_id        
-                print 'line>>>',line
-                print 'line[price]',line['price']
-                if line['price']<0:
+                print 'account_id>>>', account_id        
+                print 'line>>>', line
+                print 'line[price]', line['price']
+                if line['price'] < 0:
                     line['price'] = -line['price']
-                print 'after>>>',line['price']
-                res= {
+                print 'after>>>', line['price']
+                res = {
                     'date_maturity': line.get('date_maturity', False),
                     'partner_id': part,
                     'name': line['name'][:64],
                     'date': date,
-                    'debit': line['price']>0 and line['price'],
-                    'credit': line['price']<0 and -line['price'],
+                    'debit': line['price'] > 0 and line['price'],
+                    'credit': line['price'] < 0 and -line['price'],
                     'account_id': line['account_id'],
-                    #'account_id': account_id,
+                    # 'account_id': account_id,
                     'analytic_lines': line.get('analytic_lines', []),
-                    'amount_currency': line['price']>0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
+                    'amount_currency': line['price'] > 0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
                     'currency_id': line.get('currency_id', False),
                     'tax_code_id': line.get('tax_code_id', False),
                     'tax_amount': line.get('tax_amount', False),
                     'ref': line.get('ref', False),
-                    'quantity': line.get('quantity',1.00),
+                    'quantity': line.get('quantity', 1.00),
                     'product_id': line.get('product_id', False),
                     'product_uom_id': line.get('uos_id', False),
                     'analytic_account_id': line.get('account_analytic_id', False),
                     'main_group': account_id,
+                                        'is_discount': line.get('is_discount', False),
+
                 }
-                print 'res111111>>>',res
+                print 'res111111>>>', res
                 return res            
-        if type=='out_refund' :
-            if line['price']>0 or line['name']=='Discount'  or line['name']=='Myanmar Lion Discount' or line['name']=='Nestle Discount':
+        if type == 'out_refund' :
+            product = self.env['product.product'].browse(line.get('product_id', False))
+            product_code=product.default_code            
+            if line['price'] > 0 or line['is_discount'] == True or  product_code== 'discount1' or  product_code== 'discount2' or product_code== 'discount3' or  product_code== 'discount4' :
                 product = self.env['product.product'].browse(line.get('product_id', False))
-                print 'product>>>',product.id
-                print 'line.get>>>',line.get('product_id', False)
-                if origin and line['name']!='Discount':
-                    cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s",(origin,product.id,))
-                    discount_amt=cr.fetchone()[0]      
+                print 'product>>>', product.id
+                print 'line.get>>>', line.get('product_id', False)
+                if origin and line['is_discount'] == False:
+                    cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s", (origin, product.id,))
+                    discount_amt = cr.fetchone()[0]      
                     if discount_amt:     
-                            line['price'] = line['price']-discount_amt
-                if  line['name']=='Discount':
+                            line['price'] = line['price'] - discount_amt
+                if  line['is_discount'] == True:
                     account_id = product.product_tmpl_id.main_group.property_account_discount.id
-                    line['price']=-1* line['price']
+                    line['price'] = -1 * line['price']
                 else:
                     account_id = product.product_tmpl_id.main_group.property_account_receivable.id
-                print 'account_id>>>',account_id        
-                print 'line>>>',line
-                print 'line[price]',line['price']
-                if line['price']>0 :
+                print 'account_id>>>', account_id        
+                print 'line>>>', line
+                print 'line[price]', line['price']
+                if line['price'] > 0 :
                     line['price'] = -line['price']
-                print 'after>>>',line['price']
-                res= {
+                print 'after>>>', line['price']
+                res = {
                     'date_maturity': line.get('date_maturity', False),
                     'partner_id': part,
                     'name': line['name'][:64],
                     'date': date,
-                    'debit': line['price']>0 and line['price'],
-                    'credit': line['price']<0 and -line['price'],
+                    'debit': line['price'] > 0 and line['price'],
+                    'credit': line['price'] < 0 and -line['price'],
                     'account_id': line['account_id'],
-                    #'account_id': account_id,
+                    # 'account_id': account_id,
                     'analytic_lines': line.get('analytic_lines', []),
-                    'amount_currency': line['price']>0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
+                    'amount_currency': line['price'] > 0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
                     'currency_id': line.get('currency_id', False),
                     'tax_code_id': line.get('tax_code_id', False),
                     'tax_amount': line.get('tax_amount', False),
                     'ref': line.get('ref', False),
-                    'quantity': line.get('quantity',1.00),
+                    'quantity': line.get('quantity', 1.00),
                     'product_id': line.get('product_id', False),
                     'product_uom_id': line.get('uos_id', False),
                     'analytic_account_id': line.get('account_analytic_id', False),
                     'main_group': account_id,
+                                        'is_discount': line.get('is_discount', False),
+
                 }
-                print 'res111111>>>',res
+                print 'res111111>>>', res
                 return res
-        if type=='in_invoice' :
-            if line['price']>0  or line['name']=='Discount'  or line['name']=='Myanmar Lion Discount' or line['name']=='Nestle Discount':
+        if type == 'in_invoice' :
+            product = self.env['product.product'].browse(line.get('product_id', False))
+            product_code=product.default_code            
+            if line['price'] > 0  or line['is_discount'] == True or product_code== 'discount1' or  product_code== 'discount2' or product_code== 'discount3' or  product_code== 'discount4' :
                 product = self.env['product.product'].browse(line.get('product_id', False))
-                print 'product>>>',product.id
-                print 'line.get>>>',line.get('product_id', False)
-                if origin and line['name']!='Discount':
-                    cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s",(origin,product.id,))
-                    discount_amt=cr.fetchone()[0]      
+                print 'product>>>', product.id
+                print 'line.get>>>', line.get('product_id', False)
+                if origin and line['is_discount'] == False:
+                    cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s", (origin, product.id,))
+                    discount_amt = cr.fetchone()[0]      
                     if discount_amt:     
-                            line['price'] = line['price']-discount_amt
-                if  line['name']=='Discount':
+                            line['price'] = line['price'] - discount_amt
+                if  line['is_discount'] == True:
                     account_id = product.product_tmpl_id.main_group.property_account_discount.id
-                    line['price']=-1* line['price']
+                    line['price'] = -1 * line['price']
                 else:
                     account_id = product.product_tmpl_id.main_group.property_account_payable.id                
-                print 'account_id>>>',account_id        
-                print 'line>>>',line
-                print 'line[price]',line['price']
-                if line['price']>0:
+                print 'account_id>>>', account_id        
+                print 'line>>>', line
+                print 'line[price]', line['price']
+                if line['price'] > 0:
                     line['price'] = -line['price']
-                print 'after>>>',line['price']
-                res= {
+                print 'after>>>', line['price']
+                res = {
                     'date_maturity': line.get('date_maturity', False),
                     'partner_id': part,
                     'name': line['name'][:64],
                     'date': date,
-                    'debit': line['price']>0 and line['price'],
-                    'credit': line['price']<0 and -line['price'],
+                    'debit': line['price'] > 0 and line['price'],
+                    'credit': line['price'] < 0 and -line['price'],
                     'account_id': line['account_id'],
-                    #'account_id': account_id,
+                    # 'account_id': account_id,
                     'analytic_lines': line.get('analytic_lines', []),
-                    'amount_currency': line['price']>0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
+                    'amount_currency': line['price'] > 0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
                     'currency_id': line.get('currency_id', False),
                     'tax_code_id': line.get('tax_code_id', False),
                     'tax_amount': line.get('tax_amount', False),
                     'ref': line.get('ref', False),
-                    'quantity': line.get('quantity',1.00),
+                    'quantity': line.get('quantity', 1.00),
                     'product_id': line.get('product_id', False),
                     'product_uom_id': line.get('uos_id', False),
                     'analytic_account_id': line.get('account_analytic_id', False),
                     'main_group': account_id,
+                                        'is_discount': line.get('is_discount', False),
+
                 }
-                print 'res111111>>>',res
+                print 'res111111>>>', res
                 return res
         
 #     def line_get_product(self, line, part, date):
@@ -529,46 +554,51 @@ class account_invoice(models.Model):
             
     def line_dr_convert_account_with_principle(self, line):
         list_one = line
-        print 'list_one>>>',list_one
-        list_group = [i['main_group'] for i in list_one if i is not None]
-        print 'i>>>',list_group
+        print 'list_one>>>', list_one
+        list_group = [i['main_group'] for i in list_one if i is not None and i ['is_discount']==False]
+        print 'list_group>>>', list_group
         val = set(map(lambda x:x, list_group))
-        print 'val',val
+        dis_group = [i['main_group'] for i in list_one if i is not None and i ['is_discount']==True]
+        print 'dis_group>>>', dis_group
+        dis_val = set(map(lambda x:x, dis_group))
+        print 'val', val
         arr_list = []
+        #for AR principle
         for v in val:
-            print 'v',v
+            print 'v', v
             price = 0
-            date_maturity = partner_id = name = date  = account_id = analytic_lines = amount_currency = currency_id = tax_code_id = tax_amount = ref = quantity = product_id = product_uom_id = analytic_account_id = None
-            debit = credit=0
+            date_maturity = partner_id = name = date = account_id = analytic_lines = amount_currency = currency_id = tax_code_id = tax_amount = ref = quantity = product_id = product_uom_id = analytic_account_id = None
+            debit = credit = 0
             result = [a for a in list_one if a is not None and a['main_group'] == v]
-            print 'result>>>',result
-            cr=self._cr
-
+            print 'result>>>', result
+            cr = self._cr
             for res in result:
-                origin=res['ref']
-                if res['name']=='Myanmar Lion Discount' or res['name']=='Nestle Discount':
-                    res['debit'] = -1* res['debit']
-                    res['credit'] = -1* res['credit']
+                origin = res['ref']
+                product = self.env['product.product'].browse(res.get('product_id', False))
+                product_code=product.default_code                
+                if product_code== 'discount1' or  product_code== 'discount2' or product_code== 'discount3' or  product_code== 'discount4' :
+                    res['debit'] = -1 * res['debit']
+                    res['credit'] = -1 * res['credit']
                 if origin:
-                    cr.execute("select type from account_invoice where origin=%s",(origin,))
-                    type=cr.fetchone()
+                    cr.execute("select type from account_invoice where origin=%s", (origin,))
+                    type = cr.fetchone()
                     if type:
-                        type=type[0]
+                        type = type[0]
                     else:
-                        type=None   
-                if type=='out_invoice':
+                        type = None   
+                if type == 'out_invoice':
                     debit += res['debit']
-                if type=='in_invoice':             
+                if type == 'in_invoice':             
                     credit += res['credit']    
-                if type=='out_refund':             
+                if type == 'out_refund':             
                     credit += res['credit']       
-                if type=='in_refund':             
+                if type == 'in_refund':             
                     debit += res['debit']                                             
                 date_maturity = res['date_maturity']
                 partner_id = res['partner_id']
                 name = res['name']
                 date = res['date']
-                account_id = res['main_group'] #replace with product principle AR account
+                account_id = res['main_group']  # replace with product principle AR account
                 analytic_lines = res['analytic_lines']
                 amount_currency = res['amount_currency']
                 currency_id = res['currency_id']
@@ -579,12 +609,12 @@ class account_invoice(models.Model):
                 product_id = res['product_id']
                 product_uom_id = res['product_uom_id']
                 analytic_account_id = res['analytic_account_id']
-            price=credit+debit
-            if price!=0.0:
+            price = credit + debit
+            if price != 0.0:
                 rec = {
                             'date_maturity': date_maturity,
                             'partner_id': partner_id,
-                            'name': name,
+                            'name': '/',
                             'date': date,
                             'debit': debit,
                             'credit': credit,
@@ -602,6 +632,76 @@ class account_invoice(models.Model):
                            
                         }
                 arr_list.append(rec)
+        #for discount principle
+        for v in dis_val:
+            print 'v', v
+            price = 0
+            date_maturity = partner_id = name = date = account_id = analytic_lines = amount_currency = currency_id = tax_code_id = tax_amount = ref = quantity = product_id = product_uom_id = analytic_account_id = None
+            debit = credit = 0
+            result = [a for a in list_one if a is not None and a['main_group'] == v]
+            print 'result>>>', result
+            cr = self._cr
+
+            for res in result:
+                origin = res['ref']
+                product = self.env['product.product'].browse(res.get('product_id', False))
+                product_code=product.default_code                
+                if product_code== 'discount1' or  product_code== 'discount2' or product_code== 'discount3' or  product_code== 'discount4' :
+                    res['debit'] =  res['debit']
+                    res['credit'] = res['credit']
+                if origin:
+                    cr.execute("select type from account_invoice where origin=%s", (origin,))
+                    type = cr.fetchone()
+                    if type:
+                        type = type[0]
+                    else:
+                        type = None   
+                if type == 'out_invoice':
+                    debit = res['debit']
+                if type == 'in_invoice':             
+                    credit = res['credit']    
+                if type == 'out_refund':             
+                    credit = res['credit']       
+                if type == 'in_refund':             
+                    debit = res['debit']                                             
+                date_maturity = res['date_maturity']
+                partner_id = res['partner_id']
+                name = res['name']
+                date = res['date']
+                account_id = res['main_group']  # replace with product principle AR account
+                analytic_lines = res['analytic_lines']
+                amount_currency = res['amount_currency']
+                currency_id = res['currency_id']
+                tax_code_id = res['tax_code_id']
+                tax_amount = res['tax_amount']
+                ref = res['ref']
+                quantity = res['quantity']
+                product_id = res['product_id']
+                product_uom_id = res['product_uom_id']
+                analytic_account_id = res['analytic_account_id']
+                price = credit + debit
+                if price != 0.0:
+                    rec = {
+                                'date_maturity': date_maturity,
+                                'partner_id': partner_id,
+                                'name': name,
+                                'date': date,
+                                'debit': debit,
+                                'credit': credit,
+                                'account_id': account_id,
+                                'analytic_lines': analytic_lines,
+                                'amount_currency': amount_currency,
+                                'currency_id': currency_id,
+                                'tax_code_id': tax_code_id,
+                                'tax_amount': tax_amount,
+                                'ref': ref,
+                                'quantity': quantity,
+                                'product_id': product_id,
+                                'product_uom_id': product_uom_id,
+                                'analytic_account_id': analytic_account_id,
+                               
+                            }
+                    arr_list.append(rec)                
         return arr_list           
     
 #     def line_get_convert_accountid(self, line, product, part, date):
@@ -765,6 +865,7 @@ class account_invoice(models.Model):
                         'amount_currency': diff_currency and amount_currency,
                         'currency_id': diff_currency and inv.currency_id.id,
                         'ref': ref,
+                        'is_discount':False,
                     })
             else:
                 
@@ -783,17 +884,18 @@ class account_invoice(models.Model):
 
             part = self.env['res.partner']._find_accounting_partner(inv.partner_id)
 
-            #line = [(0, 0, self.line_get_convert(l, part.id, date)) for l in iml]
-            data=[]
+            # line = [(0, 0, self.line_get_convert(l, part.id, date)) for l in iml]
+            data = []
             for res in iml:
-                res['ref']=inv.origin
+                res['ref'] = inv.origin
+                print 'res', res
                 data.append(res)
-            iml=data
+            iml = data
             line_cr = [self.line_get_convert_new(l, part.id, date) for l in iml]
-            line_tmp = [self.line_get_convert_dr(l,part.id,date) for l in iml]
+            line_tmp = [self.line_get_convert_dr(l, part.id, date) for l in iml]
             line_dr = self.line_dr_convert_account_with_principle(line_tmp)
-            #line_product = [self.line_get_product(l, part.id, date) for l in iml]
-            #line_dr = [(0, 0, self.line_get_convert_accountid(l, part.id, date)) for l in line_cr]
+            # line_product = [self.line_get_product(l, part.id, date) for l in iml]
+            # line_dr = [(0, 0, self.line_get_convert_accountid(l, part.id, date)) for l in line_cr]
             lines = line_cr + line_dr
             line = [(0, 0, self.line_get_convert(l, part.id, date)) for l in lines  if l is not None]
             
@@ -826,7 +928,7 @@ class account_invoice(models.Model):
             ctx['invoice'] = inv
             ctx_nolang = ctx.copy()
             ctx_nolang.pop('lang', None)
-            print 'move_valsmove_valsmove_vals',move_vals
+            print 'move_valsmove_valsmove_vals', move_vals
             move = account_move.with_context(ctx_nolang).create(move_vals)
 
             # make the invoice point to that move
@@ -846,4 +948,5 @@ class account_invoice(models.Model):
         required=False, readonly=True, states={'draft': [('readonly', False)]},
         help="The partner account used for this invoice.")
     
+
     
