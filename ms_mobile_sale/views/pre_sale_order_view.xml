@@ -49,7 +49,9 @@
 								<field name="amount_total" readonly="1" />
 								<field name="deduction_amount" readonly="1" />
 								<field name="pricelist_id" readonly="1" />
-								<field name="void_flag" readonly="1" />
+								<field name="void_flag" readonly="1" />							
+								<field name="note" class="oe_inline" placeholder="Terms and conditions..."
+									readonly="1" />
 
 							</group>
 						</group>
@@ -85,10 +87,7 @@
 										<field name="foc" />
 										<field name="sub_total" />
 									</tree>
-								</field>
-
-								<field name="note" class="oe_inline" placeholder="Terms and conditions..."
-									readonly="1" />
+								</field>						
 
 							</page>
 
@@ -117,10 +116,7 @@
 										<field name="product_qty_to_deliver" />
 
 									</tree>
-								</field>
-
-								<field name="note" class="oe_inline" placeholder="Terms and conditions..."
-									readonly="1" />
+								</field>						
 
 							</page>
 
@@ -156,7 +152,7 @@
 										<field name="date" />
 										<field name="journal_id" widget="selection" />
 										<field name="amount" sum="Price" />
-										<field name="notes" />
+										
 
 									</tree>
 								</field>
@@ -229,6 +225,7 @@
 					<field name="m_status" />
 					<field name="date" />
 					<field name="void_flag" />
+					
 				</tree>
 			</field>
 		</record>
