@@ -17,7 +17,7 @@
 						class="oe_highlight"
 						groups="account_voucher_approval.group_account_cashier,account.group_account_manager"
 						sequence="3" />
-					<button  name="invoice_cancel"  states="draft,proforma2,fm_approve,open"
+					<button name="invoice_cancel" states="draft,proforma2,fm_approve,open"
 						string="Cancel Invoice" groups="base.group_no_one" />
 				</xpath>
 				<xpath expr="//field[@name='state']" position="replace">
@@ -27,6 +27,7 @@
 				</xpath>
 				<xpath expr="//field[@name='fiscal_position']" position="after">
 					<field name="payment_type" />
+					<field name="direct_credit" />
 				</xpath>
 				<xpath expr="//field[@name='account_id']" position="replace">
 					<field
@@ -41,16 +42,16 @@
 			<field name="model">account.invoice</field>
 			<field name="inherit_id" ref="account.view_account_invoice_filter" />
 			<field name="arch" type="xml">
-					<xpath expr="//search/filter[@name='draft']" position="after">
-						<filter name="finance_approve" string="Finance Approved"
-							domain="[('state','=','fm_approve')]" />
-						<filter name="cashier_approve" string="Cashier Approved"
-							domain="[('state','=','open')]" />
-					</xpath>
-					<xpath expr="//search/group/filter[@string='Status']"
-						position="after">
-						<filter string="Payment Type" context="{'group_by':'payment_type'}" />
-					</xpath>
+				<xpath expr="//search/filter[@name='draft']" position="after">
+					<filter name="finance_approve" string="Finance Approved"
+						domain="[('state','=','fm_approve')]" />
+					<filter name="cashier_approve" string="Cashier Approved"
+						domain="[('state','=','open')]" />
+				</xpath>
+				<xpath expr="//search/group/filter[@string='Status']"
+					position="after">
+					<filter string="Payment Type" context="{'group_by':'payment_type'}" />
+				</xpath>
 			</field>
 		</record>
 

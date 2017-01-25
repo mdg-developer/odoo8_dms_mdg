@@ -63,6 +63,8 @@ class account_invoice(models.Model):
 #                     ('advanced', 'Advanced')
                     ],string= 'Payment Type',default='credit')
     
+    direct_credit= fields.Boolean('Direct Credit',default=False)
+    
     account_id = fields.Many2one('account.account', string='Account',
         required=True, readonly=True, states={'draft': [('readonly', False)]},
         help="The partner account used for this invoice.")
