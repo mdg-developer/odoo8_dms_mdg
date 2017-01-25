@@ -97,7 +97,7 @@ class pre_sale_order(osv.osv):
                         branch_id = data[0][1]
                     else:
                         saleManId = None						 
-						 
+
                     cursor.execute('select id From res_partner where customer_code  = %s ', (so['customer_code'],))
                     data = cursor.fetchall()                
                     if data:
@@ -116,6 +116,7 @@ class pre_sale_order(osv.osv):
                         'user_id':so['user_id'],
                         'name':so['name'],
                         'type':so['type'],
+                        'note':so['note'],
                         'partner_id':partner_id,
                         'sale_plan_name':so['sale_plan_day_name'],
                         'amount_total':so['amount_total'],
