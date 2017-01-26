@@ -1095,7 +1095,7 @@ class mobile_sale_order(osv.osv):
     def tablet_info(self, cr, uid, tabetId, context=None, **kwargs):    
         cr.execute('''
             select id as tablet_id,date,create_uid,name,note,mac_address,model,type,storage_day
-            ,replace(hotline,',',';') hotline,sale_team_id,is_testing,ck_reg_no
+            ,replace(hotline,',',';') hotline,sale_team_id,is_testing
             from tablets_information 
             where name = %s
             ''', (tabetId,))
@@ -1103,7 +1103,7 @@ class mobile_sale_order(osv.osv):
         return datas
     
     def get_company_datas(self, cr, uid , context=None):        
-        cr.execute('''select id,name from res_company''')
+        cr.execute('''select id,name,ck_reg_no from res_company''')
         datas = cr.fetchall()        
         return datas
     

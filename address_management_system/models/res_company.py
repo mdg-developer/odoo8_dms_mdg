@@ -40,4 +40,5 @@ class res_company(osv.osv):
     
     _columns = {
         'city': fields.function(_get_address_data, fnct_inv=_set_address_data, size=24, type='many2one', relation='res.city',string="City", multi='address'),
+        'ck_reg_no':fields.char('KT REG NO'),
         }
