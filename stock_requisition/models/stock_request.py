@@ -62,19 +62,20 @@ class stock_requisition(osv.osv):
                 if qty_on_hand:
                     qty_on_hand = qty_on_hand[0]
                 else:
-                    qty_on_hand = 0                                               
-                data_line.append({
-                                  'sequence':product.sequence,
-                                    'product_id':line.id,
-                                     'product_uom': product.product_tmpl_id.uom_id and product.product_tmpl_id.uom_id.id or False,
-                                    'uom_ratio': product.product_tmpl_id.uom_ratio,
-                                    'req_quantity':big_req_quantity,
-                                    'big_uom_id':product.product_tmpl_id.big_uom_id and product.product_tmpl_id.big_uom_id.id or False,
-                                    'big_req_quantity':req_quantity,
-                                    'sale_req_quantity':sale_req_quantity,
-                                    'addtional_req_quantity':addtional_req_quantity,
-                                    'qty_on_hand':qty_on_hand,
-                                      })
+                    qty_on_hand = 0
+                if product.product_tmpl_id.type=='product':                                               
+                    data_line.append({
+                                      'sequence':product.sequence,
+                                        'product_id':line.id,
+                                         'product_uom': product.product_tmpl_id.uom_id and product.product_tmpl_id.uom_id.id or False,
+                                        'uom_ratio': product.product_tmpl_id.uom_ratio,
+                                        'req_quantity':big_req_quantity,
+                                        'big_uom_id':product.product_tmpl_id.big_uom_id and product.product_tmpl_id.big_uom_id.id or False,
+                                        'big_req_quantity':req_quantity,
+                                        'sale_req_quantity':sale_req_quantity,
+                                        'addtional_req_quantity':addtional_req_quantity,
+                                        'qty_on_hand':qty_on_hand,
+                                          })
             for line in order_ids:
                 order = sale_order_obj.browse(cr, uid, line, context=context)
                 date_order = order.date_order    
