@@ -34,6 +34,10 @@
 				<!-- </xpath> -->
 
 				<!-- Accounting Tab -->
+				
+				<field name="weight_net" position="after">
+					<field name="weight_liter"/>
+				</field>
 				<xpath
 					expr="//page[@string='Accounting']/group/label[@string='Internal Category']"
 					position="before">
