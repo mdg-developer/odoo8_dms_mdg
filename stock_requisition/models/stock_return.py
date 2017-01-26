@@ -74,15 +74,16 @@ class stock_return(osv.osv):
 #            print 'rereturn_date',return_date,sale_team_id
             note_ids = note_obj.search(cr, uid, [('sale_team_id', '=', sale_team_id), ('issue_date', '=', return_date)])
             if  note_ids:        
-                cr.execute(' select gin.from_location_id as location_id,product_id,sequence,big_uom_id,sum(big_issue_quantity) as big_issue_quantity,sum(issue_quantity) as issue_quantity,product_uom  as small_uom_id from good_issue_note gin ,good_issue_note_line  ginl where gin.id = ginl.line_id and gin.id in %s group by product_id,from_location_id,sequence,big_uom_id,product_uom', (tuple(note_ids),))
+                cr.execute('select gin.from_location_id as location_id,product_id,big_uom_id,sum(big_issue_quantity) as big_issue_quantity,sum(issue_quantity) as issue_quantity,product_uom  as small_uom_id from good_issue_note gin ,good_issue_note_line  ginl where gin.id = ginl.line_id and gin.id in %s group by product_id,from_location_id,big_uom_id,product_uom', (tuple(note_ids),))
                 p_line = cr.fetchall()            
             for note_line in p_line:
                 product_id = note_line[1]
-                sequence=note_line[2]
-                big_uom_id = note_line[3]
-                big_issue_quantity = note_line[4]
-                small_issue_quantity = note_line[5]
-                small_uom_id = note_line[6]
+                pro_data = product_obj.browse(cr, uid, product_id, context=context)
+                sequence=pro_data.sequence
+                big_uom_id = note_line[2]
+                big_issue_quantity = note_line[3]
+                small_issue_quantity = note_line[4]
+                small_uom_id = note_line[5]
                 location_id= note_line[0]
                 cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (big_uom_id,))
                 bigger_qty = cr.fetchone()[0]
@@ -109,13 +110,17 @@ class stock_return(osv.osv):
             for mobile_line in return_mobile.p_line:
                 product_id = mobile_line.product_id.id
                 return_quantity = mobile_line.return_quantity
+                if return_quantity<0:
+                    substract_qty=return_quantity
+                else:
+                    substract_qty=0
                 sale_quantity = mobile_line.sale_quantity
                 foc_quantity = mobile_line.foc_quantity
                 small_uom_id = mobile_line.product_uom.id             
                 last_qty         =foc_quantity+sale_quantity
                 product_search = stock_return_obj.search(cr, uid, [('product_id', '=', product_id), ('line_id', '=', ids[0])], context=context) 
                 if product_search:
-                    cr.execute("update stock_return_line set receive_quantity=receive_quantity+%s,return_quantity=%s,sale_quantity=%s,foc_quantity=%s where line_id=%s and product_id=%s", (last_qty,return_quantity, sale_quantity, foc_quantity, ids[0], product_id,))
+                    cr.execute("update stock_return_line set receive_quantity=receive_quantity+%s + %s ,return_quantity=%s,sale_quantity=%s,foc_quantity=%s where line_id=%s and product_id=%s", (last_qty,substract_qty,return_quantity, sale_quantity, foc_quantity, ids[0], product_id,))
                 else:
                     product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
                     sequence=product.sequence

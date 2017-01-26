@@ -77,9 +77,17 @@
 																		align="center">
 																		<span t-field="p.product_id.name" />
 																	</td>
+
+
+
 																	<td style="border:1pt solid;border-color:black;"
 																		align="center">
-																		<span t-field="p.product_uom_qty" />
+																		<t t-if="p.product_id.product_tmpl_id.type=='service'">
+																			<span>-</span>
+																		</t>
+																		<t t-if="p.product_id.product_tmpl_id.type=='product'">
+																			<span t-field="p.product_uom_qty" />
+																		</t>
 																	</td>
 																	<td style="border:1pt solid;border-color:black;"
 																		align="right">
@@ -394,7 +402,12 @@
 																	</td>
 																	<td style="border:1pt solid;border-color:black;"
 																		align="center">
-																		<span t-field="p.product_uom_qty" />
+																		<t t-if="p.product_id.product_tmpl_id.type=='service'">
+																			<span>-</span>
+																		</t>
+																		<t t-if="p.product_id.product_tmpl_id.type=='product'">
+																			<span t-field="p.product_uom_qty" />
+																		</t>
 																	</td>
 																	<td style="border:1pt solid;border-color:black;"
 																		align="right">
