@@ -15,6 +15,18 @@ from datetime import date
 from dateutil import relativedelta
 
 DEFAULT_SERVER_DATE_FORMAT = "%Y-%m-%d"
+
+
+class credit_data(osv.osv):
+    _name = "partner.credit"
+    _description = "Partner Credit"
+    _columns = {       
+        'customer_id':fields.many2one('res.partner', 'Customer', domain="[('customer','=',True)]"),
+        'credit_amount':fields.float('Credit Amount'),
+       }
+credit_data()    
+
+
 def geo_find(addr):
     url = 'https://maps.googleapis.com/maps/api/geocode/json?sensor=false&address='
     url += urllib.quote(addr.encode('utf8'))
@@ -453,7 +465,6 @@ class res_partner(osv.osv):
                      A.customer_code,A.mobile_customer,A.shop_name ,
                      A.address,A.territory,A.village,A.branch_code,
                      A.zip,A.state_name,A.partner_latitude,A.partner_longitude  from (
-
                      select RP.id,RP.name,RP.image,RP.is_company,
                      RP.image_small,RP.street,RP.street2,RP.city,RP.website,
                      RP.phone,RP.township,RP.mobile,RP.email,RP.company_id,RP.customer, 
@@ -482,9 +493,27 @@ class res_partner(osv.osv):
                     and A.customer_code is not null 
             ''', (section_id, section_id,))
         datas = cr.fetchall()
-        cr.execute
         return datas
-		
+    
+    def res_partners_credit_amount(self, cr, uid, section_id , context=None, **kwargs):
+        partner_obj=self.pool.get('res.partner')
+        credit_obj=self.pool.get('partner.credit')
+        datas=[]
+        cr.execute("select id from res_partner where section_id =%s and customer=true and active=true",(section_id,))
+        partner_data=cr.fetchall()
+        if partner_data:
+            for  data in partner_data:
+                p_id=data[0]
+                partner=partner_obj.browse(cr, uid, p_id, context=context)
+                credit=partner.credit
+                partner_id=partner.id
+                credit_obj.create(cr, uid, {'customer_id': partner_id,'credit_amount':credit}, context=context)            
+            cr.execute("select * from partner_credit")
+            credit_data=cr.fetchall()
+        return credit_data
+            
+        
+        
     def res_partners_team(self, cr, uid, section_id, context=None, **kwargs):
         cr.execute('''                    
                      
