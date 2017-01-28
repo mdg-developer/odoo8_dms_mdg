@@ -11,7 +11,7 @@ class price_list_line(osv.osv):
     _description = 'Price List Line'           
     _columns = {                
         'team_id':fields.many2one('crm.case.section', 'Line', ondelete='cascade', select=True),
-        'property_product_pricelist': fields.many2one('product.pricelist', string="Sale Pricelist", domain=[('type', '=', 'sale')]),
+            'property_product_pricelist': fields.many2one('product.pricelist', string="Sale Pricelist", domain=[('type', '=', 'sale')]),#update
         'is_default':fields.boolean('Default'),
         }
     
@@ -21,11 +21,7 @@ class crm_case_section(osv.osv):
     def _get_total_invoice_data(self, cr, uid, ids, field_name, arg, context=None):
         res = dict(map(lambda x: (x,0), ids))        
         for line in self.browse(cr, uid, ids, context=context):
-            if line.date:
-                cr.execute("select count(id) from account_invoice where state not in ('draft','cancel') and section_id = %s and date_invoice = %s" , (line.id, line.date,))
-            else:
-                cr.execute("select count(id) from account_invoice where state not in ('draft','cancel') and section_id = %s" , (line.id,))
-
+            cr.execute("select count(id) from account_invoice where state not in ('draft','cancel') and section_id = %s and date_invoice = %s" , (line.id, line.date,))
             data = cr.fetchone()[0]
             res[line.id] = data
         return res        
@@ -33,12 +29,8 @@ class crm_case_section(osv.osv):
     def _get_total_sku_data(self, cr, uid, ids, field_name, arg, context=None):
         res = dict(map(lambda x: (x,0), ids))        
         # res = {}
-        for line in self.browse(cr, uid, ids, context=context): 
-            if line.date:           
-                cr.execute("select count(st.id) from sales_target st ,sales_target_line stl where st.id=stl.sale_ids and stl.product_uom_qty !=0.0 and sale_team_id = %s and date= %s " , (line.id, line.date,))
-            else:
-                cr.execute("select count(st.id) from sales_target st ,sales_target_line stl where st.id=stl.sale_ids and stl.product_uom_qty !=0.0 and sale_team_id = %s " , (line.id,))
-
+        for line in self.browse(cr, uid, ids, context=context):            
+            cr.execute("select count(st.id) from sales_target st ,sales_target_line stl where st.id=stl.sale_ids and stl.product_uom_qty !=0.0 and sale_team_id = %s and date= %s " , (line.id, line.date,))
             data = cr.fetchone()[0]
             res[line.id] = data
         return res       
@@ -79,11 +71,7 @@ class crm_case_section(osv.osv):
         if context is None:
             context = {}
         for line in self.browse(cr, uid, ids, context=context):
-            if line.date:
-                cr.execute(" select count(id) from customer_visit where sale_team_id=%s  and  (date+ '6 hour'::interval + '30 minutes'::interval)::date=%s" ,(line.id,line.date,))
-            else:
-                cr.execute(" select count(id) from customer_visit where sale_team_id=%s  " ,(line.id,))
-
+            cr.execute(" select count(id) from customer_visit where sale_team_id=%s  and  (date+ '6 hour'::interval + '30 minutes'::interval)::date=%s" ,(line.id,line.date,))
             data=cr.fetchone()[0]
             res[line.id] = data
         return res      
@@ -94,16 +82,10 @@ class crm_case_section(osv.osv):
         if context is None:
             context = {}
         for line in self.browse(cr, uid, ids, context=context):
-            if line.date:
-                cr.execute("select count(id) from sale_order where state ='draft' and section_id=%s and (date_order+ '6 hour'::interval + '30 minutes'::interval)::date=%s and pre_order ='t'" ,( line.id,line.date,))
-                pre_sale=cr.fetchone()[0]
-                cr.execute("select count(id) from sale_order where state not in ('draft','cancel')  and section_id=%s  and pre_order ='f'" ,(line.id,line.date,))
-                sale_order=cr.fetchone()[0]
-            if not line.date:
-                cr.execute("select count(id) from sale_order where state ='draft' and section_id=%s and (date_order+ '6 hour'::interval + '30 minutes'::interval)::date=%s and pre_order ='t'" ,( line.id,))
-                pre_sale=cr.fetchone()[0]
-                cr.execute("select count(id) from sale_order where state not in ('draft','cancel')  and section_id=%s  and pre_order ='f'" ,(line.id,))
-                sale_order=cr.fetchone()[0]
+            cr.execute("select count(id) from sale_order where state ='draft' and section_id=%s and (date_order+ '6 hour'::interval + '30 minutes'::interval)::date=%s and pre_order ='t'" ,( line.id,line.date,))
+            pre_sale=cr.fetchone()[0]
+            cr.execute("select count(id) from sale_order where state not in ('draft','cancel')  and section_id=%s and (date_order+ '6 hour'::interval + '30 minutes'::interval)::date=%s and pre_order ='f'" ,(line.id,line.date,))
+            sale_order=cr.fetchone()[0]
             if pre_sale!=0 and sale_order!=0:
                 data=pre_sale/sale_order
             else:
@@ -117,10 +99,7 @@ class crm_case_section(osv.osv):
         if context is None:
             context = {}
         for line in self.browse(cr, uid, ids, context=context):
-            if line.date:
-                cr.execute("select count(id) from sale_order where state not in ('draft','cancel')  and section_id=%s and (date_order+ '6 hour'::interval + '30 minutes'::interval)::date=%s and pre_order ='f'" ,(line.id,line.date,))
-            if not line.date:
-                cr.execute("select count(id) from sale_order where state not in ('draft','cancel')  and section_id=%s and   pre_order ='f'" ,(line.id,)) 
+            cr.execute("select count(id) from sale_order where state not in ('draft','cancel')  and section_id=%s and (date_order+ '6 hour'::interval + '30 minutes'::interval)::date=%s and pre_order ='f'" ,(line.id,line.date,))
             data=cr.fetchone()[0]
             res[line.id] = data
         return res

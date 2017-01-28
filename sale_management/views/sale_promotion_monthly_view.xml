@@ -45,7 +45,7 @@
 									<form string="Multi Promotion">
 										<group>
 											<group>
-												<field name="branch_id" />
+												<field name="branch_id" />												
 												<field name="month" />
 												<field name="channel_id" />
 												<field name="promo_qty" />
@@ -153,7 +153,7 @@
 								<field name="from_date" />
 								<field name="to_date" />
 								<field name="branch_id" />
-								
+								<field name="main_group" select="1" />
 							</group>
 						</group>
 

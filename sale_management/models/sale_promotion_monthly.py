@@ -109,6 +109,8 @@ class sale_monthly_promotion(osv.osv):
                             'foc_product_id':fields.many2one('product.product', string='FOC To Give Product'),
                             'rebate_amount':fields.float('Rebate Amount'),
                             'remark':fields.text('Remark'),
+                            'sale_amount':fields.float(string='Sales Amount'),
+                            'main_group':fields.many2one('product.maingroup', 'Main Group'),
                         }
     _defaults = {
         'branch_id': _get_default_branch,
