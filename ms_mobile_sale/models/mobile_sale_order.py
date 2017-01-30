@@ -94,6 +94,7 @@ class mobile_sale_order(osv.osv):
         try : 
             mobile_sale_order_obj = self.pool.get('mobile.sale.order')
             mobile_sale_order_line_obj = self.pool.get('mobile.sale.order.line')
+            product_obj = self.pool.get('product.product')
             str = "{" + vals + "}"
             str = str.replace(":''", ":'")  # change Order_id
             str = str.replace("'',", "',")  # null
@@ -168,16 +169,20 @@ class mobile_sale_order(osv.osv):
                                 data = cursor.fetchall()
                                 if data:
                                     productId = data[0][0]
+                                    product =product_obj.browse(cursor, user, productId, context=context)
+                                    product_type=product.product_tmpl_id.type
+
                                 else:
                                     productId = None
+                                    product_type=None
                                 
                                 if sol['price_unit'] == '0':
                                     foc_val = True
                                 else:
                                     foc_val = False
-
                                 mso_line_res = {                                                            
                                   'order_id':s_order_id,
+                                  'product_type':product_type,
                                   'product_id':productId,
                                   'price_unit':sol['price_unit'],
                                   'product_uos_qty':sol['product_uos_qty'],
@@ -2719,9 +2724,7 @@ class mobile_sale_order(osv.osv):
                                             and RP.outlet_type = OT.id
                                             and RPS.partner_id = RP.id 
                                             and SPD.sale_team = %s                                        
-                                            and RPS.sale_plan_day_id = %s
-                                            
-                                                                            
+                                            and RPS.sale_plan_day_id = %s                                                                                                                        
                         )A 
                         where A.customer_code is not null
             ''', (section_id, day_id,))
@@ -2838,6 +2841,7 @@ class mobile_sale_order_line(osv.osv):
         return result    
     
     _columns = {
+        'product_type':fields.char('Product Type'),
         'product_id':fields.many2one('product.product', 'Products'),
         'product_uos_qty':fields.float('Quantity'),
         'uom_id':fields.many2one('product.uom', 'UOM', readonly=False),

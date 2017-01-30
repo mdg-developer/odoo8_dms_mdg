@@ -283,9 +283,9 @@ class account_invoice(models.Model):
                 type = None
         if type == 'out_invoice'  :
             product = self.env['product.product'].browse(line.get('product_id', False))
-            product_code=product.default_code
-            print 'product_code',product_code
-            if line['price'] < 0 or line['is_discount'] == True or product_code== 'discount1' or  product_code== 'discount2' or product_code== 'discount3' or  product_code== 'discount4' :
+            product_code = product.default_code
+            print 'product_code', product_code
+            if line['price'] < 0 or line['is_discount'] == True or product_code == 'discount1' or  product_code == 'discount2' or product_code == 'discount3' or  product_code == 'discount4' :
                 product = self.env['product.product'].browse(line.get('product_id', False))
                 print 'product>>>', product.id
                 print 'line.get>>>', line.get('product_id', False)
@@ -331,8 +331,8 @@ class account_invoice(models.Model):
                 return res
         if type == 'in_refund' :
             product = self.env['product.product'].browse(line.get('product_id', False))
-            product_code=product.default_code
-            if line['price'] < 0 or line['is_discount'] == True or product_code== 'discount1' or  product_code== 'discount2' or product_code== 'discount3' or  product_code== 'discount4' :
+            product_code = product.default_code
+            if line['price'] < 0 or line['is_discount'] == True or product_code == 'discount1' or  product_code == 'discount2' or product_code == 'discount3' or  product_code == 'discount4' :
                 product = self.env['product.product'].browse(line.get('product_id', False))
                 print 'product>>>', product.id
                 print 'line.get>>>', line.get('product_id', False)
@@ -378,8 +378,8 @@ class account_invoice(models.Model):
                 return res            
         if type == 'out_refund' :
             product = self.env['product.product'].browse(line.get('product_id', False))
-            product_code=product.default_code            
-            if line['price'] > 0 or line['is_discount'] == True or  product_code== 'discount1' or  product_code== 'discount2' or product_code== 'discount3' or  product_code== 'discount4' :
+            product_code = product.default_code            
+            if line['price'] > 0 or line['is_discount'] == True or  product_code == 'discount1' or  product_code == 'discount2' or product_code == 'discount3' or  product_code == 'discount4' :
                 product = self.env['product.product'].browse(line.get('product_id', False))
                 print 'product>>>', product.id
                 print 'line.get>>>', line.get('product_id', False)
@@ -426,8 +426,8 @@ class account_invoice(models.Model):
                 return res
         if type == 'in_invoice' :
             product = self.env['product.product'].browse(line.get('product_id', False))
-            product_code=product.default_code            
-            if line['price'] > 0  or line['is_discount'] == True or product_code== 'discount1' or  product_code== 'discount2' or product_code== 'discount3' or  product_code== 'discount4' :
+            product_code = product.default_code            
+            if line['price'] > 0  or line['is_discount'] == True or product_code == 'discount1' or  product_code == 'discount2' or product_code == 'discount3' or  product_code == 'discount4' :
                 product = self.env['product.product'].browse(line.get('product_id', False))
                 print 'product>>>', product.id
                 print 'line.get>>>', line.get('product_id', False)
@@ -467,7 +467,7 @@ class account_invoice(models.Model):
                     'product_uom_id': line.get('uos_id', False),
                     'analytic_account_id': line.get('account_analytic_id', False),
                     'main_group': account_id,
-                                        'is_discount': line.get('is_discount', False),
+                     'is_discount': line.get('is_discount', False),
 
                 }
                 print 'res111111>>>', res
@@ -555,15 +555,15 @@ class account_invoice(models.Model):
     def line_dr_convert_account_with_principle(self, line):
         list_one = line
         print 'list_one>>>', list_one
-        list_group = [i['main_group'] for i in list_one if i is not None and i ['is_discount']==False]
+        list_group = [i['main_group'] for i in list_one if i is not None and i ['is_discount'] == False]
         print 'list_group>>>', list_group
         val = set(map(lambda x:x, list_group))
-        dis_group = [i['main_group'] for i in list_one if i is not None and i ['is_discount']==True]
+        dis_group = [i['main_group'] for i in list_one if i is not None and i ['is_discount'] == True]
         print 'dis_group>>>', dis_group
         dis_val = set(map(lambda x:x, dis_group))
         print 'val', val
         arr_list = []
-        #for AR principle
+        # for AR principle
         for v in val:
             print 'v', v
             price = 0
@@ -575,8 +575,8 @@ class account_invoice(models.Model):
             for res in result:
                 origin = res['ref']
                 product = self.env['product.product'].browse(res.get('product_id', False))
-                product_code=product.default_code                
-                if product_code== 'discount1' or  product_code== 'discount2' or product_code== 'discount3' or  product_code== 'discount4' :
+                product_code = product.default_code                
+                if product_code == 'discount1' or  product_code == 'discount2' or product_code == 'discount3' or  product_code == 'discount4' :
                     res['debit'] = -1 * res['debit']
                     res['credit'] = -1 * res['credit']
                 if origin:
@@ -632,7 +632,7 @@ class account_invoice(models.Model):
                            
                         }
                 arr_list.append(rec)
-        #for discount principle
+        # for discount principle
         for v in dis_val:
             print 'v', v
             price = 0
@@ -645,9 +645,9 @@ class account_invoice(models.Model):
             for res in result:
                 origin = res['ref']
                 product = self.env['product.product'].browse(res.get('product_id', False))
-                product_code=product.default_code                
-                if product_code== 'discount1' or  product_code== 'discount2' or product_code== 'discount3' or  product_code== 'discount4' :
-                    res['debit'] =  res['debit']
+                product_code = product.default_code                
+                if product_code == 'discount1' or  product_code == 'discount2' or product_code == 'discount3' or  product_code == 'discount4' :
+                    res['debit'] = res['debit']
                     res['credit'] = res['credit']
                 if origin:
                     cr.execute("select type from account_invoice where origin=%s", (origin,))
@@ -877,7 +877,9 @@ class account_invoice(models.Model):
                     'date_maturity': inv.date_due,
                     'amount_currency': diff_currency and total_currency,
                     'currency_id': diff_currency and inv.currency_id.id,
-                    'ref': ref
+                    'ref': ref,
+                 'is_discount':False,
+
                 })
 
             date = date_invoice

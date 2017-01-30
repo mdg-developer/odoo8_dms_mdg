@@ -234,8 +234,9 @@ class pre_sale_order(osv.osv):
                                     sale_foc = line_id.foc
                                     priceUnit = line_id.price_unit
                                     productName = line_id.product_id.name
-                                    
+                                product_data = self.pool.get('product.product').browse(cr, uid,line_id.product_id.id, context=context)   
                                 detailResult = {'order_id':so_id,
+                                                        'product_type':product_data.product_tmpl_id.type,
                                                         'product_id':line_id.product_id.id,
                                                         'name':productName,
                                                         'product_uom':line_id.uom_id.id,
@@ -309,6 +310,8 @@ class pre_sale_order_line(osv.osv):
         return result       
     
     _columns = {
+        'product_type':fields.char('Product Type'),
+
         'product_id':fields.many2one('product.product', 'Products'),
         'product_uos_qty':fields.float('Quantity'),
 #        'uom_id':fields.function(_get_uom_from_product, type='many2one', relation='product.uom', string='UOM'),
@@ -359,6 +362,7 @@ class pre_product_yet_to_deliver_line(osv.osv):
         return result       
                            
     _columns = {
+                
         'product_id':fields.many2one('product.product', 'Products'),
         'uom':fields.function(_get_uom_from_product, type='many2one', relation='product.uom', string='UOM'),
         'product_qty':fields.float('Quantity'),

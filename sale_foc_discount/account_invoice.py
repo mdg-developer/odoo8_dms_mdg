@@ -179,7 +179,6 @@ class account_invoice_line(models.Model):
             mres['ref']=ref
             mres['is_discount']=False
             product = self.env['product.product'].browse(mres.get('product_id', False))
-            
             print 'mres',mres,ref,product.default_code
             if not mres:
                 continue
