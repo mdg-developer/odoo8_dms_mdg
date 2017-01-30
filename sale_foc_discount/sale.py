@@ -163,7 +163,7 @@ class sale_order_line(osv.osv):
             if not account_id:
                 if line.product_id:
                     if  line.order_id.pricelist_id.whole_sale==True:
-                        account_id = line.product_id.property_whole_account_income.id
+                        account_id = line.product_id.categ_id.property_whole_account_income_categ.id
                     else:
                         account_id = line.product_id.property_account_income.id
                     if not account_id:
@@ -380,9 +380,17 @@ class sale_order(osv.osv):
             raise osv.except_osv(_('Error!'),
                 _('Please define sales journal for this company: "%s" (id:%d).') % (order.company_id.name, order.company_id.id))
         print 'order.partner_id.property_account_receivable.id',order.partner_id.property_account_receivable.id
+        if  order.name:
+            cr.execute('select name  from stock_picking where origin=%s',(order.name,))
+            do_no=cr.fetchone()
+            if do_no:
+                do_no=do_no[0]
+            else:
+                do_no=None
         invoice_vals = {
             'name': order.client_order_ref or '',
             'origin': order.name,
+            'do_no':do_no,
             'type': 'out_invoice',
             'reference': order.client_order_ref or order.name,
             'account_id': order.partner_id.property_account_receivable.id,

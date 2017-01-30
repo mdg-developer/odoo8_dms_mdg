@@ -5,3 +5,4 @@ import product_group
 import product_uom
 import product_principal
 import res_users
+import product_product

@@ -85,12 +85,12 @@
 				</xpath>
 
 				<field name="payment_term" position="replace">
-
 				</field>
 				<field name="pricelist_id" position="after">
 					<field name="tb_ref_no"></field>
 					<field name="payment_term" options="{'no_create': True}" />
 					<field name="payment_type"></field>
+					<field name="direct_credit"/>
 					<field name="delivery_remark" />
 				</field>
 				<field name="date_order" position="after">

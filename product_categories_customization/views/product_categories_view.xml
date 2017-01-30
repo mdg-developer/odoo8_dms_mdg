@@ -2,14 +2,24 @@
 <openerp>
 	<data>
 		<record id="product_category_inherit" model="ir.ui.view">
-            <field name="name">product.category.form</field>
-            <field name="model">product.category</field>
-            <field name="inherit_id" ref="product.product_category_form_view" />
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='parent_id']" position="before">
+			<field name="name">product.category.form</field>
+			<field name="model">product.category</field>
+			<field name="inherit_id" ref="product.product_category_form_view" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='parent_id']" position="before">
 					<field name="code" />
 				</xpath>
-            </field>
-        </record>
+			</field>
+		</record>
+		<record id="view_category_property_form_inherit" model="ir.ui.view">
+			<field name="name">product.category.form</field>
+			<field name="model">product.category</field>
+			<field name="inherit_id" ref="account.view_category_property_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='property_account_income_categ' ]" position="after">
+					<field name="property_whole_account_income_categ" />
+				</xpath>
+			</field>
+		</record>		
 	</data>
 </openerp>

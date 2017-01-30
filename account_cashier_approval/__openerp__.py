@@ -41,6 +41,7 @@ Sale Cashier Approval
          'views/cashier_approval_view.xml',
         'views/qweb_view.xml',
         'views/report_cashier_approval.xml',
+        'views/custom_layout.xml',
 
     ],
     'installable': True,

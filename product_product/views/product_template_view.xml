@@ -22,9 +22,7 @@
 						</field>
 					</page>
 				</xpath>
-				<field name="property_account_income" position="after">
-					<field name="property_whole_account_income" />
-				</field>
+
 				<!-- General Information Tab -->
 				<!-- <xpath expr="//group[@name='group_standard_price']" position="after"> -->
 				<!-- <group colspan="2" name="description"> -->
@@ -36,6 +34,10 @@
 				<!-- </xpath> -->
 
 				<!-- Accounting Tab -->
+				
+				<field name="weight_net" position="after">
+					<field name="weight_liter"/>
+				</field>
 				<xpath
 					expr="//page[@string='Accounting']/group/label[@string='Internal Category']"
 					position="before">
@@ -64,6 +66,7 @@
 
 				<xpath expr="//field[@name='default_code']" position="after">
 					<field name="uom_ratio" />
+					<field name="sequence" />
 				</xpath>
 			</field>
 		</record>

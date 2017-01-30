@@ -24,43 +24,17 @@ from openerp.osv import fields, osv
 class product_category(osv.osv):
     _inherit = "product.category"
     _columns = {
-        'property_account_income_categ': fields.property(
-            type='many2one',
-            relation='account.account',
-            string="Sale",
-            help="This account will be used for invoices to value sales."),
-        'property_account_expense_categ': fields.property(
-            type='many2one',
-            relation='account.account',
-            string="GIT Account",
-            help="This account will be used for invoices to value expenses."),
-                
-        'property_stock_account_input_categ': fields.property(
-            type='many2one',
-            relation='account.account',
-            string='GIT',
-            help="When doing real-time inventory valuation, counterpart journal items for all incoming stock moves will be posted in this account, unless "
-                 "there is a specific valuation account set on the source location. This is the default value for all products in this category. It "
-                 "can also directly be set on each product"),
-        'property_stock_account_output_categ': fields.property(
-            type='many2one',
-            relation='account.account',
-            string='COGS',
-            help="When doing real-time inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account, unless "
-                 "there is a specific valuation account set on the destination location. This is the default value for all products in this category. It "
-                 "can also directly be set on each product"),
-        'property_stock_valuation_account_id': fields.property(
-            type='many2one',
-            relation='account.account',
-            string="Inventory Account",
-            help="When real-time inventory valuation is enabled on a product, this account will hold the current value of the products.",),
         'code':fields.char('Code'),
-    }
-    
-    def create(self,cr,uid,vals,context=None):
+        'property_whole_account_income_categ': fields.property(
+                    type='many2one',
+                    relation='account.account',
+                    string="Whole Sale Income Account",
+                    help="This account will be used for invoices instead of the default one to value sales for the current product."), }
+    def create(self, cr, uid, vals, context=None):
         category_code = None
         if vals:
-            category_code = self.pool.get('ir.sequence').get(cr,uid,'product.category.code')
+            category_code = self.pool.get('ir.sequence').get(cr, uid, 'product.category.code')
             vals['code'] = category_code
             new_id = super(product_category, self).create(cr, uid, vals, context=context)
             return new_id
+        

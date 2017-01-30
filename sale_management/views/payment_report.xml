@@ -29,7 +29,7 @@
 
 						<table class="table table-condensed" style="border:1pt solid;">
 							<thead >
-								<tr style="background-color:#0052cc;color:#ffffff;" height="10pt;">
+								<tr height="10pt;">
 									<th class="text-center" style="border:1pt solid;border-color:black;">Product
 									</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th>
@@ -52,17 +52,21 @@
 										</t>
 									</td>
 									<td style="border:1pt solid;border-color:black;" align="right">
-										<span t-field="l.quantity" />
+										<!-- <span t-field="l.quantity" /> -->
+										<span t-esc="'%.0f'% l.quantity"/>
 										<!-- <span t-field="l.uos_id" groups="product.group_uom" /> -->
 									</td>
 									<td class="text-right" style="border:1pt solid;border-color:black;">
-										<span t-field="l.price_unit" />
+										<!-- <span t-field="l.price_unit" /> -->
+										<span t-esc="'%.0f'% l.price_unit"/>
 									</td>
 									<td class="text-right" style="border:1pt solid;border-color:black;">
-										<span t-field="l.net_total" />
+										<!-- <span t-field="l.net_total" /> -->
+										<span t-esc="'%.0f'% l.net_total"/>
 									</td>
 									<td class="text-right" style="border:1pt solid;border-color:black;">
-										<span t-field="l.discount_amt" />
+										<!-- <span t-field="l.discount_amt" /> -->
+										<span t-esc="'%.0f'% l.discount_amt"/>
 									</td>
 									<td class="text-center" style="border:1pt solid;border-color:black;">
 										<t t-if="l.foc==True">
@@ -70,11 +74,12 @@
 									</td>
 									<td class="text-right" style="border:1pt solid;border-color:black;">
 										<t t-if="l.foc==True">
-											0.00
+											0
 										</t>
 
 										<t t-if="l.foc==False">
-											<span t-field="l.price_subtotal" />
+											<!-- <span t-field="l.price_subtotal" /> -->
+											<span t-esc="'%.0f'% l.price_subtotal"/>
 										</t>
 									</td>
 								</tr>
@@ -84,7 +89,7 @@
 						<table class="table table-condensed" style="border:1pt solid;">
 							<thead >
 								<h5>Payments:</h5>
-								<tr style="background-color:#0052cc;color:#ffffff;" height="10pt;">
+								<tr height="10pt;">
 									<th class="text-center" style="border:1pt solid;border-color:black;">Sr.No
 									</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Payment Date 
@@ -101,7 +106,7 @@
 										<t t-esc="m_index+1" />
 									</td> 
 									<td style="border:1pt solid;border-color:black;">
-										<span t-field="m.date" />
+										<span t-field="m.date" t-field-options='{"format": "dd/MM/y"}'/>
 									</td>
 									<td style="border:1pt solid;border-color:black;">
 										<span t-field="m.ref" />
@@ -110,10 +115,12 @@
 										<span t-field="m.journal_id" />
 									</td>
 									<td style="border:1pt solid;border-color:black;">
-										<span t-field="m.debit" />
+										<!-- <span t-field="m.debit" /> -->
+										<span t-esc="'%.0f'% m.debit"/>
 									</td>
 									<td style="border:1pt solid;border-color:black;">
-										<span t-field="m.credit" />
+										<!-- <span t-field="m.credit" /> -->
+										<span t-esc="'%.0f'% m.credit"/>
 									</td>
 								</tr>
 							</tbody>
@@ -168,7 +175,7 @@
 							<strong>Fiscal Position Remark:</strong>
 							<span t-field="o.fiscal_position.note" />
 						</p>
-						<div class="row" style="padding-top:-2s0pt;margin-top:20pt;">
+						<!-- <div class="row" style="padding-top:-2s0pt;margin-top:20pt;">
 							<div class="col-xs-12">
 
 								<table class="table" style='border:solid;border-color:white;'>
@@ -189,7 +196,7 @@
 									</tr>
 								</table>
 							</div>
-						</div>
+						</div> -->
 					</div>
 				</t>
 			</xpath>

@@ -15,6 +15,18 @@ from datetime import date
 from dateutil import relativedelta
 
 DEFAULT_SERVER_DATE_FORMAT = "%Y-%m-%d"
+
+
+class credit_data(osv.osv):
+    _name = "partner.credit"
+    _description = "Partner Credit"
+    _columns = {       
+        'customer_id':fields.many2one('res.partner', 'Customer', domain="[('customer','=',True)]"),
+        'credit_amount':fields.float('Credit Amount'),
+       }
+credit_data()    
+
+
 def geo_find(addr):
     url = 'https://maps.googleapis.com/maps/api/geocode/json?sensor=false&address='
     url += urllib.quote(addr.encode('utf8'))
@@ -453,7 +465,6 @@ class res_partner(osv.osv):
                      A.customer_code,A.mobile_customer,A.shop_name ,
                      A.address,A.territory,A.village,A.branch_code,
                      A.zip,A.state_name,A.partner_latitude,A.partner_longitude  from (
-
                      select RP.id,RP.name,RP.image,RP.is_company,
                      RP.image_small,RP.street,RP.street2,RP.city,RP.website,
                      RP.phone,RP.township,RP.mobile,RP.email,RP.company_id,RP.customer, 
@@ -482,9 +493,27 @@ class res_partner(osv.osv):
                     and A.customer_code is not null 
             ''', (section_id, section_id,))
         datas = cr.fetchall()
-        cr.execute
         return datas
-		
+    
+    def res_partners_credit_amount(self, cr, uid, section_id , context=None, **kwargs):
+        partner_obj=self.pool.get('res.partner')
+        credit_obj=self.pool.get('partner.credit')
+        datas=[]
+        cr.execute("select id from res_partner where section_id =%s and customer=true and active=true",(section_id,))
+        partner_data=cr.fetchall()
+        if partner_data:
+            for  data in partner_data:
+                p_id=data[0]
+                partner=partner_obj.browse(cr, uid, p_id, context=context)
+                credit=partner.credit
+                partner_id=partner.id
+                credit_obj.create(cr, uid, {'customer_id': partner_id,'credit_amount':credit}, context=context)            
+            cr.execute("select * from partner_credit")
+            credit_data=cr.fetchall()
+        return credit_data
+            
+        
+        
     def res_partners_team(self, cr, uid, section_id, context=None, **kwargs):
         cr.execute('''                    
                      
@@ -585,29 +614,38 @@ class res_partner(osv.osv):
         datas = cr.fetchall()
         return datas
     
-    # MMK
     def generate_customercode(self, cr, uid, ids, val, context=None):
             codeObj = self.pool.get('res.code')
+            userObj = self.pool.get('res.users')
+            companyObj = self.pool.get('res.company')
             cityId = townshipId = channelId = codeId = code = None
             codeResult = {}
             if ids:
+                user_data=userObj.browse(cr, uid, uid, context=context)
+                company_id=user_data.company_id.id
+                company_data=companyObj.browse(cr, uid, company_id, context=context)
+                cityId=company_data.city                
                 for resVal in self.browse(cr, uid, ids, context=context):
                     if resVal:
-                        cityId = resVal.city
-                        townshipId = resVal.township
-                        channelId = resVal.sales_channel
-                        if cityId and townshipId and channelId:
-                            codeId = codeObj.search(cr, uid, [('city_id', '=', cityId.id), ('township_id', '=', townshipId.id), ('sale_channel_id', '=', channelId.id)])
+                        customer=resVal.customer
+                        supplier=resVal.supplier
+                        if customer is True:
+                            is_flag='customer'
+                        if supplier is True:
+                            is_flag='supplier'
+                        if cityId:
+                            codeId = codeObj.search(cr, uid, [('city_id', '=', cityId.id),('is_flag', '=', is_flag)])
                             if codeId:
                                 code = codeObj.generateCode(cr, uid, codeId[0], context=context)
                             else:
-                                codeResult = {'city_id':cityId.id, 'township_id':townshipId.id, 'sale_channel_id':channelId.id, 'nextnumber':1, 'padding':6}
+                                codeResult = {'city_id':cityId.id, 'nextnumber':1, 'padding':4,'is_flag':is_flag}
                                 codeId = codeObj.create(cr, uid, codeResult, context=context)
                                 code = codeObj.generateCode(cr, uid, codeId, context=context)
                 if code:
                     from datetime import datetime
                     self.write(cr, uid, ids, {'customer_code':code,'date_partnership':datetime.now().date(),'mobile_customer':False}, context=context)
             return True
+			
 res_partner()
 class res_partner_asset(osv.Model):
 

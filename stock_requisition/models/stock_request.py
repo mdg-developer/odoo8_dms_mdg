@@ -87,7 +87,7 @@ class stock_requisition(osv.osv):
                  'to_location_id':to_location_id ,
                  'vehicle_id':vehicle_id,
                 'p_line': data_line,
-                'order_line':order_line
+                'order_line':order_line,
             }
         return {'value': values}    
     _columns = {
@@ -219,12 +219,22 @@ class stock_requisition(osv.osv):
                 for data in req_line_id:
                     req_line_value = product_line_obj.browse(cr, uid, data, context=context)
                     if (req_line_value.req_quantity + req_line_value.big_req_quantity) != 0:
-                        product_id = req_line_value.product_id.id
                         product_uom = req_line_value.product_uom.id
                         big_uom_id = req_line_value.big_uom_id.id
                         big_req_quantity = req_line_value.big_req_quantity
                         uom_ratio = req_line_value.uom_ratio
-                        quantity = req_line_value.req_quantity            
+                        quantity = req_line_value.req_quantity                              
+                        product_id = req_line_value.product_id.id
+                        product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)   
+                        cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (to_location_id, product.id,))
+                        qty_on_hand = cr.fetchone()
+                        if qty_on_hand:
+                            qty_on_hand = qty_on_hand[0]
+                        else:
+                            qty_on_hand = 0                                       
+                        if big_req_quantity > qty_on_hand:
+                            raise osv.except_osv(_('Warning'),
+                                 _('Please Check Qty On Hand For (%s)') % (product.name_template,))                                                           
                         good_line_obj.create(cr, uid, {'line_id': good_id,
                                               'product_id': product_id,
                                               'product_uom': product_uom,

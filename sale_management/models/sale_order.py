@@ -74,6 +74,7 @@ class sale_order(osv.osv):
                     ('consignment', 'Consignment'),
                     ('advanced', 'Advanced')
                     ], 'Payment Type'),
+                'direct_credit':fields.boolean('Direct Credit',default=False),
                'delivery_remark':fields.selection([
                     ('partial', 'Partial'),
                     ('delivered', 'Delivered'),

@@ -52,6 +52,7 @@
 							<field name="sale_channel_id" />
 							<field name="nextnumber" />
 							<field name="padding" />
+							<field name="is_flag" />
 						</group>
 					</sheet>
 				</form>

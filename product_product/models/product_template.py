@@ -16,6 +16,7 @@ class product_template(osv.osv):
                 "outgoing_qty": sum([p.outgoing_qty for p in product.product_variant_ids]),
             }
         return res
+    
     def _search_product_quantity(self, cr, uid, obj, name, domain, context):
         prod = self.pool.get("product.product")
         res = []
@@ -46,7 +47,6 @@ class product_template(osv.osv):
                 # new column add
                 'product_principal_ids':fields.many2one('product.principal', 'Product Principal'),
                 #################
-                           
                  
                  # copy from panasonic_producty.py of "panansonic_modulue"
                 
@@ -71,12 +71,9 @@ class product_template(osv.osv):
                  "with 'internal' type."),
                 'uom_ratio':fields.char('Packing Size'),
                 'weight_liter': fields.float('Net Weight (Liter)', digits_compute=dp.get_precision('Stock Weight'), help="The net weight in Kg."),
-                'weight_net': fields.float('Net Weight(Viss)', digits_compute=dp.get_precision('Stock Weight'), help="The net weight in Kg."),
-                'property_whole_account_income': fields.property(
-                    type='many2one',
-                    relation='account.account',
-                    string="Whole Sale Income Account",
-                    help="This account will be used for invoices instead of the default one to value sales for the current product."),                }
+                'weight_net': fields.float('Net Weight(Viss)', digits_compute=dp.get_precision('Stock Weight'), help="The net weight in Kg."),  
+                'sequence': fields.related('product_variant_ids', 'sequence', type='integer', string='Sequence', required=True),
+                      }
      
     _defaults = {
         'valuation': 'manual_periodic',
