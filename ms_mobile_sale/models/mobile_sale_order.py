@@ -2317,8 +2317,8 @@ class mobile_sale_order(osv.osv):
                     
                     cursor.execute(''' insert into res_partner_res_partner_category_rel(category_id,partner_id) 
                     values(2,%s)''', (partner_id,))
-					
-					cursor.execute(''' insert into sale_team_customer_rel(partner_id,sale_team_id) 
+                    
+                    cursor.execute(''' insert into sale_team_customer_rel(partner_id,sale_team_id) 
                     values(%s,%s)''', (partner_id,partner['section_id'],))
                     
             return partner_id
