@@ -301,7 +301,8 @@ class stock_return(osv.osv):
                         total_rec_qty=  bigger_qty +  rec_small_quantity        
                         if total_return_qty < total_rec_qty:
                             raise osv.except_osv(_('Warning'),
-                                _('Please Check Receive Qty'))
+                                _('Please Check Receive Qty (%s)') % (name,))    
+                                                   
                         move_id = move_obj.create(cr, uid, {'picking_id': picking_id,
                                                   'picking_type_id':picking_type_id,
                                                 #  'restrict_lot_id':lot_id,
