@@ -110,7 +110,7 @@
                 </ex-property>
             </list-property>
             <property name="odaDriverClass">org.postgresql.Driver</property>
-            <property name="odaURL">jdbc:postgresql://localhost:5432/rbnewlatest</property>
+            <property name="odaURL">jdbc:postgresql://localhost:5432/RB_17_1_17</property>
             <property name="odaUser">openerp</property>
             <encrypted-property name="odaPassword" encryptionID="base64">b3BlbnBncHdk</encrypted-property>
         </oda-data-source>

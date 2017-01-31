@@ -70,7 +70,7 @@
             <expression name="labelExpr" type="javascript">dataSetRow["branch_code"]</expression>
             <expression name="sortByColumn">dataSetRow["branch_code"]</expression>
             <property name="sortDirection">asc</property>
-            <property name="dataType">string</property>
+            <property name="dataType">integer</property>
             <property name="distinct">true</property>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
@@ -1837,7 +1837,10 @@ order by branch_code]]></xml-property>
                     </image>
                     <grid id="718">
                         <property name="height">1.3958333333333333in</property>
-                        <column id="719"/>
+                        <property name="width">2.5833333333333335in</property>
+                        <column id="719">
+                            <property name="width">2.5833333333333335in</property>
+                        </column>
                         <row id="720">
                             <cell id="721"/>
                         </row>

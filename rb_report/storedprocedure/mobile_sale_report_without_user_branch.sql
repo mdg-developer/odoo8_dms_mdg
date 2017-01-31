@@ -1,5 +1,50 @@
-﻿-- Function: saleorder_report_without_user(date, date, integer, integer)
---select * from saleorder_report_without_user('2016-11-10','2016-11-18',null,null)
+-- Table: report_temp1
+
+-- DROP TABLE report_temp1;
+
+CREATE TABLE report_temp1
+(
+  order_id character varying,
+  customer character varying,
+  customer_code character varying,
+  branch_code character varying,
+  saleplanname character varying,
+  saleplanday character varying,
+  saleplantrip character varying,
+  warehouse character varying,
+  sale_date character varying,
+  paymenttype character varying,
+  deliverremark character varying,
+  totalamount numeric,
+  totaldiscount numeric,
+  discount numeric,
+  deductionamount numeric,
+  product character varying,
+  quantity numeric,
+  sale_team character varying,
+  salemanname character varying,
+  location_name character varying,
+  paid_amount numeric,
+  paid character varying,
+  void character varying,
+  subtotal numeric,
+  voucher character varying,
+  unit_price numeric,
+  tablet character varying,
+  visit_reason character varying,
+  grand_total double precision,
+  promotion_line character varying,
+  product_id integer,
+  main_group character varying,
+  id serial NOT NULL,
+  CONSTRAINT report_temp1_pkey PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+
+-- Function: saleorder_report_without_user(date, date, integer, integer)
+
 -- DROP FUNCTION saleorder_report_without_user(date, date, integer, integer);
 
 CREATE OR REPLACE FUNCTION saleorder_report_without_user(IN from_date date, IN to_date date, IN m_group integer, IN param_branch integer)
@@ -199,5 +244,3 @@ $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100
   ROWS 1000;
-ALTER FUNCTION saleorder_report_without_user(date, date, integer, integer)
-  OWNER TO openerp;
