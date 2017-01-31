@@ -144,6 +144,7 @@
 								<field name="product_id" />
 								<field name="product_categ_id" />
 								<field name="sale_channel_id" widget="many2many_tags" />
+								<field name="sale_amount" />
 								<field name="sale_qty" />
 								<field name="product_uom_id" />
 							</group>

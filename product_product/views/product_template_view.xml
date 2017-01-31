@@ -43,7 +43,7 @@
 <!-- 					<div> -->
 <!-- 						<field name="product_principal_ids" colspan="3" nolabel="1" /> -->
 <!-- 					</div> 					 -->
-					<label for="main_group" string="Product Principal" />
+					<label for="main_group" string="Product Main Group" />
 					<div>
 						<field name="main_group" colspan="3" nolabel="1" />
 					</div>					
