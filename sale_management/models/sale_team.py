@@ -11,8 +11,7 @@ class price_list_line(osv.osv):
     _description = 'Price List Line'           
     _columns = {                
         'team_id':fields.many2one('crm.case.section', 'Line', ondelete='cascade', select=True),
-            'property_product_pricelist': fields.many2one('product.pricelist', string="Sale Pricelist", domain=[('type', '=', 'sale')]),#update
-        'is_default':fields.boolean('Default'),
+            
         }
     
 class crm_case_section(osv.osv):
@@ -219,7 +218,7 @@ class crm_case_section(osv.osv):
                 'warehouse_id': fields.many2one('stock.warehouse', 'Car Warehouse', required=True),
                 'location_id': fields.many2one('stock.location', ' Car Location', required=True),
                 'issue_location_id': fields.many2one('stock.location', 'Issue location', required=True),
-                'issue_warehouse_id': fields.many2one('stock.warehouse', 'Issue Warehouse', required=True),
+                'issue_warehouse_id': fields.many2many('stock.warehouse', string='Issue Warehouse', required=True),
                 'receiver':fields.char('Receiver'),
                 'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
                 'sale_channel_id':fields.many2many('sale.channel', 'sale_team_channel_rel', 'sale_team_id', 'sale_channel_id', string='Sale Channel'),
@@ -229,7 +228,7 @@ class crm_case_section(osv.osv):
                 'pricelist_ids':fields.many2many('product.pricelist'),
                 'vehicle_id':fields.many2one('fleet.vehicle', 'Vehicle No'),
                 'main_group_id': fields.many2many('product.maingroup'),
-                                'date':fields.date('Date'),
+                'date':fields.date('Date'),
                 'delivery_team_id': fields.many2one('crm.case.section', 'Delivery Team'),
                 'date':fields.date('Date'),                
                 'total_invoice': fields.function(_get_total_invoice_data, digits_compute=dp.get_precision('Product Price'),
@@ -274,6 +273,8 @@ class crm_case_section(osv.osv):
                 string='Credit Outstanding'),                
                  'price_list_line': fields.one2many('price.list.line', 'team_id', 'Price List', copy=True),      
                'branch_id':fields.many2one('res.branch', 'Branch'),
+               'property_product_pricelist': fields.many2one('product.pricelist', string="Sale Pricelist", domain=[('type', '=', 'sale')]),#update
+        		'is_default':fields.boolean('Default'),
                            
         }
     _sql_constraints = [

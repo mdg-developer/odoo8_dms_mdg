@@ -42,7 +42,7 @@
 					<field name="location_id" />
 				</field>
 				<field name="location_id" position="after">
-					<field name="issue_warehouse_id" />
+					<field name="issue_warehouse_id" widget="many2many_tags"/>
 					<field name="issue_location_id" />
 					<field name="receiver"/>
 					<field name="analytic_account_id" />
@@ -90,38 +90,8 @@
 					</page>
 
 					<page string="Pricelists">
-						<field name="price_list_line">
-							<form string="Pricelists">
-								<group>
-									<field name="property_product_pricelist" widget="selection" />
-									<field name="is_default" />
-								</group>
-							</form>
-							<tree string="Pricelists" editable="bottom" >
-<!-- 								<field name="property_product_pricelist" widget="selection" /> -->
-								<!-- start -->	
-								<field name="property_product_pricelist" widget="many2many_list">
-									<kanban quick_create="false" create="true">
-									<field name="name" />
-									<templates>
-										<t t-name="kanban-box">
-											<div style="position: relative">
-												<a t-if="! read_only_mode" type="delete"
-													style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
-												<div class="oe_module_vignette">
-													<div class="oe_module_desc">
-														<field name="name" />
-													</div>
-												</div>
-											</div>
-										</t>
-									</templates>
-								</kanban>
-								</field>
-								<!-- end -->
-								<field name="is_default" />
-							</tree>
-						</field>
+						<field name="property_product_pricelist" widget="many2many_list" />
+						<field name="is_default" />
 					</page>
 					<!-- Add adding demarcation -->
 
