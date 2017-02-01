@@ -126,6 +126,8 @@ class pre_sale_order(osv.osv):
                         'mso_latitude':so['mso_latitude'],
                         'pricelist_id':so['pricelist_id'],
                         'branch_id':branch_id,
+                        'deduction_amount':so['deduction_amount'],
+                        
                     }
                     s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
                     print "Create Sale Order", so['name']
