@@ -1,16 +1,17 @@
 from openerp.osv import fields, osv
 from openerp.osv import orm
 from xlrd import open_workbook
+import xlrd
 from openerp.tools.translate import _
 from datetime import datetime
+from datetime import timedelta  
 import base64
 import logging
 
-
 _logger = logging.getLogger(__name__)
-header_fields = ['orderreference', 'voucherno', 'duedate', 'customercode', 'saleplanname', 'salemanname', 'saleplanday', 'saleplantrip', 'warehouse', 'location', 'date', 'orderid', 'customer', 'totalamount', 'paidamount', 'quantity',
-                 'discount', 'vochertype', 'paymenttime', 'paymenttype', 'deliverremark', 'deductionamount', 'paid', 'void', 'productscode', 'foc', 'tax', 'pricelist',
-                 'products', 'quantity(pcs)', 'unitprice', 'subtotal', 'discount(%)', 'discountamount', 'nettotalamount', 'saleteam', 'paymentterm']
+header_fields = ['orderreference', 'voucherno', 'customercode', 'salemanname', 'saleplanday', 'saleplantrip', 'date',
+                 'paymenttype', 'deliverremark', 'deductionamount', 'paid', 'void', 'tax', 'pricelist',
+                 'product', 'quantity(pcs)', 'unitprice', 'discount(%)', 'discountamount', 'saleteam', 'paymentterm']
 
 class mobile_sale_import(osv.osv):
     
@@ -72,10 +73,10 @@ class mobile_sale_import(osv.osv):
         data = self.browse(cr, uid, ids)[0]
         company_id = data.company_id.id
         import_file = data.import_file
-        
+
         err_log = ''
         header_line = False
-        value = {}
+
         lines = base64.decodestring(import_file)
         wb = open_workbook(file_contents=lines)
         excel_rows = []
@@ -90,16 +91,12 @@ class mobile_sale_import(osv.osv):
             for row in range(header_row + 1, s.nrows):
                 values = []
                 for col in range(0, s.ncols):
-                    print 's.cell(row, col).value',s.cell(row, col).value
                     values.append(s.cell(row, col).value)
-                    print 'values',values
                 excel_rows.append(values)
         con_ls = []
         amls = []
         count = val = head_count = 0
-        print 'excel_rows',excel_rows
         for ln in excel_rows:
-            print 'ln',ln
             # ln = [str(x).strip() for x in ln]
             if not ln or ln and ln in ['', '#']:
                 continue
@@ -111,7 +108,7 @@ class mobile_sale_import(osv.osv):
                     if x in header_fields:
                         con_ls.append(x)
                         head_count = head_count + 1
-                if head_count < 5:
+                if head_count < 3:
                     head_count = 0
                     con_ls = []
                 else:
@@ -123,10 +120,8 @@ class mobile_sale_import(osv.osv):
                                 ln.append(str(l))
                             val = len(b3)
                     header_line = True
-                    pricelist_i = orderid_i = paymenttime_i = customer_i = totalamount_i = paidamount_i = quantity_i = discount_i = vochertype_i = tax_i = orderreference_i = duedate_i = nettotalamount_i = discountamount_i = saleplanname_i = salemanname_i = saleplanday_i = saleplantrip_i = warehouse_i = location_i = date_i = paymenttype_i = deliverremark_i = None
-                    foc_i = discount_i = deductionamount_i = paid_i = void_i = products_i = quantity_i = unitprice_i = subtotal_i = saleteam_i = paymentterm_i = None
-                    customercode_i = None
-                    productscode_i = None
+                    PriceList_i = Tax_i = OrderRefNo_i = DueDate_i = NetTotalAmount_i = DiscountAmount_i = CustomerCode_i = SalePlanName_i = SalemanName_i = SalePlanDay_i = SalePlanTrip_i = Warehouse_i = Location_i = Date_i = PaymentType_i = DeliverRemark_i = None
+                    FOC_i = Discount_i = DeductionAmount_i = Paid_i = Void_i = ProductsCODE_i = Products_i = Quantity_i = UnitPrice_i = SubTotal_i = SaleTeam_i = PaymentTerm_i = None
                     # name_related_i = gender_i = marital_i = identification_id_i = mobile_phone_i = work_phone_i = work_email_i = birthday_i= father_name_i = finger#print_id_i = job_id_i = department_id_i = address_home_id_i = joining_date_i = salary_i = None
                     column_cnt = 0
                     for cnt in range(len(ln)):
@@ -141,90 +136,60 @@ class mobile_sale_import(osv.osv):
                         header_field = ln[i].strip().lower()
                         if header_field not in header_fields:
                             err_log += '\n' + _("Invalid Excel File, Header Field '%s' is not supported !") % ln[i]
+                        
                         elif header_field == 'customercode':
-                            customercode_i = i
-                        elif header_field == 'saleplanname':
-                            saleplanname_i = i
+                            CustomerCode_i = i
                         elif header_field == 'salemanname':
-                            salemanname_i = i
+                            SalemanName_i = i
                         elif header_field == 'saleplanday':
-                            saleplanday_i = i
+                            SalePlanDay_i = i
                         elif header_field == 'saleplantrip':
-                            saleplantrip_i = i
-                        elif header_field == 'warehouse':
-                            warehouse_i = i
+                            SalePlanTrip_i = i
+#                         elif header_field == 'Warehouse':
+#                             Warehouse_i=i
                         elif header_field == 'pricelist':
-                            pricelist_i = i
-                        elif header_field == 'location':
-                            location_i = i
+                            PriceList_i = i
+#                         elif header_field == 'Location':
+#                             Location_i=i
                         elif header_field == 'date':
-                            date_i = i
-                            print 'date_i',date_i
+                            Date_i = i
                         elif header_field == 'paymenttype':
-                            paymenttype_i = i
+                            PaymentType_i = i
                         elif header_field == 'deliverremark':
-                            deliverremark_i = i
+                            DeliverRemark_i = i
                         elif header_field == 'paid':
-                            paid_i = i
+                            Paid_i = i
                         elif header_field == 'void':
-                            void_i = i
-                        elif header_field == 'foc':
-                            foc_i = i
-                        elif header_field == 'productscode':
-                            productscode_i = i
-                        elif header_field == 'products':
-                            products_i = i
+                            Void_i = i
+                        elif header_field == 'product':
+                            Products_i = i
                         elif header_field == 'quantity(pcs)':
-                            quantity_i = i
+                            Quantity_i = i
                         elif header_field == 'unitprice':
-                            unitprice_i = i
-                        elif header_field == 'productdiscount':
-                            productdiscount_i = i
-                        elif header_field == 'subtotal':
-                            subtotal_i = i    
+                            UnitPrice_i = i
+                    
                         elif header_field == 'saleteam':
-                            saleteam_i = i
+                            SaleTeam_i = i
                         elif header_field == 'paymentterm':
-                            paymentterm_i = i     
+                            PaymentTerm_i = i     
                         elif header_field == 'discount(%)':
-                            discount_i = i   
+                            Discount_i = i   
                         elif header_field == 'discountamount':
-                            discountamount_i = i
+                            DiscountAmount_i = i
                         elif header_field == 'deductionamount':
-                            deductionamount_i = i
-                        elif header_field == 'nettotalamount':
-                            nettotalamount_i = i      
-                        elif header_field == 'duedate':
-                            duedate_i = i 
+                            DeductionAmount_i = i
+
                         elif header_field == 'orderreference':
-                            orderreference_i = i
-                        elif header_field == 'tax':
-                            tax_i = i              
-                        elif header_field == 'orderid':
-                            orderid_i = i
-                        elif header_field == 'customer':
-                            customer_i = i
-                        elif header_field == 'totalamount':
-                            totalamount_i = i
-                        elif header_field == 'paidamount':
-                            paidamount_i = i
-                        elif header_field == 'quantity':
-                            quantity_i = i
-                        elif header_field == 'discount':
-                            discount_i = i
-                        elif header_field == 'vochertype':
-                            vochertype_i = i
-                        elif header_field == 'paymenttime':
-                            paymenttime_i = i                 
+                            OrderRefNo_i = i
+#                         elif header_field == 'Tax':
+#                             Tax_i=i                               
                       
-                    for f in [(orderid_i, 'orderid'), (customer_i, 'customer'), (totalamount_i, 'totalamount'), (paidamount_i, 'paidamount'), (quantity_i, 'quantity'), (discount_i, 'discount'), (vochertype_i, 'vochertype'),
-                              (paymenttime_i, 'paymenttime'), (orderreference_i, 'orderreference'), (duedate_i, 'duedate'), (nettotalamount_i, 'nettotalamount'), (discountamount_i, 'discountamount'),
-                               (customercode_i, 'customercode'), (saleplanname_i, 'saleplanname'),
-                              (salemanname_i, 'salemanname'), (saleplanday_i, 'saleplanday'), (saleplantrip_i, 'saleplantrip'), (warehouse_i, 'warehouse'),
-                              (location_i, 'location'), (date_i, 'date'), (paymenttype_i, 'paymenttype'), (deliverremark_i, 'deliverremark'),
-                              (discount_i, 'discount(%)'), (deductionamount_i, 'deductionamount'), (tax_i, 'tax'), (pricelist_i, 'pricelist'),
-                              (paid_i, 'paid'), (void_i, 'void'), (foc_i, 'foc'), (productscode_i, 'productscode'), (products_i, 'products'), (quantity_i, 'quantity(pcs)'), (unitprice_i, 'unitprice'),
-                              (subtotal_i, 'subtotal'), (saleteam_i, 'saleteam'), (paymentterm_i, 'paymentterm')]:
+                    for f in [(OrderRefNo_i, 'orderreference'), (DiscountAmount_i, 'discountamount'), (CustomerCode_i, 'customercode'),
+                              (SalemanName_i, 'salemanname'), (SalePlanDay_i, 'saleplanday'), (SalePlanTrip_i, 'saleplantrip'),
+                              (Date_i, 'date'), (PaymentType_i, 'paymenttype'), (DeliverRemark_i, 'deliverremark'),
+                              (Discount_i, 'discount(%)'), (DeductionAmount_i, 'deductionamount'), (PriceList_i, 'pricelist'),
+                              (Paid_i, 'paid'), (Void_i, 'void'), (Products_i, 'product'), (Quantity_i, 'quantity(pcs)'), (UnitPrice_i, 'unitprice'),
+                              (SaleTeam_i, 'saleteam'), (PaymentTerm_i, 'paymentterm')]:
                         if not isinstance(f[0], int):
                             err_log += '\n' + _("Invalid Excel file, Header '%s' is missing !") % f[1]                           
 
@@ -235,45 +200,31 @@ class mobile_sale_import(osv.osv):
                 for i in range(0, val):
                     ln.append('')
                 if ln and ln[0] and ln[0][0] not in ['#', '']:
+                    
                     import_vals = {}
-                    import_vals['customercode'] = ln[customercode_i]
-                    import_vals['tax'] = ln[tax_i]
-                    import_vals['saleplanname'] = ln[saleplanname_i]
-                    import_vals['salemanname'] = ln[salemanname_i]
-                    import_vals['saleplanday'] = ln[saleplanday_i]
-                    import_vals['saleplantrip'] = ln[saleplantrip_i]
-                    import_vals['warehouse'] = ln[warehouse_i]
-                    import_vals['pricelist'] = ln[pricelist_i]
-                    import_vals['location'] = ln[location_i]
-                    print 'ln[date_i]',ln[date_i]
-                    import_vals['date'] = ln[date_i]
-                    import_vals['paymenttype'] = ln[paymenttype_i]
-                    import_vals['deliverremark'] = ln[deliverremark_i]
-                    import_vals['paid'] = ln[paid_i]
-                    import_vals['void'] = ln[void_i]
-                    import_vals['foc'] = ln[foc_i]
-                    import_vals['products'] = ln[products_i]
-                    import_vals['productscode'] = ln[productscode_i]
-                    import_vals['quantity(pcs)'] = ln[quantity_i]
-                    import_vals['unitprice'] = ln[unitprice_i]
-                    import_vals['subtotal'] = ln[subtotal_i]
-                    import_vals['saleteam'] = ln[saleteam_i]
-                    import_vals['paymentterm'] = ln[paymentterm_i]
-                    import_vals['discount(%)'] = ln[discount_i]
-                    import_vals['deductionamount'] = ln[deductionamount_i]
-                    import_vals['discountamount'] = ln[discountamount_i]
-                    import_vals['nettotalamount'] = ln[nettotalamount_i]
-                    import_vals['duedate'] = ln[duedate_i]        
-                    import_vals['orderreference'] = ln[orderreference_i]    
-                    import_vals['orderid'] = ln[orderid_i]
-                    import_vals['customer'] = ln[customer_i]
-                    import_vals['totalamount'] = ln[totalamount_i]
-                    import_vals['paidamount'] = ln[paidamount_i]
-                    import_vals['quantity'] = ln[quantity_i]
-                    import_vals['discount'] = ln[discount_i]
-                    import_vals['vochertype'] = ln[vochertype_i]
-                    import_vals['paymenttime'] = ln[paymenttime_i]   
-                    print 'import_vals',import_vals      
+                    
+                    import_vals['customercode'] = ln[CustomerCode_i]
+                    import_vals['salemanname'] = ln[SalemanName_i]
+                    import_vals['saleplanday'] = ln[SalePlanDay_i]
+                    import_vals['saleplantrip'] = ln[SalePlanTrip_i]
+                    import_vals['pricelist'] = ln[PriceList_i]
+                    import_vals['date'] = ln[Date_i]
+                    import_vals['paymenttype'] = ln[PaymentType_i]
+                    import_vals['deliverremark'] = ln[DeliverRemark_i]
+                    import_vals['paid'] = ln[Paid_i]
+                    import_vals['void'] = ln[Void_i]
+                    import_vals['product'] = ln[Products_i]
+                    import_vals['quantity(pcs)'] = ln[Quantity_i]
+                    import_vals['unitprice'] = ln[UnitPrice_i]
+
+                    
+                    import_vals['saleteam'] = ln[SaleTeam_i]
+                    import_vals['paymentterm'] = ln[PaymentTerm_i]
+                    import_vals['discount(%)'] = ln[Discount_i]
+                    import_vals['deductionamount'] = ln[DeductionAmount_i]
+                    import_vals['discountamount'] = ln[DiscountAmount_i]
+      
+                    import_vals['orderreference'] = ln[OrderRefNo_i]
                     amls.append(import_vals)
                     
         if err_log:
@@ -282,41 +233,99 @@ class mobile_sale_import(osv.osv):
         else:
             order_id = None
             for aml in amls:
-                print 'aml', aml
-                _tax = _foc = _state = analytic_id = pricelist_id = partner_id = country_id = saleperson_id = warehouse_id = product_id = user_id = sale_plan_day_id = sale_plan_trip_id = section_id = payment_term_id = _duedate = None
+                order_ids = pricelist_ids = payment_term_ids = uom_ids = partner_ids = _tax = _foc = _state = analytic_id = pricelist_id = partner_id = country_id = saleperson_id = warehouse_id = product_id = user_id = sale_plan_day_id = sale_plan_trip_id = section_id = payment_term_id = _duedate = None
+                void = secObj = orderRef = partner_code = payment_type = delivery_remark = saleperson_name = sale_plan_day_name = sale_plan_trip_name = section_name = payment_term_name = pricelist_name = date = pricelist_name = None
+               # product_code = aml['ProductsCODE']
+                discount_amount = qty_pcs = unit_price = discount = deduct_amt = numberOfDays = 0
+                if aml['product']: 
+                    products = str(aml['product']).strip()
+                if products:
+                    products_name = products  # '['+product_code+'] '+ 
                 
-                product_code = aml['productscode']
-               
-                products = aml['products']
+                if aml['orderreference']:
+                    orderRef = str(aml['orderreference']).strip()
+                if aml['customercode']:
+                    partner_code = str(aml['customercode']).strip()
+                    
+                if aml['paymenttype']:
+                    payment_type = str(aml['paymenttype']).strip()
+                    
+                    
+                if aml['deliverremark']:
+                    delivery_remark = str(aml['deliverremark']).strip()
+
+                    
+                if aml['salemanname']:
+                    saleperson_name = str(aml['salemanname']).strip()
+
+                    
+                if aml['saleplanday']:
+                    sale_plan_day_name = str(aml['saleplanday']).strip()
+
                 
-                products_name = '[' + product_code + '] ' + products
+                if aml['saleplantrip']:
+                    sale_plan_trip_name = str(aml['saleplantrip']).strip()
+
+                    
+                if aml['saleteam']:
+                    section_name = str(aml['saleteam']).strip()
+
+                    
+                if aml['paymentterm']:
+                    payment_term_name = str(aml['paymentterm']).strip()
+
+                    
+                if aml['discountamount']:
+                    discount_amount = float(aml['discountamount'])
+                    
+                if aml['quantity(pcs)']:
+                    qty_pcs = float(aml['quantity(pcs)'])
                 
-                if products_name:
-                    products = products_name.split(' ', 1)
-                    products_name = products[1]
-                
-                partner_code = str(aml['customercode'])
-                sale_plan_name = str(aml['saleplanname'])
-                payment_type = str(aml['paymenttype'])
-                delivery_remark = str(aml['deliverremark'])
-                saleperson_name = aml['salemanname']
-                warehouse_name = aml['warehouse']
-                sale_plan_day_name = aml['saleplanday']
-                sale_plan_trip_name = aml['saleplantrip']
-                section_name = aml['saleteam']
-                payment_term_name = aml['paymentterm']
-                discount_amount = aml['discountamount']
-                qty_pcs = aml['quantity(pcs)']
-                unit_price = aml['unitprice']
-                discount = aml['discount(%)']
-                deduct_amt = aml['deductionamount']
-                pricelist_name = aml['pricelist']                            
-                net_total = aml['nettotalamount']
-               
-                        
+                if aml['unitprice']:
+                    unit_price = float(aml['unitprice'])
+                    
+                if aml['discount(%)']:
+                    discount = float(aml['discount(%)'])
+                    
+                if aml['deductionamount']:
+                    deduct_amt = float(aml['deductionamount'])
+                    
+                if aml['pricelist']:
+                    pricelist_name = str(aml['pricelist']).strip()             
+                    
+                if aml['void']:
+                    void = str(aml['void']).strip()
+                    
+                if aml['date']:
+                    try:
+                        data_time = float(aml['date'])
+                        result = xlrd.xldate.xldate_as_tuple(data_time, 0)
+                        a = str(result[1]) + '/' + str(result[2]) + '/' + str(result[0]) + ' ' + str(result[3]) + ':' + str(result[4]) + ':' + str(result[5])
+                        date = datetime.strptime(a, '%m/%d/%Y %H:%M:%S').date()
+                    except Exception , e:
+                        try:
+                            str_date = str(aml['date']).strip() + ' 00:00:00'
+                            date = datetime.strptime(str_date, '%m/%d/%Y %H:%M:%S').date()
+                        except Exception, e:
+                            try:
+                                str_date = str(aml['date']).strip() + ' 00:00:00'
+                                date = datetime.strptime(str_date, '%Y/%m/%d %H:%M:%S').date()
+                            except Exception, e:
+                                try:
+                                    str_date = str(aml['date']).strip() + ' 00:00:00'
+                                    date = datetime.strptime(str_date, '%d/%m/%Y %H:%M:%S').date()
+                                except Exception, e:
+                                    try:
+                                        date = None
+                                    except Exception, e:
+                                        raise orm.except_orm(_('Error :'), _("Error while processing Excel Columns. \n\nPlease check your Date!"))                        
                    
                 if saleperson_name:
-                    saleperson_ids = partner_obj.search(cr, uid, [('name', '=', saleperson_name)])
+                    cr.execute(""" select id from res_partner where lower(name) = %s""", (saleperson_name.lower(),))
+                    data = cr.fetchall()
+                    if data:
+                        saleperson_ids = data[0]
+#                     saleperson_ids = partner_obj.search(cr, uid, [('name', '=', saleperson_name)])
                     if saleperson_ids:
                         saleperson_id = saleperson_ids[0]
                         user_ids = users_obj.search(cr, uid, [('partner_id', '=', saleperson_id)])
@@ -324,70 +333,83 @@ class mobile_sale_import(osv.osv):
                             user_id = user_ids[0]
                             
                 if pricelist_name:
-                    pricelist_ids = product_pricelist_obj.search(cr, uid, [('name', '=', pricelist_name)])
+                    cr.execute(""" select id from product_pricelist where lower(name) = %s """, (pricelist_name.lower(),))
+                    data = cr.fetchall()
+                    if data:
+                        pricelist_ids = data[0]
+#                     pricelist_ids = product_pricelist_obj.search(cr, uid, [('name', '=', pricelist_name)])
                     print 'pricelist_ids', pricelist_ids
                     if pricelist_ids:
                         pricelist_id = pricelist_ids[0]
                         
                 print 'pricelist_name', pricelist_name
-                if warehouse_name:
-                    warehouse_ids = warehouse_obj.search(cr, uid, [('name', '=', warehouse_name)])
-                    if warehouse_ids:
-                        warehouse_id = warehouse_ids[0]
+#                 if warehouse_name:
+#                     warehouse_ids = warehouse_obj.search(cr,uid,[('name','=',warehouse_name)])
+#                     if warehouse_ids:
+#                         warehouse_id = warehouse_ids[0]
                         
                 if sale_plan_day_name:
-                    sale_plan_day_ids = sale_plan_day_obj.search(cr, uid, [('name', '=', sale_plan_day_name)])
+                    cr.execute(""" select id from sale_plan_day where lower(name) = %s""", (sale_plan_day_name.lower(),))
+                    data = cr.fetchall()
+                    if data:
+                        sale_plan_day_ids = data[0]
+#                     sale_plan_day_ids = sale_plan_day_obj.search(cr, uid, [('name', '=', sale_plan_day_name)])
                     if sale_plan_day_ids:
                         sale_plan_day_id = sale_plan_day_ids[0]
                         
                 if sale_plan_trip_name:
-                    sale_plan_trip_ids = sale_plan_trip_obj.search(cr, uid, [('name', '=', sale_plan_trip_name)])
+                    cr.execute(""" select id from sale_plan_trip where lower(name) = %s""", (sale_plan_trip_name.lower(),))
+                    data = cr.fetchall()
+                    if data:
+                        sale_plan_trip_ids = data[0]
+#                     sale_plan_trip_ids = sale_plan_trip_obj.search(cr, uid, [('name', '=', sale_plan_trip_name)])
                     if sale_plan_trip_ids:
                         sale_plan_trip_id = sale_plan_trip_ids[0]
                         
                 if section_name:
-                    section_ids = section_obj.search(cr, uid, [('name', '=', section_name)])
+                    cr.execute(""" select id from crm_case_section where lower(name) =%s """, (section_name.lower(),))
+                    data = cr.fetchall()
+                    if data:
+                        section_ids = data[0]
+#                     section_ids = section_obj.search(cr, uid, [('name', '=', section_name)])
                     if section_ids:
                         section_id = section_ids[0]
-                        
+                        secObj = section_obj.browse(cr, uid, section_id, context=None)
+                if secObj:
+                    warehouse_id = secObj.warehouse_id.id       
                 if payment_term_name:
-                    payment_term_ids = payment_term_obj.search(cr, uid, [('name', '=', payment_term_name)])
+                    cr.execute(""" select id from account_payment_term where lower(name) = %s """, (payment_term_name.lower(),))
+                    data = cr.fetchall()
+                    if data:
+                        payment_term_ids = data[0]
+#                     payment_term_ids = payment_term_obj.search(cr, uid, [('name', '=', payment_term_name)])
                     if payment_term_ids:
                         payment_term_id = payment_term_ids[0]
-                
+                if payment_term_id:
+                    cr.execute(""" select days from account_payment_term_line where payment_id=%s""", (payment_term_id,))
+                    data = cr.fetchall()
+                    if data:
+                        numberOfDays = data[0][0]
                 if products_name:
-                    product_ids = product_obj.search(cr, uid, [('name', '=', products_name)])
+                    cr.execute(""" select id from product_product where lower(name_template) = %s """, (products_name.lower(),))
+                    data = cr.fetchall()
+                    if data:
+                        product_ids = data[0]
+#                     product_ids = product_obj.search(cr, uid, [('name', '=', products_name)])
                     if product_ids:
                         product_id = product_ids[0]
+                        productObj = product_obj.browse(cr, uid, product_id, context=None)
+                        uom_ids = productObj.uom_id.id
                         
-                if aml['duedate'] == "":
-                   
-                    _duedate = aml['date'] 
-                elif aml['duedate'] is not  None:
-                  
-                    _duedate = aml['duedate'] 
-                elif aml['duedate'] is  None:
-                    _duedate = aml['date']
                     
-                if aml['void'] == "" and aml['void'] == "Unvoid": 
+                if void.lower() == "" and void.lower() == "unvoid": 
                     _state = "draft"
-                elif aml['void'] == "void":
+                elif void.lower() == "void":
                     _state = "cancel"
                 else:
                     _state = "draft"
                  
-                if aml['foc'] == "":
-                    _foc = False
-                   
-                elif aml['foc'] == "Yes":
-                    _foc = True
-                    unit_price = 0
-                    discount = 0
-                    discount_amount = 0
-                    net_total = 0
-                else:
-                    _foc = False
-                   
+                 
                     
                 if deduct_amt == "":
                     deduct_amt = 0
@@ -402,42 +424,49 @@ class mobile_sale_import(osv.osv):
                             analytic_id = val.analytic_account_id.id
                             
                 if partner_code:
-                    va = partner_obj.search(cr, uid, [('customer_code', '=', partner_code)], context=None)
-                    partner_id = va[0]
+                    print 'partner_code .>> ', partner_code
+                    cr.execute(""" select id from res_partner where lower(customer_code) =%s""", (partner_code.lower(),))
+                    data = cr.fetchall()
+                    if data:
+                        print 'data', data
+                        partner_ids = data[0]
+#                     va = partner_obj.search(cr, uid, [('customer_code', '=', partner_code)], context=None)
+                    print 'partner_ids .>> ', partner_ids
+                    if partner_ids:
+                        partner_id = partner_ids[0]
                 
                 # Calculate the Discount Amount
                 if discount != "":
-                    discount_amount = (qty_pcs * unit_price) * (discount / 100.00)
+                    discount_amount = (qty_pcs * unit_price) * (discount / 100)
       
-                print 'aml[date]',aml['date']
+                
                 # Sale Plan Name, Sale Plan Day,Sale Plan Trip, Deliver Remark, Discount, Deduction Amount,Paid Amount, Paid,Void
                 order_value = {
                               'partner_id':partner_id,
                               'company_id':1,  # company_id,
                               'user_id':user_id,
-                              'warehouse_id':warehouse_id,
                               'customer_code':partner_code,
-                              'sale_plan_name':sale_plan_name,
                               'sale_plan_day_id':sale_plan_day_id,
                               'sale_plan_trip_id':sale_plan_trip_id,
                               'section_id':section_id,
                               'payment_term':payment_term_id,
-                              'date_order':aml['date'],
-                              'due_date':_duedate,
-                              'date_confirm':aml['date'],
+                              'date_order':date,
+#                               'date_confirm':date + timedelta(days=numberOfDays),
+                              'due_date':date + timedelta(days=numberOfDays),
                               'payment_type':payment_type.lower(),
                               'delivery_remark':delivery_remark.lower(),
                               'project_id':analytic_id,
                               'pricelist_id':pricelist_id,
-#                                   'amount_total':aml['TotalAmount'],
                               'state':_state,
-                              
+                              'warehouse_id':warehouse_id,
                               'deduct_amt':deduct_amt,
-#                               'tb_ref_no':aml['OrderReference']
-                              'tb_ref_no':aml['orderreference']
+                              'tb_ref_no':orderRef
                               }
-             
-                order_ids = order_obj.search(cr, uid, [('tb_ref_no', '=', aml['orderreference'])], context=context)
+                cr.execute(""" select id from sale_order where lower(tb_ref_no) =%s""", (orderRef.lower(),))
+                data = cr.fetchall()
+                if data:
+                    order_ids = data[0]
+#                 order_ids = order_obj.search(cr, uid, [('tb_ref_no', '=', orderRef)], context=context)
                 if order_ids:
                     order_id = order_ids[0]
                 else:
@@ -449,50 +478,23 @@ class mobile_sale_import(osv.osv):
                                   'product_id':product_id,
                                   'name':products_name,
                                   'price_unit':unit_price,
-                                  'product_uom':20,
+                                  'product_uom':uom_ids,
                                   'product_uom_qty':qty_pcs,
                                   'discount':discount,
                                   'discount_amt':discount_amount,
                                   'company_id':1,  # company_id,
                                   'state':'draft',
-                                  'net_total':net_total,
-                                  'sale_foc':_foc
                                   # 'invoiced':'TRUE',
                 
                                 }
           
-                   
+                    
                     order_line_id = order_line_obj.create(cr, uid, order_line_value, context)
                   
                     # Tax Filed is inserted into the sale_order_tax table
                     cr.execute('select id,name,description  from account_tax where parent_id is null')
                     tax_rec = cr.fetchall() 
                 
-#                     for  k in tax_rec:
-#                             
-#                         if k[2]==  aml['Tax']:
-#                             print 'Description', k[2]
-#                             _tax= k[0]
-#                         elif k[1]==  aml['Tax']:
-#                             print 'Name Tax', k[1]
-#                             _tax= k[0]
-                   
-                    if aml['tax']:
-                        val_tax = aml['tax'].split(',')
-                        for num in val_tax:
-                            for  k in tax_rec:
-                                if k[2] == num:
-                                    print 'Description', k[2]
-                                    _tax = k[0]
-                                elif k[1] == num:
-                                    print 'Name Tax', k[1]
-                                    _tax = k[0]
-                                
-                            if _tax != None:
-                                print '_tax_', _tax
-                                print 'order_line_id', order_line_id
-                                cr.execute("insert into sale_order_tax (order_line_id,tax_id) values(%s,%s)", (order_line_id, _tax,))
-                          
 
                    
                 self.write(cr, uid, ids[0], {'state': 'completed'})

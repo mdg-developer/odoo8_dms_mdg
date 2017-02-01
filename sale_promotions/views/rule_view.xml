@@ -31,7 +31,6 @@
 							<field name="main_group" colspan="2" select="1" />
 							<field name="sale_channel_id" colspan="2"  widget="many2many_tags"/>
 							<field name="outlettype_id" colspan="2"  widget="many2many_tags"/>
-       						<field name="branch_id" colspan="2" widget="many2many_tags"/>
        						<field name="product_ids" colspan="2" widget="many2many_tags"/>
        						<field name="category_ids" colspan="2" widget="many2many_tags"/>
        						<newline/>
@@ -97,7 +96,11 @@
 										<field name="arguments" />
 									</form>
 								</field>
-							</page>							
+							</page>				
+							<page string="Branchs" >
+							           						<field name="branch_id"  />
+							    
+							</page>			
 							<page string="Description">
 								<group col="4" colspan="4">
 									<field name="description" colspan="4" nolabel="1"
