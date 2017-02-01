@@ -904,13 +904,13 @@ and pt.exchange_type = 'Sale Return' and ptl.trans_type ='In' and pt.void_flag='
 and location_id not in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) group by ptl.product_id),
 
 stk_onhand as (select sum(product_uom_qty) as qty_on_hand,product_id from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date < ?::date and location_dest_id not in (7,429)
-and location_id =
+and location_id in 
 (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) group by product_id)
 
 select (sq.open_qty + (CASE WHEN stk_return.sale_return is null THEN 0 ELSE stk_return.sale_return END) - (CASE WHEN stk_onhand.qty_on_hand is null THEN 0 ELSE stk_onhand.qty_on_hand END)) as open_qty,sq.product_id, sq.location_id
 
 from 
-(select sum(product_uom_qty) as open_qty, product_id,location_dest_id as location_id from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date < ?  and location_dest_id =
+(select sum(product_uom_qty) as open_qty, product_id,location_dest_id as location_id from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date < ?  and location_dest_id in
 (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id = ?)) group by product_id,location_dest_id) as sq
 
 left join stk_onhand on stk_onhand.product_id=sq.product_id
@@ -923,13 +923,13 @@ and pt.exchange_type = 'Sale Return' and ptl.trans_type ='In' and pt.void_flag='
 and location_id not in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) group by ptl.product_id),
 
 stk_onhand as (select sum(product_uom_qty) as qty_on_hand,product_id from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date = ? and location_dest_id not in (7,429)
-and location_id = (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id = ?)) group by product_id),
+and location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id = ?)) group by product_id),
 
 stock_return as (select sum(srl.return_quantity) as stk_return_qty,product_id as stk_return_pid from stock_return sr, stock_return_line srl 
 where sr.id=srl.line_id and state='approve' and ((return_date at time zone 'utc' )at time zone 'asia/rangoon')::date = ?  group by product_id),
 
 purchase as (select sum(product_uom_qty) as purchase_qtyt,product_id as purchasepid from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date =?  and origin like '%MO%' 
-and location_dest_id =(select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) 
+and location_dest_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) 
 group by product_id)
 
 select pp.name_template as description,sq.*,stk_return.*,purchase.*,pt.weight_liter,pt.weight_net as weight_viss,stk_onhand.*,stock_return.*,
@@ -2558,13 +2558,13 @@ stk_return as (select ptl.product_id pt_pro_id,sum(ptl.product_qty) as sale_retu
 and pt.exchange_type = 'Sale Return' and ptl.trans_type ='In' and pt.void_flag='none' and pt.date::date < ? 
 and location_id not in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) group by ptl.product_id),
 
-stk_onhand as (select sum(product_uom_qty) as qty_on_hand,product_id from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? and location_dest_id not in (7,429) and location_id =
+stk_onhand as (select sum(product_uom_qty) as qty_on_hand,product_id from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? and location_dest_id not in (7,429) and location_id in 
 (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) group by product_id)
 
 select (sq.open_qty + (CASE WHEN stk_return.sale_return is null THEN 0 ELSE stk_return.sale_return END) - (CASE WHEN stk_onhand.qty_on_hand is null THEN 0 ELSE stk_onhand.qty_on_hand END)) as open_qty,sq.product_id, sq.location_id
 
 from 
-(select sum(product_uom_qty) as open_qty, product_id,location_dest_id as location_id from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date < ?  and location_dest_id =
+(select sum(product_uom_qty) as open_qty, product_id,location_dest_id as location_id from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date < ?  and location_dest_id in 
 (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id = ?)) group by product_id,location_dest_id) as sq
 
 left join stk_onhand on stk_onhand.product_id=sq.product_id
@@ -2576,14 +2576,14 @@ stk_return as (select ptl.product_id pt_pro_id,sum(ptl.product_qty) as sale_retu
 and pt.exchange_type = 'Sale Return' and ptl.trans_type ='In' and pt.void_flag='none' and pt.date::date = ? 
 and location_id not in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) group by ptl.product_id),
 
-stk_onhand as (select sum(product_uom_qty) as qty_on_hand,product_id from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date = ? and location_dest_id not in (7,429) and location_id =
+stk_onhand as (select sum(product_uom_qty) as qty_on_hand,product_id from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date = ? and location_dest_id not in (7,429) and location_id in
 (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id = ?)) group by product_id),
 
 stock_return as (select sum(srl.return_quantity) as stk_return_qty,product_id as stk_return_pid from stock_return sr, stock_return_line srl 
 where sr.id=srl.line_id and state='approve' and ((return_date at time zone 'utc' )at time zone 'asia/rangoon')::date = ?  group by product_id),
 
 purchase as (select sum(product_uom_qty) as purchase_qtyt,product_id as purchasepid from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date =?  and origin like '%MO%' 
-and location_dest_id =(select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) 
+and location_dest_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) 
 group by product_id)
 
 select pp.name_template as description,sq.*,stk_return.*,purchase.*,pt.weight_liter,pt.weight_net as weight_viss,stk_onhand.*,stock_return.*,
@@ -4370,13 +4370,13 @@ stk_return as (select ptl.product_id pt_pro_id,sum(ptl.product_qty) as sale_retu
 and pt.exchange_type = 'Sale Return' and ptl.trans_type ='In' and pt.void_flag='none' and pt.date::date < ? 
 and location_id not in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) group by ptl.product_id),
 
-stk_onhand as (select sum(product_uom_qty) as qty_on_hand,product_id from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? and location_dest_id not in (7,429) and location_id =
+stk_onhand as (select sum(product_uom_qty) as qty_on_hand,product_id from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? and location_dest_id not in (7,429) and location_id in 
 (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) group by product_id)
 
 select (sq.open_qty + (CASE WHEN stk_return.sale_return is null THEN 0 ELSE stk_return.sale_return END) - (CASE WHEN stk_onhand.qty_on_hand is null THEN 0 ELSE stk_onhand.qty_on_hand END)) as open_qty,sq.product_id, sq.location_id
 
 from 
-(select sum(product_uom_qty) as open_qty, product_id,location_dest_id as location_id from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date < ?  and location_dest_id =
+(select sum(product_uom_qty) as open_qty, product_id,location_dest_id as location_id from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date < ?  and location_dest_id in 
 (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id = ?)) group by product_id,location_dest_id) as sq
 
 left join stk_onhand on stk_onhand.product_id=sq.product_id
@@ -4388,14 +4388,14 @@ stk_return as (select ptl.product_id pt_pro_id,sum(ptl.product_qty) as sale_retu
 and pt.exchange_type = 'Sale Return' and ptl.trans_type ='In' and pt.void_flag='none' and pt.date::date = ? 
 and location_id not in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) group by ptl.product_id),
 
-stk_onhand as (select sum(product_uom_qty) as qty_on_hand,product_id from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date = ? and location_dest_id not in (7,429) and location_id =
+stk_onhand as (select sum(product_uom_qty) as qty_on_hand,product_id from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date = ? and location_dest_id not in (7,429) and location_id in 
 (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id = ?)) group by product_id),
 
 stock_return as (select sum(srl.return_quantity) as stk_return_qty,product_id as stk_return_pid from stock_return sr, stock_return_line srl 
 where sr.id=srl.line_id and state='approve' and ((return_date at time zone 'utc' )at time zone 'asia/rangoon')::date = ?  group by product_id),
 
 purchase as (select sum(product_uom_qty) as purchase_qtyt,product_id as purchasepid from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date =?  and origin like '%MO%' 
-and location_dest_id =(select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) 
+and location_dest_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) 
 group by product_id)
 
 select pp.name_template as description,sq.*,stk_return.*,purchase.*,pt.weight_liter,pt.weight_net as weight_viss,stk_onhand.*,stock_return.*,
@@ -6058,7 +6058,7 @@ and pt.exchange_type = 'Sale Return' and ptl.trans_type ='In' and pt.void_flag='
 and location_id not in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) group by ptl.product_id),
 
 MOpurchase as (select sum(product_uom_qty) as MOpurchase_qtyt,product_id as purchasepid from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date < ?  and origin like '%MO%' 
-and product_uom != 80 and  location_id =(select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) 
+and product_uom != 80 and  location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) 
 group by product_id)
 
 --stk_onhand as (select sum(product_uom_qty) as qty_on_hand,product_id from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? 
@@ -6068,7 +6068,7 @@ group by product_id)
 select (sq.open_qty + (CASE WHEN stk_return.sale_return is null THEN 0 ELSE stk_return.sale_return END) - (CASE WHEN MOpurchase.MOpurchase_qtyt is null THEN 0 ELSE MOpurchase.MOpurchase_qtyt END)) as open_qty,sq.product_id, sq.location_id
 
 from 
-(select sum(product_uom_qty) as open_qty, product_id,location_dest_id as location_id from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date < ?  and location_dest_id =
+(select sum(product_uom_qty) as open_qty, product_id,location_dest_id as location_id from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date < ?  and location_dest_id in 
 (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id = ?)) group by product_id,location_dest_id) as sq
 
 --left join stk_onhand on stk_onhand.product_id=sq.product_id
@@ -6078,7 +6078,7 @@ left join MOpurchase on MOpurchase.purchasepid=sq.product_id),
 --(select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id = ?)) group by product_id,location_dest_id),
 stk_onhand as (select sum(product_uom_qty) as qty_on_hand,product_id from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date = ? 
 and location_dest_id not in (7,429)
-and location_id = (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id = ?)) 
+and location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id = ?)) 
 group by product_id),
 
 stk_return as (select ptl.product_id pt_pro_id,sum(ptl.product_qty) as sale_return from product_transactions pt, product_transactions_line ptl where pt.id = ptl.transaction_id
@@ -6086,11 +6086,11 @@ and pt.exchange_type = 'Sale Return' and ptl.trans_type ='In' and pt.date::date 
 and location_id not in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) group by ptl.product_id),
 
 purchase as (select sum(product_uom_qty) as purchase_qtyt,product_id as purchasepid from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date =?  --and origin like '%MO%' 
-and location_dest_id =(select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) 
+and location_dest_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) 
 group by product_id),
 
 MOpurchase as (select sum(product_uom_qty) as MOpurchase_qtyt,product_id as purchasepid from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date =?  and origin like '%MO%' 
-and product_uom != 80 and  location_id =(select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) 
+and product_uom != 80 and  location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) 
 group by product_id)
 
 select pp.name_template as description,sq.*,stk_return.*,purchase.*,pt.weight_net as weight_viss,stk_onhand.*,MOpurchase.*,
