@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION calculate_opening_balance(date_from date, date_to dat
   RETURNS numeric AS
 $BODY$
   DECLARE
-    balance numeric;
+    balance numeric=0;
     opening integer;
     opening_debit numeric;
     max_date date;
@@ -49,8 +49,10 @@ $BODY$
 		from account_move
 		where date<date_from;
 		RAISE NOTICE 'max_date(%)',max_date;
-		EXECUTE 'select * from calculate_closing_balance($1,$2,$3)' USING max_date,max_date,state_cond INTO closing_balance;
-		balance=closing_balance;
+		if max_date is not null then
+			EXECUTE 'select * from calculate_closing_balance($1,$2,$3)' USING max_date,max_date,state_cond INTO closing_balance;
+			balance=closing_balance;
+		end if;
 	end if;
 
    return balance;

@@ -319,7 +319,7 @@
             </list-property>
             <list-property name="filter">
                 <structure>
-                    <property name="operator">gt</property>
+                    <property name="operator">ge</property>
                     <expression name="expr" type="javascript">row["result"]</expression>
                     <simple-property-list name="value1">
                         <value>0</value>
@@ -439,7 +439,7 @@
             </list-property>
             <list-property name="filter">
                 <structure>
-                    <property name="operator">gt</property>
+                    <property name="operator">ge</property>
                     <expression name="expr" type="javascript">row["result"]</expression>
                     <simple-property-list name="value1">
                         <value>0</value>
