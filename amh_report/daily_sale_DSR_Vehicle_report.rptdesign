@@ -26,18 +26,6 @@
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
-        <scalar-parameter name="dsrv_no" id="1717">
-            <text-property name="promptText">DSR-V No</text-property>
-            <property name="valueType">static</property>
-            <property name="dataType">string</property>
-            <property name="distinct">true</property>
-            <list-property name="selectionList"/>
-            <property name="paramType">simple</property>
-            <property name="controlType">text-box</property>
-            <structure name="format">
-                <property name="category">Unformatted</property>
-            </structure>
-        </scalar-parameter>
         <cascading-parameter-group name="NewCascadingParameterGroup" id="1411">
             <property name="dataSet">Car_DS</property>
             <property name="dataSetMode">single</property>
@@ -1484,28 +1472,10 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <text-property name="heading">sale_amt</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">discount</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">discount</text-property>
-                    <text-property name="heading">discount</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">cash_down</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">cash_down</text-property>
-                    <text-property name="heading">cash_down</text-property>
-                </structure>
-                <structure>
                     <property name="columnName">sale_return_amt</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">sale_return_amt</text-property>
                     <text-property name="heading">sale_return_amt</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">amount_total</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">amount_total</text-property>
-                    <text-property name="heading">amount_total</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">net_sale_amt</property>
@@ -1514,52 +1484,46 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <text-property name="heading">net_sale_amt</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">deduction_amt</property>
+                    <property name="columnName">deduct_amt</property>
                     <property name="analysis">measure</property>
-                    <text-property name="displayName">deduction_amt</text-property>
-                    <text-property name="heading">deduction_amt</text-property>
+                    <text-property name="displayName">deduct_amt</text-property>
+                    <text-property name="heading">deduct_amt</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">cd_amt</property>
+                    <property name="columnName">paidamount</property>
                     <property name="analysis">measure</property>
-                    <text-property name="displayName">cd_amt</text-property>
-                    <text-property name="heading">cd_amt</text-property>
+                    <text-property name="displayName">paidamount</text-property>
+                    <text-property name="heading">paidamount</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">cd_amt_tot</property>
+                    <property name="columnName">paidamount_tot</property>
                     <property name="analysis">measure</property>
-                    <text-property name="displayName">cd_amt_tot</text-property>
-                    <text-property name="heading">cd_amt_tot</text-property>
+                    <text-property name="displayName">paidamount_tot</text-property>
+                    <text-property name="heading">paidamount_tot</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">dd_amt</property>
+                    <property name="columnName">deduct_amt_tot</property>
                     <property name="analysis">measure</property>
-                    <text-property name="displayName">dd_amt</text-property>
-                    <text-property name="heading">dd_amt</text-property>
+                    <text-property name="displayName">deduct_amt_tot</text-property>
+                    <text-property name="heading">deduct_amt_tot</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">dd_amt_tot</property>
+                    <property name="columnName">amount_total</property>
                     <property name="analysis">measure</property>
-                    <text-property name="displayName">dd_amt_tot</text-property>
-                    <text-property name="heading">dd_amt_tot</text-property>
+                    <text-property name="displayName">amount_total</text-property>
+                    <text-property name="heading">amount_total</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">ns_amt</property>
+                    <property name="columnName">amount_total_tot</property>
                     <property name="analysis">measure</property>
-                    <text-property name="displayName">ns_amt</text-property>
-                    <text-property name="heading">ns_amt</text-property>
+                    <text-property name="displayName">amount_total_tot</text-property>
+                    <text-property name="heading">amount_total_tot</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">ns_amt_tot</property>
+                    <property name="columnName">open_amt</property>
                     <property name="analysis">measure</property>
-                    <text-property name="displayName">ns_amt_tot</text-property>
-                    <text-property name="heading">ns_amt_tot</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">open_amt_new</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">open_amt_new</text-property>
-                    <text-property name="heading">open_amt_new</text-property>
+                    <text-property name="displayName">open_amt</text-property>
+                    <text-property name="heading">open_amt</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">open_amt_tot</property>
@@ -1632,18 +1596,6 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">packingliter</text-property>
                     <text-property name="heading">packingliter</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">open_amt</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">open_amt</text-property>
-                    <text-property name="heading">open_amt</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">inv_partid</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">inv_partid</text-property>
-                    <text-property name="heading">inv_partid</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">balance</property>
@@ -1971,36 +1923,6 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
-                <structure>
-                    <property name="name">param_30</property>
-                    <property name="paramName">from_date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">30</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_31</property>
-                    <property name="paramName">SaleTeam</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                    <property name="position">31</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_32</property>
-                    <property name="paramName">TeamMember</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                    <property name="position">32</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
             </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
@@ -2026,146 +1948,116 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     </structure>
                     <structure>
                         <property name="position">5</property>
-                        <property name="name">discount</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">6</property>
-                        <property name="name">cash_down</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">7</property>
                         <property name="name">sale_return_amt</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">8</property>
-                        <property name="name">amount_total</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
-                        <property name="position">9</property>
+                        <property name="position">6</property>
                         <property name="name">net_sale_amt</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
+                        <property name="position">7</property>
+                        <property name="name">deduct_amt</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">paidamount</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">paidamount_tot</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
                         <property name="position">10</property>
-                        <property name="name">deduction_amt</property>
+                        <property name="name">deduct_amt_tot</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">11</property>
-                        <property name="name">cd_amt</property>
-                        <property name="dataType">float</property>
+                        <property name="name">amount_total</property>
+                        <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">12</property>
-                        <property name="name">cd_amt_tot</property>
-                        <property name="dataType">float</property>
+                        <property name="name">amount_total_tot</property>
+                        <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">13</property>
-                        <property name="name">dd_amt</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">14</property>
-                        <property name="name">dd_amt_tot</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">15</property>
-                        <property name="name">ns_amt</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">16</property>
-                        <property name="name">ns_amt_tot</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">17</property>
-                        <property name="name">open_amt_new</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">18</property>
-                        <property name="name">open_amt_tot</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">19</property>
-                        <property name="name">uom_name</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">20</property>
-                        <property name="name">product_uom</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">21</property>
-                        <property name="name">uom_ratio</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">22</property>
-                        <property name="name">customer_code</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">23</property>
-                        <property name="name">customer_name</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">24</property>
-                        <property name="name">viss_amt</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
-                        <property name="position">25</property>
-                        <property name="name">liter_amt</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
-                        <property name="position">26</property>
-                        <property name="name">customer_id</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">27</property>
-                        <property name="name">productid</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">28</property>
-                        <property name="name">packingviss</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">29</property>
-                        <property name="name">packingliter</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">30</property>
                         <property name="name">open_amt</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">31</property>
-                        <property name="name">inv_partid</property>
+                        <property name="position">14</property>
+                        <property name="name">open_amt_tot</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">15</property>
+                        <property name="name">uom_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">16</property>
+                        <property name="name">product_uom</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">32</property>
+                        <property name="position">17</property>
+                        <property name="name">uom_ratio</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">18</property>
+                        <property name="name">customer_code</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">19</property>
+                        <property name="name">customer_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">20</property>
+                        <property name="name">viss_amt</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">21</property>
+                        <property name="name">liter_amt</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">22</property>
+                        <property name="name">customer_id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">23</property>
+                        <property name="name">productid</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">24</property>
+                        <property name="name">packingviss</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">25</property>
+                        <property name="name">packingliter</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">26</property>
                         <property name="name">balance</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">33</property>
+                        <property name="position">27</property>
                         <property name="name">balancetot</property>
                         <property name="dataType">float</property>
                     </structure>
@@ -2211,216 +2103,171 @@ this.queryText =this.queryText.replace("--$pricelist$", "and so.pricelist_id="+p
                 </structure>
                 <structure>
                     <property name="position">5</property>
-                    <property name="name">discount</property>
-                    <property name="nativeName">discount</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
-                </structure>
-                <structure>
-                    <property name="position">6</property>
-                    <property name="name">cash_down</property>
-                    <property name="nativeName">cash_down</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
-                </structure>
-                <structure>
-                    <property name="position">7</property>
                     <property name="name">sale_return_amt</property>
                     <property name="nativeName">sale_return_amt</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">8</property>
-                    <property name="name">amount_total</property>
-                    <property name="nativeName">amount_total</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">2</property>
-                </structure>
-                <structure>
-                    <property name="position">9</property>
+                    <property name="position">6</property>
                     <property name="name">net_sale_amt</property>
                     <property name="nativeName">net_sale_amt</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
+                    <property name="position">7</property>
+                    <property name="name">deduct_amt</property>
+                    <property name="nativeName">deduct_amt</property>
+                    <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">paidamount</property>
+                    <property name="nativeName">paidamount</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">paidamount_tot</property>
+                    <property name="nativeName">paidamount_tot</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
+                <structure>
                     <property name="position">10</property>
-                    <property name="name">deduction_amt</property>
-                    <property name="nativeName">deduction_amt</property>
+                    <property name="name">deduct_amt_tot</property>
+                    <property name="nativeName">deduct_amt_tot</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">11</property>
-                    <property name="name">cd_amt</property>
-                    <property name="nativeName">cd_amt</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
+                    <property name="name">amount_total</property>
+                    <property name="nativeName">amount_total</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
                     <property name="position">12</property>
-                    <property name="name">cd_amt_tot</property>
-                    <property name="nativeName">cd_amt_tot</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
+                    <property name="name">amount_total_tot</property>
+                    <property name="nativeName">amount_total_tot</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
                     <property name="position">13</property>
-                    <property name="name">dd_amt</property>
-                    <property name="nativeName">dd_amt</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
-                </structure>
-                <structure>
-                    <property name="position">14</property>
-                    <property name="name">dd_amt_tot</property>
-                    <property name="nativeName">dd_amt_tot</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
-                </structure>
-                <structure>
-                    <property name="position">15</property>
-                    <property name="name">ns_amt</property>
-                    <property name="nativeName">ns_amt</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
-                </structure>
-                <structure>
-                    <property name="position">16</property>
-                    <property name="name">ns_amt_tot</property>
-                    <property name="nativeName">ns_amt_tot</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
-                </structure>
-                <structure>
-                    <property name="position">17</property>
-                    <property name="name">open_amt_new</property>
-                    <property name="nativeName">open_amt_new</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
-                </structure>
-                <structure>
-                    <property name="position">18</property>
-                    <property name="name">open_amt_tot</property>
-                    <property name="nativeName">open_amt_tot</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
-                </structure>
-                <structure>
-                    <property name="position">19</property>
-                    <property name="name">uom_name</property>
-                    <property name="nativeName">uom_name</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-                <structure>
-                    <property name="position">20</property>
-                    <property name="name">product_uom</property>
-                    <property name="nativeName">product_uom</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">21</property>
-                    <property name="name">uom_ratio</property>
-                    <property name="nativeName">uom_ratio</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-                <structure>
-                    <property name="position">22</property>
-                    <property name="name">customer_code</property>
-                    <property name="nativeName">customer_code</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-                <structure>
-                    <property name="position">23</property>
-                    <property name="name">customer_name</property>
-                    <property name="nativeName">customer_name</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-                <structure>
-                    <property name="position">24</property>
-                    <property name="name">viss_amt</property>
-                    <property name="nativeName">viss_amt</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">2</property>
-                </structure>
-                <structure>
-                    <property name="position">25</property>
-                    <property name="name">liter_amt</property>
-                    <property name="nativeName">liter_amt</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">2</property>
-                </structure>
-                <structure>
-                    <property name="position">26</property>
-                    <property name="name">customer_id</property>
-                    <property name="nativeName">customer_id</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">27</property>
-                    <property name="name">productid</property>
-                    <property name="nativeName">productid</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">28</property>
-                    <property name="name">packingviss</property>
-                    <property name="nativeName">packingviss</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
-                </structure>
-                <structure>
-                    <property name="position">29</property>
-                    <property name="name">packingliter</property>
-                    <property name="nativeName">packingliter</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
-                </structure>
-                <structure>
-                    <property name="position">30</property>
                     <property name="name">open_amt</property>
                     <property name="nativeName">open_amt</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">31</property>
-                    <property name="name">inv_partid</property>
-                    <property name="nativeName">inv_partid</property>
+                    <property name="position">14</property>
+                    <property name="name">open_amt_tot</property>
+                    <property name="nativeName">open_amt_tot</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
+                <structure>
+                    <property name="position">15</property>
+                    <property name="name">uom_name</property>
+                    <property name="nativeName">uom_name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">16</property>
+                    <property name="name">product_uom</property>
+                    <property name="nativeName">product_uom</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">32</property>
+                    <property name="position">17</property>
+                    <property name="name">uom_ratio</property>
+                    <property name="nativeName">uom_ratio</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">18</property>
+                    <property name="name">customer_code</property>
+                    <property name="nativeName">customer_code</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">19</property>
+                    <property name="name">customer_name</property>
+                    <property name="nativeName">customer_name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">20</property>
+                    <property name="name">viss_amt</property>
+                    <property name="nativeName">viss_amt</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
+                <structure>
+                    <property name="position">21</property>
+                    <property name="name">liter_amt</property>
+                    <property name="nativeName">liter_amt</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
+                <structure>
+                    <property name="position">22</property>
+                    <property name="name">customer_id</property>
+                    <property name="nativeName">customer_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">23</property>
+                    <property name="name">productid</property>
+                    <property name="nativeName">productid</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">24</property>
+                    <property name="name">packingviss</property>
+                    <property name="nativeName">packingviss</property>
+                    <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
+                </structure>
+                <structure>
+                    <property name="position">25</property>
+                    <property name="name">packingliter</property>
+                    <property name="nativeName">packingliter</property>
+                    <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
+                </structure>
+                <structure>
+                    <property name="position">26</property>
                     <property name="name">balance</property>
                     <property name="nativeName">balance</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">33</property>
+                    <property name="position">27</property>
                     <property name="name">balancetot</property>
                     <property name="nativeName">balancetot</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[Select *,(ns_amt + (CASE WHEN open_amt_new is null THEN 0 ELSE open_amt_new END) - cd_amt) as balance,
-(ns_amt_tot + (CASE WHEN open_amt_tot is null THEN 0 ELSE open_amt_tot END) - cd_amt_tot) as balancetot
-
-
+            <xml-property name="queryText"><![CDATA[Select *,(amount_total + (CASE WHEN sale_return_amt is null THEN 0 ELSE sale_return_amt END) - (CASE WHEN open_amt is null THEN 0 ELSE open_amt END) - (CASE WHEN paidamount is null THEN 0 ELSE paidamount END)) as balance,
+(amount_total_tot + (CASE WHEN sale_return_amt is null THEN 0 ELSE sale_return_amt END) - (CASE WHEN open_amt_tot is null THEN 0 ELSE open_amt_tot END) - (CASE WHEN paidamount_tot is null THEN 0 ELSE paidamount_tot END)) as balancetot
  from 
-(select A.description,A.sale_qty,A.unit_price,A.sale_amt,A.discount,(A.cd_amt - (CASE WHEN B.TOTAL is null THEN 0 ELSE B.TOTAL END)) as cash_down,B.TOTAL sale_return_amt,A.amount_total,
- (A.sale_amt-A.discount -  (CASE WHEN B.TOTAL is null THEN 0 ELSE B.TOTAL END)) as net_sale_amt,A.deduction_amt,
- A.cd_amt,A.cd_amt_tot,A.dd_amt,A.dd_amt_tot,A.ns_amt,A.ns_amt_tot,A.open_amt_new,A.open_amt_tot,
+(select A.description,A.sale_qty,A.unit_price,A.sale_amt,B.TOTAL sale_return_amt,(A.sale_amt -  (CASE WHEN B.TOTAL is null THEN 0 ELSE B.TOTAL END)) as net_sale_amt,A.deduct_amt,
+ A.paidamount,A.paidamount_tot,A.deduct_amt_tot,A.amount_total,A.amount_total_tot,A.open_amt,A.open_amt_tot,
 A.uom_name,A.product_uom,A.uom_ratio,A.customer_code,A.customer_name,A.viss_amt,A.liter_amt,A.customer_id,A.productid,
 CASE (select dcode(A.productid))
 WHEN 'P00010' THEN ( A.viss * (select CAST(A.sale_qty as Float))) 
@@ -2453,18 +2300,16 @@ WHEN 'PP00409' THEN ( A.weight_liter * (select CAST(A.sale_qty as Float)))
 ELSE Null END as packingliter
 
 from 
-(
-select pp.id productid,pp.name_template as description,sum(distinct sol.product_uom_qty) as sale_qty,
-sol.price_unit unit_price, (sol.product_uom_qty * sol.price_unit) sale_amt,sum(sol.discount_amt) discount,sum(so.amount_total) as amount_total,
-calculate_cashdown_amount(rp.id,?,?,?) as cd_amt,
-calculate_cashdown_amounttot(?,?,?) as cd_amt_tot,
-calculate_deduction_amountcash(rp.id,?,?,?) as dd_amt,
-calculate_deduction_amountcashsum(?,?,?) as dd_amt_tot,
-calculate_netsale_cash(rp.id,?,?,?) as ns_amt,
-calculate_netsale_cashtot(?,?,?) as ns_amt_tot,
-calculate_open_amountcash(rp.id,?,?,?) as open_amt_new,
-calculate_open_amountcash_sum(?,?,?) as open_amt_tot,
-so.deduct_amt as deduction_amt,
+(select pp.id productid,pp.name_template as description,sum(distinct sol.product_uom_qty) as sale_qty,
+sol.price_unit unit_price, (sol.product_uom_qty * sol.price_unit) sale_amt,
+(select deduct_amt from calculate_cash_data(rp.id,?,?,?)),
+(select open_amt from calculate_cash_data(rp.id,?,?,?)),
+(select paidamount from calculate_cash_data(rp.id,?,?,?)),
+(select amount_total from calculate_cash_data(rp.id,?,?,?)),
+(select deduct_amt as deduct_amt_tot from calculate_cash_datasum(?,?,?)),
+(select open_amt as open_amt_tot from calculate_cash_datasum(?,?,?)),
+(select paidamount as paidamount_tot from calculate_cash_datasum(?,?,?)),
+(select amount_total as amount_total_tot from calculate_cash_datasum(?,?,?)),
 uom.name as uom_name,sol.product_uom,uom.uom_ratio as uom_ratio,rp.name as customer_name,rp.customer_code as customer_code,rp.id as customer_id,
 sum(sol.product_uom_qty * pt.weight_net) viss_amt,sum(sol.product_uom_qty * pt.weight_liter) as liter_amt,
 pt.weight_net as viss,pt.weight_liter
@@ -2496,15 +2341,9 @@ and pt.void_flag='none'
 and pt.team_id = ?
 )B on A.productid = B.pt_pro_id
 Group by 
-A.description,A.customer_id,a.sale_qty,a.unit_price,a.sale_amt,a.discount,b.total,a.uom_name,A.product_uom,A.uom_ratio,a.customer_code,a.customer_name,
-A.viss_amt,A.liter_amt,a.viss,a.weight_liter,a.productid,a.deduction_amt,A.amount_total,
-A.cd_amt,A.cd_amt_tot,A.dd_amt,A.dd_amt_tot,A.ns_amt,A.ns_amt_tot,A.open_amt_new,A.open_amt_tot)C 
-left join (SELECT sum(inv.residual) as open_amt,partner_id as inv_partid 
-FROM account_invoice inv,res_partner rp 
-where inv.partner_id = rp.id and inv.payment_type='credit' and inv.state='open' 
-and ((inv.write_date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? 
-and inv.section_id=? and inv.user_id=? and inv.type = 'out_invoice' 
-and residual > 0 group by partner_id)D on D.inv_partid=C.customer_id]]></xml-property>
+A.description,A.customer_id,a.sale_qty,a.unit_price,a.sale_amt,b.total,a.uom_name,A.product_uom,A.uom_ratio,a.customer_code,a.customer_name,
+A.viss_amt,A.liter_amt,a.viss,a.weight_liter,a.productid,A.amount_total,a.deduct_amt,a.paidamount,a.paidamount_tot,a.deduct_amt_tot,a.amount_total_tot,
+A.open_amt,A.open_amt_tot)C]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -2936,51 +2775,6 @@ and residual > 0 group by partner_id)D on D.inv_partid=C.customer_id]]></xml-pro
           <design:identifier>
             <design:name></design:name>
             <design:position>29</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>30</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>31</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>32</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
@@ -3404,18 +3198,6 @@ and residual > 0 group by partner_id)D on D.inv_partid=C.customer_id]]></xml-pro
                     <text-property name="heading">sale_amt</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">discount</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">discount</text-property>
-                    <text-property name="heading">discount</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">cash_down</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">cash_down</text-property>
-                    <text-property name="heading">cash_down</text-property>
-                </structure>
-                <structure>
                     <property name="columnName">sale_return_amt</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">sale_return_amt</text-property>
@@ -3428,64 +3210,52 @@ and residual > 0 group by partner_id)D on D.inv_partid=C.customer_id]]></xml-pro
                     <text-property name="heading">amount_total</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">net_sale_amt</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">net_sale_amt</text-property>
-                    <text-property name="heading">net_sale_amt</text-property>
-                </structure>
-                <structure>
                     <property name="columnName">deduction_amt</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">deduction_amt</text-property>
                     <text-property name="heading">deduction_amt</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">cd_amt</property>
+                    <property name="columnName">paidamount</property>
                     <property name="analysis">measure</property>
-                    <text-property name="displayName">cd_amt</text-property>
-                    <text-property name="heading">cd_amt</text-property>
+                    <text-property name="displayName">paidamount</text-property>
+                    <text-property name="heading">paidamount</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">cd_amt_tot</property>
+                    <property name="columnName">paidamount_tot</property>
                     <property name="analysis">measure</property>
-                    <text-property name="displayName">cd_amt_tot</text-property>
-                    <text-property name="heading">cd_amt_tot</text-property>
+                    <text-property name="displayName">paidamount_tot</text-property>
+                    <text-property name="heading">paidamount_tot</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">dd_amt</property>
+                    <property name="columnName">deduct_amt_tot</property>
                     <property name="analysis">measure</property>
-                    <text-property name="displayName">dd_amt</text-property>
-                    <text-property name="heading">dd_amt</text-property>
+                    <text-property name="displayName">deduct_amt_tot</text-property>
+                    <text-property name="heading">deduct_amt_tot</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">dd_amt_tot</property>
+                    <property name="columnName">amount_total_tot</property>
                     <property name="analysis">measure</property>
-                    <text-property name="displayName">dd_amt_tot</text-property>
-                    <text-property name="heading">dd_amt_tot</text-property>
+                    <text-property name="displayName">amount_total_tot</text-property>
+                    <text-property name="heading">amount_total_tot</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">ns_amt_tot</property>
+                    <property name="columnName">open_amt</property>
                     <property name="analysis">measure</property>
-                    <text-property name="displayName">ns_amt_tot</text-property>
-                    <text-property name="heading">ns_amt_tot</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">ns_amt</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">ns_amt</text-property>
-                    <text-property name="heading">ns_amt</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">open_amt_new</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">open_amt_new</text-property>
-                    <text-property name="heading">open_amt_new</text-property>
+                    <text-property name="displayName">open_amt</text-property>
+                    <text-property name="heading">open_amt</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">open_amt_tot</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">open_amt_tot</text-property>
                     <text-property name="heading">open_amt_tot</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">net_sale_amt</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">net_sale_amt</text-property>
+                    <text-property name="heading">net_sale_amt</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">uom_name</property>
@@ -3554,18 +3324,6 @@ and residual > 0 group by partner_id)D on D.inv_partid=C.customer_id]]></xml-pro
                     <text-property name="heading">packingliter</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">open_amt</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">open_amt</text-property>
-                    <text-property name="heading">open_amt</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">inv_partid</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">inv_partid</text-property>
-                    <text-property name="heading">inv_partid</text-property>
-                </structure>
-                <structure>
                     <property name="columnName">balancetot</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">balancetot</text-property>
@@ -3619,6 +3377,7 @@ and residual > 0 group by partner_id)D on D.inv_partid=C.customer_id]]></xml-pro
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">4</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -3640,6 +3399,7 @@ and residual > 0 group by partner_id)D on D.inv_partid=C.customer_id]]></xml-pro
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">6</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -3650,6 +3410,7 @@ and residual > 0 group by partner_id)D on D.inv_partid=C.customer_id]]></xml-pro
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">7</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -3660,6 +3421,7 @@ and residual > 0 group by partner_id)D on D.inv_partid=C.customer_id]]></xml-pro
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">8</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -3670,6 +3432,7 @@ and residual > 0 group by partner_id)D on D.inv_partid=C.customer_id]]></xml-pro
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">9</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -3691,6 +3454,7 @@ and residual > 0 group by partner_id)D on D.inv_partid=C.customer_id]]></xml-pro
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">11</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -3712,7 +3476,6 @@ and residual > 0 group by partner_id)D on D.inv_partid=C.customer_id]]></xml-pro
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">13</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -3734,7 +3497,6 @@ and residual > 0 group by partner_id)D on D.inv_partid=C.customer_id]]></xml-pro
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">15</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -3816,7 +3578,6 @@ and residual > 0 group by partner_id)D on D.inv_partid=C.customer_id]]></xml-pro
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">23</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -3880,36 +3641,6 @@ and residual > 0 group by partner_id)D on D.inv_partid=C.customer_id]]></xml-pro
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
-                <structure>
-                    <property name="name">param_30</property>
-                    <property name="paramName">from_date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">30</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_31</property>
-                    <property name="paramName">SaleTeam</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                    <property name="position">31</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_32</property>
-                    <property name="paramName">TeamMember</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                    <property name="position">32</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
             </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
@@ -3935,146 +3666,116 @@ and residual > 0 group by partner_id)D on D.inv_partid=C.customer_id]]></xml-pro
                     </structure>
                     <structure>
                         <property name="position">5</property>
-                        <property name="name">discount</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">6</property>
-                        <property name="name">cash_down</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">7</property>
                         <property name="name">sale_return_amt</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">8</property>
+                        <property name="position">6</property>
                         <property name="name">amount_total</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">9</property>
-                        <property name="name">net_sale_amt</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">10</property>
+                        <property name="position">7</property>
                         <property name="name">deduction_amt</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">11</property>
-                        <property name="name">cd_amt</property>
+                        <property name="position">8</property>
+                        <property name="name">paidamount</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">paidamount_tot</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">deduct_amt_tot</property>
                         <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">amount_total_tot</property>
+                        <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">12</property>
-                        <property name="name">cd_amt_tot</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">13</property>
-                        <property name="name">dd_amt</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">14</property>
-                        <property name="name">dd_amt_tot</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">15</property>
-                        <property name="name">ns_amt_tot</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">16</property>
-                        <property name="name">ns_amt</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">17</property>
-                        <property name="name">open_amt_new</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">18</property>
-                        <property name="name">open_amt_tot</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">19</property>
-                        <property name="name">uom_name</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">20</property>
-                        <property name="name">product_uom</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">21</property>
-                        <property name="name">uom_ratio</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">22</property>
-                        <property name="name">customer_code</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">23</property>
-                        <property name="name">customer_name</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">24</property>
-                        <property name="name">viss_amt</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
-                        <property name="position">25</property>
-                        <property name="name">liter_amt</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
-                        <property name="position">26</property>
-                        <property name="name">customer_id</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">27</property>
-                        <property name="name">productid</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">28</property>
-                        <property name="name">packingviss</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">29</property>
-                        <property name="name">packingliter</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">30</property>
                         <property name="name">open_amt</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">31</property>
-                        <property name="name">inv_partid</property>
+                        <property name="position">13</property>
+                        <property name="name">open_amt_tot</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">14</property>
+                        <property name="name">net_sale_amt</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">15</property>
+                        <property name="name">uom_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">16</property>
+                        <property name="name">product_uom</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">32</property>
+                        <property name="position">17</property>
+                        <property name="name">uom_ratio</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">18</property>
+                        <property name="name">customer_code</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">19</property>
+                        <property name="name">customer_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">20</property>
+                        <property name="name">viss_amt</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">21</property>
+                        <property name="name">liter_amt</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">22</property>
+                        <property name="name">customer_id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">23</property>
+                        <property name="name">productid</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">24</property>
+                        <property name="name">packingviss</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">25</property>
+                        <property name="name">packingliter</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">26</property>
                         <property name="name">balancetot</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">33</property>
+                        <property name="position">27</property>
                         <property name="name">balance</property>
                         <property name="dataType">float</property>
                     </structure>
@@ -4120,215 +3821,173 @@ this.queryText =this.queryText.replace("--$pricelist$", "and so.pricelist_id="+p
                 </structure>
                 <structure>
                     <property name="position">5</property>
-                    <property name="name">discount</property>
-                    <property name="nativeName">discount</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
-                </structure>
-                <structure>
-                    <property name="position">6</property>
-                    <property name="name">cash_down</property>
-                    <property name="nativeName">cash_down</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
-                </structure>
-                <structure>
-                    <property name="position">7</property>
                     <property name="name">sale_return_amt</property>
                     <property name="nativeName">sale_return_amt</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">8</property>
+                    <property name="position">6</property>
                     <property name="name">amount_total</property>
                     <property name="nativeName">amount_total</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">9</property>
-                    <property name="name">net_sale_amt</property>
-                    <property name="nativeName">net_sale_amt</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
-                </structure>
-                <structure>
-                    <property name="position">10</property>
+                    <property name="position">7</property>
                     <property name="name">deduction_amt</property>
                     <property name="nativeName">deduction_amt</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">11</property>
-                    <property name="name">cd_amt</property>
-                    <property name="nativeName">cd_amt</property>
+                    <property name="position">8</property>
+                    <property name="name">paidamount</property>
+                    <property name="nativeName">paidamount</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">paidamount_tot</property>
+                    <property name="nativeName">paidamount_tot</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">deduct_amt_tot</property>
+                    <property name="nativeName">deduct_amt_tot</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
+                </structure>
+                <structure>
+                    <property name="position">11</property>
+                    <property name="name">amount_total_tot</property>
+                    <property name="nativeName">amount_total_tot</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
                     <property name="position">12</property>
-                    <property name="name">cd_amt_tot</property>
-                    <property name="nativeName">cd_amt_tot</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
-                </structure>
-                <structure>
-                    <property name="position">13</property>
-                    <property name="name">dd_amt</property>
-                    <property name="nativeName">dd_amt</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
-                </structure>
-                <structure>
-                    <property name="position">14</property>
-                    <property name="name">dd_amt_tot</property>
-                    <property name="nativeName">dd_amt_tot</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
-                </structure>
-                <structure>
-                    <property name="position">15</property>
-                    <property name="name">ns_amt_tot</property>
-                    <property name="nativeName">ns_amt_tot</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
-                </structure>
-                <structure>
-                    <property name="position">16</property>
-                    <property name="name">ns_amt</property>
-                    <property name="nativeName">ns_amt</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
-                </structure>
-                <structure>
-                    <property name="position">17</property>
-                    <property name="name">open_amt_new</property>
-                    <property name="nativeName">open_amt_new</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
-                </structure>
-                <structure>
-                    <property name="position">18</property>
-                    <property name="name">open_amt_tot</property>
-                    <property name="nativeName">open_amt_tot</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
-                </structure>
-                <structure>
-                    <property name="position">19</property>
-                    <property name="name">uom_name</property>
-                    <property name="nativeName">uom_name</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-                <structure>
-                    <property name="position">20</property>
-                    <property name="name">product_uom</property>
-                    <property name="nativeName">product_uom</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">21</property>
-                    <property name="name">uom_ratio</property>
-                    <property name="nativeName">uom_ratio</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-                <structure>
-                    <property name="position">22</property>
-                    <property name="name">customer_code</property>
-                    <property name="nativeName">customer_code</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-                <structure>
-                    <property name="position">23</property>
-                    <property name="name">customer_name</property>
-                    <property name="nativeName">customer_name</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-                <structure>
-                    <property name="position">24</property>
-                    <property name="name">viss_amt</property>
-                    <property name="nativeName">viss_amt</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">2</property>
-                </structure>
-                <structure>
-                    <property name="position">25</property>
-                    <property name="name">liter_amt</property>
-                    <property name="nativeName">liter_amt</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">2</property>
-                </structure>
-                <structure>
-                    <property name="position">26</property>
-                    <property name="name">customer_id</property>
-                    <property name="nativeName">customer_id</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">27</property>
-                    <property name="name">productid</property>
-                    <property name="nativeName">productid</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">28</property>
-                    <property name="name">packingviss</property>
-                    <property name="nativeName">packingviss</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
-                </structure>
-                <structure>
-                    <property name="position">29</property>
-                    <property name="name">packingliter</property>
-                    <property name="nativeName">packingliter</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
-                </structure>
-                <structure>
-                    <property name="position">30</property>
                     <property name="name">open_amt</property>
                     <property name="nativeName">open_amt</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">31</property>
-                    <property name="name">inv_partid</property>
-                    <property name="nativeName">inv_partid</property>
+                    <property name="position">13</property>
+                    <property name="name">open_amt_tot</property>
+                    <property name="nativeName">open_amt_tot</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
+                <structure>
+                    <property name="position">14</property>
+                    <property name="name">net_sale_amt</property>
+                    <property name="nativeName">net_sale_amt</property>
+                    <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
+                </structure>
+                <structure>
+                    <property name="position">15</property>
+                    <property name="name">uom_name</property>
+                    <property name="nativeName">uom_name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">16</property>
+                    <property name="name">product_uom</property>
+                    <property name="nativeName">product_uom</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">32</property>
+                    <property name="position">17</property>
+                    <property name="name">uom_ratio</property>
+                    <property name="nativeName">uom_ratio</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">18</property>
+                    <property name="name">customer_code</property>
+                    <property name="nativeName">customer_code</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">19</property>
+                    <property name="name">customer_name</property>
+                    <property name="nativeName">customer_name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">20</property>
+                    <property name="name">viss_amt</property>
+                    <property name="nativeName">viss_amt</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
+                <structure>
+                    <property name="position">21</property>
+                    <property name="name">liter_amt</property>
+                    <property name="nativeName">liter_amt</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
+                <structure>
+                    <property name="position">22</property>
+                    <property name="name">customer_id</property>
+                    <property name="nativeName">customer_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">23</property>
+                    <property name="name">productid</property>
+                    <property name="nativeName">productid</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">24</property>
+                    <property name="name">packingviss</property>
+                    <property name="nativeName">packingviss</property>
+                    <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
+                </structure>
+                <structure>
+                    <property name="position">25</property>
+                    <property name="name">packingliter</property>
+                    <property name="nativeName">packingliter</property>
+                    <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
+                </structure>
+                <structure>
+                    <property name="position">26</property>
                     <property name="name">balancetot</property>
                     <property name="nativeName">balancetot</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">33</property>
+                    <property name="position">27</property>
                     <property name="name">balance</property>
                     <property name="nativeName">balance</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[Select *,(ns_amt_tot + (CASE WHEN open_amt_tot is null THEN 0 ELSE open_amt_tot END) - (CASE WHEN cd_amt_tot is null THEN 0 ELSE cd_amt_tot END)) as balancetot,
-(ns_amt + (CASE WHEN open_amt_new is null THEN 0 ELSE open_amt_new END) - (CASE WHEN cd_amt is null THEN 0 ELSE cd_amt END)) as balance
+            <xml-property name="queryText"><![CDATA[Select *,(amount_total_tot + (CASE WHEN sale_return_amt is null THEN 0 ELSE sale_return_amt END) + (CASE WHEN open_amt_tot is null THEN 0 ELSE open_amt_tot END) - (CASE WHEN paidamount_tot is null THEN 0 ELSE paidamount_tot END)) as balancetot,
+(amount_total + (CASE WHEN sale_return_amt is null THEN 0 ELSE sale_return_amt END)+ (CASE WHEN open_amt is null THEN 0 ELSE open_amt END) - (CASE WHEN paidamount is null THEN 0 ELSE paidamount END)) as balance
 
  from 
-(select A.description,A.sale_qty,A.unit_price,A.sale_amt,A.discount,(A.cd_amt - (CASE WHEN B.TOTAL is null THEN 0 ELSE B.TOTAL END)) as cash_down,B.TOTAL sale_return_amt,A.amount_total,
- (A.sale_amt-A.discount -  (CASE WHEN B.TOTAL is null THEN 0 ELSE B.TOTAL END)) as net_sale_amt,A.deduction_amt,
- A.cd_amt,A.cd_amt_tot,A.dd_amt,A.dd_amt_tot,A.ns_amt_tot,A.ns_amt,A.open_amt_new,A.open_amt_tot,
+(select A.description,A.sale_qty,A.unit_price,A.sale_amt,B.TOTAL sale_return_amt,A.amount_total,A.deduction_amt,
+ A.paidamount,A.paidamount_tot,A.deduct_amt_tot,A.amount_total_tot,A.open_amt,A.open_amt_tot,
+  (A.sale_amt -  (CASE WHEN B.TOTAL is null THEN 0 ELSE B.TOTAL END)) as net_sale_amt,
 A.uom_name,A.product_uom,A.uom_ratio,A.customer_code,A.customer_name,A.viss_amt,A.liter_amt,A.customer_id,A.productid,
 CASE (select dcode(A.productid))
 WHEN 'P00010' THEN ( A.viss * (select CAST(A.sale_qty as Float))) 
@@ -4363,16 +4022,15 @@ ELSE Null END as packingliter
 from 
 (
 select pp.id productid,pp.name_template as description,(sol.product_uom_qty) as sale_qty,
-sol.price_unit unit_price, (sol.product_uom_qty * sol.price_unit) sale_amt,sum(sol.discount_amt) discount,sum(distinct so.amount_total) as amount_total,
-calculate_cashdown_amountcre(rp.id,?,?,?) as cd_amt,
-calculate_cashdown_credittot(?,?,?) as cd_amt_tot,
-calculate_deduction_amount_cre(rp.id,?,?,?) as dd_amt,
-calculate_deduction_amountcresum(?,?,?) as dd_amt_tot,
-calculate_netsale_credit(rp.id,?,?,?) as ns_amt,
-calculate_netsale_credittot(?,?,?) as ns_amt_tot,
-calculate_open_amountcre(rp.id,?,?,?) as open_amt_new,
-calculate_open_amountcre_sum(?,?,?) as open_amt_tot,
- so.deduct_amt as deduction_amt,
+sol.price_unit unit_price, (sol.product_uom_qty * sol.price_unit) sale_amt,
+(select deduct_amt as deduct_amt_tot from calculate_credit_datasum(?,?,?)),
+(select amount_total as amount_total_tot from calculate_credit_datasum(?,?,?)),
+(select open_amt as open_amt_tot from calculate_credit_datasum(?,?,?)),
+(select paidamount as paidamount_tot from calculate_credit_datasum(?,?,?)),
+(select deduction_amt from calculate_credit_data(rp.id,?,?,?)),
+(select open_amt from calculate_credit_data(rp.id,?,?,?)),
+(select paidamount from calculate_credit_data(rp.id,?,?,?)),
+(select amount_total from calculate_credit_data(rp.id,?,?,?)),
 uom.name as uom_name,sol.product_uom,uom.uom_ratio as uom_ratio,rp.name as customer_name,rp.customer_code as customer_code,rp.id as customer_id,
 sum(sol.product_uom_qty * pt.weight_net) viss_amt,sum(sol.product_uom_qty * pt.weight_liter) as liter_amt,
 pt.weight_net as viss,pt.weight_liter
@@ -4384,7 +4042,7 @@ and pt.id=pp.product_tmpl_id
 and uom.id=pt.uom_id
 and rp.id=so.partner_id
 and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ? 
-and so.section_id =?
+and so.section_id = ?
 and so.user_id  = ?
 and so.payment_type='credit' 
 --$pricelist$
@@ -4401,13 +4059,8 @@ and pt.void_flag='none'
 and pt.team_id = ?
 )B on A.productid = B.pt_pro_id
 Group by 
-A.description,A.customer_id,a.sale_qty,a.unit_price,a.sale_amt,a.discount,b.total,a.uom_name,A.product_uom,A.uom_ratio,a.customer_code,a.customer_name,
-A.viss_amt,A.liter_amt,a.viss,a.weight_liter,a.productid,a.deduction_amt,A.amount_total,
-A.cd_amt,A.cd_amt_tot,A.dd_amt,A.dd_amt_tot,A.ns_amt_tot,A.ns_amt,A.open_amt_new,A.open_amt_tot)C 
-left join (SELECT sum(inv.residual) as open_amt,partner_id as inv_partid FROM account_invoice inv,res_partner rp 
-where inv.partner_id = rp.id and inv.payment_type='credit' and inv.state='open' 
-and ((inv.write_date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? and inv.section_id=? and inv.user_id=? 
-and inv.type = 'out_invoice' and residual > 0 group by partner_id)D on D.inv_partid=C.customer_id]]></xml-property>
+A.description,A.customer_id,a.sale_qty,a.unit_price,a.sale_amt,b.total,a.uom_name,A.product_uom,A.uom_ratio,a.customer_code,a.customer_name,
+A.viss_amt,A.liter_amt,a.viss,a.weight_liter,a.productid,a.deduction_amt,A.amount_total,A.paidamount_tot,A.deduction_amt,A.deduct_amt_tot,A.amount_total_tot,A.open_amt,A.open_amt_tot,a.paidamount)C ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -4839,51 +4492,6 @@ and inv.type = 'out_invoice' and residual > 0 group by partner_id)D on D.inv_par
           <design:identifier>
             <design:name></design:name>
             <design:position>29</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>30</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>31</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>32</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
@@ -5678,41 +5286,6 @@ order by name]]></xml-property>
                         </data>
                     </cell>
                 </row>
-                <row id="1702">
-                    <property name="height">0.23333333333333334in</property>
-                    <cell id="1703"/>
-                    <cell id="1704"/>
-                    <cell id="1705"/>
-                    <cell id="1706">
-                        <label id="1715">
-                            <property name="fontFamily">sans-serif</property>
-                            <property name="fontSize">8pt</property>
-                            <property name="textAlign">right</property>
-                            <text-property name="text">DSR-V No</text-property>
-                        </label>
-                    </cell>
-                    <cell id="1707">
-                        <label id="1716">
-                            <property name="fontSize">8pt</property>
-                            <text-property name="text">:</text-property>
-                        </label>
-                    </cell>
-                    <cell id="1708">
-                        <data id="1718">
-                            <property name="fontSize">8pt</property>
-                            <property name="paddingLeft">2pt</property>
-                            <property name="textAlign">left</property>
-                            <list-property name="boundDataColumns">
-                                <structure>
-                                    <property name="name">dsrv_no</property>
-                                    <expression name="expression" type="javascript">params["dsrv_no"]</expression>
-                                    <property name="dataType">string</property>
-                                </structure>
-                            </list-property>
-                            <property name="resultSetColumn">dsrv_no</property>
-                        </data>
-                    </cell>
-                </row>
             </header>
         </table>
         <label id="696"/>
@@ -5995,20 +5568,6 @@ order by name]]></xml-property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">discount</property>
-                    <text-property name="displayName">discount</text-property>
-                    <expression name="expression" type="javascript">if (dataSetRow["discount"] &lt;1 &amp;&amp; dataSetRow["discount"] > -1)&#13;
-{&#13;
-&#13;
-}&#13;
-else&#13;
-{&#13;
-dataSetRow["discount"]&#13;
-}</expression>
-                    <property name="dataType">decimal</property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
                     <property name="name">sale_amt</property>
                     <text-property name="displayName">sale_amt</text-property>
                     <expression name="expression" type="javascript">dataSetRow["sale_amt"]</expression>
@@ -6105,22 +5664,6 @@ dataSetRow["sale_return_amt"]* (-1)&#13;
                     <property name="allowExport">true</property>
                 </structure>
                 <structure>
-                    <property name="name">cusTotalDiscount</property>
-                    <text-property name="displayName">cusTotalDiscount</text-property>
-                    <property name="dataType">float</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>customercode</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["discount"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
                     <property name="name">CusTotalViss</property>
                     <text-property name="displayName">CusTotalViss</text-property>
                     <property name="dataType">float</property>
@@ -6179,60 +5722,6 @@ dataSetRow["sale_return_amt"]* (-1)&#13;
                     <property name="allowExport">true</property>
                 </structure>
                 <structure>
-                    <property name="name">GTdiscount</property>
-                    <text-property name="displayName">GTdiscount</text-property>
-                    <property name="dataType">float</property>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["discount"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">cusTotalCD</property>
-                    <text-property name="displayName">cusTotalCD</text-property>
-                    <property name="dataType">float</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>customercode</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["cash_down"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">GTcd</property>
-                    <text-property name="displayName">GTcd</text-property>
-                    <property name="dataType">float</property>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["cash_down"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation_1</property>
-                    <property name="dataType">float</property>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">vars["deductionamt"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
                     <property name="name">Aggregation_2</property>
                     <property name="dataType">float</property>
                     <property name="aggregateFunction">SUM</property>
@@ -6259,64 +5748,10 @@ dataSetRow["open_amt"]&#13;
                     <property name="allowExport">true</property>
                 </structure>
                 <structure>
-                    <property name="name">Aggregation_3</property>
-                    <property name="dataType">float</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>customercode</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["open_amt"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation_4</property>
-                    <property name="dataType">float</property>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["open_amt"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
                     <property name="name">balance</property>
                     <text-property name="displayName">balance</text-property>
                     <expression name="expression" type="javascript">dataSetRow["balance"]</expression>
                     <property name="dataType">float</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation_5</property>
-                    <property name="dataType">float</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>customercode</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["balance"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation_6</property>
-                    <property name="dataType">float</property>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">row["GTnetsale"] - row["GTcashd"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
                 </structure>
                 <structure>
                     <property name="name">Aggregation_7</property>
@@ -6347,313 +5782,10 @@ dataSetRow["open_amt"]&#13;
                     <property name="allowExport">true</property>
                 </structure>
                 <structure>
-                    <property name="name">cusNSamt</property>
-                    <text-property name="displayName">cusNSamt</text-property>
-                    <property name="dataType">float</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>customercode</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">row["net_sale_amt"] - row["Aggregation_9"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation_8</property>
-                    <property name="dataType">float</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>customername</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">MAX</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">row["deduction_amt"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation_9</property>
-                    <property name="dataType">float</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>customername</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">FIRST</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["deduction_amt"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation_10</property>
-                    <property name="dataType">float</property>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">row["net_sale_amt"] +row["deduction_amt"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation_11</property>
-                    <text-property name="displayName">nsss</text-property>
-                    <property name="dataType">float</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>customername</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">row["net_sale_amt"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">tablens</property>
-                    <text-property name="displayName">tablens</text-property>
-                    <property name="dataType">float</property>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["net_sale_amt"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
                     <property name="name">amount_total</property>
                     <text-property name="displayName">amount_total</text-property>
                     <expression name="expression" type="javascript">dataSetRow["amount_total"]</expression>
                     <property name="dataType">decimal</property>
-                </structure>
-                <structure>
-                    <property name="name">GTnetsale</property>
-                    <text-property name="displayName">GTnetsale</text-property>
-                    <property name="dataType">float</property>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["net_sale_amt"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation_12</property>
-                    <property name="dataType">float</property>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">row["GTnetsale"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">GTcashd</property>
-                    <text-property name="displayName">GTcashd</text-property>
-                    <property name="dataType">float</property>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["net_sale_amt"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation_13</property>
-                    <property name="dataType">float</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>customername</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">row["cash_down"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation_14</property>
-                    <property name="dataType">float</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>customername</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["net_sale_amt"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">netsale</property>
-                    <text-property name="displayName">cash_downNT</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["cash_down"]</expression>
-                    <property name="dataType">decimal</property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation_15</property>
-                    <property name="dataType">float</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>customername</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">row["netsale"] - row["cash_down"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation_16</property>
-                    <property name="dataType">float</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>customername</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">row["deduction_amt"]/2</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">aafsdf</property>
-                    <text-property name="displayName">deduction_amt</text-property>
-                    <expression name="expression" type="javascript">if (dataSetRow["deduction_amt"] &lt;1  &amp;&amp; dataSetRow["deduction_amt"] > -1)&#13;
-{&#13;
-&#13;
-}&#13;
-else&#13;
-{&#13;
-(dataSetRow["deduction_amt"])* (-1)&#13;
-}</expression>
-                    <property name="dataType">float</property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation_17</property>
-                    <property name="dataType">float</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>customername</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">if(row["Aggregation_18"]==1)&#13;
-{&#13;
-row["deduction_amt"]/row["Aggregation_19"]&#13;
-}&#13;
-else&#13;
-{&#13;
-row["deduction_amt"]/row["Aggregation_18"]&#13;
-}</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation_18</property>
-                    <text-property name="displayName">acountttt</text-property>
-                    <property name="dataType">integer</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>customername</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">COUNTDISTINCT</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["deduction_amt"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation_19</property>
-                    <property name="dataType">integer</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>customername</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">COUNT</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["deduction_amt"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">cd_amt</property>
-                    <text-property name="displayName">cd_amt</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["cd_amt"]</expression>
-                    <property name="dataType">float</property>
-                </structure>
-                <structure>
-                    <property name="name">cd_amt_tot</property>
-                    <text-property name="displayName">cd_amt_tot</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["cd_amt_tot"]</expression>
-                    <property name="dataType">float</property>
-                </structure>
-                <structure>
-                    <property name="name">dd_amt</property>
-                    <text-property name="displayName">dd_amt</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["dd_amt"]*(-1)</expression>
-                    <property name="dataType">float</property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">dd_amt_tot</property>
-                    <text-property name="displayName">dd_amt_tot</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["dd_amt_tot"]*(-1)</expression>
-                    <property name="dataType">float</property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">ns_amt</property>
-                    <text-property name="displayName">ns_amt</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["ns_amt"]</expression>
-                    <property name="dataType">float</property>
-                </structure>
-                <structure>
-                    <property name="name">ns_amt_tot</property>
-                    <text-property name="displayName">ns_amt_tot</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["ns_amt_tot"]</expression>
-                    <property name="dataType">float</property>
-                </structure>
-                <structure>
-                    <property name="name">open_amt_new</property>
-                    <text-property name="displayName">open_amt_new</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["open_amt_new"]</expression>
-                    <property name="dataType">float</property>
                 </structure>
                 <structure>
                     <property name="name">open_amt_tot</property>
@@ -6662,37 +5794,40 @@ row["deduction_amt"]/row["Aggregation_18"]&#13;
                     <property name="dataType">float</property>
                 </structure>
                 <structure>
-                    <property name="name">Aggregation_20</property>
-                    <property name="dataType">float</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>customername</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">(dataSetRow["ns_amt"] + dataSetRow["open_amt_new"]) - dataSetRow["cd_amt"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation_21</property>
-                    <property name="dataType">float</property>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">(dataSetRow["ns_amt_tot"] + dataSetRow["open_amt_tot"]) - dataSetRow["cd_amt_tot"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
                     <property name="name">balancetot</property>
                     <text-property name="displayName">balancetot</text-property>
                     <expression name="expression" type="javascript">dataSetRow["balancetot"]</expression>
                     <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">amount_total_tot</property>
+                    <text-property name="displayName">amount_total_tot</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["amount_total_tot"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">deduct_amt</property>
+                    <text-property name="displayName">deduct_amt</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["deduct_amt"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">deduct_amt_tot</property>
+                    <text-property name="displayName">deduct_amt_tot</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["deduct_amt_tot"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">paidamount</property>
+                    <text-property name="displayName">paidamount</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["paidamount"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">paidamount_tot</property>
+                    <text-property name="displayName">paidamount_tot</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["paidamount_tot"]</expression>
+                    <property name="dataType">decimal</property>
                 </structure>
             </list-property>
             <column id="338">
@@ -6929,7 +6064,7 @@ row["deduction_amt"]/row["Aggregation_18"]&#13;
                             <property name="borderRightWidth">thin</property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
-                            <data id="1782">
+                            <data id="1837">
                                 <property name="fontSize">8pt</property>
                                 <property name="paddingRight">2pt</property>
                                 <structure name="numberFormat">
@@ -6937,7 +6072,7 @@ row["deduction_amt"]/row["Aggregation_18"]&#13;
                                     <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
                                 </structure>
                                 <property name="textAlign">right</property>
-                                <property name="resultSetColumn">dd_amt</property>
+                                <property name="resultSetColumn">deduct_amt</property>
                             </data>
                         </cell>
                         <cell id="1610">
@@ -6949,6 +6084,16 @@ row["deduction_amt"]/row["Aggregation_18"]&#13;
                             <property name="borderRightWidth">thin</property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
+                            <data id="1838">
+                                <property name="fontSize">8pt</property>
+                                <property name="paddingRight">2pt</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Currency</property>
+                                    <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">deduct_amt</property>
+                            </data>
                         </cell>
                         <cell id="1611">
                             <property name="borderBottomStyle">solid</property>
@@ -6959,7 +6104,7 @@ row["deduction_amt"]/row["Aggregation_18"]&#13;
                             <property name="borderRightWidth">thin</property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
-                            <data id="1795">
+                            <data id="1839">
                                 <property name="fontSize">8pt</property>
                                 <property name="paddingRight">2pt</property>
                                 <structure name="numberFormat">
@@ -6967,7 +6112,7 @@ row["deduction_amt"]/row["Aggregation_18"]&#13;
                                     <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
                                 </structure>
                                 <property name="textAlign">right</property>
-                                <property name="resultSetColumn">dd_amt</property>
+                                <property name="resultSetColumn">deduct_amt</property>
                             </data>
                         </cell>
                         <cell id="1612">
@@ -7098,7 +6243,7 @@ row["deduction_amt"]/row["Aggregation_18"]&#13;
                             <property name="borderRightWidth">thin</property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
-                            <data id="1786">
+                            <data id="1830">
                                 <property name="fontSize">8pt</property>
                                 <property name="paddingRight">2pt</property>
                                 <structure name="numberFormat">
@@ -7106,7 +6251,7 @@ row["deduction_amt"]/row["Aggregation_18"]&#13;
                                     <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
                                 </structure>
                                 <property name="textAlign">right</property>
-                                <property name="resultSetColumn">dd_amt</property>
+                                <property name="resultSetColumn">deduct_amt</property>
                             </data>
                         </cell>
                         <cell id="958">
@@ -7151,7 +6296,7 @@ false&#13;
                             <property name="borderRightWidth">thin</property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
-                            <data id="1784">
+                            <data id="1828">
                                 <property name="fontSize">8pt</property>
                                 <property name="paddingRight">2pt</property>
                                 <structure name="numberFormat">
@@ -7159,7 +6304,7 @@ false&#13;
                                     <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
                                 </structure>
                                 <property name="textAlign">right</property>
-                                <property name="resultSetColumn">ns_amt</property>
+                                <property name="resultSetColumn">amount_total</property>
                             </data>
                         </cell>
                         <cell id="960">
@@ -7171,7 +6316,7 @@ false&#13;
                             <property name="borderRightWidth">thin</property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
-                            <data id="1796">
+                            <data id="1843">
                                 <property name="fontSize">8pt</property>
                                 <property name="paddingRight">2pt</property>
                                 <structure name="numberFormat">
@@ -7179,7 +6324,7 @@ false&#13;
                                     <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
                                 </structure>
                                 <property name="textAlign">right</property>
-                                <property name="resultSetColumn">open_amt_new</property>
+                                <property name="resultSetColumn">open_amt</property>
                             </data>
                         </cell>
                         <cell id="961">
@@ -7191,7 +6336,7 @@ false&#13;
                             <property name="borderRightWidth">thin</property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
-                            <data id="1780">
+                            <data id="1841">
                                 <property name="fontSize">8pt</property>
                                 <property name="paddingRight">2pt</property>
                                 <structure name="numberFormat">
@@ -7199,7 +6344,7 @@ false&#13;
                                     <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
                                 </structure>
                                 <property name="textAlign">right</property>
-                                <property name="resultSetColumn">cd_amt</property>
+                                <property name="resultSetColumn">paidamount</property>
                             </data>
                         </cell>
                         <cell id="962">
@@ -7582,7 +6727,7 @@ false&#13;
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="1783">
+                        <data id="1840">
                             <property name="fontSize">8pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
@@ -7590,7 +6735,7 @@ false&#13;
                                 <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
-                            <property name="resultSetColumn">dd_amt_tot</property>
+                            <property name="resultSetColumn">deduct_amt_tot</property>
                         </data>
                     </cell>
                     <cell id="372">
@@ -7637,7 +6782,7 @@ false&#13;
                         <property name="borderTopWidth">thin</property>
                         <property name="paddingRight">2pt</property>
                         <property name="textAlign">right</property>
-                        <data id="1785">
+                        <data id="1829">
                             <property name="fontSize">8pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
@@ -7645,7 +6790,7 @@ false&#13;
                                 <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
-                            <property name="resultSetColumn">ns_amt_tot</property>
+                            <property name="resultSetColumn">amount_total_tot</property>
                         </data>
                     </cell>
                     <cell id="374">
@@ -7677,7 +6822,7 @@ false&#13;
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="1781">
+                        <data id="1842">
                             <property name="fontSize">8pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
@@ -7685,7 +6830,7 @@ false&#13;
                                 <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
-                            <property name="resultSetColumn">cd_amt_tot</property>
+                            <property name="resultSetColumn">paidamount_tot</property>
                         </data>
                     </cell>
                     <cell id="376">
@@ -7752,6 +6897,7 @@ false&#13;
             </footer>
         </table>
         <label id="697"/>
+        <label id="1060"/>
         <table id="569">
             <property name="width">7.958333333333333in</property>
             <property name="dataSet">credit_DS</property>
@@ -7761,12 +6907,6 @@ false&#13;
                     <text-property name="displayName">description</text-property>
                     <expression name="expression" type="javascript">dataSetRow["description"]</expression>
                     <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="name">discount</property>
-                    <text-property name="displayName">discount</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["discount"]</expression>
-                    <property name="dataType">decimal</property>
                 </structure>
                 <structure>
                     <property name="name">sale_amt</property>
@@ -7799,12 +6939,6 @@ dataSetRow["sale_return_amt"]* (-1)&#13;
 }</expression>
                     <property name="dataType">float</property>
                     <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">net_sale_amt</property>
-                    <text-property name="displayName">net_sale_amt</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["net_sale_amt"]</expression>
-                    <property name="dataType">float</property>
                 </structure>
                 <structure>
                     <property name="name">packingliter</property>
@@ -7847,38 +6981,6 @@ dataSetRow["sale_return_amt"]* (-1)&#13;
                     <text-property name="displayName">customer_code</text-property>
                     <expression name="expression" type="javascript">dataSetRow["customer_code"]</expression>
                     <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="name">cusTotalAmt</property>
-                    <text-property name="displayName">cusTotalAmt</text-property>
-                    <property name="dataType">float</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>customercode</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["sale_amt"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation</property>
-                    <text-property name="displayName">cusTotalDis</text-property>
-                    <property name="dataType">float</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>customercode</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["discount"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
                 </structure>
                 <structure>
                     <property name="name">cusTotalViss</property>
@@ -7939,60 +7041,6 @@ dataSetRow["sale_return_amt"]* (-1)&#13;
                     <property name="allowExport">true</property>
                 </structure>
                 <structure>
-                    <property name="name">GTDis</property>
-                    <text-property name="displayName">GTDis</text-property>
-                    <property name="dataType">float</property>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["discount"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">cusTotalcd</property>
-                    <text-property name="displayName">cusTotalcd</text-property>
-                    <property name="dataType">float</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>customercode</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">row["cash_down"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">GTdis</property>
-                    <text-property name="displayName">GTdis</text-property>
-                    <property name="dataType">float</property>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["net_sale_amt"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation_1</property>
-                    <property name="dataType">float</property>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">row["net_sale_amt"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
                     <property name="name">Aggregation_2</property>
                     <property name="dataType">float</property>
                     <property name="aggregateFunction">SUM</property>
@@ -8011,64 +7059,10 @@ dataSetRow["sale_return_amt"]* (-1)&#13;
                     <property name="dataType">float</property>
                 </structure>
                 <structure>
-                    <property name="name">Aggregation_3</property>
-                    <property name="dataType">float</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>customercode</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["balance"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation_4</property>
-                    <property name="dataType">float</property>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">vars["deductionCredit"] - row["Aggregation_19"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
                     <property name="name">open_amt</property>
                     <text-property name="displayName">open_amt</text-property>
                     <expression name="expression" type="javascript">dataSetRow["open_amt"]</expression>
                     <property name="dataType">decimal</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation_5</property>
-                    <property name="dataType">float</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>customercode</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["open_amt"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation_6</property>
-                    <property name="dataType">float</property>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["open_amt"]/row["Aggregation_20"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
                 </structure>
                 <structure>
                     <property name="name">Aggregation_7</property>
@@ -8083,303 +7077,70 @@ dataSetRow["sale_return_amt"]* (-1)&#13;
                     <property name="allowExport">true</property>
                 </structure>
                 <structure>
-                    <property name="name">cusSRamt</property>
-                    <text-property name="displayName">cusSRamt</text-property>
-                    <property name="dataType">float</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>customercode</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["sale_return_amt"] * (-1)</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">cusNerS</property>
-                    <text-property name="displayName">cusNerS</text-property>
-                    <property name="dataType">float</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>customercode</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["net_sale_amt"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation_8</property>
-                    <property name="dataType">float</property>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">row["Aggregation_1"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation_9</property>
-                    <property name="dataType">float</property>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["net_sale_amt"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation_10</property>
-                    <property name="dataType">float</property>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["net_sale_amt"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation_11</property>
-                    <property name="dataType">float</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>customername</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["cash_down"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation_12</property>
-                    <property name="dataType">float</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>customername</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">vars["deducamt"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation_13</property>
-                    <property name="dataType">float</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>customername</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">vars["deducamt"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation_14</property>
-                    <property name="dataType">float</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>customername</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">row["Aggregation_13"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation_15</property>
-                    <property name="dataType">float</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>customername</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">row["deduction_amt"].first</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation_16</property>
-                    <property name="dataType">float</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>customername</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">if(row["counttt"]==1)&#13;
-{&#13;
-row["deduction_amt"]/row["Aggregation_17"]&#13;
-}&#13;
-else&#13;
-{&#13;
-row["deduction_amt"]/row["counttt"]&#13;
-}</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation_17</property>
-                    <property name="dataType">integer</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>customername</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">COUNT</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["deduction_amt"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation_18</property>
-                    <property name="dataType">float</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>customername</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["net_sale_amt"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation_19</property>
-                    <property name="dataType">float</property>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["cash_down"]/row["Aggregation_20"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation_20</property>
-                    <property name="dataType">integer</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>customername</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">COUNT</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["cash_down"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation_21</property>
-                    <property name="dataType">float</property>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["deduction_amt"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation_22</property>
-                    <property name="dataType">float</property>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">(row["amount_totalnt_tot"] + row["Aggregation_6"]) - row["cashdown_credittot"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">cd_amt</property>
-                    <text-property name="displayName">cd_amt</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["cd_amt"]</expression>
-                    <property name="dataType">float</property>
-                </structure>
-                <structure>
-                    <property name="name">cd_amt_tot</property>
-                    <text-property name="displayName">cd_amt_tot</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["cd_amt_tot"]</expression>
-                    <property name="dataType">float</property>
-                </structure>
-                <structure>
-                    <property name="name">ns_amt</property>
-                    <text-property name="displayName">ns_amt</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["ns_amt"]</expression>
-                    <property name="dataType">float</property>
-                </structure>
-                <structure>
-                    <property name="name">ns_amt_tot</property>
-                    <text-property name="displayName">ns_amt_tot</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["ns_amt_tot"]</expression>
-                    <property name="dataType">float</property>
-                </structure>
-                <structure>
-                    <property name="name">dd_amt</property>
-                    <text-property name="displayName">dd_amt</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["dd_amt"]*(-1)</expression>
-                    <property name="dataType">float</property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">dd_amt_tot</property>
-                    <text-property name="displayName">dd_amt_tot</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["dd_amt_tot"]*(-1)</expression>
-                    <property name="dataType">float</property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">open_amt_new</property>
-                    <text-property name="displayName">open_amt_new</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["open_amt_new"]</expression>
-                    <property name="dataType">float</property>
-                </structure>
-                <structure>
                     <property name="name">open_amt_tot</property>
                     <text-property name="displayName">open_amt_tot</text-property>
                     <expression name="expression" type="javascript">dataSetRow["open_amt_tot"]</expression>
                     <property name="dataType">float</property>
                 </structure>
                 <structure>
-                    <property name="name">Aggregation_23</property>
+                    <property name="name">balancetot</property>
+                    <text-property name="displayName">balancetot</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["balancetot"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">paidamount</property>
+                    <text-property name="displayName">paidamount</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["paidamount"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">paidamount_tot</property>
+                    <text-property name="displayName">paidamount_tot</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["paidamount_tot"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">amount_total</property>
+                    <text-property name="displayName">amount_total</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["amount_total"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">amount_total_tot</property>
+                    <text-property name="displayName">amount_total_tot</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["amount_total_tot"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">deduction_amt</property>
+                    <text-property name="displayName">deduction_amt</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["deduction_amt"]*(-1)</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">deduct_amt_tot</property>
+                    <text-property name="displayName">deduct_amt_tot</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["deduct_amt_tot"]*(-1)</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">net_sale_amt</property>
+                    <text-property name="displayName">net_sale_amt</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["net_sale_amt"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">Column Binding</property>
+                    <expression name="expression" type="javascript">row["sale_amt"]</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">custot_sale</property>
+                    <text-property name="displayName">custot_sale</text-property>
                     <property name="dataType">float</property>
                     <simple-property-list name="aggregateOn">
                         <value>customername</value>
@@ -8388,28 +7149,25 @@ row["deduction_amt"]/row["counttt"]&#13;
                     <list-property name="arguments">
                         <structure>
                             <property name="name">Expression</property>
-                            <expression name="value" type="javascript">(dataSetRow["ns_amt"] + dataSetRow["open_amt_new"]) - dataSetRow["cd_amt"]</expression>
+                            <expression name="value" type="javascript">row["sale_amt"]</expression>
                         </structure>
                     </list-property>
                     <property name="allowExport">true</property>
                 </structure>
                 <structure>
-                    <property name="name">Aggregation_24</property>
+                    <property name="name">Aggregation</property>
                     <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>customername</value>
+                    </simple-property-list>
                     <property name="aggregateFunction">SUM</property>
                     <list-property name="arguments">
                         <structure>
                             <property name="name">Expression</property>
-                            <expression name="value" type="javascript">(dataSetRow["ns_amt_tot"] + dataSetRow["open_amt_tot"]) - dataSetRow["cd_amt_tot"]</expression>
+                            <expression name="value" type="javascript">row["sale_return_amt"]</expression>
                         </structure>
                     </list-property>
                     <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">balancetot</property>
-                    <text-property name="displayName">balancetot</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["balancetot"]</expression>
-                    <property name="dataType">float</property>
                 </structure>
             </list-property>
             <column id="683">
@@ -8571,7 +7329,7 @@ row["deduction_amt"]/row["counttt"]&#13;
                 </header>
                 <footer>
                     <row id="1619">
-                        <property name="height">0.225in</property>
+                        <property name="height">0.23333333333333334in</property>
                         <cell id="1620">
                             <property name="borderBottomStyle">solid</property>
                             <property name="borderBottomWidth">thin</property>
@@ -8637,7 +7395,7 @@ row["deduction_amt"]/row["counttt"]&#13;
                             <property name="borderRightWidth">thin</property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
-                            <data id="1791">
+                            <data id="1817">
                                 <property name="fontSize">8pt</property>
                                 <property name="paddingRight">2pt</property>
                                 <structure name="numberFormat">
@@ -8645,7 +7403,7 @@ row["deduction_amt"]/row["counttt"]&#13;
                                     <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
                                 </structure>
                                 <property name="textAlign">right</property>
-                                <property name="resultSetColumn">dd_amt</property>
+                                <property name="resultSetColumn">deduction_amt</property>
                             </data>
                         </cell>
                         <cell id="1626">
@@ -8667,7 +7425,7 @@ row["deduction_amt"]/row["counttt"]&#13;
                             <property name="borderRightWidth">thin</property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
-                            <data id="1792">
+                            <data id="1820">
                                 <property name="fontSize">8pt</property>
                                 <property name="paddingRight">2pt</property>
                                 <structure name="numberFormat">
@@ -8675,7 +7433,7 @@ row["deduction_amt"]/row["counttt"]&#13;
                                     <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
                                 </structure>
                                 <property name="textAlign">right</property>
-                                <property name="resultSetColumn">dd_amt</property>
+                                <property name="resultSetColumn">deduction_amt</property>
                             </data>
                         </cell>
                         <cell id="1628">
@@ -8786,15 +7544,14 @@ row["deduction_amt"]/row["counttt"]&#13;
                             <property name="borderRightWidth">thin</property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
-                            <data id="968">
+                            <data id="1825">
                                 <property name="fontSize">8pt</property>
-                                <property name="paddingRight">2pt</property>
                                 <structure name="numberFormat">
                                     <property name="category">Currency</property>
                                     <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
                                 </structure>
                                 <property name="textAlign">right</property>
-                                <property name="resultSetColumn">cusTotalAmt</property>
+                                <property name="resultSetColumn">custot_sale</property>
                             </data>
                         </cell>
                         <cell id="1521">
@@ -8806,7 +7563,7 @@ row["deduction_amt"]/row["counttt"]&#13;
                             <property name="borderRightWidth">thin</property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
-                            <data id="1793">
+                            <data id="1816">
                                 <property name="fontSize">8pt</property>
                                 <property name="paddingRight">2pt</property>
                                 <structure name="numberFormat">
@@ -8814,7 +7571,7 @@ row["deduction_amt"]/row["counttt"]&#13;
                                     <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
                                 </structure>
                                 <property name="textAlign">right</property>
-                                <property name="resultSetColumn">dd_amt</property>
+                                <property name="resultSetColumn">deduction_amt</property>
                             </data>
                         </cell>
                         <cell id="1522">
@@ -8826,7 +7583,7 @@ row["deduction_amt"]/row["counttt"]&#13;
                             <property name="borderRightWidth">thin</property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
-                            <data id="1579">
+                            <data id="1826">
                                 <property name="fontSize">8pt</property>
                                 <property name="paddingRight">2pt</property>
                                 <structure name="numberFormat">
@@ -8834,7 +7591,7 @@ row["deduction_amt"]/row["counttt"]&#13;
                                     <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
                                 </structure>
                                 <property name="textAlign">right</property>
-                                <property name="resultSetColumn">cusSRamt</property>
+                                <property name="resultSetColumn">Aggregation</property>
                             </data>
                         </cell>
                         <cell id="1523">
@@ -8846,7 +7603,7 @@ row["deduction_amt"]/row["counttt"]&#13;
                             <property name="borderRightWidth">thin</property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
-                            <data id="1789">
+                            <data id="1814">
                                 <property name="fontSize">8pt</property>
                                 <property name="paddingRight">2pt</property>
                                 <structure name="numberFormat">
@@ -8854,7 +7611,7 @@ row["deduction_amt"]/row["counttt"]&#13;
                                     <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
                                 </structure>
                                 <property name="textAlign">right</property>
-                                <property name="resultSetColumn">ns_amt</property>
+                                <property name="resultSetColumn">amount_total</property>
                             </data>
                         </cell>
                         <cell id="1524">
@@ -8866,15 +7623,14 @@ row["deduction_amt"]/row["counttt"]&#13;
                             <property name="borderRightWidth">thin</property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
-                            <data id="1798">
+                            <data id="1827">
                                 <property name="fontSize">8pt</property>
-                                <property name="paddingRight">2pt</property>
                                 <structure name="numberFormat">
                                     <property name="category">Currency</property>
                                     <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
                                 </structure>
                                 <property name="textAlign">right</property>
-                                <property name="resultSetColumn">open_amt_new</property>
+                                <property name="resultSetColumn">open_amt</property>
                             </data>
                         </cell>
                         <cell id="1525">
@@ -8886,7 +7642,7 @@ row["deduction_amt"]/row["counttt"]&#13;
                             <property name="borderRightWidth">thin</property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
-                            <data id="1787">
+                            <data id="1812">
                                 <property name="fontSize">8pt</property>
                                 <property name="paddingRight">2pt</property>
                                 <structure name="numberFormat">
@@ -8894,7 +7650,7 @@ row["deduction_amt"]/row["counttt"]&#13;
                                     <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
                                 </structure>
                                 <property name="textAlign">right</property>
-                                <property name="resultSetColumn">cd_amt</property>
+                                <property name="resultSetColumn">paidamount</property>
                             </data>
                         </cell>
                         <cell id="1526">
@@ -8906,7 +7662,7 @@ row["deduction_amt"]/row["counttt"]&#13;
                             <property name="borderRightWidth">thin</property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
-                            <data id="1804">
+                            <data id="1810">
                                 <property name="fontSize">8pt</property>
                                 <property name="paddingRight">2pt</property>
                                 <structure name="numberFormat">
@@ -9115,7 +7871,7 @@ row["deduction_amt"]/row["counttt"]&#13;
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="716">
+                        <data id="1824">
                             <property name="fontSize">8pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
@@ -9275,7 +8031,7 @@ row["deduction_amt"]/row["counttt"]&#13;
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <property name="textAlign">right</property>
-                        <data id="1794">
+                        <data id="1823">
                             <property name="fontSize">8pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
@@ -9283,7 +8039,7 @@ row["deduction_amt"]/row["counttt"]&#13;
                                 <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
-                            <property name="resultSetColumn">dd_amt_tot</property>
+                            <property name="resultSetColumn">deduct_amt_tot</property>
                         </data>
                     </cell>
                     <cell id="676">
@@ -9315,7 +8071,7 @@ row["deduction_amt"]/row["counttt"]&#13;
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="1790">
+                        <data id="1815">
                             <property name="fontSize">8pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
@@ -9323,7 +8079,7 @@ row["deduction_amt"]/row["counttt"]&#13;
                                 <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
-                            <property name="resultSetColumn">ns_amt_tot</property>
+                            <property name="resultSetColumn">amount_total_tot</property>
                         </data>
                     </cell>
                     <cell id="678">
@@ -9335,7 +8091,7 @@ row["deduction_amt"]/row["counttt"]&#13;
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="1799">
+                        <data id="1809">
                             <property name="fontSize">8pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
@@ -9355,7 +8111,7 @@ row["deduction_amt"]/row["counttt"]&#13;
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="1788">
+                        <data id="1813">
                             <property name="fontSize">8pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
@@ -9363,7 +8119,7 @@ row["deduction_amt"]/row["counttt"]&#13;
                                 <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
-                            <property name="resultSetColumn">cd_amt_tot</property>
+                            <property name="resultSetColumn">paidamount_tot</property>
                         </data>
                     </cell>
                     <cell id="680">
@@ -9375,7 +8131,7 @@ row["deduction_amt"]/row["counttt"]&#13;
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="1805">
+                        <data id="1811">
                             <property name="fontSize">8pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
@@ -9429,7 +8185,6 @@ row["deduction_amt"]/row["counttt"]&#13;
                 </row>
             </footer>
         </table>
-        <label id="1060"/>
         <table id="1481">
             <property name="width">7.958333333333333in</property>
             <property name="dataSet">All_DS</property>
