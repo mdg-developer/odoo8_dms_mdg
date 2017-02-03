@@ -34,6 +34,7 @@
     'depends': ['base', 'account'],
     'data': [
                 'security/account_security.xml',
+                'res_users_view.xml',
                 ],
                 'installable': True,
                 'auto_install': False,
