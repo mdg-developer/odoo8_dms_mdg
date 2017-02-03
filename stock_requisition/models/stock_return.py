@@ -274,11 +274,11 @@ class stock_return(osv.osv):
                                       'date': return_date,
                                       'origin':origin,
                                       'picking_type_id':picking_type_id}, context=context)
-#         cr.execute("select  sum(rec_small_quantity+rec_big_quantity)  from stock_return_line  where line_id=%s group by line_id",(ids[0],)) 
-#         total_qty=cr.fetchone()[0]
-#         if total_qty==0.0 or total_qty is None   :
-#             raise osv.except_osv(_('Warning'),
-#                                  _('Receive Qty is Zero'))
+        cr.execute("select SUM(COALESCE(rec_small_quantity,0) +COALESCE(rec_big_quantity,0) ) as total  from stock_return_line where line_id=%s  group by line_id",(ids[0],)) 
+        total_qty=cr.fetchone()[0]
+        if total_qty==0.0 or total_qty is None   :
+            raise osv.except_osv(_('Warning'),
+                                 _('Receive Qty is Zero'))
         for line in return_obj.p_line:
             product_id = line.product_id.id
             rec_big_uom_id = line.rec_big_uom_id.id
