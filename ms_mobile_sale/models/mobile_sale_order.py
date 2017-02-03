@@ -2274,7 +2274,7 @@ class mobile_sale_order(osv.osv):
                 for ar in result:
                     ref_no = ar['payment_id'].replace('\\', "")
                     print 'Ref No', ref_no
-                    cursor.execute('select id from mobile_ar_collection where ref_no = %s ', (ref_no,))
+                    cursor.execute('''select max(id) from mobile_ar_collection where ref_no = %s and write_date::date = now()::date ''', (ref_no,))
                     data = cursor.fetchall()
                     if data:
                         collection_id = data[0][0]
