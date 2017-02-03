@@ -309,10 +309,12 @@ class mobile_sale_order(osv.osv):
                 for vs in customer_visit:
                     cursor.execute('select branch_id from crm_case_section where id=%s', (vs['sale_team_id'],))
                     branch_id = cursor.fetchone()[0]
+                    cursor.execute('select id from res_partner where customer_code=%s', (vs['customer_code'],))
+                    customer_id = cursor.fetchone()[0]                    
                     visit_result = {
                         'customer_code':vs['customer_code'],
                         'branch_id':branch_id,
-                        'customer_id':vs['customer_id'],
+                        'customer_id':customer_id,
                         'sale_plan_day_id':vs['sale_plan_day_id'],
                         'sale_plan_trip_id':vs['sale_plan_trip_id'] ,
                         'sale_plan_name':vs['sale_plan_name'],
