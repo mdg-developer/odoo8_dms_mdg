@@ -2114,16 +2114,40 @@ GROUP BY abc.payment_type,abc.price_plan,abc.customer_name,abc.paidamount]]></xm
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="cash" id="2057">
             <list-property name="columnHints">
                 <structure>
-                    <property name="columnName">wholesalecash</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">wholesalecash</text-property>
-                    <text-property name="heading">wholesalecash</text-property>
+                    <property name="columnName">customer_name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">customer_name</text-property>
+                    <text-property name="heading">customer_name</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">retailsalecash</property>
+                    <property name="columnName">customer_id</property>
                     <property name="analysis">measure</property>
-                    <text-property name="displayName">retailsalecash</text-property>
-                    <text-property name="heading">retailsalecash</text-property>
+                    <text-property name="displayName">customer_id</text-property>
+                    <text-property name="heading">customer_id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">wholesale_paidamount</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">wholesale_paidamount</text-property>
+                    <text-property name="heading">wholesale_paidamount</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">retail_paidamount</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">retail_paidamount</text-property>
+                    <text-property name="heading">retail_paidamount</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">customerss</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">customerss</text-property>
+                    <text-property name="heading">customerss</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">customer_id_6</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">customer_id</text-property>
+                    <text-property name="heading">customer_id</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">sesamepc</property>
@@ -2147,18 +2171,17 @@ GROUP BY abc.payment_type,abc.price_plan,abc.customer_name,abc.paidamount]]></xm
             <list-property name="parameters">
                 <structure>
                     <property name="name">param_1</property>
-                    <property name="paramName">Date</property>
+                    <property name="paramName">TeamName</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
                     <property name="position">1</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_2</property>
-                    <property name="paramName">TeamName</property>
+                    <property name="paramName">TeamMember</property>
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
@@ -2169,144 +2192,61 @@ GROUP BY abc.payment_type,abc.price_plan,abc.customer_name,abc.paidamount]]></xm
                 </structure>
                 <structure>
                     <property name="name">param_3</property>
-                    <property name="paramName">TeamMember</property>
+                    <property name="paramName">Date</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
                     <property name="position">3</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_4</property>
-                    <property name="paramName">Car No</property>
+                    <property name="paramName">Date</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
                     <property name="position">4</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_5</property>
-                    <property name="paramName">Date</property>
+                    <property name="paramName">TeamName</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
                     <property name="position">5</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_6</property>
-                    <property name="paramName">Date</property>
+                    <property name="paramName">TeamMember</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
                     <property name="position">6</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_7</property>
-                    <property name="paramName">TeamName</property>
+                    <property name="paramName">Car No</property>
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">7</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_8</property>
-                    <property name="paramName">TeamMember</property>
+                    <property name="paramName">Date</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
                     <property name="position">8</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_9</property>
-                    <property name="paramName">Car No</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                    <property name="position">9</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_10</property>
-                    <property name="paramName">Date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">10</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_11</property>
-                    <property name="paramName">Date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">11</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_12</property>
-                    <property name="paramName">TeamName</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                    <property name="position">12</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_13</property>
-                    <property name="paramName">TeamMember</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                    <property name="position">13</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_14</property>
-                    <property name="paramName">Car No</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                    <property name="position">14</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_15</property>
-                    <property name="paramName">Date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">15</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -2315,26 +2255,46 @@ GROUP BY abc.payment_type,abc.price_plan,abc.customer_name,abc.paidamount]]></xm
                 <list-property name="resultSet">
                     <structure>
                         <property name="position">1</property>
-                        <property name="name">wholesalecash</property>
-                        <property name="dataType">float</property>
+                        <property name="name">customer_name</property>
+                        <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">2</property>
-                        <property name="name">retailsalecash</property>
-                        <property name="dataType">float</property>
+                        <property name="name">customer_id</property>
+                        <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">3</property>
+                        <property name="name">wholesale_paidamount</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">retail_paidamount</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">customerss</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">customer_id_6</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
                         <property name="name">sesamepc</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">4</property>
+                        <property name="position">8</property>
                         <property name="name">peanutpc</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">5</property>
+                        <property name="position">9</property>
                         <property name="name">premierpc</property>
                         <property name="dataType">float</property>
                     </structure>
@@ -2344,43 +2304,88 @@ GROUP BY abc.payment_type,abc.price_plan,abc.customer_name,abc.paidamount]]></xm
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
-                    <property name="name">wholesalecash</property>
-                    <property name="nativeName">wholesalecash</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
+                    <property name="name">customer_name</property>
+                    <property name="nativeName">customer_name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
                     <property name="position">2</property>
-                    <property name="name">retailsalecash</property>
-                    <property name="nativeName">retailsalecash</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
+                    <property name="name">customer_id</property>
+                    <property name="nativeName">customer_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
                     <property name="position">3</property>
+                    <property name="name">wholesale_paidamount</property>
+                    <property name="nativeName">wholesale_paidamount</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">retail_paidamount</property>
+                    <property name="nativeName">retail_paidamount</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">customerss</property>
+                    <property name="nativeName">customerss</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">customer_id_6</property>
+                    <property name="nativeName">customer_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
                     <property name="name">sesamepc</property>
                     <property name="nativeName">sesamepc</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">4</property>
+                    <property name="position">8</property>
                     <property name="name">peanutpc</property>
                     <property name="nativeName">peanutpc</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">5</property>
+                    <property name="position">9</property>
                     <property name="name">premierpc</property>
                     <property name="nativeName">premierpc</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[SELECT  wholesaleCash,retailsaleCash,sum(SesamePC) as sesamepc,sum(PeanutPC) as peanutpc,sum(PremierPeanutPC) as premierpc
+            <xml-property name="queryText"><![CDATA[select * From (
+(select rp.name as customer_name,rp.id as customer_id,
+CASE so.pricelist_id WHEN 5 THEN sum(avl.amount) ELSE 0 END AS wholesale_paidamount, CASE so.pricelist_id WHEN 1 THEN sum(avl.amount)
+ELSE 0 END AS retail_paidamount
+FROM sale_order so, res_partner rp, account_invoice ai,account_move_line aml ,account_voucher_line avl,account_voucher  av
+where ai.move_id=aml.move_id 
+	and aml.id=avl.move_line_id 	
+	and rp.id=so.partner_id
+	and ai.origin=so.name
+	and ai.partner_id=so.partner_id
+	and av.id = avl.voucher_id
+	and so.pricelist_id in (1,5)	
+	and so.section_id = ?
+	and so.user_id  = ?
+	and ai.payment_type='cash'
+	and av.date::date = ?
+	group by rp.name,rp.id,rp.id,so.pricelist_id) sale_amt left join 
+(SELECT  customerss,customer_id,sum(SesamePC) as sesamepc,sum(PeanutPC) as peanutpc,sum(PremierPeanutPC) as premierpc
 FROM
-(SELECT (wholesaleCash) as wholesaleCash ,(retailsaleCash) as retailsaleCash,
+(SELECT customerss,customer_id,
 CASE cat
 WHEN 'Sesame Oil' THEN (saleViss + (saleliter * 0.575))
 ELSE 0 END AS SesamePC,
@@ -2392,45 +2397,20 @@ WHEN 'Premier Peanut Oil' THEN (saleViss + (saleliter * 0.575))
 ELSE 0 END AS PremierPeanutPC 
 FROM
 (with
-sale as (select sum(product_uom_qty*price_unit) AS sale_amt,sol.product_uom_qty as qty,so.payment_type,rp.name as customer_name,
-sum(av.amount) as paidAmount,sol.product_id,so.payment_type as paymenttype,pc.name as categoryname
+sale as (select sum(sol.product_uom_qty) as qty,rp.name as customer_name,sol.product_id,pc.name as categoryname,rp.id as cus_id
 FROM sale_order so,sale_order_line sol,account_voucher av,res_partner rp,product_product pp ,product_template pt,product_category pc
 WHERE  so.id = sol.order_id and so.partner_id=rp.id and so.partner_id=av.partner_id  and pp.product_tmpl_id=pt.id and  pc.id=pt.categ_id and sol.product_id=pp.id
-AND so.state!='cancel' AND ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ?
+AND so.state!='cancel' 
+AND ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ?
 and so.section_id = ? and so.user_id  = ? and so.warehouse_id = ?
+and so.pricelist_id in (1,5)
 and so.payment_type='cash'
 and av.type='receipt' 
 and av.state='posted' 
-and ((av.create_date at time zone 'utc' )at time zone 'asia/rangoon')::date=?
-GROUP BY product_id,so.partner_id,av.partner_id,so.payment_type,rp.name,sol.product_uom_qty,sol.product_id,so.payment_type,pc.name),
+and av.date::date=? 
+GROUP BY product_id,so.partner_id,so.payment_type,rp.name,sol.product_id,pc.name,rp.id)
 
-retailsale as (select sum(product_uom_qty*price_unit) AS sale_amt,sol.product_uom_qty as qty,so.payment_type,rp.name as customer_name,
-sum(av.amount) as paidAmount,sol.product_id,so.payment_type as paymenttype
-FROM sale_order so,sale_order_line sol,account_voucher av,res_partner rp
-WHERE  so.id = sol.order_id and so.partner_id=rp.id and so.partner_id=av.partner_id
-AND so.state!='cancel' AND ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ?
-and so.section_id = ? and so.user_id  = ? and so.warehouse_id=?
-and so.pricelist_id=1
-and so.payment_type='cash'
-and av.type='receipt' 
-and av.state='posted' 
-and ((av.create_date at time zone 'utc' )at time zone 'asia/rangoon')::date=?
-GROUP BY product_id,so.partner_id,av.partner_id,so.payment_type,rp.name,sol.product_uom_qty,sol.product_id,so.payment_type),
-
-wholesale as (select sum(product_uom_qty*price_unit) AS sale_amt,sol.product_uom_qty as qty,so.payment_type,rp.name as customer_name,
-sum(av.amount) as paidAmount,sol.product_id,so.payment_type as paymenttype
-FROM sale_order so,sale_order_line sol,account_voucher av,res_partner rp
-WHERE  so.id = sol.order_id and so.partner_id=rp.id and so.partner_id=av.partner_id
-AND so.state!='cancel' AND ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ?
-and so.section_id = ? and so.user_id  = ? and so.warehouse_id=?
-and so.pricelist_id=5
-and so.payment_type='cash'
-and av.type='receipt' 
-and av.state='posted' 
-and ((av.create_date at time zone 'utc' )at time zone 'asia/rangoon')::date=? 
-GROUP BY product_id,so.partner_id,av.partner_id,so.payment_type,rp.name,sol.product_uom_qty,sol.product_id,so.payment_type)
-
-SELECT retailsale.* ,wholesale.*,sale.*,pc.name,sale.categoryname as cat,
+SELECT sale.*,pc.name,sale.customer_name as customerss,sale.categoryname as cat,sale.cus_id as customer_id,
 CASE (select dcode(sale.product_id))
 WHEN 'P00010' THEN ((SELECT CAST(sale.qty AS Float)) * pt.weight_net)
 WHEN 'P00005' THEN ((SELECT CAST(sale.qty AS Float)) * pt.weight_net)
@@ -2459,28 +2439,14 @@ WHEN 'PP00402' THEN ((select CAST(sale.qty AS Float)) * pt.weight_liter)
 WHEN 'PP00403' THEN ((select CAST(sale.qty AS Float)) * pt.weight_liter)
 WHEN 'PP00406' THEN ((select CAST(sale.qty AS Float)) * pt.weight_liter)
 WHEN 'PP00409' THEN ((select CAST(sale.qty AS Float)) * pt.weight_liter)
-ELSE 0 END AS saleliter,
-CASE wholesale.paymenttype
-WHEN 'credit' THEN (SELECT CAST(wholesale.paidAmount AS Float))
-ELSE 0 END AS wholesaleCredit,
-CASE wholesale.paymenttype
-WHEN 'cash' THEN (SELECT CAST(wholesale.paidAmount AS Float))
-ELSE 0 END AS wholesaleCash,
-CASE retailsale.paymenttype
-WHEN 'credit' THEN (select CAST(retailsale.paidAmount AS Float))
-ELSE 0 END AS retailsaleCredit,
-CASE retailsale.paymenttype
-WHEN 'cash' THEN (select CAST(retailsale.paidAmount AS Float))
-ELSE 0 END AS retailsaleCash
+ELSE 0 END AS saleliter
 
 FROM product_product pp 
 INNER JOIN product_template pt on pp.product_tmpl_id=pt.id
 INNER JOIN product_category pc on pc.id=pt.categ_id
 INNER JOIN product_uom uom on pt.uom_id=uom.id
 INNER JOIN sale on pp.id =  sale.product_id
-LEFT JOIN wholesale on pp.id = wholesale.product_id
-LEFT JOIN retailsale on pp.id = retailsale.product_id 
-ORDER BY pp.id)a )b group by b.wholesaleCash,b.retailsaleCash]]></xml-property>
+ORDER BY pp.id)a )b group by b.customerss,customer_id)sale_qty on sale_qty.customer_id=sale_amt.customer_id)]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -2493,7 +2459,7 @@ ORDER BY pp.id)a )b group by b.wholesaleCash,b.retailsaleCash]]></xml-property>
             <design:name></design:name>
             <design:position>1</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -2523,7 +2489,7 @@ ORDER BY pp.id)a )b group by b.wholesaleCash,b.retailsaleCash]]></xml-property>
             <design:name></design:name>
             <design:position>3</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -2538,7 +2504,7 @@ ORDER BY pp.id)a )b group by b.wholesaleCash,b.retailsaleCash]]></xml-property>
             <design:name></design:name>
             <design:position>4</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -2553,7 +2519,7 @@ ORDER BY pp.id)a )b group by b.wholesaleCash,b.retailsaleCash]]></xml-property>
             <design:name></design:name>
             <design:position>5</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -2568,7 +2534,7 @@ ORDER BY pp.id)a )b group by b.wholesaleCash,b.retailsaleCash]]></xml-property>
             <design:name></design:name>
             <design:position>6</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -2597,111 +2563,6 @@ ORDER BY pp.id)a )b group by b.wholesaleCash,b.retailsaleCash]]></xml-property>
           <design:identifier>
             <design:name></design:name>
             <design:position>8</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>9</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>10</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>11</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>12</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>13</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>14</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>15</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
@@ -2912,63 +2773,74 @@ ORDER BY pp.id)a )b group by b.wholesaleCash,b.retailsaleCash]]></xml-property>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="grandTot" id="2191">
             <list-property name="columnHints">
                 <structure>
-                    <property name="columnName">wholesalecash</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">wholesalecash</text-property>
-                    <text-property name="heading">wholesalecash</text-property>
+                    <property name="columnName">customer_name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">customer_name</text-property>
+                    <text-property name="heading">customer_name</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">retailsalecash</property>
+                    <property name="columnName">customer_id</property>
                     <property name="analysis">measure</property>
-                    <text-property name="displayName">retailsalecash</text-property>
-                    <text-property name="heading">retailsalecash</text-property>
+                    <text-property name="displayName">customer_id</text-property>
+                    <text-property name="heading">customer_id</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">wholesalecredit</property>
+                    <property name="columnName">wholesale_paidamount</property>
                     <property name="analysis">measure</property>
-                    <text-property name="displayName">wholesalecredit</text-property>
-                    <text-property name="heading">wholesalecredit</text-property>
+                    <text-property name="displayName">wholesale_paidamount</text-property>
+                    <text-property name="heading">wholesale_paidamount</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">retailsalecredit</property>
+                    <property name="columnName">retail_paidamount</property>
                     <property name="analysis">measure</property>
-                    <text-property name="displayName">retailsalecredit</text-property>
-                    <text-property name="heading">retailsalecredit</text-property>
+                    <text-property name="displayName">retail_paidamount</text-property>
+                    <text-property name="heading">retail_paidamount</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">ss</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">ss</text-property>
-                    <text-property name="heading">ss</text-property>
+                    <property name="columnName">customerss</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">customerss</text-property>
+                    <text-property name="heading">customerss</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">p</property>
+                    <property name="columnName">customer_id_6</property>
                     <property name="analysis">measure</property>
-                    <text-property name="displayName">p</text-property>
-                    <text-property name="heading">p</text-property>
+                    <text-property name="displayName">customer_id</text-property>
+                    <text-property name="heading">customer_id</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">pp</property>
+                    <property name="columnName">sesamepc</property>
                     <property name="analysis">measure</property>
-                    <text-property name="displayName">pp</text-property>
-                    <text-property name="heading">pp</text-property>
+                    <text-property name="displayName">sesamepc</text-property>
+                    <text-property name="heading">sesamepc</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">peanutpc</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">peanutpc</text-property>
+                    <text-property name="heading">peanutpc</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">premierpc</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">premierpc</text-property>
+                    <text-property name="heading">premierpc</text-property>
                 </structure>
             </list-property>
             <list-property name="parameters">
                 <structure>
                     <property name="name">param_1</property>
-                    <property name="paramName">Date</property>
+                    <property name="paramName">TeamName</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
                     <property name="position">1</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_2</property>
-                    <property name="paramName">TeamName</property>
+                    <property name="paramName">TeamMember</property>
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
@@ -2979,144 +2851,61 @@ ORDER BY pp.id)a )b group by b.wholesaleCash,b.retailsaleCash]]></xml-property>
                 </structure>
                 <structure>
                     <property name="name">param_3</property>
-                    <property name="paramName">TeamMember</property>
+                    <property name="paramName">Date</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
                     <property name="position">3</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_4</property>
-                    <property name="paramName">Car No</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                    <property name="position">4</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_5</property>
                     <property name="paramName">Date</property>
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
-                    <property name="position">5</property>
-                    <property name="isOptional">false</property>
+                    <property name="position">4</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_6</property>
-                    <property name="paramName">Date</property>
+                    <property name="paramName">TeamName</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">6</property>
-                    <property name="isOptional">false</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">5</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_7</property>
-                    <property name="paramName">TeamName</property>
+                    <property name="paramName">TeamMember</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">6</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_5</property>
+                    <property name="paramName">Car No</property>
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">7</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_8</property>
-                    <property name="paramName">TeamMember</property>
+                    <property name="paramName">Date</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
                     <property name="position">8</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_9</property>
-                    <property name="paramName">Car No</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                    <property name="position">9</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_10</property>
-                    <property name="paramName">Date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">10</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_11</property>
-                    <property name="paramName">Date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">11</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_12</property>
-                    <property name="paramName">TeamName</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                    <property name="position">12</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_13</property>
-                    <property name="paramName">TeamMember</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                    <property name="position">13</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_14</property>
-                    <property name="paramName">Car No</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                    <property name="position">14</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_15</property>
-                    <property name="paramName">Date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">15</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -3125,37 +2914,47 @@ ORDER BY pp.id)a )b group by b.wholesaleCash,b.retailsaleCash]]></xml-property>
                 <list-property name="resultSet">
                     <structure>
                         <property name="position">1</property>
-                        <property name="name">wholesalecash</property>
-                        <property name="dataType">float</property>
+                        <property name="name">customer_name</property>
+                        <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">2</property>
-                        <property name="name">retailsalecash</property>
-                        <property name="dataType">float</property>
+                        <property name="name">customer_id</property>
+                        <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">3</property>
-                        <property name="name">wholesalecredit</property>
-                        <property name="dataType">float</property>
+                        <property name="name">wholesale_paidamount</property>
+                        <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">4</property>
-                        <property name="name">retailsalecredit</property>
-                        <property name="dataType">float</property>
+                        <property name="name">retail_paidamount</property>
+                        <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">5</property>
-                        <property name="name">ss</property>
-                        <property name="dataType">float</property>
+                        <property name="name">customerss</property>
+                        <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">6</property>
-                        <property name="name">p</property>
-                        <property name="dataType">float</property>
+                        <property name="name">customer_id_6</property>
+                        <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">7</property>
-                        <property name="name">pp</property>
+                        <property name="name">sesamepc</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">peanutpc</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">premierpc</property>
                         <property name="dataType">float</property>
                     </structure>
                 </list-property>
@@ -3164,58 +2963,87 @@ ORDER BY pp.id)a )b group by b.wholesaleCash,b.retailsaleCash]]></xml-property>
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
-                    <property name="name">wholesalecash</property>
-                    <property name="nativeName">wholesalecash</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
+                    <property name="name">customer_name</property>
+                    <property name="nativeName">customer_name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
                     <property name="position">2</property>
-                    <property name="name">retailsalecash</property>
-                    <property name="nativeName">retailsalecash</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
+                    <property name="name">customer_id</property>
+                    <property name="nativeName">customer_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
                     <property name="position">3</property>
-                    <property name="name">wholesalecredit</property>
-                    <property name="nativeName">wholesalecredit</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
+                    <property name="name">wholesale_paidamount</property>
+                    <property name="nativeName">wholesale_paidamount</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
                     <property name="position">4</property>
-                    <property name="name">retailsalecredit</property>
-                    <property name="nativeName">retailsalecredit</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
+                    <property name="name">retail_paidamount</property>
+                    <property name="nativeName">retail_paidamount</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
                     <property name="position">5</property>
-                    <property name="name">ss</property>
-                    <property name="nativeName">ss</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
+                    <property name="name">customerss</property>
+                    <property name="nativeName">customerss</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
                     <property name="position">6</property>
-                    <property name="name">p</property>
-                    <property name="nativeName">p</property>
+                    <property name="name">customer_id_6</property>
+                    <property name="nativeName">customer_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">sesamepc</property>
+                    <property name="nativeName">sesamepc</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">7</property>
-                    <property name="name">pp</property>
-                    <property name="nativeName">pp</property>
+                    <property name="position">8</property>
+                    <property name="name">peanutpc</property>
+                    <property name="nativeName">peanutpc</property>
+                    <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">premierpc</property>
+                    <property name="nativeName">premierpc</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[SELECT  (wholesaleCash) as wholesaleCash,(retailsaleCash) as retailsaleCash,(wholesaleCredit) as wholesaleCredit,(retailsaleCredit) as retailsaleCredit,
-sum(SesamePC)as ss,sum(PeanutPC) as p,sum(PremierPeanutPC) as pp
+            <xml-property name="queryText"><![CDATA[select * From (
+(select rp.name as customer_name,rp.id as customer_id,
+CASE so.pricelist_id WHEN 5 THEN sum(avl.amount) ELSE 0 END AS wholesale_paidamount, CASE so.pricelist_id WHEN 1 THEN sum(avl.amount)
+ELSE 0 END AS retail_paidamount
+FROM sale_order so, res_partner rp, account_invoice ai,account_move_line aml ,account_voucher_line avl,account_voucher  av
+where ai.move_id=aml.move_id 
+	and aml.id=avl.move_line_id 	
+	and rp.id=so.partner_id
+	and ai.origin=so.name
+	and ai.partner_id=so.partner_id
+	and av.id = avl.voucher_id
+	and so.pricelist_id in (1,5)	
+	and so.section_id = ?
+	and so.user_id  = ?
+	and av.date::date = ?
+	group by rp.name,rp.id,rp.id,so.pricelist_id) sale_amt left join 
+(SELECT  customerss,customer_id,sum(SesamePC) as sesamepc,sum(PeanutPC) as peanutpc,sum(PremierPeanutPC) as premierpc
 FROM
-(SELECT wholesaleCash, customerss,retailsaleCash ,wholesaleCredit, retailsaleCredit,
+(SELECT customerss,customer_id,
 CASE cat
 WHEN 'Sesame Oil' THEN (saleViss + (saleliter * 0.575))
 ELSE 0 END AS SesamePC,
@@ -3224,45 +3052,22 @@ WHEN 'Peanut Oil' THEN (saleViss + (saleliter * 0.575))
 ELSE 0 END AS PeanutPC,
 CASE cat
 WHEN 'Premier Peanut Oil' THEN (saleViss + (saleliter * 0.575))
-ELSE 0 END AS PremierPeanutPC FROM
+ELSE 0 END AS PremierPeanutPC 
+FROM
 (with
-sale as (select sum(product_uom_qty*price_unit) AS sale_amt,sol.product_uom_qty as qty,so.payment_type,rp.name as customer_name,
-sum(av.amount) as paidAmount,sol.product_id,so.payment_type as paymenttype,pc.name as categoryname
+sale as (select sum(sol.product_uom_qty) as qty,rp.name as customer_name,sol.product_id,pc.name as categoryname,rp.id as cus_id
 FROM sale_order so,sale_order_line sol,account_voucher av,res_partner rp,product_product pp ,product_template pt,product_category pc
 WHERE  so.id = sol.order_id and so.partner_id=rp.id and so.partner_id=av.partner_id  and pp.product_tmpl_id=pt.id and  pc.id=pt.categ_id and sol.product_id=pp.id
-AND so.state!='cancel' AND ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ?
-and so.section_id = ? and so.user_id  = ? and so.warehouse_id = ?
+AND so.state!='cancel' 
+AND ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ?
+and so.section_id = ? and so.user_id  =? and so.warehouse_id = ?
 and so.pricelist_id in (1,5)
 and av.type='receipt' 
 and av.state='posted' 
-and ((av.create_date at time zone 'utc' )at time zone 'asia/rangoon')::date=?
-GROUP BY product_id,so.partner_id,av.partner_id,so.payment_type,rp.name,sol.product_uom_qty,sol.product_id,so.payment_type,pc.name),
+and av.date::date=?
+GROUP BY product_id,so.partner_id,so.payment_type,rp.name,sol.product_id,pc.name,rp.id)
 
-retailsale as (select sum(product_uom_qty*price_unit) AS sale_amt,sol.product_uom_qty as qty,so.payment_type,rp.name as customer_name,
-sum(av.amount) as paidAmount,sol.product_id,so.payment_type as paymenttype
-FROM sale_order so,sale_order_line sol,account_voucher av,res_partner rp
-WHERE  so.id = sol.order_id and so.partner_id=rp.id and so.partner_id=av.partner_id
-AND so.state!='cancel' AND ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ?
-and so.section_id = ? and so.user_id  = ? and so.warehouse_id=?
-and so.pricelist_id=1
-and av.type='receipt' 
-and av.state='posted' 
-and ((av.create_date at time zone 'utc' )at time zone 'asia/rangoon')::date=?
-GROUP BY product_id,so.partner_id,av.partner_id,so.payment_type,rp.name,sol.product_uom_qty,sol.product_id,so.payment_type),
-
-wholesale as (select sum(product_uom_qty*price_unit) AS sale_amt,sol.product_uom_qty as qty,so.payment_type,rp.name as customer_name,
-sum(av.amount) as paidAmount,sol.product_id,so.payment_type as paymenttype
-FROM sale_order so,sale_order_line sol,account_voucher av,res_partner rp
-WHERE  so.id = sol.order_id and so.partner_id=rp.id and so.partner_id=av.partner_id
-AND so.state!='cancel' AND ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ?
-and so.section_id = ? and so.user_id  = ? and so.warehouse_id=?
-and so.pricelist_id=5
-and av.type='receipt' 
-and av.state='posted' 
-and ((av.create_date at time zone 'utc' )at time zone 'asia/rangoon')::date=? 
-GROUP BY product_id,so.partner_id,av.partner_id,so.payment_type,rp.name,sol.product_uom_qty,sol.product_id,so.payment_type)
-
-SELECT retailsale.* ,wholesale.*,sale.*,pc.name,sale.customer_name as customerss,sale.categoryname as cat,
+SELECT sale.*,pc.name,sale.customer_name as customerss,sale.categoryname as cat,sale.cus_id as customer_id,
 CASE (select dcode(sale.product_id))
 WHEN 'P00010' THEN ((SELECT CAST(sale.qty AS Float)) * pt.weight_net)
 WHEN 'P00005' THEN ((SELECT CAST(sale.qty AS Float)) * pt.weight_net)
@@ -3291,28 +3096,14 @@ WHEN 'PP00402' THEN ((select CAST(sale.qty AS Float)) * pt.weight_liter)
 WHEN 'PP00403' THEN ((select CAST(sale.qty AS Float)) * pt.weight_liter)
 WHEN 'PP00406' THEN ((select CAST(sale.qty AS Float)) * pt.weight_liter)
 WHEN 'PP00409' THEN ((select CAST(sale.qty AS Float)) * pt.weight_liter)
-ELSE 0 END AS saleliter,
-CASE wholesale.paymenttype
-WHEN 'credit' THEN (SELECT CAST(wholesale.paidAmount AS Float))
-ELSE 0 END AS wholesaleCredit,
-CASE wholesale.paymenttype
-WHEN 'cash' THEN (SELECT CAST(wholesale.paidAmount AS Float))
-ELSE 0 END AS wholesaleCash,
-CASE retailsale.paymenttype
-WHEN 'credit' THEN (select CAST(retailsale.paidAmount AS Float))
-ELSE 0 END AS retailsaleCredit,
-CASE retailsale.paymenttype
-WHEN 'cash' THEN (select CAST(retailsale.paidAmount AS Float))
-ELSE 0 END AS retailsaleCash
+ELSE 0 END AS saleliter
 
 FROM product_product pp 
 INNER JOIN product_template pt on pp.product_tmpl_id=pt.id
 INNER JOIN product_category pc on pc.id=pt.categ_id
 INNER JOIN product_uom uom on pt.uom_id=uom.id
 INNER JOIN sale on pp.id =  sale.product_id
-LEFT JOIN wholesale on pp.id = wholesale.product_id
-LEFT JOIN retailsale on pp.id = retailsale.product_id
-ORDER BY pp.id)a )b group by b.wholesaleCash,b.retailsaleCash,b.retailsaleCredit,b.wholesaleCredit]]></xml-property>
+ORDER BY pp.id)a )b group by b.customerss,customer_id)sale_qty on sale_qty.customer_id=sale_amt.customer_id)]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -3325,7 +3116,7 @@ ORDER BY pp.id)a )b group by b.wholesaleCash,b.retailsaleCash,b.retailsaleCredit
             <design:name></design:name>
             <design:position>1</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -3355,7 +3146,7 @@ ORDER BY pp.id)a )b group by b.wholesaleCash,b.retailsaleCash,b.retailsaleCredit
             <design:name></design:name>
             <design:position>3</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -3370,7 +3161,7 @@ ORDER BY pp.id)a )b group by b.wholesaleCash,b.retailsaleCash,b.retailsaleCredit
             <design:name></design:name>
             <design:position>4</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -3385,7 +3176,7 @@ ORDER BY pp.id)a )b group by b.wholesaleCash,b.retailsaleCash,b.retailsaleCredit
             <design:name></design:name>
             <design:position>5</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -3400,7 +3191,7 @@ ORDER BY pp.id)a )b group by b.wholesaleCash,b.retailsaleCash,b.retailsaleCredit
             <design:name></design:name>
             <design:position>6</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -3429,111 +3220,6 @@ ORDER BY pp.id)a )b group by b.wholesaleCash,b.retailsaleCash,b.retailsaleCredit
           <design:identifier>
             <design:name></design:name>
             <design:position>8</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>9</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>10</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>11</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>12</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>13</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>14</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>15</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
@@ -3660,22 +3346,34 @@ ORDER BY pp.id)a )b group by b.wholesaleCash,b.retailsaleCash,b.retailsaleCredit
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="credit_new" id="2233">
             <list-property name="columnHints">
                 <structure>
-                    <property name="columnName">wholesalecredit</property>
+                    <property name="columnName">customer_name_paid</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">customer_name_paid</text-property>
+                    <text-property name="heading">customer_name_paid</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">customer_id</property>
                     <property name="analysis">measure</property>
-                    <text-property name="displayName">wholesalecredit</text-property>
-                    <text-property name="heading">wholesalecredit</text-property>
+                    <text-property name="displayName">customer_id</text-property>
+                    <text-property name="heading">customer_id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">wholesale_paidamount</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">wholesale_paidamount</text-property>
+                    <text-property name="heading">wholesale_paidamount</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">retail_paidamount</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">retail_paidamount</text-property>
+                    <text-property name="heading">retail_paidamount</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">customerss</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">customerss</text-property>
                     <text-property name="heading">customerss</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">retailsalecredit</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">retailsalecredit</text-property>
-                    <text-property name="heading">retailsalecredit</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">sesamepc</property>
@@ -3699,18 +3397,17 @@ ORDER BY pp.id)a )b group by b.wholesaleCash,b.retailsaleCash,b.retailsaleCredit
             <list-property name="parameters">
                 <structure>
                     <property name="name">param_1</property>
-                    <property name="paramName">Date</property>
+                    <property name="paramName">TeamName</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
                     <property name="position">1</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_2</property>
-                    <property name="paramName">TeamName</property>
+                    <property name="paramName">TeamMember</property>
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
@@ -3721,144 +3418,61 @@ ORDER BY pp.id)a )b group by b.wholesaleCash,b.retailsaleCash,b.retailsaleCredit
                 </structure>
                 <structure>
                     <property name="name">param_3</property>
-                    <property name="paramName">TeamMember</property>
+                    <property name="paramName">Date</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
                     <property name="position">3</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_4</property>
-                    <property name="paramName">Car No</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                    <property name="position">4</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_5</property>
                     <property name="paramName">Date</property>
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
-                    <property name="position">5</property>
-                    <property name="isOptional">false</property>
+                    <property name="position">4</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_6</property>
-                    <property name="paramName">Date</property>
+                    <property name="paramName">TeamName</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">6</property>
-                    <property name="isOptional">false</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">5</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_7</property>
-                    <property name="paramName">TeamName</property>
+                    <property name="paramName">TeamMember</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">6</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_5</property>
+                    <property name="paramName">Car No</property>
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">7</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_8</property>
-                    <property name="paramName">TeamMember</property>
+                    <property name="paramName">Date</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
                     <property name="position">8</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_9</property>
-                    <property name="paramName">Car No</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                    <property name="position">9</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_10</property>
-                    <property name="paramName">Date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">10</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_11</property>
-                    <property name="paramName">Date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">11</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_12</property>
-                    <property name="paramName">TeamName</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                    <property name="position">12</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_13</property>
-                    <property name="paramName">TeamMember</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                    <property name="position">13</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_14</property>
-                    <property name="paramName">Car No</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                    <property name="position">14</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_15</property>
-                    <property name="paramName">Date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">15</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -3867,31 +3481,46 @@ ORDER BY pp.id)a )b group by b.wholesaleCash,b.retailsaleCash,b.retailsaleCredit
                 <list-property name="resultSet">
                     <structure>
                         <property name="position">1</property>
-                        <property name="name">wholesalecredit</property>
-                        <property name="dataType">float</property>
+                        <property name="name">customer_name_paid</property>
+                        <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">2</property>
+                        <property name="name">customer_id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">wholesale_paidamount</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">retail_paidamount</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
                         <property name="name">customerss</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">3</property>
-                        <property name="name">retailsalecredit</property>
-                        <property name="dataType">float</property>
+                        <property name="position">6</property>
+                        <property name="name">customer_id</property>
+                        <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">4</property>
+                        <property name="position">7</property>
                         <property name="name">sesamepc</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">5</property>
+                        <property name="position">8</property>
                         <property name="name">peanutpc</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">6</property>
+                        <property name="position">9</property>
                         <property name="name">premierpc</property>
                         <property name="dataType">float</property>
                     </structure>
@@ -3901,50 +3530,79 @@ ORDER BY pp.id)a )b group by b.wholesaleCash,b.retailsaleCash,b.retailsaleCredit
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
-                    <property name="name">wholesalecredit</property>
-                    <property name="nativeName">wholesalecredit</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
+                    <property name="name">customer_name_paid</property>
+                    <property name="nativeName">customer_name_paid</property>
+                    <property name="dataType">string</property>
                 </structure>
                 <structure>
                     <property name="position">2</property>
-                    <property name="name">customerss</property>
-                    <property name="nativeName">customerss</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
+                    <property name="name">customer_id</property>
+                    <property name="nativeName">customer_id</property>
+                    <property name="dataType">integer</property>
                 </structure>
                 <structure>
                     <property name="position">3</property>
-                    <property name="name">retailsalecredit</property>
-                    <property name="nativeName">retailsalecredit</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
+                    <property name="name">wholesale_paidamount</property>
+                    <property name="nativeName">wholesale_paidamount</property>
+                    <property name="dataType">decimal</property>
                 </structure>
                 <structure>
                     <property name="position">4</property>
-                    <property name="name">sesamepc</property>
-                    <property name="nativeName">sesamepc</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
+                    <property name="name">retail_paidamount</property>
+                    <property name="nativeName">retail_paidamount</property>
+                    <property name="dataType">decimal</property>
                 </structure>
                 <structure>
                     <property name="position">5</property>
-                    <property name="name">peanutpc</property>
-                    <property name="nativeName">peanutpc</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
+                    <property name="name">customerss</property>
+                    <property name="nativeName">customerss</property>
+                    <property name="dataType">string</property>
                 </structure>
                 <structure>
                     <property name="position">6</property>
+                    <property name="name">customer_id_6</property>
+                    <property name="nativeName">customer_id</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">sesamepc</property>
+                    <property name="nativeName">sesamepc</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">peanutpc</property>
+                    <property name="nativeName">peanutpc</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
                     <property name="name">premierpc</property>
                     <property name="nativeName">premierpc</property>
                     <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[SELECT  wholesaleCredit,customerss,retailsaleCredit,sum(SesamePC) as sesamepc,sum(PeanutPC) as peanutpc,sum(PremierPeanutPC) as premierpc
+            <xml-property name="queryText"><![CDATA[select * From (
+(select rp.name as customer_name_paid,rp.id as customer_id,
+CASE so.pricelist_id WHEN 5 THEN sum(avl.amount) ELSE 0 END AS wholesale_paidamount, CASE so.pricelist_id WHEN 1 THEN sum(avl.amount)
+ELSE 0 END AS retail_paidamount
+FROM sale_order so, res_partner rp, account_invoice ai,account_move_line aml ,account_voucher_line avl,account_voucher  av
+where ai.move_id=aml.move_id 
+	and aml.id=avl.move_line_id 	
+	and rp.id=so.partner_id
+	and ai.origin=so.name
+	and ai.partner_id=so.partner_id
+	and av.id = avl.voucher_id
+	and so.pricelist_id in (1,5)	
+	and so.section_id = ?
+	and so.user_id  = ?
+	and ai.payment_type='credit'
+	and av.date::date = ?
+	group by rp.name,rp.id,rp.id,so.pricelist_id) sale_amt left join 
+(SELECT  customerss,customer_id,sum(SesamePC) as sesamepc,sum(PeanutPC) as peanutpc,sum(PremierPeanutPC) as premierpc
 FROM
-(SELECT (wholesaleCredit) as wholesaleCredit ,customerss,(retailsaleCredit) as retailsaleCredit,
+(SELECT customerss,customer_id,
 CASE cat
 WHEN 'Sesame Oil' THEN (saleViss + (saleliter * 0.575))
 ELSE 0 END AS SesamePC,
@@ -3956,46 +3614,20 @@ WHEN 'Premier Peanut Oil' THEN (saleViss + (saleliter * 0.575))
 ELSE 0 END AS PremierPeanutPC 
 FROM
 (with
-sale as (select sum(product_uom_qty*price_unit) AS sale_amt,sol.product_uom_qty as qty,so.payment_type,rp.name as customer_name,
-sum(av.amount) as paidAmount,sol.product_id,so.payment_type as paymenttype,pc.name as categoryname
+sale as (select sum(sol.product_uom_qty) as qty,rp.name as customer_name,sol.product_id,pc.name as categoryname,rp.id as cus_id
 FROM sale_order so,sale_order_line sol,account_voucher av,res_partner rp,product_product pp ,product_template pt,product_category pc
 WHERE  so.id = sol.order_id and so.partner_id=rp.id and so.partner_id=av.partner_id  and pp.product_tmpl_id=pt.id and  pc.id=pt.categ_id and sol.product_id=pp.id
-AND so.state!='cancel' AND ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ?
-and so.section_id = ? and so.user_id  = ? and so.warehouse_id = ?
+AND so.state!='cancel' 
+AND ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ?
+and so.section_id = ? and so.user_id  =? and so.warehouse_id = ?
 and so.pricelist_id in (1,5)
 and so.payment_type='credit'
 and av.type='receipt' 
 and av.state='posted' 
-and ((av.create_date at time zone 'utc' )at time zone 'asia/rangoon')::date=?
-GROUP BY product_id,so.partner_id,av.partner_id,so.payment_type,rp.name,sol.product_uom_qty,sol.product_id,so.payment_type,pc.name),
+and av.date::date=?
+GROUP BY product_id,so.partner_id,so.payment_type,rp.name,sol.product_id,pc.name,rp.id)
 
-retailsale as (select sum(product_uom_qty*price_unit) AS sale_amt,sol.product_uom_qty as qty,so.payment_type,rp.name as customer_name,
-sum(av.amount) as paidAmount,sol.product_id,so.payment_type as paymenttype
-FROM sale_order so,sale_order_line sol,account_voucher av,res_partner rp
-WHERE  so.id = sol.order_id and so.partner_id=rp.id and so.partner_id=av.partner_id
-AND so.state!='cancel' AND ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ?
-and so.section_id = ? and so.user_id  = ? and so.warehouse_id=?
-and so.pricelist_id=1
-and so.payment_type='credit'
-and av.type='receipt' 
-and av.state='posted' 
-and ((av.create_date at time zone 'utc' )at time zone 'asia/rangoon')::date=?
-GROUP BY product_id,so.partner_id,av.partner_id,so.payment_type,rp.name,sol.product_uom_qty,sol.product_id,so.payment_type),
-
-wholesale as (select sum(product_uom_qty*price_unit) AS sale_amt,sol.product_uom_qty as qty,so.payment_type,rp.name as customer_name,
-sum(av.amount) as paidAmount,sol.product_id,so.payment_type as paymenttype
-FROM sale_order so,sale_order_line sol,account_voucher av,res_partner rp
-WHERE  so.id = sol.order_id and so.partner_id=rp.id and so.partner_id=av.partner_id
-AND so.state!='cancel' AND ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ?
-and so.section_id = ? and so.user_id  = ? and so.warehouse_id=?
-and so.pricelist_id=5
-and so.payment_type='credit'
-and av.type='receipt' 
-and av.state='posted' 
-and ((av.create_date at time zone 'utc' )at time zone 'asia/rangoon')::date=? 
-GROUP BY product_id,so.partner_id,av.partner_id,so.payment_type,rp.name,sol.product_uom_qty,sol.product_id,so.payment_type)
-
-SELECT retailsale.* ,wholesale.*,sale.*,pc.name,sale.customer_name as customerss,sale.categoryname as cat,
+SELECT sale.*,pc.name,sale.customer_name as customerss,sale.categoryname as cat,sale.cus_id as customer_id,
 CASE (select dcode(sale.product_id))
 WHEN 'P00010' THEN ((SELECT CAST(sale.qty AS Float)) * pt.weight_net)
 WHEN 'P00005' THEN ((SELECT CAST(sale.qty AS Float)) * pt.weight_net)
@@ -4024,28 +3656,14 @@ WHEN 'PP00402' THEN ((select CAST(sale.qty AS Float)) * pt.weight_liter)
 WHEN 'PP00403' THEN ((select CAST(sale.qty AS Float)) * pt.weight_liter)
 WHEN 'PP00406' THEN ((select CAST(sale.qty AS Float)) * pt.weight_liter)
 WHEN 'PP00409' THEN ((select CAST(sale.qty AS Float)) * pt.weight_liter)
-ELSE 0 END AS saleliter,
-CASE wholesale.paymenttype
-WHEN 'credit' THEN (SELECT CAST(wholesale.paidAmount AS Float))
-ELSE 0 END AS wholesaleCredit,
-CASE wholesale.paymenttype
-WHEN 'cash' THEN (SELECT CAST(wholesale.paidAmount AS Float))
-ELSE 0 END AS wholesaleCash,
-CASE retailsale.paymenttype
-WHEN 'credit' THEN (select CAST(retailsale.paidAmount AS Float))
-ELSE 0 END AS retailsaleCredit,
-CASE retailsale.paymenttype
-WHEN 'cash' THEN (select CAST(retailsale.paidAmount AS Float))
-ELSE 0 END AS retailsaleCash
+ELSE 0 END AS saleliter
 
 FROM product_product pp 
 INNER JOIN product_template pt on pp.product_tmpl_id=pt.id
 INNER JOIN product_category pc on pc.id=pt.categ_id
 INNER JOIN product_uom uom on pt.uom_id=uom.id
 INNER JOIN sale on pp.id =  sale.product_id
-LEFT JOIN wholesale on pp.id = wholesale.product_id
-LEFT JOIN retailsale on pp.id = retailsale.product_id
-ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]></xml-property>
+ORDER BY pp.id)a )b group by b.customerss,customer_id)sale_qty on sale_qty.customer_id=sale_amt.customer_id)]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -4058,7 +3676,7 @@ ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]
             <design:name></design:name>
             <design:position>1</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -4088,7 +3706,7 @@ ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]
             <design:name></design:name>
             <design:position>3</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -4103,7 +3721,7 @@ ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]
             <design:name></design:name>
             <design:position>4</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -4118,7 +3736,7 @@ ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]
             <design:name></design:name>
             <design:position>5</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -4133,7 +3751,7 @@ ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]
             <design:name></design:name>
             <design:position>6</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -4162,111 +3780,6 @@ ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]
           <design:identifier>
             <design:name></design:name>
             <design:position>8</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>9</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>10</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>11</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>12</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>13</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>14</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>15</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
@@ -4809,42 +4322,6 @@ ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]
                     <property name="dataType">float</property>
                 </structure>
                 <structure>
-                    <property name="name">wholesalecredit</property>
-                    <text-property name="displayName">wholesalecredit</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["wholesalecredit"]</expression>
-                    <property name="dataType">float</property>
-                </structure>
-                <structure>
-                    <property name="name">retailsalecredit</property>
-                    <text-property name="displayName">retailsalecredit</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["retailsalecredit"]</expression>
-                    <property name="dataType">float</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation</property>
-                    <property name="dataType">float</property>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">row["wholesalecredit"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation_1</property>
-                    <property name="dataType">float</property>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">row["retailsalecredit"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
                     <property name="name">Aggregation_2</property>
                     <property name="dataType">float</property>
                     <property name="aggregateFunction">SUM</property>
@@ -4879,6 +4356,48 @@ ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]
                         </structure>
                     </list-property>
                     <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">retail_paidamount</property>
+                    <text-property name="displayName">retail_paidamount</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["retail_paidamount"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">wholesale_paidamount</property>
+                    <text-property name="displayName">wholesale_paidamount</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["wholesale_paidamount"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["wholesale_paidamount"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation_1</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["retail_paidamount"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">customer_name_paid</property>
+                    <text-property name="displayName">customer_name_paid</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["customer_name_paid"]</expression>
+                    <property name="dataType">string</property>
                 </structure>
             </list-property>
             <column id="2281">
@@ -5045,11 +4564,14 @@ ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <property name="verticalAlign">middle</property>
-                        <data id="2387">
+                        <data id="2443">
                             <property name="fontSize">8pt</property>
-                            <property name="paddingLeft">4pt</property>
+                            <property name="paddingLeft">2pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Unformatted</property>
+                            </structure>
                             <property name="textAlign">left</property>
-                            <property name="resultSetColumn">customerss</property>
+                            <property name="resultSetColumn">customer_name_paid</property>
                         </data>
                     </cell>
                     <cell id="2267">
@@ -5069,7 +4591,7 @@ ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
-                                <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
+                                <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">peanutpc</property>
@@ -5090,7 +4612,7 @@ ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
-                                <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
+                                <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">sesamepc</property>
@@ -5111,7 +4633,7 @@ ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
-                                <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
+                                <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">premierpc</property>
@@ -5127,7 +4649,7 @@ ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <property name="verticalAlign">middle</property>
-                        <data id="2391">
+                        <data id="2435">
                             <property name="fontSize">8pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
@@ -5135,7 +4657,7 @@ ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]
                                 <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
-                            <property name="resultSetColumn">wholesalecredit</property>
+                            <property name="resultSetColumn">wholesale_paidamount</property>
                         </data>
                     </cell>
                     <cell id="2272">
@@ -5148,7 +4670,7 @@ ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <property name="verticalAlign">middle</property>
-                        <data id="2392">
+                        <data id="2436">
                             <property name="fontSize">8pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
@@ -5156,7 +4678,7 @@ ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]
                                 <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
-                            <property name="resultSetColumn">retailsalecredit</property>
+                            <property name="resultSetColumn">retail_paidamount</property>
                         </data>
                     </cell>
                 </row>
@@ -5198,7 +4720,7 @@ ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
-                                <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
+                                <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">Aggregation_2</property>
@@ -5219,7 +4741,7 @@ ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
-                                <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
+                                <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">Aggregation_3</property>
@@ -5240,7 +4762,7 @@ ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
-                                <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
+                                <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">Aggregation_4</property>
@@ -5256,7 +4778,7 @@ ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <property name="verticalAlign">middle</property>
-                        <data id="2403">
+                        <data id="2437">
                             <property name="fontSize">8pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
@@ -5277,7 +4799,7 @@ ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <property name="verticalAlign">middle</property>
-                        <data id="2404">
+                        <data id="2438">
                             <property name="fontSize">8pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
@@ -5295,18 +4817,6 @@ ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]
             <property name="width">7.958333333333333in</property>
             <property name="dataSet">cash</property>
             <list-property name="boundDataColumns">
-                <structure>
-                    <property name="name">retailsalecash</property>
-                    <text-property name="displayName">retailsalecash</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["retailsalecash"]</expression>
-                    <property name="dataType">float</property>
-                </structure>
-                <structure>
-                    <property name="name">wholesalecash</property>
-                    <text-property name="displayName">wholesalecash</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["wholesalecash"]</expression>
-                    <property name="dataType">float</property>
-                </structure>
                 <structure>
                     <property name="name">sesamepc</property>
                     <text-property name="displayName">sesamepc</text-property>
@@ -5326,25 +4836,25 @@ ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]
                     <property name="dataType">float</property>
                 </structure>
                 <structure>
-                    <property name="name">Aggregation</property>
+                    <property name="name">Aggregation_2</property>
                     <property name="dataType">float</property>
                     <property name="aggregateFunction">SUM</property>
                     <list-property name="arguments">
                         <structure>
                             <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["wholesalecash"]</expression>
+                            <expression name="value" type="javascript">dataSetRow["wholesale_paidamount"]</expression>
                         </structure>
                     </list-property>
                     <property name="allowExport">true</property>
                 </structure>
                 <structure>
-                    <property name="name">Aggregation_1</property>
+                    <property name="name">Aggregation_3</property>
                     <property name="dataType">float</property>
                     <property name="aggregateFunction">SUM</property>
                     <list-property name="arguments">
                         <structure>
                             <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["retailsalecash"]</expression>
+                            <expression name="value" type="javascript">dataSetRow["retail_paidamount"]</expression>
                         </structure>
                     </list-property>
                     <property name="allowExport">true</property>
@@ -5408,7 +4918,7 @@ ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
-                                <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
+                                <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">peanutpc</property>
@@ -5429,7 +4939,7 @@ ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
-                                <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
+                                <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">sesamepc</property>
@@ -5450,7 +4960,7 @@ ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
-                                <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
+                                <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">premierpc</property>
@@ -5466,7 +4976,7 @@ ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <property name="verticalAlign">middle</property>
-                        <data id="2429">
+                        <data id="2439">
                             <property name="fontSize">8pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
@@ -5474,7 +4984,7 @@ ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]
                                 <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
-                            <property name="resultSetColumn">Aggregation</property>
+                            <property name="resultSetColumn">Aggregation_2</property>
                         </data>
                     </cell>
                     <cell id="2428">
@@ -5487,7 +4997,7 @@ ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <property name="verticalAlign">middle</property>
-                        <data id="2430">
+                        <data id="2440">
                             <property name="fontSize">8pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
@@ -5495,7 +5005,7 @@ ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]
                                 <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
-                            <property name="resultSetColumn">Aggregation_1</property>
+                            <property name="resultSetColumn">Aggregation_3</property>
                         </data>
                     </cell>
                 </row>
@@ -5506,46 +5016,16 @@ ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]
             <property name="dataSet">grandTot</property>
             <list-property name="boundDataColumns">
                 <structure>
-                    <property name="name">Aggregation</property>
-                    <property name="dataType">float</property>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["wholesalecash"] + dataSetRow["wholesalecredit"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">Aggregation_1</property>
-                    <property name="dataType">float</property>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["retailsalecash"] + dataSetRow["retailsalecredit"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
                     <property name="name">Aggregation_2</property>
                     <property name="dataType">float</property>
                     <property name="aggregateFunction">SUM</property>
                     <list-property name="arguments">
                         <structure>
                             <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["wholesalecash"] + dataSetRow["wholesalecredit"] + dataSetRow["retailsalecash"] + dataSetRow["retailsalecredit"]</expression>
+                            <expression name="value" type="javascript">dataSetRow["wholesale_paidamount"] + dataSetRow["retail_paidamount"]</expression>
                         </structure>
                     </list-property>
                     <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">pp</property>
-                    <text-property name="displayName">pp</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["pp"]</expression>
-                    <property name="dataType">float</property>
                 </structure>
                 <structure>
                     <property name="name">Aggregation_3</property>
@@ -5554,7 +5034,7 @@ ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]
                     <list-property name="arguments">
                         <structure>
                             <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["pp"]</expression>
+                            <expression name="value" type="javascript">dataSetRow["premierpc"]</expression>
                         </structure>
                     </list-property>
                     <property name="allowExport">true</property>
@@ -5566,7 +5046,7 @@ ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]
                     <list-property name="arguments">
                         <structure>
                             <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["ss"]</expression>
+                            <expression name="value" type="javascript">dataSetRow["sesamepc"]</expression>
                         </structure>
                     </list-property>
                     <property name="allowExport">true</property>
@@ -5578,7 +5058,31 @@ ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]
                     <list-property name="arguments">
                         <structure>
                             <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["p"]</expression>
+                            <expression name="value" type="javascript">dataSetRow["peanutpc"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">dataSetRow["wholesale_paidamount"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation_1</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">dataSetRow["retail_paidamount"]</expression>
                         </structure>
                     </list-property>
                     <property name="allowExport">true</property>
@@ -5648,7 +5152,7 @@ ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <property name="verticalAlign">middle</property>
-                        <data id="2400">
+                        <data id="2441">
                             <property name="fontSize">8pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
@@ -5669,7 +5173,7 @@ ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <property name="verticalAlign">middle</property>
-                        <data id="2401">
+                        <data id="2442">
                             <property name="fontSize">8pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
@@ -5717,7 +5221,7 @@ ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
-                                <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
+                                <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">Aggregation_5</property>
@@ -5738,7 +5242,7 @@ ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
-                                <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
+                                <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">Aggregation_4</property>
@@ -5759,7 +5263,7 @@ ORDER BY pp.id)a )b group by b.customerss,b.wholesalecredit,b.retailsaleCredit]]
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
-                                <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
+                                <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">Aggregation_3</property>

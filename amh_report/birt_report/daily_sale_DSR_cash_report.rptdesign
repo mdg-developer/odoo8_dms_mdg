@@ -40,18 +40,6 @@
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
-        <scalar-parameter name="dsr_no" id="1556">
-            <text-property name="promptText">DSR No</text-property>
-            <property name="valueType">static</property>
-            <property name="dataType">string</property>
-            <property name="distinct">true</property>
-            <list-property name="selectionList"/>
-            <property name="paramType">simple</property>
-            <property name="controlType">text-box</property>
-            <structure name="format">
-                <property name="category">Unformatted</property>
-            </structure>
-        </scalar-parameter>
         <cascading-parameter-group name="NewCascadingParameterGroup" id="1246">
             <property name="dataSet">SaleTeam_DS</property>
             <property name="dataSetMode">single</property>
@@ -2628,37 +2616,9 @@ Group by A.partner_id,A.discount)final]]></xml-property>
                             <property name="resultSetColumn">sinolast</property>
                         </data>
                     </cell>
-                    <cell id="1526">
-                        <label id="1554">
-                            <property name="fontFamily">"Zawgyi-One"</property>
-                            <property name="fontSize">8pt</property>
-                            <property name="paddingLeft">1pt</property>
-                            <property name="paddingRight">2pt</property>
-                            <property name="textAlign">right</property>
-                            <text-property name="text">DSR No</text-property>
-                        </label>
-                    </cell>
-                    <cell id="1527">
-                        <label id="1555">
-                            <property name="fontSize">8pt</property>
-                            <text-property name="text">:</text-property>
-                        </label>
-                    </cell>
-                    <cell id="1528">
-                        <data id="1557">
-                            <property name="fontSize">8pt</property>
-                            <property name="paddingRight">2pt</property>
-                            <property name="textAlign">left</property>
-                            <list-property name="boundDataColumns">
-                                <structure>
-                                    <property name="name">dsr_no</property>
-                                    <expression name="expression" type="javascript">params["dsr_no"]</expression>
-                                    <property name="dataType">string</property>
-                                </structure>
-                            </list-property>
-                            <property name="resultSetColumn">dsr_no</property>
-                        </data>
-                    </cell>
+                    <cell id="1526"/>
+                    <cell id="1527"/>
+                    <cell id="1528"/>
                 </row>
             </header>
         </table>

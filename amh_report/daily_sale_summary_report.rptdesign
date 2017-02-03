@@ -39,18 +39,6 @@
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
-        <scalar-parameter name="dss_no" id="1571">
-            <text-property name="promptText">DSS No</text-property>
-            <property name="valueType">static</property>
-            <property name="dataType">string</property>
-            <property name="distinct">true</property>
-            <list-property name="selectionList"/>
-            <property name="paramType">simple</property>
-            <property name="controlType">text-box</property>
-            <structure name="format">
-                <property name="category">Unformatted</property>
-            </structure>
-        </scalar-parameter>
         <scalar-parameter name="pricelist" id="1507">
             <text-property name="promptText">Price List</text-property>
             <property name="valueType">dynamic</property>
@@ -2225,43 +2213,6 @@ Group by a.deduction_amt)abc]]></xml-property>
                             </structure>
                         </list-property>
                         <property name="resultSetColumn">date</property>
-                    </data>
-                </cell>
-            </row>
-            <row id="1561">
-                <property name="height">0.25833333333333336in</property>
-                <cell id="1562"/>
-                <cell id="1563"/>
-                <cell id="1564"/>
-                <cell id="1565"/>
-                <cell id="1566">
-                    <label id="1569">
-                        <property name="fontFamily">"Zawgyi-One"</property>
-                        <property name="fontSize">8pt</property>
-                        <property name="paddingRight">2pt</property>
-                        <property name="textAlign">right</property>
-                        <text-property name="text">DSS No</text-property>
-                    </label>
-                </cell>
-                <cell id="1567">
-                    <label id="1570">
-                        <property name="fontSize">9pt</property>
-                        <text-property name="text">:</text-property>
-                    </label>
-                </cell>
-                <cell id="1568">
-                    <data id="1572">
-                        <property name="fontSize">8pt</property>
-                        <property name="paddingLeft">2pt</property>
-                        <property name="textAlign">left</property>
-                        <list-property name="boundDataColumns">
-                            <structure>
-                                <property name="name">dss_no</property>
-                                <expression name="expression" type="javascript">params["dss_no"]</expression>
-                                <property name="dataType">string</property>
-                            </structure>
-                        </list-property>
-                        <property name="resultSetColumn">dss_no</property>
                     </data>
                 </cell>
             </row>
