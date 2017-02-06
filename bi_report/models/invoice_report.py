@@ -25,7 +25,8 @@ class account_invoice_report(osv.osv):
     _columns = {
             'invoice_no':fields.char('Invoice'),
         'price_unit': fields.float('Unit Price'),
-      'price_subtotal': fields.float('Sub Total'),
+        'sale_amount':fields.float('Sale Amount'),
+      'price_subtotal': fields.float('Net Sale Amount'),
         'discount_amt': fields.float('Discount Amount'),
         'product_type': fields.char('Product Type'),
     }
@@ -34,7 +35,7 @@ class account_invoice_report(osv.osv):
     }
 
     def _select(self):
-        return  super(account_invoice_report, self)._select() + ", sub.price_unit as price_unit,sub.discount_amt as discount_amt,sub.price_subtotal ,sub.product_type as product_type,sub.number as invoice_no"
+        return  super(account_invoice_report, self)._select() + ", sub.price_unit as price_unit,(sub.product_qty* sub.price_unit ) as  sale_amount, sub.discount_amt as discount_amt,sub.price_subtotal ,sub.product_type as product_type,sub.number as invoice_no"
 
     def _sub_select(self):
         return  super(account_invoice_report, self)._sub_select() + ", ai.number,ail.price_unit,ail.discount_amt,ail.price_subtotal,pt.type as product_type"
