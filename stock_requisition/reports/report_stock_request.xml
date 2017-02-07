@@ -3,19 +3,10 @@
 	<data>
 		<template id="report_stock_request_document">
 			<t t-call="report.external_layout">
-				<div class="page">
-					<div class="row">
-						<div class="col-xs-5 col-xs-offset-7">
-							<address t-field="o.partner_id"
-								t-field-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: true}" />
-							<span t-field="o.partner_id.vat" />
-						</div>
-					</div>
-
+				<div class="page" >
 					<h2>
 						<p>Request For Issue</p>
 					</h2>
-
 					<table class="table table-condensed">
 						<tr>
 							<td style="border:0pt;font-size:10pt;">
@@ -23,6 +14,13 @@
 							</td>
 							<td style="border:0pt;font-size:10pt;">
 								<strong t-field="o.name"></strong>
+							</td>
+
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Branch:</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.branch_id.name" />
 							</td>
 						</tr>
 
@@ -85,11 +83,12 @@
 
 						<tr>
 							<td style="border:0pt;font-size:10pt;">
-								<strong>Branch:</strong>
+								<strong>Last Updated on:</strong>
 							</td>
 							<td style="border:0pt;font-size:10pt;">
-								<span t-field="o.branch_id.name" />
+								<span t-field="o.write_date" />
 							</td>
+
 							<td style="border:0pt;font-size:10pt;">
 								<strong>Approved By:</strong>
 							</td>
@@ -115,7 +114,7 @@
 									<td>
 										<span t-field="l.product_id" />
 									</td>
-									<td align="center" >
+									<td align="center">
 										<span t-field="l.big_req_quantity" />
 										/
 										<span t-field="l.req_quantity" />

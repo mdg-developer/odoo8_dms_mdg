@@ -48,7 +48,7 @@
 						<group>
 							<notebook>
 								<page string="Stock List">
-									<field name="p_line" attrs="{'readonly':[('state','=','approve')]}">
+									<field name="p_line"   attrs="{'readonly':[('state','=','received')]}">
 										<tree string="Stock Return Line" editable="bottom"
 											default_order="sequence asc">
 											<field name="sequence" invisible="1" />
@@ -66,9 +66,9 @@
 											<field name="product_uom" invisible="1" />
 											<field name="uom_ratio" invisible="1" />
 											<!-- <field name="qty_by_wh" /> -->
-											<field name="rec_big_quantity" string="Received Qty(B)"  />
+											<field name="rec_big_quantity" string="Received Qty(B)" />
 											<field name="rec_small_quantity" string="Received Qty(S)" />
-											<field name="expiry_date" string="Expiry" attrs="{'readonly':True}" />
+											<field name="expiry_date" string="Expiry" />
 											<field name="remark" string="Remark" />
 										</tree>
 									</field>
