@@ -55,7 +55,7 @@
                 </ex-property>
             </list-property>
             <property name="odaDriverClass">org.postgresql.Driver</property>
-            <property name="odaURL">jdbc:postgresql://localhost:5432/mdg_uat_30012017</property>
+            <property name="odaURL">jdbc:postgresql://localhost:5432/mdg_uat_07022017</property>
             <property name="odaUser">openerp</property>
             <encrypted-property name="odaPassword" encryptionID="base64">b3BlbnBncHdk</encrypted-property>
         </oda-data-source>
@@ -431,26 +431,31 @@ from res_company
                     </structure>
                     <structure>
                         <property name="position">27</property>
-                        <property name="name">id</property>
+                        <property name="name">product_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">28</property>
+                        <property name="name">id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">29</property>
                         <property name="name">saleman_name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">29</property>
+                        <property name="position">30</property>
                         <property name="name">no_of_distribution</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">30</property>
+                        <property name="position">31</property>
                         <property name="name">amount</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">31</property>
+                        <property name="position">32</property>
                         <property name="name">so_propo_dis</property>
                         <property name="dataType">integer</property>
                     </structure>
@@ -616,30 +621,36 @@ from res_company
                 </structure>
                 <structure>
                     <property name="position">27</property>
+                    <property name="name">product_id</property>
+                    <property name="nativeName">product_id</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">28</property>
                     <property name="name">id</property>
                     <property name="nativeName">id</property>
                     <property name="dataType">integer</property>
                 </structure>
                 <structure>
-                    <property name="position">28</property>
+                    <property name="position">29</property>
                     <property name="name">saleman_name</property>
                     <property name="nativeName">saleman_name</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">29</property>
+                    <property name="position">30</property>
                     <property name="name">no_of_distribution</property>
                     <property name="nativeName">no_of_distribution</property>
                     <property name="dataType">decimal</property>
                 </structure>
                 <structure>
-                    <property name="position">30</property>
+                    <property name="position">31</property>
                     <property name="name">amount</property>
                     <property name="nativeName">amount</property>
                     <property name="dataType">float</property>
                 </structure>
                 <structure>
-                    <property name="position">31</property>
+                    <property name="position">32</property>
                     <property name="name">so_propo_dis</property>
                     <property name="nativeName">so_propo_dis</property>
                     <property name="dataType">integer</property>
@@ -647,25 +658,36 @@ from res_company
             </list-property>
             <xml-property name="queryText"><![CDATA[select *,(select count(msl.id) from mobile_sale_order_line msl where msl.order_id=ms_id) as no_of_distribution,(stocking_qty*stocking_unit_price)*-1 as amount,get_msol_seq(ms_id,msl_id) as so_propo_dis
 from (select ms.id as ms_id,msl.id as msl_id,ms.name,ms.customer_code,ms.date::date,ms.due_date,msl.discount,msl.discount_amt,get_smaller_qty(msl.uom_id,msl.product_uos_qty,msl.product_id) product_uos_qty,
-crm.code as team_code,Cast((select case when substr(name,0,2) ~ '^([0-9]+\.?[0-9]*|\.[0-9]+)$' then substr(name,4) else name end as name from crm_case_section where id=crm.id) || '-' || pp.name_template as character varying) as product_name,term.name as payment_term,msl.price_unit,uom.name as uom,pt.description_sale description,rp.comment as internal_note,ms.name as invoice,'1518-PTN'::character varying as receivable_account,get_smaller_qty(msl.uom_id,msl.product_uos_qty,msl.product_id) stocking_qty,msl.price_unit as stocking_unit_price,
-res.partner_id as partner_id,rp.name as ship_to_name,Cast(address || ',' || rc.name || ',' || rcs.name || ',' || city.name || ',' || town.name as character varying ) as ship_address,'Vehicle'::character varying as ship_via,'1518-YGN'::character varying as gl_account,1 as tax_type
+crm.code as team_code,Cast((select case when substr(name,0,2) ~ '^([0-9]+\.?[0-9]*|\.[0-9]+)$' then substr(name,4) else name end as name from crm_case_section where id=crm.id) || '-' || pp.name_template as character varying) as product_name,term.name as payment_term,msl.price_unit,uom.name as uom,pt.description_sale description,rp.comment as internal_note,ai.number as invoice,(select aa.name receivable_account from product_product pp left join product_template pt on (pp.product_tmpl_id=pt.id) left join product_maingroup pg on (pt.main_group=pg.id) left join account_account aa on (aa.id=pg.property_account_receivable) where pp.id=product_id),get_smaller_qty(msl.uom_id,msl.product_uos_qty,msl.product_id) stocking_qty,msl.price_unit as stocking_unit_price,
+res.partner_id as partner_id,rp.name as ship_to_name,Cast(address || ',' || rc.name || ',' || rcs.name || ',' || city.name || ',' || town.name as character varying ) as ship_address,'Vehicle'::character varying as ship_via,
+(select name gl_account
+from account_account
+where id in (
+select substring(value_reference,17)::int from ir_property ip,ir_model_fields im where im.id=ip.fields_id and model='product.category' and im.name='property_account_income_categ' and res_id='product.category,'|| (
+select id from product_category where id=cat.id)
+)
+),
+1 as tax_type,pp.id product_id
 from mobile_sale_order ms
-left join mobile_sale_order_line msl on ms.id=msl.order_id
-left join product_uom uom on uom.id=msl.uom_id
-left join account_payment_term term on ms.payment_term=term.id
-left join crm_case_section crm on ms.sale_team=crm.id
-left join product_product pp on msl.product_id=pp.id
-left join product_template pt on pp.product_tmpl_id=pt.id
-left join res_partner rp on ms.partner_id=rp.id
-left join res_country rc on rc.id=rp.country_id
-left join res_country_state rcs on rcs.id=rp.state_id
-left join res_city city on city.id=rp.city
-left join res_township town on town.id=rp.township
-left join res_users res on ms.user_id=res.id)A join (select id,name as saleman_name from res_partner)B on A.partner_id = B.id
-and A.date::date between ? and ?
-order by A.name,A.msl_id,A.date
-
-]]></xml-property>
+inner join sale_order so on (ms.name=so.tb_ref_no) 
+inner join account_invoice ai on (ai.origin=so.name) 
+inner join mobile_sale_order_line msl on (ms.id=msl.order_id)
+left join account_payment_term term on (ms.payment_term=term.id)
+left join crm_case_section crm on (ms.sale_team=crm.id)
+left join product_product pp on (msl.product_id=pp.id)
+left join product_template pt on (pp.product_tmpl_id=pt.id)
+left join product_uom uom on (uom.id=pt.uom_id)
+left join product_category cat on (pt.categ_id=cat.id)
+left join res_partner rp on (ms.partner_id=rp.id)
+left join res_country rc on (rc.id=rp.country_id)
+left join res_country_state rcs on (rcs.id=rp.state_id)
+left join res_city city on (city.id=rp.city)
+left join res_township town on (town.id=rp.township)
+left join res_users res on (ms.user_id=res.id)
+where m_status='done')A join (select id,name as saleman_name from res_partner)B on A.partner_id = B.id
+where A.date::date between ? and ?
+group by customer_code,ms_id,msl_id,a.name,a.team_code,a.date,due_date,discount,discount_amt,product_uos_qty,product_name,payment_term,price_unit,uom,description,internal_note,invoice,receivable_account,stocking_qty,stocking_unit_price,partner_id,ship_to_name,ship_address,ship_via,gl_account,tax_type,product_id,id,saleman_name
+order by A.name,A.msl_id,A.date]]></xml-property>
         </oda-data-set>
     </data-sets>
     <styles>
@@ -2344,7 +2366,7 @@ order by A.name,A.msl_id,A.date
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="3158">
+                        <data id="3159">
                             <property name="textAlign">center</property>
                             <property name="resultSetColumn">team_code</property>
                         </data>
@@ -2458,6 +2480,10 @@ order by A.name,A.msl_id,A.date
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <data id="3158">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">so_propo_dis</property>
+                        </data>
                     </cell>
                     <cell id="3086">
                         <property name="borderBottomStyle">solid</property>

@@ -19,7 +19,7 @@ class sale_denomination(osv.osv):
         'user_id':fields.many2one('res.users', 'Salesman Name'  , required=True, select=True, track_visibility='onchange'),
         'tablet_id':fields.char('Tablet ID'),
         'name':fields.char('Txn' , readonly=True),
-        'invoice_count':fields.integer('Invoiced' ,readonly=True),
+        'invoice_count':fields.integer('Invoiced' ,readonly=False),
        'denomination_product_line':fields.one2many('sales.denomination.product.line', 'denomination_product_ids', string='Sale denomination Product Line', copy=True),
        'denomination_note_line':fields.one2many('sales.denomination.note.line', 'denomination_note_ids', string='Sale denomination Product Line', copy=True ),
        'denomination_cheque_line':fields.one2many('sales.denomination.cheque.line', 'denomination_cheque_ids', string='Sale denomination Cheque Line', copy=True ),
@@ -54,8 +54,10 @@ class sale_denomination(osv.osv):
         team_id = None
         payment_ids = None
         ar_payment_ids = None
+        tablet_id=None
         bank_ids = None
         ar_bank_ids = None        
+        invoice_count=None
         discount_amount=0.0
         discount_total=0.0
         product_amount=0.0
@@ -75,6 +77,8 @@ class sale_denomination(osv.osv):
                 cr.execute("select id from customer_payment where date=%s and sale_team_id=%s and payment_code='CHEQ' ", (de_date, team_id,))
                 payment_ids = cr.fetchall()
             if team_id:
+                cr.execute("select name from tablets_information where sale_team_id=%s",(team_id,))
+                tablet_id=cr.fetchone()[0]
                 cr.execute("select id from ar_payment where date=%s and sale_team_id=%s and payment_code='CHEQ' ", (de_date, team_id,))
                 ar_payment_ids = cr.fetchall()
             if team_id:
@@ -123,6 +127,7 @@ class sale_denomination(osv.osv):
                                           'amount':data[2]}
                         order_line_data.append(data_id)
                     mobile_data = invoice_obj.search(cr, uid, [('id', 'in', tuple(pre_mobile_ids))], context=context)   
+                    invoice_count =len(mobile_data)
                     for mobile_id  in mobile_data:
                         cr.execute('select deduct_amt,amount_untaxed,additional_discount from account_invoice where id =%s', (mobile_id,))
                         invoice_data = cr.fetchone()          
@@ -175,7 +180,8 @@ class sale_denomination(osv.osv):
                                       'journal_id':journal_id,
                                       'amount': amount,}
                     transfer_data.append(data_id)                    
-            value['value'] = {
+            value['value'] = {           'tablet_id':tablet_id,
+                                             'invoice_count':invoice_count,
                                             'denomination_product_line': order_line_data ,
                                             'denomination_note_line':note,
                                             'denomination_cheque_line':cheque_data,
