@@ -193,6 +193,8 @@ class mobile_sale_order(osv.osv):
                                   'uom_id':sol['uom_id']
                                 }
                                 mobile_sale_order_line_obj.create(cursor, user, mso_line_res, context=context) 
+                    #convertintablet(KM)
+                    mobile_sale_order_obj.action_convert_so(cursor, user, [s_order_id], context=context)    
                     sale_order_name_list.append(so['name'])
             print 'True'
             return True       
