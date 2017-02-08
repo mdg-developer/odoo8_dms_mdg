@@ -111,7 +111,7 @@ class sale_denomination(osv.osv):
                 if  pre_mobile_ids:
                     line_ids = invoice_line_obj.search(cr, uid, [('invoice_id', 'in', tuple(pre_mobile_ids))], context=context)   
                     order_line_ids = invoice_line_obj.browse(cr, uid, line_ids, context=context)                
-                    cr.execute(' select product_id,sum(quantity) as quantity,sum(price_subtotal) as  sub_total from account_invoice_line where id in %s group by product_id', (tuple(order_line_ids.ids),))
+                    cr.execute('select product_id,sum(quantity) as quantity,sum(price_subtotal) as  sub_total from account_invoice_line where id in %s group by product_id', (tuple(order_line_ids.ids),))
                     order_line = cr.fetchall()
                     for data in order_line:
                         product = self.pool.get('product.product').browse(cr, uid, data[0], context=context)
@@ -124,13 +124,13 @@ class sale_denomination(osv.osv):
                         order_line_data.append(data_id)
                     mobile_data = invoice_obj.search(cr, uid, [('id', 'in', tuple(pre_mobile_ids))], context=context)   
                     for mobile_id  in mobile_data:
-                        mobile =invoice_obj.browse(cr, uid, mobile_id, context=context)
-                        deduct_amt= mobile.deduct_amt
-                        amount_total= mobile.amount_untaxed
-                        deduct_percent=mobile.additional_discount/100
+                        cr.execute('select deduct_amt,amount_untaxed,additional_discount from account_invoice where id =%s', (mobile_id,))
+                        invoice_data = cr.fetchone()          
+                        deduct_amt= invoice_data[0]
+                        amount_total= invoice_data[1]
+                        deduct_percent=invoice_data[2]/100
                         discount_total +=  amount_total * deduct_percent
                         discount_amount+=deduct_amt
-                    print 'data',
             if  payment_ids:
                 for payment in payment_ids:
                     payment_data = payment_obj.browse(cr, uid, payment, context=context)                  
