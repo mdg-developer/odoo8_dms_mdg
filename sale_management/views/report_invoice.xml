@@ -233,8 +233,9 @@
 											</span>
 										</td>
 										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
-											<!-- <span t-field="o.amount_total" /> -->
-											<t t-set="total" t-value="o.amount_untaxed"/>
+											<!-- <span t-field="o.amount_total" /> 
+											<t t-set="total" t-value="o.amount_untaxed"/>-->
+											<t t-set="total" t-value="o.amount_untaxed+remain"/>
 											<t t-esc="'%.0f'%total" />
 										</td>
 									</tr>
