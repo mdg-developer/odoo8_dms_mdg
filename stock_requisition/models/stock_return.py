@@ -289,7 +289,7 @@ class stock_return(osv.osv):
             big_return_quantity=line.return_quantity_big
             return_quantity=line.return_quantity
             
-            if (rec_small_quantity + rec_big_quantity > 0):
+            if (rec_small_quantity + rec_big_quantity > 0) and ex_return_id is False:
                 product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)       
                 name = line.product_id.name_template                                                                               
                 cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (rec_big_uom_id,))
@@ -317,16 +317,33 @@ class stock_return(osv.osv):
                                               'state':'confirmed'}, context=context)     
                         move_id = move_obj.action_done(cr, uid, move_id, context=context)
             print ' ex_return_id ,return_quantity',ex_return_id ,return_quantity
-            if ex_return_id and return_quantity<0:
+            if ex_return_id:
                 product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)       
-                name = line.product_id.name_template          
+                name = line.product_id.name_template     
+                cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (rec_big_uom_id,))
+                big_qty = cr.fetchone()
+                if big_qty:
+                        bigger_qty = big_qty[0] * rec_big_quantity      
+                        return_big_qty = big_qty[0] * big_return_quantity 
+                        total_return_qty=  return_big_qty +  return_quantity        
+                        total_rec_qty=  bigger_qty +  rec_small_quantity        
                 cr.execute("select customer_id from product_transactions where  id =%s  ",(ex_return_id,))
                 partner_id=cr.fetchone()[0]
-                partner_data = partner_obj.browse(cr, uid, partner_id, context=context)    
-                location_id = partner_data.property_stock_customer.id
-                from_location_id = ven_location_id
-                cr.execute('select id from stock_picking_type where default_location_dest_id=%s and default_location_src_id = %s', (location_id, from_location_id,))
-                price_rec = cr.fetchone()
+                partner_data = partner_obj.browse(cr, uid, partner_id, context=context) 
+                if return_quantity < 0:   
+                    location_id = partner_data.property_stock_customer.id
+                    from_location_id = main_location_id
+                    quantity = -1 * total_return_qty
+                    cr.execute("select id from stock_picking_type where default_location_dest_id=%s and default_location_src_id =%s", (location_id, from_location_id,))
+                    price_rec = cr.fetchone()
+                    print 'price_recprice_rec',price_rec                    
+                else:
+                    location_id =main_location_id
+                    from_location_id =  partner_data.property_stock_customer.id
+                    quantity = -1 * total_rec_qty
+                    cr.execute("select id from stock_picking_type where default_location_dest_id=%s and name=%s ", (location_id,'Receipts',))
+                    price_rec = cr.fetchone()
+                    print 'price_recprice_rec',price_rec
                 if price_rec: 
                     picking_type_id = price_rec[0] 
                 else:
@@ -339,8 +356,8 @@ class stock_return(osv.osv):
                 move_id=move_obj.create(cr, uid, {'picking_id': picking_id,
                                              'picking_type_id':picking_type_id,
                                               'product_id': product_id,
-                                              'product_uom_qty': -1*return_quantity,
-                                              'product_uos_qty': -1*return_quantity,
+                                              'product_uom_qty': quantity,
+                                              'product_uos_qty': quantity,
                                               'product_uom':rec_small_uom_id,
                                               'location_id':from_location_id,
                                               'location_dest_id':location_id,

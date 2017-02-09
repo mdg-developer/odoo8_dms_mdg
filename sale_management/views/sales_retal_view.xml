@@ -41,16 +41,13 @@
 						</group>
 						<group>
 							<group>
+								<field name="month_cost" />
+								<field name="rental_month" />
 								<field name="total_amt" />
 							</group>
-							<!-- <group> -->
-							<!-- <field name="image" widget='image' class="oe_avatar" /> -->
-							<!-- </group> -->
-
 						</group>
 						<notebook>
 							<page string="Photo">
-
 							</page>
 						</notebook>
 						<hr />

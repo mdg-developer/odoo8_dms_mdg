@@ -194,7 +194,7 @@ class mobile_sale_order(osv.osv):
                                 }
                                 mobile_sale_order_line_obj.create(cursor, user, mso_line_res, context=context) 
                     #convertintablet(KM)
-                    mobile_sale_order_obj.action_convert_so(cursor, user, [s_order_id], context=context)    
+                    #mobile_sale_order_obj.action_convert_so(cursor, user, [s_order_id], context=context)    
                     sale_order_name_list.append(so['name'])
             print 'True'
             return True       
@@ -279,8 +279,7 @@ class mobile_sale_order(osv.osv):
                                   'batchno':ptl['batchno'],
                                 }
                                 product_trans_line_obj.create(cursor, user, mso_line_res, context=context)
-                    if exchange_type != 'Exchange' and pt['void_flag'] == 'none':
-                        product_trans_obj.action_convert_ep(cursor, user, [s_order_id], context=context)
+#                         product_trans_obj.action_convert_ep(cursor, user, [s_order_id], context=context)
 
                                     
             print 'Truwwwwwwwwwwwwwwwwwwwwwe'
@@ -1510,15 +1509,19 @@ class mobile_sale_order(osv.osv):
                         partner_id = None
                     
                     rental_result = {
-                    
                         'partner_id':partner_id,
                         'from_date':ar['from_date'],
                         'date':ar['date'] ,
                         'to_date':ar['to_date'],
-                        'image':ar['image'],
+                        'image':ar['image1'],
+                        'image1':ar['image2'],
+                        'image2':ar['image3'],
+                        'image3':ar['image4'],
+                        'image4':ar['image5'],
+                        'note':ar['note'],
                         'company_id':ar['company_id'],
-                        'monthy_amt':ar['monthy_amt'],
-                        'month':'month',
+                        'month_cost':ar['monthy_amt'],
+                        'rental_month':'month',
                         'latitude':ar['latitude'],
                         'longitude':ar['longitude'],
                         'address':ar['address'],
@@ -1531,6 +1534,7 @@ class mobile_sale_order(osv.osv):
          except Exception, e:
             print 'False'
             return False
+        
     def get_credit_notes(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('''            
                   select ac.id,ac.description,ac.name,ac.used_date,
