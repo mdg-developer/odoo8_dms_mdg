@@ -30,7 +30,14 @@ class pre_sale_state(osv.osv_memory):
     _defaults = {
          'confirm': True,         
     }
-
+    def automation_pre_order(self, cr, uid,context=None):
+        mobile_obj = self.pool.get('pre.sale.order')
+        list_mobile = mobile_obj.search(cr, uid, [('void_flag', '=', 'none'), ('m_status', '=', 'draft'), ('partner_id', '!=', None)])            
+        for mobile in list_mobile: 
+            print 'preeeeeemobileeeeeeeeee',mobile
+            mobile_obj.action_convert_presaleorder(cr, uid, [mobile], context=context)    
+        return True
+    
     def print_report(self, cr, uid, ids, context=None):
         data = self.read(cr, uid, ids, context=context)[0]
         mobile_obj = self.pool.get('pre.sale.order')

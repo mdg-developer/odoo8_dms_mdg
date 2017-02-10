@@ -183,7 +183,7 @@
 			<field name="name">sales.denomination.tree</field>
 			<field name="model">sales.denomination</field>
 			<field name="arch" type="xml">
-				<tree string="Sales Denomination">
+				<tree string="Sales Denomination" default_order="name desc" >
 					<field name="name" />
 					<field name="date" />
 					<field name="sale_team_id" />
