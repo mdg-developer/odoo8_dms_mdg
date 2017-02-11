@@ -27,20 +27,6 @@
     <property name="account_cube.balance_sheet_report.y">80</property>
     <property name="Finance Cube.balance_sheet_report.x">135</property>
     <property name="Finance Cube.balance_sheet_report.y">80</property>
-    <list-property name="propertyBindings">
-        <structure>
-            <property name="name">queryText</property>
-            <property name="id">17</property>
-        </structure>
-        <structure>
-            <property name="name">queryTimeOut</property>
-            <property name="id">17</property>
-        </structure>
-        <structure>
-            <property name="name">rowFetchSize</property>
-            <property name="id">17</property>
-        </structure>
-    </list-property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="layoutPreference">auto layout</property>
@@ -48,7 +34,7 @@
     <property name="imageDPI">96</property>
     <list-property name="libraries">
         <structure>
-            <property name="fileName">birt_report/general_library.rptlibrary</property>
+            <property name="fileName">general_library.rptlibrary</property>
             <property name="namespace">general_library</property>
         </structure>
     </list-property>
@@ -61,15 +47,13 @@
             <property name="dataSetName">report_name</property>
             <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
             <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
-            <expression name="sortByColumn">dataSetRow["name"]</expression>
-            <property name="sortDirection">asc</property>
             <property name="dataType">integer</property>
             <property name="distinct">true</property>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
             <property name="controlType">list-box</property>
             <property name="mustMatch">true</property>
-            <property name="fixedOrder">false</property>
+            <property name="fixedOrder">true</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
             </structure>
@@ -135,7 +119,7 @@
                     <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select id,name from account_financial_report where parent_id is null and id in (1,4,9)]]></xml-property>
+            <xml-property name="queryText"><![CDATA[select id,name from account_financial_report where parent_id is null order by name ]]></xml-property>
         </oda-data-set>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="balance_sheet_report" id="17">
             <property name="nullsOrdering">nulls lowest</property>
@@ -1328,6 +1312,7 @@ from res_company]]></xml-property>
                         <property name="borderRightStyle">none</property>
                         <property name="borderTopStyle">none</property>
                         <data id="619">
+                            <property name="fontFamily">"Zawgyi-One"</property>
                             <property name="dataSet">company</property>
                             <list-property name="boundDataColumns">
                                 <structure>
@@ -1678,6 +1663,21 @@ from res_company]]></xml-property>
                             <property name="levels">
                                 <extended-item extensionName="LevelView" name="NewLevel View2" id="553">
                                     <property name="level">Group2/period_name</property>
+                                    <property name="sort">
+                                        <sort-element>
+                                            <expression name="key" type="javascript">var period = String(dimension["Group2"]["period_name"]);
+var periodcode = period.substring(0,period.indexOf('/'));
+if(period.indexOf('Opening')!=-1)
+{
+0
+}else 
+{
+periodcode
+}</expression>
+                                            <property name="direction">asc</property>
+                                            <property name="strength">-1</property>
+                                        </sort-element>
+                                    </property>
                                     <property name="member">
                                         <extended-item extensionName="CrosstabCell" id="554">
                                             <property name="content">

@@ -8,7 +8,7 @@
     <property name="imageDPI">96</property>
     <list-property name="libraries">
         <structure>
-            <property name="fileName">birt_report/general_library.rptlibrary</property>
+            <property name="fileName">general_library.rptlibrary</property>
             <property name="namespace">general_library</property>
         </structure>
     </list-property>
@@ -1442,6 +1442,7 @@ order by code]]></xml-property>
                         <property name="borderRightStyle">none</property>
                         <property name="borderTopStyle">none</property>
                         <data id="389">
+                            <property name="fontFamily">"Zawgyi-One"</property>
                             <property name="fontSize">10pt</property>
                             <property name="dataSet">company</property>
                             <list-property name="boundDataColumns">

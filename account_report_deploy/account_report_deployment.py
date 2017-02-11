@@ -33,10 +33,9 @@ class account_report_deployment(osv.osv):
         report_path = fpath + "/report"
         script_path = fpath + "/script"
         link_path = fpath + "/report_link"
-        inventory_path = fpath + "/inventory_report"
-        
+                
         to_location = to_location.replace('\\', '/')
-        report_library_path = to_location + "/birt_report" 
+        report_library_path = to_location 
            
         urlPrefix = data.report_url    
         if os.path.exists(report_library_path):
@@ -75,18 +74,6 @@ class account_report_deployment(osv.osv):
             else:  
                    
                 shutil.copy(report_path + "/" + rname, to_location)
-        
-        for iname in os.listdir(inventory_path):
-           
-            check_report = to_location + "/" + iname
-            if os.path.isfile(check_report): 
-                             
-                os.remove(check_report)                  
-              
-                shutil.copy(inventory_path + "/" + iname, to_location)              
-            else:  
-                   
-                shutil.copy(inventory_path + "/" + iname, to_location)    
             
         array = []
         script = ""

@@ -160,10 +160,9 @@
                 </ex-property>
             </list-property>
             <property name="odaDriverClass">org.postgresql.Driver</property>
-            <property name="odaURL">jdbc:postgresql://localhost:5432/ACCOUNT_REPORT_DEMO</property>
+            <property name="odaURL">jdbc:postgresql://localhost:5432/AMH_10_2_17</property>
             <property name="odaUser">openerp</property>
-            <encrypted-property name="odaPassword" encryptionID="base64">b3BlbnBncHdk</encrypted-property>
-            <property name="odaJndiName">java:comp/env/jdbc/ReportDB</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">b3BlbnBncHdk</encrypted-property>            
         </oda-data-source>
     </data-sources>
     <data-sets>

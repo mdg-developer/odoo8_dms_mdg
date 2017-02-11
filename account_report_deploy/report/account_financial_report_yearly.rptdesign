@@ -72,7 +72,7 @@
     <property name="imageDPI">96</property>
     <list-property name="libraries">
         <structure>
-            <property name="fileName">birt_report/general_library.rptlibrary</property>
+            <property name="fileName">general_library.rptlibrary</property>
             <property name="namespace">general_library</property>
         </structure>
         <structure>
@@ -226,7 +226,7 @@
                     <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select id,name from account_financial_report where parent_id is null and id in (1,4,9) order by name asc
+            <xml-property name="queryText"><![CDATA[select id,name from account_financial_report where parent_id is null order by name asc
 ]]></xml-property>
         </oda-data-set>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="fiscal_year" id="10">
@@ -1408,7 +1408,7 @@ where frt.id =?
                     <property name="colSpan">2</property>
                     <property name="rowSpan">1</property>
                     <data id="1027">
-                        <property name="fontFamily">"Arial"</property>
+                        <property name="fontFamily">"Zawgyi-One"</property>
                         <property name="fontSize">16pt</property>
                         <property name="fontWeight">bold</property>
                         <property name="textAlign">right</property>
@@ -1494,7 +1494,7 @@ where frt.id =?
                             <structure>
                                 <property name="name">end_fiscal_year</property>
                                 <expression name="expression" type="javascript">params["end_fiscal_year"].displayText</expression>
-                                <property name="dataType">string</property>
+                                <property name="dataType">integer</property>
                                 <property name="allowExport">true</property>
                             </structure>
                         </list-property>
@@ -1554,7 +1554,7 @@ where frt.id =?
                             <structure>
                                 <property name="name">start_fiscal_year</property>
                                 <expression name="expression" type="javascript">params["start_fiscal_year"].displayText</expression>
-                                <property name="dataType">string</property>
+                                <property name="dataType">integer</property>
                                 <property name="allowExport">true</property>
                             </structure>
                         </list-property>
@@ -1570,7 +1570,7 @@ where frt.id =?
                             <structure>
                                 <property name="name">end_fiscal_year</property>
                                 <expression name="expression" type="javascript">params["end_fiscal_year"].displayText</expression>
-                                <property name="dataType">string</property>
+                                <property name="dataType">integer</property>
                                 <property name="allowExport">true</property>
                             </structure>
                         </list-property>
