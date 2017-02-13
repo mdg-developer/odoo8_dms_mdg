@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+        <record id="view_manual_sale_order_convert" model="ir.ui.view">
+            <field name="name">manual.sale.order.form</field>
+            <field name="model">manual.sale.order</field>
+            <field name="arch"  type="xml">
+                <form string="Convert Sale Order">
+                    <group col="4" colspan="6">
+                       <label for="id" string="Convert Sale Order"/>
+                       <div>
+                           <div name="confirm">
+                                <field name="confirm" class="oe_inline" />
+                            </div>                         
+                       </div>
+                    </group>
+                    <footer>
+                        <button name="print_report" string="Confirm" type="object" class="oe_highlight"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_manual_sale_order_convert" model="ir.actions.act_window">
+            <field name="name">Convert Sale Order</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">manual.sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record model="ir.values" id="manual_sale_order_convert_value">
+            <field name="name">Manual Invoice And DO</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_manual_sale_order_convert'))" />
+            <field name="key">action</field>
+            <field name="model">sale.order</field>
+        </record>
+
+    </data>
+</openerp>

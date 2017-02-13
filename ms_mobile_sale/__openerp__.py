@@ -44,6 +44,7 @@ Mobile Sales
              'reports/report_mobile_sale.xml',
              'wizard/pre_sale_view.xml',
              'wizard/direct_sale_view.xml',
+             'wizard/sale_order_convert_view.xml',
 
     ],
     'installable': True,

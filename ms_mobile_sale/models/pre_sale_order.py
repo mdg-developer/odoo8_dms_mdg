@@ -182,12 +182,14 @@ class pre_sale_order(osv.osv):
                 for preObj_ids in presaleorderObj.browse(cr, uid, ids[0], context=context):
                     if preObj_ids:
                         print 'Sale Team', preObj_ids.sale_team
-                        cr.execute('select delivery_team_id from crm_case_section where id = %s ', (preObj_ids.sale_team.id,))
+                        cr.execute('select delivery_team_id,warehouse_id from crm_case_section where id = %s ', (preObj_ids.sale_team.id,))
                         data = cr.fetchall()
                         if data:
                             delivery_id = data[0][0]
+                            warehouse_id=data[0][1]
                         else:
                             delivery_id = None
+                            warehouse_id=None
                         cr.execute('select company_id from res_users where id=%s', (preObj_ids.user_id.id,))
                         company_id = cr.fetchone()[0]
                         if preObj_ids.void_flag == 'voided':  # they work while payment type not 'cash' and 'credit'
@@ -202,7 +204,7 @@ class pre_sale_order(osv.osv):
                                                         'sale_plan_trip_id':preObj_ids.sale_plan_trip_id.id,
                                                         'date_order':preObj_ids.date,
                                                         'tb_ref_no':preObj_ids.name,
-                                                        'warehouse_id':preObj_ids.warehouse_id.id,
+                                                        'warehouse_id':warehouse_id,
                                                         'delivery_remark':preObj_ids.delivery_remark,
                                                         'so_latitude':preObj_ids.mso_latitude,
                                                         'so_longitude':preObj_ids.mso_longitude,
