@@ -119,6 +119,7 @@ class stock_return(osv.osv):
                 small_uom_id = mobile_line.product_uom.id             
                 last_qty         =foc_quantity+sale_quantity
                 product_search = stock_return_obj.search(cr, uid, [('product_id', '=', product_id), ('line_id', '=', ids[0])], context=context) 
+                print ' substract_qty ',substract_qty
                 if product_search:
                     cr.execute("update stock_return_line set receive_quantity=receive_quantity+%s + %s ,return_quantity=%s,sale_quantity=%s,foc_quantity=%s where line_id=%s and product_id=%s", (last_qty,substract_qty,return_quantity, sale_quantity, foc_quantity, ids[0], product_id,))
                 else:
@@ -149,14 +150,7 @@ class stock_return(osv.osv):
                     product_trans_line_data=product_trans_line_obj.browse(cr, uid, trans_line.id, context=context)
                     if product_trans_line_data.trans_type == 'Out':
                         return_quantity = -1*return_quantity
-#                     product_search = stock_return_obj.search(cr, uid, [('product_id', '=', product_id), ('line_id', '=', ids[0])], context=context) 
-#                     if product_search:
-#                         cr.execute("select exchange_quantity from stock_return_line where line_id=%s and product_id=%s", ( ids[0], product_id,))
-#                         ex_qty=cr.fetchone()[0]
-#                         if ex_qty !=0 and ex_qty is not None :
-#                             exchange_quantity=ex_qty+exchange_quantity
-#                         cr.execute("update stock_return_line set exchange_quantity=%s where line_id=%s and product_id=%s", (exchange_quantity, ids[0], product_id,))
-#                     else:
+                        cr.execute("update stock_return_line set return_quantity = return_quantity  + %s where product_id=%s and  ex_return_id is null",(return_quantity,product_id,))
                     product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
                     sequence=product.sequence
                     big_uom = product.product_tmpl_id.big_uom_id and product.product_tmpl_id.big_uom_id.id or False,
@@ -332,23 +326,51 @@ class stock_return(osv.osv):
                 partner_data = partner_obj.browse(cr, uid, partner_id, context=context) 
                 if return_quantity < 0:   
                     location_id = partner_data.property_stock_customer.id
-                    from_location_id = main_location_id
+                    from_location_id = ven_location_id
                     quantity = -1 * total_return_qty
-                    cr.execute("select id from stock_picking_type where default_location_dest_id=%s and default_location_src_id =%s", (location_id, from_location_id,))
+                    cr.execute('select id from stock_picking_type where default_location_src_id=%s and name like %s', (from_location_id, '%Internal Transfer%',))
                     price_rec = cr.fetchone()
-                    print 'price_recprice_rec',price_rec                    
+                    if price_rec: 
+                        picking_type_id = price_rec[0] 
+                    else:
+                        raise osv.except_osv(_('Warning'),
+                                             _('Picking Type has not for this transition'))     
                 else:
+                    from_location_id = ven_location_id
                     location_id =main_location_id
-                    from_location_id =  partner_data.property_stock_customer.id
-                    quantity = -1 * total_rec_qty
-                    cr.execute("select id from stock_picking_type where default_location_dest_id=%s and name=%s ", (location_id,'Receipts',))
+                    cus_location_id =  partner_data.property_stock_customer.id
+                    quantity =total_rec_qty
+                    cr.execute("select id from stock_picking_type where default_location_dest_id=%s and name like %s ", (from_location_id, '%Internal Transfer%',))
                     price_rec = cr.fetchone()
-                    print 'price_recprice_rec',price_rec
-                if price_rec: 
-                    picking_type_id = price_rec[0] 
-                else:
-                    raise osv.except_osv(_('Warning'),
-                                         _('Picking Type has not for this transition'))
+                    if price_rec: 
+                        customer_type_id = price_rec[0] 
+                    else:
+                        raise osv.except_osv(_('Warning'),
+                                             _('Picking Type has not for this transition'))
+                    picking_id = picking_obj.create(cr, uid, {
+                                                  'date': return_date,
+                                                  'origin':origin,
+                                                  'picking_type_id':customer_type_id}, context=context) 
+                    move_id=move_obj.create(cr, uid, {'picking_id': picking_id,
+                                                 'picking_type_id':customer_type_id,
+                                                  'product_id': product_id,
+                                                  'product_uom_qty': quantity,
+                                                  'product_uos_qty': quantity,
+                                                  'product_uom':rec_small_uom_id,
+                                                  'location_id':cus_location_id,
+                                                  'location_dest_id':from_location_id,
+                                                  'name':name,
+                                                   'origin':origin,
+                                                  'state':'confirmed'}, context=context)
+                    move_obj.action_done(cr, uid, move_id, context=context)             
+                             
+                    cr.execute('select id from stock_picking_type where default_location_dest_id=%s and name like %s', (main_location_id, '%Internal Transfer%',))
+                    price_rec = cr.fetchone()
+                    if price_rec: 
+                        picking_type_id = price_rec[0] 
+                    else:
+                        raise osv.except_osv(_('Warning'),
+                                             _('Picking Type has not for this transition'))                        
                 picking_id = picking_obj.create(cr, uid, {
                                               'date': return_date,
                                               'origin':origin,
