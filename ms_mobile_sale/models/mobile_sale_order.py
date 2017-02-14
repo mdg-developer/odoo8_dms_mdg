@@ -78,6 +78,7 @@ class mobile_sale_order(osv.osv):
        'pricelist_id': fields.many2one('product.pricelist', 'Price List', select=True, ondelete='cascade'),
        'payment_line_ids':fields.one2many('customer.payment', 'payment_id', 'Payment Lines'),
       'branch_id': fields.many2one('res.branch', 'Branch', required=True),
+      'is_convert':fields.boolean('Is Convert',readonly=True),
       
    #     'journal_id'  : fields.many2one('account.journal', 'Journal' ,domain=[('type','in',('cash','bank'))]),   
     }
@@ -85,6 +86,7 @@ class mobile_sale_order(osv.osv):
     _defaults = {
         'date': datetime.now(),
         'm_status' : 'draft',
+        'is_convert':False,
        
     } 
     
