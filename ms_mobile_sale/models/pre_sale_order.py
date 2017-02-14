@@ -69,11 +69,14 @@ class pre_sale_order(osv.osv):
                 ('voided', 'Voided'),
                 ('none', 'Unvoid')
             ], 'Void'),
+      'is_convert':fields.boolean('Is Convert',readonly=True),
+                
     }
     _order = 'id desc'
     _defaults = {
         'date': datetime.now(),
         'm_status' : 'draft',
+        'is_convert':False,
        
     }
     
