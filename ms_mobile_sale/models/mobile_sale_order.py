@@ -163,6 +163,7 @@ class mobile_sale_order(osv.osv):
                         'outlet_type':so['outlet_type'] ,
                         'pricelist_id':so['pricelist_id'],
                         'branch_id':branch_id,
+                        'note':so['note'],
                     }
                     s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
                     for sol in sale_order_line:
