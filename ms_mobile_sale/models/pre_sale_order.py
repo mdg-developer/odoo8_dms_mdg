@@ -3,6 +3,23 @@ from openerp.osv import orm
 from openerp.tools.translate import _
 from datetime import datetime
 import ast
+from openerp.addons.connector.queue.job import job, related_action
+from openerp.addons.connector.session import ConnectorSession
+from openerp.addons.connector.exception import FailedJobError
+
+from openerp.addons.connector.jobrunner.runner import ConnectorRunner
+
+@job(default_channel='root.preorder')
+def automation_pre_order(session,list_mobile):
+    context = session.context.copy()
+    cr = session.cr
+    uid = session.uid
+    print 'automation pre order:',list_mobile
+    mobile_obj = session.pool.get('pre.sale.order')
+    #list_mobile = mobile_obj.search(cr, uid, [('void_flag', '=', 'none'), ('m_status', '=', 'draft'), ('partner_id', '!=', None)])            
+    for mobile in list_mobile: 
+        mobile_obj.action_convert_presaleorder(cr, uid, [mobile], context=context)    
+    return True
 
 class pre_sale_order(osv.osv):
     
@@ -62,6 +79,7 @@ class pre_sale_order(osv.osv):
     
     def create_presaleorder(self, cursor, user, vals, context=None):
         print 'vals', vals
+
         sale_order_name_list = []
         try : 
             saleManId = branch_id = None
@@ -74,6 +92,7 @@ class pre_sale_order(osv.osv):
             str = str.replace("}{", "}|{")
             new_arr = str.split('|')
             result = []
+            so_ids=[]
             for data in new_arr:
                 x = ast.literal_eval(data)
                 result.append(x)
@@ -131,6 +150,7 @@ class pre_sale_order(osv.osv):
                         'branch_id':branch_id,
                     }
                     s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
+                    so_ids.append(s_order_id)
                     print "Create Sale Order", so['name']
                     for sol in sale_order_line:
                         if sol['so_name'] == so['name']:
@@ -159,9 +179,18 @@ class pre_sale_order(osv.osv):
                                 print 'Create Order line', sol['so_name']                     
                     sale_order_name_list.append(so['name'])
             print 'True'
-            return True       
+            
+            session = ConnectorSession(cursor, user, context)
+            
+            jobid=automation_pre_order.delay(session,so_ids,priority=1, eta=10)
+            print "Job",jobid
+            runner = ConnectorRunner()
+            runner.run_jobs()
+            return True 
+                  
         except Exception, e:
             print 'False'
+            print e
             return False 
     
     def action_convert_presaleorder(self, cr, uid, ids, context=None):
