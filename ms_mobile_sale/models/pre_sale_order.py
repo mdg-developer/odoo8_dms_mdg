@@ -183,13 +183,18 @@ class pre_sale_order(osv.osv):
                 for preObj_ids in presaleorderObj.browse(cr, uid, ids[0], context=context):
                     if preObj_ids:
                         print 'Sale Team', preObj_ids.sale_team
-                        cr.execute('select delivery_team_id,warehouse_id from crm_case_section where id = %s ', (preObj_ids.sale_team.id,))
+                        cr.execute('select delivery_team_id from crm_case_section where id = %s ', (preObj_ids.sale_team.id,))
                         data = cr.fetchall()
                         if data:
                             delivery_id = data[0][0]
-                            warehouse_id=data[0][1]
                         else:
                             delivery_id = None
+                        cr.execute('select warehouse_id from crm_case_section where id = %s ', (delivery_id,))
+                        data = cr.fetchall()
+                        if data:
+                            warehouse_id=data[0][0]
+                        else:
+                            warehouse_id = None                            
                         cr.execute('select company_id from res_users where id=%s', (preObj_ids.user_id.id,))
                         company_id = cr.fetchone()[0]
                         if preObj_ids.void_flag == 'voided':  # they work while payment type not 'cash' and 'credit'

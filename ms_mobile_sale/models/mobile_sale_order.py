@@ -505,20 +505,21 @@ class mobile_sale_order(osv.osv):
                             cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s,date_invoice=%s where id =%s', ('cash', ms_ids.branch_id.id, ms_ids.delivery_remark,de_date, invoice_id,))                            
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             if invoice_id and ms_ids.paid == True:
-                                invlist = []
-                                invlist.append(invoice_id)
-                                print 'invoice_id', invoice_id
-                            
-                                
-                                # call the api function
-                                # invObj contain => account.invoice(1,) like that
-                                invObj = invoiceObj.browse(cr, uid, invoice_id, context=context)
-                                print 'invoice_id', invObj
-                                invObj.action_date_assign()
-                                invObj.action_move_create()
-                                invObj.action_number()
-                                # validate invoice
-                                invObj.invoice_validate()
+#                                 invlist = []
+#                                 invlist.append(invoice_id)
+#                                 print 'invoice_id', invoice_id
+#                             
+#                                 
+#                                 # call the api function
+#                                 # invObj contain => account.invoice(1,) like that
+#                                 invObj = invoiceObj.browse(cr, uid, invoice_id, context=context)
+#                                 print 'invoice_id', invObj
+#                                 invObj.action_date_assign()
+#                                 invObj.action_move_create()
+#                                 invObj.action_number()
+#                                 # validate invoice
+#                                 invObj.invoice_validate()
+                                self.pool['account.invoice'].signal_workflow(cr, uid, [invoice_id], 'invoice_open')
                                 
                                 # register Payment
                                 # calling the register payment pop-up
@@ -597,17 +598,19 @@ class mobile_sale_order(osv.osv):
                             cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s ,date_invoice =%s where id =%s', ('cash', ms_ids.branch_id.id, ms_ids.delivery_remark,de_date, invoice_id,))                            
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             if invoice_id and ms_ids.paid == True:
-                                invlist = []
-                                invlist.append(invoice_id)
-                                # call the api function
-                                # invObj contain => account.invoice(1,) like that
-                                invObj = invoiceObj.browse(cr, uid, invlist, context=context)
-                                invObj.action_date_assign()
-                                invObj.action_move_create()
-                                invObj.action_number()
-                                # validate invoice
-                                invObj.invoice_validate()
-                                
+#                                 invlist = []
+#                                 invlist.append(invoice_id)
+#                                 # call the api function
+#                                 # invObj contain => account.invoice(1,) like that
+#                                 invObj = invoiceObj.browse(cr, uid, invlist, context=context)
+#                                 invObj.action_date_assign()
+#                                 invObj.action_move_create()
+#                                 invObj.action_number()
+#                                 # validate invoice
+#                                 invObj.invoice_validate()
+#     
+                                self.pool['account.invoice'].signal_workflow(cr, uid, [invoice_id], 'invoice_open')
+                            
                                 # register Payment
                                 # calling the register payment pop-up
 #                                 invoiceObj.invoice_pay_customer(cr, uid, invlist, context=context)
@@ -666,16 +669,17 @@ class mobile_sale_order(osv.osv):
                             cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s,date_invoice=%s  where id =%s', ('cash', ms_ids.branch_id.id, ms_ids.delivery_remark,de_date, invoice_id,))                            
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             if invoice_id and ms_ids.paid == True:
-                                invlist = []
-                                invlist.append(invoice_id)
-                                # call the api function
-                                # invObj contain => account.invoice(1,) like that
-                                invObj = invoiceObj.browse(cr, uid, invoice_id, context=context)
-                                invObj.action_date_assign()
-                                invObj.action_move_create()
-                                invObj.action_number()
-                                # validate invoice
-                                invObj.invoice_validate()
+#                                 invlist = []
+#                                 invlist.append(invoice_id)
+#                                 # call the api function
+#                                 # invObj contain => account.invoice(1,) like that
+#                                 invObj = invoiceObj.browse(cr, uid, invoice_id, context=context)
+#                                 invObj.action_date_assign()
+#                                 invObj.action_move_create()
+#                                 invObj.action_number()
+#                                 # validate invoice
+#                                 invObj.invoice_validate()
+                                self.pool['account.invoice'].signal_workflow(cr, uid, [invoice_id], 'invoice_open')
                                 
                                 # register Payment
                                 # calling the register payment pop-up
@@ -735,16 +739,18 @@ class mobile_sale_order(osv.osv):
 #                             invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)                                    
                             cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s ,date_invoice=%s where id =%s', ('credit', ms_ids.branch_id.id, ms_ids.delivery_remark,de_date, invoice_id,))                            
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
-                            invlist = []
-                            invlist.append(invoice_id)
-                            # call the api function
-                            # invObj contain => account.invoice(1,) like that
-                            invObj = invoiceObj.browse(cr, uid, invoice_id, context=context)
-                            invObj.action_date_assign()
-                            invObj.action_move_create()
-                            invObj.action_number()
-                            # validate invoice
-                            invObj.invoice_validate()
+#                             invlist = []
+#                             invlist.append(invoice_id)
+#                             # call the api function
+#                             # invObj contain => account.invoice(1,) like that
+#                             invObj = invoiceObj.browse(cr, uid, invoice_id, context=context)
+#                             invObj.action_date_assign()
+#                             invObj.action_move_create()
+#                             invObj.action_number()
+#                             # validate invoice
+#                             invObj.invoice_validate()
+                            self.pool['account.invoice'].signal_workflow(cr, uid, [invoice_id], 'invoice_open')
+
                             # clicking the delivery order view button
                             stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)
                             if stockViewResult:
@@ -779,16 +785,18 @@ class mobile_sale_order(osv.osv):
 #                             invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)                                    
                             cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s,date_invoice=%s  where id =%s', ('credit', ms_ids.branch_id.id, ms_ids.delivery_remark,de_date, invoice_id,))                            
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
-                            invlist = []
-                            invlist.append(invoice_id)
-                            # call the api function
-                            # invObj contain => account.invoice(1,) like that
-                            invObj = invoiceObj.browse(cr, uid, invoice_id, context=context)
-                            invObj.action_date_assign()
-                            invObj.action_move_create()
-                            invObj.action_number()
-                            # validate invoice
-                            invObj.invoice_validate()
+#                             invlist = []
+#                             invlist.append(invoice_id)
+#                             # call the api function
+#                             # invObj contain => account.invoice(1,) like that
+#                             invObj = invoiceObj.browse(cr, uid, invoice_id, context=context)
+#                             invObj.action_date_assign()
+#                             invObj.action_move_create()
+#                             invObj.action_number()
+#                             # validate invoice
+#                             invObj.invoice_validate()
+                            self.pool['account.invoice'].signal_workflow(cr, uid, [invoice_id], 'invoice_open')
+
                             # clicking the delivery order view button
                             stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)  # create delivery order with draft state
                             # cr.execute('update stock_move set location_id=%s where picking_id=%s',(ms_ids.location_id.id,stockViewResult['res_id'],))
@@ -808,16 +816,18 @@ class mobile_sale_order(osv.osv):
                             cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s ,date_invoice=%s where id =%s', ('credit', ms_ids.branch_id.id, ms_ids.delivery_remark,de_date,invoice_id,))                            
                             
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
-                            invlist = []
-                            invlist.append(invoice_id)
-                            # call the api function
-                            # invObj contain => account.invoice(1,) like that
-                            invObj = invoiceObj.browse(cr, uid, invoice_id, context=context)
-                            invObj.action_date_assign()
-                            invObj.action_move_create()
-                            invObj.action_number()
-                            # validate invoice
-                            invObj.invoice_validate()
+#                             invlist = []
+#                             invlist.append(invoice_id)
+#                             # call the api function
+#                             # invObj contain => account.invoice(1,) like that
+#                             invObj = invoiceObj.browse(cr, uid, invoice_id, context=context)
+#                             invObj.action_date_assign()
+#                             invObj.action_move_create()
+#                             invObj.action_number()
+#                             # validate invoice
+#                             invObj.invoice_validate()
+                            self.pool['account.invoice'].signal_workflow(cr, uid, [invoice_id], 'invoice_open')
+
                             # clicking the delivery order view button
                             stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)
                             # cr.execute('update stock_move set location_id=%s where picking_id=%s',(ms_ids.location_id.id,stockViewResult['res_id'],))
@@ -1802,20 +1812,22 @@ class mobile_sale_order(osv.osv):
                                                         
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             if invoice_id:
-                                invlist = []
-                                invlist.append(invoice_id)
-                                # call the api function
-                                # invObj contain => account.invoice(1,) like that
-                                print 'invoice_id', invoice_id
-                                 
-                                invObj = invoiceObj.browse(cr, uid, invlist, context=context)
-                                
-                                #                                                                                                                            
-                                invObj.action_date_assign()
-                                invObj.action_move_create()
-                                invObj.action_number()
-                                # validate invoice
-                                invObj.invoice_validate()
+#                                 invlist = []
+#                                 invlist.append(invoice_id)
+#                                 # call the api function
+#                                 # invObj contain => account.invoice(1,) like that
+#                                 print 'invoice_id', invoice_id
+#                                  
+#                                 invObj = invoiceObj.browse(cr, uid, invlist, context=context)
+#                                 
+#                                 #                                                                                                                            
+#                                 invObj.action_date_assign()
+#                                 invObj.action_move_create()
+#                                 invObj.action_number()
+#                                 # validate invoice
+#                                 invObj.invoice_validate()
+                                self.pool['account.invoice'].signal_workflow(cr, uid, [invoice_id], 'invoice_open')
+
                                 # pre_order =True
                                 invoiceObj.write(cr, uid, invoice_id, {'pre_order':True}, context)                                                                                                                             
                                                                         
