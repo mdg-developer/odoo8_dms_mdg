@@ -184,7 +184,6 @@ class pre_sale_order(osv.osv):
             print 'True'
             
             session = ConnectorSession(cursor, user, context)
-            
             jobid=automation_pre_order.delay(session,so_ids,priority=1, eta=10)
             print "Job",jobid
             runner = ConnectorRunner()
@@ -290,7 +289,6 @@ class pre_sale_order(osv.osv):
                         saleOrderObj.button_dummy(cr, uid, [so_id], context=context)
                         # Do Open
                         saleOrderObj.action_button_confirm(cr, uid, [so_id], context=context)
-                        
                         
             except Exception, e:
                 raise orm.except_orm(_('Error :'), _("Error Occured while Convert Mobile Sale Order! \n [ %s ]") % (e))

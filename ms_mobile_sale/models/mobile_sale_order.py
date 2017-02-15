@@ -226,7 +226,6 @@ class mobile_sale_order(osv.osv):
                     #convert to sale order.
             session = ConnectorSession(cursor, user, context)
             jobid= automation_direct_order.delay(session,so_ids,priority=1, eta=10)
-            print "Job",jobid
             runner = ConnectorRunner()
             runner.run_jobs()
             return True     
