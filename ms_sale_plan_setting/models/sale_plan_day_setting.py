@@ -948,13 +948,13 @@ class sale_plan_for_day_setting(osv.osv):
         plan = self.browse(cr, uid, ids, context=context)
         partner_count=plan.partner_count
         plan_line=plan.plan_line
-        print 'customer_list',plan_line,partner_count
         for plan_line_id in plan_line:
             partner_id=plan_line_id.partner_id.id
+            partner_code= plan_line_id.partner_id.customer_code
+            cr.execute("update sale_plan_day_setting_line set code =%s where partner_id=%s and id = %s",(partner_code,partner_id,plan_line_id.id,))
             data_line.append(partner_id)
         sale_team_id=plan.sale_team_id.id
         partner_ids = customer_obj.search(cr, uid, [('section_id', '=', sale_team_id),('id','not in',data_line)], context=context)
-        print 'partner_ids',partner_ids
         if  partner_ids:
                 count=len(partner_ids)                
                 for line in partner_ids:

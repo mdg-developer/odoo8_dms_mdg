@@ -160,7 +160,8 @@ class mobile_sale_order(osv.osv):
                         'paid': paid,
                         'warehouse_id':so['warehouse_id'],
                         'tablet_id':so['tablet_id'],
-                        'delivery_remark':so['delivery_remark'],
+                      #  'delivery_remark':so['delivery_remark'],
+                        'delivery_remark':'delivered',
                         'location_id':so['location_id'],
                         'deduction_amount':so['deduction_amount'],
                         'user_id':so['user_id'],
@@ -226,7 +227,6 @@ class mobile_sale_order(osv.osv):
                     #convert to sale order.
             session = ConnectorSession(cursor, user, context)
             jobid= automation_direct_order.delay(session,so_ids,priority=1, eta=10)
-            print "Job",jobid
             runner = ConnectorRunner()
             runner.run_jobs()
             return True     

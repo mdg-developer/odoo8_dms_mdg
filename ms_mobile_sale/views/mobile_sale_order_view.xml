@@ -42,8 +42,8 @@
 								<field name="sale_plan_day_id" readonly="1" />
 								<field name="sale_plan_trip_id" readonly="1" />
 								<field name="pricelist_id" readonly="1" />
-								<field name="mso_latitude" digits="(14,15)" readonly="1" />
-								<field name="mso_longitude" digits="(14,15)" readonly="1" />
+								<field name="mso_latitude" digits="(14,15)" readonly="0" />
+								<field name="mso_longitude" digits="(14,15)" readonly="0" />
 
 							</group>
 							<group>
@@ -178,7 +178,7 @@
 								</field>
 							</page>
 							<page string="Google Map">
-								<widget type="gmap_marker" lat="mso_latitude" lng="mso_longitude"
+								<widget type="gmap_marker" lat="mso_latitude"  lng="mso_longitude"
 									description="field_descriptions" />
 							</page>
 						</notebook>

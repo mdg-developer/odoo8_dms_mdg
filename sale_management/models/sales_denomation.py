@@ -197,71 +197,129 @@ class sale_denomination(osv.osv):
     def create(self, cursor, user, vals, context=None):
         credit_no = self.pool.get('ir.sequence').get(cursor, user,
             'sales.denomination') or '/'
+        print ' credit_no',vals
         vals['name'] = credit_no
-        total_amount = False
-        deno_amount = False
-        cheque_amount = False
-        bank_amount = False
-        ar_amount = False
-        discount_amount=False
-        discount_total=0.0
-        invoice_obj=self.pool.get('account.invoice')
-        pre_mobile_ids=[]
-        date=vals['date'] 
-        team_id=vals['sale_team_id'] 
-        date = datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
-        de_date = date.date()        
-        cursor.execute("select id from account_invoice where date_invoice=%s and section_id =%s and state='open' ", (de_date, team_id,))
-        mobile_ids = cursor.fetchall()       
-        for data_pro in mobile_ids:
-            pre_mobile_ids.append(data_pro[0])
-        if  pre_mobile_ids:
-            mobile_data=invoice_obj.browse(cursor, user, tuple(pre_mobile_ids), context=context)           
-            for mobile in mobile_data:
-                deduct_amt= mobile.deduct_amt
-                amount_total= mobile.amount_untaxed
-                deduct_percent=mobile.additional_discount/100
-                discount_total +=  amount_total * deduct_percent
-                discount_amount+=deduct_amt 
-        denomination_note_line = vals['denomination_note_line']
-        denomination_product_line = vals['denomination_product_line']
-        denomination_cheque_line = vals['denomination_cheque_line']
-        denomination_bank_line = vals['denomination_bank_line']
-        denomination_ar_line = vals['denomination_ar_line']
-        if denomination_product_line:
-            for p_data in denomination_product_line:
-                amount = p_data[2]['amount']
-                deno_amount += amount
-        vals['product_amount'] = deno_amount -discount_amount-discount_total
-        if denomination_note_line:
-            for data in denomination_note_line:
-                note = data[2]['notes']
-                qty = data[2]['note_qty']
-                total_amount += (int(note) * int(qty))
-        vals['total_amount'] = total_amount
-        if denomination_cheque_line:
-            for data in denomination_cheque_line:
-                amount = data[2]['amount']
-                cheque_amount += amount
-        if denomination_bank_line:
-            for data in denomination_bank_line:
-                amount = data[2]['amount']
-                bank_amount += amount
-        if denomination_ar_line:
-            for data in denomination_ar_line:
-                amount = data[2]['amount']
-                ar_amount += amount
-        print ' cheque_amount',discount_amount
-        vals['cheque_amount'] = cheque_amount
-        vals['discount_amount'] = discount_amount
-        vals['discount_total'] = discount_total
-        vals['bank_amount'] = bank_amount
-        vals['ar_amount'] = ar_amount
-        vals['trans_amount'] = total_amount + cheque_amount + bank_amount
-        vals['dssr_ar_amount']=ar_amount+deno_amount -discount_amount-discount_total
-        vals['invoice_sub_total']=deno_amount -discount_amount -discount_total
-        vals['diff_amount'] = (ar_amount+deno_amount-discount_amount-discount_total)-( total_amount + cheque_amount + bank_amount)
-        return super(sale_denomination, self).create(cursor, user, vals, context=context)    
+        return super(sale_denomination, self).create(cursor, user, vals, context=context)
+    
+#     def write(self, cursor, user, ids, vals, context=None):
+#         data=self.browse(cursor, user,ids, context=context)           
+#         total_amount = 0
+#         deno_amount = 0
+#         cheque_amount = 0
+#         bank_amount = 0
+#         ar_amount = 0
+#         note_obj=self.pool.get('sales.denomination.note.line')
+#         product_obj=self.pool.get('sales.denomination.product.line')
+#         cheque_obj=self.pool.get('sales.denomination.cheque.line')
+#         bank_obj=self.pool.get('sales.denomination.bank.line')
+#         ar_obj=self.pool.get('sales.denomination.ar.line')
+#         denomination_note_line = data.denomination_note_line
+#         denomination_product_line = data.denomination_product_line
+#         denomination_cheque_line = data.denomination_cheque_line
+#         denomination_bank_line = data.denomination_bank_line
+#         denomination_ar_line = data.denomination_ar_line
+#         if denomination_product_line:
+#             for p_data in denomination_product_line:
+#                 product=product_obj.browse(cursor, user,p_data.id, context=context)           
+#                 print 'product',product
+#                 amount = product.amount
+#                 deno_amount += amount
+#         discount_amount=data.discount_amount
+#         discount_total=data.discount_total
+#         product_amount= deno_amount -discount_amount-discount_total
+#         if denomination_note_line:
+#             for data in denomination_note_line:
+#                 note_data=note_obj.browse(cursor, user,data.id, context=context)           
+#                 note = note_data.notes
+#                 note=note.replace(',', '')
+#                 qty = note_data.note_qty
+#                 total_amount += (int(note) * int(qty))
+#         if denomination_cheque_line:
+#             for data in denomination_cheque_line:
+#                 cheque=cheque_obj.browse(cursor, user,data.id, context=context)           
+#                 amount = cheque.amount
+#                 cheque_amount += amount
+#         if denomination_bank_line:
+#             for data in denomination_bank_line:
+#                 bank=bank_obj.browse(cursor, user,data.id, context=context)           
+#                 amount = bank.amount
+#                 bank_amount += amount
+#         if denomination_ar_line:
+#             for data in denomination_ar_line:
+#                 ar_data=ar_obj.browse(cursor, user,data.id, context=context)           
+#                 amount = ar_data.amount
+#                 ar_amount += amount
+#         vals['product_amount'] = product_amount
+#         vals['total_amount']= total_amount
+#         vals['cheque_amount'] = cheque_amount
+#         vals['bank_amount'] = bank_amount
+#         vals['ar_amount'] = ar_amount
+#         vals['trans_amount'] = total_amount + cheque_amount + bank_amount
+#         vals['dssr_ar_amount']=ar_amount+deno_amount -discount_amount-discount_total
+#         vals['invoice_sub_total']=deno_amount -discount_amount -discount_total
+#         vals['diff_amount'] = (ar_amount+deno_amount-discount_amount-discount_total)-( total_amount + cheque_amount + bank_amount)                
+#         print 'valsssssssss',vals
+#         return super(sale_denomination, self).write(cursor, user, ids, vals, context=context)
+    
+    def button_dummy(self, cursor, user, ids, context=None):
+        return True
+                
+#         total_amount = 0
+#         deno_amount = 0
+#         cheque_amount = 0
+#         bank_amount = 0
+#         ar_amount = 0
+#         note_obj=self.pool.get('sales.denomination.note.line')
+#         product_obj=self.pool.get('sales.denomination.product.line')
+#         cheque_obj=self.pool.get('sales.denomination.cheque.line')
+#         bank_obj=self.pool.get('sales.denomination.bank.line')
+#         ar_obj=self.pool.get('sales.denomination.ar.line')
+#         denomination_note_line = data.denomination_note_line
+#         denomination_product_line = data.denomination_product_line
+#         denomination_cheque_line = data.denomination_cheque_line
+#         denomination_bank_line = data.denomination_bank_line
+#         denomination_ar_line = data.denomination_ar_line
+#         if denomination_product_line:
+#             for p_data in denomination_product_line:
+#                 product=product_obj.browse(cursor, user,p_data.id, context=context)           
+#                 print 'product',product
+#                 amount = product.amount
+#                 deno_amount += amount
+#         discount_amount=data.discount_amount
+#         discount_total=data.discount_total
+#         product_amount= deno_amount -discount_amount-discount_total
+#         if denomination_note_line:
+#             for data in denomination_note_line:
+#                 note_data=note_obj.browse(cursor, user,data.id, context=context)           
+#                 note = note_data.notes
+#                 note=note.replace(',', '')
+#                 qty = note_data.note_qty
+#                 total_amount += (int(note) * int(qty))
+#         if denomination_cheque_line:
+#             for data in denomination_cheque_line:
+#                 cheque=cheque_obj.browse(cursor, user,data.id, context=context)           
+#                 amount = cheque.amount
+#                 cheque_amount += amount
+#         if denomination_bank_line:
+#             for data in denomination_bank_line:
+#                 bank=bank_obj.browse(cursor, user,data.id, context=context)           
+#                 amount = bank.amount
+#                 bank_amount += amount
+#         if denomination_ar_line:
+#             for data in denomination_ar_line:
+#                 ar_data=ar_obj.browse(cursor, user,data.id, context=context)           
+#                 amount = ar_data.amount
+#                 ar_amount += amount
+#         total_amount= total_amount
+#         cheque_amount= cheque_amount
+#         bank_amount= bank_amount
+#         ar_amount= ar_amount
+#         trans_amount= total_amount + cheque_amount + bank_amount
+#         dssr_ar_amount=ar_amount+deno_amount -discount_amount-discount_total
+#         invoice_sub_total=deno_amount -discount_amount -discount_total
+#         diff_amount = (ar_amount+deno_amount-discount_amount-discount_total)-( total_amount + cheque_amount + bank_amount)
+#         cursor.execute("update sales_denomination set product_amount=%s,total_amount=%s,cheque_amount=%s,bank_amount=%s,ar_amount=%s,trans_amount=%s,dssr_ar_amount=%s,invoice_sub_total=%s,diff_amount=%s where id= %s",(product_amount,total_amount,cheque_amount,bank_amount,ar_amount,trans_amount,dssr_ar_amount,invoice_sub_total,diff_amount,data.id,))
+#         return True
 sale_denomination()               
 
 class sale_denomination_product_line(osv.osv):    
