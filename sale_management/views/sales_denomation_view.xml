@@ -46,12 +46,11 @@
 								</field>
 								<group>
 									<group>
-
 									</group>
 									<group>
-									    <field name="discount_total"  readonly="1"/>
-										<field name="discount_amount"  readonly="1"/>
-										<field name="invoice_sub_total"  readonly="1"/>
+										<field name="discount_total" readonly="1" />
+										<field name="discount_amount" readonly="1" />
+										<field name="invoice_sub_total" />
 									</group>
 								</group>
 							</page>
@@ -147,14 +146,14 @@
 								<field name="note" class="oe_inline" placeholder="Note..." />
 							</group>
 							<group>
-								<field name="product_amount" readonly="1" />
-								<field name="ar_amount" readonly="1" />
-								<field name="dssr_ar_amount" readonly="1" />
-								<field name="total_amount" readonly="1" />
-								<field name="cheque_amount" readonly="1" />
-								<field name="bank_amount" readonly="1" />
-								<field name="trans_amount" readonly="1" />
-								<field name="diff_amount" readonly="1" />
+								<field name="product_amount" />
+								<field name="ar_amount" />
+								<field name="dssr_ar_amount" />
+								<field name="total_amount"  />
+								<field name="cheque_amount" />
+								<field name="bank_amount" />
+								<field name="trans_amount" />
+								<field name="diff_amount"  />
 							</group>
 						</group>
 					</sheet>
@@ -183,15 +182,14 @@
 			<field name="name">sales.denomination.tree</field>
 			<field name="model">sales.denomination</field>
 			<field name="arch" type="xml">
-				<tree string="Sales Denomination" default_order="name desc" >
+				<tree string="Sales Denomination" default_order="name desc">
 					<field name="name" />
 					<field name="date" />
 					<field name="sale_team_id" />
 					<field name="user_id" />
-					<field name="total_amount" />
-					<field name="product_amount" />
-					<field name="diff_amount" invisible="1" />
-					<field name="trans_amount" />
+					<field name="dssr_ar_amount" invisible="1"/>
+					<field name="trans_amount" invisible="1"/>
+					<field name="diff_amount" invisible="1"/>
 				</tree>
 			</field>
 		</record>
