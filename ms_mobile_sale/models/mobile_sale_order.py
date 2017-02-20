@@ -1312,7 +1312,7 @@ class mobile_sale_order(osv.osv):
                         'discount_total':0,
                         'invoice_sub_total':0,
                     }
-                    deno_id = history_obj.create(cursor, user, deno_result, context=context)             
+                    deno_id = history_obj.create(cursor, user, deno_result, context=context)
                     for ptl in notes_line:
                                 deno_amount+= float(ptl['amount'])
                                 note_line_res = {                                                            
@@ -1342,7 +1342,7 @@ class mobile_sale_order(osv.osv):
                 bank_ids = cursor.fetchall()
                 cursor.execute("select id from ar_payment where date=%s and sale_team_id=%s and payment_code='BNK' ", (de_date, team_id,))
                 ar_bank_ids = cursor.fetchall()                              
-                cursor.execute("select id from mobile_sale_order where due_date=%s and user_id=%s and void_flag != 'voided'", (de_date, user_id))
+                cursor.execute("select id from mobile_sale_order where due_date=%s and user_id=%s and m_status !='done' and void_flag != 'voided'", (de_date, user_id))
                 m_mobile_ids = cursor.fetchall()
                 cursor.execute("select id from account_invoice where date_invoice=%s and section_id =%s and state='open' ", (de_date, team_id,))
                 invoice_ids = cursor.fetchall()       
@@ -1466,15 +1466,15 @@ class mobile_sale_order(osv.osv):
                             'payment_type':'Credit',
                          'denomination_ar_ids':deno_id, }
                 ar_coll_obj.create(cursor, user, data_id, context=context)
-            dssr_ar_amount=ar_amount+product_amount- discount_amount-discount_total
-            trans_amount= deno_amount + cheque_amount + bank_amount
-            diff_amount= (ar_amount+product_amount- discount_amount-discount_total)-( deno_amount + cheque_amount + bank_amount)             
-            invoice_sub_total=product_amount - discount_amount-discount_total
-            product_amount=product_amount-discount_amount-discount_total
-            print 'discount_total',discount_total,discount_amount
-            cursor.execute("update sales_denomination set product_amount=%s,discount_total=%s,discount_amount =%s,invoice_sub_total=%s,ar_amount=%s,bank_amount=%s,total_amount=%s,cheque_amount=%s ,dssr_ar_amount=%s,trans_amount=%s ,diff_amount=%s where id=%s",
-                           (product_amount,discount_total,discount_amount,invoice_sub_total,ar_amount,bank_amount,deno_amount,cheque_amount,dssr_ar_amount,trans_amount,diff_amount,deno_id,))
-                        
+#             dssr_ar_amount=ar_amount+product_amount- discount_amount-discount_total
+#             trans_amount= deno_amount + cheque_amount + bank_amount
+#             diff_amount= (ar_amount+product_amount- discount_amount-discount_total)-( deno_amount + cheque_amount + bank_amount)             
+#             invoice_sub_total=product_amount - discount_amount-discount_total
+#             product_amount=product_amount-discount_amount-discount_total
+#             print 'discount_total',discount_total,discount_amount
+            cursor.execute("update sales_denomination set discount_total=%s,discount_amount =%s where id=%s",
+                           (discount_total,discount_amount,deno_id,))
+                         
             print 'True'
             return True       
         except Exception, e:
