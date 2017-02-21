@@ -14,7 +14,7 @@ from openerp.addons.connector.exception import FailedJobError
 from openerp.addons.connector.jobrunner.runner import ConnectorRunner
 
     
-@job(default_channel='root.direct')
+@job(default_channel='root.order')
 def automation_direct_order(session,list_mobile):
     mobile_obj = session.pool['mobile.sale.order']
     context = session.context.copy()
