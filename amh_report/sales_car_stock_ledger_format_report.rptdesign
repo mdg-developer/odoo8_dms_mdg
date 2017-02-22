@@ -1240,7 +1240,7 @@ left join sale on pp.id = sale.product_id
 left join sq on pp.id=sq.product_id 
 left join stk_return on stk_return.pt_pro_id=pp.id
 left join purchase on purchase.purchasepid=pp.id 
-left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P001'  and pp.default_code!='PD00001' order by pp.id)A]]></xml-property>
+left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P001'  and pp.default_code!='PD00001' order by pp.sequence)A]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -3442,7 +3442,7 @@ left join sale on pp.id = sale.product_id
 left join sq on pp.id=sq.product_id 
 left join stk_return on stk_return.pt_pro_id=pp.id
 left join purchase on purchase.purchasepid=pp.id 
-left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P003'  and pp.default_code!='PPD00001' order by pp.id)A]]></xml-property>
+left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P003'  and pp.default_code!='PPD00001' order by pp.sequence)A]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -4902,7 +4902,7 @@ left join sale on pp.id = sale.product_id
 left join sq on pp.id=sq.product_id 
 left join stk_return on stk_return.pt_pro_id=pp.id
 left join purchase on purchase.purchasepid=pp.id 
-left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P002'  and pp.default_code!='SD00001' order by pp.id)A]]></xml-property>
+left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P002'  and pp.default_code!='SD00001' order by pp.sequence)A]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -6147,7 +6147,7 @@ inner join product_uom uom on pt.uom_id=uom.id
 left join sq on pp.id=sq.product_id 
 left join sale on pp.id = sale.product_id
 left join stk_return on stk_return.pt_pro_id=pp.id
-left join warehouse on warehouse.sq1product_id=pp.id WHERE pp.default_code in ('PD00001','SD00001','PPD00001') order by pp.id)A ]]></xml-property>
+left join warehouse on warehouse.sq1product_id=pp.id WHERE pp.default_code in ('PD00001','SD00001','PPD00001') order by pp.sequence)A ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -11394,8 +11394,16 @@ dataSetRow["opening_qtyviss"]&#13;
                 <structure>
                     <property name="name">whqtyviss</property>
                     <text-property name="displayName">whqtyviss</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["whqtyviss"]</expression>
+                    <expression name="expression" type="javascript">if (dataSetRow["whqtyviss"] &lt;1  &amp;&amp; dataSetRow["whqtyviss"] > -1)&#13;
+{&#13;
+&#13;
+}&#13;
+else&#13;
+{&#13;
+dataSetRow["whqtyviss"]/115&#13;
+}</expression>
                     <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
                 </structure>
                 <structure>
                     <property name="name">salereturnviss</property>
@@ -11538,7 +11546,14 @@ dataSetRow["salereturnviss"]/115&#13;
                     <list-property name="arguments">
                         <structure>
                             <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["whqtyvt"]</expression>
+                            <expression name="value" type="javascript">if (dataSetRow["whqtyvt"] &lt;1  &amp;&amp; dataSetRow["whqtyvt"] > -1)&#13;
+{&#13;
+&#13;
+}&#13;
+else&#13;
+{&#13;
+dataSetRow["whqtyvt"]/115&#13;
+}</expression>
                         </structure>
                     </list-property>
                     <property name="allowExport">true</property>

@@ -2329,6 +2329,7 @@ and so.payment_type='cash'
 --and ai.residual=0.00
 --$pricelist$
 group by sol.product_uom_qty,sol.price_unit,so.deduct_amt,pp.name_template,sol.price_unit,pp.id,uom.name,sol.product_uom,uom.uom_ratio,rp.name,rp.customer_code,pt.weight_net,pt.weight_liter,rp.id
+order by pp.sequence
 )A left join 
 (
 select ptl.product_id pt_pro_id,ptl.total from 
@@ -4047,6 +4048,7 @@ and so.user_id  = ?
 and so.payment_type='credit' 
 --$pricelist$
 group by sol.product_uom_qty,sol.price_unit,so.deduct_amt,pp.name_template,sol.price_unit,pp.id,uom.name,sol.product_uom,uom.uom_ratio,rp.name,rp.customer_code,pt.weight_net,pt.weight_liter,rp.id
+order by pp.sequence
 )A left join 
 (
 select ptl.product_id pt_pro_id,ptl.total from 
