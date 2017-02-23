@@ -24,6 +24,6 @@
 					<field name="kha_tha_number" />
 				</xpath>
             </field>
-        </record>
+        </record>		
     </data>
 </openerp>

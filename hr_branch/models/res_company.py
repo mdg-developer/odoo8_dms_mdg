@@ -25,7 +25,7 @@ class res_company(osv.osv):
     _inherit = "res.company"
     _columns = {
     'branch_ids': fields.many2many('res.branch', string='Branch',required=True),
-	'kha_tha_number': fields.char(string='Kha Tha Number'),
+    'kha_tha_number': fields.char(string='Kha Tha Number'),
     }
 
     

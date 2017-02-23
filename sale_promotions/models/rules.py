@@ -3,6 +3,7 @@ from openerp import netsvc
 from openerp.tools.translate import _
 from openerp import tools
 import logging
+from pyfcm import FCMNotification
  
 ####
 # LOGGER = netsvc.Logger()
@@ -22,7 +23,9 @@ ATTRIBUTES = [
     # ('prod_unit_price', 'Product UnitPrice combination'),
     ('prod_sub_total', 'Product SubTotal combination'),
     ('promo_already_exit', 'Promotion Already Applied'),
-    ('cat_qty', 'Product Category Quantity combination'),
+    ('cat_qty', 'Product Category Quantity combination'),    
+    ('fix_prods_qty', 'Fix Quantity Total combination'),
+
 ]
 
 COMPARATORS = [
@@ -58,9 +61,11 @@ ACTION_TYPES = [
      ('prod_multi_uom_get_x', _('Buy Multi UOM get X free')),
     ('fix_qty_on_product_code', _('FOC Products on Qty')),
     ('prod_foc_smallest_unitprice', _('FOC Products on smallest Unitprice')),
-    ('foc_any_product', _('FOC Any Products')),
+    ('foc_any_product', _('FOC Any Products by Ratio')),
 	('prod_fix_amt_disc_subtotal', _('Product Fix Amount on Sub Total')),
-    ('prod_dis_double', _('Double Discount % on Sub Total')),
+    ('prod_dis_double', _('Double Discount % on SubTotal')),
+    ('prod_multi_get_x_by_limit', _('Buy Multi Products get X free By Limit')),
+    ('foc_any_prod_fix', _('FOC Any Product by Fix')),
 ]
 
 
@@ -123,6 +128,9 @@ class PromotionsRules(osv.Model):
         'stop_further':fields.boolean('Stop Checks',
                               help="Stops further promotions being checked"),
         # 'main_group': fields.many2one('product_product.maingroup','Main Group'),
+        'monthly_promotion':fields.boolean('Monthly Promotion'),
+        'promotion_count':fields.integer('Number Of Promotion Count'),
+        'category_ids': fields.many2many('res.partner.category', 'promotion_rule_category_rel', 'promotion_id', 'category_id', 'Customer Tags'),
         'partner_categories':fields.many2many(
                   'res.partner.category',
                   'rule_partner_cat_rel',
@@ -135,12 +143,10 @@ class PromotionsRules(osv.Model):
         'uses_per_coupon':fields.integer('Uses per Coupon'),
         'uses_per_partner':fields.integer('Uses per Partner'),
         'coupon_used':fields.integer('Number of Coupon Uses', required=True),
-        
         'from_date':fields.datetime('From Date'),
         'to_date':fields.datetime('To Date'),
         'sequence':fields.integer('Sequence'),
         'sale_channel_id':fields.many2many('sale.channel', 'promo_sale_channel_rel', 'promo_id', 'sale_channel_id', string='Sale Channel'),
-        'branch_id':fields.many2one('res.branch', 'Branch', required=False),
         'logic':fields.selection([
                             ('and', 'All'),
                             ('or', 'Any'),
@@ -149,25 +155,70 @@ class PromotionsRules(osv.Model):
                             ('True', 'True'),
                             ('False', 'False')
                                     ], string="Output", required=True),
-        'expressions':fields.one2many(
+  'expressions':fields.one2many(
                             'promos.rules.conditions.exps',
                             'promotion',
-                            string='Expressions/Conditions'
+                            string='Expressions/Conditions',copy=True
                             ),
         'actions':fields.one2many(
                     'promos.rules.actions',
                     'promotion',
-                    string="Actions"
+                    string="Actions",copy=True
                         ),
         'main_group':fields.many2one('product.maingroup', 'Main Group'),
+        'state': fields.selection([
+            ('draft', 'Draft'),
+            ('approve', 'Approved'),
+            ], 'Status', readonly=True, copy=False, help="Gives the status of the quotation or sales order.\
+              \nThe exception status is automatically set when a cancel operation occurs \
+              in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\nThe 'Waiting Schedule' status is set when the invoice is confirmed\
+               but waiting for the scheduler to run on the order date.", select=True),
+        'outlettype_id':fields.many2many('outlettype.outlettype', 'promos_rules_outlettype_rel' , 'promos_rules_id' ,'outlettype_id' , string='Outlet Type'),
+        'branch_id':fields.many2many('res.branch', string='Branch'),
+        'customer_ids':fields.many2many('res.partner'),
+        'product_ids':fields.many2many('product.product', 'promos_rules_product_rel' , 'promos_rules_id' ,'product_id' , string='Product'),
+        
     }
     _defaults = {
         'logic':lambda * a:'and',
         'expected_logic_result':lambda * a:'True',
         'coupon_used': '0',
+        'state':'draft',
     }
     _constraints = [(_check_positive_number, 'Coupon Use must be Positive', ['coupon_used'])]
-     
+	
+    def approve(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state':'approve'})
+
+
+    def publish(self, cr, uid, ids, context=None):
+        fcm_api_key = self.pool.get('ir.config_parameter').get_param(cr, uid, 'fcm_api_key', default=False, context=context)
+        push_service = FCMNotification(api_key=fcm_api_key)
+        # data = self.browse(cr, uid, ids)[0]
+        crm_obj = self.pool.get('crm.case.section')
+        tablet_obj = self.pool.get('tablets.information')
+        # title = data.title
+        #  body = data.body
+        #  tag = data.reason
+        result = {}
+        msg_title = "Promotion has be chage"
+        message = "Ready to update"
+        msg_tag = ""
+        
+        if ids:
+            cr.execute("select id from crm_case_section ")
+            team_id = cr.fetchall()
+
+            registration_ids=[]
+            for data in team_id:
+                tablet_ids = tablet_obj.search(cr,uid,[('sale_team_id','in',data)])
+                for tablet_id in tablet_ids:
+                    tablet_data = tablet_obj.browse(cr,uid,tablet_id,context)
+                    if tablet_data.token:
+                        registration_ids.append(tablet_data.token);                
+            result = push_service.notify_multiple_devices(registration_ids=registration_ids,  message_body=message, message_title= msg_title, tag=msg_tag)
+        return True        
+    
     def promotion_date(self, str_date):
         "Converts string date to date"
         import time
@@ -224,17 +275,60 @@ class PromotionsRules(osv.Model):
 #                           ('coupon_code', '=', promotion_rule.coupon_code),
 #                           ('state', '<>', 'cancel')
 #                           ], context=context)
-       
-        date_order = order.date_order
-        from_date = promotion_rule.from_date
-        to_date = promotion_rule.to_date
+        print '10 Mile Causine10 Mile Causine10 Mile Causine',promotion_rule.name
+        is_branch=False
+        is_outlet=False
+        is_channel=False
+        is_customer=False
+        partner_id=order.partner_id.id
+        team_id=order.section_id.id
+        cursor.execute("select res_branch_id from promos_rules_res_branch_rel where promos_rules_id = %s",(promotion_rule.id,))
+        promo_branch_id=cursor.fetchall()
+        cursor.execute("select outlettype_id from promos_rules_outlettype_rel where promos_rules_id =%s",(promotion_rule.id,))
+        promo_outlet_type=cursor.fetchall()
+        cursor.execute("select sale_channel_id  from promo_sale_channel_rel  where promo_id=%s",(promotion_rule.id,))
+        promo_sale_channel_id=cursor.fetchall()
+        cursor.execute("select res_partner_id  from promos_rules_res_partner_rel where promos_rules_id = %s",(promotion_rule.id,))
+        promo_res_partner_id=cursor.fetchall()
         # Check date is valid date during promotion date
-        if date_order >= from_date and date_order <= to_date:
+        if promo_branch_id:
+            cursor.execute("select branch_id from crm_case_section where id=%s and branch_id in %s",(team_id,tuple(promo_branch_id),))
+            team_branch_id=cursor.fetchone()
+            if team_branch_id:
+                is_branch=True
+        else:
+            is_branch=True
             
+        if promo_outlet_type:
+            cursor.execute("select outlet_type from res_partner where id=%s and outlet_type in %s",(partner_id,tuple(promo_outlet_type),))
+            team_outlet_type=cursor.fetchone()
+            if team_outlet_type:
+                is_outlet=True
+        else:
+            is_outlet=True  
+                 
+        if promo_sale_channel_id:
+            cursor.execute("select sale_channel_id,sale_team_id from sale_team_channel_rel where sale_team_id =%s and sale_channel_id in %s",(team_id,tuple(promo_sale_channel_id),))
+            team_channel_id=cursor.fetchone()
+            if team_channel_id:
+                is_channel=True
+        else:
+            is_channel=True      
+            
+        if promo_res_partner_id:
+            cursor.execute("select id from res_partner where id in %s and id =%s",(tuple(promo_res_partner_id),partner_id,))          
+            team_customer_id=cursor.fetchone()
+            if team_customer_id:
+                is_customer=True
+        else:
+                is_customer=True  
+                          
+        print 'is_branchis_branchis_branchis_branch',is_branch,is_outlet,is_channel,is_customer
+                
+        if is_branch==True and is_outlet ==True and is_channel==True and is_customer==True:
             # for total amount for condition expression
             cursor.execute("select attribute,value,comparator from promos_rules_conditions_exps where id=%s", (expression.id,))
             datas = cursor.fetchone()
-
             attribute = datas[0]
             value = datas[1]
             comparator = datas[2]
@@ -248,13 +342,11 @@ class PromotionsRules(osv.Model):
                 if comparator == '==':
                     if order.amount_total == svalue:
                         return True
-                            
                 elif comparator == '!=':    
                         if order.amount_total != svalue:
                             return True
                 elif comparator == '>':
                         if order.amount_total > svalue:
-                            
                             return True
                 elif comparator == '<':    
                         if order.amount_total < svalue:
@@ -266,7 +358,6 @@ class PromotionsRules(osv.Model):
                             return True
                 elif comparator == '<=':    
                         if order.amount_total <= svalue:
-                           
                             return True
             # Check attribute is product_product codes    
             elif attribute == 'product_product':
@@ -292,6 +383,7 @@ class PromotionsRules(osv.Model):
             # MMK
             elif attribute == 'prod_qty':
                 svalue = value.split(":")
+                print 'svaluesvalue',svalue
                 product_code = eval(svalue[0])
                 product_qty = eval(svalue[1])
                 LOGGER.info("Product Code : %s ", product_code)
@@ -361,11 +453,13 @@ class PromotionsRules(osv.Model):
                 elif comparator == '<=':    
                     if tota_qty <= product_qty:
                         return True                
+                    
             # Check attribute is sub total amount                
             elif attribute == 'prod_sub_total':   
                 svalue = value.split(":")
                 product_code = eval(svalue[0])
                 sub_total = eval(svalue[1])
+                #big uom not change
                 for order_line in order.order_line:   
                     if order_line.product_id.default_code == product_code:
                         order_subtotal = (order_line.product_uom_qty * order_line.price_unit)
@@ -433,6 +527,7 @@ class PromotionsRules(osv.Model):
                 product_code = product_codes.split(";")
                 uom_qty = uom_qtys.split(";")
                 qtys = 0.0
+                #big uom not change
                 for order_line in order.order_line:  
                     for p_code in product_code: 
                         if order_line.product_id.default_code == eval(p_code):
@@ -459,12 +554,108 @@ class PromotionsRules(osv.Model):
                 elif comparator == '<=':    
                     if qtys <= quantity:
                         return True       
-        return False
+                    
+            elif attribute == 'fix_prods_qty':
+                print 'expression',expression,promotion_rule
+                svalue = value.split(":")
+                product_code = svalue[0] 
+                #product_code = product_code.split(" ")                
+                product_qty = eval(svalue[1])
+                con_product_qty=0
+                qtys = 0.0
+                ori_qtys=0.0
+                cursor.execute("select comparator,value from promos_rules_conditions_exps where promotion= %s and id!=%s and attribute='fix_prods_qty' ",(promotion_rule.id,expression.id))
+                data=cursor.fetchone()
+                if data:
+                    data_comparator =data[0]
+                    value=data[1]
+                    svalue = value.split(":")
+                    con_product_codes = svalue[0]
+                    con_product_qty = eval(svalue[1])
+                    #   con_product_codes = con_product_codes.split("'")                
 
-        
-    
-        
-        
+                    for order_line in order.order_line:  
+                            if order_line.product_id.default_code ==eval(con_product_codes):
+                                qtys += order_line.product_uom_qty
+                    result=False
+                    total_result= False
+                    if data_comparator == '==':
+                        if qtys == con_product_qty:
+                            result= True
+                    elif data_comparator == '!=':    
+                        if qtys != con_product_qty:
+                            result= True
+                    if data_comparator == '>':
+                        if qtys > con_product_qty:
+                            result= True
+                    elif data_comparator == '<':    
+                        if qtys < con_product_qty:
+                            result= True
+                    elif data_comparator == '>=':
+                        if qtys >= con_product_qty:
+                            result =True
+                    elif data_comparator == '<=':    
+                        if qtys <= con_product_qty:
+                            result =True 
+
+                total=product_qty + con_product_qty
+                default=con_product_codes + ','+product_code
+                default=eval(default)
+                if result==True:
+                    cursor.execute("select sum(sol.product_uom_qty),sol.product_id,sol.product_uom from sale_order_line sol,product_product pp where sol.product_id=pp.id and sol.order_id=%s and pp.default_code in %s",(order.id,default,))
+                    data=cursor.fetchone()
+                    if data:
+                        prod_qty=data[0]
+                        product_id=data[1]
+                        product_uom=data[2]
+                        product = self.pool.get('product.product').browse(cursor, user, product_id, context=context)
+                                              
+                        toal_prod_qty=prod_qty
+
+                    if comparator == '==':
+                        if toal_prod_qty == total:
+                            total_result= True
+                    elif comparator == '!=':    
+                        if toal_prod_qty != total:
+                            total_result= True
+                    if comparator == '>':
+                        if toal_prod_qty > total:
+                            total_result= True
+                    elif comparator == '<':    
+                        if toal_prod_qty < total:
+                            total_result= True
+                    elif comparator == '>=':
+                        if toal_prod_qty >= total:
+                            total_result= True
+                    elif comparator == '<=':    
+                        if toal_prod_qty <= total:
+                            total_result= True                
+                            
+                if result ==True and total_result==True: 
+                    for order_line in order.order_line:  
+                            if order_line.product_id.default_code ==eval(product_code):
+                                ori_qtys += order_line.product_uom_qty          
+                                    
+                    if comparator == '==':
+                        if ori_qtys == product_qty:
+                            return True
+                    elif comparator == '!=':    
+                        if ori_qtys != product_qty:
+                            return True
+                    if comparator == '>':
+                        if ori_qtys > product_qty:
+                            return True
+                    elif comparator == '<':    
+                        if ori_qtys < product_qty:
+                            return True
+                    elif comparator == '>=':
+                        if ori_qtys >= product_qty:
+                            return True
+                    elif comparator == '<=':    
+                        if ori_qtys <= product_qty:
+                            return True                    
+        return False
+       
     def evaluate(self, cursor, user, promotion_rule, order, context=None):
         """
         Evaluates if a promotion is valid
@@ -561,11 +752,15 @@ class PromotionsRules(osv.Model):
                                                    order_id, context)
         for action in promotion_rule.actions:
             # try:
-            action_obj.execute(cursor, user, action.id,
+            
+            data=action_obj.execute(cursor, user, action.id,
                                    order, context=None)
-            # except Exception, error:
-                # raise error
-        return True
+            if data!=True:
+                data=data
+            else:
+                data=True
+
+        return data
         
         
     def apply_promotions(self, cursor, user, order_id, context=None):
@@ -584,27 +779,43 @@ class PromotionsRules(osv.Model):
         # cursor.execute('update sale_order set promo_state=True where id = %s', (order_id,))
         order = self.pool.get('sale.order').browse(cursor, user,
                                                    order_id, context=context)
-        active_promos = self.search(cursor, user,
-                                    [('active', '=', True)],
-                                    context=context)
+        date_order=order.date_order
+        partner_id=order.partner_id
+        team_id=order.section_id
+        branch_id=order.section_id.branch_id.id
+        active_promos=[]
+#         active_promos = self.search(cursor, user,
+#                                     [('active', '=', True),('from_date', '<=', date_order),('to_date', '>=', date_order)],
+#                                     context=context)
+        cursor.execute("select id from promos_rules where active=True and from_date <= %s and  to_date >=%s order by sequence asc",(date_order,date_order,))
+        active_data=cursor.fetchall()
+        print 'active_promos',
+        for data_pro in active_data:
+            print ' data_pro',data_pro
+            active_promos.append(data_pro[0])
+        print 'active_promos',active_promos
         for promotion_rule in self.browse(cursor, user,
                                           active_promos, context):
             result = self.evaluate(cursor, user,
                                    promotion_rule, order,
                                    context)
+            data=True
             
             # MMK I'm just fix a little missing codeI'm just fix a little missing code
             # Apply Promotions Here
             # And so yin result ka true phit ya mal
             # OR so yin result ka false phit ya mal   
             if result:
-                self.execute_actions(cursor, user,
+                data=self.execute_actions(cursor, user,
                                   promotion_rule, order_id,
                                   context)
-                    
+                
+            if  data!=True:
+                return data
                 # If stop further is true
             if promotion_rule.stop_further:
                     return True
+                
                 
         return False
             
@@ -670,7 +881,8 @@ class PromotionsRulesConditionsExprs(osv.Model):
                          'prod_sub_total',
                          'prod_discount',
                          'prod_weight',
-                         'prod_net_price',
+                         'prod_net_price',                          
+
                          ]:
             return {
                     'value':{
@@ -733,7 +945,14 @@ class PromotionsRulesConditionsExprs(osv.Model):
                     'value':{
                              'value':"'category_code':0.00"
                              }
-                    }                   
+                    }
+            
+        if attribute == 'fix_prods_qty':
+            return {
+                    'value':{
+                             'value':"'product_code1';'product_code2':0.00|'product_code3':0.00"
+                             }
+                    }                  
             
         return {}
     _columns = {
@@ -784,6 +1003,7 @@ class PromotionsRulesConditionsExprs(osv.Model):
                          'prod_net_price',
                          'comp_sub_total',
                          'comp_sub_total_x',
+                         'fix_prods_qty',
                          ] and \
             not comparator in NUMERCIAL_COMPARATORS:
             
@@ -795,6 +1015,7 @@ class PromotionsRulesConditionsExprs(osv.Model):
         if attribute in [
                          # 'prods_qty',
                          'prod_qty',
+                         'fix_prods_qty',
                          'prod_unit_price',
                          'prod_sub_total',
                          'prod_discount',
@@ -892,7 +1113,6 @@ class PromotionsRulesConditionsExprs(osv.Model):
         if attribute == 'custom':
             return value
         if attribute in [
-                        
                          'promo_already_exit',
                          ]:
             return '%s %s products' % (value,
@@ -913,6 +1133,7 @@ class PromotionsRulesConditionsExprs(osv.Model):
                          'prod_weight',
                          'prod_net_price',
                          'cat_qty',
+                          'fix_prods_qty',
                          ]:
             product_code, quantity = value.split(":")
             return '(%s in products) and (%s["%s"] %s %s)' % (
@@ -1020,34 +1241,34 @@ class PromotionsRulesConditionsExprs(osv.Model):
                                                     ) + line.th_weight 
         return eval(expression.serialised_expr)     
     
-    def write(self, cursor, user, ids, vals, context):
-        """
-        Serialise before Write
-        @param cursor: Database Cursor
-        @param user: ID of User
-        @param  ids: ID of current record.
-        @param vals: Values of current record.
-        @param context: Context(no direct use).
-        """
-        # Validate before save
-        if type(ids) in [list, tuple] and ids:
-            ids = ids[0]
-        try:
-            old_vals = self.read(cursor, user, ids,
-                                 ['attribute', 'comparator', 'value'],
-                                 context)
-            old_vals.update(vals)
-            old_vals.has_key('id') and old_vals.pop('id')
-            self.validate(cursor, user, old_vals, context)
-        except Exception, e:
-            LOGGER.info(e)
-        # only value may have changed and client gives only value
-            vals = old_vals 
-            vals['serialised_expr'] = self.serialise(vals['attribute'],
-                                                 vals['comparator'],
-                                                 vals['value'])
-            super(PromotionsRulesConditionsExprs, self).write(cursor, user, ids,
-                                                           vals, context)
+#     def write(self, cursor, user, ids, vals, context):
+#         """
+#         Serialise before Write
+#         @param cursor: Database Cursor
+#         @param user: ID of User
+#         @param  ids: ID of current record.
+#         @param vals: Values of current record.
+#         @param context: Context(no direct use).
+#         """
+#         # Validate before save
+#         if type(ids) in [list, tuple] and ids:
+#             ids = ids[0]
+#         try:
+#             old_vals = self.read(cursor, user, ids,
+#                                  ['attribute', 'comparator', 'value'],
+#                                  context)
+#             old_vals.update(vals)
+#             old_vals.has_key('id') and old_vals.pop('id')
+#             self.validate(cursor, user, old_vals, context)
+#         except Exception, e:
+#             LOGGER.info(e)
+#         # only value may have changed and client gives only value
+#             vals = old_vals 
+#             vals['serialised_expr'] = self.serialise(vals['attribute'],
+#                                                  vals['comparator'],
+#                                                  vals['value'])
+#             super(PromotionsRulesConditionsExprs, self).write(cursor, user, ids,
+#                                                            vals, context)
         
 PromotionsRulesConditionsExprs()
 
@@ -1187,14 +1408,7 @@ class PromotionsRulesActions(osv.Model):
                               'arguments':"0.00",
                               }
                    }          
-#kzo
-        if action_type in ['foc_any_product', ] :
-            return{
-                   'value' : {
-                              'product_code':"'product_code_x1':'product_code_x2':'product_code_x3'",
-                              'arguments':"0.00",
-                              }
-                   }
+
         if action_type in ['prod_fix_amt_disc_subtotal', ] :
             return{
                    'value' : {
@@ -1208,7 +1422,31 @@ class PromotionsRulesActions(osv.Model):
                               'product_code':"'product_code'",
                               'arguments':"1",
                               }
-                   }    	
+                   }
+        
+        if action_type in ['prod_multi_get_x_by_limit', ] :
+            return{
+                   'value' : {
+                              'product_code':"'product_code_x1';'product_code_x2':'product_code_x'",
+                              'arguments':"1:1;1",
+                              }
+                   }
+#kzo 
+        if action_type in ['foc_any_product', ] :
+            return{
+                   'value' : {
+                              'product_code':"'product_code_x1':'product_code_x2':'product_code_x3'",
+                              'arguments':"0.00",
+                              }
+                   }    
+            
+        if action_type in ['foc_any_prod_fix', ] :
+            return{
+                   'value' : {
+                              'product_code':"'product_code_x1':'product_code_x2':'product_code_x3'",
+                              'arguments':"0.00",
+                              }
+                   }            
         # Finally if nothing works prod_dis_double
         return {}
     
@@ -1267,6 +1505,7 @@ class PromotionsRulesActions(osv.Model):
                                           }, context)
             order_obj.button_dummy(cursor, user, [order.id], context)
         return True
+    
     # MMK I'm just fix a little missing code  
     def action_prod_disc_perc(self, cursor, user,
                                action, order, context=None):
@@ -1322,7 +1561,6 @@ class PromotionsRulesActions(osv.Model):
         for order_line in order.order_line:
             if order_line.product_id.default_code == eval(action.product_code):
                 # MMK I'm just fix a little missing codeI'm just fix a little missing code
-            
                 order_line_obj.write(cursor,
                                                      user,
                                                      order_line.id,
@@ -1747,58 +1985,7 @@ class PromotionsRulesActions(osv.Model):
   
             
             
-    # MMK I'm just fix a little missing code
-    def action_foc_any_product(self, cursor, user,
-                             action, order, context=None):
-        """
-        'FOC Any Products'
-        @param cursor: Database Cursor
-        @param user: ID of User
-        @param action: Action to be taken on sale order
-        @param order: sale order
-        @param context: Context(no direct use).
-        
-        Note: The function is too long because if it is split then there 
-                will a lot of arguments to be passed from one function to
-                another. This might cause the function to get slow and 
-                hamper the coding standards.
-        """
-        LOGGER.info("FOC Any Products")
-        order_line_obj = self.pool.get('sale.order.line')
-        # Get Product
-        product_codes_str = action.product_code  # there contained array list of product code
-        product_codes_list = product_codes_str.split(':')
-        product_x_code = None
-        existing_id = foc_product_id = None
-        same_product_id_list = []
-        LOGGER.info('Product Code Lists >>> %s ', product_codes_list)
-        if product_codes_list:
-            try:
-                product_x_code = ([eval(x) for x in product_codes_list])
-            except Exception, e:
-                LOGGER.info(e)
-                product_x_code = None
-        if product_x_code:
-            for order_line in order.order_line:
-                if order_line.product_id.default_code in product_x_code:
-                    LOGGER.info("Same Default Code : %s ", order_line.product_id.default_code)
-                    LOGGER.info("Index :: %s ", product_x_code.index(order_line.product_id.default_code))
-                    same_product_id_list.append(order_line.product_id.id)
-                    
-            if same_product_id_list:  # if there contained already foc product from product list, firstly 
-                for check_product_id in same_product_id_list:
-                    foc_product_id = check_product_id
-                    existing_id = order_line_obj.search(cursor, user, [('order_id', '=', order.id), ('product_id', '=', check_product_id), ('price_unit', '=', 0), ('sale_foc', '=', True)], context)
-                    if existing_id:
-                        order_line_obj.unlink(cursor, user, existing_id, context)
-                if foc_product_id:
-                    LOGGER.info("Default Code :: %s ", foc_product_id)
-                # get Quantity
-                    qty_x = eval(action.arguments)
-                    LOGGER.info("FOC : %s ", qty_x)
-                    self.create_x_line(cursor, user, action,
-                                       order, qty_x, [foc_product_id], context)  
-        return True  
+
         
     # MMK I'm just fix a little missing code
     def action_prod_x_get_x(self, cursor, user,
@@ -1998,7 +2185,47 @@ class PromotionsRulesActions(osv.Model):
                                                    order, free_qty, product_x2_code_id, context)
   
         return False
-    
+
+    def action_prod_multi_get_x_by_limit(self, cursor, user,
+                             action, order, context=None):
+        # MMK
+        existing_id = None
+        LOGGER.info("Buy Multi Products get X free Limit")
+        product_obj = self.pool.get('product.product')
+        order_line_obj = self.pool.get('sale.order.line')
+        
+        product_codes = self.tsplit(action.product_code, (':', ';'))
+        LOGGER.info("Action Product Codes : %s ", product_codes)
+        qty = free_qty = 0
+        final_code = product_codes[len(product_codes) - 1]
+        print ' final_code',final_code
+        product_x2_code_id = product_obj.search(cursor, user,
+                                    [('default_code', '=', eval(final_code))], context=context)
+#         product_codes.remove(final_code)
+        qty_column = self.tsplit(action.arguments, (':', ';'))
+        print ' qty_columnqty_columnqty_column',qty_column
+        qty_x=eval(qty_column[0])#24
+        qty_y =eval(qty_column[1])#1
+        limit=eval(qty_column[2])#240
+        LOGGER.info("Product Code : %s ", product_x2_code_id[0], qty_x, qty_y,limit )
+#         existing_id = order_line_obj.search(cursor, user, [('order_id', '=', order.id), ('product_id', '=', product_x2_code_id[0]), ('price_unit', '=', 0), ('sale_foc', '=', True)], context)
+#         if existing_id:
+#             order_line_obj.unlink(cursor, user, existing_id, context)
+        for order_line in order.order_line:        
+            for product_code in product_codes:
+                print 'product_codeproduct_code',product_code
+                if order_line.product_id.default_code == eval(product_code):    
+                    qty += order_line.product_uom_qty
+        if  qty>limit:
+            qty=limit
+        if qty >= qty_x:
+            free_qty = int((qty / qty_x) * qty_y)
+            LOGGER.info("Free Quantity : %s ", free_qty)
+            return self.create_x_line(cursor, user, action,
+                                                   order, free_qty, product_x2_code_id, context)
+  
+        return False
+        
     def tsplit(self, string, delimiters):
         """Behaves str.split but supports multiple delimiters."""
         
@@ -2074,6 +2301,97 @@ class PromotionsRulesActions(osv.Model):
         """
         return True
     
+    # KM I'm just fix a little missing code
+    def action_foc_any_product(self, cursor, user,
+                             action, order, context=None):
+        
+        """
+        'FOC Any Products'
+        @param cursor: Database Cursor
+        @param user: ID of User
+        @param action: Action to be taken on sale order
+        @param order: sale order
+        @param context: Context(no direct use).
+        
+        Note: The function is too long because if it is split then there 
+                will a lot of arguments to be passed from one function to
+                another. This might cause the function to get slow and 
+                hamper the coding standards.
+        """
+        mod_obj = self.pool.get('ir.model.data')        
+        act_obj = self.pool.get('ir.actions.act_window')
+        LOGGER.info("FOC Any Products")
+        order_line_obj = self.pool.get('sale.order.line')
+        # Get Product
+        result_context = {}    
+        product_codes_str = action.product_code  # there contained array list of product code
+        product_codes_list = product_codes_str.split(':')
+        product_obj = self.pool.get('product.product')
+        temp_obj = self.pool.get('foc.any.product.temp')
+        product_x_code, product_y_code = [eval(code) \
+                                for code in action.product_code.split(":")]
+        product_xy_code='NA'
+        
+        product_x_code_id = product_obj.search(cursor, user,
+                                    [('default_code', '=', product_x_code)], context=context)
+        product_x2_code_id = product_obj.search(cursor, user,
+                                    [('default_code', '=', product_y_code)], context=context)        
+        product_xy_code_id= product_obj.search(cursor, user,
+                                    [('default_code', '=', product_xy_code)], context=context)  
+        qty_x = eval(action.arguments)              
+        if product_codes_list:
+            result = mod_obj.get_object_reference(cursor, user, 'sale_promotions', 'open_view_foc_any_product')
+            id = result and result[1] or False
+            result = act_obj.read(cursor, user, [id], context=context)[0]   
+            cursor.execute("delete from foc_any_product_temp")
+#             result['domain'] = str({'one_product_id', '=',product_x_code_id[0],\
+#                                     'two_product_id', '=',product_x2_code_id[0],\
+#                                     'three_product_id', '=',product_xy_code_id[0]})
+#             result['context'] = str({'one_product_id', '=',product_x_code_id[0],\
+#                                     'two_product_id', '=',product_x2_code_id[0],\
+#                                     'three_product_id', '=',product_xy_code_id[0]})            
+#             result['view_type'] = 'form'
+    
+#             if product_x_code_id:
+#                 result_context.update({'one_product_id': product_x_code_id[0]})
+#             if product_x2_code_id:
+#                 result_context.update({'two_product_id': product_x2_code_id[0]})
+#     
+        if product_x_code_id and product_x2_code_id :
+            temp_obj.create(cursor, user, {
+                                     'order_id':order.id,
+                                     'one_product_id':product_x_code_id[0],
+                                      'two_product_id':product_x2_code_id[0],
+                                      'three_product_id':False,
+                                      'qty':qty_x,
+                                      }, context)    
+        return result        
+#             try:
+#                 product_x_code = ([eval(x) for x in product_codes_list])
+#             except Exception, e:
+#                 LOGGER.info(e)
+#                 product_x_code = None
+#         if product_x_code:
+#             for order_line in order.order_line:
+#                 if order_line.product_id.default_code in product_x_code:
+#                     LOGGER.info("Same Default Code : %s ", order_line.product_id.default_code)
+#                     LOGGER.info("Index :: %s ", product_x_code.index(order_line.product_id.default_code))
+#                     same_product_id_list.append(order_line.product_id.id)
+#                     
+#             if same_product_id_list:  # if there contained already foc product from product list, firstly 
+#                 for check_product_id in same_product_id_list:
+#                     foc_product_id = check_product_id
+#                     existing_id = order_line_obj.search(cursor, user, [('order_id', '=', order.id), ('product_id', '=', check_product_id), ('price_unit', '=', 0), ('sale_foc', '=', True)], context)
+#                     if existing_id:
+#                         order_line_obj.unlink(cursor, user, existing_id, context)
+#                 if foc_product_id:
+#                     LOGGER.info("Default Code :: %s ", foc_product_id)
+#                 # get Quantity
+#                     qty_x = eval(action.arguments)
+#                     LOGGER.info("FOC : %s ", qty_x)
+#                     self.create_x_line(cursor, user, action,
+#                                        order, qty_x, [foc_product_id], context)  
+#        return True  
     
     def execute(self, cursor, user, action_id,
                                    order, context=None):
@@ -2153,30 +2471,30 @@ class PromotionsRulesActions(osv.Model):
         
         return True
     
-    def write(self, cursor, user, ids, vals, context):
-        """
-        Validate before Write
-        @param cursor: Database Cursor
-        @param user: ID of User
-        @param vals: Values of current record.
-        @param context: Context(no direct use).
-        """
-        # Validate before save
-        if type(ids) in [list, tuple] and ids:
-            ids = ids[0]
-        try:
-            old_vals = self.read(cursor, user, ids,
-                                 ['action_type', 'product_code', 'arguments'],
-                                 context)
-            old_vals.update(vals)
-            old_vals.has_key('id') and old_vals.pop('id')
-            self.validate(cursor, user, old_vals, context)
-        except Exception, e:
-            raise osv.except_osv("Invalid Expression", tools.ustr(e))
-        # only value may have changed and client gives only value
-        vals = old_vals 
-        super(PromotionsRulesActions, self).write(cursor, user, ids,
-                                                           vals, context)
+#     def write(self, cursor, user, ids, vals, context):
+#         """
+#         Validate before Write
+#         @param cursor: Database Cursor
+#         @param user: ID of User
+#         @param vals: Values of current record.
+#         @param context: Context(no direct use).
+#         """
+#         # Validate before save
+#         if type(ids) in [list, tuple] and ids:
+#             ids = ids[0]
+#         try:
+#             old_vals = self.read(cursor, user, ids,
+#                                  ['action_type', 'product_code', 'arguments'],
+#                                  context)
+#             old_vals.update(vals)
+#             old_vals.has_key('id') and old_vals.pop('id')
+#             self.validate(cursor, user, old_vals, context)
+#         except Exception, e:
+#             raise osv.except_osv("Invalid Expression", tools.ustr(e))
+#         # only value may have changed and client gives only value
+#         vals = old_vals 
+#         super(PromotionsRulesActions, self).write(cursor, user, ids,
+#                                                            vals, context)
     
 PromotionsRulesActions()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

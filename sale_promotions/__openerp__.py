@@ -26,7 +26,7 @@
     'author': 'seventh computing',
     'website': 'http://www.7thcomputing.com',
     'category' : 'Sales',
-    'depends' : ["base","sale","product_product",],
+    'depends' : ["base", "sale", "product_product", ],
     'description': """
     Promotions on Sale Order for OpenERP
     = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -39,8 +39,9 @@
     'data': [
         'views/rule_view.xml',
 	 'views/sale_view.xml',
+     'wizard/foc_any_product_view.xml',
 
-        #odoo8 need to include  sale_view
+        # odoo8 need to include  sale_view
                 ],
     'installable': True,
     'auto_install': False,
