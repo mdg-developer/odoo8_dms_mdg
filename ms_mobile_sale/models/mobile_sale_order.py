@@ -7,7 +7,6 @@ import time
 from openerp import netsvc
 DEFAULT_SERVER_DATE_FORMAT = "%Y-%m-%d"
 from openerp.http import request
-
 from openerp.addons.connector.queue.job import job, related_action
 from openerp.addons.connector.session import ConnectorSession
 from openerp.addons.connector.exception import FailedJobError
@@ -1290,13 +1289,14 @@ class mobile_sale_order(osv.osv):
             if history:
                 print 'hidtory', history
                 for pt in history:
-                    print 'dateImmmm',datetime.today().strftime('%d-%m-%Y %H:%M:%S'  )
+                    
+                    print 'dateImmmm',datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     deno_result = {
                         'invoice_count':pt['invoice_count'],
                         'sale_team_id':pt['sale_team_id'],
                         'company_id':pt['company_id'] ,
                         'note':pt['note'],
-                        'date': datetime.today().strftime('%Y-%m-%d %H:%M:%S' ),
+                        'date':datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                         'tablet_id':pt['tablet_id'],
                         'user_id':pt['user_id'],
                         'denomination_note_line':False,
