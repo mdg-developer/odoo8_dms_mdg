@@ -22,8 +22,9 @@
                 </ex-property>
             </list-property>
             <property name="odaDriverClass">org.postgresql.Driver</property>
-            <property name="odaURL">jdbc:postgresql://localhost:5432/MDG_22_9_16(2)</property>
-            <property name="odaUser">openerp</property>
+            <property name="odaURL">jdbc:postgresql://10.1.3.246:5432/mdg_uat</property>
+            <property name="odaUser">odoo</property>
+<property name="odaJndiName">java:comp/env/jdbc/ReportDB</property>
             <encrypted-property name="odaPassword" encryptionID="base64">b3BlbnBncHdk</encrypted-property>
         </oda-data-source>
     </data-sources>
