@@ -292,8 +292,7 @@
 					                <strong> Kyats Exactly )</strong>
 					                <strong> received.</strong>
 					            </p>
-						<br></br>
-						<br></br>
+					            
 						<div class="row" style="padding-top:-2s0pt;">
 							<div class="col-xs-3 pull-left">
 								<table class="table" style='border:solid;border-color:white;'>
@@ -309,7 +308,7 @@
 											<span>
 												<span>
 													<img src="/sale_management/static/description/16.png"
-															style="max-height: 85pt;width:80px;" />
+															style="max-height: 75pt;width:70px;" />
 												</span>
 											</span>
 										</td>
@@ -328,12 +327,10 @@
 									</tr>
 									<tr style='border:solid;border-color:white;'>
 										<td style="margin-top:-10pt;" align="center">
-											<span>
 												<span>
 													<img src="/sale_management/static/description/17.png"
-															style="max-height: 155pt;width:130px;" />
+															style="max-height: 70pt;width:110px;" />
 												</span>
-											</span>
 										</td>
 									</tr>
 								</table>
@@ -341,14 +338,14 @@
 							</div>
 						</div>
 
-						<p t-if="o.comment">
+						<!-- <p t-if="o.comment">
 							<strong>Comment:</strong>
 							<span t-field="o.comment" />
 						</p>
 						<p t-if="o.fiscal_position.note">
 							<strong>Fiscal Position Remark:</strong>
 							<span t-field="o.fiscal_position.note" />
-						</p>
+						</p> -->
 					</div>
 				<!-- </t> -->
 			</xpath>
