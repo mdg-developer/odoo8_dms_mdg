@@ -39,7 +39,8 @@
          'views/customer_visit_report_view.xml',
          'views/stock_history_view.xml',
          'views/sku_by_customer_view.xml',
-         'views/sku_by_category_view.xml'
+         'views/sku_by_category_view.xml',
+         'views/stock_different_report_view.xml'
 
                 ],
     'installable': True,

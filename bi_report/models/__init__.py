@@ -4,5 +4,5 @@ import stock_history
 import invoice_report
 import sku_by_customer
 import sku_by_category
-
+import stock_different_report
 
