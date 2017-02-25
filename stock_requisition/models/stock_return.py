@@ -282,7 +282,7 @@ class stock_return(osv.osv):
             ex_return_id =    line.ex_return_id.id    
             big_return_quantity=line.return_quantity_big
             return_quantity=line.return_quantity
-            
+            different_qty=0
             if (rec_small_quantity + rec_big_quantity > 0) and ex_return_id is False:
                 product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)       
                 name = line.product_id.name_template                                                                               
@@ -296,7 +296,9 @@ class stock_return(osv.osv):
                         if total_return_qty < total_rec_qty:
                             raise osv.except_osv(_('Warning'),
                                 _('Please Check Receive Qty (%s)') % (name,))    
-                                                   
+                        if  total_return_qty > total_rec_qty:
+                            different_qty   = total_return_qty - total_rec_qty
+                        cr.execute("update stock_return_line set different_qty= %s where id=%s",(different_qty,line.id,))
                         move_id = move_obj.create(cr, uid, {'picking_id': picking_id,
                                                   'picking_type_id':picking_type_id,
                                                 #  'restrict_lot_id':lot_id,
@@ -414,6 +416,7 @@ class stock_return_line(osv.osv):  # #prod_pricelist_update_line
         'rec_small_uom_id': fields.many2one('product.uom', 'Rec Smaller UoM'),         
         'sequence':fields.integer('Sequence'),
         'ex_return_id':fields.many2one('product.transactions','Exchange ID'),
+        'different_qty':fields.integer('Different Qty'),
 
     }
         
