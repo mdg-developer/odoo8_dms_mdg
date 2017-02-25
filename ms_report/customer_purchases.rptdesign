@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.4.2.v201410272105 Build &lt;4.4.2.v20150217-1805></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="bidiLayoutOrientation">ltr</property>
@@ -59,7 +59,7 @@
             </structure>
         </scalar-parameter>
         <scalar-parameter name="customer" id="86">
-            <text-property name="promptText">Customer</text-property>
+            <text-property name="promptText">Sales Team</text-property>
             <property name="valueType">dynamic</property>
             <property name="isRequired">false</property>
             <property name="dataSetName">customer</property>
@@ -290,7 +290,7 @@ if (params["customer"].value == null ){
 }
 else
 {     
-   this.queryText =this.queryText.replace("--$customer$", "and inv.partner_id="+params["customer"])
+   this.queryText =this.queryText.replace("--$customer$", "and inv.section_id="+params["customer"])
 }]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
@@ -861,12 +861,14 @@ from res_branch]]></xml-property>
                     <property name="columnName">id</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">id</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">id</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">name</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">name</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">name</text-property>
                 </structure>
             </list-property>
@@ -903,8 +905,8 @@ from res_branch]]></xml-property>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select id,name 
-from res_partner 
-where customer='True'
+from crm_case_section 
+where active='True'
 order by name]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
