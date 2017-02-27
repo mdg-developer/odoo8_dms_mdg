@@ -68,7 +68,7 @@
         <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="23"
  extends="report_library.Data Source">
             <property name="odaDriverClass">org.postgresql.Driver</property>
-            <property name="odaURL">jdbc:postgresql://localhost:5432/mdg20161214</property>
+            <property name="odaURL">jdbc:postgresql://localhost:5432/mdg_uat</property>
             <property name="odaUser">openerp</property>
             <encrypted-property name="odaPassword" encryptionID="base64">b3BlbnBncHdk</encrypted-property>
         </oda-data-source>

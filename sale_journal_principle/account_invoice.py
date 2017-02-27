@@ -285,7 +285,7 @@ class account_invoice(models.Model):
             product = self.env['product.product'].browse(line.get('product_id', False))
             product_code = product.default_code
             print 'product_code', product_code
-            if line['price'] < 0 or line['is_discount'] == True or product_code == 'discount1' or  product_code == 'discount2' or product_code == 'discount3' or  product_code == 'discount4' :
+            if line['price'] < 0 or line['is_discount'] == True or product_code == 'discount1' or  product_code == 'discount2' or product_code == 'discount3' or  product_code == 'discount4' or  product_code == 'discount5' :
                 product = self.env['product.product'].browse(line.get('product_id', False))
                 print 'product>>>', product.id
                 print 'line.get>>>', line.get('product_id', False)
@@ -332,7 +332,7 @@ class account_invoice(models.Model):
         if type == 'in_refund' :
             product = self.env['product.product'].browse(line.get('product_id', False))
             product_code = product.default_code
-            if line['price'] < 0 or line['is_discount'] == True or product_code == 'discount1' or  product_code == 'discount2' or product_code == 'discount3' or  product_code == 'discount4' :
+            if line['price'] < 0 or line['is_discount'] == True or product_code == 'discount1' or  product_code == 'discount2' or product_code == 'discount3' or  product_code == 'discount4' or  product_code == 'discount5' :
                 product = self.env['product.product'].browse(line.get('product_id', False))
                 print 'product>>>', product.id
                 print 'line.get>>>', line.get('product_id', False)
@@ -379,7 +379,7 @@ class account_invoice(models.Model):
         if type == 'out_refund' :
             product = self.env['product.product'].browse(line.get('product_id', False))
             product_code = product.default_code            
-            if line['price'] > 0 or line['is_discount'] == True or  product_code == 'discount1' or  product_code == 'discount2' or product_code == 'discount3' or  product_code == 'discount4' :
+            if line['price'] > 0 or line['is_discount'] == True or  product_code == 'discount1' or  product_code == 'discount2' or product_code == 'discount3' or  product_code == 'discount4' or  product_code == 'discount5' :
                 product = self.env['product.product'].browse(line.get('product_id', False))
                 print 'product>>>', product.id
                 print 'line.get>>>', line.get('product_id', False)
@@ -427,7 +427,7 @@ class account_invoice(models.Model):
         if type == 'in_invoice' :
             product = self.env['product.product'].browse(line.get('product_id', False))
             product_code = product.default_code            
-            if line['price'] > 0  or line['is_discount'] == True or product_code == 'discount1' or  product_code == 'discount2' or product_code == 'discount3' or  product_code == 'discount4' :
+            if line['price'] > 0  or line['is_discount'] == True or product_code == 'discount1' or  product_code == 'discount2' or product_code == 'discount3' or  product_code == 'discount4' or  product_code == 'discount5'  :
                 product = self.env['product.product'].browse(line.get('product_id', False))
                 print 'product>>>', product.id
                 print 'line.get>>>', line.get('product_id', False)
@@ -576,7 +576,7 @@ class account_invoice(models.Model):
                 origin = res['ref']
                 product = self.env['product.product'].browse(res.get('product_id', False))
                 product_code = product.default_code                
-                if product_code == 'discount1' or  product_code == 'discount2' or product_code == 'discount3' or  product_code == 'discount4' :
+                if product_code == 'discount1' or  product_code == 'discount2' or product_code == 'discount3' or  product_code == 'discount4' or  product_code == 'discount5' :
                     res['debit'] = -1 * res['debit']
                     res['credit'] = -1 * res['credit']
                 if origin:
@@ -646,7 +646,7 @@ class account_invoice(models.Model):
                 origin = res['ref']
                 product = self.env['product.product'].browse(res.get('product_id', False))
                 product_code = product.default_code                
-                if product_code == 'discount1' or  product_code == 'discount2' or product_code == 'discount3' or  product_code == 'discount4' :
+                if product_code == 'discount1' or  product_code == 'discount2' or product_code == 'discount3' or  product_code == 'discount4' or  product_code == 'discount5' :
                     res['debit'] = res['debit']
                     res['credit'] = res['credit']
                 if origin:

@@ -182,7 +182,7 @@ class sale_target_report(osv.osv):
  
     def _select(self):
         select_str = """
-            select min(st.id) AS id,
+            select min(stl.id) AS id,
                st.sale_team_id,
                st.branch_id,
                stl.product_id,
