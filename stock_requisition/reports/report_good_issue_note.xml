@@ -155,11 +155,9 @@
                     </tr>
                 </thead>
                <tbody class="invoice_tbody">
-					<tr t-foreach="o" t-as="l">
+					<tr >
 	                    <td>Name</td>
-	                    <td><p t-field="l.issue_by"/></td>
-	                   	<td><p t-field="l.approve_by"/></td>
-	                   	<td><p t-field="l.receive_by"/></td>
+	                    
 					</tr>
 					<tr>
 	                    <td>Position</td>
