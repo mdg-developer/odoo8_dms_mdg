@@ -17,7 +17,7 @@
 			<field name="model">good.issue.note</field>
 			<field name="inherit_id" ref="stock_requisition.good_issue_note_form" />
 			<field name="arch" type="xml">
-				<field name="from_location_id" position="after">
+				<field name="to_location_id" position="after">
 					<field name="branch_id" />
 				</field>
 			</field>
