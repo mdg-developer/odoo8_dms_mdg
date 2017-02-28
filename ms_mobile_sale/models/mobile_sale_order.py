@@ -381,6 +381,7 @@ class mobile_sale_order(osv.osv):
         voucherLineObj = self.pool.get('account.voucher.line')
         stockPickingObj = self.pool.get('stock.picking')
         stockDetailObj = self.pool.get('stock.transfer_details')
+        sale_team_Obj = self.pool.get('crm.case.section')
         soResult = {}
         solResult = {}
         accountVResult = {}
@@ -403,6 +404,8 @@ class mobile_sale_order(osv.osv):
 #                 sale_team_id = cr.fetchone()
             sale_team_obj = self.browse(cr, uid, ids, context)
             sale_team_id = sale_team_obj.sale_team.id
+            team_data=sale_team_Obj.browse(cr, uid, sale_team_id, context)
+            delivery_team_id=team_data.delivery_team_id.id
             cr.execute("select cc.analytic_account_id from crm_case_section cc,mobile_sale_order mso where mso.sale_team=cc.id and mso.id=%s", (ids[0],))
             analytic_id = cr.fetchone()
             if analytic_id:
@@ -445,7 +448,7 @@ class mobile_sale_order(osv.osv):
                                             'sale_plan_name':ms_ids.sale_plan_name,
                                             'payment_type':ms_ids.type,
                                             'direct_credit':ms_ids.direct_credit,
-
+                                            'delivery_id':delivery_team_id,
                                             'section_id':sale_team_id,
                                             'due_date':ms_ids.due_date,
                                             'so_latitude':ms_ids.mso_latitude,
@@ -2062,7 +2065,6 @@ class mobile_sale_order(osv.osv):
                      substring(replace(cast(RP.image_medium as text),'/',''),1,5) as image_medium,RP.credit_limit,RP.credit_allow,
                      RP.sales_channel,RP.branch_id,RP.pricelist_id,RP.payment_term_id,RP.outlet_type,RP.city as city_id,RP.township as township_id,
                      RP.country_id,RP.state_id,RP.unit,RP.class_id,RP.chiller,RP.frequency_id,RP.temp_customer
-
                      from   res_partner RP ,res_country_state RS, res_city RC,res_township RT,
                              outlettype_outlettype OT
                                             where RS.id = RP.state_id
