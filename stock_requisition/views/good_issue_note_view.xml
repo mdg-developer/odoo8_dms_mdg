@@ -31,8 +31,8 @@
 								<field name="name" />
 								<field name="sale_team_id" attrs="{'readonly':[('state','=','approve')]}"
 									invisible="1" />
-								<field name="from_location_id" attrs="{'readonly':[('state','=','approve')]}" />
 								<field name="to_location_id" attrs="{'readonly':[('state','=','approve')]}" />
+								<field name="from_location_id" attrs="{'readonly':[('state','=','approve')]}" />
 								<field name="request_by" attrs="{'readonly':[('state','=','approve')]}" />
 							</group>
 							<group>
