@@ -181,7 +181,10 @@ class PromotionsRules(osv.Model):
         'branch_id':fields.many2many('res.branch', string='Branch'),
         'customer_ids':fields.many2many('res.partner'),
         'product_ids':fields.many2many('product.product', 'promos_rules_product_rel' , 'promos_rules_id' ,'product_id' , string='Product'),
-        'join_promotion_ids':fields.many2many('promos.rules', 'promos_rules_join_rel' , 'promos_rules_id' ,'join_promotion_id' , string='Monthly Join Promotions'),
+       # 'promotion_id':fields.many2many('promos.rules', 'promos_rules_join_rel' , 'promos_rules_id' ,'join_promotion_id' , string='Monthly Join Promotions'),
+        'promotion_id_a':fields.many2one('promos.rules','Other Promotion A'),
+        'promotion_id_b':fields.many2one('promos.rules' ,'Other Promotion B'),
+        'promotion_id_c':fields.many2one('promos.rules' ,'Other Promotion C'),
         
     }
     _defaults = {
