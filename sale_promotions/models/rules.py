@@ -20,10 +20,12 @@ ATTRIBUTES = [
     ('prod_qty', 'Product Quantity combination'),
     ('prods_qty', 'Multiple Product Quantity combination'),
     ('prods_multi_uom_qty', 'Multiple Product UOM Combination'),
+    ('multi_prod_sale_amt', 'Multiple Product SubTotal combination'),
     # ('prod_unit_price', 'Product UnitPrice combination'),
     ('prod_sub_total', 'Product SubTotal combination'),
     ('promo_already_exit', 'Promotion Already Applied'),
-    ('cat_qty', 'Product Category Quantity combination'),    
+    ('cat_qty', 'Product Category Quantity combination'),  
+    ('cat_total', 'Product Category Sale Total'),   
     ('fix_prods_qty', 'Fix Quantity Total combination'),
 
 ]
@@ -59,7 +61,8 @@ ACTION_TYPES = [
     ('prod_x_get_x', _('Buy X get X free')),
     ('prod_multi_get_x', _('Buy Multi Products get X free')),
     ('prod_multi_get_x_conds', _('Buy Multi Products get X free by Condition')),
-     ('prod_multi_uom_get_x', _('Buy Multi UOM get X free')),
+    ('prod_multi_uom_get_x', _('Buy Multi UOM get X free')),
+    ('prod_multi_ratio_x',_('Buy Multi Product Ratio get X free')),
     ('fix_qty_on_product_code', _('FOC Products on Qty')),
     ('prod_foc_smallest_unitprice', _('FOC Products on smallest Unitprice')),
     ('foc_any_product', _('FOC Any Products by Ratio')),
@@ -942,6 +945,14 @@ class PromotionsRulesConditionsExprs(osv.Model):
                              'value':"'product_code1';'product_code2'|0.00"
                              }
                }
+            
+        if attribute in ['multi_prod_sale_amt']:
+            return{
+                    'value':{
+                             'value':"'product_code1';'product_code2'|0.00"
+                             }
+               }
+        
         # Case 6   
         if attribute in ['prods_multi_uom_qty']:
             return {
@@ -982,6 +993,18 @@ class PromotionsRulesConditionsExprs(osv.Model):
                              'value':"'category_code':0.00"
                              }
                     }
+            
+        if attribute in [
+                         'cat_total',
+                        
+                         ]:
+            return {
+                    'value':{
+                             'value':"'category_code':0.00"
+                             }
+                    }
+            
+            
             
         if attribute == 'fix_prods_qty':
             return {
@@ -1407,6 +1430,16 @@ class PromotionsRulesActions(osv.Model):
                               'arguments':"1:1",
                               }
                    }
+            
+        if action_type in ['prod_multi_ratio_x' ] :
+            return{
+                   'value' : {
+                              'product_code':"'code_1';'code_2';'code_3';|3;3;1:'given_product_code'",
+                         'arguments':"1:1",
+                              }
+                   }
+            
+            
         if action_type in ['prod_multi_uom_get_x', ]:
             return{
                    'value' : {
