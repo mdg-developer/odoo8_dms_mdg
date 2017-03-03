@@ -40,14 +40,12 @@ class account_invoice(models.Model):
         # Validate before save
         if type(ids) in [list, tuple] and ids:
             ids = ids[0]
-            print 'valslllllllllllllllllllllllllllllllllllll',vals
             if vals.get('partner_id'):
                 partner_id=vals['partner_id']
                 part = self.pool.get('res.partner').browse(cursor, user, partner_id, context=context)    
                 defaults=self.onchange_partner_id(cursor, user, [], 'out_invoice', partner_id)['value']
                 vals = dict(defaults, **vals)
         ctx = dict(context or {}, mail_create_nolog=True)
-        print 'valssssssssssssssss',vals
         new_id = super(account_invoice, self).write(cursor, user, ids, vals, context=context)
         return new_id        
     @api.multi    
