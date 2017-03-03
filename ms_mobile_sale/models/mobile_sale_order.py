@@ -2844,14 +2844,25 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()        
         return datas
     
+#     def get_monthly_promotion_history(self, cr, uid, section_id , context=None, **kwargs):
+#             cr.execute("""
+#             select promotion_id,date, partner_id,section_id from sales_promotion_history where section_id = %s
+#             and  date between date_trunc('month', current_date)::date
+#             and  DATE_TRUNC('month', CURRENT_DATE) + INTERVAL '1 month'  - INTERVAL '1 day' 
+#             """, (section_id,))   
+#             datas = cr.fetchall()        
+#             return datas
+        
     def get_monthly_promotion_history(self, cr, uid, section_id , context=None, **kwargs):
             cr.execute("""
-            select promotion_id,date, partner_id,section_id from sales_promotion_history where section_id = %s
-            and  date between date_trunc('month', current_date)::date
-            and  DATE_TRUNC('month', CURRENT_DATE) + INTERVAL '1 month'  - INTERVAL '1 day' 
+            select promotion_id,date, partner_id,section_id from 
+            sales_promotion_history h,promos_rules r where 
+            h.promotion_id=r.id
+            and section_id = %s and date between r.from_date and r.to_date order by promotion_id
             """, (section_id,))   
             datas = cr.fetchall()        
             return datas
+        
     
     def create_monthly_promotion_history(self, cursor, user, vals, context=None):
                     
