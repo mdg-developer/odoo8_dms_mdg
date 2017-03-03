@@ -36,8 +36,8 @@ class good_issue_note(osv.osv):
     _columns = {
         'name': fields.char('(GIN)Ref;No.', readonly=True),
         'request_id':fields.many2one('stock.requisition', '(REI)Ref;No.', readonly=True),
-        'to_location_id':fields.many2one('stock.location', 'Issue To', required=True),
-        'from_location_id':fields.many2one('stock.location', 'Issue From', required=True),
+        'to_location_id':fields.many2one('stock.location', 'Issue From', required=True),
+        'from_location_id':fields.many2one('stock.location', 'Issue To', required=True),
         'sale_team_id':fields.many2one('crm.case.section', 'Sale Team'),
 #         'so_no' : fields.char('Sales Order/Inv Ref;No.'),
          'issue_by':fields.many2one('res.users', "Issue By"),
