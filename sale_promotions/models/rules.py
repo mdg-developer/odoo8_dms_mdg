@@ -60,6 +60,9 @@ ACTION_TYPES = [
 
     ('prod_x_get_x', _('Buy X get X free')),
     ('prod_multi_get_x', _('Buy Multi Products get X free')),
+    
+    ('prod_categ_value_get_x', _('Buy Category Value get X free')),
+    
     ('prod_multi_get_x_conds', _('Buy Multi Products get X free by Condition')),
     ('prod_multi_uom_get_x', _('Buy Multi UOM get X free')),
     ('prod_multi_ratio_x',_('Buy Multi Product Ratio get X free')),
@@ -1434,7 +1437,14 @@ class PromotionsRulesActions(osv.Model):
                               'arguments':"1:1",
                               }
                    }
-            
+          
+        if action_type in ['prod_categ_value_get_x' ] :
+            return{
+                   'value' : {
+                              'product_code':"'category_code':'product_code_x'",
+                              'arguments':"1:1",
+                              }
+                   }          
         if action_type in ['prod_multi_ratio_x' ] :
             return{
                    'value' : {
