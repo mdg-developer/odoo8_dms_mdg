@@ -4,12 +4,14 @@
 		<template id="report_invoice_document" inherit_id="account.report_invoice_document">
 			<xpath expr="//t[@t-call='report.external_layout']" position="replace">
 
-				<t t-call="sale_management.invoice_custom_layout">
+				<!-- <t t-call="sale_management.invoice_custom_layout"> -->
 					<div class="page" style="font-size:10pt;">
 						<div class="row" style="padding-top:-2s0pt;">
 							<center>
-								<img src="/sale_management/static/description/Header.png"
-									style="max-height: 250pt;width:500px;" />
+								<img src="/sale_management/static/description/AMH_Header.png"
+									style="max-height: 250pt;width:700px;" /><br/>
+								<img src="/sale_management/static/description/AMH_Address.png"
+								style="max-height: 250pt;width:700px;" />
 							</center>
 							
 						</div>
@@ -21,16 +23,15 @@
 							
 						</div>
 						<br></br>
-						<br></br>
-
 						<table class="table"
 							style='border:solid;border-color:white;margin-top:-20pt;'>
 							<tr style='border:solid;border-color:white;'>
-								<td>
+								<td style="line-height: .4;">
 									<!-- <b>၀ယ္သူအမည္</b> -->
 									<span>
-										<img src="/sale_management/static/description/2.png"
-												style="max-height: 50pt;width:90px;" />
+										<!-- <img src="/sale_management/static/description/2.png"
+												style="max-height: 50pt;width:90px;" /> -->
+										<b>Customer Name</b>
 									</span>
 									<b>-</b>
 									<span t-field="o.partner_id.name" />
@@ -38,7 +39,8 @@
 								<td></td>
 								<td></td>
 								<td></td>
-								<td >
+								<td></td>
+								<td style="line-height: .4;">
 									<b>Date</b>
 									<b>-</b>
 									<span t-field="o.date_invoice" t-field-options='{"format": "dd/MM/y"}'/>
@@ -46,11 +48,12 @@
 							</tr>
 
 							<tr style='border:solid;border-color:white;'>
-								<td>
+								<td style="line-height: .4;">
 									<!-- <b>၀ယ္သူနံပါတ္</b> -->
 									<span>
-										<img src="/sale_management/static/description/3.png"
-												style="max-height: 35pt;width:90px;" />
+										<!-- <img src="/sale_management/static/description/3.png"
+												style="max-height: 35pt;width:90px;" /> -->
+											<b>Customer No</b>
 									</span>
 									<b>-</b>
 									<span t-field="o.partner_id.customer_code" />
@@ -58,19 +61,20 @@
 								<td></td>
 								<td></td>
 								<td></td>
-								
-								<td >
+								<td></td>
+								<td style="line-height: .4;">
 									<b>Invoice No</b>
 									<b>-</b>
 									<span t-field="o.internal_number"/>
 								</td>
 							</tr>
 							<tr style='border:solid;border-color:white;'>
-								<td>
+								<td style="line-height: .4;">
 									<!-- <b>လိပ္ စာ </b> -->
 									<span>
-										<img src="/sale_management/static/description/4.png"
-												style="max-height: 15pt;width:45px;" />
+										<!-- <img src="/sale_management/static/description/4.png"
+												style="max-height: 15pt;width:45px;" /> -->
+										<b>Address</b>
 									</span>
 									<b>-</b>
 									<span t-field="o.partner_id.street" />
@@ -78,7 +82,8 @@
 								<td></td>
 								<td></td>
 								<td></td>
-								<td>
+								<td></td>
+								<td style="line-height: .4;">
 									<b>Sale Order No.</b>
 									<b>-</b>
 									<span t-field="o.reference" />
@@ -90,7 +95,8 @@
 								<td></td>
 								<td></td>
 								<td></td>
-								<td>
+								<td></td>
+								<td style="line-height: .4;">
 									<b>Deliver No.</b>
 									<b>-</b>
 									<span t-field="o.do_no" />
@@ -100,41 +106,41 @@
 
 						<table class="table table-condensed" style="border:1pt solid;">
 							<thead>
-								<tr height="10pt;">
+								<tr >
 									<th class="text-center" style="border:1pt solid;border-color:black;">
 										<span>
 											<img src="/sale_management/static/description/5.png"
-													style="max-height: 25pt;width:40px;" />
+													style="max-height: 20pt;width:30px;" />
 										</span>
 									</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">
 										<strong>
 											<img src="/sale_management/static/description/6.png"
-													style="max-height: 85pt;width:120px;" />
+													style="max-height: 80pt;width:90px;" />
 										</strong>
 									</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">
 										<strong>
 											<img src="/sale_management/static/description/7.png"
-													style="max-height: 85pt;width:122px;" />
+													style="max-height: 80pt;width:90px;" />
 										</strong>
 									</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">
 										<span>
 											<img src="/sale_management/static/description/8.png"
-													style="max-height: 25pt;width:40px;" />
+													style="max-height: 20pt;width:30px;" />
 										</span>
 									</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">
 										<strong>
 											<img src="/sale_management/static/description/9.png"
-													style="max-height: 50pt;width:80px;" />
+													style="max-height: 45pt;width:65px;" />
 										</strong>
 									</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">
 										<span>
 											<img src="/sale_management/static/description/10.png"
-													style="max-height: 35pt;width:70px;" />
+													style="max-height: 30pt;width:55px;" />
 										</span>
 									</th>
 								</tr>
@@ -169,7 +175,7 @@
 						</table>
 
 						<div class="row">
-							<div class="col-xs-8 pull-left" style="padding-top: 1cm;">
+							<!-- <div class="col-xs-8 pull-left" style="padding-top: 1cm;">
 								<t t-if="o.tax_line">
 									<table class="table table-condensed">
 										<thead>
@@ -188,14 +194,14 @@
 													<span t-field="t.base" />
 												</td>
 												<td class="text-right" >
-													<!-- <span t-field="t.amount" /> -->
+													<span t-field="t.amount" />
 													<span t-esc="'%.0f'% t.amount"/>
 												</td>
 											</tr>
 										</tbody>
 									</table>
 								</t>
-							</div>
+							</div> -->
 							
 							<div class="col-xs-5 pull-right">
 								<table class="table">
@@ -203,7 +209,7 @@
 										<td style="border-top-color:white;padding-bottom: 2mm;">
 											<span>
 												<img src="/sale_management/static/description/10.png"
-														style="max-height: 25pt;width:60px;" />
+														style="max-height: 30pt;width:50px;" />
 											</span>
 										</td>
 										<td class="text-right" style="border-top-color:white;padding-bottom: 2mm;">
@@ -215,7 +221,7 @@
 										<td style="padding-top: 2mm;padding-bottom: 2mm;">
 											<span>
 												<img src="/sale_management/static/description/11.png"
-														style="max-height: 250pt;width:200px;" />
+														style="max-height: 240pt;width:170px;" />
 											</span>
 										</td>
 										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
@@ -229,7 +235,7 @@
 										<td style="padding-top: 2mm;padding-bottom: 2mm;">
 											<span>
 												<img src="/sale_management/static/description/Su Su Paung.png"
-														style="max-height: 100pt;width:70px;" />
+														style="max-height: 95pt;width:60px;" />
 											</span>
 										</td>
 										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
@@ -243,7 +249,7 @@
 										<td style="padding-top: 2mm;padding-bottom: 2mm;">
 											<span>
 												<img src="/sale_management/static/description/13.png"
-														style="max-height: 55pt;width:80px;" />
+														style="max-height: 50pt;width:70px;" />
 											</span>
 										</td>
 										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
@@ -255,7 +261,7 @@
 										<td style="padding-top: 2mm;padding-bottom: 2mm;">
 											<span>
 												<img src="/sale_management/static/description/14.png"
-														style="max-height: 300pt;width:200px;" />
+														style="max-height: 290pt;width:170px;" />
 											</span>
 										</td>
 										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
@@ -267,7 +273,7 @@
 										<td style="padding-top: 2mm;padding-bottom: 2mm;">
 											<span>
 												<img src="/sale_management/static/description/15.png"
-														style="max-height: 330pt;width:180px;" />
+														style="max-height: 320pt;width:160px;" />
 											</span>
 										</td>
 										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
@@ -286,8 +292,7 @@
 					                <strong> Kyats Exactly )</strong>
 					                <strong> received.</strong>
 					            </p>
-						<br></br>
-						<br></br>
+					            
 						<div class="row" style="padding-top:-2s0pt;">
 							<div class="col-xs-3 pull-left">
 								<table class="table" style='border:solid;border-color:white;'>
@@ -303,7 +308,7 @@
 											<span>
 												<span>
 													<img src="/sale_management/static/description/16.png"
-															style="max-height: 90pt;width:90px;" />
+															style="max-height: 75pt;width:70px;" />
 												</span>
 											</span>
 										</td>
@@ -322,12 +327,10 @@
 									</tr>
 									<tr style='border:solid;border-color:white;'>
 										<td style="margin-top:-10pt;" align="center">
-											<span>
 												<span>
 													<img src="/sale_management/static/description/17.png"
-															style="max-height: 160pt;width:140px;" />
+															style="max-height: 70pt;width:110px;" />
 												</span>
-											</span>
 										</td>
 									</tr>
 								</table>
@@ -335,38 +338,16 @@
 							</div>
 						</div>
 
-						<p t-if="o.comment">
+						<!-- <p t-if="o.comment">
 							<strong>Comment:</strong>
 							<span t-field="o.comment" />
 						</p>
 						<p t-if="o.fiscal_position.note">
 							<strong>Fiscal Position Remark:</strong>
 							<span t-field="o.fiscal_position.note" />
-						</p>
-						<!-- <div class="row" style="padding-top:-2s0pt;margin-top:20pt;">
-							<div class="col-xs-12">
-
-								<table class="table" style='border:solid;border-color:white;'>
-									<tr>
-										<td style="text-align:center;">
-											For questions concerning this invoice, please
-											contact Hot
-											Line
-											:
-											01 685804,
-											ahmayhtwar.ygn@gmail.com
-										</td>
-									</tr>
-									<tr>
-										<td style="text-align:center;border:solid;border-color:white;">
-											<b> THANK YOU</b>
-										</td>
-									</tr>
-								</table>
-							</div>
-						</div> -->
+						</p> -->
 					</div>
-				</t>
+				<!-- </t> -->
 			</xpath>
 		</template>
 	</data>
