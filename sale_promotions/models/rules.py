@@ -124,7 +124,7 @@ class PromotionsRules(osv.Model):
     
     _columns = {
         
-        'name':fields.char('Promo Name', size=50, required=True),
+        'name':fields.char('Promo Name', required=True),
         'description':fields.text('Description'),
         'active':fields.boolean('Active'),
         
@@ -195,6 +195,7 @@ class PromotionsRules(osv.Model):
         'expected_logic_result':lambda * a:'True',
         'coupon_used': '0',
         'state':'draft',
+        'monthly_promotion':False,
     }
     _constraints = [(_check_positive_number, 'Coupon Use must be Positive', ['coupon_used'])]
 	
