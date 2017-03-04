@@ -5856,7 +5856,7 @@ dataSetRow["saleqty_05viss_peanut"] + dataSetRow["saleqty_025viss_peanut"] + dat
 dataSetRow["saleqty_025viss_ss"] + dataSetRow["saleqty_01viss_ss"] + dataSetRow["saleqty_01viss_peanut"] +&#13;
 dataSetRow["saleqty_1viss_ss"]+ dataSetRow["saleqty_drum_ss"]+dataSetRow["saleqty_drum_peanut"]) +&#13;
 ((dataSetRow["saleqty_1liter_p"]+dataSetRow["saleqty_06liter_p"]+dataSetRow["saleqty_1liter_ss"]&#13;
-+dataSetRow["saleqty_06liter_ss"]) *0.57)</expression>
++dataSetRow["saleqty_06liter_ss"]) *0.575)</expression>
                         </structure>
                     </list-property>
                     <property name="allowExport">true</property>

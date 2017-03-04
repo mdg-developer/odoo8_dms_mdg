@@ -529,17 +529,21 @@ sol.price_unit unit_price, sum(sol.product_uom_qty * sol.price_unit) sale_amt,su
 (sum(sol.product_uom_qty * sol.price_unit) - sum(sol.discount_amt) ) cash_down, 
 uom.name as uom_name,sol.product_uom,sum(sol.product_uom_qty * pt.weight_net) viss_amt,sum(sol.product_uom_qty * pt.weight_liter) as liter_amt,
 pt.weight_net as viss,pt.weight_liter
-from sale_order so, sale_order_line sol ,product_product pp,product_uom uom,product_template pt,account_invoice ai
-
+from sale_order so, sale_order_line sol ,product_product pp,product_uom uom,product_template pt,account_invoice ai,
+account_move_line aml, account_voucher_line avl,account_voucher av
 where so.id=sol.order_id
 and sol.product_id = pp.id
 and pt.id=pp.product_tmpl_id
 and uom.id=pt.uom_id
-and ai.origin=so.name
-and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+and ai.move_id=aml.move_id 
+and aml.id=avl.move_line_id 
+and av.id = avl.voucher_id	
+and ai.origin=so.name 
+and av.date between ? and ?
 and so.section_id = ? 
 and so.user_id  = ?
 and so.payment_type='cash'
+--and so.state='done'
 and ai.residual=0.00
 --$pricelist$
 group by pp.name_template,sol.price_unit,pp.id,uom.name,sol.product_uom,uom.uom_ratio,pt.weight_net,pt.weight_liter
@@ -1992,12 +1996,16 @@ order by name]]></xml-property>
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[ select sum(so.deduct_amt) as deduct_amt
-	from sale_order so
-	where  ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
-	and so.section_id = ?
-	and so.user_id  = ?
-	and so.payment_type='cash']]></xml-property>
+            <xml-property name="queryText"><![CDATA[Select sum(so.deduct_amt) as deduct_amt
+From sale_order so,account_invoice ai,account_move_line aml ,account_voucher_line avl,account_voucher  av
+Where ai.move_id=aml.move_id 
+and aml.id=avl.move_line_id 
+and av.id = avl.voucher_id	
+and ai.origin=so.name 
+and av.date between ? and ?
+and so.section_id = ?
+and so.user_id  = ?
+and so.payment_type='cash']]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
