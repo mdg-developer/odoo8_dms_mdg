@@ -989,7 +989,22 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()
         cr.execute
         return datas
-   
+    
+    def get_promos_joint_rules(self,cr,uid,branch_id,context=None,**kwargs):
+        cr.execute('''
+        select distinct prj.promos_rules_id,join_promotion_id from promos_rules pr,promos_rules_res_branch_rel rb ,promos_rules_join_rel prj 
+where
+pr.active=true and
+pr.monthly_promotion=true and
+pr.id=rb.promos_rules_id and 
+rb.promos_rules_id = pr.id and 
+rb.res_branch_id = %s
+'''
+      (branch_id,))
+        datas = cr.fetchall()
+        cr.execute
+        return datas
+        
     def get_promos_rule_partner_datas(self, cr, uid , context=None, **kwargs):
         cr.execute('''select category_id,rule_id from rule_partner_cat_rel''')
         datas = cr.fetchall()
@@ -2821,7 +2836,6 @@ class mobile_sale_order(osv.osv):
                      and RP.active = true
                      and SPT.sale_team = %s
                      and RPT.sale_plan_trip_id = %s
-                     
                         )A 
                     where A.customer_code is not null 
             ''', (section_id, day_id,))
@@ -2832,6 +2846,8 @@ class mobile_sale_order(osv.osv):
         cr.execute('''select * from promotion_rule_category_rel''')
         datas = cr.fetchall()        
         return datas
+    
+
     
     def get_partner_category_rel(self, cr, uid,section_id , context=None):        
         cr.execute('''select a.* from res_partner_res_partner_category_rel a,

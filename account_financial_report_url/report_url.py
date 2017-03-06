@@ -38,7 +38,6 @@ class account_report(osv.osv):
                   'target'   : 'new',
                }
         for record in self.browse(cr,uid,ids,context=context):
-            print record.url_link
             result['url'] = record.url_link
             
         return result

@@ -10,7 +10,6 @@ class account_common_report(osv.osv_memory):
     _inherit = "account.common.report"
     
     def _build_contexts(self, cr, uid, ids, data, context=None):
-        print 'inherit build context'
         if context is None:
             context = {}
         result = {}
@@ -32,7 +31,6 @@ class account_common_report(osv.osv_memory):
     
 
     def check_report(self, cr, uid, ids, context=None):
-        print 'inherit check_report'
         if context is None:
             context = {}
         data = {}

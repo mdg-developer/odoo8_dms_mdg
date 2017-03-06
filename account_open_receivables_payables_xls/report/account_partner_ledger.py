@@ -60,7 +60,6 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
         return super(third_party_ledger, self)._get_filter(data)
 
     def set_context(self, objects, data, ids, report_type=None):
-        print 'hello'
         sum=[]
         obj_move = self.pool.get('account.move.line')
         obj_partner = self.pool.get('res.partner')

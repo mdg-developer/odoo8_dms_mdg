@@ -32,7 +32,6 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
     _inherit = "account.common.report"
     
     def set_context(self, objects, data, ids, report_type=None):
-        print 'data new>>>',data
         new_ids = ids
         obj_move = self.pool.get('account.move.line')
         self.sortby = data['form'].get('sortby', 'sort_date')
@@ -62,7 +61,6 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
 
     
     def __init__(self, cr, uid, name, context=None): 
-        print 'self',self
         if context is None:
             context = {}
         super(report_account_common, self).__init__(cr, uid, name, context=context)
@@ -107,9 +105,7 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
         return sum_currency
     
     def _get_branch(self, data):
-        print '_get_branch'
         if data['form']['branch_ids']:
-            print '_get_branch_code>>>',data['form']['branch_ids']
             return data['form']['branch_ids'][1]
         return ''
     
@@ -143,7 +139,6 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
 
     def lines(self, account):
         """ Return all the account_move_line of account with their account code counterparts """
-        print 'lines>>>>work'
         move_state = ['draft','posted']
         if self.target_move == 'posted':
             move_state = ['posted', '']

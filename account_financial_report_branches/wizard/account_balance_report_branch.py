@@ -13,7 +13,6 @@ class account_balance_report_branch(osv.osv_memory):
        
     
     def _build_contexts(self, cr, uid, ids, data, context=None):
-        print 'T'
         if context is None:
             context = {}
         result = {}
@@ -30,14 +29,12 @@ class account_balance_report_branch(osv.osv_memory):
                 raise osv.except_osv(_('Error!'),_('Select a starting and an ending period.'))
             result['period_from'] = data['form']['period_from']
             result['period_to'] = data['form']['period_to']
-        print 'T result>>>',   result 
         return result
 
 #     def _print_report(self, cr, uid, ids, data, context=None):
 #         raise (_('Error!'), _('Not implemented.'))
     
     def check_report(self, cr, uid, ids, context=None):
-        print 'T our check_report'
         if context is None:
             context = {}
         data = {}
@@ -48,11 +45,9 @@ class account_balance_report_branch(osv.osv_memory):
             if isinstance(data['form'][field], tuple):
                 data['form'][field] = data['form'][field][0]
         used_context = self._build_contexts(cr, uid, ids, data, context=context)
-        print 'used_context1>>>',used_context
         data['form']['periods'] = used_context.get('periods', False) and used_context['periods'] or []
         
         data['form']['used_context'] = dict(used_context, lang=context.get('lang', 'en_US'))
-        print 'fi context>>',context
         return self._print_report(cr, uid, ids, data, context=context)
 #     def _build_contexts(self, cr, uid, ids, data, context=None):
 #         print 'new balance context'

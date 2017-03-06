@@ -202,7 +202,6 @@ class sale_order_line(osv.osv):
                 'invoice_line_tax_id': [(6, 0, [x.id for x in line.tax_id])],
                 'account_analytic_id': line.order_id.project_id and line.order_id.project_id.id or False,
             }
-            print 'res1111111111111',res
 
         return res
 

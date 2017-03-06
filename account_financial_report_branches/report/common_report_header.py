@@ -62,7 +62,6 @@ class common_report_header(object):
         return ''
 
     def _get_target_move(self, data): 
-        print 'move data',data
         if data.get('form', False) and data['form'].get('target_move', False):
             if data['form']['target_move'] == 'all':
                 return _('All Entries')

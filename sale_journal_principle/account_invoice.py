@@ -160,7 +160,6 @@ class account_invoice(models.Model):
                     'main_group': account_id,
                     'is_discount': line.get('is_discount', False),
                 }
-                print 'res111111>>>', res
                 return res
         if type == 'in_refund' :
             if line['price'] < 0:
@@ -195,7 +194,6 @@ class account_invoice(models.Model):
                                         'is_discount': line.get('is_discount', False),
 
                 }
-                print 'res111111>>>', res
                 return res            
         if type == 'out_refund' :
             
@@ -230,7 +228,6 @@ class account_invoice(models.Model):
                                         'is_discount': line.get('is_discount', False),
 
                 }
-                print 'res111111>>>', res
                 return res    
         if type == 'in_invoice' :
             if line['price'] > 0:
@@ -265,7 +262,6 @@ class account_invoice(models.Model):
                                         'is_discount': line.get('is_discount', False),
 
                 }
-                print 'res111111>>>', res
                 return res    
             
     def line_get_convert_dr(self, line, part, date):
@@ -327,7 +323,6 @@ class account_invoice(models.Model):
                                         'is_discount': line.get('is_discount', False),
 
                 }
-                print 'res111111>>>', res
                 return res
         if type == 'in_refund' :
             product = self.env['product.product'].browse(line.get('product_id', False))
@@ -374,7 +369,6 @@ class account_invoice(models.Model):
                                         'is_discount': line.get('is_discount', False),
 
                 }
-                print 'res111111>>>', res
                 return res            
         if type == 'out_refund' :
             product = self.env['product.product'].browse(line.get('product_id', False))
@@ -422,7 +416,6 @@ class account_invoice(models.Model):
                                         'is_discount': line.get('is_discount', False),
 
                 }
-                print 'res111111>>>', res
                 return res
         if type == 'in_invoice' :
             product = self.env['product.product'].browse(line.get('product_id', False))
@@ -470,7 +463,6 @@ class account_invoice(models.Model):
                      'is_discount': line.get('is_discount', False),
 
                 }
-                print 'res111111>>>', res
                 return res
         
 #     def line_get_product(self, line, part, date):

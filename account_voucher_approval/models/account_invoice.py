@@ -138,11 +138,10 @@ class account_invoice(models.Model):
         if partner_bank_id != bank_id:
             to_update = self.onchange_partner_bank(bank_id)
             result['value'].update(to_update.get('value', {}))
-
         return result        
+
     @api.model
     def _default_journal(self):
-        print ' _default_journal'
         inv_type = self._context.get('type', 'out_invoice')
         inv_types = inv_type if isinstance(inv_type, list) else [inv_type]
         company_id = self._context.get('company_id', self.env.user.company_id.id)

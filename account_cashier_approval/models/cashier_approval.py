@@ -272,7 +272,6 @@ class cashier_approval(osv.osv):
 
                     line_total_amount=invoice.residual
                     for line in move_line_data:
-                        print ' line_total_moun ,pay',line_total_amount,payment[1]
                         if line_total_amount ==payment[1]:
                             if line[3] is not None:
                                 line_data = {

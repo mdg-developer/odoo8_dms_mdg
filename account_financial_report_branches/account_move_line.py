@@ -53,7 +53,6 @@ _logger = logging.getLogger(__name__)
 #                 new_context.update({
 #                                 'account_analytic_id':report.account_analytic_id.id,
 #                                 })
-#            # print new_context
 #             if report.id in res:
 #                 continue
 #             res[report.id] = dict((fn, 0.0) for fn in field_names)
@@ -91,7 +90,6 @@ class account_move_line(osv.osv):
     
     
     def _query_get(self, cr, uid, obj='l', context=None):
-        print 'sssssssssssssss'
         fiscalyear_obj = self.pool.get('account.fiscalyear')
         fiscalperiod_obj = self.pool.get('account.period')
         account_obj = self.pool.get('account.account')
@@ -161,15 +159,11 @@ class account_move_line(osv.osv):
         if context.get('chart_account_id', False):
             child_ids = account_obj._get_children_and_consol(cr, uid, [context['chart_account_id']], context=context)
             query += ' AND '+obj+'.account_id IN (%s)' % ','.join(map(str, child_ids))
-        print 'what is it',context.get('branch_ids',False) 
-        print 'journal',context.get('journal_ids', False)   
         if context.get('branch_ids',False):
-            print 'comeeeeeee'
             branch_id = context['branch_ids']
             query += ' AND '+obj+'.branch_id IN (%s)' % ','.join(map(str, context['branch_ids']))
             
             
         query += company_clause
-        print 'query>>>>',query
         return query
 

@@ -19,13 +19,11 @@ class account_bank_statement_line(osv.osv):
         }
 
     def create(self, cursor, user, vals, context=None):
-        print vals
         sequence = self.pool.get('ir.sequence').get(cursor, user,
             'cash.code') or '/'
         vals['sequence'] = sequence
         if vals.get('amount_currency', 0) and not vals.get('amount', 0):
             raise osv.except_osv(_('Error!'), _('If "Amount Currency" is specified, then "Amount" must be as well.'))
-        print 'valssss', vals
         return super(account_bank_statement_line, self).create(cursor, user, vals, context=context)
     
     def onchange_income_amt(self, cr, uid, ids, income_amt, context=None):

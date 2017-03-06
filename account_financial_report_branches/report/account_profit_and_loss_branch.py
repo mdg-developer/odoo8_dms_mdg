@@ -12,7 +12,6 @@ class account_profit_and_loss_branch(report_sxw.rml_parse, common_report_header)
     
         
     def set_context(self, objects, data, ids, report_type=None):
-        print 'data new>>>',data
         new_ids = ids
         obj_move = self.pool.get('account.move.line')
         self.sortby = data['form'].get('sortby', 'sort_date')
@@ -42,7 +41,6 @@ class account_profit_and_loss_branch(report_sxw.rml_parse, common_report_header)
 
     
     def __init__(self, cr, uid, name, context=None): 
-        print 'self',self
         if context is None:
             context = {}
         super(account_profit_and_loss_branch, self).__init__(cr, uid, name, context=context)
@@ -87,9 +85,7 @@ class account_profit_and_loss_branch(report_sxw.rml_parse, common_report_header)
         return sum_currency
     
     def _get_branch(self, data):
-        print '_get_branch'
         if data['form']['branch_ids']:
-            print '_get_branch_code>>>',data['form']['branch_ids']
             return data['form']['branch_ids'][1]
         return ''
     
@@ -123,7 +119,6 @@ class account_profit_and_loss_branch(report_sxw.rml_parse, common_report_header)
 
     def lines(self, account):
         """ Return all the account_move_line of account with their account code counterparts """
-        print 'lines>>>>work'
         move_state = ['draft','posted']
         if self.target_move == 'posted':
             move_state = ['posted', '']
@@ -153,7 +148,6 @@ class account_profit_and_loss_branch(report_sxw.rml_parse, common_report_header)
             sql_sort='j.code, p.name, l.move_id'
         else:
             sql_sort='l.date, l.move_id'
-        print 'self.query>>>',self.query    
         sql = """
             SELECT l.id AS lid, l.date AS ldate, j.code AS lcode, l.currency_id,l.amount_currency,l.ref AS lref, l.name AS lname, COALESCE(l.debit,0) AS debit, COALESCE(l.credit,0) AS credit, l.period_id AS lperiod_id, l.partner_id AS lpartner_id,
             m.name AS move_name, m.id AS mmove_id,per.code as period_code,

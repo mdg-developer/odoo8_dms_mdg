@@ -35,13 +35,10 @@ class account_balance_branch(report_sxw.rml_parse, common_report_header):
             'get_branch_code':self._get_branch,
             
         })
-        print 'context>>>',context
         self.context = context
         
     def _get_branch(self, data):
-        print '_get_branch'
         if data['form']['branch_ids']:
-            print '_get_branch_code>>>',data['form']['branch_ids']
             return data['form']['branch_ids'][1]
         return ''
     
@@ -74,7 +71,6 @@ class account_balance_branch(report_sxw.rml_parse, common_report_header):
 #             objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
 #         return super(account_balance_branch, self).set_context(objects, data, new_ids, report_type=report_type)
     def set_context(self, objects, data, ids, report_type=None):
-        print 'data balance>>>',data
         new_ids = ids
         obj_move = self.pool.get('account.move.line')
         self.query = obj_move._query_get(self.cr, self.uid, obj='l', context=data['form'].get('used_context',{}))
@@ -82,7 +78,6 @@ class account_balance_branch(report_sxw.rml_parse, common_report_header):
 #         self.branch_ids = data['form']['branch_ids']
 #         ctx = self.context.copy()
 #         self.context.update(ctx)
-        print 'balance self.query>>>',self.query
         if (data['model'] == 'ir.ui.menu'):
             new_ids = 'chart_account_id' in data['form'] and [data['form']['chart_account_id']] or []
             objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
@@ -134,8 +129,6 @@ class account_balance_branch(report_sxw.rml_parse, common_report_header):
         self.branch_ids = form['branch_ids']
         ctx = self.context.copy()
         self.context.update(ctx)
-        print 'form[branch_ids]>>>',form['branch_ids']
-        print 'ctx>>>>',ctx
         ctx['fiscalyear'] = form['fiscalyear_id']
         if form['filter'] == 'filter_period':
             ctx['period_from'] = form['period_from']

@@ -41,7 +41,6 @@ class accounting_report(osv.osv_memory):
     }
     
     def _build_contexts(self, cr, uid, ids, data, context=None):
-        print 'new build context'
         if context is None:
             context = {}
         result = {}
@@ -63,7 +62,6 @@ class accounting_report(osv.osv_memory):
     
 
     def check_report(self, cr, uid, ids, context=None):
-        print 'new check_report'
         if context is None:
             context = {}
         data = {}
