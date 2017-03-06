@@ -13,7 +13,7 @@ from openerp.addons.connector.exception import FailedJobError
 from openerp.addons.connector.jobrunner.runner import ConnectorRunner
 
     
-@job(default_channel='root.order')
+@job(default_channel='root.direct')
 def automation_direct_order(session,list_mobile):
     mobile_obj = session.pool['mobile.sale.order']
     context = session.context.copy()
@@ -1290,7 +1290,12 @@ class mobile_sale_order(osv.osv):
                 print 'hidtory', history
                 for pt in history:
                     
-                    print 'dateImmmm',datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    print 'dateImmmm',
+                    de_date=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    if  de_date:
+                        date = datetime.strptime(de_date, '%Y-%m-%d %H:%M:%S')
+                        deno_date = date.date()
+                    cursor.execute("delete from sales_denomination where date::date=%s and sale_team_id=%s and user_id=%s",(deno_date,pt['sale_team_id'],pt['user_id'],))
                     deno_result = {
                         'invoice_count':pt['invoice_count'],
                         'sale_team_id':pt['sale_team_id'],
