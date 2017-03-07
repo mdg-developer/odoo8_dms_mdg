@@ -975,6 +975,7 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()
         cr.execute
         return datas
+    
     def get_promos_cond_datas(self, cr, uid , branch_id, promo_id, context=None, **kwargs):
         cr.execute('''select cond.id,cond.promotion,cond.sequence as cond_seq,
                             cond.attribute as cond_attr,cond.comparator as cond_comparator,
@@ -989,7 +990,7 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()
         cr.execute
         return datas
-    def get_promos_joint_rules(self,cr,uid,branch_id,context=None,**kwargs):
+    def get_promos_joint_rules(self,cr,uid,branch_id,section_id,context=None,**kwargs):
         cr.execute('''
         select distinct prj.promos_rules_id,join_promotion_id from promos_rules pr,promos_rules_res_branch_rel rb ,promos_rules_join_rel prj 
         where
@@ -997,11 +998,8 @@ class mobile_sale_order(osv.osv):
         pr.monthly_promotion=true and
         pr.id=rb.promos_rules_id and 
         rb.promos_rules_id = pr.id and 
-        rb.res_branch_id = %s
-'''
-      (branch_id,))
+        rb.res_branch_id = %s''',(branch_id,))
         datas = cr.fetchall()
-        cr.execute
         return datas   
     def get_promos_rule_partner_datas(self, cr, uid , context=None, **kwargs):
         cr.execute('''select category_id,rule_id from rule_partner_cat_rel''')
