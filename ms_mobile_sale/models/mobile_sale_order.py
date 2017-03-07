@@ -1,6 +1,6 @@
 from openerp.osv import fields, osv
 from openerp.osv import orm
-from datetime import datetime
+from datetime import datetime, timedelta
 from openerp.tools.translate import _
 import ast
 import time
@@ -989,22 +989,20 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()
         cr.execute
         return datas
-    
     def get_promos_joint_rules(self,cr,uid,branch_id,context=None,**kwargs):
         cr.execute('''
         select distinct prj.promos_rules_id,join_promotion_id from promos_rules pr,promos_rules_res_branch_rel rb ,promos_rules_join_rel prj 
-where
-pr.active=true and
-pr.monthly_promotion=true and
-pr.id=rb.promos_rules_id and 
-rb.promos_rules_id = pr.id and 
-rb.res_branch_id = %s
+        where
+        pr.active=true and
+        pr.monthly_promotion=true and
+        pr.id=rb.promos_rules_id and 
+        rb.promos_rules_id = pr.id and 
+        rb.res_branch_id = %s
 '''
       (branch_id,))
         datas = cr.fetchall()
         cr.execute
-        return datas
-        
+        return datas   
     def get_promos_rule_partner_datas(self, cr, uid , context=None, **kwargs):
         cr.execute('''select category_id,rule_id from rule_partner_cat_rel''')
         datas = cr.fetchall()
@@ -1306,17 +1304,19 @@ rb.res_branch_id = %s
                 for pt in history:
                     
                     print 'dateImmmm',
-                    de_date=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    de_date=datetime.now().strftime("%Y-%m-%d %H:%M:%S")          
                     if  de_date:
                         date = datetime.strptime(de_date, '%Y-%m-%d %H:%M:%S')
                         deno_date = date.date()
-                    cursor.execute("delete from sales_denomination where date::date=%s and sale_team_id=%s and user_id=%s",(deno_date,pt['sale_team_id'],pt['user_id'],))
+                    print datetime.now() + timedelta(hours=6.5)
+                    current_date=datetime.now() + timedelta(hours=6.5)
+                    cursor.execute("delete from sales_denomination where ((date at time zone 'utc') at time zone 'asia/rangoon')::date=%s and sale_team_id=%s and user_id=%s",(deno_date,pt['sale_team_id'],pt['user_id'],))
                     deno_result = {
                         'invoice_count':pt['invoice_count'],
                         'sale_team_id':pt['sale_team_id'],
                         'company_id':pt['company_id'] ,
                         'note':pt['note'],
-                        'date':datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                        'date': current_date,
                         'tablet_id':pt['tablet_id'],
                         'user_id':pt['user_id'],
                         'denomination_note_line':False,
@@ -2841,6 +2841,7 @@ rb.res_branch_id = %s
                      and RP.active = true
                      and SPT.sale_team = %s
                      and RPT.sale_plan_trip_id = %s
+                     
                         )A 
                     where A.customer_code is not null 
             ''', (section_id, day_id,))
@@ -2851,8 +2852,6 @@ rb.res_branch_id = %s
         cr.execute('''select * from promotion_rule_category_rel''')
         datas = cr.fetchall()        
         return datas
-    
-
     
     def get_partner_category_rel(self, cr, uid,section_id , context=None):        
         cr.execute('''select a.* from res_partner_res_partner_category_rel a,
@@ -2883,7 +2882,6 @@ rb.res_branch_id = %s
             """, (section_id,))   
             datas = cr.fetchall()        
             return datas
-        
     
     def create_monthly_promotion_history(self, cursor, user, vals, context=None):
                     
