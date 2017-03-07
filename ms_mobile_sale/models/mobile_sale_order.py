@@ -990,7 +990,7 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()
         cr.execute
         return datas
-    def get_promos_joint_rules(self,cr,uid,branch_id,section_id,context=None,**kwargs):
+    def get_promos_joint_rules(self,cr,uid,branch_id,context=None,**kwargs):
         cr.execute('''
         select distinct prj.promos_rules_id,join_promotion_id from promos_rules pr,promos_rules_res_branch_rel rb ,promos_rules_join_rel prj 
         where
