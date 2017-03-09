@@ -990,6 +990,7 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()
         cr.execute
         return datas
+    
     def get_promos_joint_rules(self,cr,uid,branch_id,context=None,**kwargs):
         cr.execute('''
         select distinct prj.promos_rules_id,join_promotion_id from promos_rules pr,promos_rules_res_branch_rel rb ,promos_rules_join_rel prj 
@@ -1001,6 +1002,7 @@ class mobile_sale_order(osv.osv):
         rb.res_branch_id = %s''',(branch_id,))
         datas = cr.fetchall()
         return datas   
+    
     def get_promos_rule_partner_datas(self, cr, uid , context=None, **kwargs):
         cr.execute('''select category_id,rule_id from rule_partner_cat_rel''')
         datas = cr.fetchall()
@@ -1079,7 +1081,7 @@ class mobile_sale_order(osv.osv):
     def get_product_uoms(self, cr, uid , saleteam_id, context=None, **kwargs):
         cr.execute('''
                 select distinct uom_id,uom_name,ratio,template_id,product_id from(
-                select  pu.id as uom_id,pu.name as uom_name ,1/pu.factor as ratio,
+                select  pu.id as uom_id,pu.name as uom_name ,floor(round(1/factor,2)) as ratio,
                 pur.product_template_id as template_id,pp.id as product_id
                 from product_uom pu , product_template_product_uom_rel pur ,
                 product_product pp,
@@ -1710,7 +1712,7 @@ class mobile_sale_order(osv.osv):
         return datas
     
     def get_uom(self, cr, uid, context=None, **kwargs):    
-        cr.execute("""select id,name,floor(1/factor) as ratio from product_uom where active = true""")
+        cr.execute("""select id,name,floor(round(1/factor,2))  as ratio from product_uom where active = true""")
         datas = cr.fetchall()
         print 'Product UOM', datas
         return datas
@@ -2059,7 +2061,7 @@ class mobile_sale_order(osv.osv):
 
                             ori_req_quantity = int(srl['req_quantity'])
                             # print 'product_idddddddddddd',req_quantity
-                            cursor.execute("select floor(1/factor) as ratio from product_uom where active = true and id=%s", (big_uom_id,))
+                            cursor.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (big_uom_id,))
                             bigger_qty = cursor.fetchone()[0]
                             bigger_qty = int(bigger_qty)
                             # print ' bigger_qty',sale_qty,bigger_qty,type(sale_qty),type(bigger_qty)                        
