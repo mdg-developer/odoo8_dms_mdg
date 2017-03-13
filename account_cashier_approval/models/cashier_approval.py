@@ -127,7 +127,15 @@ class cashier_approval(osv.osv):
         for line in self.pool.get('cashier.denomination.line').browse(cr, uid, ids, context=context):
             result[line.cashier_id.id] = True
         return result.keys()
-   
+    
+    def onchange_sale_team_id(self, cr, uid, ids, section_id, context=None):
+        team_obj = self.pool.get('crm.case.section')
+        branch_id = False        
+        if section_id:
+            team_id = team_obj.browse(cr, uid, section_id, context=context)
+            branch_id = team_id.branch_id.id         
+        return {'value': {'branch_id': branch_id}}     
+    
     _columns = {
         'name': fields.char('Order Reference', size=64),
         'user_id':fields.many2one('res.users', 'Salesman', required=True),
@@ -167,6 +175,7 @@ class cashier_approval(osv.osv):
        'total': fields.function(_amount_total_all, digits_compute=dp.get_precision('Account'), string='Total Net',
             multi='sums', help="The credit total amount.", store=True,),
         'state':fields.selection([('draft', 'Draft'), ('pending', 'Confirmed'), ('done', 'Done')], 'Status'),
+        'branch_id':fields.many2one('res.branch','Branch'),
                                                                
     }
     _order = 'id desc'
