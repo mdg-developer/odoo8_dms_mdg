@@ -98,7 +98,7 @@ class stock_return(osv.osv):
                                              'sequence':sequence,
                                           'product_id': product_id,
                                           'product_uom': small_uom_id,
-                                          'receive_quantity':qty_on_hand,
+                                          'receive_quantity':receive_qty,
                                           'return_quantity':0,
                                           'sale_quantity':0,
                                           'foc_quantity':0,
@@ -121,7 +121,8 @@ class stock_return(osv.osv):
                 product_search = stock_return_obj.search(cr, uid, [('product_id', '=', product_id), ('line_id', '=', ids[0])], context=context) 
                 print ' substract_qty ',substract_qty
                 if product_search:
-                    cr.execute("update stock_return_line set receive_quantity=receive_quantity+%s + %s ,return_quantity=%s,sale_quantity=%s,foc_quantity=%s where line_id=%s and product_id=%s", (last_qty,substract_qty,return_quantity, sale_quantity, foc_quantity, ids[0], product_id,))
+                    # cr.execute("update stock_return_line set receive_quantity=receive_quantity+%s + %s ,return_quantity=%s,sale_quantity=%s,foc_quantity=%s where line_id=%s and product_id=%s", (last_qty,substract_qty,return_quantity, sale_quantity, foc_quantity, ids[0], product_id,))
+                    cr.execute("update stock_return_line set receive_quantity=receive_quantity+ %s ,return_quantity=%s,sale_quantity=%s,foc_quantity=%s where line_id=%s and product_id=%s", (substract_qty,return_quantity, sale_quantity, foc_quantity, ids[0], product_id,))
                 else:
                     product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
                     sequence=product.sequence
