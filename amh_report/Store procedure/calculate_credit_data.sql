@@ -38,19 +38,16 @@ BEGIN
 	and av.date::date = from_date
 	and rp.id=customer_id
 	group by rp.name,rp.id,ai.payment_type),
-	deductamttbl as (select rp.id,rp.name,so.deduct_amt
-	from sale_order so, sale_order_line sol ,product_product pp,product_uom uom,product_template pt,res_partner rp	
-	where so.id=sol.order_id
-	and sol.product_id = pp.id
-	and pt.id=pp.product_tmpl_id
-	and uom.id=pt.uom_id
-	and rp.id=so.partner_id
+	
+	deductamttbl as (select rp.id,rp.name,sum(so.deduct_amt) as deduct_amt
+	from sale_order so, res_partner rp	
+	where  rp.id=so.partner_id
 	and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = from_date
 	and so.section_id =section_ids
 	and so.user_id  = user_ids
 	and so.payment_type='credit' 
 	and rp.id=customer_id	
-	group by so.deduct_amt,rp.name,rp.customer_code,rp.id)
+	group by rp.name,rp.id)
 
 	Select deductamttbl.deduct_amt,paidamounttbl.paidamount,openingamounttbl.open_amt,netamttbl.amount_total
 	from (select sum(so.amount_total) as amount_total,rp.name as customer_name,rp.id as customer_id
@@ -73,4 +70,4 @@ $BODY$
   COST 100
   ROWS 1000;
 ALTER FUNCTION calculate_credit_data(integer, integer, integer, date)
-  OWNER TO postgres;
+  OWNER TO openerp;
