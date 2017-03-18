@@ -2015,21 +2015,30 @@ class mobile_sale_order(osv.osv):
             
             if stock:
                 for sr in stock:                                    
-                    cursor.execute('select vehicle_id,location_id,issue_location_id,delivery_team_id,receiver from crm_case_section where id = %s ', (sr['sale_team_id'],))
+                    cursor.execute('select vehicle_id,location_id,issue_location_id,delivery_team_id,receiver,branch_id from crm_case_section where id = %s ', (sr['sale_team_id'],))
                     data = cursor.fetchall()
                     if data:
                         vehcle_no = data[0][0]
                         from_location_id = data[0][1]
                         to_location_id = data[0][2]
                         delivery_id = data[0][3]             
-                        receiver=data[0][4]           
+                        receiver=data[0][4] 
+                        branch_id= data[0][5] 
                     else:
                         vehcle_no = None
                         from_location_id = None
                         to_location_id = None
                         delivery_id = None          
                         receiver=None
-                    
+                        branch_id=None
+                        
+                    cursor.execute('select company_id from res_users where id = %s ', (sr['request_by'],))
+                    data = cursor.fetchone()         
+                    if data:
+                        company_id=data[0]
+                    else:
+                        company_id=None
+                                   
                     mso_result = {
                         'request_date':sr['request_date'],
                         'request_by':sr['request_by'],
@@ -2037,8 +2046,8 @@ class mobile_sale_order(osv.osv):
                          's_issue_date':sr['issue_date'] ,
                         'state': 'draft',
                         'issue_to':receiver,
-                        'company_id':sr['company_id'],
-                        'branch_id':sr['branch_id'],
+                        'company_id':company_id,
+                        'branch_id':branch_id,
                         'vehicle_id':vehcle_no,
                         'from_location_id':from_location_id,
                         'to_location_id':to_location_id,
