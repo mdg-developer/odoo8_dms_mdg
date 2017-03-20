@@ -990,6 +990,7 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()
         cr.execute
         return datas
+    
     def get_promos_joint_rules(self,cr,uid,branch_id,context=None,**kwargs):
         cr.execute('''
         select distinct prj.promos_rules_id,join_promotion_id from promos_rules pr,promos_rules_res_branch_rel rb ,promos_rules_join_rel prj 
@@ -1001,6 +1002,7 @@ class mobile_sale_order(osv.osv):
         rb.res_branch_id = %s''',(branch_id,))
         datas = cr.fetchall()
         return datas   
+    
     def get_promos_rule_partner_datas(self, cr, uid , context=None, **kwargs):
         cr.execute('''select category_id,rule_id from rule_partner_cat_rel''')
         datas = cr.fetchall()
@@ -1079,7 +1081,7 @@ class mobile_sale_order(osv.osv):
     def get_product_uoms(self, cr, uid , saleteam_id, context=None, **kwargs):
         cr.execute('''
                 select distinct uom_id,uom_name,ratio,template_id,product_id from(
-                select  pu.id as uom_id,pu.name as uom_name ,1/pu.factor as ratio,
+                select  pu.id as uom_id,pu.name as uom_name ,floor(round(1/factor,2)) as ratio,
                 pur.product_template_id as template_id,pp.id as product_id
                 from product_uom pu , product_template_product_uom_rel pur ,
                 product_product pp,
@@ -1709,7 +1711,7 @@ class mobile_sale_order(osv.osv):
         return datas
     
     def get_uom(self, cr, uid, context=None, **kwargs):    
-        cr.execute("""select id,name,floor(1/factor) as ratio from product_uom where active = true""")
+        cr.execute("""select id,name,floor(round(1/factor,2))  as ratio from product_uom where active = true""")
         datas = cr.fetchall()
         print 'Product UOM', datas
         return datas
@@ -2012,21 +2014,30 @@ class mobile_sale_order(osv.osv):
             
             if stock:
                 for sr in stock:                                    
-                    cursor.execute('select vehicle_id,location_id,issue_location_id,delivery_team_id,receiver from crm_case_section where id = %s ', (sr['sale_team_id'],))
+                    cursor.execute('select vehicle_id,location_id,issue_location_id,delivery_team_id,receiver,branch_id from crm_case_section where id = %s ', (sr['sale_team_id'],))
                     data = cursor.fetchall()
                     if data:
                         vehcle_no = data[0][0]
                         from_location_id = data[0][1]
                         to_location_id = data[0][2]
                         delivery_id = data[0][3]             
-                        receiver=data[0][4]           
+                        receiver=data[0][4] 
+                        branch_id= data[0][5] 
                     else:
                         vehcle_no = None
                         from_location_id = None
                         to_location_id = None
                         delivery_id = None          
                         receiver=None
-                    
+                        branch_id=None
+                        
+                    cursor.execute('select company_id from res_users where id = %s ', (sr['request_by'],))
+                    data = cursor.fetchone()         
+                    if data:
+                        company_id=data[0]
+                    else:
+                        company_id=None
+                                   
                     mso_result = {
                         'request_date':sr['request_date'],
                         'request_by':sr['request_by'],
@@ -2034,8 +2045,8 @@ class mobile_sale_order(osv.osv):
                          's_issue_date':sr['issue_date'] ,
                         'state': 'draft',
                         'issue_to':receiver,
-                        'company_id':sr['company_id'],
-                        'branch_id':sr['branch_id'],
+                        'company_id':company_id,
+                        'branch_id':branch_id,
                         'vehicle_id':vehcle_no,
                         'from_location_id':from_location_id,
                         'to_location_id':to_location_id,
@@ -2058,7 +2069,7 @@ class mobile_sale_order(osv.osv):
 
                             ori_req_quantity = int(srl['req_quantity'])
                             # print 'product_idddddddddddd',req_quantity
-                            cursor.execute("select floor(1/factor) as ratio from product_uom where active = true and id=%s", (big_uom_id,))
+                            cursor.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (big_uom_id,))
                             bigger_qty = cursor.fetchone()[0]
                             bigger_qty = int(bigger_qty)
                             # print ' bigger_qty',sale_qty,bigger_qty,type(sale_qty),type(bigger_qty)                        

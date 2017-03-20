@@ -19,6 +19,7 @@
 							</group>
 							<group>
 								<field name="return_date" />
+								<field name="write_date" />
 								<field name="vehicle_id" />
 								<field name="company_id"/>
 							</group>
