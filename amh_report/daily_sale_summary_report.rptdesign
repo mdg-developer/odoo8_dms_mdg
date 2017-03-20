@@ -59,6 +59,34 @@
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
+        <scalar-parameter name="presale" id="1561">
+            <text-property name="promptText">Pre-Sale</text-property>
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">boolean</property>
+            <property name="distinct">true</property>
+            <simple-property-list name="defaultValue">
+                <value type="constant">False</value>
+            </simple-property-list>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">check-box</property>
+            <structure name="format"/>
+        </scalar-parameter>
+        <scalar-parameter name="directsale" id="1562">
+            <text-property name="promptText">Direct Sale</text-property>
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">boolean</property>
+            <property name="distinct">true</property>
+            <simple-property-list name="defaultValue">
+                <value type="constant">False</value>
+            </simple-property-list>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">check-box</property>
+            <structure name="format"/>
+        </scalar-parameter>
     </parameters>
     <data-sources>
         <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="1560"
@@ -114,12 +142,6 @@
                     <property name="analysis">measure</property>
                     <text-property name="displayName">net_sale_amt</text-property>
                     <text-property name="heading">net_sale_amt</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">deduction_amt</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">deduction_amt</text-property>
-                    <text-property name="heading">deduction_amt</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">uom_name</property>
@@ -189,23 +211,101 @@
                 </structure>
                 <structure>
                     <property name="name">param_3</property>
-                    <property name="paramName">from_date</property>
+                    <property name="paramName">presale</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
                     <property name="position">3</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_4</property>
+                    <property name="paramName">directsale</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">4</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_5</property>
+                    <property name="paramName">presale</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">5</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_6</property>
+                    <property name="paramName">directsale</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">6</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_7</property>
+                    <property name="paramName">presale</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">7</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_8</property>
+                    <property name="paramName">directsale</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">8</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_9</property>
+                    <property name="paramName">presale</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">9</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_10</property>
+                    <property name="paramName">directsale</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">10</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_11</property>
+                    <property name="paramName">from_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">11</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_12</property>
                     <property name="paramName">To Date</property>
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
-                    <property name="position">4</property>
-                    <property name="isOptional">false</property>
+                    <property name="position">12</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -254,41 +354,36 @@
                     </structure>
                     <structure>
                         <property name="position">9</property>
-                        <property name="name">deduction_amt</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">10</property>
                         <property name="name">uom_name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">11</property>
+                        <property name="position">10</property>
                         <property name="name">product_uom</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">12</property>
+                        <property name="position">11</property>
                         <property name="name">productid</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">13</property>
+                        <property name="position">12</property>
                         <property name="name">packingviss</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">14</property>
+                        <property name="position">13</property>
                         <property name="name">viss_amt</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">15</property>
+                        <property name="position">14</property>
                         <property name="name">packingliter</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">16</property>
+                        <property name="position">15</property>
                         <property name="name">liter_amt</property>
                         <property name="dataType">decimal</property>
                     </structure>
@@ -362,55 +457,48 @@ this.queryText =this.queryText.replace("--$pricelist$", "and so.pricelist_id="+p
                 </structure>
                 <structure>
                     <property name="position">9</property>
-                    <property name="name">deduction_amt</property>
-                    <property name="nativeName">deduction_amt</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
-                </structure>
-                <structure>
-                    <property name="position">10</property>
                     <property name="name">uom_name</property>
                     <property name="nativeName">uom_name</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">11</property>
+                    <property name="position">10</property>
                     <property name="name">product_uom</property>
                     <property name="nativeName">product_uom</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">12</property>
+                    <property name="position">11</property>
                     <property name="name">productid</property>
                     <property name="nativeName">productid</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">13</property>
+                    <property name="position">12</property>
                     <property name="name">packingviss</property>
                     <property name="nativeName">packingviss</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">14</property>
+                    <property name="position">13</property>
                     <property name="name">viss_amt</property>
                     <property name="nativeName">viss_amt</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">15</property>
+                    <property name="position">14</property>
                     <property name="name">packingliter</property>
                     <property name="nativeName">packingliter</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">16</property>
+                    <property name="position">15</property>
                     <property name="name">liter_amt</property>
                     <property name="nativeName">liter_amt</property>
                     <property name="dataType">decimal</property>
@@ -418,7 +506,7 @@ this.queryText =this.queryText.replace("--$pricelist$", "and so.pricelist_id="+p
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select A.description,A.sale_qty,A.unit_price,A.sale_amt,A.discount,A.cash_down,B.TOTAL sale_return_amt,
- (A.sale_amt-A.discount- (CASE WHEN B.TOTAL is null THEN 0 ELSE B.TOTAL END)) as net_sale_amt, A.deduction_amt,
+ (A.sale_amt-A.discount- (CASE WHEN B.TOTAL is null THEN 0 ELSE B.TOTAL END)) as net_sale_amt,
 A.uom_name,A.product_uom,A.productid,
 CASE (select dcode(A.productid))
 WHEN 'P00010' THEN ( A.viss * (select CAST(A.sale_qty as Float))) 
@@ -454,7 +542,7 @@ from
 (
 select pp.id productid,pp.name_template as description,sum(sol.product_uom_qty) as sale_qty,
 sol.price_unit unit_price, sum(sol.product_uom_qty * sol.price_unit) sale_amt,sum(sol.discount_amt) discount,
-(sum(sol.product_uom_qty * sol.price_unit) - sum(sol.discount_amt)) cash_down, so.deduct_amt as deduction_amt,
+(sum(sol.product_uom_qty * sol.price_unit) - sum(sol.discount_amt)) cash_down, 
 sum(sol.product_uom_qty * pt.weight_net) viss_amt,sum(sol.product_uom_qty * pt.weight_liter) as liter_amt,
 uom.name as uom_name,sol.product_uom,uom.uom_ratio as uom_ratio,pt.weight_net as viss,pt.weight_liter
 from sale_order so, sale_order_line sol ,product_product pp,product_uom uom,product_template pt
@@ -463,8 +551,14 @@ and sol.product_id = pp.id
 and pt.id=pp.product_tmpl_id
 and uom.id=pt.uom_id
 and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+and case 
+when ? = TRUE and ? = TRUE then so.pre_order in (TRUE,FALSE) 
+When ? = FALSE and ? = FALSE then so.pre_order in (TRUE,FALSE) 
+When ? = TRUE and ? = FALSE then so.pre_order in (TRUE) 
+When ? = FALSE and ? = TRUE then so.pre_order in (FALSE) end 
 --$pricelist$
-group by so.deduct_amt,pp.name_template,sol.price_unit,pp.id,uom.name,sol.product_uom,uom.uom_ratio,pt.weight_net,pt.weight_liter
+group by pp.name_template,sol.price_unit,pp.id,uom.name,sol.product_uom,uom.uom_ratio,pt.weight_net,pt.weight_liter
+order by pp.sequence
 )A left join 
 (
 select ptl.product_id pt_pro_id,ptl.total from 
@@ -477,7 +571,7 @@ and pt.date::date between ? and ?
 )B on A.productid = B.pt_pro_id
 Group by 
 A.description,a.sale_qty,a.unit_price,a.sale_amt,a.discount,a.cash_down,b.total,a.uom_name,A.product_uom,
-A.viss,a.weight_liter,a.viss_amt,a.liter_amt,a.productid,a.deduction_amt
+A.viss,a.weight_liter,a.viss_amt,a.liter_amt,a.productid
 Order by a.productid]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
@@ -521,7 +615,7 @@ Order by a.productid]]></xml-property>
             <design:name></design:name>
             <design:position>3</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -535,6 +629,126 @@ Order by a.productid]]></xml-property>
           <design:identifier>
             <design:name></design:name>
             <design:position>4</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>5</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>6</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>7</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>8</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>9</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>10</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>11</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>12</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
@@ -1823,21 +2037,81 @@ order by name]]></xml-property>
                 </structure>
                 <structure>
                     <property name="name">param_3</property>
-                    <property name="paramName">from_date</property>
+                    <property name="paramName">presale</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
                     <property name="position">3</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_4</property>
-                    <property name="paramName">To Date</property>
+                    <property name="paramName">directsale</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
                     <property name="position">4</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_5</property>
+                    <property name="paramName">presale</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">5</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_6</property>
+                    <property name="paramName">directsale</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">6</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_7</property>
+                    <property name="paramName">presale</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">7</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_8</property>
+                    <property name="paramName">directsale</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">8</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_9</property>
+                    <property name="paramName">presale</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">9</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_10</property>
+                    <property name="paramName">directsale</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">10</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -1862,32 +2136,17 @@ order by name]]></xml-property>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[SELECT sum (deduction_amt) as deduction_amt FROM 
-(select A.deduction_amt
-from 
 (
-select pp.id productid,pp.name_template as description,sum(sol.product_uom_qty) as sale_qty,
-sol.price_unit unit_price, sum(sol.product_uom_qty * sol.price_unit) sale_amt,sum(sol.discount_amt) discount,
-(sum(sol.product_uom_qty * sol.price_unit) - sum(sol.discount_amt)) cash_down, so.deduct_amt as deduction_amt,
-sum(sol.product_uom_qty * pt.weight_net) viss_amt,sum(sol.product_uom_qty * pt.weight_liter) as liter_amt,
-uom.name as uom_name,sol.product_uom,uom.uom_ratio as uom_ratio,pt.weight_net as viss,pt.weight_liter
-from sale_order so, sale_order_line sol ,product_product pp,product_uom uom,product_template pt
-where so.id=sol.order_id
-and sol.product_id = pp.id
-and pt.id=pp.product_tmpl_id
-and uom.id=pt.uom_id
-and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+select so.deduct_amt as deduction_amt
+from sale_order so
+where ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+and case 
+when ? = TRUE and ? = TRUE then so.pre_order in (TRUE,FALSE) 
+When ? = FALSE and ? = FALSE then so.pre_order in (TRUE,FALSE) 
+When ? = TRUE and ? = FALSE then so.pre_order in (TRUE) 
+When ? = FALSE and ? = TRUE then so.pre_order in (FALSE) end
 --$pricelist$
-group by so.deduct_amt,pp.name_template,sol.price_unit,pp.id,uom.name,sol.product_uom,uom.uom_ratio,pt.weight_net,pt.weight_liter
-)A left join 
-(
-select ptl.product_id pt_pro_id,ptl.total from 
-product_transactions pt, product_transactions_line ptl
-where pt.id = ptl.transaction_id
-and pt.exchange_type = 'Sale Return'
-and ptl.trans_type ='In'
-and ((pt.date at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
-)B on A.productid = B.pt_pro_id
-Group by a.deduction_amt)abc]]></xml-property>
+)abc]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -1930,7 +2189,7 @@ Group by a.deduction_amt)abc]]></xml-property>
             <design:name></design:name>
             <design:position>3</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -1945,7 +2204,97 @@ Group by a.deduction_amt)abc]]></xml-property>
             <design:name></design:name>
             <design:position>4</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>5</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>6</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>7</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>8</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>9</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>10</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -2092,6 +2441,7 @@ Group by a.deduction_amt)abc]]></xml-property>
                 </cell>
                 <cell id="1221">
                     <data id="1557">
+                        <property name="fontFamily">"Zawgyi-One"</property>
                         <property name="fontSize">8pt</property>
                         <property name="paddingLeft">2pt</property>
                         <structure name="dateTimeFormat">
@@ -2111,6 +2461,7 @@ Group by a.deduction_amt)abc]]></xml-property>
                 </cell>
                 <cell id="1222"/>
                 <cell id="1223">
+                    <property name="verticalAlign">middle</property>
                     <label id="1518">
                         <property name="fontFamily">sans-serif</property>
                         <property name="fontSize">8pt</property>
@@ -2127,6 +2478,7 @@ Group by a.deduction_amt)abc]]></xml-property>
                 </cell>
                 <cell id="1225">
                     <data id="1519">
+                        <property name="fontFamily">"Zawgyi-One"</property>
                         <property name="fontSize">8pt</property>
                         <property name="paddingLeft">2pt</property>
                         <property name="textAlign">left</property>
@@ -2143,6 +2495,7 @@ Group by a.deduction_amt)abc]]></xml-property>
                 </cell>
             </row>
             <row id="1543">
+                <property name="verticalAlign">middle</property>
                 <property name="height">0.25833333333333336in</property>
                 <cell id="1544">
                     <label id="1555">
@@ -2161,6 +2514,7 @@ Group by a.deduction_amt)abc]]></xml-property>
                 </cell>
                 <cell id="1546">
                     <data id="1558">
+                        <property name="fontFamily">"Zawgyi-One"</property>
                         <property name="fontSize">8pt</property>
                         <property name="paddingLeft">2pt</property>
                         <structure name="dateTimeFormat">
@@ -2195,7 +2549,9 @@ Group by a.deduction_amt)abc]]></xml-property>
                     </label>
                 </cell>
                 <cell id="1550">
+                    <property name="verticalAlign">middle</property>
                     <data id="1207">
+                        <property name="fontFamily">"Zawgyi-One"</property>
                         <property name="fontSize">8pt</property>
                         <property name="paddingLeft">2pt</property>
                         <structure name="dateTimeFormat">

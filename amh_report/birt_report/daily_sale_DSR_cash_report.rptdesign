@@ -529,20 +529,25 @@ sol.price_unit unit_price, sum(sol.product_uom_qty * sol.price_unit) sale_amt,su
 (sum(sol.product_uom_qty * sol.price_unit) - sum(sol.discount_amt) ) cash_down, 
 uom.name as uom_name,sol.product_uom,sum(sol.product_uom_qty * pt.weight_net) viss_amt,sum(sol.product_uom_qty * pt.weight_liter) as liter_amt,
 pt.weight_net as viss,pt.weight_liter
-from sale_order so, sale_order_line sol ,product_product pp,product_uom uom,product_template pt,account_invoice ai
-
+from sale_order so, sale_order_line sol ,product_product pp,product_uom uom,product_template pt,account_invoice ai,
+account_move_line aml, account_voucher_line avl,account_voucher av
 where so.id=sol.order_id
 and sol.product_id = pp.id
 and pt.id=pp.product_tmpl_id
 and uom.id=pt.uom_id
-and ai.origin=so.name
-and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+and ai.move_id=aml.move_id 
+and aml.id=avl.move_line_id 
+and av.id = avl.voucher_id	
+and ai.origin=so.name 
+and av.date between ? and ?
 and so.section_id = ? 
 and so.user_id  = ?
 and so.payment_type='cash'
+--and so.state='done'
 and ai.residual=0.00
 --$pricelist$
 group by pp.name_template,sol.price_unit,pp.id,uom.name,sol.product_uom,uom.uom_ratio,pt.weight_net,pt.weight_liter
+order by pp.sequence
 )A left join 
 (
 select ptl.product_id pt_pro_id,ptl.total from 
@@ -1920,10 +1925,10 @@ order by name]]></xml-property>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="discount_DS" id="1534">
             <list-property name="columnHints">
                 <structure>
-                    <property name="columnName">sum</property>
+                    <property name="columnName">deduct_amt</property>
                     <property name="analysis">measure</property>
-                    <text-property name="displayName">sum</text-property>
-                    <text-property name="heading">sum</text-property>
+                    <text-property name="displayName">deduct_amt</text-property>
+                    <text-property name="heading">deduct_amt</text-property>
                 </structure>
             </list-property>
             <list-property name="parameters">
@@ -1971,45 +1976,12 @@ order by name]]></xml-property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
-                <structure>
-                    <property name="name">param_5</property>
-                    <property name="paramName">from_date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">5</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_6</property>
-                    <property name="paramName">to_date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">6</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_7</property>
-                    <property name="paramName">TeamName</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                    <property name="position">7</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
             </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
                     <structure>
                         <property name="position">1</property>
-                        <property name="name">sum</property>
+                        <property name="name">deduct_amt</property>
                         <property name="dataType">float</property>
                     </structure>
                 </list-property>
@@ -2018,47 +1990,22 @@ order by name]]></xml-property>
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
-                    <property name="name">sum</property>
-                    <property name="nativeName">sum</property>
+                    <property name="name">deduct_amt</property>
+                    <property name="nativeName">deduct_amt</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[SELECT SUM(totDis) FROM 
-(select A.discount as totDis,A.partner_id
-from 
-(
-select pp.id productid,pp.name_template as description,sum(sol.product_uom_qty) as sale_qty,
-sol.price_unit unit_price, sum(sol.product_uom_qty * sol.price_unit) sale_amt,sum(so.deduct_amt) discount,
-(sum(sol.product_uom_qty * sol.price_unit) - sum(so.deduct_amt) ) cash_down, so.partner_id,
-uom.name as uom_name,sol.product_uom,sum(sol.product_uom_qty * pt.weight_net) viss_amt,sum(sol.product_uom_qty * pt.weight_liter) as liter_amt,
-pt.weight_net as viss,pt.weight_liter
-from sale_order so, sale_order_line sol ,product_product pp,product_uom uom,product_template pt, account_invoice ai
-
-where so.id=sol.order_id
-and sol.product_id = pp.id
-and pt.id=pp.product_tmpl_id
-and uom.id=pt.uom_id
-and ai.origin=so.name
-and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+            <xml-property name="queryText"><![CDATA[Select sum(so.deduct_amt) as deduct_amt
+From sale_order so,account_invoice ai,account_move_line aml ,account_voucher_line avl,account_voucher  av
+Where ai.move_id=aml.move_id 
+and aml.id=avl.move_line_id 
+and av.id = avl.voucher_id	
+and ai.origin=so.name 
+and av.date between ? and ?
 and so.section_id = ?
 and so.user_id  = ?
-and so.payment_type='cash'
-and ai.residual=0.00
---$pricelist$
-group by pp.name_template,sol.price_unit,pp.id,uom.name,sol.product_uom,uom.uom_ratio,pt.weight_net,pt.weight_liter,so.partner_id
-)A left join 
-(
-select ptl.product_id pt_pro_id,ptl.total from 
-product_transactions pt, product_transactions_line ptl
-where pt.id = ptl.transaction_id
-and pt.exchange_type = 'Sale Return'
-and ptl.trans_type ='In'
-and pt.void_flag='none'
-and pt.date::date between ? and ?
-and pt.team_id = ?
-)B on A.productid = B.pt_pro_id
-Group by A.partner_id,A.discount)final]]></xml-property>
+and so.payment_type='cash']]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -2115,51 +2062,6 @@ Group by A.partner_id,A.discount)final]]></xml-property>
           <design:identifier>
             <design:name></design:name>
             <design:position>4</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>5</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>6</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>7</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
@@ -3278,7 +3180,7 @@ dataSetRow["sale_return_amt"]* (-1)&#13;
                                 <structure>
                                     <property name="name">deduct</property>
                                     <text-property name="displayName">deduct</text-property>
-                                    <expression name="expression" type="javascript">dataSetRow["sum"] * (-1)</expression>
+                                    <expression name="expression" type="javascript">dataSetRow["deduct_amt"] * (-1)</expression>
                                     <property name="dataType">float</property>
                                     <property name="allowExport">true</property>
                                 </structure>
@@ -3308,7 +3210,7 @@ dataSetRow["sale_return_amt"]* (-1)&#13;
                                 <structure>
                                     <property name="name">deduct</property>
                                     <text-property name="displayName">deduct</text-property>
-                                    <expression name="expression" type="javascript">dataSetRow["sum"] * (-1)</expression>
+                                    <expression name="expression" type="javascript">dataSetRow["deduct_amt"] * (-1)</expression>
                                     <property name="dataType">float</property>
                                     <property name="allowExport">true</property>
                                 </structure>
@@ -3456,7 +3358,7 @@ false&#13;
                                 <structure>
                                     <property name="name">discountamtvar</property>
                                     <text-property name="displayName">discountamtvar</text-property>
-                                    <expression name="expression" type="javascript">row._outer["gtAmt"] - dataSetRow["sum"]</expression>
+                                    <expression name="expression" type="javascript">row._outer["gtAmt"] - dataSetRow["deduct_amt"]</expression>
                                     <property name="dataType">float</property>
                                     <property name="allowExport">true</property>
                                 </structure>
@@ -3487,7 +3389,7 @@ false&#13;
                                 <structure>
                                     <property name="name">discountamtvar</property>
                                     <text-property name="displayName">discountamtvar</text-property>
-                                    <expression name="expression" type="javascript">row._outer["gtAmt"] - dataSetRow["sum"]</expression>
+                                    <expression name="expression" type="javascript">row._outer["gtAmt"] - dataSetRow["deduct_amt"]</expression>
                                     <property name="dataType">float</property>
                                     <property name="allowExport">true</property>
                                 </structure>

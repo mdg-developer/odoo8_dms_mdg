@@ -1101,7 +1101,7 @@ left join stk_onhand on stk_onhand.product_id=pp.id
 left join stock_return on stock_return.stk_return_pid=pp.id
 left join sq on pp.id=sq.product_id 
 left join stk_return on stk_return.pt_pro_id=pp.id
-left join purchase on purchase.purchasepid=pp.id where pc.code='P001' order by pp.name_template)A]]></xml-property>
+left join purchase on purchase.purchasepid=pp.id where pc.code='P001' order by pp.sequence)A]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -2755,7 +2755,7 @@ left join stk_onhand on stk_onhand.product_id=pp.id
 left join stock_return on stock_return.stk_return_pid=pp.id
 left join sq on pp.id=sq.product_id 
 left join stk_return on stk_return.pt_pro_id=pp.id
-left join purchase on purchase.purchasepid=pp.id where pc.code='P002' order by pp.name_template)A]]></xml-property>
+left join purchase on purchase.purchasepid=pp.id where pc.code='P002' order by pp.sequence)A]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -4567,7 +4567,7 @@ left join stk_onhand on stk_onhand.product_id=pp.id
 left join stock_return on stock_return.stk_return_pid=pp.id
 left join sq on pp.id=sq.product_id 
 left join stk_return on stk_return.pt_pro_id=pp.id
-left join purchase on purchase.purchasepid=pp.id where pc.code='P003' order by pp.name_template)A]]></xml-property>
+left join purchase on purchase.purchasepid=pp.id where pc.code='P003' order by pp.sequence)A]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -6042,7 +6042,7 @@ and pt.exchange_type = 'Sale Return' and ptl.trans_type ='In' and pt.void_flag='
 and location_id not in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) group by ptl.product_id),
 
 MOpurchase as (select sum(product_uom_qty) as MOpurchase_qtyt,product_id as purchasepid from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date < ?  --and origin like '%MO%' 
-and product_uom != 80 and  location_dest_id=604 and location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) 
+and product_uom != 80 and  location_dest_id in (7,604) and location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) 
 group by product_id)
 
 --stk_onhand as (select sum(product_uom_qty) as qty_on_hand,product_id from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? 
@@ -6076,7 +6076,7 @@ and location_dest_id in (select id from stock_location where active='t' and name
 group by product_id),
 
 MOpurchase as (select sum(product_uom_qty) as MOpurchase_qtyt,product_id as purchasepid from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date =?  --and origin like '%MO%' 
-and product_uom != 80 and location_dest_id=604 and location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) 
+and product_uom != 80 and location_dest_id in (7,604) and location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) 
 group by product_id)
 
 select pp.name_template as description,sq.*,stk_return.*,purchase.*,pt.weight_net as weight_viss,stk_onhand.*,MOpurchase.*,
@@ -6208,7 +6208,7 @@ left join sq on pp.id=sq.product_id
 left join stk_onhand on stk_onhand.product_id=pp.id
 left join stk_return on stk_return.pt_pro_id=pp.id
 left join purchase on purchase.purchasepid=pp.id
-left join MOpurchase on MOpurchase.purchasepid=pp.id where pp.default_code in ('PPO0001','PSO0001','PPO0002') order by pp.id)A
+left join MOpurchase on MOpurchase.purchasepid=pp.id where pp.default_code in ('PPO0001','PSO0001','PPO0002') order by pp.sequence)A
 ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">

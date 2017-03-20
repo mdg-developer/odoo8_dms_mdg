@@ -629,16 +629,17 @@ class res_partner(osv.osv):
                     if resVal:
                         customer=resVal.customer
                         supplier=resVal.supplier
+                        branch_id=resVal.branch_id
                         if customer is True:
                             is_flag='customer'
                         if supplier is True:
                             is_flag='supplier'
-                        if cityId:
-                            codeId = codeObj.search(cr, uid, [('city_id', '=', cityId.id),('is_flag', '=', is_flag)])
+                        if branch_id:
+                            codeId = codeObj.search(cr, uid, [('branch_id', '=', branch_id.id),('is_flag', '=', is_flag)])
                             if codeId:
                                 code = codeObj.generateCode(cr, uid, codeId[0], context=context)
                             else:
-                                codeResult = {'city_id':cityId.id, 'nextnumber':1, 'padding':4,'is_flag':is_flag}
+                                codeResult = {'branch_id':branch_id.id, 'nextnumber':1, 'padding':4,'is_flag':is_flag}
                                 codeId = codeObj.create(cr, uid, codeResult, context=context)
                                 code = codeObj.generateCode(cr, uid, codeId, context=context)
                 if code:

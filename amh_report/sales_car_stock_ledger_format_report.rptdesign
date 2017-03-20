@@ -126,16 +126,16 @@
                     <text-property name="heading">sale_qty</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">pt_pro_id</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">pt_pro_id</text-property>
-                    <text-property name="heading">pt_pro_id</text-property>
-                </structure>
-                <structure>
                     <property name="columnName">sale_return</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">sale_return</text-property>
                     <text-property name="heading">sale_return</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">pt_pro_id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">pt_pro_id</text-property>
+                    <text-property name="heading">pt_pro_id</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">purchase_qtyt</property>
@@ -354,23 +354,12 @@
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
-                    <property name="name">param_3</property>
-                    <property name="paramName">Team Member</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                    <property name="position">3</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
                     <property name="name">param_4</property>
                     <property name="paramName">date</property>
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
-                    <property name="position">4</property>
+                    <property name="position">3</property>
                     <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
@@ -381,18 +370,8 @@
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
-                    <property name="position">5</property>
+                    <property name="position">4</property>
                     <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_6</property>
-                    <property name="paramName">Team Member</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                    <property name="position">6</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -402,7 +381,7 @@
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
-                    <property name="position">7</property>
+                    <property name="position">5</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -412,7 +391,7 @@
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
-                    <property name="position">8</property>
+                    <property name="position">6</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -422,7 +401,7 @@
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
-                    <property name="position">9</property>
+                    <property name="position">7</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -432,7 +411,7 @@
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
-                    <property name="position">10</property>
+                    <property name="position">8</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -442,7 +421,7 @@
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
-                    <property name="position">11</property>
+                    <property name="position">9</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -452,7 +431,7 @@
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
-                    <property name="position">12</property>
+                    <property name="position">10</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -462,7 +441,7 @@
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
-                    <property name="position">13</property>
+                    <property name="position">11</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -472,7 +451,7 @@
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
-                    <property name="position">14</property>
+                    <property name="position">12</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -482,7 +461,7 @@
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
-                    <property name="position">15</property>
+                    <property name="position">13</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -492,27 +471,27 @@
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
-                    <property name="position">16</property>
+                    <property name="position">14</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
-                    <property name="name">param_17</property>
-                    <property name="paramName">Team Name</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                    <property name="position">17</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_18</property>
+                    <property name="name">param_3</property>
                     <property name="paramName">date</property>
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
-                    <property name="position">18</property>
+                    <property name="position">15</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_6</property>
+                    <property name="paramName">Car No</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">16</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -522,12 +501,32 @@
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
-                    <property name="position">19</property>
+                    <property name="position">17</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_20</property>
+                    <property name="paramName">Car No</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">18</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_17</property>
+                    <property name="paramName">date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">19</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_18</property>
                     <property name="paramName">Car No</property>
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
@@ -571,13 +570,13 @@
                     </structure>
                     <structure>
                         <property name="position">7</property>
-                        <property name="name">pt_pro_id</property>
-                        <property name="dataType">integer</property>
+                        <property name="name">sale_return</property>
+                        <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">8</property>
-                        <property name="name">sale_return</property>
-                        <property name="dataType">decimal</property>
+                        <property name="name">pt_pro_id</property>
+                        <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">9</property>
@@ -787,17 +786,17 @@
                 </structure>
                 <structure>
                     <property name="position">7</property>
+                    <property name="name">sale_return</property>
+                    <property name="nativeName">sale_return</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
                     <property name="name">pt_pro_id</property>
                     <property name="nativeName">pt_pro_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">8</property>
-                    <property name="name">sale_return</property>
-                    <property name="nativeName">sale_return</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">-5</property>
                 </structure>
                 <structure>
                     <property name="position">9</property>
@@ -1025,8 +1024,8 @@
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[SELECT *,
-((opening_qtyViss + WHqtyViss + salereturnViss + sr_qtyViss) - (saleViss)) as closingViss,
-((opening_qtyLiter + WHqtyLiter +salereturnLiter + sr_qtyLiter)- (saleliter)) as closingLiter,
+((opening_qtyViss + WHqtyViss + salereturnViss - sr_qtyViss) - (saleViss)) as closingViss,
+((opening_qtyLiter + WHqtyLiter +salereturnLiter - sr_qtyLiter)- (saleliter)) as closingLiter,
 opening_qtyViss * weight_viss as openingQtyVT,
 opening_qtyLiter * weight_liter as openingQtyLT,
 saleViss * weight_viss as saleQtyVT,
@@ -1035,8 +1034,8 @@ WHqtyViss * weight_viss as WHQtyVT,
 WHqtyLiter * weight_liter as WHQtyLT,
 salereturnViss * weight_viss as salereturnQtyVT,
 salereturnLiter * weight_liter as salereturnQtyLT,
-((opening_qtyViss + WHqtyViss + salereturnViss + sr_qtyViss) - (saleViss)) * weight_viss as closingQtyVT,
-((opening_qtyLiter + WHqtyLiter +salereturnLiter + sr_qtyLiter)- (saleliter)) * weight_liter as closingQtyLT,
+((opening_qtyViss + WHqtyViss + salereturnViss - sr_qtyViss) - (saleViss)) * weight_viss as closingQtyVT,
+((opening_qtyLiter + WHqtyLiter +salereturnLiter - sr_qtyLiter)- (saleliter)) * weight_liter as closingQtyLT,
 (sr_qtyViss ) as gdpa_viss,
 (sr_qtyLiter )  as gdpa_liter,
 (sr_qtyViss * weight_viss) as gdpa_vissGTqty,
@@ -1045,40 +1044,54 @@ salereturnLiter * weight_liter as salereturnQtyLT,
 FROM 
 (with 
 sale as (select product_id,sum(product_uom_qty) as sale_qty from sale_order so,sale_order_line sol where so.id = sol.order_id and so.state!='cancel' 
-and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ? and so.section_id =? and so.user_id  = ? group by product_id),
+and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ? and so.delivery_id =?  group by product_id),
 
 sq as (with 
 sale as (select product_id,sum(product_uom_qty) as sale_qty from sale_order so,sale_order_line sol where so.id = sol.order_id and so.state!='cancel' 
-and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date < ? and so.section_id = ? and so.user_id  = ? group by product_id),
+and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date < ? and so.delivery_id = ? group by product_id),
 
 sq as (select sum(product_uom_qty) as open_qty,product_id as product_id,location_id from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? and location_id = 5 
 and location_dest_id in 
 (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id = ?)) group by product_id,location_id),
 
-stk_return as (select ptl.product_id pt_pro_id,sum(ptl.product_qty) as sale_return from product_transactions pt, product_transactions_line ptl where pt.id = ptl.transaction_id
-and pt.exchange_type = 'Sale Return' and ptl.trans_type ='In' and pt.void_flag='none' and pt.date::date < ?
-and location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) group by ptl.product_id),
+stk_return as (select sum(product_uom_qty) as sale_return,product_id as pt_pro_id from stock_move 
+where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date < ?
+and location_id=9 and location_dest_id in
+(select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) group by product_id),
+
+stock_return as (select sum(product_uom_qty) as stk_return_qty,product_id as stk_return_pid from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date < ?
+and location_dest_id in (429,604) and location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?))
+ group by product_id),
 
 warehouse as (select sum(product_uom_qty) as WHqty,product_id as sq1product_id from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? and location_id=429 and location_dest_id in
 (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) group by product_id)
 
-select ((CASE WHEN sq.open_qty is null THEN 0 ELSE sq.open_qty END) + (CASE WHEN warehouse.WHqty is null THEN 0 ELSE warehouse.WHqty END) + (CASE WHEN stk_return.sale_return is null THEN 0 ELSE stk_return.sale_return END) - (CASE WHEN sale.sale_qty is null THEN 0 ELSE sale.sale_qty END)) as open_qty,pp.id as product_id, sq.location_id
+select ((CASE WHEN sq.open_qty is null THEN 0 ELSE sq.open_qty END) - (CASE WHEN stock_return.stk_return_qty is null THEN 0 ELSE stock_return.stk_return_qty END) + 
+(CASE WHEN warehouse.WHqty is null THEN 0 ELSE warehouse.WHqty END) + (CASE WHEN stk_return.sale_return is null THEN 0 ELSE stk_return.sale_return END) - 
+(CASE WHEN sale.sale_qty is null THEN 0 ELSE sale.sale_qty END)) as open_qty,pp.id as product_id, sq.location_id
+
 from product_product pp 
 left join sq on sq.product_id = pp.id
 left join sale on pp.id = sale.product_id
 left join stk_return on stk_return.pt_pro_id=pp.id
-left join warehouse on warehouse.sq1product_id=pp.id),
+left join warehouse on warehouse.sq1product_id=pp.id
+left join stock_return on stock_return.stk_return_pid=pp.id),
 
-stk_return as (select ptl.product_id pt_pro_id,sum(ptl.product_qty) as sale_return from product_transactions pt, product_transactions_line ptl where pt.id = ptl.transaction_id
-and pt.exchange_type = 'Sale Return' and ptl.trans_type ='In' and pt.void_flag='none' and pt.date::date = ?
-and location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) group by ptl.product_id),
+stk_return as (select sum(product_uom_qty) as sale_return,product_id as pt_pro_id from stock_move 
+where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date = ?
+and location_id=9 and location_dest_id in
+(select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) group by product_id),
 
 purchase as (select sum(pol.product_qty) as purchase_qtyt, pol.product_id as purchasepid from purchase_order po,purchase_order_line pol, product_product pp 
 where po.id=pol.order_id and pol.product_id=pp.id and ((po.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ?
 and location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?))group by  pol.product_id),
 
-stock_return as (select sum(srl.return_quantity) as stk_return_qty,product_id as stk_return_pid from stock_return sr, stock_return_line srl 
-where sr.id=srl.line_id and state='approve' and sale_team_id=? and ((return_date at time zone 'utc' )at time zone 'asia/rangoon')::date = ?  group by product_id),
+stock_return as (select sum(product_uom_qty) as stk_return_qty,product_id as stk_return_pid from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date = ?
+and location_dest_id in (429,604) and location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?))
+ group by product_id),
+
+--stock_return as (select sum(srl.return_quantity) as stk_return_qty,product_id as stk_return_pid from stock_return sr, stock_return_line srl 
+--where sr.id=srl.line_id and state='approve' and sale_team_id=? and ((return_date at time zone 'utc' )at time zone 'asia/rangoon')::date = ?  group by product_id),
 
 warehouse as (select sum(product_uom_qty) as WHqty,product_id as sq1product_id from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date = ? and location_id=429 
 and location_dest_id in
@@ -1240,7 +1253,7 @@ left join sale on pp.id = sale.product_id
 left join sq on pp.id=sq.product_id 
 left join stk_return on stk_return.pt_pro_id=pp.id
 left join purchase on purchase.purchasepid=pp.id 
-left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P001'  and pp.default_code!='PD00001' order by pp.id)A]]></xml-property>
+left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P001'  and pp.default_code!='PD00001' order by pp.sequence)A]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -1283,7 +1296,7 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P001'  and p
             <design:name></design:name>
             <design:position>3</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -1298,7 +1311,7 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P001'  and p
             <design:name></design:name>
             <design:position>4</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -1313,7 +1326,7 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P001'  and p
             <design:name></design:name>
             <design:position>5</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -1493,7 +1506,7 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P001'  and p
             <design:name></design:name>
             <design:position>17</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -1508,7 +1521,7 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P001'  and p
             <design:name></design:name>
             <design:position>18</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -2320,16 +2333,16 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <text-property name="heading">sale_qty</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">pt_pro_id</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">pt_pro_id</text-property>
-                    <text-property name="heading">pt_pro_id</text-property>
-                </structure>
-                <structure>
                     <property name="columnName">sale_return</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">sale_return</text-property>
                     <text-property name="heading">sale_return</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">pt_pro_id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">pt_pro_id</text-property>
+                    <text-property name="heading">pt_pro_id</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">purchase_qtyt</property>
@@ -2548,23 +2561,12 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
-                    <property name="name">param_3</property>
-                    <property name="paramName">Team Member</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                    <property name="position">3</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
                     <property name="name">param_4</property>
                     <property name="paramName">date</property>
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
-                    <property name="position">4</property>
+                    <property name="position">3</property>
                     <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
@@ -2575,18 +2577,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
-                    <property name="position">5</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_6</property>
-                    <property name="paramName">Team Member</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                    <property name="position">6</property>
+                    <property name="position">4</property>
                     <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
@@ -2597,7 +2588,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
-                    <property name="position">7</property>
+                    <property name="position">5</property>
                     <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
@@ -2608,7 +2599,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
-                    <property name="position">8</property>
+                    <property name="position">6</property>
                     <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
@@ -2619,7 +2610,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
-                    <property name="position">9</property>
+                    <property name="position">7</property>
                     <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
@@ -2630,7 +2621,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
-                    <property name="position">10</property>
+                    <property name="position">8</property>
                     <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
@@ -2641,7 +2632,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
-                    <property name="position">11</property>
+                    <property name="position">9</property>
                     <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
@@ -2652,7 +2643,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
-                    <property name="position">12</property>
+                    <property name="position">10</property>
                     <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
@@ -2663,7 +2654,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
-                    <property name="position">13</property>
+                    <property name="position">11</property>
                     <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
@@ -2674,7 +2665,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
-                    <property name="position">14</property>
+                    <property name="position">12</property>
                     <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
@@ -2685,7 +2676,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
-                    <property name="position">15</property>
+                    <property name="position">13</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -2695,27 +2686,27 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
-                    <property name="position">16</property>
+                    <property name="position">14</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
-                    <property name="name">param_17</property>
-                    <property name="paramName">Team Name</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                    <property name="position">17</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_18</property>
+                    <property name="name">param_3</property>
                     <property name="paramName">date</property>
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
-                    <property name="position">18</property>
+                    <property name="position">15</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_6</property>
+                    <property name="paramName">Car No</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">16</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -2725,12 +2716,32 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
-                    <property name="position">19</property>
+                    <property name="position">17</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_20</property>
+                    <property name="paramName">Car No</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">18</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_17</property>
+                    <property name="paramName">date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">19</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_18</property>
                     <property name="paramName">Car No</property>
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
@@ -2774,13 +2785,13 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     </structure>
                     <structure>
                         <property name="position">7</property>
-                        <property name="name">pt_pro_id</property>
-                        <property name="dataType">integer</property>
+                        <property name="name">sale_return</property>
+                        <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">8</property>
-                        <property name="name">sale_return</property>
-                        <property name="dataType">decimal</property>
+                        <property name="name">pt_pro_id</property>
+                        <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">9</property>
@@ -2990,17 +3001,17 @@ where crm.active='t'  order by crm.name]]></xml-property>
                 </structure>
                 <structure>
                     <property name="position">7</property>
+                    <property name="name">sale_return</property>
+                    <property name="nativeName">sale_return</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
                     <property name="name">pt_pro_id</property>
                     <property name="nativeName">pt_pro_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">8</property>
-                    <property name="name">sale_return</property>
-                    <property name="nativeName">sale_return</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">-5</property>
                 </structure>
                 <structure>
                     <property name="position">9</property>
@@ -3228,8 +3239,8 @@ where crm.active='t'  order by crm.name]]></xml-property>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[SELECT *,
-((opening_qtyViss + WHqtyViss + salereturnViss + sr_qtyViss) - (saleViss)) as closingViss,
-((opening_qtyLiter + WHqtyLiter +salereturnLiter + sr_qtyLiter)- (saleliter)) as closingLiter,
+((opening_qtyViss + WHqtyViss + salereturnViss - sr_qtyViss) - (saleViss)) as closingViss,
+((opening_qtyLiter + WHqtyLiter +salereturnLiter - sr_qtyLiter)- (saleliter)) as closingLiter,
 opening_qtyViss * weight_viss as openingQtyVT,
 opening_qtyLiter * weight_liter as openingQtyLT,
 saleViss * weight_viss as saleQtyVT,
@@ -3238,8 +3249,8 @@ WHqtyViss * weight_viss as WHQtyVT,
 WHqtyLiter * weight_liter as WHQtyLT,
 salereturnViss * weight_viss as salereturnQtyVT,
 salereturnLiter * weight_liter as salereturnQtyLT,
-((opening_qtyViss + WHqtyViss + salereturnViss + sr_qtyViss) - (saleViss)) * weight_viss as closingQtyVT,
-((opening_qtyLiter + WHqtyLiter +salereturnLiter + sr_qtyLiter)- (saleliter)) * weight_liter as closingQtyLT,
+((opening_qtyViss + WHqtyViss + salereturnViss - sr_qtyViss) - (saleViss)) * weight_viss as closingQtyVT,
+((opening_qtyLiter + WHqtyLiter +salereturnLiter - sr_qtyLiter)- (saleliter)) * weight_liter as closingQtyLT,
 (sr_qtyViss ) as gdpa_viss,
 (sr_qtyLiter )  as gdpa_liter,
 (sr_qtyViss * weight_viss) as gdpa_vissGTqty,
@@ -3248,11 +3259,11 @@ salereturnLiter * weight_liter as salereturnQtyLT,
 FROM 
 (with 
 sale as (select product_id,sum(product_uom_qty) as sale_qty from sale_order so,sale_order_line sol where so.id = sol.order_id and so.state!='cancel' 
-and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ? and so.section_id =? and so.user_id  = ? group by product_id),
+and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ? and so.delivery_id =? group by product_id),
 
 sq as (with 
 sale as (select product_id,sum(product_uom_qty) as sale_qty from sale_order so,sale_order_line sol where so.id = sol.order_id and so.state!='cancel' 
-and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date < ? and so.section_id = ? and so.user_id  = ? group by product_id),
+and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date < ? and so.delivery_id = ? group by product_id),
 
 warehouse as (select sum(product_uom_qty) as WHqty,product_id as sq1product_id from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? and location_id=429 and location_dest_id in 
 (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) group by product_id),
@@ -3260,28 +3271,37 @@ warehouse as (select sum(product_uom_qty) as WHqty,product_id as sq1product_id f
 sq as (select sum(product_uom_qty) as open_qty,product_id as product_id,location_id from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? and location_id=5 and location_dest_id in 
 (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id = ?)) group by product_id,location_id),
 
-stk_return as (select ptl.product_id pt_pro_id,sum(ptl.product_qty) as sale_return from product_transactions pt, product_transactions_line ptl where pt.id = ptl.transaction_id
-and pt.exchange_type = 'Sale Return' and ptl.trans_type ='In' and pt.void_flag='none' and pt.date::date < ?
-and location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) group by ptl.product_id)
+stock_return as (select sum(product_uom_qty) as stk_return_qty,product_id as stk_return_pid from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date < ?
+and location_dest_id in (429,604) and location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?))
+ group by product_id),
 
-select ( (CASE WHEN sq.open_qty is null THEN 0 ELSE sq.open_qty END) + (CASE WHEN warehouse.WHqty is null THEN 0 ELSE warehouse.WHqty END) + (CASE WHEN stk_return.sale_return is null THEN 0 ELSE stk_return.sale_return END) - (CASE WHEN sale.sale_qty is null THEN 0 ELSE sale.sale_qty END)) as open_qty,pp.id as product_id, sq.location_id
+stk_return as (select sum(product_uom_qty) as sale_return,product_id as pt_pro_id from stock_move 
+where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date < ?
+and location_id=9 and location_dest_id in
+(select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) group by product_id)
+
+select ((CASE WHEN sq.open_qty is null THEN 0 ELSE sq.open_qty END) - (CASE WHEN stock_return.stk_return_qty is null THEN 0 ELSE stock_return.stk_return_qty END) + 
+(CASE WHEN warehouse.WHqty is null THEN 0 ELSE warehouse.WHqty END) + (CASE WHEN stk_return.sale_return is null THEN 0 ELSE stk_return.sale_return END) - (CASE WHEN sale.sale_qty is null THEN 0 ELSE sale.sale_qty END)) as open_qty,pp.id as product_id, sq.location_id
 
 from product_product pp 
 left join sq on sq.product_id = pp.id
 left join sale on pp.id = sale.product_id
 left join stk_return on stk_return.pt_pro_id=pp.id
-left join warehouse on warehouse.sq1product_id=pp.id),
+left join warehouse on warehouse.sq1product_id=pp.id
+left join stock_return on stock_return.stk_return_pid=pp.id),
 
-stk_return as (select ptl.product_id pt_pro_id,sum(ptl.product_qty) as sale_return from product_transactions pt, product_transactions_line ptl where pt.id = ptl.transaction_id
-and pt.exchange_type = 'Sale Return' and ptl.trans_type ='In' and pt.void_flag='none' and pt.date::date = ?
-and location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) group by ptl.product_id),
+stk_return as (select sum(product_uom_qty) as sale_return,product_id as pt_pro_id from stock_move 
+where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date = ?
+and location_id=9 and location_dest_id in
+(select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) group by product_id),
 
 purchase as (select sum(pol.product_qty) as purchase_qtyt, pol.product_id as purchasepid from purchase_order po,purchase_order_line pol, product_product pp 
 where po.id=pol.order_id and pol.product_id=pp.id and ((po.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ?
 and location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?))group by  pol.product_id),
 
-stock_return as (select sum(srl.return_quantity) as stk_return_qty,product_id as stk_return_pid from stock_return sr, stock_return_line srl 
-where sr.id=srl.line_id and state='approve' and sale_team_id=? and ((return_date at time zone 'utc' )at time zone 'asia/rangoon')::date = ?  group by product_id),
+stock_return as (select sum(product_uom_qty) as stk_return_qty,product_id as stk_return_pid from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date = ?
+and location_dest_id in (429,604) and location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?))
+ group by product_id),
 
 warehouse as (select sum(product_uom_qty) as WHqty,product_id as sq1product_id from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date = ? and location_id=429 and location_dest_id in 
 (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) group by product_id)
@@ -3442,7 +3462,7 @@ left join sale on pp.id = sale.product_id
 left join sq on pp.id=sq.product_id 
 left join stk_return on stk_return.pt_pro_id=pp.id
 left join purchase on purchase.purchasepid=pp.id 
-left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P003'  and pp.default_code!='PPD00001' order by pp.id)A]]></xml-property>
+left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P003'  and pp.default_code!='PPD00001' order by pp.sequence)A]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -3485,7 +3505,7 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P003'  and p
             <design:name></design:name>
             <design:position>3</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -3500,7 +3520,7 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P003'  and p
             <design:name></design:name>
             <design:position>4</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -3515,7 +3535,7 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P003'  and p
             <design:name></design:name>
             <design:position>5</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -3695,7 +3715,7 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P003'  and p
             <design:name></design:name>
             <design:position>17</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -3710,7 +3730,7 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P003'  and p
             <design:name></design:name>
             <design:position>18</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -3789,16 +3809,16 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P003'  and p
                     <text-property name="heading">sale_qty</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">pt_pro_id</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">pt_pro_id</text-property>
-                    <text-property name="heading">pt_pro_id</text-property>
-                </structure>
-                <structure>
                     <property name="columnName">sale_return</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">sale_return</text-property>
                     <text-property name="heading">sale_return</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">pt_pro_id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">pt_pro_id</text-property>
+                    <text-property name="heading">pt_pro_id</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">purchase_qtyt</property>
@@ -4017,23 +4037,12 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P003'  and p
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
-                    <property name="name">param_3</property>
-                    <property name="paramName">Team Member</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                    <property name="position">3</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
                     <property name="name">param_4</property>
                     <property name="paramName">date</property>
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
-                    <property name="position">4</property>
+                    <property name="position">3</property>
                     <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
@@ -4044,18 +4053,8 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P003'  and p
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
-                    <property name="position">5</property>
+                    <property name="position">4</property>
                     <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_6</property>
-                    <property name="paramName">Team Member</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                    <property name="position">6</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -4065,7 +4064,7 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P003'  and p
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
-                    <property name="position">7</property>
+                    <property name="position">5</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -4075,7 +4074,7 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P003'  and p
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
-                    <property name="position">8</property>
+                    <property name="position">6</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -4085,7 +4084,7 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P003'  and p
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
-                    <property name="position">9</property>
+                    <property name="position">7</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -4095,7 +4094,7 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P003'  and p
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
-                    <property name="position">10</property>
+                    <property name="position">8</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -4105,7 +4104,7 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P003'  and p
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
-                    <property name="position">11</property>
+                    <property name="position">9</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -4115,7 +4114,7 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P003'  and p
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
-                    <property name="position">12</property>
+                    <property name="position">10</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -4125,7 +4124,7 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P003'  and p
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
-                    <property name="position">13</property>
+                    <property name="position">11</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -4135,7 +4134,7 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P003'  and p
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
-                    <property name="position">14</property>
+                    <property name="position">12</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -4145,7 +4144,7 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P003'  and p
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
-                    <property name="position">15</property>
+                    <property name="position">13</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -4155,27 +4154,27 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P003'  and p
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
-                    <property name="position">16</property>
+                    <property name="position">14</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
-                    <property name="name">param_17</property>
-                    <property name="paramName">Team Name</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                    <property name="position">17</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_18</property>
+                    <property name="name">param_3</property>
                     <property name="paramName">date</property>
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
-                    <property name="position">18</property>
+                    <property name="position">15</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_6</property>
+                    <property name="paramName">Car No</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">16</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -4185,12 +4184,32 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P003'  and p
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
-                    <property name="position">19</property>
+                    <property name="position">17</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_20</property>
+                    <property name="paramName">Car No</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">18</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_17</property>
+                    <property name="paramName">date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">19</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_18</property>
                     <property name="paramName">Car No</property>
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
@@ -4234,13 +4253,13 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P003'  and p
                     </structure>
                     <structure>
                         <property name="position">7</property>
-                        <property name="name">pt_pro_id</property>
-                        <property name="dataType">integer</property>
+                        <property name="name">sale_return</property>
+                        <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">8</property>
-                        <property name="name">sale_return</property>
-                        <property name="dataType">decimal</property>
+                        <property name="name">pt_pro_id</property>
+                        <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">9</property>
@@ -4450,17 +4469,17 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P003'  and p
                 </structure>
                 <structure>
                     <property name="position">7</property>
+                    <property name="name">sale_return</property>
+                    <property name="nativeName">sale_return</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
                     <property name="name">pt_pro_id</property>
                     <property name="nativeName">pt_pro_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">8</property>
-                    <property name="name">sale_return</property>
-                    <property name="nativeName">sale_return</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">-5</property>
                 </structure>
                 <structure>
                     <property name="position">9</property>
@@ -4688,8 +4707,8 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P003'  and p
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[SELECT *,
-((opening_qtyViss + WHqtyViss + salereturnViss + sr_qtyViss) - (saleViss)) as closingViss,
-((opening_qtyLiter + WHqtyLiter +salereturnLiter + sr_qtyLiter)- (saleliter)) as closingLiter,
+((opening_qtyViss + WHqtyViss + salereturnViss - sr_qtyViss) - (saleViss)) as closingViss,
+((opening_qtyLiter + WHqtyLiter +salereturnLiter - sr_qtyLiter)- (saleliter)) as closingLiter,
 opening_qtyViss * weight_viss as openingQtyVT,
 opening_qtyLiter * weight_liter as openingQtyLT,
 saleViss * weight_viss as saleQtyVT,
@@ -4698,8 +4717,8 @@ WHqtyViss * weight_viss as WHQtyVT,
 WHqtyLiter * weight_liter as WHQtyLT,
 salereturnViss * weight_viss as salereturnQtyVT,
 salereturnLiter * weight_liter as salereturnQtyLT,
-((opening_qtyViss + WHqtyViss + salereturnViss + sr_qtyViss) - (saleViss)) * weight_viss as closingQtyVT,
-((opening_qtyLiter + WHqtyLiter +salereturnLiter + sr_qtyLiter)- (saleliter)) * weight_liter as closingQtyLT,
+((opening_qtyViss + WHqtyViss + salereturnViss - sr_qtyViss) - (saleViss)) * weight_viss as closingQtyVT,
+((opening_qtyLiter + WHqtyLiter +salereturnLiter - sr_qtyLiter)- (saleliter)) * weight_liter as closingQtyLT,
 (sr_qtyViss ) as gdpa_viss,
 (sr_qtyLiter )  as gdpa_liter,
 (sr_qtyViss * weight_viss) as gdpa_vissGTqty,
@@ -4708,40 +4727,51 @@ salereturnLiter * weight_liter as salereturnQtyLT,
 FROM 
 (with 
 sale as (select product_id,sum(product_uom_qty) as sale_qty from sale_order so,sale_order_line sol where so.id = sol.order_id and so.state!='cancel' 
-and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ? and so.section_id =? and so.user_id  = ? group by product_id),
+and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ? and so.delivery_id =? group by product_id),
 
 sq as (with 
 sale as (select product_id,sum(product_uom_qty) as sale_qty from sale_order so,sale_order_line sol where so.id = sol.order_id and so.state!='cancel' 
-and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date < ? and so.section_id = ? and so.user_id  = ? group by product_id),
+and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date < ? and so.delivery_id = ? group by product_id),
 
 sq as (select sum(product_uom_qty) as open_qty,product_id as product_id,location_id from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? and location_id=5 and location_dest_id in 
 (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id = ?)) group by product_id,location_id),
 
+stock_return as (select sum(product_uom_qty) as stk_return_qty,product_id as stk_return_pid from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date < ?
+and location_dest_id in (429,604) and location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?))
+ group by product_id),
+
 warehouse as (select sum(product_uom_qty) as WHqty,product_id as sq1product_id from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? and location_id=429 and location_dest_id in 
 (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) group by product_id),
 
-stk_return as (select ptl.product_id pt_pro_id,sum(ptl.product_qty) as sale_return from product_transactions pt, product_transactions_line ptl where pt.id = ptl.transaction_id
-and pt.exchange_type = 'Sale Return' and ptl.trans_type ='In' and pt.void_flag='none' and pt.date::date < ?
-and location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) group by ptl.product_id)
+stk_return as (select sum(product_uom_qty) as sale_return,product_id as pt_pro_id from stock_move 
+where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date < ?
+and location_id=9 and location_dest_id in
+(select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) group by product_id)
 
-select ((CASE WHEN sq.open_qty is null THEN 0 ELSE sq.open_qty END) + (CASE WHEN warehouse.WHqty is null THEN 0 ELSE warehouse.WHqty END) + (CASE WHEN stk_return.sale_return is null THEN 0 ELSE stk_return.sale_return END) - (CASE WHEN sale.sale_qty is null THEN 0 ELSE sale.sale_qty END)) as open_qty,pp.id as product_id, sq.location_id
+select ((CASE WHEN sq.open_qty is null THEN 0 ELSE sq.open_qty END) - (CASE WHEN stock_return.stk_return_qty is null THEN 0 ELSE stock_return.stk_return_qty END) + 
+(CASE WHEN warehouse.WHqty is null THEN 0 ELSE warehouse.WHqty END) + (CASE WHEN stk_return.sale_return is null THEN 0 ELSE stk_return.sale_return END) - (CASE WHEN sale.sale_qty is null THEN 0 ELSE sale.sale_qty END)) as open_qty,pp.id as product_id, sq.location_id
 
 from  product_product pp 
 left join sq on sq.product_id = pp.id
 left join sale on pp.id = sale.product_id
 left join stk_return on stk_return.pt_pro_id=pp.id
-left join warehouse on warehouse.sq1product_id=pp.id),
+left join warehouse on warehouse.sq1product_id=pp.id
+left join stock_return on stock_return.stk_return_pid=pp.id),
 
-stk_return as (select ptl.product_id pt_pro_id,sum(ptl.product_qty) as sale_return from product_transactions pt, product_transactions_line ptl where pt.id = ptl.transaction_id
-and pt.exchange_type = 'Sale Return' and ptl.trans_type ='In' and pt.void_flag='none' and pt.date::date = ?
-and location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) group by ptl.product_id),
+stk_return as (select sum(product_uom_qty) as sale_return,product_id as pt_pro_id from stock_move 
+where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date = ?
+and location_id=9 and location_dest_id in
+(select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) group by product_id),
 
 purchase as (select sum(pol.product_qty) as purchase_qtyt, pol.product_id as purchasepid from purchase_order po,purchase_order_line pol, product_product pp 
 where po.id=pol.order_id and pol.product_id=pp.id and ((po.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ?
 and location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?))group by  pol.product_id),
 
-stock_return as (select sum(srl.return_quantity) as stk_return_qty,product_id as stk_return_pid from stock_return sr, stock_return_line srl 
-where sr.id=srl.line_id and state='approve' and sale_team_id=? and ((return_date at time zone 'utc' )at time zone 'asia/rangoon')::date = ?  group by product_id),
+stock_return as (select sum(product_uom_qty) as stk_return_qty,product_id as stk_return_pid from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date = ?
+and location_dest_id in (429,604) and location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?))
+ group by product_id),
+--stock_return as (select sum(srl.return_quantity) as stk_return_qty,product_id as stk_return_pid from stock_return sr, stock_return_line srl 
+--where sr.id=srl.line_id and state='approve' and sale_team_id=? and ((return_date at time zone 'utc' )at time zone 'asia/rangoon')::date = ?  group by product_id),
 
 warehouse as (select sum(product_uom_qty) as WHqty,product_id as sq1product_id from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date = ? and location_id=429 and location_dest_id in 
 (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) group by product_id)
@@ -4902,7 +4932,7 @@ left join sale on pp.id = sale.product_id
 left join sq on pp.id=sq.product_id 
 left join stk_return on stk_return.pt_pro_id=pp.id
 left join purchase on purchase.purchasepid=pp.id 
-left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P002'  and pp.default_code!='SD00001' order by pp.id)A]]></xml-property>
+left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P002'  and pp.default_code!='SD00001' order by pp.sequence)A]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -4945,7 +4975,7 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P002'  and p
             <design:name></design:name>
             <design:position>3</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -4960,7 +4990,7 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P002'  and p
             <design:name></design:name>
             <design:position>4</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -4975,7 +5005,7 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P002'  and p
             <design:name></design:name>
             <design:position>5</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -5155,7 +5185,7 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P002'  and p
             <design:name></design:name>
             <design:position>17</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -5170,7 +5200,7 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P002'  and p
             <design:name></design:name>
             <design:position>18</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -5475,16 +5505,28 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P002'  and p
                     <text-property name="heading">location_id</text-property>
                 </structure>
                 <structure>
+                    <property name="columnName">sale_return</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">sale_return</text-property>
+                    <text-property name="heading">sale_return</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">pt_pro_id</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">pt_pro_id</text-property>
                     <text-property name="heading">pt_pro_id</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">sale_return</property>
+                    <property name="columnName">stk_return_qty</property>
                     <property name="analysis">measure</property>
-                    <text-property name="displayName">sale_return</text-property>
-                    <text-property name="heading">sale_return</text-property>
+                    <text-property name="displayName">stk_return_qty</text-property>
+                    <text-property name="heading">stk_return_qty</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">stk_return_pid</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">stk_return_pid</text-property>
+                    <text-property name="heading">stk_return_pid</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">whqty</property>
@@ -5505,7 +5547,7 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P002'  and p
                     <text-property name="heading">weight_viss</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">product_id_10</property>
+                    <property name="columnName">product_id_12</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">product_id</text-property>
                     <text-property name="heading">product_id</text-property>
@@ -5533,6 +5575,12 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P002'  and p
                     <property name="analysis">measure</property>
                     <text-property name="displayName">salereturnviss</text-property>
                     <text-property name="heading">salereturnviss</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">stockreturnviss</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">stockreturnviss</text-property>
+                    <text-property name="heading">stockreturnviss</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">saleviss</property>
@@ -5569,6 +5617,12 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P002'  and p
                     <property name="analysis">measure</property>
                     <text-property name="displayName">salereturnqtyvt</text-property>
                     <text-property name="heading">salereturnqtyvt</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">stockreturnqtyvt</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">stockreturnqtyvt</text-property>
+                    <text-property name="heading">stockreturnqtyvt</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">closingqtyvt</property>
@@ -5667,23 +5721,12 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P002'  and p
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
-                    <property name="name">param_9</property>
-                    <property name="paramName">Team Member</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                    <property name="position">9</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
                     <property name="name">param_10</property>
                     <property name="paramName">date</property>
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
-                    <property name="position">10</property>
+                    <property name="position">9</property>
                     <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
@@ -5694,18 +5737,7 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P002'  and p
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
-                    <property name="position">11</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_12</property>
-                    <property name="paramName">Team Member</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                    <property name="position">12</property>
+                    <property name="position">10</property>
                     <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
@@ -5716,7 +5748,7 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P002'  and p
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
-                    <property name="position">13</property>
+                    <property name="position">11</property>
                     <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
@@ -5727,7 +5759,7 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P002'  and p
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
-                    <property name="position">14</property>
+                    <property name="position">12</property>
                     <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
@@ -5738,7 +5770,7 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P002'  and p
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
-                    <property name="position">15</property>
+                    <property name="position">13</property>
                     <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
@@ -5749,8 +5781,48 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P002'  and p
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
-                    <property name="position">16</property>
+                    <property name="position">14</property>
                     <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_9</property>
+                    <property name="paramName">date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">15</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_12</property>
+                    <property name="paramName">Car No</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">16</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_17</property>
+                    <property name="paramName">date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">17</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_18</property>
+                    <property name="paramName">Car No</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">18</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -5779,86 +5851,106 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P002'  and p
                     </structure>
                     <structure>
                         <property name="position">5</property>
-                        <property name="name">pt_pro_id</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">6</property>
                         <property name="name">sale_return</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
+                        <property name="position">6</property>
+                        <property name="name">pt_pro_id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
                         <property name="position">7</property>
-                        <property name="name">whqty</property>
+                        <property name="name">stk_return_qty</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">8</property>
-                        <property name="name">sq1product_id</property>
+                        <property name="name">stk_return_pid</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">9</property>
-                        <property name="name">weight_viss</property>
+                        <property name="name">whqty</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">10</property>
-                        <property name="name">product_id_10</property>
+                        <property name="name">sq1product_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">11</property>
-                        <property name="name">sale_qty</property>
+                        <property name="name">weight_viss</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">12</property>
+                        <property name="name">product_id_12</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">13</property>
+                        <property name="name">sale_qty</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">14</property>
                         <property name="name">opening_qtyviss</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">13</property>
+                        <property name="position">15</property>
                         <property name="name">whqtyviss</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">14</property>
+                        <property name="position">16</property>
                         <property name="name">salereturnviss</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">15</property>
-                        <property name="name">saleviss</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">16</property>
-                        <property name="name">closingviss</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
                         <property name="position">17</property>
-                        <property name="name">openingqtyvt</property>
+                        <property name="name">stockreturnviss</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">18</property>
-                        <property name="name">whqtyvt</property>
+                        <property name="name">saleviss</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">19</property>
-                        <property name="name">saleqtyvt</property>
+                        <property name="name">closingviss</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">20</property>
-                        <property name="name">salereturnqtyvt</property>
+                        <property name="name">openingqtyvt</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">21</property>
+                        <property name="name">whqtyvt</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">22</property>
+                        <property name="name">saleqtyvt</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">23</property>
+                        <property name="name">salereturnqtyvt</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">24</property>
+                        <property name="name">stockreturnqtyvt</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">25</property>
                         <property name="name">closingqtyvt</property>
                         <property name="dataType">float</property>
                     </structure>
@@ -5896,118 +5988,146 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P002'  and p
                 </structure>
                 <structure>
                     <property name="position">5</property>
+                    <property name="name">sale_return</property>
+                    <property name="nativeName">sale_return</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
                     <property name="name">pt_pro_id</property>
                     <property name="nativeName">pt_pro_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">6</property>
-                    <property name="name">sale_return</property>
-                    <property name="nativeName">sale_return</property>
+                    <property name="position">7</property>
+                    <property name="name">stk_return_qty</property>
+                    <property name="nativeName">stk_return_qty</property>
                     <property name="dataType">decimal</property>
-                    <property name="nativeDataType">-5</property>
+                    <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">7</property>
+                    <property name="position">8</property>
+                    <property name="name">stk_return_pid</property>
+                    <property name="nativeName">stk_return_pid</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
                     <property name="name">whqty</property>
                     <property name="nativeName">whqty</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">8</property>
+                    <property name="position">10</property>
                     <property name="name">sq1product_id</property>
                     <property name="nativeName">sq1product_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">9</property>
+                    <property name="position">11</property>
                     <property name="name">weight_viss</property>
                     <property name="nativeName">weight_viss</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">10</property>
-                    <property name="name">product_id_10</property>
+                    <property name="position">12</property>
+                    <property name="name">product_id_12</property>
                     <property name="nativeName">product_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">11</property>
+                    <property name="position">13</property>
                     <property name="name">sale_qty</property>
                     <property name="nativeName">sale_qty</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">12</property>
+                    <property name="position">14</property>
                     <property name="name">opening_qtyviss</property>
                     <property name="nativeName">opening_qtyviss</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">13</property>
+                    <property name="position">15</property>
                     <property name="name">whqtyviss</property>
                     <property name="nativeName">whqtyviss</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">14</property>
+                    <property name="position">16</property>
                     <property name="name">salereturnviss</property>
                     <property name="nativeName">salereturnviss</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">15</property>
+                    <property name="position">17</property>
+                    <property name="name">stockreturnviss</property>
+                    <property name="nativeName">stockreturnviss</property>
+                    <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
+                </structure>
+                <structure>
+                    <property name="position">18</property>
                     <property name="name">saleviss</property>
                     <property name="nativeName">saleviss</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">16</property>
+                    <property name="position">19</property>
                     <property name="name">closingviss</property>
                     <property name="nativeName">closingviss</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">17</property>
+                    <property name="position">20</property>
                     <property name="name">openingqtyvt</property>
                     <property name="nativeName">openingqtyvt</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">18</property>
+                    <property name="position">21</property>
                     <property name="name">whqtyvt</property>
                     <property name="nativeName">whqtyvt</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">19</property>
+                    <property name="position">22</property>
                     <property name="name">saleqtyvt</property>
                     <property name="nativeName">saleqtyvt</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">20</property>
+                    <property name="position">23</property>
                     <property name="name">salereturnqtyvt</property>
                     <property name="nativeName">salereturnqtyvt</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">21</property>
+                    <property name="position">24</property>
+                    <property name="name">stockreturnqtyvt</property>
+                    <property name="nativeName">stockreturnqtyvt</property>
+                    <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
+                </structure>
+                <structure>
+                    <property name="position">25</property>
                     <property name="name">closingqtyvt</property>
                     <property name="nativeName">closingqtyvt</property>
                     <property name="dataType">float</property>
@@ -6015,48 +6135,61 @@ left join warehouse on warehouse.sq1product_id=pp.id where pc.code='P002'  and p
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[SELECT *,
-((opening_qtyViss + WHqtyViss - saleViss)) as closingViss,
+((opening_qtyViss + WHqtyViss - saleViss - stockreturnViss)) as closingViss,
 opening_qtyViss  as openingQtyVT,
 WHqtyViss  as WHQtyVT,
 saleViss  as saleQtyVT,
 salereturnViss  as salereturnQtyVT,
-((opening_qtyViss + WHqtyViss - saleViss)) as closingQtyVT
+stockreturnViss as stockreturnQtyVT,
+((opening_qtyViss + WHqtyViss - saleViss - stockreturnViss)) as closingQtyVT
 FROM  
 (with 
 
 sq as (with 
-stk_return as (select ptl.product_id pt_pro_id,sum(ptl.product_qty) as sale_return from product_transactions pt, product_transactions_line ptl where pt.id = ptl.transaction_id
-and pt.exchange_type = 'Sale Return' and ptl.trans_type ='In' and pt.void_flag='none' and pt.date::date < ? 
-and location_id not in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) group by ptl.product_id),
+stk_return as (select sum(product_uom_qty) as sale_return,product_id as pt_pro_id from stock_move 
+where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date < ?
+and location_id=9 and location_dest_id in
+(select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) group by product_id),
 
 warehouse as (select sum(product_uom_qty) as WHqty,product_id as sq1product_id from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? and location_id=429 
 and location_dest_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) group by product_id),
 
+stock_return as (select sum(product_uom_qty) as stk_return_qty,product_id as stk_return_pid from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date < ?
+and location_dest_id in (429,604) and location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?))
+ group by product_id),
+ 
 sq as (select sum(product_uom_qty) as open_qty,product_id as product_id,location_id from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? and location_id = 5 
 and location_dest_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id = ?)) group by product_id,location_id),
 
 sale as (select product_id,sum(product_uom_qty) as sale_qty from sale_order so,sale_order_line sol where so.id = sol.order_id and so.state!='cancel' 
-and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date < ? and so.section_id =? and so.user_id  = ? group by product_id)
+and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date < ? and so.delivery_id =? group by product_id)
 
-select ((CASE WHEN sq.open_qty is null THEN 0 ELSE sq.open_qty END) + (CASE WHEN warehouse.WHqty is null THEN 0 ELSE warehouse.WHqty END) + (CASE WHEN stk_return.sale_return is null THEN 0 ELSE stk_return.sale_return END) - (CASE WHEN sale.sale_qty is null THEN 0 ELSE sale.sale_qty END)) as open_qty,pp.id as product_id, sq.location_id
+select ((CASE WHEN sq.open_qty is null THEN 0 ELSE sq.open_qty END) - (CASE WHEN stock_return.stk_return_qty is null THEN 0 ELSE stock_return.stk_return_qty END) + 
+(CASE WHEN warehouse.WHqty is null THEN 0 ELSE warehouse.WHqty END) + (CASE WHEN stk_return.sale_return is null THEN 0 ELSE stk_return.sale_return END) - (CASE WHEN sale.sale_qty is null THEN 0 ELSE sale.sale_qty END)) as open_qty,pp.id as product_id, sq.location_id
 
 from product_product pp 
 left join sq on pp.id=sq.product_id
 left join warehouse on warehouse.sq1product_id=pp.id
 left join sale on sale.product_id=pp.id
-left join  stk_return on stk_return.pt_pro_id=pp.id),
+left join  stk_return on stk_return.pt_pro_id=pp.id
+left join stock_return on stock_return.stk_return_pid=pp.id),
 
 sale as (select product_id,sum(product_uom_qty) as sale_qty from sale_order so,sale_order_line sol where so.id = sol.order_id and so.state!='cancel' 
-and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ? and so.section_id =? and so.user_id  = ? group by product_id),
+and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ? and so.delivery_id =? group by product_id),
 
-stk_return as (select ptl.product_id pt_pro_id,sum(ptl.product_qty) as sale_return from product_transactions pt, product_transactions_line ptl where pt.id = ptl.transaction_id
-and pt.exchange_type = 'Sale Return' and ptl.trans_type ='In' and pt.void_flag='none' and pt.date::date = ?
-and location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) group by ptl.product_id),
+stock_return as (select sum(product_uom_qty) as stk_return_qty,product_id as stk_return_pid from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date = ?
+and location_dest_id in (429,604) and location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?))
+ group by product_id),
+ 
+stk_return as (select sum(product_uom_qty) as sale_return,product_id as pt_pro_id from stock_move 
+where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date = ?
+and location_id=9 and location_dest_id in
+(select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) group by product_id),
 
 warehouse as (select sum(product_uom_qty) as WHqty,product_id as sq1product_id from stock_move where ((date at time zone 'utc' )at time zone 'asia/rangoon')::date = ? and location_id=429 
 and location_dest_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)) group by product_id)
 
-select pp.name_template as description,sq.*,stk_return.*,warehouse.*,pt.weight_net as weight_viss,sale.*,
+select pp.name_template as description,sq.*,stk_return.*,stock_return.*,warehouse.*,pt.weight_net as weight_viss,sale.*,
 CASE (select dcode(sq.product_id))
 WHEN 'P00010' THEN (select CAST(sq.open_qty as Float)) 
 WHEN 'P00005' THEN (select CAST(sq.open_qty as Float)) 
@@ -6120,6 +6253,27 @@ WHEN 'S000005' THEN (select CAST(stk_return.sale_return as Float))
 WHEN 'S000025' THEN (select CAST(stk_return.sale_return as Float))
 WHEN 'S000001' THEN (select CAST(stk_return.sale_return as Float))
 ELSE 0 END as salereturnViss,
+CASE (select dcode(stock_return.stk_return_pid)) 
+WHEN 'P00010' THEN (select CAST(stock_return.stk_return_qty as Float)) 
+WHEN 'P00005' THEN (select CAST(stock_return.stk_return_qty as Float)) 
+WHEN 'P00003' THEN (select CAST(stock_return.stk_return_qty as Float)) 
+WHEN 'P00002' THEN (select CAST(stock_return.stk_return_qty as Float)) 
+WHEN 'P00001' THEN (select CAST(stock_return.stk_return_qty as Float))
+WHEN 'S00010' THEN (select CAST(stock_return.stk_return_qty as Float)) 
+WHEN 'S00005' THEN (select CAST(stock_return.stk_return_qty as Float)) 
+WHEN 'S00003' THEN (select CAST(stock_return.stk_return_qty as Float)) 
+WHEN 'S00002' THEN (select CAST(stock_return.stk_return_qty as Float)) 
+WHEN 'S00001' THEN (select CAST(stock_return.stk_return_qty as Float))
+WHEN 'PD00001' THEN (select CAST((stock_return.stk_return_qty*pt.weight_net) as Float)) 
+WHEN 'SD00001' THEN (select CAST((stock_return.stk_return_qty*pt.weight_net) as Float)) 
+WHEN 'PPD00001' THEN (select CAST((stock_return.stk_return_qty*pt.weight_net) as Float))
+WHEN 'P000005' THEN (select CAST(stock_return.stk_return_qty as Float))
+WHEN 'P000025' THEN (select CAST(stock_return.stk_return_qty as Float))
+WHEN 'P000001' THEN (select CAST(stock_return.stk_return_qty as Float))
+WHEN 'S000005' THEN (select CAST(stock_return.stk_return_qty as Float))
+WHEN 'S000025' THEN (select CAST(stock_return.stk_return_qty as Float))
+WHEN 'S000001' THEN (select CAST(stock_return.stk_return_qty as Float))
+ELSE 0 END as stockreturnViss,
 CASE (select dcode(sale.product_id))
 WHEN 'P00010' THEN (select CAST(sale.sale_qty as Float)) 
 WHEN 'P00005' THEN (select CAST(sale.sale_qty as Float)) 
@@ -6147,7 +6301,8 @@ inner join product_uom uom on pt.uom_id=uom.id
 left join sq on pp.id=sq.product_id 
 left join sale on pp.id = sale.product_id
 left join stk_return on stk_return.pt_pro_id=pp.id
-left join warehouse on warehouse.sq1product_id=pp.id WHERE pp.default_code in ('PD00001','SD00001','PPD00001') order by pp.id)A ]]></xml-property>
+left join warehouse on warehouse.sq1product_id=pp.id
+left join stock_return on stock_return.stk_return_pid=pp.id WHERE pp.default_code in ('PD00001','SD00001','PPD00001') order by pp.sequence)A ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -6280,7 +6435,7 @@ left join warehouse on warehouse.sq1product_id=pp.id WHERE pp.default_code in ('
             <design:name></design:name>
             <design:position>9</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -6295,7 +6450,7 @@ left join warehouse on warehouse.sq1product_id=pp.id WHERE pp.default_code in ('
             <design:name></design:name>
             <design:position>10</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -6310,7 +6465,7 @@ left join warehouse on warehouse.sq1product_id=pp.id WHERE pp.default_code in ('
             <design:name></design:name>
             <design:position>11</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -6384,6 +6539,36 @@ left join warehouse on warehouse.sq1product_id=pp.id WHERE pp.default_code in ('
           <design:identifier>
             <design:name></design:name>
             <design:position>16</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>17</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>18</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
@@ -11366,12 +11551,6 @@ dataSetRow["whqty"]&#13;
                     <property name="dataType">decimal</property>
                 </structure>
                 <structure>
-                    <property name="name">product_id_10</property>
-                    <text-property name="displayName">product_id</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["product_id_10"]</expression>
-                    <property name="dataType">integer</property>
-                </structure>
-                <structure>
                     <property name="name">sale_qty</property>
                     <text-property name="displayName">sale_qty</text-property>
                     <expression name="expression" type="javascript">dataSetRow["sale_qty"]</expression>
@@ -11394,8 +11573,16 @@ dataSetRow["opening_qtyviss"]&#13;
                 <structure>
                     <property name="name">whqtyviss</property>
                     <text-property name="displayName">whqtyviss</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["whqtyviss"]</expression>
+                    <expression name="expression" type="javascript">if (dataSetRow["whqtyviss"] &lt;1  &amp;&amp; dataSetRow["whqtyviss"] > -1)&#13;
+{&#13;
+&#13;
+}&#13;
+else&#13;
+{&#13;
+dataSetRow["whqtyviss"]/115&#13;
+}</expression>
                     <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
                 </structure>
                 <structure>
                     <property name="name">salereturnviss</property>
@@ -11538,7 +11725,14 @@ dataSetRow["salereturnviss"]/115&#13;
                     <list-property name="arguments">
                         <structure>
                             <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["whqtyvt"]</expression>
+                            <expression name="value" type="javascript">if (dataSetRow["whqtyvt"] &lt;1  &amp;&amp; dataSetRow["whqtyvt"] > -1)&#13;
+{&#13;
+&#13;
+}&#13;
+else&#13;
+{&#13;
+dataSetRow["whqtyvt"]/115&#13;
+}</expression>
                         </structure>
                     </list-property>
                     <property name="allowExport">true</property>
@@ -11663,6 +11857,83 @@ dataSetRow["whqty"]/115&#13;
 else&#13;
 {&#13;
 dataSetRow["whqtyviss"]/115&#13;
+}</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">stockreturnviss</property>
+                    <text-property name="displayName">stockreturndrum</text-property>
+                    <expression name="expression" type="javascript">if (dataSetRow["stockreturnviss"]=='0' )&#13;
+{&#13;
+&#13;
+}&#13;
+else&#13;
+{&#13;
+dataSetRow["stockreturnviss"]&#13;
+}</expression>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation_10</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">dataSetRow["stockreturnqtyvt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">stock_r_drum</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">if (dataSetRow["stockreturnviss"]=='0' )&#13;
+{&#13;
+&#13;
+}&#13;
+else&#13;
+{&#13;
+dataSetRow["stockreturnviss"]&#13;
+}</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation_11</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["stock_return_drum"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">stockreturnviss_1</property>
+                    <text-property name="displayName">stockreturnviss</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["stockreturnviss"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">stock_return_drum</property>
+                    <text-property name="displayName">stockreturndrum</text-property>
+                    <expression name="expression" type="javascript">if (dataSetRow["stockreturnviss"]=='0' )&#13;
+{&#13;
+&#13;
+}&#13;
+else&#13;
+{&#13;
+dataSetRow["stockreturnviss"]/115&#13;
 }</expression>
                     <property name="dataType">float</property>
                     <property name="allowExport">true</property>
@@ -12309,6 +12580,16 @@ dataSetRow["whqtyviss"]/115&#13;
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <property name="verticalAlign">middle</property>
+                        <data id="2496">
+                            <property name="fontSize">8pt</property>
+                            <property name="paddingRight">2pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">###0;(###0){RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">stockreturnviss</property>
+                        </data>
                     </cell>
                     <cell id="2388">
                         <property name="borderBottomStyle">solid</property>
@@ -12320,6 +12601,16 @@ dataSetRow["whqtyviss"]/115&#13;
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <property name="verticalAlign">middle</property>
+                        <data id="2503">
+                            <property name="fontSize">8pt</property>
+                            <property name="paddingRight">2pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">###0;(###0){RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">stock_return_drum</property>
+                        </data>
                     </cell>
                     <cell id="2390">
                         <property name="borderBottomStyle">solid</property>
@@ -12561,7 +12852,7 @@ dataSetRow["whqtyviss"]/115&#13;
                         </data>
                     </cell>
                     <cell id="2432">
-                        <property name="colSpan">2</property>
+                        <property name="colSpan">1</property>
                         <property name="rowSpan">1</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -12572,6 +12863,37 @@ dataSetRow["whqtyviss"]/115&#13;
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <property name="verticalAlign">middle</property>
+                        <data id="2499">
+                            <property name="fontSize">8pt</property>
+                            <property name="paddingRight">2pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">Aggregation_10</property>
+                        </data>
+                    </cell>
+                    <cell id="2498">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <property name="verticalAlign">middle</property>
+                        <data id="2501">
+                            <property name="fontSize">8pt</property>
+                            <property name="paddingRight">2pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">Aggregation_11</property>
+                        </data>
                     </cell>
                     <cell id="2434">
                         <property name="colSpan">1</property>

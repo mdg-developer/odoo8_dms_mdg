@@ -113,6 +113,34 @@
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
+        <scalar-parameter name="presale" id="2352">
+            <text-property name="promptText">Pre-Sale</text-property>
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">boolean</property>
+            <property name="distinct">true</property>
+            <simple-property-list name="defaultValue">
+                <value type="constant">False</value>
+            </simple-property-list>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">check-box</property>
+            <structure name="format"/>
+        </scalar-parameter>
+        <scalar-parameter name="directsale" id="2353">
+            <text-property name="promptText">Direct Sale</text-property>
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">boolean</property>
+            <property name="distinct">true</property>
+            <simple-property-list name="defaultValue">
+                <value type="constant">False</value>
+            </simple-property-list>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">check-box</property>
+            <structure name="format"/>
+        </scalar-parameter>
     </parameters>
     <data-sources>
         <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="2071"
@@ -369,6 +397,12 @@
                     <text-property name="heading">saleqty_6liter_pp</text-property>
                 </structure>
                 <structure>
+                    <property name="columnName">saleqty_9liter_pp_42</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">saleqty_9liter_pp</text-property>
+                    <text-property name="heading">saleqty_9liter_pp</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">saleqty_10viss_p</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">saleqty_10viss_p</text-property>
@@ -598,6 +632,7 @@
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">8</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -608,6 +643,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">9</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -618,6 +654,7 @@
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">10</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -628,6 +665,7 @@
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">11</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -660,6 +698,7 @@
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">14</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -670,6 +709,89 @@
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">15</property>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_16</property>
+                    <property name="paramName">presale</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">16</property>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_17</property>
+                    <property name="paramName">directsale</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">17</property>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_18</property>
+                    <property name="paramName">presale</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">18</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_19</property>
+                    <property name="paramName">directsale</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">19</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_20</property>
+                    <property name="paramName">presale</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">20</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_21</property>
+                    <property name="paramName">directsale</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">21</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_22</property>
+                    <property name="paramName">presale</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">22</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_23</property>
+                    <property name="paramName">directsale</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">23</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -883,7 +1005,7 @@
                     </structure>
                     <structure>
                         <property name="position">42</property>
-                        <property name="name">saleqty_9liter_pp</property>
+                        <property name="name">saleqty_9liter_pp_42</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
@@ -1023,396 +1145,462 @@ this.queryText =this.queryText.replace("--$pricelist$", "and so.pricelist_id="+p
                     <property name="name">customer_id</property>
                     <property name="nativeName">customer_id</property>
                     <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
                     <property name="position">2</property>
                     <property name="name">customer_name</property>
                     <property name="nativeName">customer_name</property>
                     <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
                     <property name="position">3</property>
                     <property name="name">sale_qty</property>
                     <property name="nativeName">sale_qty</property>
                     <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
                     <property name="position">4</property>
                     <property name="name">discount_amt</property>
                     <property name="nativeName">discount_amt</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">5</property>
                     <property name="name">sale_amt</property>
                     <property name="nativeName">sale_amt</property>
                     <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
                     <property name="position">6</property>
                     <property name="name">deduction_amt</property>
                     <property name="nativeName">deduction_amt</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">7</property>
                     <property name="name">paidamount</property>
                     <property name="nativeName">paidamount</property>
                     <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
                     <property name="position">8</property>
                     <property name="name">open_amt</property>
                     <property name="nativeName">open_amt</property>
                     <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
                     <property name="position">9</property>
                     <property name="name">amount_total</property>
                     <property name="nativeName">amount_total</property>
                     <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
                     <property name="position">10</property>
                     <property name="name">saleamt_1liter_pp</property>
                     <property name="nativeName">saleamt_1liter_pp</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">11</property>
                     <property name="name">saleamt_2liter_pp</property>
                     <property name="nativeName">saleamt_2liter_pp</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">12</property>
                     <property name="name">saleamt_3liter_pp</property>
                     <property name="nativeName">saleamt_3liter_pp</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">13</property>
                     <property name="name">saleamt_6liter_pp</property>
                     <property name="nativeName">saleamt_6liter_pp</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">14</property>
                     <property name="name">saleqty_9liter_pp</property>
                     <property name="nativeName">saleqty_9liter_pp</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">15</property>
                     <property name="name">saleamt_10viss_peanut</property>
                     <property name="nativeName">saleamt_10viss_peanut</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">16</property>
                     <property name="name">saleamt_5viss_peanut</property>
                     <property name="nativeName">saleamt_5viss_peanut</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">17</property>
                     <property name="name">saleamt_3viss_peanut</property>
                     <property name="nativeName">saleamt_3viss_peanut</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">18</property>
                     <property name="name">saleamt_2viss_peanut</property>
                     <property name="nativeName">saleamt_2viss_peanut</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">19</property>
                     <property name="name">saleamt_1viss_peanut</property>
                     <property name="nativeName">saleamt_1viss_peanut</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">20</property>
                     <property name="name">saleamt_10viss_ss</property>
                     <property name="nativeName">saleamt_10viss_ss</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">21</property>
                     <property name="name">saleamt_5viss_ss</property>
                     <property name="nativeName">saleamt_5viss_ss</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">22</property>
                     <property name="name">saleamt_3viss_ss</property>
                     <property name="nativeName">saleamt_3viss_ss</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">23</property>
                     <property name="name">saleamt_2viss_ss</property>
                     <property name="nativeName">saleamt_2viss_ss</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">24</property>
                     <property name="name">saleamt_1viss_ss</property>
                     <property name="nativeName">saleamt_1viss_ss</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">25</property>
                     <property name="name">saleamt_1liter_peanut</property>
                     <property name="nativeName">saleamt_1liter_peanut</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">26</property>
                     <property name="name">saleamt_06liter_peanut</property>
                     <property name="nativeName">saleamt_06liter_peanut</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">27</property>
                     <property name="name">saleamt_1liter_ss</property>
                     <property name="nativeName">saleamt_1liter_ss</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">28</property>
                     <property name="name">saleamt_06liter_ss</property>
                     <property name="nativeName">saleamt_06liter_ss</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">29</property>
                     <property name="name">saleamt_drum_peanut</property>
                     <property name="nativeName">saleamt_drum_peanut</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">30</property>
                     <property name="name">saleamt_drum_ss</property>
                     <property name="nativeName">saleamt_drum_ss</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">31</property>
                     <property name="name">saleamt_drum_pp</property>
                     <property name="nativeName">saleamt_drum_pp</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">32</property>
                     <property name="name">saleamt_05viss_peanut</property>
                     <property name="nativeName">saleamt_05viss_peanut</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">33</property>
                     <property name="name">saleamt_025viss_peanut</property>
                     <property name="nativeName">saleamt_025viss_peanut</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">34</property>
                     <property name="name">saleamt_01viss_peanut</property>
                     <property name="nativeName">saleamt_01viss_peanut</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">35</property>
                     <property name="name">saleamt_05viss_ss</property>
                     <property name="nativeName">saleamt_05viss_ss</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">36</property>
                     <property name="name">saleamt_025viss_ss</property>
                     <property name="nativeName">saleamt_025viss_ss</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">37</property>
                     <property name="name">saleamt_01viss_ss</property>
                     <property name="nativeName">saleamt_01viss_ss</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">38</property>
                     <property name="name">saleqty_1liter_pp</property>
                     <property name="nativeName">saleqty_1liter_pp</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">39</property>
                     <property name="name">saleqty_2liter_pp</property>
                     <property name="nativeName">saleqty_2liter_pp</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">40</property>
                     <property name="name">saleqty_3liter_pp</property>
                     <property name="nativeName">saleqty_3liter_pp</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">41</property>
                     <property name="name">saleqty_6liter_pp</property>
                     <property name="nativeName">saleqty_6liter_pp</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">42</property>
                     <property name="name">saleqty_9liter_pp_42</property>
                     <property name="nativeName">saleqty_9liter_pp</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">43</property>
                     <property name="name">saleqty_10viss_p</property>
                     <property name="nativeName">saleqty_10viss_p</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">44</property>
                     <property name="name">saleqty_5viss_p</property>
                     <property name="nativeName">saleqty_5viss_p</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">45</property>
                     <property name="name">saleqty_3viss_p</property>
                     <property name="nativeName">saleqty_3viss_p</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">46</property>
                     <property name="name">saleqty_2viss_p</property>
                     <property name="nativeName">saleqty_2viss_p</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">47</property>
                     <property name="name">saleqty_1viss_p</property>
                     <property name="nativeName">saleqty_1viss_p</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">48</property>
                     <property name="name">saleqty_10viss_ss</property>
                     <property name="nativeName">saleqty_10viss_ss</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">49</property>
                     <property name="name">saleqty_5viss_ss</property>
                     <property name="nativeName">saleqty_5viss_ss</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">50</property>
                     <property name="name">saleqty_3viss_ss</property>
                     <property name="nativeName">saleqty_3viss_ss</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">51</property>
                     <property name="name">saleqty_2viss_ss</property>
                     <property name="nativeName">saleqty_2viss_ss</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">52</property>
                     <property name="name">saleqty_1viss_ss</property>
                     <property name="nativeName">saleqty_1viss_ss</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">53</property>
                     <property name="name">saleqty_1liter_p</property>
                     <property name="nativeName">saleqty_1liter_p</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">54</property>
                     <property name="name">saleqty_06liter_p</property>
                     <property name="nativeName">saleqty_06liter_p</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">55</property>
                     <property name="name">saleqty_1liter_ss</property>
                     <property name="nativeName">saleqty_1liter_ss</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">56</property>
                     <property name="name">saleqty_06liter_ss</property>
                     <property name="nativeName">saleqty_06liter_ss</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">57</property>
                     <property name="name">saleqty_drum_peanut</property>
                     <property name="nativeName">saleqty_drum_peanut</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">58</property>
                     <property name="name">saleqty_drum_ss</property>
                     <property name="nativeName">saleqty_drum_ss</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">59</property>
                     <property name="name">saleqty_drum_pp</property>
                     <property name="nativeName">saleqty_drum_pp</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">60</property>
                     <property name="name">saleqty_05viss_peanut</property>
                     <property name="nativeName">saleqty_05viss_peanut</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">61</property>
                     <property name="name">saleqty_025viss_peanut</property>
                     <property name="nativeName">saleqty_025viss_peanut</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">62</property>
                     <property name="name">saleqty_01viss_peanut</property>
                     <property name="nativeName">saleqty_01viss_peanut</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">63</property>
                     <property name="name">saleqty_05viss_ss</property>
                     <property name="nativeName">saleqty_05viss_ss</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">64</property>
                     <property name="name">saleqty_025viss_ss</property>
                     <property name="nativeName">saleqty_025viss_ss</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">65</property>
                     <property name="name">saleqty_01viss_ss</property>
                     <property name="nativeName">saleqty_01viss_ss</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">66</property>
                     <property name="name">balance</property>
                     <property name="nativeName">balance</property>
                     <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[SELECT *,
@@ -1497,6 +1685,11 @@ where so.id = sol.order_id and rp.id=so.partner_id
 and so.state!='cancel' 
 and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ? and so.section_id = ? and so.user_id  = ? and rp.active='t' 
 and so.payment_type='credit' 
+and case 
+when ? = TRUE and ? = TRUE then so.pre_order in (TRUE,FALSE) 
+When ? = FALSE and ? = FALSE then so.pre_order in (TRUE,FALSE) 
+When ? = TRUE and ? = FALSE then so.pre_order in (TRUE) 
+When ? = FALSE and ? = TRUE then so.pre_order in (FALSE) end 
 --$pricelist$
 group by sol.product_uom_qty,sol.price_unit,so.deduct_amt,rp.id,product_id,date_order,sol.product_uom,rp.name,so.section_id,so.user_id)firstq)
 
@@ -1788,6 +1981,126 @@ inner join sale on pp.id = sale.product_id )AA group by aa.customer_id,AA.custom
             <design:position>15</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>16</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>17</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>18</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>19</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>20</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>21</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>22</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>23</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -5820,11 +6133,8 @@ dataSetRow["saleamt_06liter_ss"]&#13;
                         <structure>
                             <property name="name">Expression</property>
                             <expression name="value" type="javascript">(dataSetRow["saleqty_10viss_p"] + dataSetRow["saleqty_5viss_p"] + dataSetRow["saleqty_3viss_p"] +&#13;
-dataSetRow["saleqty_2viss_p"] + dataSetRow["saleqty_1viss_p"] + dataSetRow["saleqty_10viss_ss"] +&#13;
-dataSetRow["saleqty_5viss_ss"] + dataSetRow["saleqty_3viss_ss"] + dataSetRow["saleqty_2viss_ss"] +&#13;
-dataSetRow["saleqty_05viss_ss"] + dataSetRow["saleqty_025viss_ss"] + dataSetRow["saleqty_05viss_peanut"] +&#13;
-dataSetRow["saleqty_025viss_peanut"] + dataSetRow["saleqty_01viss_ss"] +dataSetRow["saleqty_01viss_peanut"] +&#13;
-dataSetRow["saleqty_1viss_ss"]+ dataSetRow["saleqty_drum_ss"] + dataSetRow["saleqty_drum_peanut"])</expression>
+dataSetRow["saleqty_2viss_p"] + dataSetRow["saleqty_1viss_p"] + dataSetRow["saleqty_05viss_peanut"] +&#13;
+dataSetRow["saleqty_025viss_peanut"] +dataSetRow["saleqty_01viss_peanut"]  + dataSetRow["saleqty_drum_peanut"])</expression>
                         </structure>
                     </list-property>
                     <property name="allowExport">true</property>
@@ -5836,8 +6146,7 @@ dataSetRow["saleqty_1viss_ss"]+ dataSetRow["saleqty_drum_ss"] + dataSetRow["sale
                     <list-property name="arguments">
                         <structure>
                             <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["saleqty_1liter_p"] + dataSetRow["saleqty_06liter_p"] + &#13;
-dataSetRow["saleqty_1liter_ss"] + dataSetRow["saleqty_06liter_ss"]</expression>
+                            <expression name="value" type="javascript">dataSetRow["saleqty_1liter_p"] + dataSetRow["saleqty_06liter_p"]</expression>
                         </structure>
                     </list-property>
                     <property name="allowExport">true</property>
@@ -5850,13 +6159,9 @@ dataSetRow["saleqty_1liter_ss"] + dataSetRow["saleqty_06liter_ss"]</expression>
                         <structure>
                             <property name="name">Expression</property>
                             <expression name="value" type="javascript">(dataSetRow["saleqty_10viss_p"]+dataSetRow["saleqty_5viss_p"]+dataSetRow["saleqty_3viss_p"]+&#13;
-dataSetRow["saleqty_2viss_p"]+dataSetRow["saleqty_1viss_p"]+dataSetRow["saleqty_10viss_ss"]+&#13;
-dataSetRow["saleqty_5viss_ss"]+dataSetRow["saleqty_3viss_ss"]+dataSetRow["saleqty_2viss_ss"]+&#13;
-dataSetRow["saleqty_05viss_peanut"] + dataSetRow["saleqty_025viss_peanut"] + dataSetRow["saleqty_05viss_ss"] +&#13;
-dataSetRow["saleqty_025viss_ss"] + dataSetRow["saleqty_01viss_ss"] + dataSetRow["saleqty_01viss_peanut"] +&#13;
-dataSetRow["saleqty_1viss_ss"]+ dataSetRow["saleqty_drum_ss"]+dataSetRow["saleqty_drum_peanut"]) +&#13;
-((dataSetRow["saleqty_1liter_p"]+dataSetRow["saleqty_06liter_p"]+dataSetRow["saleqty_1liter_ss"]&#13;
-+dataSetRow["saleqty_06liter_ss"]) *0.57)</expression>
+dataSetRow["saleqty_2viss_p"]+dataSetRow["saleqty_1viss_p"]+dataSetRow["saleqty_05viss_peanut"] + &#13;
+dataSetRow["saleqty_025viss_peanut"] + dataSetRow["saleqty_01viss_peanut"] +dataSetRow["saleqty_drum_peanut"]) +&#13;
+((dataSetRow["saleqty_1liter_p"]+dataSetRow["saleqty_06liter_p"]) *0.575)</expression>
                         </structure>
                     </list-property>
                     <property name="allowExport">true</property>
@@ -6087,6 +6392,47 @@ dataSetRow["saleamt_01viss_ss"]&#13;
                     <text-property name="displayName">deduction_amt</text-property>
                     <expression name="expression" type="javascript">dataSetRow["deduction_amt"]</expression>
                     <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation_31</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">(dataSetRow["saleqty_10viss_ss"] + dataSetRow["saleqty_5viss_ss"] + dataSetRow["saleqty_3viss_ss"] + &#13;
+dataSetRow["saleqty_2viss_ss"] + dataSetRow["saleqty_05viss_ss"] + dataSetRow["saleqty_025viss_ss"] + &#13;
+dataSetRow["saleqty_01viss_ss"] + dataSetRow["saleqty_1viss_ss"]+ dataSetRow["saleqty_drum_ss"] )</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation_32</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">dataSetRow["saleqty_1liter_ss"] + dataSetRow["saleqty_06liter_ss"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation_33</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">(dataSetRow["saleqty_10viss_ss"]+dataSetRow["saleqty_5viss_ss"]+dataSetRow["saleqty_3viss_ss"]+&#13;
+dataSetRow["saleqty_2viss_ss"]+dataSetRow["saleqty_05viss_ss"] +dataSetRow["saleqty_025viss_ss"] + &#13;
+dataSetRow["saleqty_01viss_ss"] + dataSetRow["saleqty_1viss_ss"]+ dataSetRow["saleqty_drum_ss"]) +&#13;
+((dataSetRow["saleqty_1liter_ss"]+dataSetRow["saleqty_06liter_ss"]) *0.575)</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
                 </structure>
             </list-property>
             <column id="519">
@@ -7341,94 +7687,12 @@ dataSetRow["saleamt_01viss_ss"]&#13;
                         </data>
                     </cell>
                 </row>
-                <row id="1883">
-                    <property name="height">0.25833333333333336in</property>
-                    <cell id="1884">
-                        <property name="colSpan">2</property>
-                        <property name="rowSpan">1</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <label id="1971">
-                            <property name="fontSize">8pt</property>
-                            <property name="textAlign">right</property>
-                            <text-property name="text">Weight in Viss : </text-property>
-                        </label>
-                    </cell>
-                    <cell id="1886">
-                        <property name="colSpan">28</property>
-                        <property name="rowSpan">1</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <data id="1973">
-                            <property name="fontSize">8pt</property>
-                            <property name="paddingLeft">2pt</property>
-                            <structure name="numberFormat">
-                                <property name="category">Currency</property>
-                                <property name="pattern">#,##0.0;(#,##0.0){RoundingMode=HALF_UP}</property>
-                            </structure>
-                            <property name="textAlign">left</property>
-                            <property name="resultSetColumn">Aggregation_20</property>
-                        </data>
-                    </cell>
-                </row>
-                <row id="1912">
-                    <property name="height">0.25833333333333336in</property>
-                    <cell id="1913">
-                        <property name="colSpan">2</property>
-                        <property name="rowSpan">1</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <label id="1689">
-                            <property name="fontSize">8pt</property>
-                            <property name="textAlign">right</property>
-                            <text-property name="text">Weight in Liter : </text-property>
-                        </label>
-                    </cell>
-                    <cell id="1915">
-                        <property name="colSpan">28</property>
-                        <property name="rowSpan">1</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <data id="1974">
-                            <property name="fontSize">8pt</property>
-                            <property name="paddingLeft">2pt</property>
-                            <structure name="numberFormat">
-                                <property name="category">Currency</property>
-                                <property name="pattern">#,##0.0;(#,##0.0){RoundingMode=HALF_UP}</property>
-                            </structure>
-                            <property name="textAlign">left</property>
-                            <property name="resultSetColumn">Aggregation_21</property>
-                        </data>
-                    </cell>
-                </row>
                 <row id="1941">
+                    <property name="fontWeight">bold</property>
+                    <property name="verticalAlign">middle</property>
                     <property name="height">0.25833333333333336in</property>
                     <cell id="1942">
-                        <property name="colSpan">2</property>
+                        <property name="colSpan">3</property>
                         <property name="rowSpan">1</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -7441,11 +7705,11 @@ dataSetRow["saleamt_01viss_ss"]&#13;
                         <label id="1690">
                             <property name="fontSize">8pt</property>
                             <property name="textAlign">right</property>
-                            <text-property name="text">Viss Total : </text-property>
+                            <text-property name="text">Peanut Oil Total in Viss: </text-property>
                         </label>
                     </cell>
-                    <cell id="1944">
-                        <property name="colSpan">28</property>
+                    <cell id="2295">
+                        <property name="colSpan">27</property>
                         <property name="rowSpan">1</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -7467,9 +7731,53 @@ dataSetRow["saleamt_01viss_ss"]&#13;
                         </data>
                     </cell>
                 </row>
+                <row id="2153">
+                    <property name="fontWeight">bold</property>
+                    <property name="verticalAlign">middle</property>
+                    <property name="height">0.25833333333333336in</property>
+                    <cell id="2154">
+                        <property name="colSpan">3</property>
+                        <property name="rowSpan">1</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="2184">
+                            <property name="fontSize">8pt</property>
+                            <property name="textAlign">right</property>
+                            <text-property name="text">Sesame Oil Total in Viss : </text-property>
+                        </label>
+                    </cell>
+                    <cell id="2322">
+                        <property name="colSpan">27</property>
+                        <property name="rowSpan">1</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="2186">
+                            <property name="fontSize">8pt</property>
+                            <property name="marginLeft">0pt</property>
+                            <property name="paddingLeft">2pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.0;(#,##0.0){RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">left</property>
+                            <property name="resultSetColumn">Aggregation_33</property>
+                        </data>
+                    </cell>
+                </row>
             </footer>
         </table>
-        <label id="641"/>
         <grid id="306">
             <property name="height">0.5416666666666666in</property>
             <property name="width">16.45in</property>
@@ -7549,6 +7857,7 @@ dataSetRow["saleamt_01viss_ss"]&#13;
                 </cell>
             </row>
         </grid>
+        <label id="641"/>
     </body>
     <property name="pageVariables">
         <variable-element name="NewVariableElement">

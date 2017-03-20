@@ -4859,6 +4859,42 @@ ORDER BY pp.id)a )b group by b.customerss,customer_id)sale_qty on sale_qty.custo
                     </list-property>
                     <property name="allowExport">true</property>
                 </structure>
+                <structure>
+                    <property name="name">Aggregation</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">dataSetRow["peanutpc"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation_1</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">dataSetRow["sesamepc"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation_4</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">dataSetRow["premierpc"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
             </list-property>
             <column id="2334">
                 <property name="width">2.05in</property>
@@ -4913,15 +4949,14 @@ ORDER BY pp.id)a )b group by b.customerss,customer_id)sale_qty on sale_qty.custo
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <property name="verticalAlign">middle</property>
-                        <data id="2410">
+                        <data id="2444">
                             <property name="fontSize">8pt</property>
-                            <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
                                 <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
-                            <property name="resultSetColumn">peanutpc</property>
+                            <property name="resultSetColumn">Aggregation</property>
                         </data>
                     </cell>
                     <cell id="2425">
@@ -4934,15 +4969,14 @@ ORDER BY pp.id)a )b group by b.customerss,customer_id)sale_qty on sale_qty.custo
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <property name="verticalAlign">middle</property>
-                        <data id="2408">
+                        <data id="2445">
                             <property name="fontSize">8pt</property>
-                            <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
                                 <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
-                            <property name="resultSetColumn">sesamepc</property>
+                            <property name="resultSetColumn">Aggregation_1</property>
                         </data>
                     </cell>
                     <cell id="2426">
@@ -4955,15 +4989,14 @@ ORDER BY pp.id)a )b group by b.customerss,customer_id)sale_qty on sale_qty.custo
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <property name="verticalAlign">middle</property>
-                        <data id="2409">
+                        <data id="2446">
                             <property name="fontSize">8pt</property>
-                            <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
                                 <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
-                            <property name="resultSetColumn">premierpc</property>
+                            <property name="resultSetColumn">Aggregation_4</property>
                         </data>
                     </cell>
                     <cell id="2427">
