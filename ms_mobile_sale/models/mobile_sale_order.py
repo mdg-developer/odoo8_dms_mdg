@@ -1348,7 +1348,6 @@ class mobile_sale_order(osv.osv):
                 mobile_sale_order_obj = self.pool.get('mobile.sale.order.line')
                 pre_sale_order_obj = self.pool.get('pre.sale.order.line')
                 payment_obj = self.pool.get('customer.payment')
-                print 'user_iddddddddddddd', user_id, type(user_id)
                 cursor.execute("select default_section_id from res_users where id=%s", (user_id,))
                 team_id = cursor.fetchone()[0]            
                 print 'team_id', team_id,de_date
