@@ -30,6 +30,8 @@
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
 				<tree string="Code">
+					<field name="branch_id" />
+
 					<field name="city_id" />
 					<field name="township_id" />
 					<field name="sale_channel_id" />
@@ -47,6 +49,7 @@
 				<form string="Code">
 					<sheet>
 						<group>
+							<field name="branch_id" />
 							<field name="city_id" />
 							<field name="township_id" />
 							<field name="sale_channel_id" />

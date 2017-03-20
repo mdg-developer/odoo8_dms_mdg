@@ -4,6 +4,7 @@ class res_code(osv.osv):
     _name = "res.code"
     _columns = {
                'city_id':fields.many2one('res.city', string='City'),
+               'branch_id':fields.many2one('res.branch', string='Branch'),
                'township_id':fields.many2one('res.township', string='Township'),
                'sale_channel_id':fields.many2one('sale.channel', string='Channel'),
                'nextnumber':fields.integer(string='Next Number'),
@@ -16,6 +17,7 @@ class res_code(osv.osv):
         if ids:
             for obj in self.browse(cr, uid, ids, context=context):
                 city = obj.city_id.code
+                branch=obj.branch_id.branch_code
                 township = obj.township_id.code
                 sale_channel = obj.sale_channel_id.code
                 nextNumber = obj.nextnumber
@@ -23,9 +25,9 @@ class res_code(osv.osv):
                 is_flag=obj.is_flag
                 code = None
 #                if city and township and sale_channel and nextNumber and padding:
-                if city and nextNumber and padding:
+                if branch and nextNumber and padding:
 #                    code = city + '-' + township + '-' + sale_channel
-                    code = city
+                    code = branch
                     result = None
                     while(len(str(nextNumber)) <= padding - 1):
                         nextNumber = '0' + str(nextNumber)
