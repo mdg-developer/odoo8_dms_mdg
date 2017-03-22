@@ -9,7 +9,7 @@
 			<field name="name">Stock Taking and Loading Instruction Form</field>
 			<field name="model">stock.taking.loading.instruction</field>
 			<field name="arch" type="xml">
-				<form string=">Stock Taking and Loading Instruction Form">
+				<form string="Stock Taking and Loading Instruction Form">
 <!-- 					<header> -->
 <!-- 						<button name="confirm" string="Sale Manager Approve" class="oe_highlight" -->
 <!-- 							type="object" states="draft" groups="stock.group_stock_manager" /> -->
@@ -84,7 +84,7 @@
 
 
 		<record id="view_stock_taking_loading_instruction_filter" model="ir.ui.view">
-			<field name="name">Stock Taking and Loading InstructionFilter</field>
+			<field name="name">Stock Taking and Loading Instruction Filter</field>
 			<field name="model">stock.taking.loading.instruction</field>
 			<field name="arch" type="xml">
 				<search string="Search Stock Taking and Loading Instruction">

@@ -144,7 +144,7 @@ class stock_taking_loading_instruction_line(osv.osv):  # #prod_pricelist_update_
     _columns = {                
         'line_id':fields.many2one('stock.taking.loading.instruction', 'Line', ondelete='cascade', select=True),
         'request_id':fields.many2one('stock.requisition', 'RFI-Ref:', readonly=True),        
-        'product_id': fields.many2one('product.product', 'Item Description', required=True),               
+        'product_id': fields.many2one('product.product', 'Product', required=True),                  
         'batch_no':fields.char('Batch No'),
         'expiry_date':fields.datetime('Expiry'),
         'storage_location':fields.many2one('stock.location','Storage Location'),
