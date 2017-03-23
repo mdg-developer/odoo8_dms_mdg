@@ -10,5 +10,11 @@
 		<report id="report_stock_request" model="stock.requisition" string="RFI Report"
 			report_type="qweb-pdf" name="stock_requisition.stock_request" file="stock_requisition.stock_request"
 			attachment_use="True" attachment="('Request For Issue')+'.pdf'" />
+			
+		<!-- Stock Taking and Loading Instruction -->
+		<report id="report_stock_taking_loading_instruction" model="stock.taking.loading.instruction" string="STLI Report"
+			report_type="qweb-pdf" name="stock_requisition.report_stock_taking_loading_instruction_document" file="stock_requisition.report_stock_taking_loading_instruction_document"
+			attachment_use="True" attachment="('Stock Taking and Loading Instruction')+'.pdf'" />	
+			
 	</data>
 </openerp>
