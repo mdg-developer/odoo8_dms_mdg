@@ -49,6 +49,7 @@ Request For Issue And Good Issue Note Module
         'reports/stock_return_note.xml',
 		'views/stock_taking_loading_instruction_view.xml',
 		'views/way_bill_view.xml',
+		'views/stock_return_note_view.xml',
     ],
     'test': [
 
