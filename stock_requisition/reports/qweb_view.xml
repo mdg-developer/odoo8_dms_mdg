@@ -14,7 +14,11 @@
 		<!-- Stock Taking and Loading Instruction -->
 		<report id="report_stock_taking_loading_instruction" model="stock.taking.loading.instruction" string="STLI Report"
 			report_type="qweb-pdf" name="stock_requisition.report_stock_taking_loading_instruction_document" file="stock_requisition.report_stock_taking_loading_instruction_document"
-			attachment_use="True" attachment="('Stock Taking and Loading Instruction')+'.pdf'" />	
-			
+			attachment_use="True" attachment="('Stock Taking and Loading Instruction')+'.pdf'" />			
+		
+		<!-- Way Bill -->
+		<report id="report_way_bill" model="way.bill" string="Way Bill Report"
+			report_type="qweb-pdf" name="stock_requisition.report_way_bill_document" file="stock_requisition.report_way_bill_document"
+			attachment_use="True" attachment="('Way Bill')+'.pdf'" />		
 	</data>
 </openerp>
