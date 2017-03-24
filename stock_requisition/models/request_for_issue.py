@@ -31,10 +31,10 @@ class issue_requisition(osv.osv):
     _columns = {
         'name': fields.char('(TR) Ref:No.', readonly=True),
         'request_id':fields.many2one('stock.requisition', '(RFI) Ref:No.', readonly=True),
-        'from_location_id':fields.many2one('stock.location', 'Request From'),
+        'request_from':fields.many2one('res.users', 'Request From'),
         'to_location_id':fields.many2one('stock.location', 'Request To'),
         'so_no' : fields.char('Reference of Sales Request'),
-        'issue_to':fields.many2one('res.users', "Issue To"),
+        'issue_for':fields.many2one('stock.location', "Issue For"),
         'request_date' : fields.datetime('Date Requested'),
          'issue_date':fields.datetime('Date For Issue'),
         'state': fields.selection([
@@ -47,6 +47,7 @@ class issue_requisition(osv.osv):
                but waiting for the scheduler to run on the order date.", select=True),
         'p_line':fields.one2many('issue.requisition.line', 'line_id', 'Product Lines',
                               copy=True),
+        'vehicle_id':fields.many2one('fleet.vehicle', 'Vehicle No'),
         
 
 }
@@ -113,16 +114,20 @@ class issue_requisition_line(osv.osv):  # #prod_pricelist_update_line
             values = {
                 'product_uom': product.product_tmpl_id.uom_id and product.product_tmpl_id.uom_id.id or False,
                 'uom_ratio': product.product_tmpl_id.uom_ratio,
+                'big_uom_id': product.product_tmpl_id.big_uom_id and product.product_tmpl_id.big_uom_id.id or False,
             }
         return {'value': values}
-        
+    
     _columns = {                
         'line_id':fields.many2one('issue.requisition', 'Line', ondelete='cascade', select=True),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'req_quantity' : fields.float(string='Qty', digits=(16, 0)),
-        'product_uom': fields.many2one('product.uom', 'UOM', required=True),
-                'uom_ratio':fields.char('Packing Unit'),
-                'remark':fields.char('Remark'),
+        #'product_uom': fields.many2one('product.uom', 'UOM', required=True),
+        'product_uom': fields.many2one('product.uom', 'Smaller UOM',readonly=True),
+        'uom_ratio':fields.char('Packing Unit'),
+        'remark':fields.char('Remark'),
+        'big_uom_id': fields.many2one('product.uom', 'Bigger UOM',  help="Default Unit of Measure used for all stock operation.",readonly=True),
+        'big_req_quantity' : fields.float(string='Qty', digits=(16, 0)),
     }
         
    
