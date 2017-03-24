@@ -20,5 +20,11 @@
 		<report id="report_way_bill" model="way.bill" string="Way Bill Report"
 			report_type="qweb-pdf" name="stock_requisition.report_way_bill_document" file="stock_requisition.report_way_bill_document"
 			attachment_use="True" attachment="('Way Bill')+'.pdf'" />		
+			
+		<!-- Stock Return Note -->
+		<report id="report_stock_return_note" model="stock.return.note" string="Stock Return Note Report"
+			report_type="qweb-pdf" name="stock_requisition.report_stock_return_note_document" file="stock_requisition.report_stock_return_note_document"
+			attachment_use="True" attachment="('SRN')+'.pdf'" />			
+			
 	</data>
 </openerp>
