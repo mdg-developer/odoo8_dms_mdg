@@ -11,3 +11,5 @@ import account_ext
 import sale_team
 import customer_asset
 import ar_collection
+import purchase
+import mrp

@@ -36,6 +36,7 @@ Branch Customization
     'data': [
         'views/res_users_view.xml', 
          'views/sale_order_view.xml',
+         'views/purchase_view.xml',
          'views/sale_rental_view.xml',
          'views/sale_denomination_view.xml',
          'views/sale_approval_view.xml',
@@ -47,6 +48,7 @@ Branch Customization
          'views/sale_team_view.xml',
          'views/customer_asset_view.xml',
          'views/ar_collection_view.xml',
+         'views/mrp_view.xml',
                 ],
     'installable': True,
     'auto_install': False,
