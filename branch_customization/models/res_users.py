@@ -17,4 +17,11 @@ class res_users(osv.osv):
     _columns = {
         'branch_ids':fields.many2many('res.branch','res_branch_users_rel','user_id','bid','Branches',required=True),
     }
+    
+    def create(self, cr,uid,vals,context=None):
+        print 'res_user_val',vals
+        context['branch_id'] = vals['branch_id']
+        user = super(res_users, self).create(cr,uid,vals,context)
+        return user
+    
 res_users()

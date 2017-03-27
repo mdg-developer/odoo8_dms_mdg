@@ -70,6 +70,17 @@ class res_partner(osv.osv):
     _inherit = 'res.partner'
     _period_number = 5
     
+    
+    def create(self, cr,uid,vals,context=None):
+        
+        if 'branch_id' in context and 'branch_id' not in vals:
+            vals['branch_id'] = context['branch_id']
+        #user = user_obj.browse(cr,uid,[uid])
+        #if user.branch_id:
+        #    vals['branch_id'] = user.branch_id
+        partner = super(res_partner, self).create(cr,uid,vals,context)
+        return partner
+    
     def _get_default_pricelist(self, cr, uid, ids, field_name, arg, context=None):
         result = {}
         for rec in self.browse(cr, uid, ids, context=context):
