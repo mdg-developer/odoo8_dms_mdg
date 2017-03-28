@@ -37,9 +37,9 @@ product_pricelist()
 class product_pricelist_version(osv.osv):
     _inherit = 'product.pricelist.version'
     _columns = {
-          #           'branch_id': fields.related('pricelist_id','branch_id',type='many2one',
-#             readonly=True, relation='res.branch', string='Branch', store=True),
-             'branch_id':fields.many2one('res.branch', string='Branch'),                         
+             'branch_id': fields.related('pricelist_id','branch_id',type='many2one',
+              relation='res.branch', string='Branch', store=True),
+#             'branch_id':fields.many2one('res.branch', string='Branch'),                         
              'date_start': fields.date('Start Date', help="First valid date for the version.", required=True),
              'date_end': fields.date('End Date', help="Last valid date for the version.", required=True),
               }
