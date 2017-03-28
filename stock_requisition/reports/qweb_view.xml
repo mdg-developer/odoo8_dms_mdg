@@ -24,7 +24,12 @@
 		<!-- Stock Return Note -->
 		<report id="report_stock_return_note" model="stock.return.note" string="Stock Return Note Report"
 			report_type="qweb-pdf" name="stock_requisition.report_stock_return_note_document" file="stock_requisition.report_stock_return_note_document"
-			attachment_use="True" attachment="('SRN')+'.pdf'" />			
+			attachment_use="True" attachment="('SRN')+'.pdf'" />
+			
+		<!-- Good Issue Note-TR-->
+		<report id="report_good_issue_note_tr" model="good.issue.note.tr" string="GIN-TR Report"
+			report_type="qweb-pdf" name="stock_requisition.report_good_issue_note_tr_document" file="stock_requisition.report_good_issue_note_tr_document"
+			attachment_use="True" attachment="('Good Issue Note-TR')+'.pdf'" />			
 			
 	</data>
 </openerp>
