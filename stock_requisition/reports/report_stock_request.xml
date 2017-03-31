@@ -2,7 +2,7 @@
 <openerp>
 	<data>
 		<template id="report_stock_request_document">
-			<t t-call="sale_management.invoice_custom_layout">
+			<t t-call="stock_requisition.stock_req_layout">
         <div class="page">
             <div class="row">
                 <div class="col-xs-5 col-xs-offset-7">
@@ -93,7 +93,9 @@
                       	<strong>Company:</strong>
                       </td>
                       <td>
-                          <p t-field="o.company_id.name"/>
+                          <!-- <p t-field="o.company_id.name"/> -->
+                          <img src="/sale_management/static/description/amh_comany.png"
+													style="max-height: 100pt;width:150px;" />
                       </td>
                       <td>
                           <strong>Approved By:</strong>
@@ -160,7 +162,7 @@
                 </tbody>
 			</table>
 			<br/>
-			<strong>FO-ST-10 REV-00</strong>
+			<!-- <strong>FO-ST-10 REV-00</strong> -->
         </div>
    		</t>
 		</template>

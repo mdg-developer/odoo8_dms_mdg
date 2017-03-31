@@ -4,9 +4,9 @@
 		<template id="report_invoice_document" inherit_id="account.report_invoice_document">
 			<xpath expr="//t[@t-call='report.external_layout']" position="replace">
 
-				<!-- <t t-call="sale_management.invoice_custom_layout"> -->
+				<t t-call="sale_management.invoice_custom_layout">
 					<div class="page" style="font-size:10pt;">
-						<div class="row" style="padding-top:-2s0pt;">
+						<!-- <div class="row" style="padding-top:-2s0pt;">
 							<center>
 								<img src="/sale_management/static/description/AMH_Header.png"
 									style="max-height: 250pt;width:700px;" /><br/>
@@ -14,7 +14,7 @@
 								style="max-height: 250pt;width:700px;" />
 							</center>
 							
-						</div>
+						</div> -->
 						<div class="row" style="padding-top:-2s0pt;">
 							<center>
 							<span style="align:center;font-size:20pt;">INVOICE
@@ -374,8 +374,11 @@
 							<br/>
 						</div>
 						<br/>
-						<strong>FO-SM-03 REV-00</strong>
+						<!-- <table style="height:1250px; width=100%;overflow-y:hidden; table-layout: fixed;">
+							<strong>FO-SM-03 REV-00</strong>
+						</table> -->
 					</div>
+					</t>
 			</xpath>
 		</template>
 	</data>

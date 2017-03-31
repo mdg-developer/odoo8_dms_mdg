@@ -2,20 +2,21 @@
 <openerp>
 	<data>
 		<template id="report_good_issue_note_document">
-			<!-- <t t-call="sale_management.invoice_custom_layout"> -->
-			<xpath expr="//t[@t-call='report.external_layout']" position="replace">
+			<t t-call="stock_requisition.gin_custom_layout">
 				<div class="page">
-					<div class="row" style="padding-top:-2s0pt;">
+					<!-- <div class="row" style="padding-top:-2s0pt;">
 						<center>
 							<img src="/sale_management/static/description/AMH_Header.png"
 								style="max-height: 250pt;width:700px;" />
 							<br />
-							<h3>
-								<p>Good Issue Note</p>
-							</h3>
+							
 						</center>
 
-					</div>
+					</div> -->
+					<br />
+					<h3>
+						<p>Good Issue Note</p>
+					</h3>
 					<br />
 					<table class="table"
 						style='border:solid;border-color:white;margin-top:-20pt;'>
@@ -191,10 +192,9 @@
 						</tbody>
 					</table>
 					<br/>
-					<strong>FO-ST-07 REV-00</strong>
+					<!-- <strong>FO-ST-07 REV-00</strong> -->
 				</div>
-				<!-- </t> -->
-			</xpath>
+				</t>
 		</template>
 
 		<template id="good_issue_note">
