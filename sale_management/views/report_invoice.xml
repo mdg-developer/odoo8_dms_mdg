@@ -292,14 +292,14 @@
 					                <strong> Kyats Exactly )</strong>
 					                <strong> received.</strong>
 					            </p>
-					            
+					     <br/>       
 						<div class="row" style="padding-top:-2s0pt;">
-							<div class="col-xs-3 pull-left">
+							<!-- <div class="col-xs-3 pull-left">
 								<table class="table" style='border:solid;border-color:white;'>
 									<tr style='border:solid;border-color:white;'>
 										<td style="margin-top:-10pt;" align="center">
 											<span>
-												------------------
+												
 											</span>
 										</td>
 									</tr>
@@ -321,7 +321,7 @@
 									<tr style='border:solid;border-color:white;'>
 										<td style="margin-top:-10pt;" align="center">
 											<span>
-												------------------
+												
 											</span>
 										</td>
 									</tr>
@@ -334,20 +334,48 @@
 										</td>
 									</tr>
 								</table>
-
-							</div>
+							</div> -->
+								
+									<div class="col-xs-3 pull-left">
+										<table class="table" style='border:solid;border-color:white;'>
+											<tr style='border:solid;border-color:white;'>
+												<td style="margin-top:-10pt;" align="center">
+													<strong>
+														Prepared By
+													</strong>
+												</td>
+											</tr>
+										</table>
+									</div>
+									
+									<div class="col-xs-6 pull-left">
+										<table class="table" style='border:solid;border-color:white;'>
+											<tr style='border:solid;border-color:white;'>
+												<td style="margin-top:-10pt;" align="center">
+													<strong>
+														Checked By
+													</strong>
+												</td>
+											</tr>
+										</table>
+									</div>
+									
+									<div class="col-xs-3 pull-right">
+										<table class="table" style='border:solid;border-color:white;'>
+											<tr style='border:solid;border-color:white;'>
+												<td style="margin-top:-10pt;" align="center">
+													<strong>
+														Approved By
+													</strong>
+												</td>
+											</tr>
+										</table>
+									</div>
+							<br/>
 						</div>
-
-						<!-- <p t-if="o.comment">
-							<strong>Comment:</strong>
-							<span t-field="o.comment" />
-						</p>
-						<p t-if="o.fiscal_position.note">
-							<strong>Fiscal Position Remark:</strong>
-							<span t-field="o.fiscal_position.note" />
-						</p> -->
+						<br/>
+						<strong>FO-SM-03 REV-00</strong>
 					</div>
-				<!-- </t> -->
 			</xpath>
 		</template>
 	</data>

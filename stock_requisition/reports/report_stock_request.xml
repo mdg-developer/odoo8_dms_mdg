@@ -133,10 +133,15 @@
                     <tr>
                         <th></th>
                         <th>Requested By</th>
-                         <th>Approved By</th>
+                        <th>Approved By</th>
                     </tr>
                 </thead>
                <tbody class="invoice_tbody">
+				<tr height="50">
+                    <td>Signature</td>
+					<td></td>
+					<td></td>
+				</tr>
 				<tr t-foreach="o" t-as="l">
                     <td>Name</td>
                     <td><p t-field="l.request_by"/></td>
@@ -148,17 +153,14 @@
 					<td></td>
 				</tr>
 				<tr>
-                    <td>Signature</td>
-					<td></td>
-					<td></td>
-				</tr>
-				<tr>
                     <td>Date</td>
 					<td></td>
 					<td></td>
 				</tr>
                 </tbody>
 			</table>
+			<br/>
+			<strong>FO-ST-10 REV-00</strong>
         </div>
    		</t>
 		</template>
