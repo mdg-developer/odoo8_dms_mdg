@@ -57,12 +57,9 @@ ACTION_TYPES = [
     ('prod_x_get_y', _('Buy X get Y free')),
     ('buy_cat_get_x', _('Buy Category get X free')),
     ('buy_cat_get_x_cat', _('Buy Category get X Category free')),
-
     ('prod_x_get_x', _('Buy X get X free')),
     ('prod_multi_get_x', _('Buy Multi Products get X free')),
-    
     ('prod_categ_value_get_x', _('Buy Category Value get X free')),
-    
     ('prod_multi_get_x_conds', _('Buy Multi Products get X free by Condition')),
     ('prod_multi_uom_get_x', _('Buy Multi UOM get X free')),
     ('prod_multi_ratio_x',_('Buy Multi Product Ratio get X free')),
@@ -85,6 +82,31 @@ class PromotionsRules(osv.Model):
     _description = __doc__
     _order = 'sequence'
 
+    def generate_code(self, cr, uid, ids, val, context=None):
+            codeObj = self.pool.get('res.promotion.code')
+            code = None
+            codeResult = {}
+            if ids:
+                for proVal in self.browse(cr, uid, ids, context=context):
+                    if proVal:
+                        import datetime
+                        d = datetime.date.today()
+                        month='%02d' % d.month
+                        year =d.year
+                        if month and year:
+                            codeId = codeObj.search(cr, uid, [('month', '=', month), ('year', '=', year)])
+                            if codeId:
+                                code = codeObj.generateCode(cr, uid, codeId[0], context=context)
+                            else:
+                                codeResult = {'month':month, 'year':year, 'nextnumber':1, 'padding':3}
+                                codeId = codeObj.create(cr, uid, codeResult, context=context)
+                                code = codeObj.generateCode(cr, uid, codeId, context=context)
+                if code:
+                    self.write(cr, uid, ids, {'code':code}, context=context)
+
+            return True
+
+    
     def _check_positive_number(self, cr, uid, ids, context=None):
         record = self.browse(cr, uid, ids, context=context)
         for data in record:
@@ -123,7 +145,8 @@ class PromotionsRules(osv.Model):
         return res
     
     _columns = {
-        
+                
+        'code':fields.char('Promo Code', readonly=True),
         'name':fields.char('Promo Name', required=True),
         'description':fields.text('Description'),
         'active':fields.boolean('Active'),
@@ -511,9 +534,7 @@ class PromotionsRules(osv.Model):
             elif attribute == 'prods_qty':
                 svalue = value.split("|")
                 product_codes = svalue[0]
-                product_code = product_codes.split(";")
-                
-                
+                product_code = product_codes.split(";")               
                 product_qty = eval(svalue[1])
                 qtys = 0.0
                 for order_line in order.order_line:  
@@ -1011,8 +1032,7 @@ class PromotionsRulesConditionsExprs(osv.Model):
                              'value':"'category_code':0.00"
                              }
                     }
-            
-            
+               
             
         if attribute == 'fix_prods_qty':
             return {
@@ -1119,6 +1139,7 @@ class PromotionsRulesConditionsExprs(osv.Model):
                          'prods_multi_uom_qty',
                         ]:
             try:
+
                 svalue = value.split(':')
                 codes = svalue[0]
                 quantity = svalue[1]
