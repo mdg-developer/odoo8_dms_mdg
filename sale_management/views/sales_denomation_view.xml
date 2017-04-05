@@ -149,11 +149,11 @@
 								<field name="product_amount" />
 								<field name="ar_amount" />
 								<field name="dssr_ar_amount" />
-								<field name="total_amount"  />
+								<field name="total_amount" />
 								<field name="cheque_amount" />
 								<field name="bank_amount" />
 								<field name="trans_amount" />
-								<field name="diff_amount"  />
+								<field name="diff_amount" />
 							</group>
 						</group>
 					</sheet>
@@ -187,9 +187,9 @@
 					<field name="date" />
 					<field name="sale_team_id" />
 					<field name="user_id" />
-					<field name="dssr_ar_amount" invisible="1"/>
-					<field name="trans_amount" invisible="1"/>
-					<field name="diff_amount" invisible="1"/>
+					<field name="dssr_ar_amount" invisible="1" />
+					<field name="trans_amount" invisible="1" />
+					<field name="diff_amount" invisible="1" />
 				</tree>
 			</field>
 		</record>
