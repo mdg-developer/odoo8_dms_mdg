@@ -62,8 +62,13 @@ class stock_return(osv.osv):
             cr.execute('delete from stock_return_line where line_id=%s', (ids[0],))
             return_data = self.browse(cr, uid, ids, context=context)
             return_date = return_data.return_date
+            from_location_id=return_data.from_location.id
             # return_from=return_data.return_from.id            
             sale_team_id = return_data.sale_team_id.id
+            team_location_id=return_data.sale_team_id.location_id.id
+            if  from_location_id !=team_location_id :
+                raise osv.except_osv(_('Warning'),
+                                 _('Please Check Your Sales Team Location'))
             note_id = return_data.note_id.id
             #print 'sale_team_id', sale_team_id, ids                                               
 #             cr.execute("select id from good_issue_note where (issue_date+ '6 hour'::interval + '30 minutes'::interval)::date =%s and sale_team_id = %s" ,(return_date,sale_team_id,))
@@ -117,7 +122,7 @@ class stock_return(osv.osv):
                 sale_quantity = mobile_line.sale_quantity
                 foc_quantity = mobile_line.foc_quantity
                 small_uom_id = mobile_line.product_uom.id             
-                last_qty         =foc_quantity+sale_quantity
+                last_qty         = foc_quantity + sale_quantity
                 product_search = stock_return_obj.search(cr, uid, [('product_id', '=', product_id), ('line_id', '=', ids[0])], context=context) 
                 print ' substract_qty ',substract_qty
                 if product_search:
