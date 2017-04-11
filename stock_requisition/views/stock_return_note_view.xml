@@ -115,6 +115,6 @@
 
 
  <menuitem action='action_stock_return_note' id="menu_stock_return_note"
-			parent="stock.menu_stock_warehouse_mgmt" groups="stock.group_stock_manager" sequence="6"/>
+			parent="stock.menu_stock_warehouse_mgmt" groups="stock.group_stock_manager" sequence="13"/>
 	</data>
 </openerp>
