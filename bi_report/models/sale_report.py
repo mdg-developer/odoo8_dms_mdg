@@ -27,9 +27,9 @@ class sale_report(osv.osv):
     _description = "Sales Orders Statistics"
     _auto = False
     _rec_name = 'date'
-    _columns = {
+    _columns = {       
         'weight_viss':fields.float('Weight Viss'),
-        'weight_liter':fields.float('Weight Liter'),
+        'weight_liter':fields.float('Weight Liter')        
     }
     _order = 'date desc'
 
@@ -48,7 +48,7 @@ class sale_report(osv.osv):
                     l.product_id as product_id,
                     t.uom_id as product_uom,
                     sum(l.product_uom_qty / u.factor * u2.factor) as product_uom_qty,
-                    sum(l.product_uom_qty * l.price_unit / cr.rate * (100.0-l.discount) / 100.0) as price_total,
+                    sum(l.product_uom_qty * l.price_unit) as price_total,                      
                     count(*) as nbr,
                     s.date_order as date,
                     s.date_confirm as date_confirm,
@@ -90,7 +90,8 @@ class sale_report(osv.osv):
                     s.date_order,
                     s.date_confirm,
                     s.partner_id,
-                    s.user_id,
+                    s.deduct_amt,
+                    s.user_id,                  
                     s.company_id,
                     l.state,
                     s.pricelist_id,

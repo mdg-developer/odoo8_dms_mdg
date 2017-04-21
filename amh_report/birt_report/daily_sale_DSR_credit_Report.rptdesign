@@ -31,7 +31,7 @@
     </list-property>
     <parameters>
         <scalar-parameter name="from_date" id="1178">
-            <text-property name="promptText">From Date</text-property>
+            <text-property name="promptText">Date</text-property>
             <property name="valueType">static</property>
             <property name="isRequired">true</property>
             <property name="dataType">date</property>
@@ -141,9 +141,29 @@
             <property name="controlType">check-box</property>
             <structure name="format"/>
         </scalar-parameter>
+        <scalar-parameter name="branch" id="2356">
+            <text-property name="promptText">Branch</text-property>
+            <property name="valueType">dynamic</property>
+            <property name="isRequired">true</property>
+            <property name="dataSetName">branchDS</property>
+            <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
+            <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
+            <expression name="sortByColumn">dataSetRow["name"]</expression>
+            <property name="sortDirection">asc</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">list-box</property>
+            <property name="mustMatch">true</property>
+            <property name="fixedOrder">false</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="2071"
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="2357"
  extends="amh_library.Data Source"/>
     </data-sources>
     <data-sets>
@@ -313,6 +333,12 @@
                     <text-property name="heading">saleamt_06liter_peanut</text-property>
                 </structure>
                 <structure>
+                    <property name="columnName">saleamt_1_1liter_peanut</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">saleamt_1_1liter_peanut</text-property>
+                    <text-property name="heading">saleamt_1_1liter_peanut</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">saleamt_1liter_ss</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">saleamt_1liter_ss</text-property>
@@ -323,6 +349,12 @@
                     <property name="analysis">measure</property>
                     <text-property name="displayName">saleamt_06liter_ss</text-property>
                     <text-property name="heading">saleamt_06liter_ss</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">saleamt_1_1liter_ss</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">saleamt_1_1liter_ss</text-property>
+                    <text-property name="heading">saleamt_1_1liter_ss</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">saleamt_drum_peanut</property>
@@ -403,7 +435,7 @@
                     <text-property name="heading">saleqty_6liter_pp</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">saleqty_9liter_pp_43</property>
+                    <property name="columnName">saleqty_9liter_pp_45</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">saleqty_9liter_pp</text-property>
                     <text-property name="heading">saleqty_9liter_pp</text-property>
@@ -481,6 +513,12 @@
                     <text-property name="heading">saleqty_06liter_p</text-property>
                 </structure>
                 <structure>
+                    <property name="columnName">saleqty_1_1liter_p</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">saleqty_1_1liter_p</text-property>
+                    <text-property name="heading">saleqty_1_1liter_p</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">saleqty_1liter_ss</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">saleqty_1liter_ss</text-property>
@@ -491,6 +529,12 @@
                     <property name="analysis">measure</property>
                     <text-property name="displayName">saleqty_06liter_ss</text-property>
                     <text-property name="heading">saleqty_06liter_ss</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">saleqty_1_1liter_ss</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">saleqty_1_1liter_ss</text-property>
+                    <text-property name="heading">saleqty_1_1liter_ss</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">saleqty_drum_peanut</property>
@@ -721,18 +765,17 @@
                 </structure>
                 <structure>
                     <property name="name">param_16</property>
-                    <property name="paramName">presale</property>
+                    <property name="paramName">branch</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">boolean</property>
-                    <property name="nativeDataType">-7</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
                     <property name="position">16</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_17</property>
-                    <property name="paramName">directsale</property>
+                    <property name="paramName">presale</property>
                     <property name="nativeName"></property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
@@ -743,7 +786,7 @@
                 </structure>
                 <structure>
                     <property name="name">param_18</property>
-                    <property name="paramName">presale</property>
+                    <property name="paramName">directsale</property>
                     <property name="nativeName"></property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
@@ -753,7 +796,7 @@
                 </structure>
                 <structure>
                     <property name="name">param_19</property>
-                    <property name="paramName">directsale</property>
+                    <property name="paramName">presale</property>
                     <property name="nativeName"></property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
@@ -763,7 +806,7 @@
                 </structure>
                 <structure>
                     <property name="name">param_20</property>
-                    <property name="paramName">presale</property>
+                    <property name="paramName">directsale</property>
                     <property name="nativeName"></property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
@@ -773,7 +816,7 @@
                 </structure>
                 <structure>
                     <property name="name">param_21</property>
-                    <property name="paramName">directsale</property>
+                    <property name="paramName">presale</property>
                     <property name="nativeName"></property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
@@ -783,7 +826,7 @@
                 </structure>
                 <structure>
                     <property name="name">param_22</property>
-                    <property name="paramName">presale</property>
+                    <property name="paramName">directsale</property>
                     <property name="nativeName"></property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
@@ -793,11 +836,21 @@
                 </structure>
                 <structure>
                     <property name="name">param_23</property>
-                    <property name="paramName">directsale</property>
+                    <property name="paramName">presale</property>
                     <property name="nativeName"></property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">23</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_24</property>
+                    <property name="paramName">directsale</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">24</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -941,201 +994,221 @@
                     </structure>
                     <structure>
                         <property name="position">28</property>
-                        <property name="name">saleamt_1liter_ss</property>
+                        <property name="name">saleamt_1_1liter_peanut</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">29</property>
-                        <property name="name">saleamt_06liter_ss</property>
+                        <property name="name">saleamt_1liter_ss</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">30</property>
-                        <property name="name">saleamt_drum_peanut</property>
+                        <property name="name">saleamt_06liter_ss</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">31</property>
-                        <property name="name">saleamt_drum_ss</property>
+                        <property name="name">saleamt_1_1liter_ss</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">32</property>
-                        <property name="name">saleamt_drum_pp</property>
+                        <property name="name">saleamt_drum_peanut</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">33</property>
-                        <property name="name">saleamt_05viss_peanut</property>
+                        <property name="name">saleamt_drum_ss</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">34</property>
-                        <property name="name">saleamt_025viss_peanut</property>
+                        <property name="name">saleamt_drum_pp</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">35</property>
-                        <property name="name">saleamt_01viss_peanut</property>
+                        <property name="name">saleamt_05viss_peanut</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">36</property>
-                        <property name="name">saleamt_05viss_ss</property>
+                        <property name="name">saleamt_025viss_peanut</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">37</property>
-                        <property name="name">saleamt_025viss_ss</property>
+                        <property name="name">saleamt_01viss_peanut</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">38</property>
-                        <property name="name">saleamt_01viss_ss</property>
+                        <property name="name">saleamt_05viss_ss</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">39</property>
-                        <property name="name">saleqty_1liter_pp</property>
+                        <property name="name">saleamt_025viss_ss</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">40</property>
-                        <property name="name">saleqty_2liter_pp</property>
+                        <property name="name">saleamt_01viss_ss</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">41</property>
-                        <property name="name">saleqty_3liter_pp</property>
+                        <property name="name">saleqty_1liter_pp</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">42</property>
-                        <property name="name">saleqty_6liter_pp</property>
+                        <property name="name">saleqty_2liter_pp</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">43</property>
-                        <property name="name">saleqty_9liter_pp_43</property>
+                        <property name="name">saleqty_3liter_pp</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">44</property>
-                        <property name="name">saleqty_10viss_p</property>
+                        <property name="name">saleqty_6liter_pp</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">45</property>
-                        <property name="name">saleqty_5viss_p</property>
+                        <property name="name">saleqty_9liter_pp_45</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">46</property>
-                        <property name="name">saleqty_3viss_p</property>
+                        <property name="name">saleqty_10viss_p</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">47</property>
-                        <property name="name">saleqty_2viss_p</property>
+                        <property name="name">saleqty_5viss_p</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">48</property>
-                        <property name="name">saleqty_1viss_p</property>
+                        <property name="name">saleqty_3viss_p</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">49</property>
-                        <property name="name">saleqty_10viss_ss</property>
+                        <property name="name">saleqty_2viss_p</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">50</property>
-                        <property name="name">saleqty_5viss_ss</property>
+                        <property name="name">saleqty_1viss_p</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">51</property>
-                        <property name="name">saleqty_3viss_ss</property>
+                        <property name="name">saleqty_10viss_ss</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">52</property>
-                        <property name="name">saleqty_2viss_ss</property>
+                        <property name="name">saleqty_5viss_ss</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">53</property>
-                        <property name="name">saleqty_1viss_ss</property>
+                        <property name="name">saleqty_3viss_ss</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">54</property>
-                        <property name="name">saleqty_1liter_p</property>
+                        <property name="name">saleqty_2viss_ss</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">55</property>
-                        <property name="name">saleqty_06liter_p</property>
+                        <property name="name">saleqty_1viss_ss</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">56</property>
-                        <property name="name">saleqty_1liter_ss</property>
+                        <property name="name">saleqty_1liter_p</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">57</property>
-                        <property name="name">saleqty_06liter_ss</property>
+                        <property name="name">saleqty_06liter_p</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">58</property>
-                        <property name="name">saleqty_drum_peanut</property>
+                        <property name="name">saleqty_1_1liter_p</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">59</property>
-                        <property name="name">saleqty_drum_ss</property>
+                        <property name="name">saleqty_1liter_ss</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">60</property>
-                        <property name="name">saleqty_drum_pp</property>
+                        <property name="name">saleqty_06liter_ss</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">61</property>
-                        <property name="name">saleqty_05viss_peanut</property>
+                        <property name="name">saleqty_1_1liter_ss</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">62</property>
-                        <property name="name">saleqty_025viss_peanut</property>
+                        <property name="name">saleqty_drum_peanut</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">63</property>
-                        <property name="name">saleqty_01viss_peanut</property>
+                        <property name="name">saleqty_drum_ss</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">64</property>
-                        <property name="name">saleqty_05viss_ss</property>
+                        <property name="name">saleqty_drum_pp</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">65</property>
-                        <property name="name">saleqty_025viss_ss</property>
+                        <property name="name">saleqty_05viss_peanut</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">66</property>
-                        <property name="name">saleqty_01viss_ss</property>
+                        <property name="name">saleqty_025viss_peanut</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">67</property>
+                        <property name="name">saleqty_01viss_peanut</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">68</property>
+                        <property name="name">saleqty_05viss_ss</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">69</property>
+                        <property name="name">saleqty_025viss_ss</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">70</property>
+                        <property name="name">saleqty_01viss_ss</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">71</property>
                         <property name="name">balance</property>
                         <property name="dataType">float</property>
                     </structure>
@@ -1342,279 +1415,307 @@ this.queryText =this.queryText.replace("--$pricelist$", "and so.pricelist_id="+p
                 </structure>
                 <structure>
                     <property name="position">28</property>
+                    <property name="name">saleamt_1_1liter_peanut</property>
+                    <property name="nativeName">saleamt_1_1liter_peanut</property>
+                    <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
+                </structure>
+                <structure>
+                    <property name="position">29</property>
                     <property name="name">saleamt_1liter_ss</property>
                     <property name="nativeName">saleamt_1liter_ss</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">29</property>
+                    <property name="position">30</property>
                     <property name="name">saleamt_06liter_ss</property>
                     <property name="nativeName">saleamt_06liter_ss</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">30</property>
+                    <property name="position">31</property>
+                    <property name="name">saleamt_1_1liter_ss</property>
+                    <property name="nativeName">saleamt_1_1liter_ss</property>
+                    <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
+                </structure>
+                <structure>
+                    <property name="position">32</property>
                     <property name="name">saleamt_drum_peanut</property>
                     <property name="nativeName">saleamt_drum_peanut</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">31</property>
+                    <property name="position">33</property>
                     <property name="name">saleamt_drum_ss</property>
                     <property name="nativeName">saleamt_drum_ss</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">32</property>
+                    <property name="position">34</property>
                     <property name="name">saleamt_drum_pp</property>
                     <property name="nativeName">saleamt_drum_pp</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">33</property>
+                    <property name="position">35</property>
                     <property name="name">saleamt_05viss_peanut</property>
                     <property name="nativeName">saleamt_05viss_peanut</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">34</property>
+                    <property name="position">36</property>
                     <property name="name">saleamt_025viss_peanut</property>
                     <property name="nativeName">saleamt_025viss_peanut</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">35</property>
+                    <property name="position">37</property>
                     <property name="name">saleamt_01viss_peanut</property>
                     <property name="nativeName">saleamt_01viss_peanut</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">36</property>
+                    <property name="position">38</property>
                     <property name="name">saleamt_05viss_ss</property>
                     <property name="nativeName">saleamt_05viss_ss</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">37</property>
+                    <property name="position">39</property>
                     <property name="name">saleamt_025viss_ss</property>
                     <property name="nativeName">saleamt_025viss_ss</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">38</property>
+                    <property name="position">40</property>
                     <property name="name">saleamt_01viss_ss</property>
                     <property name="nativeName">saleamt_01viss_ss</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">39</property>
+                    <property name="position">41</property>
                     <property name="name">saleqty_1liter_pp</property>
                     <property name="nativeName">saleqty_1liter_pp</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">40</property>
+                    <property name="position">42</property>
                     <property name="name">saleqty_2liter_pp</property>
                     <property name="nativeName">saleqty_2liter_pp</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">41</property>
+                    <property name="position">43</property>
                     <property name="name">saleqty_3liter_pp</property>
                     <property name="nativeName">saleqty_3liter_pp</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">42</property>
+                    <property name="position">44</property>
                     <property name="name">saleqty_6liter_pp</property>
                     <property name="nativeName">saleqty_6liter_pp</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">43</property>
-                    <property name="name">saleqty_9liter_pp_43</property>
+                    <property name="position">45</property>
+                    <property name="name">saleqty_9liter_pp_45</property>
                     <property name="nativeName">saleqty_9liter_pp</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">44</property>
+                    <property name="position">46</property>
                     <property name="name">saleqty_10viss_p</property>
                     <property name="nativeName">saleqty_10viss_p</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">45</property>
+                    <property name="position">47</property>
                     <property name="name">saleqty_5viss_p</property>
                     <property name="nativeName">saleqty_5viss_p</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">46</property>
+                    <property name="position">48</property>
                     <property name="name">saleqty_3viss_p</property>
                     <property name="nativeName">saleqty_3viss_p</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">47</property>
+                    <property name="position">49</property>
                     <property name="name">saleqty_2viss_p</property>
                     <property name="nativeName">saleqty_2viss_p</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">48</property>
+                    <property name="position">50</property>
                     <property name="name">saleqty_1viss_p</property>
                     <property name="nativeName">saleqty_1viss_p</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">49</property>
+                    <property name="position">51</property>
                     <property name="name">saleqty_10viss_ss</property>
                     <property name="nativeName">saleqty_10viss_ss</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">50</property>
+                    <property name="position">52</property>
                     <property name="name">saleqty_5viss_ss</property>
                     <property name="nativeName">saleqty_5viss_ss</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">51</property>
+                    <property name="position">53</property>
                     <property name="name">saleqty_3viss_ss</property>
                     <property name="nativeName">saleqty_3viss_ss</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">52</property>
+                    <property name="position">54</property>
                     <property name="name">saleqty_2viss_ss</property>
                     <property name="nativeName">saleqty_2viss_ss</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">53</property>
+                    <property name="position">55</property>
                     <property name="name">saleqty_1viss_ss</property>
                     <property name="nativeName">saleqty_1viss_ss</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">54</property>
+                    <property name="position">56</property>
                     <property name="name">saleqty_1liter_p</property>
                     <property name="nativeName">saleqty_1liter_p</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">55</property>
+                    <property name="position">57</property>
                     <property name="name">saleqty_06liter_p</property>
                     <property name="nativeName">saleqty_06liter_p</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">56</property>
+                    <property name="position">58</property>
+                    <property name="name">saleqty_1_1liter_p</property>
+                    <property name="nativeName">saleqty_1_1liter_p</property>
+                    <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
+                </structure>
+                <structure>
+                    <property name="position">59</property>
                     <property name="name">saleqty_1liter_ss</property>
                     <property name="nativeName">saleqty_1liter_ss</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">57</property>
+                    <property name="position">60</property>
                     <property name="name">saleqty_06liter_ss</property>
                     <property name="nativeName">saleqty_06liter_ss</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">58</property>
+                    <property name="position">61</property>
+                    <property name="name">saleqty_1_1liter_ss</property>
+                    <property name="nativeName">saleqty_1_1liter_ss</property>
+                    <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
+                </structure>
+                <structure>
+                    <property name="position">62</property>
                     <property name="name">saleqty_drum_peanut</property>
                     <property name="nativeName">saleqty_drum_peanut</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">59</property>
+                    <property name="position">63</property>
                     <property name="name">saleqty_drum_ss</property>
                     <property name="nativeName">saleqty_drum_ss</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">60</property>
+                    <property name="position">64</property>
                     <property name="name">saleqty_drum_pp</property>
                     <property name="nativeName">saleqty_drum_pp</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">61</property>
+                    <property name="position">65</property>
                     <property name="name">saleqty_05viss_peanut</property>
                     <property name="nativeName">saleqty_05viss_peanut</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">62</property>
+                    <property name="position">66</property>
                     <property name="name">saleqty_025viss_peanut</property>
                     <property name="nativeName">saleqty_025viss_peanut</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">63</property>
+                    <property name="position">67</property>
                     <property name="name">saleqty_01viss_peanut</property>
                     <property name="nativeName">saleqty_01viss_peanut</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">64</property>
+                    <property name="position">68</property>
                     <property name="name">saleqty_05viss_ss</property>
                     <property name="nativeName">saleqty_05viss_ss</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">65</property>
+                    <property name="position">69</property>
                     <property name="name">saleqty_025viss_ss</property>
                     <property name="nativeName">saleqty_025viss_ss</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">66</property>
+                    <property name="position">70</property>
                     <property name="name">saleqty_01viss_ss</property>
                     <property name="nativeName">saleqty_01viss_ss</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">67</property>
+                    <property name="position">71</property>
                     <property name="name">balance</property>
                     <property name="nativeName">balance</property>
                     <property name="dataType">float</property>
@@ -1649,8 +1750,10 @@ sum(AA.saleamt_2viss_ss) as saleamt_2viss_ss,
 sum(AA.saleamt_1viss_ss) as saleamt_1viss_ss,
 sum(AA.saleamt_1liter_peanut) as saleamt_1liter_peanut,
 sum(AA.saleamt_06liter_peanut) as saleamt_06liter_peanut,
+sum(AA.saleamt_1_1Liter_Peanut) as saleamt_1_1Liter_Peanut,
 sum(AA.saleamt_1liter_ss) as saleamt_1liter_ss,
 sum(AA.saleamt_06liter_ss) as saleamt_06liter_ss,
+sum(AA.saleamt_1_1Liter_SS) as saleamt_1_1Liter_SS,
 sum(AA.saleamt_Drum_Peanut) as saleamt_Drum_Peanut,
 sum(AA.saleamt_Drum_SS) as saleamt_Drum_SS,
 sum(AA.saleamt_06liter_ss) as saleamt_Drum_PP,
@@ -1677,8 +1780,10 @@ sum(saleqty_2Viss_SS) as saleqty_2Viss_SS,
 sum(saleqty_1Viss_SS) as saleqty_1Viss_SS,
 sum(saleqty_1Liter_P) as saleqty_1Liter_P,
 sum(saleqty_06Liter_P) as saleqty_06Liter_P,
+sum(saleqty_1_1Liter_P) as saleqty_1_1Liter_P,
 sum(saleqty_1Liter_SS) as saleqty_1Liter_SS,
 sum(saleqty_06Liter_SS) as saleqty_06Liter_SS,
+sum(saleqty_1_1Liter_SS) as saleqty_1_1Liter_SS,
 sum(saleqty_Drum_Peanut) as saleqty_Drum_Peanut,
 sum(saleqty_Drum_SS) as saleqty_Drum_SS,
 sum(saleqty_Drum_PP) as saleqty_Drum_PP,
@@ -1701,7 +1806,7 @@ sol.product_uom, rp.name as customer_name,rp.id as customer_id,rp.customer_code,
 from sale_order so,sale_order_line sol,res_partner rp
 where so.id = sol.order_id and rp.id=so.partner_id 
 and so.state!='cancel' 
-and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ? and so.section_id = ? and so.user_id  = ? and rp.active='t' 
+and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ? and so.section_id = ? and so.user_id  = ? and so.branch_id=? and rp.active='t' 
 and so.payment_type='credit' 
 and case 
 when ? = TRUE and ? = TRUE then so.pre_order in (TRUE,FALSE) 
@@ -1729,8 +1834,10 @@ CASE (select dcode(sale.product_id)) WHEN 'S00002' THEN (SELECT CAST(sale.sale_q
 CASE (select dcode(sale.product_id)) WHEN 'S00001' THEN (SELECT CAST(sale.sale_qty AS FLOAT)) ELSE 0 END AS saleamt_1Viss_SS,
 CASE (select dcode(sale.product_id)) WHEN 'P00011' THEN (SELECT CAST(sale.sale_qty AS FLOAT)) ELSE 0 END AS saleamt_1Liter_Peanut,
 CASE (select dcode(sale.product_id)) WHEN 'P00012' THEN (SELECT CAST(sale.sale_qty AS FLOAT)) ELSE 0 END AS saleamt_06Liter_Peanut,
+CASE (select dcode(sale.product_id)) WHEN 'P00021' THEN (SELECT CAST(sale.sale_qty AS FLOAT)) ELSE 0 END AS saleamt_1_1Liter_Peanut,
 CASE (select dcode(sale.product_id)) WHEN 'S00011' THEN (SELECT CAST(sale.sale_qty AS FLOAT)) ELSE 0 END AS saleamt_1Liter_SS,
 CASE (select dcode(sale.product_id)) WHEN 'S00012' THEN (SELECT CAST(sale.sale_qty AS FLOAT)) ELSE 0 END AS saleamt_06Liter_SS,
+CASE (select dcode(sale.product_id)) WHEN 'S00021' THEN (SELECT CAST(sale.sale_qty AS FLOAT)) ELSE 0 END AS saleamt_1_1Liter_SS,
 CASE (select dcode(sale.product_id)) WHEN 'PD00001' THEN (SELECT CAST(sale.sale_qty AS FLOAT)) ELSE 0 END AS saleamt_Drum_Peanut,
 CASE (select dcode(sale.product_id)) WHEN 'SD00001' THEN (SELECT CAST(sale.sale_qty AS FLOAT)) ELSE 0 END AS saleamt_Drum_SS,
 CASE (select dcode(sale.product_id)) WHEN 'PPD00001' THEN (SELECT CAST(sale.sale_qty AS FLOAT)) ELSE 0 END AS saleamt_Drum_PP,
@@ -1757,8 +1864,10 @@ CASE (select dcode(sale.product_id)) WHEN 'S00002' THEN ( pt.weight_net * (SELEC
 CASE (select dcode(sale.product_id)) WHEN 'S00001' THEN ( pt.weight_net * (SELECT CAST(sale.sale_qty AS FLOAT))) ELSE 0 END AS saleqty_1Viss_SS,
 CASE (select dcode(sale.product_id)) WHEN 'P00011' THEN ( pt.weight_liter * (SELECT CAST(sale.sale_qty AS FLOAT))) ELSE 0 END AS saleqty_1Liter_P,
 CASE (select dcode(sale.product_id)) WHEN 'P00012' THEN ( pt.weight_liter * (SELECT CAST(sale.sale_qty AS FLOAT))) ELSE 0 END AS saleqty_06Liter_P,
+CASE (select dcode(sale.product_id)) WHEN 'P00021' THEN ( pt.weight_liter * (SELECT CAST(sale.sale_qty AS FLOAT))) ELSE 0 END AS saleqty_1_1Liter_P,
 CASE (select dcode(sale.product_id)) WHEN 'S00011' THEN ( pt.weight_liter * (SELECT CAST(sale.sale_qty AS FLOAT))) ELSE 0 END AS saleqty_1Liter_SS,
 CASE (select dcode(sale.product_id)) WHEN 'S00012' THEN ( pt.weight_liter * (SELECT CAST(sale.sale_qty AS FLOAT))) ELSE 0 END AS saleqty_06Liter_SS,
+CASE (select dcode(sale.product_id)) WHEN 'S00021' THEN ( pt.weight_liter * (SELECT CAST(sale.sale_qty AS FLOAT))) ELSE 0 END AS saleqty_1_1Liter_SS,
 CASE (select dcode(sale.product_id)) WHEN 'PD00001' THEN ( pt.weight_net * (SELECT CAST(sale.sale_qty AS FLOAT))) ELSE 0 END AS saleqty_Drum_Peanut,
 CASE (select dcode(sale.product_id)) WHEN 'SD00001' THEN ( pt.weight_net * (SELECT CAST(sale.sale_qty AS FLOAT))) ELSE 0 END AS saleqty_Drum_SS,
 CASE (select dcode(sale.product_id)) WHEN 'PPD00001' THEN ( pt.weight_net * (SELECT CAST(sale.sale_qty AS FLOAT))) ELSE 0 END AS saleqty_Drum_PP,
@@ -2010,7 +2119,7 @@ inner join sale on pp.id = sale.product_id )AA group by aa.customer_id,AA.custom
             <design:name></design:name>
             <design:position>16</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -2114,6 +2223,21 @@ inner join sale on pp.id = sale.product_id )AA group by aa.customer_id,AA.custom
           <design:identifier>
             <design:name></design:name>
             <design:position>23</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>24</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
@@ -2426,186 +2550,6 @@ inner join sale on pp.id = sale.product_id )AA group by aa.customer_id,AA.custom
   </design:ResultSets>
 </model:DesignValues>]]></xml-property>
         </oda-data-set>
-        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="CarDS" id="1169">
-            <list-property name="columnHints">
-                <structure>
-                    <property name="columnName">id</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">id</text-property>
-                    <text-property name="heading">id</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">name</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">name</text-property>
-                    <text-property name="heading">name</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">location_id</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">location_id</text-property>
-                    <text-property name="heading">location_id</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">license_plate</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">license_plate</text-property>
-                    <text-property name="heading">license_plate</text-property>
-                </structure>
-            </list-property>
-            <list-property name="parameters"/>
-            <structure name="cachedMetaData">
-                <list-property name="resultSet">
-                    <structure>
-                        <property name="position">1</property>
-                        <property name="name">id</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">2</property>
-                        <property name="name">name</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">3</property>
-                        <property name="name">location_id</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">4</property>
-                        <property name="name">license_plate</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                </list-property>
-            </structure>
-            <property name="dataSource">Data Source</property>
-            <list-property name="resultSet">
-                <structure>
-                    <property name="position">1</property>
-                    <property name="name">id</property>
-                    <property name="nativeName">id</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">2</property>
-                    <property name="name">name</property>
-                    <property name="nativeName">name</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-                <structure>
-                    <property name="position">3</property>
-                    <property name="name">location_id</property>
-                    <property name="nativeName">location_id</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">4</property>
-                    <property name="name">license_plate</property>
-                    <property name="nativeName">license_plate</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-            </list-property>
-            <xml-property name="queryText"><![CDATA[select crm.id,crm.name,crm.location_id,fv.license_plate from crm_case_section crm, Fleet_vehicle fv where fv.id=crm.vehicle_id and crm.active='t' order by crm.name]]></xml-property>
-            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
-  <Version>2.0</Version>
-  <design:ResultSets derivedMetaData="true">
-    <design:resultSetDefinitions>
-      <design:resultSetColumns>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>id</design:name>
-              <design:position>1</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-            <design:precision>10</design:precision>
-            <design:scale>0</design:scale>
-            <design:nullability>NotNullable</design:nullability>
-            <design:uiHints>
-              <design:displayName>id</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>id</design:label>
-            <design:formattingHints>
-              <design:displaySize>11</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>name</design:name>
-              <design:position>2</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
-            <design:precision>64</design:precision>
-            <design:scale>0</design:scale>
-            <design:nullability>NotNullable</design:nullability>
-            <design:uiHints>
-              <design:displayName>name</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>name</design:label>
-            <design:formattingHints>
-              <design:displaySize>64</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>location_id</design:name>
-              <design:position>3</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-            <design:precision>10</design:precision>
-            <design:scale>0</design:scale>
-            <design:nullability>NotNullable</design:nullability>
-            <design:uiHints>
-              <design:displayName>location_id</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>location_id</design:label>
-            <design:formattingHints>
-              <design:displaySize>11</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>loc_name</design:name>
-              <design:position>4</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
-            <design:precision>2147483647</design:precision>
-            <design:scale>0</design:scale>
-            <design:nullability>NotNullable</design:nullability>
-            <design:uiHints>
-              <design:displayName>loc_name</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>loc_name</design:label>
-            <design:formattingHints>
-              <design:displaySize>2147483647</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-      </design:resultSetColumns>
-      <design:criteria/>
-    </design:resultSetDefinitions>
-  </design:ResultSets>
-</model:DesignValues>]]></xml-property>
-        </oda-data-set>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="price_DS" id="1562">
             <list-property name="columnHints">
                 <structure>
@@ -2681,6 +2625,12 @@ inner join sale on pp.id = sale.product_id )AA group by aa.customer_id,AA.custom
                     <text-property name="heading">price_06liter_peanut</text-property>
                 </structure>
                 <structure>
+                    <property name="columnName">price_1_1liter_peanut</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">price_1_1liter_peanut</text-property>
+                    <text-property name="heading">price_1_1liter_peanut</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">price_1liter_ss</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">price_1liter_ss</text-property>
@@ -2691,6 +2641,12 @@ inner join sale on pp.id = sale.product_id )AA group by aa.customer_id,AA.custom
                     <property name="analysis">measure</property>
                     <text-property name="displayName">price_06liter_ss</text-property>
                     <text-property name="heading">price_06liter_ss</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">price_1_1liter_ss</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">price_1_1liter_ss</text-property>
+                    <text-property name="heading">price_1_1liter_ss</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">price_drum_peanut</property>
@@ -2824,56 +2780,66 @@ inner join sale on pp.id = sale.product_id )AA group by aa.customer_id,AA.custom
                     </structure>
                     <structure>
                         <property name="position">13</property>
-                        <property name="name">price_1liter_ss</property>
+                        <property name="name">price_1_1liter_peanut</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">14</property>
-                        <property name="name">price_06liter_ss</property>
+                        <property name="name">price_1liter_ss</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">15</property>
-                        <property name="name">price_drum_peanut</property>
+                        <property name="name">price_06liter_ss</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">16</property>
-                        <property name="name">price_drum_ss</property>
+                        <property name="name">price_1_1liter_ss</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">17</property>
-                        <property name="name">price_drum_pp</property>
+                        <property name="name">price_drum_peanut</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">18</property>
-                        <property name="name">price_05viss_peanut</property>
+                        <property name="name">price_drum_ss</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">19</property>
-                        <property name="name">price_025viss_peanut</property>
+                        <property name="name">price_drum_pp</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">20</property>
-                        <property name="name">price_01viss_peanut</property>
+                        <property name="name">price_05viss_peanut</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">21</property>
-                        <property name="name">price_05viss_ss</property>
+                        <property name="name">price_025viss_peanut</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">22</property>
-                        <property name="name">price_025viss_ss</property>
+                        <property name="name">price_01viss_peanut</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">23</property>
+                        <property name="name">price_05viss_ss</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">24</property>
+                        <property name="name">price_025viss_ss</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">25</property>
                         <property name="name">price_01viss_ss</property>
                         <property name="dataType">float</property>
                     </structure>
@@ -2975,76 +2941,90 @@ this.queryText =this.queryText.replace("--$pricelist$", "and so.pricelist_id="+p
                 </structure>
                 <structure>
                     <property name="position">13</property>
+                    <property name="name">price_1_1liter_peanut</property>
+                    <property name="nativeName">price_1_1liter_peanut</property>
+                    <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
+                </structure>
+                <structure>
+                    <property name="position">14</property>
                     <property name="name">price_1liter_ss</property>
                     <property name="nativeName">price_1liter_ss</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">14</property>
+                    <property name="position">15</property>
                     <property name="name">price_06liter_ss</property>
                     <property name="nativeName">price_06liter_ss</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">15</property>
+                    <property name="position">16</property>
+                    <property name="name">price_1_1liter_ss</property>
+                    <property name="nativeName">price_1_1liter_ss</property>
+                    <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
+                </structure>
+                <structure>
+                    <property name="position">17</property>
                     <property name="name">price_drum_peanut</property>
                     <property name="nativeName">price_drum_peanut</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">16</property>
+                    <property name="position">18</property>
                     <property name="name">price_drum_ss</property>
                     <property name="nativeName">price_drum_ss</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">17</property>
+                    <property name="position">19</property>
                     <property name="name">price_drum_pp</property>
                     <property name="nativeName">price_drum_pp</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">18</property>
+                    <property name="position">20</property>
                     <property name="name">price_05viss_peanut</property>
                     <property name="nativeName">price_05viss_peanut</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">19</property>
+                    <property name="position">21</property>
                     <property name="name">price_025viss_peanut</property>
                     <property name="nativeName">price_025viss_peanut</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">20</property>
+                    <property name="position">22</property>
                     <property name="name">price_01viss_peanut</property>
                     <property name="nativeName">price_01viss_peanut</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">21</property>
+                    <property name="position">23</property>
                     <property name="name">price_05viss_ss</property>
                     <property name="nativeName">price_05viss_ss</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">22</property>
+                    <property name="position">24</property>
                     <property name="name">price_025viss_ss</property>
                     <property name="nativeName">price_025viss_ss</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">23</property>
+                    <property name="position">25</property>
                     <property name="name">price_01viss_ss</property>
                     <property name="nativeName">price_01viss_ss</property>
                     <property name="dataType">float</property>
@@ -3063,12 +3043,13 @@ sum(two.PRICE_2VISS_SS)as PRICE_2VISS_SS,
 sum(two.PRICE_1VISS_SS)as PRICE_1VISS_SS,
 sum(two.PRICE_1LITER_PEANUT)as PRICE_1LITER_PEANUT,
 sum(two.PRICE_06LITER_PEANUT)as PRICE_06LITER_PEANUT,
+sum(two.PRICE_1_1LITER_PEANUT)as PRICE_1_1LITER_PEANUT,
 sum(two.PRICE_1LITER_SS)as PRICE_1LITER_SS,
 sum(two.PRICE_06LITER_SS)as PRICE_06LITER_SS,
+sum(two.PRICE_1_1LITER_SS)as PRICE_1_1LITER_SS,
 sum(two.PRICE_DRUM_PEANUT)as PRICE_DRUM_PEANUT,
 sum(two.PRICE_DRUM_SS)as PRICE_DRUM_SS,
 sum(two.PRICE_DRUM_PP)as PRICE_DRUM_PP,
-
 sum(two.PRICE_05VISS_PEANUT)as PRICE_05VISS_PEANUT,
 sum(two.PRICE_025VISS_PEANUT)as PRICE_025VISS_PEANUT,
 sum(two.PRICE_01VISS_PEANUT)as PRICE_01VISS_PEANUT,
@@ -3089,8 +3070,10 @@ CASE (select dcode(ONE.productid)) WHEN 'S00002' THEN (SELECT CAST(ONE.PRICE AS 
 CASE (select dcode(ONE.productid)) WHEN 'S00001' THEN (SELECT CAST(ONE.PRICE AS FLOAT))  END AS PRICE_1VISS_SS,
 CASE (select dcode(ONE.productid)) WHEN 'P00011' THEN (SELECT CAST(ONE.PRICE AS FLOAT))  END AS PRICE_1LITER_PEANUT,
 CASE (select dcode(ONE.productid)) WHEN 'P00012' THEN (SELECT CAST(ONE.PRICE AS FLOAT))  END AS PRICE_06LITER_PEANUT,
+CASE (select dcode(ONE.productid)) WHEN 'P00021' THEN (SELECT CAST(ONE.PRICE AS FLOAT))  END AS PRICE_1_1LITER_PEANUT,
 CASE (select dcode(ONE.productid)) WHEN 'S00011' THEN (SELECT CAST(ONE.PRICE AS FLOAT))  END AS PRICE_1LITER_SS,
 CASE (select dcode(ONE.productid)) WHEN 'S00012' THEN (SELECT CAST(ONE.PRICE AS FLOAT))  END AS PRICE_06LITER_SS,
+CASE (select dcode(ONE.productid)) WHEN 'S00021' THEN (SELECT CAST(ONE.PRICE AS FLOAT))  END AS PRICE_1_1LITER_SS,
 CASE (select dcode(ONE.productid)) WHEN 'PD00001' THEN (SELECT CAST(ONE.PRICE AS FLOAT))  END AS PRICE_DRUM_PEANUT,
 CASE (select dcode(ONE.productid)) WHEN 'SD00001' THEN (SELECT CAST(ONE.PRICE AS FLOAT))  END AS PRICE_DRUM_SS,
 CASE (select dcode(ONE.productid)) WHEN 'PPD00001' THEN (SELECT CAST(ONE.PRICE AS FLOAT))  END AS PRICE_DRUM_PP,
@@ -3550,6 +3533,16 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
+                <structure>
+                    <property name="name">param_4</property>
+                    <property name="paramName">branch</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">4</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
             </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
@@ -3578,7 +3571,7 @@ sale as (select * from
 sol.product_uom, rp.name as customer_name,rp.id as customer_id,so.section_id,so.user_id,so.deduct_amt as discount_amt
 from sale_order so,sale_order_line sol,res_partner rp
 where so.id = sol.order_id and rp.id=so.partner_id and so.state!='cancel' 
-and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ? and so.section_id = ? and so.user_id  = ? and rp.active='t' and so.payment_type='credit'
+and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ? and so.section_id = ? and so.user_id  = ? and so.branch_id=? and rp.active='t' and so.payment_type='credit'
 --$pricelist$
 group by so.deduct_amt,rp.id,product_id,date_order,sol.product_uom,rp.name,so.section_id,so.user_id)A left join ( SELECT sum(inv.residual) as open_amt,partner_id FROM account_invoice inv,res_partner rp 
 where inv.partner_id = rp.id and inv.payment_type='credit' and inv.state='open' and inv.type = 'out_invoice' and residual > 0 group by partner_id )B on A.customer_id=B.partner_id)
@@ -3632,6 +3625,21 @@ inner join sale on pp.id = sale.product_id )AA group by aa.customer_id,AA.custom
           <design:identifier>
             <design:name></design:name>
             <design:position>3</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>4</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
@@ -3775,6 +3783,108 @@ order by name]]></xml-property>
   </design:ResultSets>
 </model:DesignValues>]]></xml-property>
         </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="branchDS" id="2355">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">id</text-property>
+                    <text-property name="heading">id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">name</text-property>
+                    <text-property name="heading">name</text-property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">id</property>
+                    <property name="nativeName">id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">name</property>
+                    <property name="nativeName">name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select id,name
+from res_branch where active='t']]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>id</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>id</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>id</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>name</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>2147483647</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>name</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>name</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
     </data-sets>
     <styles>
         <style name="report" id="4">
@@ -3816,22 +3926,43 @@ order by name]]></xml-property>
             <property name="orientation">landscape</property>
             <page-footer>
                 <text id="3">
+                    <property name="fontSize">8pt</property>
+                    <property name="paddingLeft">2pt</property>
                     <property name="contentType">html</property>
+                    <text-property name="content"><![CDATA[FO-SM-05-REV-00]]></text-property>
                 </text>
             </page-footer>
         </simple-master-page>
     </page-setup>
     <body>
-        <grid id="245">
-            <property name="height">0.275in</property>
-            <column id="246"/>
-            <row id="247">
-                <property name="height">0.275in</property>
-                <cell id="248">
-                    <label id="1879">
+        <grid id="2380">
+            <property name="height">0.6in</property>
+            <property name="width">16.458333333333332in</property>
+            <column id="2386">
+                <property name="width">7.05in</property>
+            </column>
+            <column id="2381">
+                <property name="width">9.408333333333333in</property>
+            </column>
+            <row id="2382">
+                <property name="height">0.6in</property>
+                <cell id="2385">
+                    <property name="textAlign">right</property>
+                    <property name="verticalAlign">middle</property>
+                    <image id="2387">
+                        <property name="height">0.49166666666666664in</property>
+                        <property name="width">0.9916666666666667in</property>
+                        <property name="source">embed</property>
+                        <property name="imageName">company_logo.png</property>
+                    </image>
+                </cell>
+                <cell id="2383">
+                    <property name="verticalAlign">middle</property>
+                    <label id="2384">
+                        <property name="fontSize">12pt</property>
                         <property name="fontWeight">bold</property>
-                        <property name="textAlign">center</property>
-                        <text-property name="text">AHMAY HTWAR Trading Co.,Ltd.</text-property>
+                        <property name="textAlign">left</property>
+                        <text-property name="text"> AHMAY HTWAR Trading Co.,Ltd.</text-property>
                     </label>
                 </cell>
             </row>
@@ -3999,11 +4130,12 @@ order by name]]></xml-property>
                         </data>
                     </cell>
                     <cell id="1259">
-                        <label id="305">
-                            <property name="fontFamily">sans-serif</property>
+                        <label id="1240">
                             <property name="fontSize">8pt</property>
+                            <property name="paddingLeft">1pt</property>
+                            <property name="paddingRight">2pt</property>
                             <property name="textAlign">right</property>
-                            <text-property name="text">Car No</text-property>
+                            <text-property name="text">Team Member</text-property>
                         </label>
                     </cell>
                     <cell id="1260">
@@ -4068,12 +4200,11 @@ order by name]]></xml-property>
                     </cell>
                     <cell id="1268">
                         <property name="textAlign">right</property>
-                        <label id="1240">
+                        <label id="305">
+                            <property name="fontFamily">sans-serif</property>
                             <property name="fontSize">8pt</property>
-                            <property name="paddingLeft">1pt</property>
-                            <property name="paddingRight">2pt</property>
                             <property name="textAlign">right</property>
-                            <text-property name="text">Team Member</text-property>
+                            <text-property name="text">Car No</text-property>
                         </label>
                     </cell>
                     <cell id="1269">
@@ -4091,13 +4222,57 @@ order by name]]></xml-property>
                                 <structure>
                                     <property name="name">Car No</property>
                                     <expression name="expression" type="javascript">params["Car No"].displayText</expression>
-                                    <property name="dataType">integer</property>
+                                    <property name="dataType">string</property>
                                     <property name="allowExport">true</property>
                                 </structure>
                             </list-property>
                             <property name="resultSetColumn">Car No</property>
                         </data>
                     </cell>
+                </row>
+                <row id="2358">
+                    <property name="height">0.25833333333333336in</property>
+                    <cell id="2359">
+                        <label id="2367">
+                            <property name="fontSize">8pt</property>
+                            <property name="paddingLeft">2pt</property>
+                            <property name="textAlign">center</property>
+                            <text-property name="text">Branch</text-property>
+                        </label>
+                    </cell>
+                    <cell id="2360">
+                        <label id="2368">
+                            <property name="fontSize">8pt</property>
+                            <text-property name="text">:</text-property>
+                        </label>
+                    </cell>
+                    <cell id="2361">
+                        <data id="2369">
+                            <property name="fontSize">8pt</property>
+                            <property name="paddingLeft">2pt</property>
+                            <property name="textAlign">left</property>
+                            <list-property name="boundDataColumns">
+                                <structure>
+                                    <property name="name">branch</property>
+                                    <expression name="expression" type="javascript">params["branch"].displayText</expression>
+                                    <property name="dataType">string</property>
+                                    <property name="allowExport">true</property>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">branch</property>
+                        </data>
+                    </cell>
+                    <cell id="2362">
+                        <property name="verticalAlign">middle</property>
+                    </cell>
+                    <cell id="2363">
+                        <property name="verticalAlign">middle</property>
+                    </cell>
+                    <cell id="2364">
+                        <property name="textAlign">right</property>
+                    </cell>
+                    <cell id="2365"/>
+                    <cell id="2366"/>
                 </row>
             </header>
         </table>
@@ -6450,6 +6625,7 @@ dataSetRow["saleqty_1viss_ss"]+ dataSetRow["saleqty_drum_ss"]) +&#13;
             </column>
             <detail>
                 <row id="461">
+                    <property name="verticalAlign">middle</property>
                     <property name="height">0.3416666666666667in</property>
                     <cell id="462">
                         <property name="borderBottomStyle">solid</property>
@@ -7004,6 +7180,7 @@ dataSetRow["saleqty_1viss_ss"]+ dataSetRow["saleqty_drum_ss"]) +&#13;
             </detail>
             <footer>
                 <row id="686">
+                    <property name="verticalAlign">middle</property>
                     <property name="height">0.35in</property>
                     <cell id="687">
                         <property name="colSpan">4</property>
@@ -7636,6 +7813,7 @@ dataSetRow["saleqty_1viss_ss"]+ dataSetRow["saleqty_drum_ss"]) +&#13;
                 </row>
             </footer>
         </table>
+        <label id="2370"/>
         <grid id="306">
             <property name="height">0.5416666666666666in</property>
             <property name="width">16.45in</property>
@@ -7661,12 +7839,7 @@ dataSetRow["saleqty_1viss_ss"]+ dataSetRow["saleqty_drum_ss"]) +&#13;
                 <property name="height">0.26666666666666666in</property>
                 <cell id="314"/>
                 <cell id="315"/>
-                <cell id="316">
-                    <label id="330">
-                        <property name="fontSize">9pt</property>
-                        <text-property name="text">FO-SM-07 REV00</text-property>
-                    </label>
-                </cell>
+                <cell id="316"/>
                 <cell id="317"/>
                 <cell id="318">
                     <label id="331">
@@ -7726,4 +7899,342 @@ dataSetRow["saleqty_1viss_ss"]+ dataSetRow["saleqty_drum_ss"]) +&#13;
             <property name="type">report</property>
         </variable-element>
     </property>
+    <list-property name="images">
+        <structure>
+            <property name="name">company_logo.png</property>
+            <property name="type">image/png</property>
+            <property name="data">
+                iVBORw0KGgoAAAANSUhEUgAAALQAAABjCAYAAAAy9iqlAABNDUlEQVR4nO29d5xeV3Xv/d2nPG26ZjSj
+                Ua9WL5bcZeNusA0YQpxCCyEkQAwhlJubm4T3JrkvIaHECQQSuEAoeVNoweCKjassy022bKsXj3qZGU19
+                5imn7PePtfc5Z2TJNoxzjXW1/BmP5nnO2Wefvddee63fKltprTlDZ+h0IefV7sAZOkOvJJ1h6DN0WtEZ
+                hj5DpxWdYegzdFrRGYY+Q6cVnWHoM3Ra0RmGPkOnFXkTvP+mV6QXJ6HY/I4AlyBdebELjkNsvouBvL3B
+                sb8CCMz1LgTEuDg4gQ8OBH56nRuD49j7Y4gjcHzAz/QlZrQ2RlQLkk7FYUxttEatOkpQGyOIY+IYHMch
+                dqSppFuOa/4dmPcBx3TWccDPl8gXihSKJby8D0S4rtxXKhVxnLQv8mJx8v7yihGOaZXABdchjiBykyGQ
+                8YtiYj/AwSGO7Yc+EOMQmUH3CZzMuP6fp28C5V/0ZjVBx8p/mVdGA2rcv6Nxf8n/3VPfl842sflME+Cg
+                eKl1rIGd+/Yz0N+Hcj2U1lTCCtQCCkpR8nM0OB6qkCPneeTzHrgebrkGlTFUEBOFNZx6hK80WkXUFLiu
+                j/Y88H1ULocqNBB6PmFcRYeasFKjUgsJgjrDjiZEU8gX0J6L1jHNzU3MnTWHXDIypyZheY0DhBG4rmvG
+                IEJpFxToEJSn0SjTYgTaBaWJUa/W9j0dOPiL3vxLy9AveEoyhxEJt2oHIg+8Ey7RoM0fKgRcCBW4makL
+                Y6hHmmPHB6iNDROUKxw7eIiwFtBScpnZNQldbCQuVyhUaxTDkEJ5BPfwUYYPH2L02FH6ewcYGhlmZKTM
+                yNgoVGoQ1HDqEIV1iEO0VmgVEQAaD+Ur8PKonEOcK+AVfQoNLTQ0lJg0eRJtkyYxpaMTf/Y8dFsrY36e
+                oJhDNzSC0hw5epT+kTJOoUhXezuNLZPwCjkaWlopFXxy47gwBB0BCh2ZL1zvBQseBTERyo6hduRfL71u
+                /ivoNGTo0HChHVE3ZVDspzoy+kgMShHjEqLw0KJyALKdpjcOHB+mZ38PRA7D5WEKpUZURytePaBr+Bid
+                ymHowCHirbso7NpFZe8B4gNHKO87Rrncz3EqVM1LO0BoWveQ7Vkn/XOJyaNRRCiziDSaGE1MREREQA2o
+                IkpEnVTN8oAxII+i3W+mZUoXLTM6yU+bSdO82Tjz51OYNY1cIU+5VGKko5N4qEy1UsZ1fDzfo3NKO1O6
+                uk86vHbxx+bHNctNoUD76TVnGPqVoYCUncdJXdIPsp+fSpIMl8v0DffSs/8gvcPDrGidQkNbAw1DZdqH
+                BmHjU9Q2beLQjh2Eu/cz0jfECGUCNBUgwsVxSnhtJZqbJtHd3UlXZydeZxe6pZWwtQFVKpInxHU8HOXK
+                /h5FEIXyOwjl37GWRahjcGRXiRyXkIixwIGgRjRURg0dJxwcZGhgiMP9gxwdGKJvdJTRWpVRAiDCwSOH
+                S2tDM1Omd9I8bz5Lli9i6qpVVGbNZbjYwICO2TvQi2ouMKtrOpObWpnU2vyCkdYxKG2kt+OiVcroPq8K
+                nZ4MDXZAo1RfTkSgSDvh4/F69POHDnGst4/a8AitbY0UdciCKKZ+9Bjh409xaMtz7H3qGY5uex5NlSLQ
+                DsymgDN5GjOWLYEFs6FzEjQWwC9CPkegA6qDw8RHBqkODTE8NMTQyBDlkWHq1TGqozWC4Qq1agSVKjli
+                PDRG0QDAMXppjEbj4uGi8GjqKJEveuRLRRqLRRqLJQpNRVRjAxQcCoFG6QiCgHC0Qt/AMEcGh+ntH+L4
+                0DG2UWMQ8HFoa+9m9opFLFixkhmrVpCfPYtascRIIUetWmMk59HROYk502bjWkkQm5k0QxwTmpGdKGbw
+                C9Hpx9BojH0SkmIZrrBD5IGXmOjE1BkeKbN75zaOHRtiztQZNBZzTBkb49gD97J93SNED26idnQvHjUA
+                JuEzbdoM8mvPJz57OU2d3RQmNcPxIbZt38nu/T1w7DDOoT4a9g6gxypAHU1IjSoKKCAMlDM9kR/pp5f0
+                NsEe8Eg3E4XCA3xiYmO4WbUkNgqNS0xsvnHIocgRUKCeyxNNbSJqLlFsztHc2MSx1hIjI2NUd+5j7879
+                HNODDAEhLvmGdtqWL2L6+RdwzmUX4SyazvEq9A6P4RSKzF4wj862tszgx6A1KJcwDMWYVArLJ+q/Xg85
+                PRladOZ6YsTF+OOs7v7+QXr272O00o/X1MZZuQbyfX04999Lz223s2/9UwxRwQMcmmk7fw2LL7mA7tmz
+                ibvbqA6MMLZ9F8GWHRzeuZv9Ow4SUCUiRFMnT4yLpoiiZPCUYtIbkt64hiE9XCI0OXNtiqVofFxcw6oY
+                Zlbmr6xq5UJyFVi7TRGiCRHDDTwCoEZMjIuHD3jkvTzNUydT72pDeXkqtSp7KkNs7etnf+8gA5RpwmP6
+                /HmsuvR1dF76OtTisxlQimEdU/RhavcUpnR2vHA6MjxyhqF/YYog1GKZuK79hMNHjvPcpifpmtTGtCkt
+                dB47Ru8d97PzjrvYtv5JehnDARZ1Tmft66+h9dzVOJ2d0HOQzc89yeCufRzeuZeR/hEchnEImQQ0AHkc
+                FAoXRQES6Moyp4eDNqabg92lPfO3qECOkdqgcY2MhWR/SX7UCT8nI9n+rWRXOMREOCg0GgcB3ESBCYEa
+                DsMofAoUyJHzihQ7G9ENLv05jyN9x1l3tJd9lAlyBabOn8ma89ay+tpr8RctYndYpzeoMX3KDM6aOQM3
+                07GstP4vptOPoata48fK8jFBGLFl81bK5WGaPJ/lrU0Mb97Eo7fcwhP/cSu16ggzgbNnz2Xp1ZeTO/8i
+                4sYS5W07eeLxjWx5fCMNx45TYpQ8wrwFwyKizbpGaoqUdIEcVtEB0X6tOiFsLsyaaKE4KFzD7oUEr9DJ
+                MxSChDjJNylj26ttS/b/2qDv9nvXIOqiplhvkGV3ZRQWhSYyT4QAhxouFYo0FptQMyYxFoxwoHeIXaN9
+                7CZiBJ/p56zg/De/lfkXv47R5iLDlTpxaxNzps+gtbV1gjP6c9Hpx9Ahqevj0ac2cGRohCWLltIZjbHx
+                P77L/q/9G8HW5ygCU/NT6f6dG5l59cWUqwFPPP4E8QOPMPzU86i4DwgpIoxZwkWhyOEYaStgmkjamAJQ
+                MDK0ioNvJKyTuUZ+O/goPPO9n8hMcWVY/TeHle7yJGUWhjERAOvwSUkZZcRDdojIPFukf3q9Su6WxRSY
+                JeegzTKL0MQE5jsZV0UNKFJCOwWGGxs53A4HRofZ1dvHIJrGzqnMv+J8lv7mjYQXXMLgwcN49YBzVq6g
+                oVB4xeb4Reg1wtC6BsqB0AHXlUmx/hGvarRTcbYGccRTzz3H8YEBzp06i8LAAME3vsW9X/8m28Jhcijm
+                vfltXPuWGyg0akYf28SOWx/myLZtlBkFQkpAI4oCrtmkRZ7ZhWK3+ggSxssn34gktnJQpHGqP3sGaRY2
+                FeZ2iY0+nDKkk0hox7C4Zc44wbFT7Nkx/xap7CcsL+QCgTE0ZdCjZPfQiSKUxcIx0tr2A6OyyJIKEHPT
+                UR4+BSq6wH4iNjLILip4qsh5ay/inHe/jZFzV3M40uT8EvNnzqW1tdE8TLAmhUZFWhwyCmJHfqR/oShb
+                OqNcvbjW8tpgaK2BKEJ5oRjRuMRKI+ZVKnOeeW4HBw89z6qFS+geGOGpL/09P/3+99k7eJzZxSZ+7d3v
+                ZPbllzKyZTc7H3yY5zY9RXWgn1YCJiHSMjay0AFyGSbwjJ4r/3YS6M8zaERs/s6jkgiHrMFmmTiVyiId
+                PTwjPeNk6ajkXm0ksqgELglClkjq8U5mbVjZMf8F5jkOEZZ9LfoRmTbEKSIKSFaep/uAm6BCcpVdfJFh
+                7giHkAJj5BhF08MoG6kx4BWYf8n5XP72X2P6hWvZPjJE4+QuFs2bb9qOiQlRcYzSeXFyOeCYbtgFrF/w
+                nqek1whD2wcaFEHhEeLimg1y3/6jbHnmKebOmMNZTZpNX/4m3/rczYTUObuplbd++AO0XnYpBx7YwD3f
+                /nf8/dvJAY1AA65hZG08c6IWOAYDjox+mzOSzDWS1+rNFjTzSXVch9jAb6lAsX9rMzUax/gDU7XEvquN
+                H7FqQgDjWM1e52TaT6+Tq1TClHHST1l4qVkp7KST7zHmYmgW1Hg5DaFRSexYRAlzy3UBLhEuIXn2odjG
+                KJupMoBixSWXc90H3k95/kx6qzVmL5rPjM5ppveh9FJndpFEIGszM1lz+JT0GmHoOqic3FFXGCRAJvDR
+                J56gVunjyuXL2H/PPTz+B5/kzsMHmOo18rY//kOWX3QFPbfdwfZ/+VeODB2khBh2zeTIoQkMM4UIUiGM
+                qYyq4RomgBL1jKTQxk0uE2DBQVExHKOeqHE4szjkXSOJLTNGiQQ/GWWjAl3zXMvsWYa3KoKF6tzkX5i3
+                ESaV94zxDSNGZhK00c9tv0GYVUxHlUjyiJg8nlFR7PTJ3uMBgdHaqyhiPBQ+fcDTjLGZOjEtvPWv/zsz
+                X38V+8Yg19TKwkXzafAtk4aZlh3Td/OByipEp6TXBkODhGh4GefTnuf3s+nZLaxZs4SZe3bz3T/7U257
+                cD2d5Pn9j93EnMsuYc+//4DHv3crI8EgbcDkRNsV7TdnmBSEqfKkzKXNTy7RZIWxcoa1nIwKkUU1VHKf
+                dYLYzVJaSI3EbDyEbNvpkDjJQrBqhNXlIWVEG06a4tGxUU7SxYCReREOgVl0XqYdJ8MgJ+4AEamtABJG
+                G2Ywccf0UxSYiMjg7y6KmkFNHFw0PvsIeIwKTwKLlq/mjR/+GGrFCnqiCnNmzWDetG7z1BpaK5Qye1qc
+                6dxLo36vDYbWlBHXhAz3ukfWo2s1Ljn3QnZ9/Rt8/hMfozeo8fuXX8UV7/8gQ089wU//+TtUjh2gK7nT
+                QVHAN5MrZltgdFqNZ1hMDDIHZVgMRDq6pIadY/RZK5HJ/G3v8LGxxBrX6LDamGDWILNxaqkkta1bv1+U
+                kVY6UYUwjBWa7zzipH/aLIDYSGX7TvZ5sshEPRAVwpqT41WYiDSAyio8uWRfiQjNOMXJHmLHQVAguV/e
+                pABUcOjH4THGeA6IG9u5/LfeyfK3/yYH0OQKOZasWIHvefL0GBPhpEApYzvxUkz9y8fQWmuiKMLzPONl
+                Uig1BpQ4Xqvys7vu4dxlC5jtOHztHe/h/vXrWds2g9/65B9Sw+WeL3yFcs9WZiB4sYNL3cjFAg4lPGJC
+                45mTiA/fMK81eYQxA+OiVmbiU73VIhtWOmrDZm5GiuaQ7Vt04pRxLUphF6d9ngJCwhdIWKs7B8a3VzCL
+                r06cqBF24aRYskbhUSPEN3aGSM4o2SNET5a9QWc06/ET5BEathabQgzYwHxm9Wi7VOwuYp1JsuDskggA
+                hzEceojZQJW9wKxVa7n2zz5GbtYMDlXrnLV4KZ3trQmHhMRopfC0sVZeawx9Kq9S79EB7tvwMG96w+tx
+                H7mPz133KzxTKfOr176JX33n77L3B//Bhh9+lxwBbeTxifGRKArRgQt41Mc9NocYc3YLNa+FR0iRAjEB
+                eWRiUjgtzeKw0Jx1U2vSoNNUTRBpP94BQrKAgky7mlQdCJNdRAwjm4ZRwnoNHQOfxYa11DhVxEGRxyUg
+                ThhX/m8lO8bgzb57tm+iVXvmLaonSHIXMRLT0XTNKLhm0QZIiJUiQHB1GwIb4NFPzA7GeADQrd385n+7
+                ic5rr2HfWMjs2fOYNa0z06PYxFkb7++p6ZePoUGkdJahn962nQO7DvLGa65gy+c+yyf/9I+YBPzV33yK
+                5rGQ//yHrzDWf4i5Bq8oUDCMGhChzPYfU0QZBlImok18bRaKE13ZN+hGlMRHWDvfminW8YFZNFmPnWc2
+                4swwvcgQCBIRAzWyuq3FFlwj1R00NWJc8icsvxemdkZGAVDUARsxoomoEyXojJ+xDSyl2TmpAmRzUmpo
+                xtAGN8e0fKJzJ04Wc0S6UGMzIjUzNhpZyBVgBxHrCTmGwxXveQ9rfvu97HUVrR2TWbZwQWKiis6RWhan
+                oF8+hj4xMmvbju1s3b+Nt155A+s//Ef8xT98lrWtk/l/Pv3/cmT949zznW/RTEAnLj4F6gT4ZuDlIcJu
+                LTiMohilzkFiqtiMuNQxksMaaEK++bwDxVw8ajjkDZNJBFwWTRBJOojmEAExEnhfJ9VNLSNkXdLWoGwH
+                msjRiIuHxYUtjKgZJWCIgF4kac4lhQItA1nJ6SLB/wroAiaRM+qQSNwaEUcJOcx4J1E2US2LeXsIxDkP
+                DwePiJjj1DkEDGauUeZ9swkttn9NCLd1mCUZmb2rjsvzRDxGje3ABW/9VS7/yAfo8/PkmztYtGxR0iel
+                X4MSOgxDPANnPL3pWQ4O9HP9ZZfyrbf/Ot//t+/xzrPX8Osf+SB3fv6rlJ99iskEePg0GAlrYx+cDGog
+                EsljlADXaaPtzz5AOefjjYaETgBRHS+KcWpVVE2DE6OVRtVjXMelcPeDdPZspUoxgc8SyZEhj4i95Kj9
+                6q/Q2FAkVHXRHE1WqWsuj3yDXMQOnopwYig8f4DKugdpwydvzMjIvI9DzAF8mtdcRPnsWdSjEKUVuRh0
+                oAjzJKLSi8GpK6IGjc65FB/bSPzkU0wiR83YFANuAf/qqxl5/bk4I/V0MszK0zqGWGS043oQgffQA0y+
+                +zYCSlRxCBtmEH30BsbaGlFVBycU6Rt6msgL8St5lFJELqiCxt+3D+fr/0FLeYAYjxqeiToMiXDoRfEA
+                YzyKZuHrr+WGT/wBlYYWvFIzy1cuTcb4VBCnoQkxNFrrX/gnjrWOY621DrSOtdax1pGOtaVt27frH936
+                Q6211lvffIO+GPR3r7hM6y98Rj/cMF3/FPTToJ/D05vJ6Wdo0Jto0tvw9XZ8/Sw5/Sx5vZ0GvZ+8Poin
+                HwO97vI36J+XBv7pK3oA9CgNOqak6xR0lbz5KeoyDbpMo9Y4+jFa9b4dO37uZ9S27taPNkzRwygdkdc1
+                03aNnK7j6Dta5up446afu91Dn/uifgr0GDk9RF734urdTVO1/s73XnYbodZ6z+e+oPtAD+HpgxT0sUuu
+                1zozXy9F8bEDese8RfoA6MP4+hAlfZSS7qegj5PXA5T0Xor6e6A/CvrrF12md9/zY/2zDQ/qjVu2Ju1E
+                UaRjXdc6rutYxzrU47oxTU+AJ1+WL/JFlgNRLGYNyC/r0zqw93l279zJDde/lX/53Y/xBz++hT+49mpu
+                vHgt9/zB39BXPkCb2f600c/EJAqS1j00eVxy5psCIk/b585MrkmvPtWCld+tSxYzAoTUCBM73uqQ1mEs
+                eEadKroykrRRP8VzpKBAKuFzM6cwacl8hgweEOJQRyfYRGH2JNS82ZnRS1We7GfyO9XhK/V+bEqUtRjG
+                ggrRSO+4+8a3NL69OIiolIcJsakKIdWxCgwfz1wdjb/nBEM4HBihVh0z1wi6lCMiRic5kY04LKeJ1cCT
+                6+/n7pu/zrTRCrXBY+zYuh2QUg/gg/ZRscGKEqdL5SRv8fJpYgytIlzXZp5Vkyi5qFrn0Q3ruO7669ly
+                85f58tdu5n3nXMCNq9dwy19+kWb6mUGOgsnEUBnorZGIAjag3qWADaAX48YDOhctTLoQQepBwTKZ0eOz
+                6trcOUjeiWAPQYIln2xQNHGU1aYMmqwzj0q+dpNFQ6mEd/HZVLDOdGHAmoHUJi05C91s8vosTHFSNoxQ
+                oZMq6aH1LsqSC+UjHC+9JE5+gnFtJtqqFpTbTniiJ2uDbGgMCpE1Vl2UQaIBnMjB1WlNlDQyxMKUglxP
+                RrOGBtYAT912C5u+9W/MiBSHjx1i/4EDyTM0GmJtePmlPS4vhybE0OPy+lQaG/yTW27n9W96Gwdv+xG/
+                97Gb+M3ZS/m1Ky7m3k/9b6YwTDsuRUTiSChnSA5t3NYKFz+JYCsQ4xGTM9CTDzRdfL55UjgeqDeM5Whj
+                iimRMFWAadM53DmD0eSlXSTCA2y4vPWraRxw0jIrOS1B/6jMQxT42gThmL5ooPu8tZRJ8WhlrIEaMOuK
+                C6SJhN8is/CicYtSE2aqw4DWhSQz3Pbcc0BHfgIdupj+IIxVJZKwpqS7Ibk4RTc8ixBpE86qQCuV7YS0
+                pdPdSWk9zjmlDKYT4hPiUDNISkCddmIupMQq4MHvfIedt97OzGKBHT076B3ok/uVMpZoFrGfGE2IoR0y
+                q9v46dZveIR5Z82n0Svxsd94J4sV3PTuN/PUZ76Jop82A8ClHvCABjSNiPdL2EyZABoyAfkxMTE5GvGW
+                WwNDj6/uE1nYTIESWa20qCoA+VVLsBumhzIGlkUWtGFvlxwFfC+z2SrwLHKDMFzybWR3ARPEv2IlYyrP
+                mF1sOAQEDJGjZfWFduCMZaROYfDrcWUbSlo8hXUE/vNRNHoeOq4lzaXk4+BSwMXTKuERLxdQCEexPXWQ
+                tDCi0QS9kZ1H7omUWShKpWPsj5mwWrAxJVWsnBbHkZX8dSJKRKymSCcRP/7mN+h7dguTig1s2bGLKAhB
+                QaBVRq05Een/+WliKoeWNGFlJFtf7zGO9h5j+dnL+OZb3sah0TKfec+7ePob3yWmjxnGKo6M7pwnoojG
+                lsbKo4yUjikhjCjB9JocImmbZ01HNbTKq5uRjTXEZlY0Wf9qNsoB5l92idFDdRLjkI0jttBXJ6NU3veH
+                HP/uvyT3WtkVZ6dfQeAZCRaZJ3V3U1q9lBFsaI6mn5ij3d2wcplIWYUgMJnYwOxzbGQc1Bn95tfp++yX
+                aE/2E1PWbOQ4z3/kM1Q+ezMJ11pBF7lEdkwcIBzlyOe+Ss/nv55E8znA4JOPsv3N76e26UkzWmYhRQb5
+                DrWZHajv2ML23/0fjB7aaxw1EbFx6zsGMLTOcwsjOmimEHMRPs7RYzz8j9+gdOgoThiwdfsuADxlbBdt
+                7q4UXwbjnZompnIkYWPCFg89tJ4rLruCI/few1fu+CH//cIr8HcfoX5gN1145Ezkcc4waTOaRix+Khqe
+                qBcaHycJpBdJrRgF9KpVaQfE14yjUrxYtlCbgjR+C5t04VqzfeqEebNXiL7rMRlgw33s/dj/gr6j6fc6
+                vTKNzzNtuObLthamX3QhZWwBBhOyumoxuIWk1oU2QKSoaxk9WmdieLZs45kPfYJi+RBdeAYClPjAJlxy
+                4T4OfOrz7N/wwAsnR6WLdWzLdp7/uy/RVj1K3ixpB4c26gTr72H3X98M8bB9qnQiAJRRL8IK/d/6PoMP
+                3EU7Cg+XnNnlsrZCwcyTaxQT2e80c/BZgaLnyfXseXQDHUWfI31H6BscNkLFMYELE9ejJ8bQSSCVz/7D
+                +8kVCrQ0NfEXH/wgc4Bru6ew7cH1dKIoGP9chKZARINZ0YJeeDQkkthJItBsfLKN3B0C6quXA+bVozQu
+                IEcEKsJR1niyroLMyy6cR4EmRolIa+Wd6DCR3JQOwD24l/KRw+ZKE/em7aDVU2ZGckysjtu4arWR4REu
+                MTUcui49N3mWNexEixG5O34uHepAddt2cuVB2hMlzEcTJzEXjYA/dpzDm3cm82G3Hdeo4ega1T2HGTp4
+                gFazVOz7SuJuyLFd24kPHE36F3uKyI+SQYnKNY727DAz7VLH5jpKX2z4gGjqtoqV7E8RkEezlAJTgSd+
+                dDvhgQM051z27Nxt3laZZI+J04QYOsg08MRjj3Htda9nz3f/je07dnHThZdx8GcbUJRR5PBQxl0dUTAu
+                acnLE53QGoiK2JQQsBlyaQimC7QtWyYPjDS4HtqTnjhArlJmfCEAIRtvQXc37QsW0Y82BQ91IqXFlSuu
+                5DqKCi6NuOQMY9SUmxGddfPMgAIBOW2XtUAXhfPOJ6daGTZT7tDAlLVXJf1RhElwFNpGtEX2S8AjD6gg
+                ogkQPdxLYpWlkJhINN/zKUYZCe8Yp49dyxqc8gg+ATESRmXd6iEKH0Vz4OPUvWSsImsIagPjxTFqpGxi
+                w61ElhjE0LyjeFUdw8xSZ7WCrekHHbiswOHY5k1s/9mDTCJksO8Yx4/0mQX2yhS1mRBDKzOBQ72DaE8C
+                Nr/2mc+xALiwUKB/6ACzcCkB4OPjUMJG98rW5CFZH3kiI3+ykjkVXDUiPBppXSYGoXKVYQbzGtU6O753
+                B5jo5UThUKLji7Dx0CvmM4awvU1hsoFL0pJEwtnaGTpQpvdCcp2L1IAzPVW+GQ8zKXPnUFh5FkPElAkp
+                TetCLV1iNGBImNco8mli2HhyY2GsKopAsA8CY87ZlCxXO+gw3fa1TvNX5IU8lHKNjHeoI6FQATb9zOxm
+                2mrv8uOb1F4AJ4rJGRTLqjEB4+2TiGwCmk7aAZvaFtJFjlZg4z33Uj7cT6mQZ9+BvclzYcIq9MQYOmde
+                ecvmzcxbugK2b+E/n9zIDWvO5/B9z9EBNFGgEZvtYQNjtEEuHIqIuxmzmWZTnmwcgZCmsbUNNc06VaIE
+                ewUX9vby9Dd+AAbHSHYwDRKKJFd6564yOnuUWPbWsaPNUnONBI/R4Ns6HMKEwlQuRDlqmL1BJw3JU0ol
+                apeLHl1F075yHrR1mHp5kTBPmPZPo1NpmBnfwIyMMjJZmzGS0RIUJdYRjgXCY1CRwksWsH2GLIFcIkGt
+                0Rab3ctDq/QO+6+6sY1UHOFEsbE/HKrYiiM62WlsvwM0NvUtj2MEgw39dZmBx4EtOzmyay/FYoEDR45R
+                GS6bGZ04TQzliEQybdy2mZWz5/HDz3+es4Dzo4iIPlqwnjJNCxJcVDKQkjBtQBoAn6JZdXwiFHViKuaq
+                ISB/1ixoyFbHDMjbUdi8nqkP3AZb9knXFFJKV4lXy5Z8cddeRD+CEwcGePQNk9TNIgmJiQzHRVY2hy6E
+                Gl8bu98TSNFHGUmrxw1oy6UXMgTsxqF25WUAlBAdNNTaVq4BhYnptjnniccFxw2xmTJ5rNEl0X2ix5oa
+                HVE1GUDtgdZuIknRLtoPCImoEVEnTAxwUT8UuXgUpcUbOWrGztWhMSBBuzli1+562gRJSd5LiGOktZXf
+                ITUiqsRUiamhqckypkjMEmAOdfrXPcwkArTrsueghG64xBQrr6an0IWhkVE6OycD8L0f/IA15KhtGyBH
+                bMIbJQVKGeki/+lEqEEqka2RNV4yA2hGgY7F881fGCMpfYOhLc9SZozaM8+lL5aAqymVFsykw2vBBkDJ
+                wpF+5s2d44MyLZALuAqU8bZFoSib9rsT5Ev7yrNpMZKseOEF0pK93DhtwuGRxIFhB+JEJDbrCQxJ1SOr
+                zmtEAKTjEo0TEkQBulKnbhw9miouVSKqhNSFyQdrUJeQrUbA1XGCg2szmPa5QfJc0cFDIrNraGwVEYVN
+                P3Ow+TlpPmOeBmD7ji2MHO2jVChw+NAhdJhaSxOhCbfw+GNPccEFF0G1zMDxIZbSQkN1mGYTg+Eng5tl
+                4/HTZhnZrvE0xk4GpU4kCVyLF6U3acgWfA2f20kTcGTDw+k1yko7KbcCQNdMollTKSNpWxiLPNXXlTGe
+                sr2z7aWro9rbx8C+Pckkj+8XMG06zdPnoxraaV6y0rScUnD0IAcefYLYQiOKE5zW8mH2nqwQsH9LnuF4
+                Uirj1o89olKJ4Zap7KSB/TTRQxP7KPI8BQ7SyNC8bkLfjGWEidJLXFRZ52giBCyLkplT27cIm9QVj5vX
+                GE2BmFYUA0cOUenrpTXvcnxggOGyiZ2ZoA49YdMyCKpM6e5g/0MPMQZMxaOJSpLMeTIw5kS08cSJUgmL
+                p6VahvDQa1aP09cS/0m1zuDTu8gD/Rs2Mit5RoRWJsVVx8mDm1cto7Z7K+Iktu6KOGEfD8dUG0rNoLp5
+                os1WHz58lEPbNtE2Zx5JxkiCJ7vgl2i7+AJ2HngeWlrk40iLJwE4sukZjmzczOyrL8+8eVrCCxK12jCu
+                7ErCFgncgtbxOC+mdekn8jSXo+NX3saNV1wJ+OAYd6pSskCjCLw8lBqSrusohNBFeeOXU5rvEp9ELGVH
+                y0n+ne4mskfngHYcouER+nsOMuOsJQRBldGREVpampkoTUhC1ytVRkaG8ZVL/47NxgESIgk7tmLmyZN+
+                o8zPqcjF5gFqqoVm1JrVpp3xLpFo9zb6enbSCTQ8uhGO95lvzGkk2qLa8rzZr1vLIJKyb9Uiu41C6uET
+                JrVye7y0DAeOc+TeB5LrLdmU1RBouOFqprz1evN5Jh4JGLvjbvTBo2RJ6oi+kCwun+Le4w0xDGyYIjCg
+                dWCwkbLAJe1t0N4IbS3Q1AKNzdDQAs2TUmaORNfVrpegSJg2FU5m1LOy2Ul+R0ZVk79tZmRaRkE07Yhm
+                oy6OHD5Gk6eIwoDjg9mov1+cJsTQ1VqNaiDxBMeff55mBLGoUScym7wwsZMwdnZSXoxER5ME+ghoWzQf
+                2trByk6VJrPWntlKWBulC4AyI5s3y+dmIANI9FMNcOGFHEemRRnM2xqFIFtmLemnLf4NfiYZIl+Hvoc2
+                wMioTKA2IUI6NW4Lb76G5e99R3KPayVepUzt7ntoNPWqzQuDdknrm6YOcOlTelkGtQatceujybcaiZFQ
+                cQ5FHrRHrEXLteECVkGw46ExQUiuC7qOQx2JhUlbTVUHnSmao5L5tYyusHnxJHueMuNrWywhtVJqI8OA
+                QzUMGRwe4pWgCTF0GIYoRyapPlwzWdLyGjFpkW8Yh2y9YKuylBqHNkdQgP8yMGmJ0Z9NuKOVggBsegoA
+                OagBwg0bAPFQyQQLbpFgo7Nm401qN8E+wtY2Lq5uALIUm06ldnZTbSQgv70HDh+S91Ji9NlgIwVQ6sBr
+                7Wa8bAb27aBv8xYakuGPUmVVp1GLsZsyjlU7bAl4ZWwTpTRp1HIm4TUGIg+l8jjKN4slfZRDlJh1Fg0C
+                cFWaRZhOjFFvEMXD1j+NM5+mI6gy/8n1WZXSvrECwiCQVpQiqNV5JWjCrm9tvFQFxzO6ZEQON9E1Bbc9
+                tZdehsDqfVLyUHK2JQi9Zg3C1WvMDRobFGWfF6x7nE4k+i8P7L3//qR1J45PKPEFdHYy5byzGUUc2DqJ
+                JBCt37ptbYUkednx/fYcaGUMHnsc68lUigy+bDddGQVFalNW71/PKBF5P5uqioRvqqxq45IiBCRYgvTY
+                fqeoOyX7tokxp32NNvElsYWpNeJB1ID2UDp1JzqRVcocwtAeg2QoTjPNs2UZzFembypheE1svIVSpiFM
+                JLgyjiJJKNbKQTsOQRBQqdk951UMTlLaJQxlI/GbmqgAFWwsl7y0uLxPFkrvJj/j9Wlt0GnpXN2007zY
+                BPWbCpcmahlqYzz98MPEQB8VasC+u9bDvkPm+hwE6gVCsn2lBOLHiaaXbpWpDg2n2k+UK06hgSc3AuPV
+                g+QaOxZmV7FcsPve+yQs6ZSjn5pfNirQ6swnCgYF6CijuqBNaYJU63dU+uOSaVABeGKomkxYHYF7EkVe
+                ZX7bXXa8PBZmroNhYCsU7L4mSo/GoWKuyxcKOJ5LUK9C9FK5Ry+PJoRy+F4O32SstM6ZxRDQS4jONGur
+                Jp84FekmppK/42QiU0OtSo2IBkpzjIfQ7uk2xz7OUXjvu4mP9zGc81GhS2f3ZPB80dlccF3D/JluFFau
+                JAJqhBRNRrVDTJ3QMMT4QgYoe7txdYQBPtDz+EZKQB4pd648a06mRpU2AKEDcHyI/vseoQFwnPGLIDX0
+                ouQ5IoXjFwiFhB9jq4zIxcrg5FpHxEoQ4crzu9lzy08olUeIcznRZWKH2A0JnDq5adOYf/V10NGVNqXD
+                RNq/kNJAM1sWzcpXdcJvgGwiV4zDmClz09zahBdpdAS+/8rUnp4QQ5eKRbxcgRCYcvZiAI5RRSozWxTV
+                1hHKYhxCUcLWKYZpr3DMnRqoTuqAmdMBk2KlIe8ZK6+Y5/yvf3Vcu/PMbx9NVYtG76jx4rCwciUlbL6y
+                BflsPehE/pNVAAINvjJ99CXWYf/Tu5izp4f83NmiDIQa5UFg9A8fD6XTWtDhs1uh95DEt6jM8GcGIIW6
+                LHiZLi5hItds6xArhdZZZjcVpKwrO64yfMedPP3Rj7IgaS9FXQaBWqGDWXfPwb+4S6JZCUDFkFFJ7Ny8
+                UFtPa+VZA9E8eJzunN4fM0pEDmjr7mKkXqderlNqaOSVoAmpHK6jcLTPkf4h2ldfRCswgI1v1cmhkhHO
+                OLUiNDqW1bdOJOuCVrhyCsrqJdAgcWe+DvFVTQYqBOIaqR9LjMAaWgSXVjgqFOmmPWqqTmzB3emL6eua
+                zkEkfq1OTIRH3ZQZiwmkdpyTx+Yt5sw8A9haR13loxTv+1kynAolx9ZqSIppqWoCyY09cBcdiEeuHllL
+                g8QoVDrEMdps1ZHUrRJy5oswocRj1PFNdFuME2TjqU8wrpwCuUmdtJKnDZ/JFOimwHQKzCTPTHJMmjoN
+                z2DlErjvUCWf5CyouCYOGiSiLrAGqXnfnPlPmTLt1rECNntFdOY6imGglxjd2k5hwWKOqxyV+ij5RgFj
+                K69qkqwLs2bN5NknngCga8Y0dgH9SMyCFHSJk23A6lkvTgqpW+cmMQFtS+cl38ZK8iVUJOa6dvJobWPj
+                RGvPo3Bi8RlIbqE4EPK4OMrEOTS7xEvmYdOv5L8aOeIkecolwotqRu8MiHMQmxFzYony8AkYXPd40j9t
+                YjR8Za0DM1AAY1X2331fCst5J46FAuUl3+fjOh4YR7XdtSJC4/nME+FphWNXmQKpWZxGzQGoCFNWTbCh
+                CjAMlIkF04k1KrCyVOyaceEHvkckpgs5JBpbjP2Ymln64lwPEoTKBpnZIpM5JBjtOFJ0Y9a06cycPoXe
+                /l5cDW0tzSe1tH5emhBDxzriggvOZuPjjwBw/Tt/k13AHiIk0tm+HsY6f3k5Y/lERsm22rlUYqAT17BW
+                ElfhmznMQGWJguCKcePbqc3gxJZaLzg3KUXgok21I9lM07Cp1J7PHl+sHVEDJgH9GzdBUE222NhgvUoA
+                apJhfm47gxufM0FKQJCJsMvgm2kgnuxUdXQCstkafBavFsZKJfSJ27wlMTAtSmI/swZkDIlKpnG0zgQV
+                2GsjEkwfG6UnKpCtjxeR9Q465pmi4MgicDlMwDFg3qpVNHR2cejAQZqb2pjc1nWSXv/8NCEd2jJSQ1sr
+                R8dGuP6//TFf+PTneIIya2jBVrWMErv4FO2c5G8b3FLEpWmZZKlgdNhA+VICrDpC5V+/T+TX8FwXFRXx
+                Q01cCDlSqzPlimvJzZwpLmdfjERJQBLf27xrruXgpz9HaKSOdW+LVBRLPUrCKmXCUx1SMlQagGPP7IGt
+                W1ErzpZ3sZiyQlAZc2+w7kHqY/00IqpZavhJz5RxCabF4H3jxHCJTdGztBaT7D51omRHEU52iVRgxs/A
+                gS6MEjNG2nbqHYW662BRZI2S81JMiLQCiHSiOgh05ySj4TA+YMpGNVpVE+xJui7HidhHhHZcFl6+lsNh
+                nZ79PZxzzrk0lkSHLk4QtptYLIcp+Lty+XLW3/Yz3nrjW3jDFVfz2L13cxUhs42+5Z/AzCfDpLMu8ADx
+                +VeoE9ECq84GhBntOeAAh3/8E3p/570MIYyF+W4Y6AGuedcH6f72l8F1CEOdxFEkUdQrV9JJC2MMIXBX
+                TCuy4dbMxpkaPxE5Mkf5xIVkWy4zwN77H2DWirPNuEBNKfJ6/CYa3/1TmpE6y0PEFBKpaExPVxBGKx09
+                E2RfIT0fxtbRs8wYAW4wXiZ7poK2JR06iUQtki7KRPWJgCiFWuWAwoy6FHsok5El8yLqnZdpxTJ0injE
+                GSPbowzsQ3MAmLtyNbPOXcP6PbupxzEz5y8A/5VQOF6JeD1gxZJl7N4ueW2/96lPMwQ8QJkyTnIAD4xX
+                CU7lCldIjmEOzVGgdP4aKBaTa6wfC2Bs8y6WAueSZzkey/BYQpHzcLkIiNY9lLTreaYfyrKPA23tdJ+7
+                il5EvyskWmZMQCh1LSIz7abMlF2cKq5lJFPA0YceSV8ikuURRWHywtV6lQMPrWcywnAuiAcPEiVgnEsb
+                iGsSNddASJ46LvY8FQuWxThRTOyaoz5TLC8NNAR0aysOHiXE0A6N6SdF4oG6g1apkqHlBcWHBcS+g9PY
+                mMyPqD/WuM+ioQ7pUUyp4NHEDBKy05TcedOv/zr1hiLrHllP94xZTJ81LUGaJmgTTpShpRPtHe20T+1i
+                3aMbabhgDeeuPpv7gR4ifNJi4OnUvdAVnsJ8ktdco84RoPFD70sfF4fJbg5wZN8+c79rTm/yGMYlRlEC
+                +vf3gClqEliXZRhmZx7nV29gF1L3KcKWFQgZIGYYj1LRwEmqYO43akJRxr6G6NGFJ7dCbLjIAwcP10sN
+                vCNPPM3x8nFaUFQIOQLUu6eaUdEQi+Mjg3sQtTRwBMl6kWOZxY8aElMnpheoe83MMInDiS4e6XHbYPOi
+                uUxasoQjkOBLEZoRInpRNC+fj7NgVtKGqJJ2sYHXWmDqxeczDPQlGZA6rVJFWspYcmWstJdkgBEc9hOz
+                H5i76kKWvuFqntu1h77+Ac466ywmtbSedNf+RWhCDJ2VJtfd8CbuuO0WAP7sP/+DCLiTCkeMMaCxedI2
+                S9hJmFhisJSRjhHDBPQAXWvOp+PtbwIQiWN9uObtW+bNZgtwmDHEfa0pE3KUmB7AmzMH2toxnt4knC0b
+                7dz6Rx9g+a/dyCHjxwrQHCekH2h5y1Uo66FEZc12nLMW0XHOeewHWoDq8weIdsouJUahRut0gEdvvQOb
+                wtsPtM4/j5nXXylfmkVCCFlfS/OVl7HqXe9jCIdeAvIok0blMELMKK3M+JMPMvuNb5Y+YUSGtX3NBPnz
+                Z7Po4x+mRoEKoSkiH9KLomH5BZzz6U9CsygjFmuWxeGiY8lon/wbb2LWG97IUTDLyaaCOcbg08k8pwdt
+                OIR47CPiWQJi5XLtR95DfdoUHrj/IWZO6WbV4oXk1SuiKCRj8AuTm7m9q72N2XPn8p1//zbMXMBNH/sE
+                jwD3UmYA32St2JgA2TptMYEQm88gM9BHQPeNb2PZPf8OjkjIwIOa74FOo7ZWfPiDzPjQB2jumscANQrE
+                NBIwQjMLf+/DLL3tFmTJSIlCe59WIllFehZZ8KWbUR3dlE3yVz9FlvzRf2fVv3xLnk1MRJ2yV09KFdDV
+                xZq772TRvOUmxHWU2iOSXOAoyBOTJGOXRyjc9VOKwDEc5l14CWs33oK/cB5JSoNVyJW8XwDQUGLBt/83
+                Mz/xUQaACiE1DJ8W2znvkx+i88//V6aPEbEyjOa66faHousdb6Hrt99mpGtEjKL7rHO46D++hHv2CgAD
+                4mXqlcSgTNV9p2M6K//nJ2grtILZKdJTvSziIllJNrRpDAwzV9kPXPaWt3Detddx97qHOHp0gPPPPY/O
+                zg4zKS+X616cJiihI9Cpsva2G97Mts3bOXj4GJd+/rOsXb6Se4hZTz2pJOphi5BEyY8lhRQqcYDo4kuh
+                dbZ8nxgkNuPOsGZLO+1f/Ecm3XAtfVi1JSKaPYWOv/8cLJhjpE2Er7Ux6ZTRhTPSsKOLaPo06shhxGUg
+                uvwCaBBT08XBjTUldJKBowFa28gvnGMM1YCedRszoxPgeeYBO7fSt3ETrShGUQStrdA0BTABR1421iPE
+                15JHkyzAhUuoYWE2EQlVpchNny3fYwuAaRwNsdbJrhQ42uyODVSa2rDeuhFigu5mmLUAEE3MwcHRmeM1
+                PIjc1HMQ5NqpuVJj0DMAZxWHmsGlrT/RKpkHidhElR5gzcLV/Mof/w+eOniEu269k2XLl7Jm5RoK+SLi
+                fHolUmQnGm2nxBFgShYxqa2Na6++nn/62y8C8D9+8J+0AvcxxkCCVsZmS7LKRqp+gMA+IeCYvM/IBK87
+                oeC62irRIUmOXiWOGAZAMQYMqRqYZMsICHUepUz0mOFGJxPbTOxSC+15g8ZvWB1NvpY4EA8VuhKQRYoV
+                V+MwKQB56KlnYDTK3CVvNfDUJoao4CHnpcQZz16ATQS2vRVSOknPRUfZI45l/CpRRGg1sAiJx9YadIwN
+                QBVJawIQqhq3Pv7I+3otlkMjMQFJYYyjIpQWc0Dqc9hiD/LSOhAwzh51Z2W0MuCijbkbMnrzHmCSV+Jd
+                f/RxCgsX8qMf3EKjm+e88y9icldndkpeEZpYtJ3VRR275cHFr7uIGd1d3PzP/wgL5vCR237CDlz+jpBt
+                uHh4Rko7xpuosLEccjyvYhCoe8LRXuij3RAtRyjhUxU/lkeSyOnquqlmanLpagpM5rOvs5mHsq9rFaBV
+                ACYcBEcRutbdLkUcI1cWgIYUK/Q86UOmzXpcxEH06MaNz8CWxwCIyck6j2oc+sntEoxkxijOjHo+zFPC
+                ZqQEYmoZ56YVjSq2CLmcHuPgoZUicE0sjAtKmX3HcaUOhwYvTOoy4aiAMHaNHi+pZH4YmtABOzwuiiqo
+                GsqFWGkKVA0aDihwlPg/q8b3KFlK2iw1lxo59lDgERQbjWPo9X/6B0x/5/V8+0c/ZsfeHi65/CKWLluQ
+                hLIoU/QNmHBO4cQkdPKvyFZpA+Dd7/4tDmzt4Ud3/Sdzrnsjf/HP/8QR4A5GkRJ9svFJVotDFWVMOimB
+                UgJ8LTG+2rcvbGV4IXEYJJ1XRSmdRU4G1o0hb8KLDKCR9FWJU0STG9dG5JCcryVHDqXRX9q3VYHSNiwV
+                TKkBjUOdGv1PPJ20mwMoD/H8ukdMTHaOCI84GzdqjUzAoYBCIErt5AnMZbWiZgwJzQ2NPy52PVx/XO1V
+                CyJLnxMDVtS0qLmRoEG4RQ77UcQNBWhMOUgrB0H08+KMRY5vsjVendYcQc7CreLurhJSRbyNHooRYAdj
+                9Bj87Z0f+Qg3/Mkn+fGd93H7bd/j3HNWcskll9LS3MJ/BU3QKMyQTp0nhY4mPvi+D3HHrffy8MaHOf89
+                7+Njf/pJtgJ3MsrziLM5JjbQj4tDejxZEchHaUzwS5GnhMUriB7YHQL79wqGXB2B8ihqtAyjFRit4NRG
+                cGrHYXQUahEcPcgcLfHNEYoSORqiNOvZxjCcbLBKvsQp5HAoUqc/ieswS+hnG2jvPUoR64xwaH4JJ4J9
+                pt0FJgUOTQYJks1C0e4qSiZtSY1VoDwK5REoj6Cqw6iyvKtbHsOLxsgdPszU0SFzqJIcpNlcHoOjB+St
+                K3VUOYTaCJQrOOUId6yGM1ZDVcdAV8kfPkyD65pgI233EyRdLsdhFM9QYxcBVeC6d76T6/7ik9z/+Ea+
+                +//9K0sWLuaaK69i2rRpybvqiZ3x88Kxm2CDqXJFTGBqKVks9fFHN/HFr36B93z0Jq5Ytpqtf3szn/74
+                x5gBvJUSc7HZwRFyZLpM5XGqhFMWEyyZxXB1FOV6OJELOiR2I5zYRTtSzqpN52jYtIWR0aO0kSdHjUNo
+                xvId9DuKIK5RwiMMYvDqxFqCMV0dE+s8oXbpKBUpjB5gEooSDgeB0oKlDE/rYqxaAxXg+QEEJbQymSxO
+                TKW1gSn3Po471k+BHCF1+igQL1nMWK2CG3m09fcTjhymCTnvb4SIHG2oK8/maFCXwKFQcnYix2AFcR6U
+                JlCaRscjv38/5X27aMWeeRszSkyNRo405HGCGug0X7zuKpxIGeQ6xlcRucijGAVMooKDT4BI/YGGZka0
+                xolisc0cca3HjocTSJa4RwieI3Hj1X6acJDasBEeilEcetDspE4PsjO+6/03ce0X/46HNz3B337ms8zq
+                msU73vF2Vp+z5oRs8hfQq3gKlvELayXgm0IO+BXkUmjDfev539/6Oh/+8EdYtWYFm7/5Db74279DC/BG
+                HJaTI2cMIwfPWNhVjgMVIxWHSevd1ZGd1AaNNiCOjTw+NVwaiBhFJ7pinQAHx8RwiDlqETIpECZnvDQi
+                9ZUkvq3OKBEDpBa/Y/5dJT1uuA60AY3GreCiqRDQh2zLPnIUmgT/5xFZVqNGbN4vhbazNn6BFJrMIaGm
+                vjHDNIqq6XmI1HeqkkJtOvPvbMSbA6Y0V97keobUiRgzen0ampTGZtg9157tolA0oZIxc3AZBrYSspsa
+                ZdPO2z76cd7wmU+z7okn+Ye/u5mO9km8/ca3c/75F+IWM8kfJ5xlaejVZ2hpyXrgADV+S33ygQ184R+/
+                ym+860auvf5aeHwjf3TZ5dTGhrkMOIcCk3AJiJKDHZUxMwpA3ZxQbZHOImlemmQgSqztGD4eIXkk7Usc
+                2DqJRQ7NPWADoJRRfYTVA+OekfIJcrykb37SYCB7bKfAWdXk6sh4ygTjNeYaEryjiMiD2Yl8M2zCfHHC
+                cBE2aSlNhnWRyL+acajYenQaKXKZI050/9QpYhUWW60vMhizPeFcps4lwMchLTkgVf1r1pDM9EGTnpsI
+                DnU8DhOwh4ijRBwDOvJNfOgLf8Pi3/sgP7zzdr725a8wf9ZM3nXjr7PmvHNxCvmsn/xU9CoyNJmZUSCV
+                UcR1jHKNbgzEmofWPcw3vvY1Xnfp6/jt33kvDPTzxauu5ImNm7gIWEuRydiamp6RG1ECPfnYXLWYRgPt
+                ib9KzLsaihgfKb4l4aA2vFIwbNeUydUm5MhObVoxM0Qbg1PSY20sXOr5UoTmrjxpmKmUZXdNDyNsldC8
+                WZRSbiwndfAMe1v2C8hWtUvPEwdbEADjRZWeWWkeZHruJj3NTotLqoToxGmST+6XnuWMsSsR6HmzXEWg
+                SBU8H1vsS4SCzxAuh6izjxrHkayXRQsW87EvfIGWN1zFt771bb7zve+ycOlZ/Oqb38qFK1dTaGyQUdYW
+                kTklvXoMHY+LirB8HQpjK4dYayIlUBPEbNu5iy//w1cp5Tz+52f/miLwzF/9Nd//5KcI41EuBFbiUyRP
+                ntDELNhYDym/GyCF0UVlUFSNkmC3Y8dITxvuGIhbxGySmBqeUTLdVgrZLTYNqFHmHVUSb+ybBSVMp5PF
+                EhksXZjLorLiF7VrXY7hkFiV2EhzG4opgZ6OOW4NU7kzpp70MVtmRhaxVXkCMHWbU7XFYs12XhRpLHnR
+                /JYMEhEGNivft9UjEQleN8tIkB9NBc1BAnYZlWkUUbmu/fBNvP5v/5qBsRqf+8u/ZcvTT3PBZZdwzVuu
+                Z9myRUiwr925xpfhPQm9egytbWAWJIVZpEaRlUD2E5mGGIeeQ/v4l2/8Kz3Pb+fjH/9jli9ZSGXDJr74
+                rnfQt2sz84DlFJiCpoSLBAxZkE2ZmLPYsIEwm9XKbN6ePZRVJJHd0EMz6RZ+C4xhk/oq0xOebOFa+6mN
+                QZEr0y1eWEc8cXJvnvGHYWSjCy2EBjaA3jFMLVI+zZQR1UWks4UoRXGwp57YECB7bDPYAHurEqVpYiRL
+                XQrzWsUlGsf69oxvTWRY0AqHEJcjOOwm4gi1JC561pwlvPPPP8mcd/8GDz7xEF/58leoDtW55vI3cOWV
+                lzF70Uw8CzZrCFU2F/yU9GqqHKG2QKpN/xeS6bbJ9CfqTeXRMrfc9kNu/9FtXHD+xfz+H34IB9j2mb/h
+                O3/+V3RUhpkOzKJEBw4lArNVKgMTRWb4xeTxjBdSTmQS/VnC84W1bIayLDOFrcLhGmldNQuvkGFn8Rdi
+                XEHKZI1EeNiU39S/KUwisjRbIy80z7SeO88oL9bgy5txC7EeN1EiikAZW1zB3qvNAnUSBUcO9FTYjBuF
+                JCaIiiU7Sc1Ids8sgToBcriFqGgCndpCXmkdbwefMg7HiDhIwHGzW1aBQqmNN7z3HVzzl39FvbWJz9/8
+                9/zszjuYM2cm1173BtauXUtXh8lA0Rp7aL2Vfr+0ElpqoHrjdQ77z8xnCsYXmHBAxxUeWfco3/3+rQxU
+                y/zhn32Cs2fOg2eeZeuHbuL7Dz1EI7AQl+komvGMlwwkuNQxSIJHHgl2qpqpxejcNrYD0rJX0hVhHxu+
+                Xzff5PGIjN4eJoaRi4tr1B9RFYQ1JNZbFpis2DwOVSQWLYeTBEBZM8whTpjZ6rO2X2mofyp5010AY6Iy
+                zjCM8ZEiuQFeotOrxMkVJEvfxTWmbUwdW+Q2RhnDWsbJB2r4BDgME3OAkKOEjCCBRnlgccdsfv9fvop6
+                /dU88sQTfPlLX2Kor5/zzjmXyy67ghWrl9DU1JL0O1mtjilgrHmJs+t/GYzCCdCRY0f46e13cOvtd7Fo
+                +TJu+pM/oct1OPLoRtb9yZ/xzL134APTgJm4dFOgFYwklLp09USKyYTaUmRCdiWlHU7/Uskas1dGpLmP
+                VnXQmXvBRmmkLvvsIKQMqjL68wm2c+Yei1jYPU6bT+2Op833Nl/P7gMWShS7INWDI+Ok0qQxymn9Zmu6
+                pmce2mDeGg5jCAZ/gJDj5gjpkulDx5RZXP7xm7jkE/+NnoFevnTz3/PM448xe/p0rr7m9Zx/4UVMnzY9
+                heG0LPSTwHIvRa9thgaoVqs8+uij3HrrrRw6dIgrrr2G33nnbwEw9OMf8YNPforBZ56gBHQBrUArPg3k
+                KBotzx4ZgZk2ywTKqA8i4VLIKjJTb7XbtJC3ZVYrGdMXtZI0TtrNMmGqt8u1brI3WOa00j1bGs2iOCcO
+                qA1E0hkmt+1HmWtj0jw6+1z7BoJSWENY2szhYk9hidHU8OlDcZiIYwRUicmb/o4BhdYOrnzfe7jmTz4J
+                bc3cd/d93PyFv8VRcM4F53P5FVewZOFi2traXt5kvzS99hna0tDQEA899BA/uet2hkbKXH/NVbzr7e+S
+                B933EPd+9nNsuuNnOJSZBnQgyIOHRwnHnA0eG13VSQKmREVQJsk+m0+RbvaaLNPGiZwXCe4YJoyNaRkn
+                Rpm47rPWQ5xpKyudLIKb4s+WUiMpC79Jz6UdWxE6xZyzrcbYDGu7s8i7W6wlrSwnybYjSJJuH1X6DZpi
+                HVdyrLPPvAXzuPj338fZ738/FBu5/a67+c63v8Ox/Qe4+LKLufiSS1i1YjWTO9tPqhSfwmnycui1y9D2
+                2dkXr9fr9B04xI/uvJ0NGx4lrxRXXX8dv/5rvyYXPPIYz33xn3j0337IIEPGUwfNQAs+RTCnbmGcK5Z9
+                bY4F5m+rlpxYnFtAsQBx6mQTSrPl8ZTRZbMeuhMHRmXut9KVzN+Y56ctpCFYtr6fwsm0klWZ0kUgC0SO
+                hMgUEjUwpziPakj8RT8x/QQMoJPzbywzOyjmrziX697/W0z5nd+FvM/PNqzjn7/yj+zft59502Zw0QVr
+                ueyqa5g+ey6FnDOuUyebz1+ATg+GPnFFx0HA9l3buG/9Azxw/zoI4No3vZE3vu2tdBQaoFJm0xe/TN9X
+                vs6RPXtQBDRj5ZrgnQVcWvEpIAdzRsYchPTABeu8sIajIAWpQyYNEnJMNl1qvtmaIxa8S3HttHa1zlwd
+                45yE+WVh2dNJ7D0Wi8nq2nK1Qqq0Crmm5yoxAJWB56CMYgCX48AAEQPUqKJoRBt3urTb2DaNedddztoP
+                vI9JF19KSMwdP7mTf//uD9m/awdLF85m1blnc/Z553LWwqW0NrclfYoIULjGXB8/t//XSegXNHaSQajH
+                dXp29LDugYd48NF1DIwMsnDePN7+rveyaukSueiZx9j/g1t4+JvfJ9y3gxIitcUwEqNKmZIAefI0I2qF
+                aNQRcuhZYDRnZSqopjq1rUBr8VdrjNmiko5RSSyzirTX45japvZnmdQqIfY4u6wzxBZxsQVyrRM7xk3a
+                s2pUDY86mhoew4QMU2XAqBJWx24wfR4yzy8W21h51TVc9vbfoOXGt4ALh44d4xtf+xoPPrKOyugYi+ct
+                4KJzL2L1OcuZM38BTfZojWTCAlD2XKxXpgwBpxNDJ43qEK3Gr/kojjm4/xBPbtzA4088yaanNtHY3sqb
+                3/RGrr76OjrbWuXCRx5j5z9/m0MPPEzvjt2EjNAIybmINWxFpPFsKditRw5xv+eIsWHrlgllO9dYN3T2
+                wMwsLGgPnsxmuNvf9n6ra1s02xqQKbIpn4fmesmS8amjKRvVooJDFSnpVaeWxGDA+EUo9fFcprZ3MO28
+                c7jwV97KpBt/E1pKDFRq/PTOO7n9tlvZvXULne2TWLBkMWtWrWbF8mXMnDWHUmMD4yk2L+W8JKj8C9Dp
+                x9CYDDoBrL20gg9ADEODA2zb8yyPrn+Uxx7dRnn4OB2TOzn7kgu59sZfYU5js1z7/E7iH/2Yoz+9m50P
+                P05x5Dhj2GgyOYhCIK9saXNbhy2mgG82U01acVmRuk6skydEZZg7e6C7dSaL08Q127RjXyUxEMejMpJR
+                ooExIsoEDBJTRpxHFfM7RWXkOZmzbY2q1MT0FYtZdtVlLLzuGtSVlwIeY4T84JZbuO+un/J8zz7Cao25
+                s2dyzsqVrFxxNvPmzaGrczpewaJC2Qi+uhkFQZLs819Bvj79GLoCFLUBqJSUyQp0Dv+EUQuCOvv3HWb7
+                1q08t/kZnt3yHIeOHmbqtC4uvfhSLl27lnlnLUkH+5ln2H7rHfQ++CC5zVtpObAfhzCRwEXEEzeAzz7k
+                /EI5LTYgMlIxxpGij4bV5YjQCM/UNkqrUthAojTEybpyBAfWSfSfBJVqkw0fEhJRNk4YWzoxb4rvFIjJ
+                E1HAJTRmqmW2XLGdprPm0HDBeZz9hjcw9fprwGS1HDp8mHUP3MtdD9zPti3P0VBsprt7CgvPWsSypUuZ
+                O38B3TNnMamxlIxXxicipMZPeFZ1OsPQL0K2DrM8ITKjZfx6IS8MEI+hHtbZe3AvPXv2sPHJp9m46RlG
+                h8fwfJf5CxexZPliLr7oXBbOPiu9b9fz8PSTBFs20/f40/Tt3s2RXfuJghEaiShBUsbWRrnVzY+NQa6S
+                ItISmirMaatCZQsYyrfmtUi9gtnPIY2Ii0jDXq0zRI7RyNM6pYsZc2exYPFippx7Lm3nnwOLFkNBGHho
+                ZIQ77rmTJx9/is3PPcfIwABuLsecWXNZtmQp82bPYeHChXR3d9Ha0ZrphYUsYNzhK6EG15jJ2WiGE19s
+                4nT6MTTauM5N6+PcDird2DVIXbYT7JGxsTEGjpfZvm0be/bsZtu2LRw9doj+gWOEYcyCJSs4Z+2lLFm2
+                lPnzZtPuZ0r8jY3C5qdg/Tp4bifx5r1Uj/VC/yhjg4MMMkaZgHoCewnaG2Cj3wTrtkiJjRS07nW7G2RL
+                QFoJ5ya/XXyKNDU3UGptoaVtEt1z59Kyaimccx6sXgFTOpMu14BtO/awZfuzPLZhA1s2bWR0qExLqYH2
+                tsnMmDWNmXPmcNbCRUyfMoPuzi6amhsz2cNiymodYc+6kRR7I6Mt5ya1+lTmM/vRK8bRpyFDv4KktWZg
+                YIC+/n72HzhIz57d7N69m82bn6NSreL6OYqlElOmT2fqrBnMmb+Q7oWLmD9/LjNPaCsAasEI9aOHiQ4c
+                JeobwDu8D9V7nGB0lLh/CF2royqj6FqIDkOUAh1D4ILW4OdyuDkPnW/EaW5CtzXjdkxGTe5CdbSQm9xJ
+                rquT3JRpL8AN+oAdB/azb9s29u3Yzt49Pezb28PI8QGCeh3XdZkxdRrzF8xn+vQZTJ8+janTptHV1UVL
+                czPF4gRTqv/P0BmGfrmktSYMQ4aHhxkeHubw4cMcOHCAvT099Pb20t/fz/HBQXQQMDYyRhQHtLVPZvas
+                6SxYOI+Z02fRPXU6zS2tlBpLFIqNNDY14jkTl07lsSq10QrD9THGBgYZOLKPvT0H2NKzjS27eug7dgxC
+                RSHvk3c8ivkiTe0ttHd0MKV7GtOmTaV76lQmT55MW1sbzc3NFAoFHGdCedCvBp1h6FPRy/VcxXHM4OAg
+                5XKZwcFB+np7GeoboG+gn4GREY4cOcLBw4fpPXacarWC6zn4Th7P8cF3iT2N7yp8x8X3PDzfwzPVkBzP
+                JY4ddCyB+XEUo6OIamWMKI4Io4goDogiTS0MqAdVojjC1THt7e10d3bTPqWT1uY2Jje30dnSRmtHO+0d
+                k2hpa6GpqZHGxlby+dyLvqMdjwl68f5P0BmGfjl04nu+1MSGUUi9XqdWDanVaoyVxwjqdUZGhhktj1Ie
+                GmFgcJBKZYzRyhhjo1XqYY0wqhEGEZEWVIQoTmpMSma7j+9JQZhSKYfjOxTzBRqbGmgsNVJqKdHc1Eyx
+                oUShoZG8n6Ox2EhDQyMlz6dYyIHjvdiZcC94Z/uu/zcw9IQPr38tkJ3IF5vgEyfbcz28okfppGpnJq9a
+                IxasjgjigDgKCDSEWqPDzLmAaIjFRPRdF3wpNBy7irznS6Wkn5PXBEEJ8bVEQ58YQnAi857492uEwX8u
+                mihDf/EV6cV/Mb2cCR7/nY2IdhJYLQ3jkJB96wV0VIw9ItZ1XRxfglJtTaNs3b5skBGIOzupCaUyl5wE
+                uTkZCR7hGSDi5O/4YvRLysyjL33JqWmiKscZOkO/VPSaM4HP0Bl6MTrD0GfotKIzDH2GTis6w9Bn6LSi
+                Mwx9hk4rOsPQZ+i0ojMMfYZOK/r/AbD+kCDCskmaAAAAAElFTkSuQmCC
+</property>
+        </structure>
+    </list-property>
 </report>
