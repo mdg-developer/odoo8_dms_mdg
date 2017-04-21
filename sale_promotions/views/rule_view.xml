@@ -16,15 +16,19 @@
 					</header>
 					<sheet>
 						<h1>
+							<field name="code" placeholder="Promotion Code" />
 							<field name="name" placeholder="Promotion Name" />
 						</h1>
+						<button name="generate_code" string="Generate Code" class="oe_highlight"
+							type="object" states="draft"  groups="base.group_sale_manager" />
+						
 						<group col="4">
 							<field name="sequence" colspan="2" />
 							<field name="active" colspan="2" select="1" />
 							<field name="promotion_count" colspan="2" select="1" />
 							<field name="monthly_promotion" colspan="2" select="1" />
-							<field name ="join_promotion_ids" colspan="2" select="1" widget="many2many_tags" 
-								/>
+							<field name="join_promotion_ids" colspan="2" select="1"
+								widget="many2many_tags" />
 							<!-- <field name="stop_further" colspan="2" /> -->
 							<!-- <field name="special" colspan="2" select="1" invisible="1"/> -->
 							<!-- <field name="special1" colspan="2" select="1" /> <field name="special2" 
@@ -111,14 +115,14 @@
 								</group>
 
 							</page>
-<!-- 							<page string="Monthly Other Promotions" -->
-<!-- 								attrs="{'invisible':[('monthly_promotion', '!=',True)]}"> -->
-<!-- 								<group> -->
-<!-- 									<field name="promotion_id_a"  class="oe_inline" /> -->
-<!-- 									<field name="promotion_id_b"  class="oe_inline" /> -->
-<!-- 									<field name="promotion_id_c"  class="oe_inline" /> -->
-<!-- 								</group> -->
-<!-- 							</page> -->
+							<!-- <page string="Monthly Other Promotions" -->
+							<!-- attrs="{'invisible':[('monthly_promotion', '!=',True)]}"> -->
+							<!-- <group> -->
+							<!-- <field name="promotion_id_a" class="oe_inline" /> -->
+							<!-- <field name="promotion_id_b" class="oe_inline" /> -->
+							<!-- <field name="promotion_id_c" class="oe_inline" /> -->
+							<!-- </group> -->
+							<!-- </page> -->
 						</notebook>
 					</sheet>
 				</form>
@@ -130,7 +134,7 @@
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
 				<tree string="Promotions">
-					<field name="sequence" />
+					<field name="code" />
 					<field name="name" />
 					<field name="active" />
 					<field name="coupon_code" />

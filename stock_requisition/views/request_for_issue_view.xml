@@ -34,14 +34,14 @@
 						</group>
 						<group>
 							<group>
-								<field name="from_location_id" attrs="{'readonly':[('state','=','approve')]}" />
+								<field name="request_from" attrs="{'readonly':[('state','=','approve')]}" />
 								<field name="request_date" attrs="{'readonly':[('state','=','approve')]}" />
-								<field name="so_no" attrs="{'readonly':[('state','=','approve')]}" />
+								<field name="vehicle_id" attrs="{'readonly':[('state','=','approve')]}" />
 							</group>
 							<group>
 								<field name="to_location_id" attrs="{'readonly':[('state','=','approve')]}" />
 								<field name="issue_date" attrs="{'readonly':[('state','=','approve')]}" />
-								<field name="issue_to" attrs="{'readonly':[('state','=','approve')]}" />
+								<field name="issue_for" attrs="{'readonly':[('state','=','approve')]}" />
 							</group>
 						</group>
 						<group>
@@ -50,9 +50,13 @@
 									<field name="p_line" attrs="{'readonly':[('state','=','approve')]}">
 										<tree string="Stock Request Line" editable="bottom">
 											<field name="product_id" on_change="on_change_product_id(product_id)" />
-											<field name="req_quantity" />
+											<!-- <field name="req_quantity" />
 											<field name="product_uom" />
-											<field name="uom_ratio" />
+											<field name="uom_ratio" /> -->
+											<field name="uom_ratio"/>
+											<field name="big_req_quantity" string="Qty(B)"/>
+											<field name="big_uom_id" invisible="1" />
+											<field name="req_quantity" string="Qty(S)"/>
 											<field name="remark" />
 										</tree>
 									</field>
@@ -79,11 +83,11 @@
 				<tree string="Contents">
 					<field name="name" />
 					<field name="request_id" />
-					<field name="issue_to" />
-					<field name="from_location_id" />
+					<field name="issue_for" />
+					<field name="request_from" />
 					<field name="to_location_id" />
 					<field name="request_date" />
-					<field name="so_no" />
+					<field name="vehicle_id" />
 					<field name="state" />
 				</tree>
 			</field>

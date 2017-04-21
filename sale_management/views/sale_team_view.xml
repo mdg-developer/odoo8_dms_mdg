@@ -44,7 +44,7 @@
 				<field name="location_id" position="after">
 					<field name="issue_warehouse_id" />
 					<field name="issue_location_id" />
-					<field name="receiver"/>
+					<field name="receiver" />
 					<field name="analytic_account_id" />
 					<field name="van_id" invisible="1" />
 					<field name="vehicle_id" />
@@ -63,6 +63,9 @@
 					<field name="sku_invoice" invisible="1" />
 					<field name="product_invoice" invisible="1" />
 					<field name="credit_sale" invisible="1" />
+				</field>
+				<field name="active" position="after">
+					<field name="allow_foc" />
 				</field>
 				<page string="Team Members" position="after">
 					<page string="Products">

@@ -116,6 +116,6 @@
 
 
  <menuitem action='action_stock_taking_loading_instruction' id="menu_stli"
-			parent="stock.menu_stock_warehouse_mgmt" groups="stock.group_stock_manager" sequence="3"/>
+			parent="stock.menu_stock_warehouse_mgmt" groups="stock.group_stock_manager" sequence="11"/>
 	</data>
 </openerp>

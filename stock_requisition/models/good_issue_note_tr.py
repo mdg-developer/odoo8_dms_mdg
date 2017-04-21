@@ -146,6 +146,9 @@ class good_issue_line(osv.osv):  # #prod_pricelist_update_line
         'product_uom': fields.many2one('product.uom', 'UOM', required=True),
         'uom_ratio':fields.char('Packing Unit'),
         'remark':fields.char('Remark'),
+        'big_issue_quantity' : fields.float(string='Qty', digits=(16, 0)),
+        'batch_no':fields.char('Batch No.'),
+        'expiry_date':fields.date('Expiry'), 
                
     }
         

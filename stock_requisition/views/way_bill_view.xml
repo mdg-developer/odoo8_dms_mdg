@@ -127,6 +127,6 @@
 
 
  <menuitem action='action_way_bill' id="menu_way_bill"
-			parent="stock.menu_stock_warehouse_mgmt" groups="stock.group_stock_manager" sequence="4"/>
+			parent="stock.menu_stock_warehouse_mgmt" groups="stock.group_stock_manager" sequence="12"/>
 	</data>
 </openerp>

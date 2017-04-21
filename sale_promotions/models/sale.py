@@ -26,8 +26,7 @@ class SaleOrder(osv.osv):
     '''
     Sale Order
     '''
-    _inherit = 'sale.order'
-    
+    _inherit = 'sale.order'    
     _columns = {
         'coupon_code':fields.char('Promo Coupon Code', size=20),
     }

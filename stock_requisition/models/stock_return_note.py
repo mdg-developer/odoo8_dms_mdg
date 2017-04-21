@@ -30,12 +30,12 @@ class stock_return_note(osv.osv):
         
     
     _columns = {
-                'request_gin_id':fields.char('(GIN) Ref:No:', readonly=True),
+                'request_gin_id':fields.char('(GIN) Ref:No.', readonly=True),
                 'return_from':fields.char('Return From'),
                 'return_date':fields.date('Date of Return'),
-                'name': fields.char('(SRN) Ref:No:', readonly=True),                
-                'sale_order_inv_id':fields.char('Sale Order/Inv Ref:No:', readonly=True),
-                'vehicle_id':fields.many2one('fleet.vehicle', 'Vehicle No'), 
+                'name': fields.char('(SRN) Ref:No.', readonly=True),                
+                'sale_order_inv_id':fields.char('Sale Order/Inv Ref:No.', readonly=True),
+                'vehicle_id':fields.many2one('fleet.vehicle', 'Vehicle No.'), 
         
 #         'state': fields.selection([
 #             ('draft', 'Pending'),

@@ -32,11 +32,9 @@ class direct_sale_state(osv.osv_memory):
          'confirm': True,         
     }
     def automation_order(self, cr, uid,context=None):
-        print ' automation_orderautomation_orderautomation_orderautomation_order',
         mobile_obj = self.pool.get('mobile.sale.order')
         list_mobile = mobile_obj.search(cr, uid, [('void_flag', '=', 'none'), ('m_status', '=', 'draft'), ('partner_id', '!=', None),('is_convert','=',False)])            
         for mobile in list_mobile: 
-            print 'mobileeeeeeeeee',mobile
             mobile_obj.action_convert_so(cr, uid, [mobile], context=context)
             mobile_obj.write(cr,uid,mobile,{'is_convert':True}, context)
         return True

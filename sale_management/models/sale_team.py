@@ -252,6 +252,7 @@ class crm_case_section(osv.osv):
                 string='Credit Outstanding'),                
                  'price_list_line': fields.one2many('price.list.line', 'team_id', 'Price List', copy=True),      
                'branch_id':fields.many2one('res.branch', 'Branch'),
+               'allow_foc':fields.boolean('Allow FOC'),
                            
         }
     _sql_constraints = [
@@ -259,5 +260,6 @@ class crm_case_section(osv.osv):
     ]    
     _defaults = {
         'date': fields.datetime.now,
+        'allow_foc':False,
         }   
 crm_case_section()
