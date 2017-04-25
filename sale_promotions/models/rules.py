@@ -88,7 +88,8 @@ class PromotionsRules(osv.Model):
             codeResult = {}
             if ids:
                 for proVal in self.browse(cr, uid, ids, context=context):
-                    if proVal:
+                    code=proVal.code
+                    if proVal and code is False:
                         import datetime
                         d = datetime.date.today()
                         month='%02d' % d.month
@@ -146,7 +147,7 @@ class PromotionsRules(osv.Model):
     
     _columns = {
                 
-        'code':fields.char('Promo Code', readonly=True),
+        'code':fields.char('Promo Code', readonly=True,copy=False),
         'name':fields.char('Promo Name', required=True),
         'description':fields.text('Description'),
         'active':fields.boolean('Active'),
@@ -964,7 +965,7 @@ class PromotionsRulesConditionsExprs(osv.Model):
                          ]:
             return {
                     'value':{
-                             'value':"'promo_name'"
+                             'value':"'promo_code'"
                              }
                     }
         # Case 5    

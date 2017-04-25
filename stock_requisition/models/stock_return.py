@@ -258,11 +258,15 @@ class stock_return(osv.osv):
         move_obj = self.pool.get('stock.move')           
         note_obj = self.pool.get('good.issue.note') 
         return_obj = self.browse(cr, uid, ids, context=context)    
+        team_location_id=return_obj.sale_team_id.location_id.id
         origin = return_obj.name
         return_date = return_obj.return_date   
         main_location_id = return_obj.to_location.id    
         ven_location_id = return_obj.from_location.id    
         note_id = return_obj.note_id
+        if  ven_location_id !=team_location_id :
+            raise osv.except_osv(_('Warning'),
+                     _('Please Check Your Sales Team Location'))
         cr.execute('select id from stock_picking_type where default_location_dest_id=%s and name like %s', (main_location_id, '%Internal Transfer%',))
         price_rec = cr.fetchone()
         if price_rec: 
