@@ -15,6 +15,9 @@
 						<button name="received" string="Received" class="oe_highlight"
 							type="object" states="draft"
 							groups="stock.group_stock_manager,stock.group_stock_user" />
+						<button name="cancel" string="Cancel" class="oe_highlight"
+							type="object" states="draft"
+							groups="stock.group_stock_manager" />
 						<field name="state" widget="statusbar" />
 					</header>
 					<sheet>

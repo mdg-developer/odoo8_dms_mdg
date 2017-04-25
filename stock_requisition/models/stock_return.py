@@ -216,6 +216,7 @@ class stock_return(osv.osv):
          'state': fields.selection([
             ('draft', 'Pending'),
             ('received', 'Received'),
+            ('cancel','Cancel')
             ], 'Status', readonly=True, copy=False, help="Gives the status of the quotation or sales order.\
               \nThe exception status is automatically set when a cancel operation occurs \
               in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\nThe 'Waiting Schedule' status is set when the invoice is confirmed\
