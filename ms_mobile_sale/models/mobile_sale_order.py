@@ -2056,16 +2056,18 @@ class mobile_sale_order(osv.osv):
                     
                     for srl in stock_line:
                         if (sr['rfi_no'] == srl['rfi_no']):
-                            cursor.execute('select a.uom_ratio,a.big_uom_id,a.uom_id from product_template a, product_product b where a.id = b.product_tmpl_id and b.id = %s ', (srl['product_id'],))
+                            cursor.execute('select a.uom_ratio,a.big_uom_id,a.uom_id,b.sequence from product_template a, product_product b where a.id = b.product_tmpl_id and b.id = %s ', (srl['product_id'],))
                             data = cursor.fetchall()
                             if data:
                                 packing_unit = data[0][0]
                                 big_uom_id = data[0][1]
                                 small_uom_id = data[0][2]
+                                sequence=data[0][3]
                             else:
                                 packing_unit = None
                                 big_uom_id = None
                                 small_uom_id = None
+                                sequence=None
 
                             ori_req_quantity = int(srl['req_quantity'])
                             # print 'product_idddddddddddd',req_quantity
@@ -2096,6 +2098,7 @@ class mobile_sale_order(osv.osv):
                                       'big_uom_id':big_uom_id,
                                       'big_req_quantity':ori_req_quantity,
                                       'qty_on_hand':qty_on_hand,
+                                      'sequence':sequence,
                                       }
                             else:
                                 mso_line_res = {                                                            
@@ -2108,6 +2111,7 @@ class mobile_sale_order(osv.osv):
                                       'big_uom_id':big_uom_id,
                                       'big_req_quantity':big_req_quantity,
                                       'qty_on_hand':qty_on_hand,
+                                      'sequence':sequence,
                                       }
                             stock_request_line_obj.create(cursor, user, mso_line_res, context=context)
             print 'True'
