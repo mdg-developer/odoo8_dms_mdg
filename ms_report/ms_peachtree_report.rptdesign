@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.4.2.v201410272105 Build &lt;4.4.2.v20150217-1805></property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="layoutPreference">auto layout</property>
@@ -666,7 +666,18 @@ rp.comment as internal_note,ms.name as invoice,'1518-YGN'::character varying as 
             ELSE pt.list_price
        END
         stocking_unit_price, msl.sub_total as sub_total,
-res.partner_id as partner_id,rp.name as ship_to_name,Cast(address || ',' || rc.name || ',' || rcs.name || ',' || city.name || ',' || town.name as character varying ) as ship_address,'Vehicle'::character varying as ship_via,'1518-YGN'::character varying as gl_account,1 as tax_type
+res.partner_id as partner_id,rp.name as ship_to_name,Cast(address || ',' || rc.name || ',' || rcs.name || ',' || city.name || ',' || town.name as character varying ) as ship_address,'Vehicle'::character varying as ship_via,
+CASE WHEN msl.price_unit=0 THEN (select aa.code receivable_account from product_product pp left join product_template pt on (pp.product_tmpl_id=pt.id) left join product_maingroup pg on (pt.main_group=pg.id) left join account_account aa 
+on (aa.id=pg.property_account_foc) where pp.id=product_id)
+            ELSE (select code gl_account
+from account_account
+where id in (
+select substring(value_reference,17)::int from ir_property ip,ir_model_fields im where im.id=ip.fields_id and model='product.category' and im.name='property_account_income_categ' and res_id='product.category,'|| (
+select id from product_category where id=cat.id)
+)
+)       END
+        gl_account,
+1 as tax_type
 from mobile_sale_order ms
 left join mobile_sale_order_line msl on ms.id=msl.order_id
 left join account_payment_term term on ms.payment_term=term.id
@@ -674,6 +685,7 @@ left join crm_case_section crm on ms.sale_team=crm.id
 left join product_product pp on msl.product_id=pp.id
 left join product_template pt on pp.product_tmpl_id=pt.id
 left join product_uom uom on uom.id=pt.uom_id
+left join product_category cat on (pt.categ_id=cat.id)
 left join res_partner rp on ms.partner_id=rp.id
 left join res_country rc on rc.id=rp.country_id
 left join res_country_state rcs on rcs.id=rp.state_id
@@ -889,7 +901,7 @@ order by code]]></xml-property>
                                     <property name="fontSize">12pt</property>
                                     <structure name="dateTimeFormat">
                                         <property name="category">Custom</property>
-                                        <property name="pattern">dd/MM/yyyy</property>
+                                        <property name="pattern">MM/dd/yyyy</property>
                                     </structure>
                                     <list-property name="boundDataColumns">
                                         <structure>
@@ -915,7 +927,7 @@ order by code]]></xml-property>
                                     <property name="fontSize">12pt</property>
                                     <structure name="dateTimeFormat">
                                         <property name="category">Custom</property>
-                                        <property name="pattern">dd/MM/yyyy</property>
+                                        <property name="pattern">MM/dd/yyyy</property>
                                     </structure>
                                     <list-property name="boundDataColumns">
                                         <structure>
@@ -1872,7 +1884,7 @@ order by code]]></xml-property>
                         <data id="2611">
                             <structure name="dateTimeFormat">
                                 <property name="category">Custom</property>
-                                <property name="pattern">dd/MM/yyyy</property>
+                                <property name="pattern">MM/dd/yyyy</property>
                             </structure>
                             <property name="resultSetColumn">date</property>
                         </data>
@@ -1889,7 +1901,7 @@ order by code]]></xml-property>
                         <data id="2988">
                             <structure name="dateTimeFormat">
                                 <property name="category">Custom</property>
-                                <property name="pattern">dd/MM/yyyy</property>
+                                <property name="pattern">MM/dd/yyyy</property>
                             </structure>
                             <property name="resultSetColumn">date</property>
                         </data>
