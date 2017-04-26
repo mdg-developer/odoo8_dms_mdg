@@ -670,20 +670,27 @@ else
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select *,(select count(msl.id) from mobile_sale_order_line msl where msl.order_id=ms_id) as no_of_distribution,(A.sub_total)*-1 as amount,get_msol_seq(ms_id,msl_id) as so_propo_dis
-from (select ms.sale_team as section_id , ms.void_flag as flag ,ms.id as ms_id,msl.id as msl_id,ms.name,ms.customer_code,ms.date::date,ms.due_date,msl.discount,msl.discount_amt,get_smaller_qty(msl.uom_id,msl.product_uos_qty,msl.product_id) product_uos_qty,
-crm.code as team_code,Cast((select case when substr(name,0,2) ~ '^([0-9]+\.?[0-9]*|\.[0-9]+)$' then substr(name,4) else name end as name from crm_case_section where id=crm.id) || '-' || pp.name_template as character varying) as product_name,term.name as payment_term,pt.list_price as price_unit,uom.name as uom,pt.description_sale description,rp.comment as internal_note,ai.number as invoice,(select aa.code receivable_account from product_product pp left join product_template pt on (pp.product_tmpl_id=pt.id) left join product_maingroup pg on (pt.main_group=pg.id) left join account_account aa on (aa.id=pg.property_account_receivable) where pp.id=product_id),get_smaller_qty(msl.uom_id,msl.product_uos_qty,msl.product_id) stocking_qty
+from (select ms.sale_team as section_id , ms.void_flag as flag ,ms.id as ms_id,msl.id as msl_id,ms.name,ms.customer_code,ms.date::date,ms.due_date,msl.discount,msl.discount_amt,
+get_smaller_qty(msl.uom_id,msl.product_uos_qty,msl.product_id) product_uos_qty,
+crm.code as team_code,Cast((select case when substr(name,0,2) ~ '^([0-9]+\.?[0-9]*|\.[0-9]+)$' then substr(name,4) else name end as name from crm_case_section where id=crm.id) || '-' || pp.name_template as character varying) as product_name,term.name as payment_term,pt.list_price as price_unit,
+uom.name as uom,pt.description_sale description,rp.comment as internal_note,ai.number as invoice,(select aa.code receivable_account from product_product pp left join product_template pt on (pp.product_tmpl_id=pt.id) left join product_maingroup pg on (pt.main_group=pg.id) left join account_account aa 
+on (aa.id=pg.property_account_receivable) where pp.id=product_id),get_smaller_qty(msl.uom_id,msl.product_uos_qty,msl.product_id) stocking_qty
 ,CASE WHEN msl.price_unit=0 THEN 0
             ELSE pt.list_price
        END
         stocking_unit_price, msl.sub_total as sub_total,
 res.partner_id as partner_id,rp.name as ship_to_name,Cast(address || ',' || rc.name || ',' || rcs.name || ',' || city.name || ',' || town.name as character varying ) as ship_address,'Vehicle'::character varying as ship_via,
-(select code gl_account
+CASE WHEN msl.price_unit=0 THEN (select aa.code receivable_account from product_product pp left join product_template pt on (pp.product_tmpl_id=pt.id) left join product_maingroup pg on (pt.main_group=pg.id) left join account_account aa 
+on (aa.id=pg.property_account_foc) where pp.id=product_id)
+            ELSE (select code gl_account
 from account_account
 where id in (
 select substring(value_reference,17)::int from ir_property ip,ir_model_fields im where im.id=ip.fields_id and model='product.category' and im.name='property_account_income_categ' and res_id='product.category,'|| (
 select id from product_category where id=cat.id)
 )
-),
+)       END
+        gl_account
+,
 1 as tax_type,pp.id product_id
 from mobile_sale_order ms
 inner join sale_order so on (ms.name=so.tb_ref_no) 
