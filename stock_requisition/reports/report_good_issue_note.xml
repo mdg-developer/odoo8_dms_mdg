@@ -150,7 +150,7 @@
 						</tr>
 					</thead>
 					<tbody class="invoice_tbody">
-						<tr t-foreach="o.p_line" t-as="l">
+						<tr t-foreach="o.p_line.sorted(key=lambda b: b.sequence)" t-as="l">
 							<td>
 								<span t-field="l.product_id" />
 							</td>

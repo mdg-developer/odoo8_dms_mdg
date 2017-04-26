@@ -31,13 +31,13 @@
 						<span t-field="o.create_uid.company_id.country_id.name" />
 						.
 					</div>
-	
+
 					<h4>
 						<strong>
 							Stock Return Note
 						</strong>
 					</h4>
-	
+
 					<table class="table table-condensed">
 						<tr>
 							<td style="border:0pt;font-size:10pt;">
@@ -46,7 +46,7 @@
 							<td style="border:0pt;font-size:10pt;">
 								<span t-field="o.request_gin_id"></span>
 							</td>
-	
+
 							<td style="border:0pt;font-size:10pt;">
 								<strong>(SRN) Ref:No:</strong>
 							</td>
@@ -54,7 +54,7 @@
 								<span t-field="o.name" />
 							</td>
 						</tr>
-	
+
 						<tr>
 							<td style="border:0pt;font-size:10pt;">
 								<strong>Return From:</strong>
@@ -62,36 +62,36 @@
 							<td style="border:0pt;font-size:10pt;">
 								<span t-field="o.return_from" />
 							</td>
-	
+
 							<td style="border:0pt;font-size:10pt;">
 								<strong>Sale Order/Inv Ref:No:</strong>
 							</td>
 							<td style="border:0pt;font-size:10pt;">
-								<span t-field="o.sale_order_inv_id" />								
+								<span t-field="o.sale_order_inv_id" />
 							</td>
 						</tr>
-	
+
 						<tr>
 							<td style="border:0pt;font-size:10pt;">
 								<strong>Date of Return:</strong>
 							</td>
 							<td style="border:0pt;font-size:10pt;">
-								<span t-field="o.return_date" />								
+								<span t-field="o.return_date" />
 							</td>
-	
+
 							<td style="border:0pt;font-size:10pt;">
 								<strong> Vehicle No:</strong>
 							</td>
 							<td style="border:0pt;font-size:10pt;">
 								<span t-field="o.vehicle_id" />
 							</td>
-						</tr>	
-								
+						</tr>
+
 					</table>
-	
+
 					<table class="table table-condensed">
 						<thead>
-							<tr>								
+							<tr>
 								<th>Product</th>
 								<th>UOM</th>
 								<th>ISSUED QTY</th>
@@ -106,7 +106,8 @@
 							</tr>
 						</thead>
 						<tbody class="invoice_tbody">
-							<tr t-foreach="o.p_line" t-as="l">
+							<tr t-foreach="o.p_line.sorted(key=lambda b: b.sequence)"
+								t-as="l">
 								<td>
 									<span t-field="l.product_id" />
 								</td>
@@ -130,21 +131,21 @@
 								</td>
 								<td>
 									<span t-field="l.actual_rec_quantity" />
-								</td>								
+								</td>
 								<td>
 									<span t-field="l.batch_no" />
 								</td>
 								<td>
 									<span t-field="l.expiry_date" />
-								</td>								
+								</td>
 								<td>
 									<span t-field="l.remark" />
 								</td>
-								
+
 							</tr>
 						</tbody>
 					</table>
-	
+
 					<table class="table table-condensed">
 						<thead>
 							<tr>
@@ -152,20 +153,20 @@
 								<th>Issued By</th>
 								<th>Approved By</th>
 								<th>Received By</th>
-	
+
 							</tr>
 						</thead>
 						<tbody class="invoice_tbody">
 							<tr t-foreach="o" t-as="l">
 								<td>Name</td>
 								<td>
-									
+
 								</td>
 								<td>
-									
+
 								</td>
 								<td>
-									
+
 								</td>
 							</tr>
 							<tr>
@@ -192,13 +193,9 @@
 			</div>
 		</template>
 
-		<!-- <template id="good_issue_note">
-			<t t-call="report.html_container">
-				<t t-foreach="doc_ids" t-as="doc_id">
-					<t
-						t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', 'stock_requisition.report_good_issue_note_document')" />
-				</t>
-			</t>
-		</template> -->
+		<!-- <template id="good_issue_note"> <t t-call="report.html_container"> 
+			<t t-foreach="doc_ids" t-as="doc_id"> <t t-raw="translate_doc(doc_id, doc_model, 
+			'partner_id.lang', 'stock_requisition.report_good_issue_note_document')" 
+			/> </t> </t> </template> -->
 	</data>
 </openerp>

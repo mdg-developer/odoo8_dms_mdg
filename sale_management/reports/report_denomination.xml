@@ -72,7 +72,9 @@
 																</tr>
 															</thead>
 															<tbody class="invoice_tbody">
-																<tr t-foreach="o.denomination_product_line" t-as="p">
+																<tr
+																	t-foreach="o.denomination_product_line.sorted(key=lambda b: b.sequence)"
+																	t-as="p">
 																	<td style="border:1pt solid;border-color:black;"
 																		align="center">
 																		<span t-field="p.product_id.name" />
@@ -395,7 +397,10 @@
 																</tr>
 															</thead>
 															<tbody class="invoice_tbody">
-																<tr t-foreach="o.denomination_product_line" t-as="p">
+																<tr
+																	t-foreach="o.denomination_product_line.sorted(key=lambda b: b.sequence)"
+																	t-as="p">
+
 																	<td style="border:1pt solid;border-color:black;"
 																		align="center">
 																		<span t-field="p.product_id.name" />

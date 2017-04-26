@@ -138,7 +138,7 @@
 						</tr>
 					</thead>
 					<tbody class="invoice_tbody">
-						<tr t-foreach="o.p_line" t-as="l">
+						<tr t-foreach="o.p_line.sorted(key=lambda b: b.sequence)" t-as="l">
 
 							<t t-if="(l.big_req_quantity)+(l.req_quantity)!=0">
 								<td>
