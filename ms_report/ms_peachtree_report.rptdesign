@@ -658,9 +658,14 @@ else
                     <property name="dataType">integer</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select *,(select count(msl.id) from mobile_sale_order_line msl where msl.order_id=ms_id) as no_of_distribution,(stocking_qty*stocking_unit_price)*-1 as amount,get_msol_seq(ms_id,msl_id) as so_propo_dis
-from (select ms.sale_team as section_id,ms.id as ms_id,ms.void_flag as flag,msl.id as msl_id,ms.name,ms.customer_code,ms.date::date,ms.due_date,msl.discount,get_smaller_qty(msl.uom_id,msl.product_uos_qty,msl.product_id) product_uos_qty,
-Cast((select case when substr(name,0,2) ~ '^([0-9]+\.?[0-9]*|\.[0-9]+)$' then substr(name,4) else name end as name from crm_case_section where id=crm.id) || '-' || pp.name_template as character varying) as product_name,term.name as payment_term,pt.list_price as price_unit,uom.name as uom,pt.description_sale description,rp.comment as internal_note,ms.name as invoice,'1518-YGN'::character varying as receivable_account,get_smaller_qty(msl.uom_id,msl.product_uos_qty,msl.product_id) stocking_qty,pt.list_price as stocking_unit_price,
+            <xml-property name="queryText"><![CDATA[select *,(select count(msl.id) from mobile_sale_order_line msl where msl.order_id=ms_id) as no_of_distribution,(sub_total)*-1 as amount,get_msol_seq(ms_id,msl_id) as so_propo_dis
+from (select ms.sale_team as section_id,ms.void_flag as flag,ms.id as ms_id,msl.id as msl_id,ms.name,ms.customer_code,ms.date::date,ms.due_date,msl.discount,get_smaller_qty(msl.uom_id,msl.product_uos_qty,msl.product_id) product_uos_qty,
+Cast((select case when substr(name,0,2) ~ '^([0-9]+\.?[0-9]*|\.[0-9]+)$' then substr(name,4) else name end as name from crm_case_section where id=crm.id) || '-' || pp.name_template as character varying) as product_name,term.name as payment_term,pt.list_price as price_unit,uom.name as uom,pt.description_sale description,
+rp.comment as internal_note,ms.name as invoice,'1518-YGN'::character varying as receivable_account,get_smaller_qty(msl.uom_id,msl.product_uos_qty,msl.product_id) stocking_qty,
+       CASE WHEN msl.price_unit=0 THEN 0
+            ELSE pt.list_price
+       END
+        stocking_unit_price, msl.sub_total as sub_total,
 res.partner_id as partner_id,rp.name as ship_to_name,Cast(address || ',' || rc.name || ',' || rcs.name || ',' || city.name || ',' || town.name as character varying ) as ship_address,'Vehicle'::character varying as ship_via,'1518-YGN'::character varying as gl_account,1 as tax_type
 from mobile_sale_order ms
 left join mobile_sale_order_line msl on ms.id=msl.order_id
