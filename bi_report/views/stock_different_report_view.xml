@@ -8,6 +8,7 @@
 			<field name="arch" type="xml">
 				<graph string="Stock Different Analysis" type="pivot" stacked="True">
 					<field name="different_qty" type="measure" />
+					<field name="return_quantity" type="measure" />
 					<field name="product_id" type="col" />
 				</graph>
 			</field>
@@ -58,7 +59,7 @@
 			</field>
 		</record>
 
-		<menuitem action="action_stock_different_report_all"  id="menu_stock_different_report_all"
-			parent="stock.menu_stock_warehouse_mgmt"  sequence="10" />
+		<menuitem action="action_stock_different_report_all" id="menu_stock_different_report_all"
+			parent="stock.menu_stock_warehouse_mgmt" sequence="10" />
 	</data>
 </openerp>
