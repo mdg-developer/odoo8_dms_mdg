@@ -54,7 +54,7 @@
 															</td>
 														</tr>
 
-														<table t-if="o.denomination_product_line" class="table table-condensed"
+														<table t-if="o.denomination_product_line.sorted(key=lambda b: b.sequence)" class="table table-condensed"
 															style="border:1pt solid;">
 															<h6 align="rignt">
 																<span class="text-right">
@@ -379,7 +379,7 @@
 															</td>
 														</tr>
 
-														<table t-if="o.denomination_product_line" class="table table-condensed"
+														<table t-if="o.denomination_product_line.sorted(key=lambda b: b.sequence)" class="table table-condensed"
 															style="border:1pt solid;">
 															<h6 align="left">
 																<span class="text-right">
