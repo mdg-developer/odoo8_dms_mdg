@@ -923,7 +923,6 @@ class mobile_sale_order(osv.osv):
     # get promotion datas from database
     
     def get_promos_datas(self, cr, uid , branch_id, state, team_id, context=None, **kwargs):
-   
         if state == 'approve':
             status = 'approve'
             cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,

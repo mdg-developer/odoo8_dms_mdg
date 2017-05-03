@@ -77,7 +77,7 @@ class stock_return(osv.osv):
 #             if note:
 #                 note_id=note[0]
 #            print 'rereturn_date',return_date,sale_team_id
-            note_ids = note_obj.search(cr, uid, [('sale_team_id', '=', sale_team_id), ('issue_date', '=', return_date)])
+            note_ids = note_obj.search(cr, uid, [('sale_team_id', '=', sale_team_id), ('issue_date', '=', return_date),('state','!=','cancel')])
             if  note_ids:        
                 cr.execute('select gin.from_location_id as location_id,product_id,big_uom_id,sum(big_issue_quantity) as big_issue_quantity,sum(issue_quantity) as issue_quantity,product_uom  as small_uom_id from good_issue_note gin ,good_issue_note_line  ginl where gin.id = ginl.line_id and gin.id in %s group by product_id,from_location_id,big_uom_id,product_uom', (tuple(note_ids),))
                 p_line = cr.fetchall()            
@@ -124,7 +124,6 @@ class stock_return(osv.osv):
                 small_uom_id = mobile_line.product_uom.id             
                 last_qty         = foc_quantity + sale_quantity
                 product_search = stock_return_obj.search(cr, uid, [('product_id', '=', product_id), ('line_id', '=', ids[0])], context=context) 
-                print ' substract_qty ',substract_qty
                 if product_search:
                     # cr.execute("update stock_return_line set receive_quantity=receive_quantity+%s + %s ,return_quantity=%s,sale_quantity=%s,foc_quantity=%s where line_id=%s and product_id=%s", (last_qty,substract_qty,return_quantity, sale_quantity, foc_quantity, ids[0], product_id,))
                     cr.execute("update stock_return_line set receive_quantity=receive_quantity,return_quantity=%s,sale_quantity=%s,foc_quantity=%s where line_id=%s and product_id=%s", (return_quantity, sale_quantity, foc_quantity, ids[0], product_id,))
