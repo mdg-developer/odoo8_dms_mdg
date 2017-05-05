@@ -879,37 +879,29 @@ class mobile_sale_order(osv.osv):
             status = 'approve'
             cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,
                         logic ,expected_logic_result ,special, special1, special2, special3 ,description,
-                        pr.promotion_count, pr.monthly_promotion
-                        from promos_rules pr ,promos_rules_res_branch_rel pro_br_rel
+                        promotion_count,monthly_promotion
+                        from promos_rules pr ,promos_rules_res_branch_rel pro_br_rel,crm_case_section_promos_rules_rel team_promo_rel
                         where pr.active = true                     
                         and pr.id = pro_br_rel.promos_rules_id
                         and pro_br_rel.res_branch_id = %s
+                        and team_promo_rel.promos_rules_id = pr.id
                         and pr.state = %s
-                        and  now()::date  between from_date::date and to_date::date
-                        and pr.id in (
-                        select a.promo_id from promo_sale_channel_rel a
-                        inner join sale_team_channel_rel b
-                        on a.sale_channel_id = b.sale_channel_id
-                        where b.sale_team_id = %s
-                        )
+                        and team_promo_rel.crm_case_section_id = %s
+                        and  now()::date  between from_date::date and to_date::date                        
                         ''', (branch_id, status, team_id,))
         else:
             status = 'approve', 'draft'            
             cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,
                         logic ,expected_logic_result ,special, special1, special2, special3 ,description,
-                        pr.promotion_count, pr.monthly_promotion
-                        from promos_rules pr ,promos_rules_res_branch_rel pro_br_rel
+                        promotion_count,monthly_promotion
+                        from promos_rules pr ,promos_rules_res_branch_rel pro_br_rel,crm_case_section_promos_rules_rel team_promo_rel
                         where pr.active = true                     
                         and pr.id = pro_br_rel.promos_rules_id
                         and pro_br_rel.res_branch_id = %s
-                        and pr.state in %s
-                        and  now()::date  between from_date::date and to_date::date
-                        and pr.id in (
-                        select a.promo_id from promo_sale_channel_rel a
-                        inner join sale_team_channel_rel b
-                        on a.sale_channel_id = b.sale_channel_id
-                        where b.sale_team_id = %s
-                        )
+                        and team_promo_rel.promos_rules_id = pr.id
+                        and pr.state = %s
+                        and team_promo_rel.crm_case_section_id = %s
+                        and  now()::date  between from_date::date and to_date::date                    
                         ''', (branch_id, status, team_id,))
         datas = cr.fetchall()        
         return datas
@@ -1008,7 +1000,7 @@ class mobile_sale_order(osv.osv):
     def get_pricelist_item_datas(self, cr, uid, version_id, context=None, **kwargs):
         cr.execute('''select pi.id,pi.price_discount,pi.sequence,pi.product_tmpl_id,pi.name,pp.id base_pricelist_id,
                     pi.product_id,pi.base,pi.price_version_id,pi.min_quantity,
-                    pi.categ_id,pi.new_price price_surcharge,pi.product_uom_id
+                    pi.categ_id,pi.price_surcharge price_surcharge
                     from product_pricelist_item pi, product_pricelist_version pv, product_pricelist pp
                     where pv.pricelist_id = pp.id                             
                     and pv.id = pi.price_version_id
@@ -1103,7 +1095,7 @@ class mobile_sale_order(osv.osv):
     def tablet_info(self, cr, uid, tabetId, context=None, **kwargs):    
         cr.execute('''
             select id as tablet_id,date,create_uid,name,note,mac_address,model,type,storage_day
-            ,replace(hotline,',',';') hotline,sale_team_id,is_testing
+            ,replace(hotline,',',';') hotline,sale_team_id,is_testing,ck_reg_no
             from tablets_information 
             where name = %s
             ''', (tabetId,))

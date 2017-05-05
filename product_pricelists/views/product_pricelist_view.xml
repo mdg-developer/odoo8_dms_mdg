@@ -108,7 +108,7 @@
 								on_change="price_dis_change(product_id,price_discount,new_price,price_surcharge)" />
 							<field name="price_surcharge" string=" +/- "
 								on_change="price_subcharge_change(product_id,price_discount,new_price,price_surcharge)" />
-							<field name="new_price" />
+							<field name="new_price" invisiblle="0"/>
 						</tree>
 					</field>
 				</xpath>

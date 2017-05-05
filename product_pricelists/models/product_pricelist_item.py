@@ -68,8 +68,10 @@ class product_pricelist_item(osv.osv):
      
     def create(self, cr, uid, data, context=None):
         product_obj= self.pool.get('product.product')
-        product_id=data['product_id']
-        product_uom=data['product_uom_id']        
+        product_id=data['product_id']        
+        #product_uom=data['product_uom_id'] 
+        product_data = product_obj.browse(cr,uid,product_id,context=None)
+        product_uom=product_data.product_tmpl_id.uom_id.id        
         if product_id and product_uom:
             product_data = product_obj.browse(cr,uid,product_id,context=None)
             uom_id=product_data.product_tmpl_id.uom_id and product_data.product_tmpl_id.uom_id.id or False,

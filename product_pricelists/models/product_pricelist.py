@@ -9,3 +9,5 @@ class product_pricelist(osv.osv):
 
                 }
 product_pricelist()
+
+    

@@ -42,7 +42,7 @@
 					<field name="location_id" />
 				</field>
 				<field name="location_id" position="after">
-					<field name="issue_warehouse_id" />
+					<field name="issue_warehouse_id"  widget="many2many_tags"/>
 					<field name="issue_location_id" />
 					<field name="receiver"/>
 					<field name="analytic_account_id" />

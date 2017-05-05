@@ -13,7 +13,7 @@ Begin
   delete from daily_sale_temp;
 
 for data_record in  select (s.date+ '6 hour'::interval + '30 minutes'::interval)::date as date,s.name as vr_no,s.customer_code,r.id as customerid,r.name as customer , p.name_template as product,l.product_uos_qty,l.price_unit as sprice_unit,l.discount,
-l.sub_total,c.name as sale_group ,s.m_status,s.type ,r.township ,r.city,sc.name as channel, rs.name as state,s.delivery_remark ,s.additional_discount,s.void_flag,p.default_code as product_code,branch.name as branch,pm.name as main_group
+l.sub_total,c.name as sale_group ,s.m_status,s.type ,tp.name as  township,ci.name as city,sc.name as channel, rs.name as state,s.delivery_remark ,s.additional_discount,s.void_flag,p.default_code as product_code,branch.name as branch,pm.name as main_group
 from mobile_sale_order s
 left join mobile_sale_order_line l  on s.id = l.order_id 
 left join product_product p on l.product_id = p.id
@@ -25,6 +25,8 @@ left join crm_case_section c on tb.sale_team_id = c.id
 left join res_country_state rs on r.state_id = rs.id 
 left join sale_channel sc on sc.id = r.sales_channel
 left join res_branch branch on branch.id=r.branch_id
+left join res_city ci on r.city = ci.id
+left join res_township  tp on  r.township = tp.id
 where (s.date+ '6 hour'::interval + '30 minutes'::interval)::date between from_date and to_date
 						
 loop
