@@ -13,23 +13,33 @@
 					<sheet>
 						<group>
 							<group>
-								<field name="sale_team_id" />
-								<field name="user_id"  />
-								<field name="branch_id"/>
+							<field name="sale_team_id"  on_change="onchange_sale_team_id(sale_team_id)" />
+								<field name="user_id" />
+								<field name="branch_id" />
 							</group>
 							<group>
 								<field name="return_date" />
 								<field name="write_date" />
 								<field name="vehicle_id" />
-								<field name="company_id"/>
+								<field name="company_id" />
+							</group>
+						</group>
+						<group>
+							<group>
+								<button name="manual_data" string="Manual" type="object"
+									widget="statinfo" class="oe_highlight" />
+
+							</group>
+							<group>
+
 							</group>
 						</group>
 						<group>
 							<notebook>
 								<page string="Stock List">
-									<field name="p_line" >
+									<field name="p_line">
 										<tree string="Stock Return From Mobile Line" editable="bottom">
-											<field name="product_id"  />
+											<field name="product_id" />
 											<field name="return_quantity" />
 											<field name="sale_quantity" />
 											<field name="foc_quantity" />
@@ -77,7 +87,7 @@
 		</record>
 
 
-		<menuitem action='action_stock_return_mobile'  id="menu_action_stock_return_mobile"
+		<menuitem action='action_stock_return_mobile' id="menu_action_stock_return_mobile"
 			parent="stock.menu_stock_warehouse_mgmt" groups="stock.group_stock_manager" />
 
 	</data>

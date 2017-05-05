@@ -4,7 +4,7 @@
 		<template id="report_denomination_document">
 			<t t-call="sale_management.custom_layout">
 				<div class="page" style="font-size:10pt;">
-					<table border="0" cellspacing="0" cellpadding="0" width="100%">
+					<table border="0" cellspacing="0" cellpadding="0"  width="100%">
 						<tbody>
 							<tr>
 								<td>
