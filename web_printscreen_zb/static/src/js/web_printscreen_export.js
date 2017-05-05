@@ -4,6 +4,35 @@ openerp.web_printscreen_zb = function(instance, m) {
     var QWeb = instance.web.qweb;
     
     instance.web.ListView.include({
+        configure_pager: function (dataset) {
+            this.dataset.ids = dataset.ids;
+            // Not exactly clean
+            if (dataset._length) {
+                this.dataset._length = dataset._length;
+            }
+
+            var total = dataset.size();
+            var limit = this.limit() || total;
+            if (total === 0)
+                this.$pager.hide();
+            else
+                this.$pager.css("display", "");
+            this.$pager.toggleClass('oe_list_pager', (total <= limit));
+            var spager = '-';
+            if (total) {
+                var range_start = this.page * limit + 1;
+                var range_stop = range_start - 1 + limit;
+                if (this.records.length) {
+                    range_stop = range_start - 1 + this.records.length;
+                }
+                if (range_stop > total) {
+                    range_stop = total;
+                }
+                spager = _.str.sprintf(_t("%d-%d of %d"), range_start, range_stop, total);
+            }
+
+            this.$pager.find('.oe_list_pager_state').text(spager);
+        },
         load_list: function () {
             var self = this;
             this._super.apply(this, arguments);

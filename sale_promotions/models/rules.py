@@ -124,7 +124,7 @@ class PromotionsRules(osv.Model):
         'special':fields.boolean('Special'),
         'special1':fields.boolean('Special 1'),
         'special2':fields.boolean('Special 2'),
-        'special3':fields.boolean('Special 3'),
+        #'special3':fields.boolean('Special 3'),
         'stop_further':fields.boolean('Stop Checks',
                               help="Stops further promotions being checked"),
         # 'main_group': fields.many2one('product_product.maingroup','Main Group'),

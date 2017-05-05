@@ -45,7 +45,7 @@
 									<form string="Multi Promotion">
 										<group>
 											<group>
-												<field name="branch_id" />
+												<field name="branch_id" />												
 												<field name="month" />
 												<field name="channel_id" />
 												<field name="promo_qty" />
@@ -144,6 +144,7 @@
 								<field name="product_id" />
 								<field name="product_categ_id" />
 								<field name="sale_channel_id" widget="many2many_tags" />
+								<field name="sale_amount" />
 								<field name="sale_qty" />
 								<field name="product_uom_id" />
 							</group>
@@ -153,7 +154,7 @@
 								<field name="from_date" />
 								<field name="to_date" />
 								<field name="branch_id" />
-								
+								<field name="main_group" select="1" />
 							</group>
 						</group>
 

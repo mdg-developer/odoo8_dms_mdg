@@ -72,11 +72,12 @@ class sale_target(osv.osv):
             ], 'Month', copy=False, select=True),
         'sale_team_id':fields.many2one('crm.case.section', 'Sale Team'),
         'target_line':fields.one2many('sales.target.line', 'sale_ids', string='Sale Target Line', copy=True),
-         'description':fields.text('Description'),
-         'date':fields.date('Target Date'),
-         'year':fields.char('Year'),
-       'amount_total': fields.function(_amount_all, string='Total Value', digits_compute=dp.get_precision('Product Price'), store=True),
+        'description':fields.text('Description'),
+        'date':fields.date('Target Date'),
+        'year':fields.char('Year'),
+        'amount_total': fields.function(_amount_all, string='Total Value', digits_compute=dp.get_precision('Product Price'), store=True),
         'company_id': fields.many2one('res.company', 'Company', required=True, readonly=True),
+        'week': fields.char('Week'),
   }
     _defaults = {
         'branch_id': _get_default_branch,

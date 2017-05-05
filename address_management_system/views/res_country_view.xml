@@ -12,3 +12,4 @@
         <menuitem action="action_country_inherit" id="menu_country_partner" parent="address_management_system.menu_address" sequence="1"/>
     </data>
 </openerp>
+

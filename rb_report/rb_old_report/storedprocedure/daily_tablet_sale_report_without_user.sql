@@ -1,4 +1,4 @@
-﻿-- Function: daily_sale_report_without_user(date, date, integer, integer)
+-- Function: daily_sale_report_without_user(date, date, integer, integer)
 
 -- DROP FUNCTION daily_sale_report_without_user(date, date, integer, integer);
 
@@ -8,12 +8,17 @@ $BODY$
 DECLARE 
 data_record record;
 up_record record;
-
+param_main_group character varying;
+param_sale_branch character varying;
 Begin
   delete from daily_sale_temp;
 
+  select name into param_main_group from product_maingroup where id=m_group;
+
+  select name into param_sale_branch from sale_branch where id=param_branch;	
+  
 for data_record in  select (s.date+ '6 hour'::interval + '30 minutes'::interval)::date as date,s.name as vr_no,s.customer_code,r.id as customerid,r.name as customer , p.name_template as product,l.product_uos_qty,l.price_unit as sprice_unit,l.discount,
-l.sub_total,c.name as sale_group ,s.m_status,s.type ,tp.name as  township,ci.name as city,sc.name as channel, rs.name as state,s.delivery_remark ,s.additional_discount,s.void_flag,p.default_code as product_code,branch.name as branch,pm.name as main_group
+l.sub_total,c.name as sale_group ,s.m_status,s.type ,r.township ,r.village,r.city,sc.name as channel,r.territory , rs.name as state,s.delivery_remark ,s.additional_discount,s.void_flag,p.default_code as product_code,branch.name as branch,pm.name as main_group
 from mobile_sale_order s
 left join mobile_sale_order_line l  on s.id = l.order_id 
 left join product_product p on l.product_id = p.id
@@ -24,17 +29,15 @@ left join tablets_information tb on tb.id = s.tablet_id
 left join crm_case_section c on tb.sale_team_id = c.id
 left join res_country_state rs on r.state_id = rs.id 
 left join sale_channel sc on sc.id = r.sales_channel
-left join res_branch branch on branch.id=r.branch_id
-left join res_city ci on r.city = ci.id
-left join res_township  tp on  r.township = tp.id
+left join sale_branch branch on branch.id=r.branch_id
 where (s.date+ '6 hour'::interval + '30 minutes'::interval)::date between from_date and to_date
 						
 loop
 insert into daily_sale_temp(date,vr_no,customer_code,customerid,customer,product,product_uos_qty,price_unit,discount,sub_total,sale_group,m_status ,
-type,township ,city,channel, state,delivery_remark,additional_discount,sale_plan_day_name ,sale_plan_trip_name,void,product_code,branch,main_group)
+type,township ,village,city,channel,territory, state,delivery_remark,additional_discount,sale_plan_day_name ,sale_plan_trip_name,void,product_code,branch,main_group)
 values(data_record.date,data_record.vr_no,data_record.customer_code,data_record.customerid,data_record.customer,data_record.product,data_record.product_uos_qty,
 data_record.sprice_unit,data_record.discount,data_record.sub_total,data_record.sale_group,data_record.m_status ,data_record.type,
-data_record.township ,data_record.city,data_record.channel,
+data_record.township ,data_record.village,data_record.city,data_record.channel,data_record.territory,
 data_record.state,data_record.delivery_remark,data_record.additional_discount,'','',data_record.void_flag,data_record.product_code,data_record.branch,data_record.main_group);
 end loop;
 
@@ -91,19 +94,16 @@ update daily_sale_temp dst set void='Unvoid' where dst.void like 'none';
 update daily_sale_temp dst set void='Voided' where dst.void like 'voided';
 
 	IF m_group IS NULL AND param_branch IS NULL THEN
-		return  query select * from daily_sale_temp ds;
+		return  query select * from daily_sale_temp;
 	ELSEIF m_group IS NOT NULL AND param_branch IS NULL THEN
-		return  query select ds.* from daily_sale_temp ds,product_product pp,product_template pt where ds.product_code=pp.default_code and pp.product_tmpl_id=pt.id and pt.main_group=m_group;
+		return  query select ds.* from daily_sale_temp ds where ds.main_group=param_main_group;
 	ELSEIF m_group IS NULL AND param_branch IS NOT NULL THEN
-		return  query select ds.* from daily_sale_temp ds,res_partner res where ds.customerid=res.id and res.branch_id=param_branch;
+		return  query select ds.* from daily_sale_temp ds where ds.branch=param_sale_branch;
 	ELSEIF m_group IS NOT NULL AND param_branch IS NOT NULL THEN
-		return  query select ds.* from daily_sale_temp ds,res_partner res,product_product pp,product_template pt where ds.customerid=res.id and ds.product_code=pp.default_code and pp.product_tmpl_id=pt.id and pt.main_group=m_group and res.branch_id=param_branch;		
+		return  query select ds.* from daily_sale_temp ds where ds.main_group=param_main_group and ds.branch=param_sale_branch;		
 	END IF;
 	END;
 $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100
   ROWS 1000;
-ALTER FUNCTION daily_sale_report_without_user(date, date, integer, integer)
-  OWNER TO openerp;
-

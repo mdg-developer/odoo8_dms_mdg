@@ -11,7 +11,7 @@ class price_list_line(osv.osv):
     _description = 'Price List Line'           
     _columns = {                
         'team_id':fields.many2one('crm.case.section', 'Line', ondelete='cascade', select=True),
-        'property_product_pricelist': fields.many2one('product.pricelist', string="Sale Pricelist", domain=[('type', '=', 'sale')]),
+        'property_product_pricelist': fields.many2one('product.pricelist', string="Default Pricelist", domain=[('type', '=', 'sale')]),
         'is_default':fields.boolean('Default'),
         }
     
@@ -227,12 +227,14 @@ class crm_case_section(osv.osv):
                 'demarcation_ids':fields.many2many('sale.demarcation'),
                 'promotion_id':fields.many2many('promos.rules'),
                 'van_id':fields.char('Vehicle No'),
-                'pricelist_ids':fields.many2many('product.pricelist'),
+                'pricelist_ids':fields.many2many('product.pricelist', domain=[('type', '=', 'sale')]),
+                'default_sale_pricelist': fields.many2one('product.pricelist', string="Default Sale Pricelist", domain=[('type', '=', 'sale')]),
                 'vehicle_id':fields.many2one('fleet.vehicle', 'Vehicle No'),
                 'main_group_id': fields.many2many('product.maingroup'),
-                                'date':fields.date('Date'),
+                'date':fields.date('Date'),
                 'delivery_team_id': fields.many2one('crm.case.section', 'Delivery Team'),
-                'date':fields.date('Date'),                
+                'date':fields.date('Date'), 
+                'is_default':fields.boolean('Default'),               
                 'total_invoice': fields.function(_get_total_invoice_data, digits_compute=dp.get_precision('Product Price'),
                 type='float', 
                 string='Total Invoice'),

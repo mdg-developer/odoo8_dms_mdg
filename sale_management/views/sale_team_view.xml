@@ -89,7 +89,7 @@
 						</field>
 					</page>
 
-					<page string="Pricelists">
+<!-- 					<page string="Pricelists">
 						<field name="price_list_line">
 							<form string="Pricelists">
 								<group>
@@ -102,6 +102,40 @@
 								<field name="is_default" />
 							</tree>
 						</field>
+					</page> -->
+					
+				<!-- Change selection field to many2many field  in pricelist tab  -->
+					<page string="Pricelists">
+						<separator string="Pricelists" />
+						
+							<form string="Pricelists">
+								<group>
+									<field name="default_sale_pricelist" widget="manay2one_list" />
+								</group>
+							</form>
+						
+						<field name="pricelist_ids" widget="many2many_list">
+							<kanban quick_create="false" create="true">
+								<field name="name" />
+								
+								<templates>
+									<t t-name="kanban-box">
+										<div style="position: relative">
+											<a t-if="! read_only_mode" type="delete"
+												style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
+											<div class="oe_module_vignette">
+												<div class="oe_module_desc">
+													<field name="name" />
+													
+												</div>
+											</div>
+										</div>
+									</t>
+								</templates>
+							</kanban>
+						</field>
+						
+		
 					</page>
 					<!-- Add adding demarcation -->
 
