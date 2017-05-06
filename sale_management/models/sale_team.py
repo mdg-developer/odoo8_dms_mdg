@@ -21,7 +21,10 @@ class crm_case_section(osv.osv):
     def _get_total_invoice_data(self, cr, uid, ids, field_name, arg, context=None):
         res = dict(map(lambda x: (x,0), ids))        
         for line in self.browse(cr, uid, ids, context=context):
-            cr.execute("select count(id) from account_invoice where state not in ('draft','cancel') and section_id = %s and date_invoice = %s" , (line.id, line.date,))
+            date = datetime.now()
+            if line.date:
+                date = line.date
+            cr.execute("select count(id) from account_invoice where state not in ('draft','cancel') and section_id = %s and date_invoice = %s" , (line.id, date,))
             data = cr.fetchone()[0]
             res[line.id] = data
         return res        
@@ -29,8 +32,11 @@ class crm_case_section(osv.osv):
     def _get_total_sku_data(self, cr, uid, ids, field_name, arg, context=None):
         res = dict(map(lambda x: (x,0), ids))        
         # res = {}
-        for line in self.browse(cr, uid, ids, context=context):            
-            cr.execute("select count(st.id) from sales_target st ,sales_target_line stl where st.id=stl.sale_ids and stl.product_uom_qty !=0.0 and sale_team_id = %s and date= %s " , (line.id, line.date,))
+        for line in self.browse(cr, uid, ids, context=context):   
+            date = datetime.now()
+            if line.date:
+                date = line.date         
+            cr.execute("select count(st.id) from sales_target st ,sales_target_line stl where st.id=stl.sale_ids and stl.product_uom_qty !=0.0 and sale_team_id = %s and date= %s " , (line.id, date,))
             data = cr.fetchone()[0]
             res[line.id] = data
         return res       
@@ -71,7 +77,10 @@ class crm_case_section(osv.osv):
         if context is None:
             context = {}
         for line in self.browse(cr, uid, ids, context=context):
-            cr.execute(" select count(id) from customer_visit where sale_team_id=%s  and  (date+ '6 hour'::interval + '30 minutes'::interval)::date=%s" ,(line.id,line.date,))
+            date = datetime.now()
+            if line.date:
+                date = line.date
+            cr.execute(" select count(id) from customer_visit where sale_team_id=%s  and  (date+ '6 hour'::interval + '30 minutes'::interval)::date=%s" ,(line.id,date,))
             data=cr.fetchone()[0]
             res[line.id] = data
         return res      
@@ -82,9 +91,12 @@ class crm_case_section(osv.osv):
         if context is None:
             context = {}
         for line in self.browse(cr, uid, ids, context=context):
-            cr.execute("select count(id) from sale_order where state ='draft' and section_id=%s and (date_order+ '6 hour'::interval + '30 minutes'::interval)::date=%s and pre_order ='t'" ,( line.id,line.date,))
+            date = datetime.now()
+            if line.date:
+                date = line.date
+            cr.execute("select count(id) from sale_order where state ='draft' and section_id=%s and (date_order+ '6 hour'::interval + '30 minutes'::interval)::date=%s and pre_order ='t'" ,( line.id,date,))
             pre_sale=cr.fetchone()[0]
-            cr.execute("select count(id) from sale_order where state not in ('draft','cancel')  and section_id=%s and (date_order+ '6 hour'::interval + '30 minutes'::interval)::date=%s and pre_order ='f'" ,(line.id,line.date,))
+            cr.execute("select count(id) from sale_order where state not in ('draft','cancel')  and section_id=%s and (date_order+ '6 hour'::interval + '30 minutes'::interval)::date=%s and pre_order ='f'" ,(line.id,date,))
             sale_order=cr.fetchone()[0]
             if pre_sale!=0 and sale_order!=0:
                 data=pre_sale/sale_order
@@ -99,7 +111,10 @@ class crm_case_section(osv.osv):
         if context is None:
             context = {}
         for line in self.browse(cr, uid, ids, context=context):
-            cr.execute("select count(id) from sale_order where state not in ('draft','cancel')  and section_id=%s and (date_order+ '6 hour'::interval + '30 minutes'::interval)::date=%s and pre_order ='f'" ,(line.id,line.date,))
+            date = datetime.now()
+            if line.date:
+                date = line.date
+            cr.execute("select count(id) from sale_order where state not in ('draft','cancel')  and section_id=%s and (date_order+ '6 hour'::interval + '30 minutes'::interval)::date=%s and pre_order ='f'" ,(line.id,date,))
             data=cr.fetchone()[0]
             res[line.id] = data
         return res
@@ -108,7 +123,10 @@ class crm_case_section(osv.osv):
         res = {}
         data = 0
         for line in self.browse(cr, uid, ids, context=context):
-            team_date=line.date
+            #team_date = datetime.now().strftime(OE_DATEFORMAT)
+            team_date = datetime.now().strftime(OE_DATEFORMAT)
+            if line.date:
+                team_date = line.date
             date_filter = datetime.strptime(team_date, OE_DATEFORMAT).date()                       
             month_begin =date_filter.replace(day=1)
             to_date = month_begin.replace(day=calendar.monthrange(month_begin.year, month_begin.month)[1]).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
@@ -136,7 +154,10 @@ class crm_case_section(osv.osv):
         if context is None:
             context = {}
         for line in self.browse(cr, uid, ids, context=context):
-            cr.execute("select count(id) from sale_order where state ='progress' and section_id=%s and (date_order+ '6 hour'::interval + '30 minutes'::interval)::date=%s" ,( line.id,line.date,))
+            date = datetime.now()
+            if line.date:
+                date = line.date
+            cr.execute("select count(id) from sale_order where state ='progress' and section_id=%s and (date_order+ '6 hour'::interval + '30 minutes'::interval)::date=%s" ,( line.id,date,))
             data=cr.fetchone()[0]
             res[line.id] = data
         return res  
@@ -195,7 +216,10 @@ class crm_case_section(osv.osv):
         if context is None:
             context = {}
         for line in self.browse(cr, uid, ids, context=context):
-            cr.execute(" select count(id) from sale_order where state not in ('draft','cancel') and payment_type='credit' and section_id=%s and (date_order+ '6 hour'::interval + '30 minutes'::interval)::date=%s" ,(line.id,line.date,))
+            date = datetime.now()
+            if line.date:
+                date = line.date
+            cr.execute(" select count(id) from sale_order where state not in ('draft','cancel') and payment_type='credit' and section_id=%s and (date_order+ '6 hour'::interval + '30 minutes'::interval)::date=%s" ,(line.id,date,))
             data=cr.fetchone()[0]
             res[line.id] = data
         return res
