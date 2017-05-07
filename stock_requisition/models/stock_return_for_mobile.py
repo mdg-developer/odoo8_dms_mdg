@@ -103,7 +103,7 @@ class stock_return_from_mobile(osv.osv):
                             bigger_qty = cr.fetchone()[0]
                             bigger_qty = int(bigger_qty)
                             foc_qty = bigger_qty * foc_qty
-                            cr.execute('update stock_return_mobile_line set return_quantity = return_quantity - %s, foc_quantity = foc_quantity + %s where line_id= %s and product_id =%s ',(foc_qty,foc_qty,ids[0],product_id,))                        
+                        cr.execute('update stock_return_mobile_line set return_quantity = return_quantity - %s, foc_quantity = foc_quantity + %s where line_id= %s and product_id =%s ',(foc_qty,foc_qty,ids[0],product_id,))                        
         return True 
                
 class stock_return_from_mobile_line(osv.osv):
