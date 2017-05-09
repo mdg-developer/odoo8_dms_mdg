@@ -241,14 +241,21 @@ class sale_denomination(osv.osv):
                 if  pre_mobile_ids:
                     line_ids = invoice_line_obj.search(cr, uid, [('invoice_id', 'in', tuple(pre_mobile_ids))], context=context)   
                     order_line_ids = invoice_line_obj.browse(cr, uid, line_ids, context=context)                
-                    cr.execute('select product_id,sum(quantity) as quantity,sum(price_subtotal) as  sub_total from account_invoice_line where id in %s group by product_id', (tuple(order_line_ids.ids),))
+                    cr.execute('select product_id,sum(quantity) as quantity,sum(price_subtotal) as sub_total ,uos_id  from account_invoice_line where id in %s group by product_id,uos_id ', (tuple(order_line_ids.ids),))
                     order_line = cr.fetchall()
                     for data in order_line:
                         product = self.pool.get('product.product').browse(cr, uid, data[0], context=context)
                         sequence = product.sequence
                         product_amount += data[2]
+                        sale_qty=data[1]
+                        product_uom=data[3]
+                        if product_uom == product.product_tmpl_id.big_uom_id.id:                                                                          
+                            cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (product.product_tmpl_id.big_uom_id.id,))
+                            bigger_qty = cr.fetchone()[0]
+                            bigger_qty = int(bigger_qty)
+                            sale_qty = bigger_qty * sale_qty                                 
                         data_id = {'product_id':data[0],
-                                          'product_uom_qty':data[1],
+                                          'product_uom_qty':sale_qty,
                                           'sequence':sequence,
                                           'amount':data[2]}
                         order_line_data.append(data_id)

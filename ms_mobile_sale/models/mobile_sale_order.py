@@ -1378,23 +1378,33 @@ class mobile_sale_order(osv.osv):
                         discount_amount+=deduct_amt                    
                     line_ids = invoice_obj.search(cursor, user, [('invoice_id', 'in', pre_mobile_ids)], context=context)         
                     order_line_ids = invoice_obj.browse(cursor, user, line_ids, context=context)         
-                    cursor.execute(' select product_id,sum(quantity) as quantity,sum(price_subtotal) as  sub_total from account_invoice_line where id in %s group by product_id', (tuple(order_line_ids.ids),))
+                    cursor.execute('select product_id,sum(quantity) as quantity,sum(price_subtotal) as  sub_total,uos_id from account_invoice_line where id in %s group by product_id,uos_id', (tuple(order_line_ids.ids),))
                     order_line = cursor.fetchall()
                     for data in order_line:
                         product = self.pool.get('product.product').browse(cursor, user, data[0], context=context)
                         sequence = product.sequence
                         product_amount+=data[2]
+                        pre_qty=data[1]
+                        pre_p_uom=data[3]
+                        if pre_p_uom == product.product_tmpl_id.big_uom_id.id:                                                                          
+                            cursor.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (product.product_tmpl_id.big_uom_id.id,))
+                            bigger_qty = cursor.fetchone()[0]
+                            bigger_qty = int(bigger_qty)
+                            pre_qty = bigger_qty * pre_qty         
                         data_id = {'product_id':data[0],
-                                          'product_uom_qty':data[1],
+                                          'product_uom_qty':pre_qty,
                                           'denomination_product_ids':deno_id,
                                           'sequence':sequence,
                                           'amount':data[2]}
-                        deno_product_obj.create(cursor, user, data_id, context=context)                        
+                        exit_data=deno_product_obj.search(cursor, user, [('denomination_product_ids', '=', deno_id),('product_id','=',data[0])], context=context)         
+                        if exit_data:
+                            cursor.execute("update sales_denomination_product_line set product_uom_qty = product_uom_qty + %s , amount = amount + %s where denomination_product_ids = %s and product_id =%s",(pre_qty,data[2],deno_id,data[0],))
+                        else:
+                            deno_product_obj.create(cursor, user, data_id, context=context)                        
                 if  m_mobile_ids:
                     for data_mo in m_mobile_ids:
                         mobile_ids.append(data_mo[0])
                     mobile_data=mobile_sale_obj.browse(cursor, user, tuple(mobile_ids), context=context)           
-                    print 'mobile_data',mobile_data
                     for mobile in mobile_data:
                         deduct_amt= mobile.deduction_amount
                         amount_total= mobile.amount_total
@@ -1403,18 +1413,29 @@ class mobile_sale_order(osv.osv):
                         discount_amount+=deduct_amt                             
                     line_ids = mobile_sale_order_obj.search(cursor, user, [('order_id', 'in', mobile_ids)], context=context)                        
                     order_line_ids = mobile_sale_order_obj.browse(cursor, user, line_ids, context=context)                
-                    cursor.execute('select product_id,sum(product_uos_qty),sum(sub_total) from mobile_sale_order_line where id in %s group by product_id', (tuple(order_line_ids.ids),))
+                    cursor.execute('select product_id,sum(product_uos_qty) as qty ,sum(sub_total) as total ,uom_id from mobile_sale_order_line where id in %s group by product_id,uom_id', (tuple(order_line_ids.ids),))
                     order_line = cursor.fetchall()
                     for data in order_line:
                         product = self.pool.get('product.product').browse(cursor, user, data[0], context=context)
                         sequence = product.sequence
                         product_amount+=data[2]
+                        sale_qty = int(data[1])
+                        product_uom = int(data[3])
+                        if product_uom == product.product_tmpl_id.big_uom_id.id:                                                                          
+                            cursor.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (product.product_tmpl_id.big_uom_id.id,))
+                            bigger_qty = cursor.fetchone()[0]
+                            bigger_qty = int(bigger_qty)
+                            sale_qty = bigger_qty * sale_qty
                         data_id = {'product_id':data[0],
-                                          'product_uom_qty':data[1],
+                                          'product_uom_qty':sale_qty,
                                           'denomination_product_ids':deno_id,
                                           'sequence':sequence,
                                           'amount':data[2]}
-                        deno_product_obj.create(cursor, user, data_id, context=context)
+                        exit_data=deno_product_obj.search(cursor, user, [('denomination_product_ids', '=', deno_id),('product_id','=',data[0])], context=context)         
+                        if exit_data:
+                            cursor.execute("update sales_denomination_product_line set product_uom_qty = product_uom_qty + %s , amount = amount + %s where denomination_product_ids = %s and product_id =%s",(sale_qty,data[2],deno_id,data[0],))
+                        else:
+                            deno_product_obj.create(cursor, user, data_id, context=context)                                 
             if  payment_ids:
                 for payment in payment_ids:
                     payment_data = payment_obj.browse(cursor, user, payment, context=context)                  

@@ -27,6 +27,8 @@ ATTRIBUTES = [
     ('cat_qty', 'Product Category Quantity combination'),  
     ('cat_total', 'Product Category Sale Total'),   
     ('fix_prods_qty', 'Fix Quantity Total combination'),
+    ('fix_categ_qty', 'Fix Category Quantity And Subtotal'),
+
 
 ]
 
@@ -1041,7 +1043,12 @@ class PromotionsRulesConditionsExprs(osv.Model):
                              'value':"'product_code1';'product_code2':0.00|'product_code3':0.00"
                              }
                     }                  
-            
+        if attribute == 'fix_categ_qty':
+            return {
+                    'value':{
+                             'value':"'categ1';'categ2';'categ3':0.00|limit_amount"
+                             }
+                    }                       
         return {}
     _columns = {
         'sequence':fields.integer('Sequence'),
@@ -1092,6 +1099,7 @@ class PromotionsRulesConditionsExprs(osv.Model):
                          'comp_sub_total',
                          'comp_sub_total_x',
                          'fix_prods_qty',
+                         'fix_categ_qty',
                          ] and \
             not comparator in NUMERCIAL_COMPARATORS:
             
