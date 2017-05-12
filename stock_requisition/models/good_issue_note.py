@@ -85,9 +85,8 @@ class good_issue_note(osv.osv):
         return super(good_issue_note, self).create(cursor, user, vals, context=context)
     
     def approve(self, cr, uid, ids, context=None):
-        from datetime import datetime
-        issue_date=datetime.now().date()
-        return self.write(cr, uid, ids, {'state': 'approve','approve_by':uid,'issue_date':issue_date})
+        
+        return self.write(cr, uid, ids, {'state': 'approve','approve_by':uid})
     
     def cancel(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state':'cancel' })
