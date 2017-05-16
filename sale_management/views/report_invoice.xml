@@ -272,18 +272,18 @@
 
 
 
-						<div class="row" style="padding-top:-2s0pt;">
-							<div class="col-xs-4 pull-left">
-								<table class="table" style="border:solid;border-color:white;">
+						<div class="row" style="padding-top:-2s0pt;width:500px;">
+							<div class="col-xs-4 pull-left" style="width:250px;" align="left">
+								<table class="table" style="border:solid;border-color:white;" align="left">
 									<tr style="border:solid;border-color:white;">
-										<td style="margin-top:-10pt;" align="center">
+										<td style="margin-top:-10pt;" align="left">
 											<span>
 												Cash Paid By
 											</span>
 										</td>
 									</tr>
 									<tr style="border:solid;border-color:white;">
-										<td style="margin-top:-10pt;" align="center">
+										<td style="margin-top:-10pt;" align="left">
 											<span>
 												(Customer Name)
 											</span>
@@ -292,17 +292,17 @@
 								</table>
 							</div>
 
-							<div class="col-xs-2 pull-left">
-								<table class="table" style="border:solid;border-color:white;">
+							<div class="col-xs-2 pull-left" style="width:250px;" align="right">
+								<table class="table" style="border:solid;border-color:white;" align="right">
 									<tr style="border:solid;border-color:white;">
-										<td style="margin-top:-10pt;" align="center">
+										<td style="margin-top:-10pt;" align="left">
 											<span>
 												Cash Received By
 											</span>
 										</td>
 									</tr>
 									<tr style="border:solid;border-color:white;">
-										<td style="margin-top:-10pt;" align="center">
+										<td style="margin-top:-10pt;" align="left">
 											<span>
 												(Salesman Name)
 											</span>
@@ -344,8 +344,6 @@
 								</table>
 							</div>
 							<div class="col-xs-4 pull-right">
-
-
 							</div>
 						</div>
 					</div>

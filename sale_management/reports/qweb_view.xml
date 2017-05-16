@@ -5,5 +5,10 @@
 		<report id="report_denomination" model="sales.denomination" string="Denomination Report"
 			report_type="qweb-pdf" name="sale_management.sale_denomination" file="sale_management.sale_denomination"
 			attachment_use="True" attachment="('Sale Denomination')+'.pdf'" />
+		
+		<!-- Pre Sale Order-->
+		<report id="report_pre_sale_order" model="sale.order" string="Deliver Report"
+			report_type="qweb-pdf" name="sale_management.report_pre_sale_order_document" file="sale_management.report_pre_sale_order_document"
+			attachment_use="True" attachment="('Pre-Sales Order')+'.pdf'" />
 	</data>
 </openerp>
