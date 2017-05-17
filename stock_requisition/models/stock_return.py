@@ -303,11 +303,11 @@ class stock_return(osv.osv):
                         return_big_qty = big_qty[0] * big_return_quantity 
                         total_return_qty=  return_big_qty +  return_quantity        
                         total_rec_qty=  bigger_qty +  rec_small_quantity        
-                        if total_return_qty < total_rec_qty:
-                            raise osv.except_osv(_('Warning'),
-                                _('Please Check Receive Qty (%s)') % (name,))    
-                        if  total_return_qty > total_rec_qty:
-                            different_qty   = total_return_qty - total_rec_qty
+#                         if total_return_qty < total_rec_qty:
+#                             raise osv.except_osv(_('Warning'),
+#                                 _('Please Check Receive Qty (%s)') % (name,))    
+#                         if  total_return_qty > total_rec_qty:
+                        different_qty   = total_return_qty - total_rec_qty
                         cr.execute("update stock_return_line set different_qty= %s where id=%s",(different_qty,line.id,))
                         move_id = move_obj.create(cr, uid, {'picking_id': picking_id,
                                                   'picking_type_id':picking_type_id,
