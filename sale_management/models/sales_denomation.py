@@ -234,7 +234,7 @@ class sale_denomination(osv.osv):
                 discount_amount = 0.0
                 product_amount = 0.0
                 discount_total = 0.0
-                cr.execute("select id from account_invoice where date_invoice=%s and section_id =%s and state='open' ", (de_date, team_id,))
+                cr.execute("select id from account_invoice where date_invoice=%s and section_id =%s and state='open' and payment_type='cash' ", (de_date, team_id,))
                 mobile_ids = cr.fetchall()       
                 for data_pro in mobile_ids:
                     pre_mobile_ids.append(data_pro[0])

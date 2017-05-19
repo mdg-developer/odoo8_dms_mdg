@@ -1001,7 +1001,18 @@ class mobile_sale_order(osv.osv):
         rb.res_branch_id = %s''',(branch_id,))
         datas = cr.fetchall()
         return datas   
-    
+
+    def get_exclusive_promo_rules(self,cr,uid,branch_id,context=None,**kwargs):
+        cr.execute('''
+        select distinct pcl.partner_categ_id,pcl.promotion_id  from promos_rules pr ,partner_cate_rules_join_rel pcl ,promos_rules_res_branch_rel rb
+        where
+        pr.active=true and
+        pr.id=rb.promos_rules_id and 
+        rb.promos_rules_id = pr.id and 
+        rb.res_branch_id = %s''',(branch_id,))
+        datas = cr.fetchall()
+        return datas   
+        
     def get_promos_rule_partner_datas(self, cr, uid , context=None, **kwargs):
         cr.execute('''select category_id,rule_id from rule_partner_cat_rel''')
         datas = cr.fetchall()
@@ -1360,9 +1371,9 @@ class mobile_sale_order(osv.osv):
                 bank_ids = cursor.fetchall()
                 cursor.execute("select id from ar_payment where date=%s and sale_team_id=%s and payment_code='BNK' ", (de_date, team_id,))
                 ar_bank_ids = cursor.fetchall()                              
-                cursor.execute("select id from mobile_sale_order where due_date=%s and user_id=%s and m_status !='done' and void_flag != 'voided'", (de_date, user_id))
+                cursor.execute("select id from mobile_sale_order where due_date=%s and user_id=%s and m_status !='done' and void_flag != 'voided' and type='cash'", (de_date, user_id))
                 m_mobile_ids = cursor.fetchall()
-                cursor.execute("select id from account_invoice where date_invoice=%s and section_id =%s and state='open' ", (de_date, team_id,))
+                cursor.execute("select id from account_invoice where date_invoice=%s and section_id =%s and state='open' and payment_type='cash' ", (de_date, team_id,))
                 invoice_ids = cursor.fetchall()       
                 if invoice_ids:
                     for data_pro in invoice_ids:
