@@ -623,5 +623,13 @@
 		<menuitem action="product.product_uom_form_action" id="product.menu_product_uom_form_action"
 			parent="product_uom_setting" sequence="2" groups="product.group_uom"
 			name="UoMs" />
+		
+        <menuitem action="base.action_partner_category_form" id="base.menu_partner_category_form" name="Customer Tags" sequence="4" parent="crm_management.config_asset_type_action" groups="base.group_sale_manager"/>
+	
+		
+		<!-- Stock Requisition -->
+	
+		<menuitem action='stock_requisition.action_stock_return'   id="inherit_menu_action_stock_return"
+			parent="menu_sales_report_menu"   groups="base.group_sale_manager" />
 	</data>
 </openerp>

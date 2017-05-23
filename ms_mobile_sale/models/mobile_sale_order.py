@@ -1834,9 +1834,9 @@ class mobile_sale_order(osv.osv):
             if deliver_data:
                 
                 for deli in deliver_data:       
-                    print 'Miss', deli['miss'], deli
+                    print 'Missssssssssssssssss', deli['miss'], deli
                     so_ref_no = deli['so_refNo'].replace('\\','').replace('\\','')          
-                    print       'so_ref_noso_ref_no',so_ref_no
+                    print 'so_ref_noso_ref_no',so_ref_no
                     if deli['miss'] == 't':
                         cr.execute('update sale_order set is_generate = false, due_date = %s where name=%s', (deli['due_date'], so_ref_no,))
                         cr.execute('select tb_ref_no from sale_order where name=%s',( so_ref_no,))
@@ -1936,10 +1936,8 @@ class mobile_sale_order(osv.osv):
             if deliver_data:
                 
                 for deli in deliver_data:            
-                    print 'Journal ID', deli['journal_id']
-                    print 'Payment Type', deli['payment_type']
-                    print 'So Ref No', deli['so_refNo']
-                    so_ref_no = deli['so_refNo'].replace('||','')
+
+                    so_ref_no = deli['so_refNo'].replace('\\','').replace('\\','')          
                     So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
                                                    , ('name', '=', so_ref_no)], context=context)
                     if So_id:
