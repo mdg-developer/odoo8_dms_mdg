@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.4.2.v201410272105 Build &lt;4.4.2.v20150217-1805></property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="bidiLayoutOrientation">ltr</property>
@@ -1080,7 +1080,7 @@ order by st.name
                         <label id="793">
                             <property name="fontFamily">"Arial"</property>
                             <property name="fontWeight">bold</property>
-                            <text-property name="text">Difference Qty</text-property>
+                            <text-property name="text">Different Qty</text-property>
                         </label>
                     </cell>
                 </row>
