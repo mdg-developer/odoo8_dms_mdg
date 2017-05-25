@@ -257,6 +257,7 @@ class pre_sale_order(osv.osv):
                                                         'delivery_id':delivery_id,
                                                         'branch_id':preObj_ids.branch_id.id,
                                                         'company_id':company_id,
+                                                        'note':preObj_ids.note,
                                                          }
                         so_id = saleOrderObj.create(cr, uid, saleOrderResult, context=context)
                     if so_id and preObj_ids.order_line:

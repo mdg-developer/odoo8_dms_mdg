@@ -474,6 +474,8 @@ class mobile_sale_order(osv.osv):
                                             'sale_plan_trip_id':ms_ids.sale_plan_trip_id.id,
                                             'customer_code':ms_ids.customer_code,
                                             'branch_id':ms_ids.branch_id.id,
+                                             'note':ms_ids.note,
+
                                         }
                     soId = soObj.create(cr, uid, soResult, context=context)
                     if soId and ms_ids.order_line:
@@ -1778,7 +1780,7 @@ class mobile_sale_order(osv.osv):
                     so.due_date,so.sale_plan_trip_id,so.so_latitude,so.customer_code,so.name as so_refNo,so.total_dis,so.deduct_amt,so.coupon_code,
                     so.invoiced,so.branch_id,so.delivery_remark ,team.name,so.payment_term,so.due_date
                     from sale_order so, crm_case_section team                                    
-                    where so.id= %s
+                    where so.id= %s and so.state!= 'cancel'
                     and  team.id = so.section_id''', (So_id,))
                     result = cr.fetchall()
                     print 'Result Sale Order', result
