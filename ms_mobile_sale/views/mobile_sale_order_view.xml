@@ -44,7 +44,8 @@
 								<field name="pricelist_id" readonly="1" />
 								<field name="mso_latitude" digits="(14,15)" readonly="0" />
 								<field name="mso_longitude" digits="(14,15)" readonly="0" />
-
+								<field name="note" class="oe_inline" placeholder="Terms and conditions..."
+									readonly="1" />
 							</group>
 							<group>
 								<field name="date" readonly="1" />
@@ -101,10 +102,6 @@
 
 									</tree>
 								</field>
-
-								<field name="note" class="oe_inline" placeholder="Terms and conditions..."
-									readonly="1" />
-
 							</page>
 
 							<page string="Delivery Lines">
@@ -133,9 +130,6 @@
 
 									</tree>
 								</field>
-
-								<field name="note" class="oe_inline" placeholder="Terms and conditions..."
-									readonly="1" />
 
 							</page>
 
