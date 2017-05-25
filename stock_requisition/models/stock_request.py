@@ -216,6 +216,24 @@ class stock_requisition(osv.osv):
             #raise message 
         return True
     
+    def updateQtyOnHand(self, cr, uid, ids, context=None):
+        product_line_obj = self.pool.get('stock.requisition.line')
+        if ids:
+            stock_request_data = self.browse(cr, uid, ids[0], context=context)
+            location_id = stock_request_data.to_location_id.id
+            req_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
+            for data in req_line_id:
+                req_line_value = product_line_obj.browse(cr, uid, data, context=context)
+                line_id= req_line_value.id
+                product_id = req_line_value.product_id.id
+                cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (location_id, product_id,))
+                qty_on_hand = cr.fetchone()
+                if qty_on_hand:
+                    qty_on_hand = qty_on_hand[0]
+                else:
+                    qty_on_hand = 0
+                cr.execute("update stock_requisition_line set qty_on_hand=%s where product_id=%s and id=%s", (qty_on_hand, product_id,line_id,))
+    
     def approve(self, cr, uid, ids, context=None):
         product_line_obj = self.pool.get('stock.requisition.line')
         requisition_obj = self.pool.get('stock.requisition')
