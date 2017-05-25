@@ -4,7 +4,7 @@
 		<template id="report_saleorder_document" inherit_id="sale.report_saleorder_document">
 			<xpath expr="//t[@t-call='report.external_layout']" position="replace">
 				<t t-call="sale_management.sale_custom_layout">
-					<div class="page">
+					<div class="page" style="font-size:9pt;">
 						<div class="row" style="padding-top:-2s0pt;">
 							<div class="col-xs-8 pull-left">
 								<table class="table" style='border:solid;border-color:white;'>
@@ -198,31 +198,31 @@
 							</div>
 							<div class="col-xs-4 pull-right">
 								<table class="table">
+<!-- 									<tr> -->
+<!-- 										<td style="border-top-color:white;padding-bottom: 2mm;"> -->
+<!-- 											Sub Total -->
+<!-- 										</td> -->
+<!-- 										<td class="text-right" style="border-top-color:white;padding-bottom: 2mm;"> -->
+<!-- 											<span t-field="o.amount_untaxed" /> -->
+<!-- 										</td> -->
+<!-- 									</tr> -->
+<!-- 									<tr class="border-black"> -->
+<!-- 										<td style="padding-top: 2mm;padding-bottom: 2mm;"> -->
+<!-- 											Total Discount -->
+<!-- 										</td> -->
+<!-- 										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;"> -->
+<!-- 											<span t-field="o.total_dis" /> -->
+<!-- 										</td> -->
+<!-- 									</tr> -->
+<!-- 									<tr class="border-black"> -->
+<!-- 										<td style="padding-top: 2mm;padding-bottom: 2mm;"> -->
+<!-- 											Deduction Amount -->
+<!-- 										</td> -->
+<!-- 										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;"> -->
+<!-- 											<span t-field="o.deduct_amt" /> -->
+<!-- 										</td> -->
+<!-- 									</tr> -->
 									<tr>
-										<td style="border-top-color:white;padding-bottom: 2mm;">
-											Sub Total
-										</td>
-										<td class="text-right" style="border-top-color:white;padding-bottom: 2mm;">
-											<span t-field="o.amount_untaxed" />
-										</td>
-									</tr>
-									<tr class="border-black">
-										<td style="padding-top: 2mm;padding-bottom: 2mm;">
-											Total Discount
-										</td>
-										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
-											<span t-field="o.total_dis" />
-										</td>
-									</tr>
-									<tr class="border-black">
-										<td style="padding-top: 2mm;padding-bottom: 2mm;">
-											Deduction Amount
-										</td>
-										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
-											<span t-field="o.deduct_amt" />
-										</td>
-									</tr>
-									<tr class="border-black">
 										<td style="padding-top: 2mm;padding-bottom: 2mm;">
 											<strong>Net Amount</strong>
 										</td>
@@ -239,7 +239,7 @@
 									<tr style='border:solid;border-color:white;'>
 										<td style="margin-top:-10pt;" align="left">
 											<span>
-												Cash Paid By
+												<strong>Cash Paid By</strong>
 											</span>
 										</td>
 									</tr>
@@ -258,7 +258,7 @@
 									<tr style='border:solid;border-color:white;'>
 										<td style="margin-top:-10pt;" align="left">
 											<span>
-												Cash Received By
+												<strong>Cash Received By</strong>
 											</span>
 										</td>
 									</tr>

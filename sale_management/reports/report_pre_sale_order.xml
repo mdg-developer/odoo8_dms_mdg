@@ -2,7 +2,7 @@
 <openerp>
 	<data>
 		<template id="report_pre_sale_order_document">
-		<t t-call="sale_management.invoice_custom_layout">
+		<t t-call="sale_management.deliver_order_custom_layouts">
 			<div class="page" style="font-size:10pt;">
 				<t t-foreach="docs" t-as="o">
 					<div class="row" style="padding-top:-2s0pt;">
@@ -38,14 +38,6 @@
 							<table class="table" style="border:solid;border-color:white;">
 								<tr style="margin-top:-30pt;border:solid;border-color:white;">
 									<td style="font-size:20pt;" colspan="4">
-<!-- 										<span -->
-<!-- 											t-if="o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')">Invoice No - </span> -->
-<!-- 										<span t-if="o.type == 'out_invoice' and o.state == 'proforma2'">PRO-FORMA</span> -->
-<!-- 										<span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span> -->
-<!-- 										<span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span> -->
-<!-- 										<span t-if="o.type == 'out_refund'">Refund</span> -->
-<!-- 										<span t-if="o.type == 'in_refund'">Supplier Refund</span> -->
-<!-- 										<span t-if="o.type == 'in_invoice'">Supplier Invoice</span> -->
 										<span t-field="o.name" />
 									</td>
 								</tr>
@@ -103,7 +95,7 @@
 							<td>
 								<b>Source</b>
 								<br />
-								<span t-field="o.origin" />
+								<span t-field="o.name" />
 							</td>
 							<td>
 								<b>Delivery Remark</b>
@@ -202,36 +194,41 @@
 								</td>
 							</tr>
 						</tbody>
-					</table>
-
+					</table>				
+				
+					
 					<div class="row">
+						<div style="padding-left:20px">
+							<strong>Remark :</strong>
+							<span t-field="o.note" />
+						</div>
 						<div class="col-xs-4 pull-right">
 							<table class="table">
+<!-- 								<tr> -->
+<!-- 									<td style="border-top-color:white;padding-bottom: 2mm;"> -->
+<!-- 										Sub Total -->
+<!-- 									</td> -->
+<!-- 									<td class="text-right" style="border-top-color:white;padding-bottom: 2mm;"> -->
+<!-- 										<span t-field="o.amount_untaxed" /> -->
+<!-- 									</td> -->
+<!-- 								</tr> -->
+<!-- 								<tr class="border-black"> -->
+<!-- 									<td style="padding-top: 2mm;padding-bottom: 2mm;"> -->
+<!-- 										Total Discount -->
+<!-- 									</td> -->
+<!-- 									<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;"> -->
+<!-- 										<span t-field="o.total_dis" /> -->
+<!-- 									</td> -->
+<!-- 								</tr> -->
+<!-- 								<tr class="border-black"> -->
+<!-- 									<td style="padding-top: 2mm;padding-bottom: 2mm;"> -->
+<!-- 										Deduction Amount -->
+<!-- 									</td> -->
+<!-- 									<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;"> -->
+<!-- 										<span t-field="o.deduct_amt" /> -->
+<!-- 									</td> -->
+<!-- 								</tr> -->
 								<tr>
-									<td style="border-top-color:white;padding-bottom: 2mm;">
-										Sub Total
-									</td>
-									<td class="text-right" style="border-top-color:white;padding-bottom: 2mm;">
-										<span t-field="o.amount_untaxed" />
-									</td>
-								</tr>
-								<tr class="border-black">
-									<td style="padding-top: 2mm;padding-bottom: 2mm;">
-										Total Discount
-									</td>
-									<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
-										<span t-field="o.total_dis" />
-									</td>
-								</tr>
-								<tr class="border-black">
-									<td style="padding-top: 2mm;padding-bottom: 2mm;">
-										Deduction Amount
-									</td>
-									<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
-										<span t-field="o.deduct_amt" />
-									</td>
-								</tr>
-								<tr class="border-black">
 									<td style="padding-top: 2mm;padding-bottom: 2mm;">
 										<strong>Net Amount</strong>
 									</td>
@@ -248,7 +245,7 @@
 								<tr style="border:solid;border-color:white;">
 									<td style="margin-top:-10pt;" align="left">
 										<span>
-											Goods Received By
+											<strong>Goods Received By</strong>
 										</span>
 									</td>
 								</tr>
@@ -289,7 +286,7 @@
 								<tr style="border:solid;border-color:white;">
 									<td style="margin-top:-10pt" align="left">
 										<span>
-											Goods Delivered By
+											<strong>Goods Delivered By</strong>
 										</span>
 									</td>
 								</tr>
@@ -324,7 +321,6 @@
 					
 					<div class="row" style="padding-top:-2s0pt;margin-top:20pt;">
 						<div class="col-xs-12">
-
 							<table class="table" style="border:solid;border-color:white;">
 								<tr>
 									<td style="text-align:center;">
@@ -345,8 +341,6 @@
 							</table>
 						</div>
 						<div class="col-xs-4 pull-right">
-
-
 						</div>
 					</div>
 				</t>

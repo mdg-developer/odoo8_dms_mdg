@@ -25,7 +25,7 @@
 			}
 		</template>
 
-		<template id="invoice_custom_layout">
+		<template id="deliver_order_custom_layouts">
 			<!-- Multicompany -->
 			<t t-if="o and 'company_id' in o">
 				<t t-set="company" t-value="o.company_id"></t>
@@ -34,12 +34,12 @@
 				<t t-set="company" t-value="res_company"></t>
 			</t>
 
-			<t t-call="sale_management.invoice_custom_layout_header" />
+			<t t-call="sale_management.deliver_order_custom_layout_header" />
 			<t t-raw="0" />
-			<t t-call="sale_management.invoice_custom_layout_footer" />
+			<t t-call="sale_management.deliver_order_custom_layout_footer" />
 		</template>
 
-		<template id="invoice_custom_layout_header">
+		<template id="deliver_order_custom_layout_header">
 			<div class="header">
 				<div class="row">
 					<div class="col-xs-6"></div>
@@ -66,7 +66,7 @@
 			</div>
 		</template>
 
-		<template id="invoice_custom_layout_footer">
+		<template id="deliver_order_custom_layout_footer">
 			<div class="footer">
 				<div class="text-center" style="border-top: 1pt solid black;font-size:10pt;">
 				<!-- 	<ul t-if="not company.custom_footer" class="list-inline">
