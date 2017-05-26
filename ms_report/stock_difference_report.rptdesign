@@ -275,8 +275,8 @@ else
                     <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select return_date,ccs.code,rb.name branch,st.name,pp.name_template,case when different_qty>0 then abs(different_qty) end as plus_qty,
-case when different_qty<0 then abs(different_qty) end as minus_qty,remark
+            <xml-property name="queryText"><![CDATA[select return_date,ccs.code,rb.name branch,st.name,pp.name_template,case when different_qty>0 then different_qty end as plus_qty,
+case when different_qty<0 then different_qty end as minus_qty,remark
 from stock_return st,stock_return_line line,product_product pp,crm_case_section ccs,res_branch rb
 where st.id=line.line_id
 and line.product_id=pp.id
