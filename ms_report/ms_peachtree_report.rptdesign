@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.4.2.v201410272105 Build &lt;4.4.2.v20150217-1805></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="layoutPreference">auto layout</property>
@@ -317,92 +317,92 @@ from res_company
                     </structure>
                     <structure>
                         <property name="position">3</property>
-                        <property name="name">flag</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">4</property>
                         <property name="name">msl_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">5</property>
+                        <property name="position">4</property>
                         <property name="name">name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">6</property>
+                        <property name="position">5</property>
                         <property name="name">customer_code</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">7</property>
+                        <property name="position">6</property>
                         <property name="name">date</property>
                         <property name="dataType">date</property>
                     </structure>
                     <structure>
-                        <property name="position">8</property>
+                        <property name="position">7</property>
                         <property name="name">due_date</property>
                         <property name="dataType">date</property>
                     </structure>
                     <structure>
-                        <property name="position">9</property>
+                        <property name="position">8</property>
                         <property name="name">discount</property>
-                        <property name="dataType">float</property>
+                        <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">10</property>
+                        <property name="position">9</property>
                         <property name="name">product_uos_qty</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">11</property>
+                        <property name="position">10</property>
                         <property name="name">product_name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">12</property>
+                        <property name="position">11</property>
                         <property name="name">payment_term</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">13</property>
+                        <property name="position">12</property>
                         <property name="name">price_unit</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">14</property>
+                        <property name="position">13</property>
                         <property name="name">uom</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">15</property>
+                        <property name="position">14</property>
                         <property name="name">description</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">16</property>
+                        <property name="position">15</property>
                         <property name="name">internal_note</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">17</property>
+                        <property name="position">16</property>
                         <property name="name">invoice</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">18</property>
+                        <property name="position">17</property>
                         <property name="name">receivable_account</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">19</property>
+                        <property name="position">18</property>
                         <property name="name">stocking_qty</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">20</property>
+                        <property name="position">19</property>
                         <property name="name">stocking_unit_price</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">20</property>
+                        <property name="name">sub_total</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
@@ -485,110 +485,110 @@ else
                 </structure>
                 <structure>
                     <property name="position">3</property>
-                    <property name="name">flag</property>
-                    <property name="nativeName">flag</property>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="position">4</property>
                     <property name="name">msl_id</property>
                     <property name="nativeName">msl_id</property>
                     <property name="dataType">integer</property>
                 </structure>
                 <structure>
-                    <property name="position">5</property>
+                    <property name="position">4</property>
                     <property name="name">name</property>
                     <property name="nativeName">name</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">6</property>
+                    <property name="position">5</property>
                     <property name="name">customer_code</property>
                     <property name="nativeName">customer_code</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">7</property>
+                    <property name="position">6</property>
                     <property name="name">date</property>
                     <property name="nativeName">date</property>
                     <property name="dataType">date</property>
                 </structure>
                 <structure>
-                    <property name="position">8</property>
+                    <property name="position">7</property>
                     <property name="name">due_date</property>
                     <property name="nativeName">due_date</property>
                     <property name="dataType">date</property>
                 </structure>
                 <structure>
-                    <property name="position">9</property>
+                    <property name="position">8</property>
                     <property name="name">discount</property>
                     <property name="nativeName">discount</property>
-                    <property name="dataType">float</property>
+                    <property name="dataType">decimal</property>
                 </structure>
                 <structure>
-                    <property name="position">10</property>
+                    <property name="position">9</property>
                     <property name="name">product_uos_qty</property>
                     <property name="nativeName">product_uos_qty</property>
                     <property name="dataType">integer</property>
                 </structure>
                 <structure>
-                    <property name="position">11</property>
+                    <property name="position">10</property>
                     <property name="name">product_name</property>
                     <property name="nativeName">product_name</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">12</property>
+                    <property name="position">11</property>
                     <property name="name">payment_term</property>
                     <property name="nativeName">payment_term</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">13</property>
+                    <property name="position">12</property>
                     <property name="name">price_unit</property>
                     <property name="nativeName">price_unit</property>
                     <property name="dataType">decimal</property>
                 </structure>
                 <structure>
-                    <property name="position">14</property>
+                    <property name="position">13</property>
                     <property name="name">uom</property>
                     <property name="nativeName">uom</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">15</property>
+                    <property name="position">14</property>
                     <property name="name">description</property>
                     <property name="nativeName">description</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">16</property>
+                    <property name="position">15</property>
                     <property name="name">internal_note</property>
                     <property name="nativeName">internal_note</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">17</property>
+                    <property name="position">16</property>
                     <property name="name">invoice</property>
                     <property name="nativeName">invoice</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">18</property>
+                    <property name="position">17</property>
                     <property name="name">receivable_account</property>
                     <property name="nativeName">receivable_account</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">19</property>
+                    <property name="position">18</property>
                     <property name="name">stocking_qty</property>
                     <property name="nativeName">stocking_qty</property>
                     <property name="dataType">integer</property>
                 </structure>
                 <structure>
-                    <property name="position">20</property>
+                    <property name="position">19</property>
                     <property name="name">stocking_unit_price</property>
                     <property name="nativeName">stocking_unit_price</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">20</property>
+                    <property name="name">sub_total</property>
+                    <property name="nativeName">sub_total</property>
                     <property name="dataType">decimal</property>
                 </structure>
                 <structure>
@@ -658,14 +658,15 @@ else
                     <property name="dataType">integer</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select *,(select count(msl.id) from mobile_sale_order_line msl where msl.order_id=ms_id) as no_of_distribution,(sub_total)*-1 as amount,get_msol_seq(ms_id,msl_id) as so_propo_dis
-from (select ms.sale_team as section_id,ms.void_flag as flag,ms.id as ms_id,msl.id as msl_id,ms.name,ms.customer_code,ms.date::date,ms.due_date,msl.discount,get_smaller_qty(msl.uom_id,msl.product_uos_qty,msl.product_id) product_uos_qty,
+            <xml-property name="queryText"><![CDATA[select *,(select count(msl.id) from mobile_sale_order_line msl where msl.order_id=ms_id) as no_of_distribution,(sub_total)*-1 as amount,
+get_invl_seq(ms_id,msl_id) as so_propo_dis
+from (select ms.section_id as section_id,ms.id as ms_id,msl.id as msl_id,ms.name,so.customer_code,ms.date_invoice as date,ms.date_due as due_date,msl.discount,get_smaller_qty(msl.uos_id,msl.quantity,msl.product_id) product_uos_qty,
 Cast((select case when substr(name,0,2) ~ '^([0-9]+\.?[0-9]*|\.[0-9]+)$' then substr(name,4) else name end as name from crm_case_section where id=crm.id) || '-' || pp.name_template as character varying) as product_name,term.name as payment_term,pt.list_price as price_unit,uom.name as uom,pt.description_sale description,
-rp.comment as internal_note,ms.name as invoice,'1518-YGN'::character varying as receivable_account,get_smaller_qty(msl.uom_id,msl.product_uos_qty,msl.product_id) stocking_qty,
+rp.comment as internal_note,ms.name as invoice,'1518-YGN'::character varying as receivable_account,get_smaller_qty(msl.uos_id,msl.quantity,msl.product_id) stocking_qty,
        CASE WHEN msl.price_unit=0 THEN 0
             ELSE pt.list_price
        END
-        stocking_unit_price, msl.sub_total as sub_total,
+        stocking_unit_price, msl.price_subtotal as sub_total,
 res.partner_id as partner_id,rp.name as ship_to_name,Cast(address || ',' || rc.name || ',' || rcs.name || ',' || city.name || ',' || town.name as character varying ) as ship_address,'Vehicle'::character varying as ship_via,
 CASE WHEN msl.price_unit=0 THEN (select aa.code receivable_account from product_product pp left join product_template pt on (pp.product_tmpl_id=pt.id) left join product_maingroup pg on (pt.main_group=pg.id) left join account_account aa 
 on (aa.id=pg.property_account_foc) where pp.id=product_id)
@@ -678,10 +679,11 @@ select id from product_category where id=cat.id)
 )       END
         gl_account,
 1 as tax_type
-from mobile_sale_order ms
-left join mobile_sale_order_line msl on ms.id=msl.order_id
+from sale_order so 
+inner join account_invoice ms on (ms.origin=so.name) 
+inner join account_invoice_line msl on (ms.id=msl.invoice_id)
 left join account_payment_term term on ms.payment_term=term.id
-left join crm_case_section crm on ms.sale_team=crm.id
+left join crm_case_section crm on ms.section_id=crm.id
 left join product_product pp on msl.product_id=pp.id
 left join product_template pt on pp.product_tmpl_id=pt.id
 left join product_uom uom on uom.id=pt.uom_id
@@ -691,9 +693,8 @@ left join res_country rc on rc.id=rp.country_id
 left join res_country_state rcs on rcs.id=rp.state_id
 left join res_city city on city.id=rp.city
 left join res_township town on town.id=rp.township
-left join res_users res on ms.user_id=res.id)A join (select id,name as saleman_name from res_partner)B on A.partner_id = B.id
+left join res_users res on ms.user_id=res.id where so.tb_ref_no is not null)A join (select id,name as saleman_name from res_partner)B on A.partner_id = B.id
 and A.date::date between ? and ?
-and A.flag='none'
 --$sales_team$
 order by A.name,A.msl_id,A.date
 ]]></xml-property>
