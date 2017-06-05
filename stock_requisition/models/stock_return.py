@@ -293,6 +293,19 @@ class stock_return(osv.osv):
             big_return_quantity=line.return_quantity_big
             return_quantity=line.return_quantity
             different_qty=0
+            cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (rec_big_uom_id,))
+            big_qty = cr.fetchone()
+            if big_qty:
+                bigger_qty = big_qty[0] * rec_big_quantity      
+                return_big_qty = big_qty[0] * big_return_quantity 
+                total_return_qty=  return_big_qty +  return_quantity        
+                total_rec_qty=  bigger_qty +  rec_small_quantity        
+#                         if total_return_qty < total_rec_qty:
+#                             raise osv.except_osv(_('Warning'),
+#                                 _('Please Check Receive Qty (%s)') % (name,))    
+#                         if  total_return_qty > total_rec_qty:
+                different_qty   = total_return_qty - total_rec_qty
+                cr.execute("update stock_return_line set different_qty= %s where id=%s",(different_qty,line.id,))            
             if (rec_small_quantity + rec_big_quantity > 0) and ex_return_id is False:
                 product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)       
                 name = line.product_id.name_template                                                                               
@@ -307,8 +320,8 @@ class stock_return(osv.osv):
 #                             raise osv.except_osv(_('Warning'),
 #                                 _('Please Check Receive Qty (%s)') % (name,))    
 #                         if  total_return_qty > total_rec_qty:
-                        different_qty   = total_return_qty - total_rec_qty
-                        cr.execute("update stock_return_line set different_qty= %s where id=%s",(different_qty,line.id,))
+#                         different_qty   = total_return_qty - total_rec_qty
+#                         cr.execute("update stock_return_line set different_qty= %s where id=%s",(different_qty,line.id,))
                         move_id = move_obj.create(cr, uid, {'picking_id': picking_id,
                                                   'picking_type_id':picking_type_id,
                                                 #  'restrict_lot_id':lot_id,
