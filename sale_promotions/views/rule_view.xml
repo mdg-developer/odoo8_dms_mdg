@@ -20,8 +20,8 @@
 							<field name="name" placeholder="Promotion Name" />
 						</h1>
 						<button name="generate_code" string="Generate Code" class="oe_highlight"
-							type="object"   groups="base.group_sale_manager" />
-						
+							type="object" groups="base.group_sale_manager" />
+
 						<group col="4">
 							<field name="sequence" colspan="2" />
 							<field name="active" colspan="2" select="1" />
@@ -42,6 +42,8 @@
 							<newline />
 							<field name="from_date" />
 							<field name="to_date" />
+							<field name="image"  filename="att_fname"  />
+							<field name="att_fname" invisible="1" class="oe_inline oe_right" />
 						</group>
 
 						<group invisible="1">
