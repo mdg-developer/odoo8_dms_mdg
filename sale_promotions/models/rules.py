@@ -146,15 +146,7 @@ class PromotionsRules(osv.Model):
                     
             res[promotion_rule.id] = len(matching_ids)
         return res
-    
-    def _get_image(self, cr, uid, ids, name, args, context=None):
-        result = dict.fromkeys(ids, False)
-        for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = tools.image_get_resized_images(obj.image)
-        return result
-    
-    def _set_image(self, cr, uid, id, name, value, args, context=None):
-        return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
+
         
     _columns = {
                 
@@ -224,29 +216,6 @@ class PromotionsRules(osv.Model):
 #         'promotion_id_b':fields.many2one('promos.rules' ,'Other Promotion B'),
 #         'promotion_id_c':fields.many2one('promos.rules' ,'Other Promotion C'),
 #         'file_import': fields.binary(string='Files Attachment'),
-        
-                'image': fields.binary("Files Attachment",
-            help="This field holds the image used as logo for the brand, limited to 1024x1024px."),
-                'att_fname': fields.char('Filename', size=128, required=True),
-
-        'image_medium': fields.function(_get_image, fnct_inv=_set_image,
-            string="Files Attachment photo", type="binary", multi="_get_image",
-            store={
-                'promos.rules': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
-            },
-            help="Medium-sized logo of the brand. It is automatically "\
-                 "resized as a 128x128px image, with aspect ratio preserved. "\
-                 "Use this field in form views or some kanban views."),
-                
-        'image_small': fields.function(_get_image, fnct_inv=_set_image,
-            string="Smal-sized photo", type="binary", multi="_get_image",
-            store={
-                'promos.rules': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
-            },
-            help="Small-sized photo of the brand. It is automatically "\
-                 "resized as a 64x64px image, with aspect ratio preserved. "\
-                 "Use this field anywhere a small image is required."),
-
     }
     _defaults = {
         'logic':lambda * a:'and',

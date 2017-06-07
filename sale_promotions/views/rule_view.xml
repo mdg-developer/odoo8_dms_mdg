@@ -42,8 +42,6 @@
 							<newline />
 							<field name="from_date" />
 							<field name="to_date" />
-							<field name="image"  filename="att_fname"  />
-							<field name="att_fname" invisible="1" class="oe_inline oe_right" />
 						</group>
 
 						<group invisible="1">
