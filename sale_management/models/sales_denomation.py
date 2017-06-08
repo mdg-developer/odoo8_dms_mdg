@@ -1,6 +1,7 @@
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 from datetime import datetime
+import locale
 class sale_denomination(osv.osv):
     
     _name = "sales.denomination"
@@ -126,10 +127,87 @@ class sale_denomination(osv.osv):
         val1=0.0
         for order in self.browse(cr, uid, ids, context=context):
 
-            val1=dssr_ar_amount-trans_amount
+            val1=dssr_ar_amount-trans_amount          
             res[order.id]= val1 
-        return res            
+        return res  
     
+    def _get_plusorminus_diff_amount(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        if context is None:
+            context = {}                
+        dssr_ar_amount=self._dssr_ar_amount(cr, uid, ids, field_name, arg, context=context)
+        trans_amount=self._trans_amount(cr, uid, ids, field_name, arg, context=context)
+        for k, dssr_ar_amount in dssr_ar_amount.iteritems():
+            dssr_ar_amount=dssr_ar_amount
+        for k, trans_amount in trans_amount.iteritems():
+            trans_amount=trans_amount       
+        val1=0.0
+        sign = ""
+        for order in self.browse(cr, uid, ids, context=context):
+
+            val1=dssr_ar_amount-trans_amount
+            sign = str(val1)
+            if val1 > 0:
+               locale.setlocale( locale.LC_ALL, '' )
+               val1 = locale.currency(val1, grouping=True )
+               val1 = val1[1:]
+               sign = "(Surpuls) " + str(val1)
+            elif val1 < 0:
+               val1 = val1 * -1
+               locale.setlocale( locale.LC_ALL, '' )
+               val1 = locale.currency(val1, grouping=True )
+               val1 = val1[1:]                 
+               sign = "(defaultsive) " + str(val1)
+                                      
+            res[order.id]= sign 
+        return res
+              
+    def _get_plusorminus(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        if context is None:
+            context = {}                
+        dssr_ar_amount=self._dssr_ar_amount(cr, uid, ids, field_name, arg, context=context)
+        trans_amount=self._trans_amount(cr, uid, ids, field_name, arg, context=context)
+        for k, dssr_ar_amount in dssr_ar_amount.iteritems():
+            dssr_ar_amount=dssr_ar_amount
+        for k, trans_amount in trans_amount.iteritems():
+            trans_amount=trans_amount       
+        val1=0.0
+        sign = ""
+        for order in self.browse(cr, uid, ids, context=context):
+
+            val1=dssr_ar_amount-trans_amount
+            if val1 > 0:
+               sign = "(Surpuls) " 
+            elif val1 < 0:                
+               sign = "(defaultsive) "
+                                      
+            res[order.id]= sign 
+        return res
+    
+    def _get_plusorminus_amount(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        if context is None:
+            context = {}                
+        dssr_ar_amount=self._dssr_ar_amount(cr, uid, ids, field_name, arg, context=context)
+        trans_amount=self._trans_amount(cr, uid, ids, field_name, arg, context=context)
+        for k, dssr_ar_amount in dssr_ar_amount.iteritems():
+            dssr_ar_amount=dssr_ar_amount
+        for k, trans_amount in trans_amount.iteritems():
+            trans_amount=trans_amount       
+        val1=0.0
+        
+        for order in self.browse(cr, uid, ids, context=context):
+
+            val1=dssr_ar_amount-trans_amount
+            if val1 > 0:
+               val1 = val1 * 1
+            elif val1 < 0:
+               val1= val1 * -1 
+               
+                                      
+            res[order.id]= val1 
+        return res
     _columns = {
         'company_id':fields.many2one('res.company', 'Company'),
         'date':fields.datetime('Date'),
@@ -164,7 +242,10 @@ class sale_denomination(osv.osv):
      'dssr_ar_amount':fields.function(_dssr_ar_amount,string= 'Grand  Total', digits_compute=dp.get_precision('Product Price'),type='float'),
      'trans_amount':fields.function(_trans_amount, string='Grand  Total', digits_compute=dp.get_precision('Product Price'),type='float'),
      'diff_amount':fields.function(_diff_amount,string= 'Difference Amount', digits_compute=dp.get_precision('Product Price'),type='float'),
-    'invoice_sub_total':fields.function(_invoice_amount,string= 'Sub Total', digits_compute=dp.get_precision('Product Price'),type='float'),
+    'invoice_sub_total':fields.function(_invoice_amount,string= 'Sub Total', digits_compute=dp.get_precision('Product Price'),type='float'),    
+    'sign_diff_amount': fields.function(_get_plusorminus_diff_amount, string="Difference Amount", type="char"),
+    #'sign': fields.function(_get_plusorminus, string="Sign", store=True, type="char"),
+    #'sign_amount': fields.function(_get_plusorminus_amount,string= 'Sign Amount', digits_compute=dp.get_precision('Product Price'),type='float'),
          }
     _defaults = {
         'date': fields.datetime.now,

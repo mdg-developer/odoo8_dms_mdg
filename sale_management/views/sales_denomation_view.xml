@@ -161,9 +161,10 @@
 								<field name="cheque_amount" />
 								<field name="bank_amount" />
 								<field name="trans_amount" />
-								<field name="diff_amount" />
+								<field name="sign_diff_amount" />																
 							</group>
 						</group>
+						
 					</sheet>
 
 				</form>

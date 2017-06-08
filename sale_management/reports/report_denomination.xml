@@ -316,10 +316,14 @@
 														<h5 align="right">
 															<b>
 																<span>Different Amount:</span>
-																<span t-field="o.diff_amount" />
+																<span t-field="o.sign_diff_amount" />
+																<!-- <span t-field="o.sign" />
+																<span t-field="o.sign_amount"/> -->
+																<!-- <span t-field="o.diff_amount" /> -->
 
 															</b>
 														</h5>
+														
 														<table class="table table-condensed" style="border:0pt;">
 															<thead>
 																<tr>
@@ -639,11 +643,16 @@
 														</h5>
 														<h5 align="right">
 															<b>
+																<!-- <span>Different Amount:</span> -->
 																<span>Different Amount:</span>
-																<span t-field="o.diff_amount" />
+																<span t-field="o.sign_diff_amount" />
+																<!-- <span t-field="o.sign" />
+																<span t-field="o.sign_amount"/> -->
+																<!-- <span t-field="o.diff_amount" /> -->
 
 															</b>
 														</h5>
+														
 														<table class="table table-condensed" style="border:0pt;">
 															<thead>
 																<tr>
