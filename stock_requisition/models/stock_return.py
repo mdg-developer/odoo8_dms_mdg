@@ -259,6 +259,7 @@ class stock_return(osv.osv):
         note_obj = self.pool.get('good.issue.note') 
         return_obj = self.browse(cr, uid, ids, context=context)    
         team_location_id=return_obj.sale_team_id.location_id.id
+        tmp_location_id=return_obj.sale_team_id.temp_location_id.id
         origin = return_obj.name
         return_date = return_obj.return_date   
         main_location_id = return_obj.to_location.id    
@@ -285,6 +286,7 @@ class stock_return(osv.osv):
                                  _('Receive Qty is Zero'))
         for line in return_obj.p_line:
             product_id = line.product_id.id
+            name = line.product_id.name_template                                                                               
             rec_big_uom_id = line.rec_big_uom_id.id
             rec_big_quantity = line.rec_big_quantity
             rec_small_quantity = line.rec_small_quantity
@@ -306,6 +308,36 @@ class stock_return(osv.osv):
 #                         if  total_return_qty > total_rec_qty:
                 different_qty   = total_return_qty - total_rec_qty
                 cr.execute("update stock_return_line set different_qty= %s where id=%s",(different_qty,line.id,))            
+                if different_qty:
+                    if different_qty <0:
+                        # Tmp===> Car
+                        move_id = move_obj.create(cr, uid, {
+                                              'product_id': product_id,
+                                              'product_uom_qty': -1* different_qty ,
+                                              'product_uos_qty':  -1* different_qty,
+                                              'product_uom':rec_small_uom_id,
+                                              'location_id':tmp_location_id,
+                                              'location_dest_id':team_location_id,
+                                              'name':name,
+                                               'origin':origin,
+                                               'manual':True,
+                                              'state':'confirmed'}, context=context)     
+                        move_obj.action_done(cr, uid, move_id, context=context)
+                    if different_qty >0:
+#                         Car===> tmp                    
+                        move_id = move_obj.create(cr, uid, {
+                                              'product_id': product_id,
+                                              'product_uom_qty':  different_qty ,
+                                              'product_uos_qty':  different_qty,
+                                              'product_uom':rec_small_uom_id,
+                                              'location_id':tmp_location_id,
+                                              'location_dest_id':team_location_id,
+                                              'name':name,
+                                               'origin':origin,
+                                             'manual':True,
+                                              'state':'confirmed'}, context=context)     
+                        move_obj.action_done(cr, uid, move_id, context=context)        
+                                
             if (rec_small_quantity + rec_big_quantity > 0) and ex_return_id is False:
                 product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)       
                 name = line.product_id.name_template                                                                               
