@@ -35,7 +35,7 @@
 								<field name="name" />
 								<field name="sale_team_id" attrs="{'readonly':[('state','=','issue')]}"  widget="selection" />
 								<field name="to_location_id"  readonly="1"
-									widget="selection" />
+									/>
 								<field name="request_by"  readonly="1"
 									widget="selection" />
 								<field name="issue_date" attrs="{'readonly':[('state','=','issue')]}" />
