@@ -306,8 +306,9 @@ class stock_return(osv.osv):
 #                             raise osv.except_osv(_('Warning'),
 #                                 _('Please Check Receive Qty (%s)') % (name,))    
 #                         if  total_return_qty > total_rec_qty:
-                different_qty   = total_return_qty - total_rec_qty
-                cr.execute("update stock_return_line set different_qty= %s where id=%s",(different_qty,line.id,))            
+                if ex_return_id is False:
+                    different_qty   = total_return_qty - total_rec_qty
+                    cr.execute("update stock_return_line set different_qty= %s where id=%s",(different_qty,line.id,))            
                 if different_qty:
                     if different_qty <0:
                         # Tmp===> Car
@@ -324,7 +325,7 @@ class stock_return(osv.osv):
                                               'state':'confirmed'}, context=context)     
                         move_obj.action_done(cr, uid, move_id, context=context)
                     if different_qty >0:
-#                         Car===> tmp                    
+    #                         Car===> tmp                    
                         move_id = move_obj.create(cr, uid, {
                                               'product_id': product_id,
                                               'product_uom_qty':  different_qty ,
