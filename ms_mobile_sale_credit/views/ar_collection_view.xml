@@ -13,7 +13,7 @@
 					<sheet>
 						<group>
 							<group>
-								<field name="ref_no" />
+								<field name="ref_no"  invisible="1" />
 								<!-- <field name="name" /> -->
 								<field name="invoice_id" />
 								<field name="partner_id" />

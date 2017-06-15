@@ -45,7 +45,7 @@
 				<xpath expr="//field[@name='journal_id']" position="after">
 					<field name="pricelist_id" attrs="{'readonly':[('state','!=','draft')]}" />
 					<field name="delivery_remark" attrs="{'readonly':[('state','!=','draft')]}" />
-					<field name="state" readonly="1"/>
+<!-- 					<field name="state" readonly="1"/> -->
 				</xpath>
 				<xpath expr="//field[@name='partner_id']" position="replace">
 					<field string="Customer" name="partner_id"
