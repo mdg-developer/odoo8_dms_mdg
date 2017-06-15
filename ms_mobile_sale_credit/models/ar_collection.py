@@ -21,12 +21,12 @@ class mobile_ar_collection(osv.osv):
                 'name': fields.char('Customer'),
 				'partner_id':fields.many2one('res.partner','Customer'),
                 'date': fields.date('Invoice Date'),
-                'so_ref': fields.char('Sale Order No'),
+                'so_ref': fields.char('Invoice No'),
                 'sale_team_id':fields.many2one('crm.case.section', 'Sale Team'),
 				'user_id':fields.many2one("res.users", "Salesman Name"),
                 'tablet_id':fields.many2one('tablets.information', 'Tablet Name'),
                 'balance': fields.float('Balance'),
-                'ref_no': fields.char('Invoice No'),
+                'ref_no': fields.char('Payment Reference'),
                 'is_sync':fields.char('Is Sync'),
                 'void_flag':fields.char('Void'),
                 'customer_code':fields.char('Customer Code'),
@@ -35,6 +35,7 @@ class mobile_ar_collection(osv.osv):
                 'credit_limit':fields.float('Credit Limit'),
                 'payment_line_ids':fields.one2many('ar.payment', 'collection_id', 'Payment Lines'),
                 'state':fields.selection([('draft', 'Draft'), ('done', 'Done')], 'Status',readonly=True),
+                'invoice_id':fields.many2one('account.invoice','Payment Reference'),
     }
     _defaults = {
                  'state' : 'draft',

@@ -15,6 +15,7 @@
 							<group>
 								<field name="ref_no" />
 								<!-- <field name="name" /> -->
+								<field name="invoice_id" />
 								<field name="partner_id" />
 								<field name="so_ref" />
 								<field name="sale_team_id" />
@@ -58,6 +59,7 @@
 					<field name="sale_team_id" />
 					<field name="tablet_id" />
 					<field name="date" />
+					<field name="so_amount" string="Amount" />
 					<field name="payment_amount" />
 					<field name="balance" />
 					<field name="void_flag" />
