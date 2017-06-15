@@ -45,6 +45,7 @@
 				<xpath expr="//field[@name='journal_id']" position="after">
 					<field name="pricelist_id" attrs="{'readonly':[('state','!=','draft')]}" />
 					<field name="delivery_remark" attrs="{'readonly':[('state','!=','draft')]}" />
+					<field name="state" readonly="1"/>
 				</xpath>
 				<xpath expr="//field[@name='partner_id']" position="replace">
 					<field string="Customer" name="partner_id"
@@ -120,7 +121,7 @@
 
 				</xpath>
 				<xpath expr="//field[@name='residual']" position="replace">
-					<field name="residual" invisible="1" />
+					<field name="residual" string="Paid Amount"/>
 
 				</xpath>
 				<xpath expr="//field[@name='amount_untaxed']" position="replace">
