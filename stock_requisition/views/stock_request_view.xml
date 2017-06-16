@@ -32,10 +32,11 @@
 									invisible="1" />
 								<field name="company_id" attrs="{'readonly':[('state','=','approve')]}" invisible="1"/>
 								<field name="pre_order" invisible="1" />
+								<field name="good_issue_id" invisible="0" />
 							</group>
 							<group>
 								<field name="issue_to" attrs="{'readonly':[('state','=','approve')]}" />
-								<field name="to_location_id"  widget="selection"/>
+								<field name="to_location_id" />
 								<field name="issue_date" attrs="{'readonly':[('state','=','approve')]}" />
 								<label for="s_issue_date" />
 								<div>
