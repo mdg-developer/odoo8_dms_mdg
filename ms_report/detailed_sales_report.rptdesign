@@ -53,9 +53,29 @@
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
+        <scalar-parameter name="payment_type" id="331">
+            <text-property name="promptText">Payment Type</text-property>
+            <property name="valueType">dynamic</property>
+            <property name="isRequired">false</property>
+            <property name="dataSetName">payment_type</property>
+            <expression name="valueExpr" type="javascript">dataSetRow["payment_type"]</expression>
+            <expression name="labelExpr" type="javascript">dataSetRow["payment_type"]</expression>
+            <expression name="sortByColumn">dataSetRow["payment_type"]</expression>
+            <property name="sortDirection">asc</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">list-box</property>
+            <property name="mustMatch">true</property>
+            <property name="fixedOrder">false</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="281"
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="333"
  extends="report_library.Data Source"/>
     </data-sources>
     <data-sets>
@@ -293,6 +313,12 @@ order by name]]></xml-property>
                     <text-property name="heading">number</text-property>
                 </structure>
                 <structure>
+                    <property name="columnName">payment_type</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">payment_type</text-property>
+                    <text-property name="heading">payment_type</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">date_invoice</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">date_invoice</text-property>
@@ -395,61 +421,66 @@ order by name]]></xml-property>
                     </structure>
                     <structure>
                         <property name="position">4</property>
-                        <property name="name">date_invoice</property>
+                        <property name="name">payment_type</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">5</property>
+                        <property name="name">date_invoice</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
                         <property name="name">section_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">6</property>
+                        <property name="position">7</property>
                         <property name="name">branch_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">7</property>
+                        <property name="position">8</property>
                         <property name="name">product_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">8</property>
+                        <property name="position">9</property>
                         <property name="name">name_template</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">9</property>
+                        <property name="position">10</property>
                         <property name="name">quantity</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">10</property>
+                        <property name="position">11</property>
                         <property name="name">uos_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">11</property>
+                        <property name="position">12</property>
                         <property name="name">uom_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">12</property>
+                        <property name="position">13</property>
                         <property name="name">big_uom_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">13</property>
+                        <property name="position">14</property>
                         <property name="name">product_quantity</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">14</property>
+                        <property name="position">15</property>
                         <property name="name">status</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">15</property>
+                        <property name="position">16</property>
                         <property name="name">seq</property>
                         <property name="dataType">integer</property>
                     </structure>
@@ -468,6 +499,13 @@ if (params["branch"].value == null ){
 else
 {     
    this.queryText =this.queryText.replace("--$branch$", "and branch_id="+params["branch"])
+}
+if (params["payment_type"].value == null ){     
+   this.queryText =this.queryText.replace("--$payment_type$", "")
+}
+else
+{     
+   this.queryText =this.queryText.replace("--$payment_type$", "and payment_type='"+params["payment_type"]+"'")
 }]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
@@ -494,83 +532,90 @@ else
                 </structure>
                 <structure>
                     <property name="position">4</property>
+                    <property name="name">payment_type</property>
+                    <property name="nativeName">payment_type</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
                     <property name="name">date_invoice</property>
                     <property name="nativeName">date_invoice</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">5</property>
+                    <property name="position">6</property>
                     <property name="name">section_id</property>
                     <property name="nativeName">section_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">6</property>
+                    <property name="position">7</property>
                     <property name="name">branch_id</property>
                     <property name="nativeName">branch_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">7</property>
+                    <property name="position">8</property>
                     <property name="name">product_id</property>
                     <property name="nativeName">product_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">8</property>
+                    <property name="position">9</property>
                     <property name="name">name_template</property>
                     <property name="nativeName">name_template</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">9</property>
+                    <property name="position">10</property>
                     <property name="name">quantity</property>
                     <property name="nativeName">quantity</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">10</property>
+                    <property name="position">11</property>
                     <property name="name">uos_id</property>
                     <property name="nativeName">uos_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">11</property>
+                    <property name="position">12</property>
                     <property name="name">uom_id</property>
                     <property name="nativeName">uom_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">12</property>
+                    <property name="position">13</property>
                     <property name="name">big_uom_id</property>
                     <property name="nativeName">big_uom_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">13</property>
+                    <property name="position">14</property>
                     <property name="name">product_quantity</property>
                     <property name="nativeName">product_quantity</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">14</property>
+                    <property name="position">15</property>
                     <property name="name">status</property>
                     <property name="nativeName">status</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">15</property>
+                    <property name="position">16</property>
                     <property name="name">seq</property>
                     <property name="nativeName">seq</property>
                     <property name="dataType">integer</property>
@@ -578,7 +623,7 @@ else
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[with foc_qty as (
-	select rp.name customer,rt.code township,number,date_invoice::text,ai.section_id,ai.branch_id,product_id,name_template,quantity,ail.uos_id,pt.uom_id,pt.big_uom_id,
+	select rp.name customer,rt.code township,number,payment_type,date_invoice::text,ai.section_id,ai.branch_id,product_id,name_template,quantity,ail.uos_id,pt.uom_id,pt.big_uom_id,
 	case when ail.uos_id=pt.uom_id then quantity when ail.uos_id=pt.big_uom_id then quantity*(select floor(round(1/factor,2)) from product_uom where id=big_uom_id) end as product_quantity,'Foc Qty'::text as status,1::int as seq
 	from account_invoice ai,res_partner rp,res_township rt,account_invoice_line ail,product_uom uom,product_product pp,product_template pt
 	where ai.partner_id=rp.id
@@ -590,7 +635,7 @@ else
 	and foc='true'
 	order by rp.name),
 sale_qty as (
-	select rp.name customer,rt.code township,number,date_invoice::text,ai.section_id,ai.branch_id,product_id,name_template,quantity,ail.uos_id,pt.uom_id,pt.big_uom_id,
+	select rp.name customer,rt.code township,number,payment_type,date_invoice::text,ai.section_id,ai.branch_id,product_id,name_template,quantity,ail.uos_id,pt.uom_id,pt.big_uom_id,
 	case when ail.uos_id=pt.uom_id then quantity when ail.uos_id=pt.big_uom_id then quantity*(select floor(round(1/factor,2)) from product_uom where id=big_uom_id) end as product_quantity,'Sales Qty'::text as status,1::int as seq
 	from account_invoice ai,res_partner rp,res_township rt,account_invoice_line ail,product_uom uom,product_product pp,product_template pt
 	where ai.partner_id=rp.id
@@ -602,7 +647,7 @@ sale_qty as (
 	and foc='false'
 	order by rp.name),
 total_amt as (
-	select rp.name customer,rt.code township,number,date_invoice::text,ai.section_id,ai.branch_id,0,'Total Amt.'::character varying name_template,0,0,0,0,
+	select rp.name customer,rt.code township,number,payment_type,date_invoice::text,ai.section_id,ai.branch_id,0,'Total Amt.'::character varying name_template,0,0,0,0,
 	amount_untaxed as product_quantity,''::text as status,2::int as seq
 	from account_invoice ai,res_partner rp,res_township rt
 	where ai.partner_id=rp.id	
@@ -610,7 +655,7 @@ total_amt as (
 	order by rp.name
 ),
 total_discount as (
-	select rp.name customer,rt.code township,number,date_invoice::text,ai.section_id,ai.branch_id,0,'Total Disc.'::character varying name_template,0,0,0,0,
+	select rp.name customer,rt.code township,number,payment_type,date_invoice::text,ai.section_id,ai.branch_id,0,'Total Disc.'::character varying name_template,0,0,0,0,
 	discount_total as product_quantity,''::text as status,3::int as seq
 	from account_invoice ai,res_partner rp,res_township rt
 	where ai.partner_id=rp.id
@@ -618,7 +663,7 @@ total_discount as (
 	order by rp.name
 ),
 net_amt as (
-	select rp.name customer,rt.code township,number,date_invoice::text,ai.section_id,ai.branch_id,0,'Net Amt.'::character varying name_template,0,0,0,0,
+	select rp.name customer,rt.code township,number,payment_type,date_invoice::text,ai.section_id,ai.branch_id,0,'Net Amt.'::character varying name_template,0,0,0,0,
 	amount_total as product_quantity,''::text as status,4::int as seq
 	from account_invoice ai,res_partner rp,res_township rt
 	where ai.partner_id=rp.id
@@ -648,6 +693,7 @@ from result
 where 1=1
 --$sales_team$
 --$branch$
+--$payment_type$
 order by number]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
@@ -934,6 +980,70 @@ order by number]]></xml-property>
   </design:ResultSets>
 </model:DesignValues>]]></xml-property>
         </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="payment_type" id="330">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">payment_type</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">payment_type</text-property>
+                    <text-property name="heading">payment_type</text-property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">payment_type</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">payment_type</property>
+                    <property name="nativeName">payment_type</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select distinct(payment_type)
+from account_invoice
+order by payment_type]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>payment_type</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>2147483647</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>payment_type</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>payment_type</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
     </data-sets>
     <cubes>
         <tabular-cube name="Data Cube" id="96">
@@ -1055,13 +1165,27 @@ order by number]]></xml-property>
             </list-property>
             <property name="resultSetColumn">name</property>
         </data>
-        <label id="11">
+        <data id="332">
             <property name="fontFamily">"Arial"</property>
             <property name="fontSize">12pt</property>
             <property name="fontWeight">bold</property>
             <property name="textAlign">center</property>
-            <text-property name="text">Detailed Sales Report</text-property>
-        </label>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">payment_type</property>
+                    <expression name="expression" type="javascript">if (params["payment_type"].value == null ){     &#13;
+'Daily Cash Credit Sales Record of Yangon Office'&#13;
+}&#13;
+else&#13;
+{     &#13;
+'Daily '+params["payment_type"]+' Sales Record of Yangon Office'&#13;
+}</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+            </list-property>
+            <property name="resultSetColumn">payment_type</property>
+        </data>
         <data id="250">
             <property name="fontFamily">"Arial"</property>
             <property name="fontSize">12pt</property>
