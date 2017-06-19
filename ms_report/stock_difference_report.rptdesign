@@ -385,6 +385,7 @@ else
 	and line.product_id=pp.id
 	and st.sale_team_id=ccs.id
 	and st.branch_id=rb.id
+	and line.ex_return_id is null
 	and different_qty!=0
 	and return_date between ? and ?
 	--$sale_team_id$

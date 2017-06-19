@@ -1921,6 +1921,7 @@ params["branch"].displayText&#13;
         <label id="406"/>
         <label id="407"/>
         <grid id="283">
+            <property name="height">1in</property>
             <column id="284"/>
             <column id="285"/>
             <column id="286">
@@ -1936,6 +1937,7 @@ params["branch"].displayText&#13;
             <column id="290"/>
             <column id="291"/>
             <row id="292">
+                <property name="height">0.5729166666666666in</property>
                 <cell id="293">
                     <label id="320">
                         <property name="fontFamily">"Arial"</property>
@@ -1951,7 +1953,7 @@ params["branch"].displayText&#13;
                         <property name="fontWeight">normal</property>
                         <property name="paddingLeft">3pt</property>
                         <property name="textAlign">left</property>
-                        <text-property name="text">____________</text-property>
+                        <text-property name="text">_____________</text-property>
                     </label>
                 </cell>
                 <cell id="295"/>
@@ -1970,7 +1972,7 @@ params["branch"].displayText&#13;
                         <property name="fontWeight">normal</property>
                         <property name="paddingLeft">3pt</property>
                         <property name="textAlign">left</property>
-                        <text-property name="text">____________</text-property>
+                        <text-property name="text">_____________</text-property>
                     </label>
                 </cell>
                 <cell id="298"/>
@@ -1989,11 +1991,12 @@ params["branch"].displayText&#13;
                         <property name="fontWeight">normal</property>
                         <property name="paddingLeft">3pt</property>
                         <property name="textAlign">left</property>
-                        <text-property name="text">____________</text-property>
+                        <text-property name="text">_____________</text-property>
                     </label>
                 </cell>
             </row>
             <row id="301">
+                <property name="height">0.4270833333333333in</property>
                 <cell id="302"/>
                 <cell id="303">
                     <label id="322">
@@ -2012,7 +2015,7 @@ params["branch"].displayText&#13;
                         <property name="fontWeight">normal</property>
                         <property name="paddingLeft">3pt</property>
                         <property name="textAlign">left</property>
-                        <text-property name="text">____________</text-property>
+                        <text-property name="text">_____________</text-property>
                     </label>
                 </cell>
                 <cell id="307"/>
@@ -2023,7 +2026,7 @@ params["branch"].displayText&#13;
                         <property name="fontWeight">normal</property>
                         <property name="paddingLeft">3pt</property>
                         <property name="textAlign">left</property>
-                        <text-property name="text">____________</text-property>
+                        <text-property name="text">_____________</text-property>
                     </label>
                 </cell>
             </row>
