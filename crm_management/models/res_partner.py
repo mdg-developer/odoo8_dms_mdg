@@ -334,7 +334,7 @@ class res_partner(osv.osv):
         return country_id       
 
     _columns = {  
-                'customer_code':fields.char('Code', required=False,readonly = True),
+                'customer_code':fields.char('Code', required=False,readonly = True,copy=False),
                 'outlet_type': fields.many2one('outlettype.outlettype', 'Outlet Type'),
                 'temp_customer':fields.char('Contact Person'),
                 'class_id':fields.many2one('sale.class', 'Class'),
