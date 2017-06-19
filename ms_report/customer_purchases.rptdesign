@@ -47,13 +47,15 @@
             <property name="dataSetName">res_branch</property>
             <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
             <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
+            <expression name="sortByColumn">dataSetRow["name"]</expression>
+            <property name="sortDirection">asc</property>
             <property name="dataType">integer</property>
             <property name="distinct">true</property>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
             <property name="controlType">list-box</property>
             <property name="mustMatch">true</property>
-            <property name="fixedOrder">true</property>
+            <property name="fixedOrder">false</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
             </structure>
@@ -1000,18 +1002,18 @@ order by name]]></xml-property>
     <page-setup>
         <simple-master-page name="NewSimpleMasterPage" id="50" extends="report_library.NewSimpleMasterPage">
             <overridden-values>
-                <ref-entry baseId="37" name="NewGrid" id="51"/>
-                <ref-entry baseId="38" id="52"/>
-                <ref-entry baseId="39" id="53"/>
-                <ref-entry baseId="40" id="54"/>
-                <ref-entry baseId="41" id="55"/>
-                <ref-entry baseId="42" id="56"/>
+                <ref-entry baseId="37" name="NewGrid" id="107"/>
+                <ref-entry baseId="38" id="108"/>
+                <ref-entry baseId="39" id="109"/>
+                <ref-entry baseId="40" id="110"/>
+                <ref-entry baseId="41" id="111"/>
+                <ref-entry baseId="42" id="112"/>
                 <ref-entry baseId="58" name="NewImage" id="58"/>
-                <ref-entry baseId="43" id="59"/>
-                <ref-entry baseId="59" name="NewData" id="60"/>
-                <ref-entry baseId="44" id="61"/>
-                <ref-entry baseId="45" id="62"/>
-                <ref-entry baseId="48" id="63"/>
+                <ref-entry baseId="43" id="113"/>
+                <ref-entry baseId="59" name="NewData" id="59"/>
+                <ref-entry baseId="44" id="114"/>
+                <ref-entry baseId="45" id="115"/>
+                <ref-entry baseId="48" id="116"/>
             </overridden-values>
         </simple-master-page>
     </page-setup>
@@ -1037,19 +1039,44 @@ order by name]]></xml-property>
                         <list-property name="boundDataColumns">
                             <structure>
                                 <property name="name">branch</property>
-                                <expression name="expression" type="javascript">if(params["branch"].value==null)
-{
-"All Branches"
-}
-else
-{
-params["branch"].displayText+" branch"
+                                <expression name="expression" type="javascript">if(params["branch"].value==null)&#13;
+{&#13;
+"All Branches"&#13;
+}&#13;
+else&#13;
+{&#13;
+params["branch"].displayText+" Branch"&#13;
 }</expression>
                                 <property name="dataType">string</property>
                                 <property name="allowExport">true</property>
                             </structure>
                         </list-property>
                         <property name="resultSetColumn">branch</property>
+                    </data>
+                </cell>
+            </row>
+            <row id="129">
+                <cell id="130">
+                    <data id="106">
+                        <property name="fontSize">12pt</property>
+                        <property name="fontWeight">bold</property>
+                        <property name="textAlign">center</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">customer</property>
+                                <expression name="expression" type="javascript">if(params["customer"].value==null)&#13;
+{&#13;
+"All Sales Teams"&#13;
+}&#13;
+else&#13;
+{&#13;
+params["customer"].displayText&#13;
+}</expression>
+                                <property name="dataType">string</property>
+                                <property name="allowExport">true</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">customer</property>
                     </data>
                 </cell>
             </row>
@@ -1115,6 +1142,54 @@ params["branch"].displayText+" branch"
                     <text-property name="displayName">value_inv</text-property>
                     <expression name="expression" type="javascript">dataSetRow["value_inv"]</expression>
                     <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["value"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation_1</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["invoices"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation_2</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["value_inv"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation_3</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["sku_count"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
                 </structure>
             </list-property>
             <column id="37">
@@ -1338,6 +1413,105 @@ params["branch"].displayText+" branch"
                     </cell>
                 </row>
             </detail>
+            <footer>
+                <row id="117">
+                    <cell id="118">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="128">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">center</property>
+                            <text-property name="text">Total</text-property>
+                        </label>
+                    </cell>
+                    <cell id="120">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="124">
+                            <property name="fontWeight">bold</property>
+                            <property name="paddingRight">3pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">Aggregation</property>
+                        </data>
+                    </cell>
+                    <cell id="121">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="125">
+                            <property name="fontWeight">bold</property>
+                            <property name="paddingRight">3pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Unformatted</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">Aggregation_1</property>
+                        </data>
+                    </cell>
+                    <cell id="122">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="126">
+                            <property name="fontWeight">bold</property>
+                            <property name="paddingRight">3pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">Aggregation_2</property>
+                        </data>
+                    </cell>
+                    <cell id="123">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="127">
+                            <property name="fontWeight">bold</property>
+                            <property name="paddingRight">3pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Unformatted</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">Aggregation_3</property>
+                        </data>
+                    </cell>
+                </row>
+            </footer>
         </table>
     </body>
 </report>
