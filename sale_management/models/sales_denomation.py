@@ -151,13 +151,13 @@ class sale_denomination(osv.osv):
                locale.setlocale( locale.LC_ALL, '' )
                val1 = locale.currency(val1, grouping=True )
                val1 = val1[1:]
-               sign = "(deficit) " + str(val1)
+               sign = "(Deficit) " + str(val1)
             elif val1 < 0:
                val1 = val1 * -1
                locale.setlocale( locale.LC_ALL, '' )
                val1 = locale.currency(val1, grouping=True )
                val1 = val1[1:]                 
-               sign = "(Surpuls) " + str(val1)
+               sign = "(Surplus) " + str(val1)
                                       
             res[order.id]= sign 
         return res
@@ -178,9 +178,9 @@ class sale_denomination(osv.osv):
 
             val1=dssr_ar_amount-trans_amount
             if val1 > 0:
-               sign = "(deficit) " 
+               sign = "(Deficit) " 
             elif val1 < 0:                
-               sign = "(Surpuls) "
+               sign = "(Surplus) "
                                       
             res[order.id]= sign 
         return res
