@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.4.2.v201410272105 Build &lt;4.4.2.v20150217-1805></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="layoutPreference">fixed layout</property>
@@ -996,6 +996,50 @@ order by mso.name]]></xml-property>
             <property name="textAlign">center</property>
             <text-property name="text">Direct Sales Manual FOC Report</text-property>
         </label>
+        <data id="142">
+            <property name="fontFamily">"Arial"</property>
+            <property name="fontSize">12pt</property>
+            <property name="fontWeight">bold</property>
+            <property name="textAlign">center</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">branch</property>
+                    <expression name="expression" type="javascript">if(params["branch"].value==null)&#13;
+{&#13;
+"All Branches"&#13;
+}&#13;
+else&#13;
+{&#13;
+params["branch"].displayText+" Branch"&#13;
+}</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+            </list-property>
+            <property name="resultSetColumn">branch</property>
+        </data>
+        <data id="141">
+            <property name="fontFamily">"Arial"</property>
+            <property name="fontSize">12pt</property>
+            <property name="fontWeight">bold</property>
+            <property name="textAlign">center</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">sales_team</property>
+                    <expression name="expression" type="javascript">if(params["sales_team"].value==null)&#13;
+{&#13;
+"All Sales Teams"&#13;
+}&#13;
+else&#13;
+{&#13;
+params["sales_team"].displayText&#13;
+}</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+            </list-property>
+            <property name="resultSetColumn">sales_team</property>
+        </data>
         <label id="21"/>
         <table id="50">
             <property name="width">16.447916666666668in</property>
