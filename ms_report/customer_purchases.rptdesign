@@ -1026,7 +1026,7 @@ order by name]]></xml-property>
                         <property name="fontSize">12pt</property>
                         <property name="fontWeight">bold</property>
                         <property name="textAlign">center</property>
-                        <text-property name="text">Customer Purchases</text-property>
+                        <text-property name="text">Customer Purchases Report</text-property>
                     </label>
                 </cell>
             </row>

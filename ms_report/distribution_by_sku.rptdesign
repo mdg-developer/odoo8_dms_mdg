@@ -693,7 +693,7 @@ from res_branch ]]></xml-property>
                         <property name="fontSize">12pt</property>
                         <property name="fontWeight">bold</property>
                         <property name="textAlign">center</property>
-                        <text-property name="text">Distribution by SKU</text-property>
+                        <text-property name="text">Distribution by SKU Report</text-property>
                     </label>
                 </cell>
             </row>
