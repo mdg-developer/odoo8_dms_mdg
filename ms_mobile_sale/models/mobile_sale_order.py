@@ -1559,13 +1559,18 @@ class mobile_sale_order(osv.osv):
                     origin = None
                     
                 invoice_no=ar['ref_no'].replace('\\', "")
-                cursor.execute("select id from account_invoice where number =%s",(invoice_no,))
-                invoice_id=cursor.fetchone()
-                if invoice_id:
-                    invoice_id=invoice_id[0]
+                cursor.execute("select id,date_due,payment_term,date_invoice from account_invoice where number =%s",(invoice_no,))
+                invoice=cursor.fetchone()
+                if invoice:
+                    invoice_id=invoice[0]
+                    due_date=invoice[1]
+                    payment_term=invoice[2]
+                    invoice_date=invoice[3]
                 else:
                     invoice_id=None
-
+                    due_date=None
+                    payment_term=None
+                    invoice_date=None
                 ar_result = {
                     'customer_code':ar['customer_code'],
                     'partner_id':ar['partner_id'],
@@ -1582,6 +1587,9 @@ class mobile_sale_order(osv.osv):
                     'sale_team_id':ar['sale_team_id'],
                     'user_id':ar['user_id'],
                     'state':'draft',
+                     'due_date': due_date,
+                    'payment_term':payment_term,
+                    'invoice_date':invoice_date,
                 }
                 ar_obj.create(cursor, user, ar_result, context=context)
         return True

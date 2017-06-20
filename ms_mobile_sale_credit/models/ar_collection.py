@@ -18,10 +18,10 @@ class mobile_ar_collection(osv.osv):
     _name = "mobile.ar.collection"
     _description = "AR Collections"
     _columns = {
-                'name': fields.char('Customer'),
+            #    'name': fields.char('Customer'),
 				'partner_id':fields.many2one('res.partner','Customer'),
-                'date': fields.date('Invoice Date'),
-                'so_ref': fields.char('Invoice No'),
+                'date': fields.date('Payment Date'),
+                'so_ref': fields.char('So No'),
                 'sale_team_id':fields.many2one('crm.case.section', 'Sale Team'),
 				'user_id':fields.many2one("res.users", "Salesman Name"),
                 'tablet_id':fields.many2one('tablets.information', 'Tablet Name'),
@@ -31,16 +31,25 @@ class mobile_ar_collection(osv.osv):
                 'void_flag':fields.char('Void'),
                 'customer_code':fields.char('Customer Code'),
                 'payment_amount':fields.float('Payment'),
-                'so_amount':fields.float('Sale Order Amount'),
+                'so_amount':fields.float('Invoice Amount'),
                 'credit_limit':fields.float('Credit Limit'),
                 'payment_line_ids':fields.one2many('ar.payment', 'collection_id', 'Payment Lines'),
                 'state':fields.selection([('draft', 'Draft'), ('done', 'Done')], 'Status',readonly=True),
-                'invoice_id':fields.many2one('account.invoice','Payment Reference'),
+                'invoice_id':fields.many2one('account.invoice','Invoice No'),
+                'invoice_date':fields.date('Invoice Date'),
+                'payment_term':fields.many2one('account.payment.term','Payment Terms'),
+                'due_date':fields.date('Due Date'),
+                'name':fields.char('Payment Reference',readonly=True),
     }
     _defaults = {
                  'state' : 'draft',
                
     }
+    def create(self, cursor, user, vals, context=None):
+        id_code = self.pool.get('ir.sequence').get(cursor, user,
+                                                'ar.collection.code') or '/'
+        vals['name'] = id_code
+        return super(mobile_ar_collection, self).create(cursor, user, vals, context=context)
     
     def get_ar_collections_datas(self, cr, uid, todayDateNormal, creditPaymentList, saleOrderNoList, context=None, **kwargs):
         ar_collection_obj = self.pool.get('mobile.ar.collection')
