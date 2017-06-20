@@ -1109,69 +1109,21 @@ params["sales_team_id"].displayText&#13;
             </list-property>
             <property name="resultSetColumn">sales_team_id</property>
         </data>
-        <grid id="798">
-            <property name="width">10.427083333333334in</property>
-            <column id="799">
-                <property name="width">5.1875in</property>
-            </column>
-            <column id="800">
-                <property name="width">0.19791666666666666in</property>
-            </column>
-            <column id="801">
-                <property name="width">5.041666666666667in</property>
-            </column>
-            <row id="802">
-                <cell id="803">
-                    <data id="806">
-                        <property name="fontFamily">"Arial"</property>
-                        <property name="fontSize">12pt</property>
-                        <property name="fontWeight">bold</property>
-                        <structure name="dateTimeFormat">
-                            <property name="category">Custom</property>
-                            <property name="pattern">dd/MM/YYYY</property>
-                        </structure>
-                        <property name="textAlign">right</property>
-                        <list-property name="boundDataColumns">
-                            <structure>
-                                <property name="name">from_date</property>
-                                <expression name="expression" type="javascript">params["from_date"]</expression>
-                                <property name="dataType">date</property>
-                            </structure>
-                        </list-property>
-                        <property name="resultSetColumn">from_date</property>
-                    </data>
-                </cell>
-                <cell id="804">
-                    <label id="808">
-                        <property name="fontFamily">"Arial"</property>
-                        <property name="fontSize">12pt</property>
-                        <property name="fontWeight">bold</property>
-                        <property name="textAlign">center</property>
-                        <text-property name="text">-</text-property>
-                    </label>
-                </cell>
-                <cell id="805">
-                    <data id="807">
-                        <property name="fontFamily">"Arial"</property>
-                        <property name="fontSize">12pt</property>
-                        <property name="fontWeight">bold</property>
-                        <structure name="dateTimeFormat">
-                            <property name="category">Custom</property>
-                            <property name="pattern">dd/MM/YYYY</property>
-                        </structure>
-                        <property name="textAlign">left</property>
-                        <list-property name="boundDataColumns">
-                            <structure>
-                                <property name="name">to_date</property>
-                                <expression name="expression" type="javascript">params["to_date"]</expression>
-                                <property name="dataType">date</property>
-                            </structure>
-                        </list-property>
-                        <property name="resultSetColumn">to_date</property>
-                    </data>
-                </cell>
-            </row>
-        </grid>
+        <data id="125">
+            <property name="fontFamily">"Arial"</property>
+            <property name="fontSize">12pt</property>
+            <property name="fontWeight">bold</property>
+            <property name="textAlign">right</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">from_date</property>
+                    <expression name="expression" type="javascript">"From Date - "+Formatter.format(params["from_date"],'dd-MM-yy')+"			To Date - "+Formatter.format(params["to_date"],'dd-MM-yy')</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+            </list-property>
+            <property name="resultSetColumn">from_date</property>
+        </data>
         <label id="738"/>
         <table id="6">
             <property name="width">10.447916666666666in</property>

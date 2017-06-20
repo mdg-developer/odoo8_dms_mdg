@@ -1089,74 +1089,34 @@ params["sales_team"].displayText&#13;
                         </list-property>
                         <property name="resultSetColumn">sales_team</property>
                     </data>
-                </cell>
-            </row>
-            <row id="2541">
-                <cell id="2542">
-                    <grid id="2967">
-                        <column id="2968"/>
-                        <column id="2969"/>
-                        <row id="2970">
-                            <cell id="2971">
-                                <label id="2976">
-                                    <property name="fontSize">12pt</property>
-                                    <property name="fontWeight">normal</property>
-                                    <property name="textAlign">right</property>
-                                    <text-property name="text">From Date:</text-property>
-                                </label>
-                            </cell>
-                            <cell id="2972">
-                                <data id="2978">
-                                    <property name="fontSize">12pt</property>
-                                    <structure name="dateTimeFormat">
-                                        <property name="category">Custom</property>
-                                        <property name="pattern">MM/dd/yyyy</property>
-                                    </structure>
-                                    <list-property name="boundDataColumns">
-                                        <structure>
-                                            <property name="name">From Date</property>
-                                            <expression name="expression" type="javascript">params["From Date"]</expression>
-                                            <property name="dataType">date</property>
-                                        </structure>
-                                    </list-property>
-                                    <property name="resultSetColumn">From Date</property>
-                                </data>
-                            </cell>
-                        </row>
-                        <row id="2973">
-                            <cell id="2974">
-                                <label id="2977">
-                                    <property name="fontSize">12pt</property>
-                                    <property name="textAlign">right</property>
-                                    <text-property name="text">To Date:</text-property>
-                                </label>
-                            </cell>
-                            <cell id="2975">
-                                <data id="2979">
-                                    <property name="fontSize">12pt</property>
-                                    <structure name="dateTimeFormat">
-                                        <property name="category">Custom</property>
-                                        <property name="pattern">MM/dd/yyyy</property>
-                                    </structure>
-                                    <list-property name="boundDataColumns">
-                                        <structure>
-                                            <property name="name">To Date</property>
-                                            <expression name="expression" type="javascript">params["To Date"]</expression>
-                                            <property name="dataType">date</property>
-                                        </structure>
-                                    </list-property>
-                                    <property name="resultSetColumn">To Date</property>
-                                </data>
-                            </cell>
-                        </row>
-                    </grid>
+                    <data id="103">
+                        <property name="fontSize">12pt</property>
+                        <property name="fontWeight">bold</property>
+                        <property name="textAlign">right</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">from_date</property>
+                                <expression name="expression" type="javascript">"From Date - "+Formatter.format(params["From Date"],'dd-MM-yy')+"			To Date - "+Formatter.format(params["To Date"],'dd-MM-yy')</expression>
+                                <property name="dataType">string</property>
+                                <property name="allowExport">true</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">from_date</property>
+                    </data>
                 </cell>
             </row>
             <row id="2547">
                 <cell id="2548"/>
             </row>
             <row id="2549">
-                <cell id="2550"/>
+                <cell id="2550">
+                    <grid id="3164">
+                        <column id="3165"/>
+                        <row id="3166">
+                            <cell id="3167"/>
+                        </row>
+                    </grid>
+                </cell>
             </row>
         </grid>
         <table id="2569">

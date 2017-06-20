@@ -634,6 +634,8 @@ order by name]]></xml-property>
   </design:ResultSets>
 </model:DesignValues>]]></xml-property>
         </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="company" id="12"
+ extends="report_library.company"/>
     </data-sets>
     <cubes>
         <tabular-cube name="Data Cube" id="253">
@@ -709,7 +711,33 @@ order by name]]></xml-property>
         </simple-master-page>
     </page-setup>
     <body>
+        <data id="139">
+            <property name="fontFamily">sans-serif</property>
+            <property name="fontSize">12pt</property>
+            <property name="fontWeight">bold</property>
+            <property name="paddingLeft">218pt</property>
+            <property name="textAlign">left</property>
+            <property name="dataSet">company</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">name</property>
+                    <text-property name="displayName">name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <property name="resultSetColumn">name</property>
+        </data>
+        <label id="87">
+            <property name="fontFamily">sans-serif</property>
+            <property name="fontSize">12pt</property>
+            <property name="fontWeight">bold</property>
+            <property name="paddingLeft">250pt</property>
+            <property name="textAlign">left</property>
+            <text-property name="text">Bank Report</text-property>
+        </label>
         <data id="306">
+            <property name="fontFamily">sans-serif</property>
             <property name="fontSize">12pt</property>
             <property name="fontWeight">bold</property>
             <property name="paddingLeft">250pt</property>
@@ -731,6 +759,7 @@ params["branch"].displayText+" Branch"&#13;
             <property name="resultSetColumn">branch</property>
         </data>
         <data id="305">
+            <property name="fontFamily">sans-serif</property>
             <property name="fontSize">12pt</property>
             <property name="fontWeight">bold</property>
             <property name="paddingLeft">250pt</property>

@@ -629,24 +629,12 @@ from res_branch ]]></xml-property>
                         </list-property>
                         <property name="resultSetColumn">name</property>
                     </data>
-                </cell>
-            </row>
-            <row id="130">
-                <cell id="132">
-                    <data id="125">
+                    <label id="62">
                         <property name="fontSize">12pt</property>
                         <property name="fontWeight">bold</property>
                         <property name="textAlign">center</property>
-                        <list-property name="boundDataColumns">
-                            <structure>
-                                <property name="name">from_date</property>
-                                <expression name="expression" type="javascript">"From Date - "+Formatter.format(params["from_date"],'dd-MM-yy')+"			To Date - "+Formatter.format(params["to_date"],'dd-MM-yy')</expression>
-                                <property name="dataType">string</property>
-                                <property name="allowExport">true</property>
-                            </structure>
-                        </list-property>
-                        <property name="resultSetColumn">from_date</property>
-                    </data>
+                        <text-property name="text">By Customer SKU Distribution</text-property>
+                    </label>
                 </cell>
             </row>
             <row id="133">
@@ -693,17 +681,24 @@ params["sales_team"].displayText&#13;
                         </list-property>
                         <property name="resultSetColumn">sales_team</property>
                     </data>
+                    <data id="125">
+                        <property name="fontSize">12pt</property>
+                        <property name="fontWeight">bold</property>
+                        <property name="textAlign">right</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">from_date</property>
+                                <expression name="expression" type="javascript">"From Date - "+Formatter.format(params["from_date"],'dd-MM-yy')+"			To Date - "+Formatter.format(params["to_date"],'dd-MM-yy')</expression>
+                                <property name="dataType">string</property>
+                                <property name="allowExport">true</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">from_date</property>
+                    </data>
                 </cell>
             </row>
             <row id="136">
-                <cell id="138">
-                    <label id="62">
-                        <property name="fontSize">12pt</property>
-                        <property name="fontWeight">bold</property>
-                        <property name="textAlign">center</property>
-                        <text-property name="text">By Customer SKU Distribution</text-property>
-                    </label>
-                </cell>
+                <cell id="138"/>
             </row>
         </grid>
         <label id="123"/>

@@ -692,10 +692,19 @@ from res_branch ]]></xml-property>
         </simple-master-page>
     </page-setup>
     <body>
-        <data id="256">
+        <label id="260">
+            <property name="fontFamily">"Arial"</property>
             <property name="fontSize">12pt</property>
             <property name="fontWeight">bold</property>
-            <property name="paddingLeft">455pt</property>
+            <property name="paddingLeft">440pt</property>
+            <property name="textAlign">left</property>
+            <text-property name="text">Sales Denomination Report</text-property>
+        </label>
+        <data id="256">
+            <property name="fontFamily">"Arial"</property>
+            <property name="fontSize">12pt</property>
+            <property name="fontWeight">bold</property>
+            <property name="paddingLeft">465pt</property>
             <property name="textAlign">left</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -719,9 +728,10 @@ params["branch"].displayText+" Branch"&#13;
             <row id="9">
                 <cell id="10">
                     <data id="255">
+                        <property name="fontFamily">"Arial"</property>
                         <property name="fontSize">12pt</property>
                         <property name="fontWeight">bold</property>
-                        <property name="paddingLeft">455pt</property>
+                        <property name="paddingLeft">465pt</property>
                         <property name="textAlign">left</property>
                         <property name="display">block</property>
                         <list-property name="boundDataColumns">
@@ -1239,5 +1249,11 @@ params["sales_team"].displayText&#13;
                 </structure>
             </list-property>
         </extended-item>
+        <label id="259">
+            <property name="fontSize">12pt</property>
+            <property name="fontWeight">bold</property>
+            <property name="textAlign">center</property>
+            <text-property name="text">Sales Achievement by SKU</text-property>
+        </label>
     </body>
 </report>
