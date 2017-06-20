@@ -893,7 +893,7 @@ from res_branch ]]></xml-property>
                         <property name="fontSize">12pt</property>
                         <property name="fontWeight">bold</property>
                         <property name="textAlign">center</property>
-                        <text-property name="text">Outlet Effectiveness by Team</text-property>
+                        <text-property name="text">Outlet Effectiveness by Team Report</text-property>
                     </label>
                 </cell>
             </row>

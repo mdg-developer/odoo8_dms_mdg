@@ -233,16 +233,6 @@
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
-                <structure>
-                    <property name="name">sales_team_id</property>
-                    <property name="paramName">sales_team</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                    <property name="position">3</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
             </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
@@ -309,7 +299,6 @@ and pp.id=ail.product_id
 and pp.product_tmpl_id=pt.id
 and cat.id=pt.categ_id
 and date_invoice between ? and ?
-and ai.section_id=?
 --$sales_team$
 --$branch_id$
 group by rp.id,cat.id
@@ -343,21 +332,6 @@ order by rp.name,cat.name
             <design:position>2</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>3</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -659,7 +633,7 @@ from res_branch ]]></xml-property>
                         <property name="fontSize">12pt</property>
                         <property name="fontWeight">bold</property>
                         <property name="textAlign">center</property>
-                        <text-property name="text">By Customer CAT Distribution</text-property>
+                        <text-property name="text">By Customer CAT Distribution Report</text-property>
                     </label>
                 </cell>
             </row>
