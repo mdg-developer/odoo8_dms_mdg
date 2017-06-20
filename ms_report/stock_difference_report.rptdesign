@@ -38,14 +38,14 @@
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
-        <scalar-parameter name="sales_team_id" id="736">
-            <text-property name="promptText">Sales Team</text-property>
+        <scalar-parameter name="branch_id" id="737">
+            <text-property name="promptText">Branch</text-property>
             <property name="valueType">dynamic</property>
             <property name="isRequired">false</property>
-            <property name="dataSetName">sales_team</property>
+            <property name="dataSetName">branch</property>
             <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
-            <expression name="labelExpr" type="javascript">dataSetRow["code"]</expression>
-            <expression name="sortByColumn">dataSetRow["code"]</expression>
+            <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
+            <expression name="sortByColumn">dataSetRow["name"]</expression>
             <property name="sortDirection">asc</property>
             <property name="dataType">integer</property>
             <property name="distinct">true</property>
@@ -58,14 +58,14 @@
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
-        <scalar-parameter name="branch_id" id="737">
-            <text-property name="promptText">Branch</text-property>
+        <scalar-parameter name="sales_team_id" id="736">
+            <text-property name="promptText">Sales Team</text-property>
             <property name="valueType">dynamic</property>
             <property name="isRequired">false</property>
-            <property name="dataSetName">branch</property>
+            <property name="dataSetName">sales_team</property>
             <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
-            <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
-            <expression name="sortByColumn">dataSetRow["name"]</expression>
+            <expression name="labelExpr" type="javascript">dataSetRow["code"]</expression>
+            <expression name="sortByColumn">dataSetRow["code"]</expression>
             <property name="sortDirection">asc</property>
             <property name="dataType">integer</property>
             <property name="distinct">true</property>
@@ -1065,6 +1065,50 @@ order by code ]]></xml-property>
             <property name="textAlign">center</property>
             <text-property name="text">Stock Difference Report</text-property>
         </label>
+        <data id="912">
+            <property name="fontFamily">"Arial"</property>
+            <property name="fontSize">12pt</property>
+            <property name="fontWeight">bold</property>
+            <property name="textAlign">center</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">branch_id</property>
+                    <expression name="expression" type="javascript">if(params["branch_id"].value==null)&#13;
+{&#13;
+"All Branches"&#13;
+}&#13;
+else&#13;
+{&#13;
+params["branch_id"].displayText+" Branch"&#13;
+}</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+            </list-property>
+            <property name="resultSetColumn">branch_id</property>
+        </data>
+        <data id="910">
+            <property name="fontFamily">"Arial"</property>
+            <property name="fontSize">12pt</property>
+            <property name="fontWeight">bold</property>
+            <property name="textAlign">center</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">sales_team_id</property>
+                    <expression name="expression" type="javascript">if(params["sales_team_id"].value==null)&#13;
+{&#13;
+"All Sales Teams"&#13;
+}&#13;
+else&#13;
+{&#13;
+params["sales_team_id"].displayText&#13;
+}</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+            </list-property>
+            <property name="resultSetColumn">sales_team_id</property>
+        </data>
         <grid id="798">
             <property name="width">10.427083333333334in</property>
             <column id="799">
