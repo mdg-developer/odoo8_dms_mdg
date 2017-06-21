@@ -41,14 +41,14 @@
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
-        <scalar-parameter name="sales_team" id="10">
-            <text-property name="promptText">Sales Team</text-property>
+        <scalar-parameter name="branch" id="11">
+            <text-property name="promptText">Branch</text-property>
             <property name="valueType">dynamic</property>
             <property name="isRequired">false</property>
-            <property name="dataSetName">sales_team</property>
+            <property name="dataSetName">branch</property>
             <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
-            <expression name="labelExpr" type="javascript">dataSetRow["code"]</expression>
-            <expression name="sortByColumn">dataSetRow["code"]</expression>
+            <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
+            <expression name="sortByColumn">dataSetRow["name"]</expression>
             <property name="sortDirection">asc</property>
             <property name="dataType">integer</property>
             <property name="distinct">true</property>
@@ -61,14 +61,14 @@
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
-        <scalar-parameter name="branch" id="11">
-            <text-property name="promptText">Branch</text-property>
+        <scalar-parameter name="sales_team" id="10">
+            <text-property name="promptText">Sales Team</text-property>
             <property name="valueType">dynamic</property>
             <property name="isRequired">false</property>
-            <property name="dataSetName">branch</property>
+            <property name="dataSetName">sales_team</property>
             <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
-            <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
-            <expression name="sortByColumn">dataSetRow["name"]</expression>
+            <expression name="labelExpr" type="javascript">dataSetRow["code"]</expression>
+            <expression name="sortByColumn">dataSetRow["code"]</expression>
             <property name="sortDirection">asc</property>
             <property name="dataType">integer</property>
             <property name="distinct">true</property>
@@ -103,7 +103,7 @@
         </scalar-parameter>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="409"
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="430"
  extends="report_library.Data Source"/>
     </data-sources>
     <data-sets>
@@ -424,6 +424,12 @@ order by payment_type]]></xml-property>
                     <text-property name="heading">section_id</text-property>
                 </structure>
                 <structure>
+                    <property name="columnName">sales_team</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">sales_team</text-property>
+                    <text-property name="heading">sales_team</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">branch_id</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">branch_id</text-property>
@@ -442,6 +448,12 @@ order by payment_type]]></xml-property>
                     <text-property name="displayName">name_template</text-property>
                     <property name="onColumnLayout">false</property>
                     <text-property name="heading">name_template</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">sequence</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">sequence</text-property>
+                    <text-property name="heading">sequence</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">quantity</property>
@@ -629,51 +641,61 @@ order by payment_type]]></xml-property>
                     </structure>
                     <structure>
                         <property name="position">7</property>
+                        <property name="name">sales_team</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
                         <property name="name">branch_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">8</property>
+                        <property name="position">9</property>
                         <property name="name">product_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">9</property>
+                        <property name="position">10</property>
                         <property name="name">name_template</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">10</property>
-                        <property name="name">quantity</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
                         <property name="position">11</property>
-                        <property name="name">uos_id</property>
+                        <property name="name">sequence</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">12</property>
-                        <property name="name">uom_id</property>
-                        <property name="dataType">integer</property>
+                        <property name="name">quantity</property>
+                        <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">13</property>
-                        <property name="name">big_uom_id</property>
+                        <property name="name">uos_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">14</property>
+                        <property name="name">uom_id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">15</property>
+                        <property name="name">big_uom_id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">16</property>
                         <property name="name">product_quantity</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">15</property>
+                        <property name="position">17</property>
                         <property name="name">status</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">16</property>
+                        <property name="position">18</property>
                         <property name="name">seq</property>
                         <property name="dataType">integer</property>
                     </structure>
@@ -746,69 +768,83 @@ else
                 </structure>
                 <structure>
                     <property name="position">7</property>
+                    <property name="name">sales_team</property>
+                    <property name="nativeName">sales_team</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
                     <property name="name">branch_id</property>
                     <property name="nativeName">branch_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">8</property>
+                    <property name="position">9</property>
                     <property name="name">product_id</property>
                     <property name="nativeName">product_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">9</property>
+                    <property name="position">10</property>
                     <property name="name">name_template</property>
                     <property name="nativeName">name_template</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">10</property>
+                    <property name="position">11</property>
+                    <property name="name">sequence</property>
+                    <property name="nativeName">sequence</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">12</property>
                     <property name="name">quantity</property>
                     <property name="nativeName">quantity</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">11</property>
+                    <property name="position">13</property>
                     <property name="name">uos_id</property>
                     <property name="nativeName">uos_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">12</property>
+                    <property name="position">14</property>
                     <property name="name">uom_id</property>
                     <property name="nativeName">uom_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">13</property>
+                    <property name="position">15</property>
                     <property name="name">big_uom_id</property>
                     <property name="nativeName">big_uom_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">14</property>
+                    <property name="position">16</property>
                     <property name="name">product_quantity</property>
                     <property name="nativeName">product_quantity</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">15</property>
+                    <property name="position">17</property>
                     <property name="name">status</property>
                     <property name="nativeName">status</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">16</property>
+                    <property name="position">18</property>
                     <property name="name">seq</property>
                     <property name="nativeName">seq</property>
                     <property name="dataType">integer</property>
@@ -816,55 +852,60 @@ else
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[with foc_qty as (
-	select rp.name customer,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ai.branch_id,product_id,name_template,quantity,ail.uos_id,pt.uom_id,pt.big_uom_id,
+	select rp.name customer,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,product_id,name_template,pp.sequence,quantity,ail.uos_id,pt.uom_id,pt.big_uom_id,
 	case when ail.uos_id=pt.uom_id then quantity when ail.uos_id=pt.big_uom_id then quantity*(select floor(round(1/factor,2)) from product_uom where id=big_uom_id) end as product_quantity,'Foc Qty'::text as status,1::int as seq
-	from account_invoice ai,res_partner rp,res_township rt,account_invoice_line ail,product_uom uom,product_product pp,product_template pt
+	from account_invoice ai,res_partner rp,res_township rt,account_invoice_line ail,product_uom uom,product_product pp,product_template pt,crm_case_section ccs
 	where ai.partner_id=rp.id
 	and rp.township=rt.id
 	and ai.id=ail.invoice_id
 	and ail.uos_id=uom.id
 	and pp.id=ail.product_id
 	and pp.product_tmpl_id=pt.id
+	and ai.section_id=ccs.id
 	and foc='true'
 	and date_invoice between ? and ?
-	order by rp.name),
+	order by rp.name,pp.sequence),
 sale_qty as (
-	select rp.name customer,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ai.branch_id,product_id,name_template,quantity,ail.uos_id,pt.uom_id,pt.big_uom_id,
+	select rp.name customer,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,product_id,name_template,pp.sequence,quantity,ail.uos_id,pt.uom_id,pt.big_uom_id,
 	case when ail.uos_id=pt.uom_id then quantity when ail.uos_id=pt.big_uom_id then quantity*(select floor(round(1/factor,2)) from product_uom where id=big_uom_id) end as product_quantity,'Sales Qty'::text as status,1::int as seq
-	from account_invoice ai,res_partner rp,res_township rt,account_invoice_line ail,product_uom uom,product_product pp,product_template pt
+	from account_invoice ai,res_partner rp,res_township rt,account_invoice_line ail,product_uom uom,product_product pp,product_template pt,crm_case_section ccs
 	where ai.partner_id=rp.id
 	and rp.township=rt.id
 	and ai.id=ail.invoice_id
 	and ail.uos_id=uom.id
 	and pp.id=ail.product_id
-	and pp.product_tmpl_id=pt.id			
+	and pp.product_tmpl_id=pt.id
+	and ai.section_id=ccs.id			
 	and foc='false'
 	and date_invoice between ? and ?
-	order by rp.name),
+	order by rp.name,pp.sequence),
 total_amt as (
-	select rp.name customer,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ai.branch_id,0,'Total Amt.'::character varying name_template,0,0,0,0,
+	select rp.name customer,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,0,'Total Amt.'::character varying name_template,0,0,0,0,0,
 	amount_untaxed as product_quantity,''::text as status,2::int as seq
-	from account_invoice ai,res_partner rp,res_township rt
+	from account_invoice ai,res_partner rp,res_township rt,crm_case_section ccs
 	where ai.partner_id=rp.id	
 	and rp.township=rt.id	
-	and date_invoice between ? and ?	
+	and ai.section_id=ccs.id
+	and date_invoice between ? and ?
 	order by rp.name
 ),
 total_discount as (
-	select rp.name customer,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ai.branch_id,0,'Total Disc.'::character varying name_template,0,0,0,0,
+	select rp.name customer,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,0,'Total Disc.'::character varying name_template,0,0,0,0,0,
 	discount_total as product_quantity,''::text as status,3::int as seq
-	from account_invoice ai,res_partner rp,res_township rt
+	from account_invoice ai,res_partner rp,res_township rt,crm_case_section ccs
 	where ai.partner_id=rp.id
 	and rp.township=rt.id	
+	and ai.section_id=ccs.id
 	and date_invoice between ? and ?
 	order by rp.name
 ),
 net_amt as (
-	select rp.name customer,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ai.branch_id,0,'Net Amt.'::character varying name_template,0,0,0,0,
+	select rp.name customer,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,0,'Net Amt.'::character varying name_template,0,0,0,0,0,
 	(amount_untaxed-discount_total) as product_quantity,''::text as status,4::int as seq
-	from account_invoice ai,res_partner rp,res_township rt
+	from account_invoice ai,res_partner rp,res_township rt,crm_case_section ccs
 	where ai.partner_id=rp.id
 	and rp.township=rt.id	
+	and ai.section_id=ccs.id
 	and date_invoice between ? and ?
 	order by rp.name
 ),
@@ -1472,6 +1513,148 @@ where date_invoice between ? and ?
   </design:ResultSets>
 </model:DesignValues>]]></xml-property>
         </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="invoice_count" id="429">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">count</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">count</text-property>
+                    <text-property name="heading">count</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">from_date</property>
+                    <property name="paramName">from_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">to_date</property>
+                    <property name="paramName">to_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">2</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">count</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <method name="beforeOpen"><![CDATA[if (params["sales_team"].value == null ){     
+   this.queryText =this.queryText.replace("--$sales_team$", "")
+}
+else
+{     
+   this.queryText =this.queryText.replace("--$sales_team$", "and section_id="+params["sales_team"])
+}
+if (params["branch"].value == null ){     
+   this.queryText =this.queryText.replace("--$branch$", "")
+}
+else
+{     
+   this.queryText =this.queryText.replace("--$branch$", "and branch_id="+params["branch"])
+}
+if (params["payment_type"].value == null ){     
+   this.queryText =this.queryText.replace("--$payment_type$", "")
+}
+else
+{     
+   this.queryText =this.queryText.replace("--$payment_type$", "and payment_type='"+params["payment_type"]+"'")
+}]]></method>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">count</property>
+                    <property name="nativeName">count</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">-5</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select count(distinct(id))
+from account_invoice
+where date_invoice between ? and ?
+--$sales_team$
+--$branch$
+--$payment_type$]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>2</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>count</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>-5</design:nativeDataTypeCode>
+            <design:precision>19</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>count</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>count</design:label>
+            <design:formattingHints>
+              <design:displaySize>20</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
     </data-sets>
     <cubes>
         <tabular-cube name="Data Cube" id="334">
@@ -1552,6 +1735,19 @@ where date_invoice between ? and ?
                         </tabular-hierarchy>
                     </property>
                 </tabular-dimension>
+                <tabular-dimension name="Group5" id="436">
+                    <property name="defaultHierarchy">NewTabularHierarchy5</property>
+                    <property name="hierarchies">
+                        <tabular-hierarchy name="NewTabularHierarchy5" id="437">
+                            <property name="levels">
+                                <tabular-level name="sales_team" id="438">
+                                    <property name="dataType">string</property>
+                                    <property name="columnName">sales_team</property>
+                                </tabular-level>
+                            </property>
+                        </tabular-hierarchy>
+                    </property>
+                </tabular-dimension>
             </property>
             <property name="measureGroups">
                 <tabular-measure-group name="Summary Field" id="351">
@@ -1580,6 +1776,7 @@ where date_invoice between ? and ?
     <body>
         <grid id="410">
             <property name="textAlign">center</property>
+            <property name="width">8.1in</property>
             <column id="411">
                 <property name="width">4.489583333333333in</property>
             </column>
@@ -1635,34 +1832,8 @@ else&#13;
                     </data>
                 </cell>
             </row>
-            <row id="424">
-                <cell id="425">
-                    <property name="colSpan">2</property>
-                    <property name="rowSpan">1</property>
-                    <data id="250">
-                        <property name="fontFamily">"Arial"</property>
-                        <property name="fontSize">12pt</property>
-                        <property name="fontWeight">bold</property>
-                        <property name="textAlign">center</property>
-                        <list-property name="boundDataColumns">
-                            <structure>
-                                <property name="name">sales_team</property>
-                                <expression name="expression" type="javascript">if (params["sales_team"].value == null ){     &#13;
-'All Sales Teams'&#13;
-}&#13;
-else{&#13;
-params["sales_team"].displayText&#13;
-}</expression>
-                                <property name="dataType">string</property>
-                                <property name="allowExport">true</property>
-                            </structure>
-                        </list-property>
-                        <property name="resultSetColumn">sales_team</property>
-                    </data>
-                </cell>
-            </row>
-            <row id="418">
-                <cell id="419">
+            <row id="433">
+                <cell id="434">
                     <property name="colSpan">2</property>
                     <property name="rowSpan">1</property>
                     <data id="251">
@@ -1687,33 +1858,29 @@ params["branch"].displayText&#13;
                     </data>
                 </cell>
             </row>
-            <row id="413">
-                <cell id="414">
-                    <label id="416">
+            <row id="424">
+                <cell id="425">
+                    <property name="colSpan">2</property>
+                    <property name="rowSpan">1</property>
+                    <data id="250">
                         <property name="fontFamily">"Arial"</property>
                         <property name="fontSize">12pt</property>
                         <property name="fontWeight">bold</property>
-                        <property name="paddingRight">3pt</property>
-                        <property name="textAlign">right</property>
-                        <text-property name="text">Customer Count :</text-property>
-                    </label>
-                </cell>
-                <cell id="415">
-                    <data id="417">
-                        <property name="fontFamily">"Arial"</property>
-                        <property name="fontSize">12pt</property>
-                        <property name="fontWeight">bold</property>
-                        <property name="textAlign">left</property>
-                        <property name="dataSet">customer_count</property>
+                        <property name="textAlign">center</property>
                         <list-property name="boundDataColumns">
                             <structure>
-                                <property name="name">count</property>
-                                <text-property name="displayName">count</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["count"]</expression>
-                                <property name="dataType">decimal</property>
+                                <property name="name">sales_team</property>
+                                <expression name="expression" type="javascript">if (params["sales_team"].value == null ){     &#13;
+'All Sales Teams'&#13;
+}&#13;
+else{&#13;
+params["sales_team"].displayText&#13;
+}</expression>
+                                <property name="dataType">string</property>
+                                <property name="allowExport">true</property>
                             </structure>
                         </list-property>
-                        <property name="resultSetColumn">count</property>
+                        <property name="resultSetColumn">sales_team</property>
                     </data>
                 </cell>
             </row>
@@ -1844,6 +2011,33 @@ params["branch"].displayText&#13;
                                 </extended-item>
                             </property>
                         </extended-item>
+                        <extended-item extensionName="DimensionView" id="439">
+                            <property name="dimension">Group5</property>
+                            <property name="levels">
+                                <extended-item extensionName="LevelView" name="NewLevel View6" id="440">
+                                    <property name="level">Group5/sales_team</property>
+                                    <property name="member">
+                                        <extended-item extensionName="CrosstabCell" id="441">
+                                            <property name="content">
+                                                <data name="sales_team" id="444">
+                                                    <property name="fontFamily">"Arial"</property>
+                                                    <property name="fontWeight">normal</property>
+                                                    <property name="resultSetColumn">sales_team</property>
+                                                </data>
+                                            </property>
+                                            <property name="borderTopStyle">solid</property>
+                                            <property name="borderTopWidth">thin</property>
+                                            <property name="borderLeftStyle">solid</property>
+                                            <property name="borderLeftWidth">thin</property>
+                                            <property name="borderBottomStyle">solid</property>
+                                            <property name="borderBottomWidth">thin</property>
+                                            <property name="borderRightStyle">solid</property>
+                                            <property name="borderRightWidth">thin</property>
+                                        </extended-item>
+                                    </property>
+                                </extended-item>
+                            </property>
+                        </extended-item>
                         <extended-item extensionName="DimensionView" id="361">
                             <property name="dimension">Group1</property>
                             <property name="levels">
@@ -1950,6 +2144,18 @@ params["branch"].displayText&#13;
                                                     <property name="fontFamily">"Arial"</property>
                                                     <property name="fontWeight">bold</property>
                                                     <property name="textAlign">center</property>
+                                                    <list-property name="highlightRules">
+                                                        <structure>
+                                                            <property name="operator">not-in</property>
+                                                            <property name="backgroundColor">#FFFFFF</property>
+                                                            <expression name="testExpr" type="javascript">data["name_template"]</expression>
+                                                            <simple-property-list name="value1">
+                                                                <value type="javascript">'Total Amt.'</value>
+                                                                <value type="javascript">'Total Disc.'</value>
+                                                                <value type="javascript">'Net Amt.'</value>
+                                                            </simple-property-list>
+                                                        </structure>
+                                                    </list-property>
                                                     <property name="resultSetColumn">name_template</property>
                                                 </data>
                                             </property>
@@ -1993,10 +2199,70 @@ params["branch"].displayText&#13;
                 </extended-item>
             </property>
             <property name="header">
-                <extended-item extensionName="CrosstabCell" id="386"/>
+                <extended-item extensionName="CrosstabCell" id="386">
+                    <property name="content">
+                        <label id="416">
+                            <property name="fontFamily">"Arial"</property>
+                            <property name="fontSize">10pt</property>
+                            <property name="fontWeight">bold</property>
+                            <property name="paddingRight">3pt</property>
+                            <property name="textAlign">right</property>
+                            <text-property name="text">Customers:</text-property>
+                        </label>
+                    </property>
+                </extended-item>
+                <extended-item extensionName="CrosstabCell" id="443">
+                    <property name="content">
+                        <data id="417">
+                            <property name="fontFamily">"Arial"</property>
+                            <property name="fontSize">10pt</property>
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">left</property>
+                            <property name="dataSet">customer_count</property>
+                            <list-property name="boundDataColumns">
+                                <structure>
+                                    <property name="name">count</property>
+                                    <text-property name="displayName">count</text-property>
+                                    <expression name="expression" type="javascript">dataSetRow["count"]</expression>
+                                    <property name="dataType">decimal</property>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">count</property>
+                        </data>
+                    </property>
+                </extended-item>
                 <extended-item extensionName="CrosstabCell" id="387"/>
-                <extended-item extensionName="CrosstabCell" id="388"/>
-                <extended-item extensionName="CrosstabCell" id="389"/>
+                <extended-item extensionName="CrosstabCell" id="388">
+                    <property name="content">
+                        <label id="431">
+                            <property name="fontFamily">"Arial"</property>
+                            <property name="fontSize">10pt</property>
+                            <property name="fontWeight">bold</property>
+                            <property name="paddingRight">3pt</property>
+                            <property name="textAlign">right</property>
+                            <text-property name="text">Invoices:</text-property>
+                        </label>
+                    </property>
+                </extended-item>
+                <extended-item extensionName="CrosstabCell" id="389">
+                    <property name="content">
+                        <data id="432">
+                            <property name="fontFamily">"Arial"</property>
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">left</property>
+                            <property name="dataSet">invoice_count</property>
+                            <list-property name="boundDataColumns">
+                                <structure>
+                                    <property name="name">count</property>
+                                    <text-property name="displayName">count</text-property>
+                                    <expression name="expression" type="javascript">dataSetRow["count"]</expression>
+                                    <property name="dataType">decimal</property>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">count</property>
+                        </data>
+                    </property>
+                </extended-item>
                 <extended-item extensionName="CrosstabCell" id="354">
                     <property name="content">
                         <label id="150">
@@ -2004,6 +2270,24 @@ params["branch"].displayText&#13;
                             <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
                             <text-property name="text">Customer</text-property>
+                        </label>
+                    </property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                </extended-item>
+                <extended-item extensionName="CrosstabCell" id="442">
+                    <property name="content">
+                        <label id="446">
+                            <property name="fontFamily">"Arial"</property>
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">center</property>
+                            <text-property name="text">Sales Team</text-property>
                         </label>
                     </property>
                     <property name="borderTopStyle">solid</property>
@@ -2071,6 +2355,16 @@ params["branch"].displayText&#13;
                 </extended-item>
             </property>
             <property name="hideMeasureHeader">true</property>
+            <list-property name="highlightRules">
+                <structure>
+                    <property name="operator">eq</property>
+                    <expression name="testExpr" type="javascript">data["status"]</expression>
+                    <simple-property-list name="value1">
+                        <value type="javascript">'Foc Qty'</value>
+                    </simple-property-list>
+                    <property name="backgroundColor">#FFFF00</property>
+                </structure>
+            </list-property>
             <list-property name="boundDataColumns">
                 <structure>
                     <property name="name">customer</property>
@@ -2120,6 +2414,11 @@ params["branch"].displayText&#13;
                         <value>Group4/status</value>
                     </simple-property-list>
                     <property name="aggregateFunction">sum</property>
+                </structure>
+                <structure>
+                    <property name="name">sales_team</property>
+                    <expression name="expression">dimension["Group5"]["sales_team"]</expression>
+                    <property name="dataType">string</property>
                 </structure>
             </list-property>
         </extended-item>
