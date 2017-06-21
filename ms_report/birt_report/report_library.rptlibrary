@@ -83,7 +83,7 @@
                 </ex-property>
             </list-property>
             <property name="odaDriverClass">org.postgresql.Driver</property>
-            <property name="odaURL">jdbc:postgresql://192.168.100.134:5432/MDG_20062017</property>
+            <property name="odaURL">jdbc:postgresql://localhost:5432/MDG_20062017</property>
             <property name="odaUser">odoo</property>
             <encrypted-property name="odaPassword" encryptionID="base64">b3BlbnBncHdk</encrypted-property>
             <property name="odaJndiName">java:comp/env/jdbc/ReportDB</property>
@@ -131,6 +131,9 @@
                     </structure>
                 </list-property>
             </structure>
+            <method name="onFetch"><![CDATA[if (teamList.indexOf(row["id"].toString()) != null){
+teamList = teamList.replace(row["id"].toString(),row["name"]);
+}]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
                 <structure>
@@ -574,6 +577,9 @@ order by login
                     </structure>
                 </list-property>
             </structure>
+            <method name="onFetch"><![CDATA[if (branchList.indexOf(row["id"].toString()) != null){
+branchList = branchList.replace(row["id"].toString(),row["name"]);
+}]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
                 <structure>
