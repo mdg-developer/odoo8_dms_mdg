@@ -17,16 +17,16 @@
 								<field name="name" />
 								<field name="partner_id" />
 								<field name="invoice_id" />
+								<field name="invoice_date" />
 								<field name="so_ref" invisible="1" />
 								<field name="payment_term" />
-								<field name="due_date" />
 								<field name="sale_team_id" />
 								<field name="user_id" />
 								<field name="tablet_id" />
 							</group>
 							<group>
+								<field name="due_date" />
 								<field name="date" />
-								<field name="invoice_date" />
 								<field name="so_amount" />
 								<field name="payment_amount" />
 								<field name="balance" />
@@ -60,7 +60,7 @@
 					<field name="invoice_id" />
 					<field name="partner_id" />
 					<field name="sale_team_id" />
-					<field name="tablet_id" />
+					<field name="due_date" />
 					<field name="date" />
 					<field name="so_amount" string="Invoice Amount" />
 					<field name="payment_amount" />
