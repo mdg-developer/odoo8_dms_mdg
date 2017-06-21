@@ -103,12 +103,12 @@
 									<th class="text-center" style="border:1pt solid;border-color:black;">Description
 									</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">FOC</th>
 									<!-- <th class="text-center" style="border:1pt solid;border-color:black;">Unit Price</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Total Price</th>
 									<th style="border:1pt solid;border-color:black;" class="text-center"
 										groups="sale.group_discount_per_so_line">Disc.(%)</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Disc.(Amt)</th>
-									<th class="text-center" style="border:1pt solid;border-color:black;">FOC</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Total</th> -->
 								</tr>
 							</thead>
@@ -127,6 +127,11 @@
 										<span t-field="l.product_uom_qty" />
 										<span t-field="l.product_uom.name" groups="product.group_uom" />
 									</td>
+									<td class="text-center" style="border:1pt solid;border-color:black;">
+										<t t-if="l.foc==True">
+											✓
+										</t>
+									</td>
 									<!-- <td class="text-right" style="border:1pt solid;border-color:black;">
 										<span t-field="l.price_unit" />
 									</td>
@@ -140,11 +145,7 @@
 									<td class="text-right" style="border:1pt solid;border-color:black;">
 										<span t-field="l.discount_amt" />
 									</td>
-									<td class="text-center" style="border:1pt solid;border-color:black;">
-										<t t-if="l.sale_foc==True">
-											✓
-										</t>
-									</td>
+									
 									<td class="text-right" style="border:1pt solid;border-color:black;">
 										<t t-if="l.sale_foc==True">
 											0.00
@@ -163,6 +164,7 @@
 							<div style="padding-left:20px">
 								<strong>Remark :</strong>
 								<span t-field="o.note" />
+								<br /><br /><br /><br /><br />
 							</div>
 							<!-- <div class="col-xs-4 pull-right">
 								<table class="table">
