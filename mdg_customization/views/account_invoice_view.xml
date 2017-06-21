@@ -121,7 +121,7 @@
 
 				</xpath>
 				<xpath expr="//field[@name='residual']" position="replace">
-					<field name="residual" string="Paid Amount"/>
+					<field name="residual" invisible="1"/>
 
 				</xpath>
 				<xpath expr="//field[@name='amount_untaxed']" position="replace">
@@ -134,6 +134,8 @@
 				</xpath>
 				<xpath expr="//field[@name='amount_total']" position="replace">
 					<field name="amount_total" sum="Total Amount" string="Amount" />
+					<field name="paid_amount"/>
+					<field name="residual"/>
 					<field name="payment_type" />
 					<field name="branch_id" />
 				</xpath>
