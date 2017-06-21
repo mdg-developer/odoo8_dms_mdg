@@ -10,5 +10,10 @@
 		<report id="report_pre_sale_order" model="sale.order" string="Deliver Report"
 			report_type="qweb-pdf" name="sale_management.report_pre_sale_order_document" file="sale_management.report_pre_sale_order_document"
 			attachment_use="True" attachment="('Pre-Sales Order')+'.pdf'" />
+		
+		<!-- Picking Report-->	
+		<report string="Picking" id="stock.action_report_picking" model="stock.picking" 
+            report_type="qweb-pdf" name="sale_management.report_picking_inherit_document" 
+            file="sale_management.report_picking_inherit_document" />
 	</data>
 </openerp>

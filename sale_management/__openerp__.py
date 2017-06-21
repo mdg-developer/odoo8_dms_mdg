@@ -59,6 +59,7 @@ Sale Management
         'reports/custom_layout.xml',
         'reports/deliver_order_custom_layouts.xml',
         'reports/report_pre_sale_order.xml',
+        'reports/report_stock_picking.xml',
     ],
     'installable': True,
     'auto_install': False,
