@@ -45,6 +45,30 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
         <scalar-parameter name="branch_id" id="258" extends="report_library.branch_id"/>
         <scalar-parameter name="sales_team_id" id="259" extends="report_library.sales_team_id"/>
         <scalar-parameter name="user_id" id="260" extends="report_library.user_id"/>
+        <scalar-parameter name="customer_status" id="675">
+            <text-property name="promptText">Customer Status</text-property>
+            <property name="valueType">static</property>
+            <property name="isRequired">false</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList">
+                <structure>
+                    <property name="value">pending</property>
+                    <property name="label">Pending</property>
+                </structure>
+                <structure>
+                    <property name="value">register</property>
+                    <property name="label">Register</property>
+                </structure>
+            </list-property>
+            <property name="paramType">simple</property>
+            <property name="controlType">list-box</property>
+            <property name="mustMatch">true</property>
+            <property name="fixedOrder">true</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
     </parameters>
     <data-sources>
         <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="68"
@@ -68,6 +92,24 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <text-property name="displayName">customer_name</text-property>
                     <property name="onColumnLayout">false</property>
                     <text-property name="heading">customer_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">active</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">active</text-property>
+                    <text-property name="heading">active</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mobile_customer</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">mobile_customer</text-property>
+                    <text-property name="heading">mobile_customer</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">customer_status</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">customer_status</text-property>
+                    <text-property name="heading">customer_status</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">sales_team</property>
@@ -142,26 +184,41 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     </structure>
                     <structure>
                         <property name="position">3</property>
-                        <property name="name">sales_team</property>
-                        <property name="dataType">string</property>
+                        <property name="name">active</property>
+                        <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">4</property>
-                        <property name="name">township</property>
-                        <property name="dataType">string</property>
+                        <property name="name">mobile_customer</property>
+                        <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">5</property>
-                        <property name="name">street</property>
+                        <property name="name">customer_status</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">6</property>
-                        <property name="name">display_name</property>
+                        <property name="name">sales_team</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">7</property>
+                        <property name="name">township</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">street</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">display_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
                         <property name="name">mobile</property>
                         <property name="dataType">string</property>
                     </structure>
@@ -171,7 +228,15 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
 this.queryText =this.queryText.replace("--$s_team$", "and section_id in ("+ params["sales_team_id"].value.join(",")+")")
 this.queryText =this.queryText.replace("--$branch$", "and res.branch_id in ("+ params["branch_id"].value.join(",")+")")
 this.queryText =this.queryText.replace("--$br$", "and branch_id in ("+ params["branch_id"].value.join(",")+")")
-]]></method>
+if (params["customer_status"].value == null ){     
+	this.queryText =this.queryText.replace("--$customer_status$", "")
+}
+if (params["customer_status"].value == 'pending'){ 
+	this.queryText =this.queryText.replace("--$customer_status$", "and res.active='true'and mobile_customer='true'")
+}
+if (params["customer_status"].value == 'register'){ 
+	this.queryText =this.queryText.replace("--$customer_status$", "and res.active='true'and mobile_customer='false'")
+}]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
                 <structure>
@@ -190,41 +255,64 @@ this.queryText =this.queryText.replace("--$br$", "and branch_id in ("+ params["b
                 </structure>
                 <structure>
                     <property name="position">3</property>
+                    <property name="name">active</property>
+                    <property name="nativeName">active</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">-7</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">mobile_customer</property>
+                    <property name="nativeName">mobile_customer</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">-7</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">customer_status</property>
+                    <property name="nativeName">customer_status</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
                     <property name="name">sales_team</property>
                     <property name="nativeName">sales_team</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">4</property>
+                    <property name="position">7</property>
                     <property name="name">township</property>
                     <property name="nativeName">township</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">5</property>
+                    <property name="position">8</property>
                     <property name="name">street</property>
                     <property name="nativeName">street</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">6</property>
+                    <property name="position">9</property>
                     <property name="name">display_name</property>
                     <property name="nativeName">display_name</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">7</property>
+                    <property name="position">10</property>
                     <property name="name">mobile</property>
                     <property name="nativeName">mobile</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select customer_code,res.name as customer_name,ccs.name sales_team,rt.code township,street,display_name,mobile  
+            <xml-property name="queryText"><![CDATA[select customer_code,res.name as customer_name,res.active,mobile_customer,
+case when res.active='true'and mobile_customer='true' then 'Pending' when res.active='true'and mobile_customer='false' then 'Register' end as customer_status,
+ccs.name sales_team,rt.code township,street,display_name,mobile  
 from res_partner res,sale_team_customer_rel rel,res_township rt,crm_case_section ccs
 where res.id=rel.partner_id 
 and res.township=rt.id
@@ -237,7 +325,9 @@ from account_invoice
 where date_invoice between ? and ?
 --$s_team$
 --$br$
-)]]></xml-property>
+)
+--$customer_status$
+order by customer_code]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -583,6 +673,7 @@ where date_invoice between ? and ?
                         <property name="colSpan">2</property>
                         <property name="rowSpan">1</property>
                         <text-data id="674">
+                            <property name="fontFamily">sans-serif</property>
                             <property name="fontSize">12pt</property>
                             <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
@@ -668,6 +759,12 @@ where date_invoice between ? and ?
                     <expression name="expression" type="javascript">dataSetRow["sales_team"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">customer_status</property>
+                    <text-property name="displayName">customer_status</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["customer_status"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
             </list-property>
             <column id="41">
                 <property name="width">0.3in</property>
@@ -676,6 +773,9 @@ where date_invoice between ? and ?
                 <property name="width">1.4895833333333333in</property>
             </column>
             <column id="43">
+                <property name="width">1.1in</property>
+            </column>
+            <column id="678">
                 <property name="width">1.1in</property>
             </column>
             <column id="254">
@@ -744,6 +844,23 @@ where date_invoice between ? and ?
                             <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
                             <text-property name="text">Name</text-property>
+                        </label>
+                    </cell>
+                    <cell id="676">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="681">
+                            <property name="fontFamily">"Arial"</property>
+                            <property name="fontSize">10pt</property>
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">center</property>
+                            <text-property name="text">Customer Status</text-property>
                         </label>
                     </cell>
                     <cell id="252">
@@ -876,6 +993,20 @@ where date_invoice between ? and ?
                         <data id="51">
                             <property name="fontFamily">"Arial"</property>
                             <property name="resultSetColumn">customer_name</property>
+                        </data>
+                    </cell>
+                    <cell id="677">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="680">
+                            <property name="fontFamily">"Arial"</property>
+                            <property name="resultSetColumn">customer_status</property>
                         </data>
                     </cell>
                     <cell id="253">
