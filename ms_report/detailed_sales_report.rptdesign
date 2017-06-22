@@ -643,7 +643,7 @@ else
             </list-property>
             <xml-property name="queryText"><![CDATA[with foc_qty as (
 	select rp.id customer_id,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,product_id,name_template,pp.sequence,quantity,ail.uos_id,pt.uom_id,pt.big_uom_id,
-	case when ail.uos_id=pt.uom_id then quantity when ail.uos_id=pt.big_uom_id then quantity*(select floor(round(1/factor,2)) from product_uom where id=big_uom_id) end as product_quantity,'Foc Qty'::text as status,1::int as seq
+	case when ail.uos_id=pt.uom_id then round(quantity,0) when ail.uos_id=pt.big_uom_id then round(quantity*(select floor(round(1/factor,2)) from product_uom where id=big_uom_id),0) end as product_quantity,'Foc Qty'::text as status,1::int as seq
 	from account_invoice ai,res_partner rp,res_township rt,account_invoice_line ail,product_uom uom,product_product pp,product_template pt,crm_case_section ccs
 	where ai.partner_id=rp.id
 	and rp.township=rt.id
@@ -657,7 +657,7 @@ else
 	order by rp.name,pp.sequence),
 sale_qty as (
 	select rp.id customer,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,product_id,name_template,pp.sequence,quantity,ail.uos_id,pt.uom_id,pt.big_uom_id,
-	case when ail.uos_id=pt.uom_id then quantity when ail.uos_id=pt.big_uom_id then quantity*(select floor(round(1/factor,2)) from product_uom where id=big_uom_id) end as product_quantity,'Sales Qty'::text as status,1::int as seq
+	case when ail.uos_id=pt.uom_id then round(quantity,0) when ail.uos_id=pt.big_uom_id then round(quantity*(select floor(round(1/factor,2)) from product_uom where id=big_uom_id),0) end as product_quantity,'Sales Qty'::text as status,1::int as seq
 	from account_invoice ai,res_partner rp,res_township rt,account_invoice_line ail,product_uom uom,product_product pp,product_template pt,crm_case_section ccs
 	where ai.partner_id=rp.id
 	and rp.township=rt.id
@@ -671,7 +671,7 @@ sale_qty as (
 	order by rp.name,pp.sequence),
 total_amt as (
 	select rp.id customer,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,0,'Total Amt.'::character varying name_template,0,0,0,0,0,
-	(amount_untaxed-discount_total) as product_quantity,''::text as status,2::int as seq
+	round((amount_untaxed-discount_total),0) as product_quantity,''::text as status,2::int as seq
 	from account_invoice ai,res_partner rp,res_township rt,crm_case_section ccs
 	where ai.partner_id=rp.id	
 	and rp.township=rt.id	
@@ -681,7 +681,7 @@ total_amt as (
 ),
 total_discount as (
 	select rp.id customer,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,0,'Total Disc.'::character varying name_template,0,0,0,0,0,
-	discount_total as product_quantity,''::text as status,3::int as seq
+	round(discount_total,0) as product_quantity,''::text as status,3::int as seq
 	from account_invoice ai,res_partner rp,res_township rt,crm_case_section ccs
 	where ai.partner_id=rp.id
 	and rp.township=rt.id	
@@ -691,7 +691,7 @@ total_discount as (
 ),
 net_amt as (
 	select rp.id customer,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,0,'Net Amt.'::character varying name_template,0,0,0,0,0,
-	amount_untaxed as product_quantity,''::text as status,4::int as seq
+	round(amount_untaxed,0) as product_quantity,''::text as status,4::int as seq
 	from account_invoice ai,res_partner rp,res_township rt,crm_case_section ccs
 	where ai.partner_id=rp.id
 	and rp.township=rt.id	
@@ -1835,7 +1835,31 @@ else&#13;
                             <property name="borderRightWidth">thin</property>
                             <property name="content">
                                 <data id="824">
+                                    <property name="fontFamily">"Arial"</property>
+                                    <property name="textAlign">center</property>
                                     <property name="resultSetColumn">product_quantity_Group3/date_invoice_Group4/status</property>
+                                </data>
+                            </property>
+                        </extended-item>
+                    </property>
+                    <property name="aggregations">
+                        <extended-item extensionName="AggregationCell" id="877">
+                            <property name="aggregationOnColumn">Group4/status</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">thin</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                            <property name="content">
+                                <data id="878">
+                                    <property name="fontFamily">"Arial"</property>
+                                    <property name="fontSize">11pt</property>
+                                    <property name="fontWeight">bold</property>
+                                    <property name="textAlign">center</property>
+                                    <property name="resultSetColumn">product_quantity_Group4/status_1</property>
                                 </data>
                             </property>
                         </extended-item>
@@ -1853,6 +1877,27 @@ else&#13;
             </property>
             <property name="rows">
                 <extended-item extensionName="CrosstabView" id="792">
+                    <property name="grandTotal">
+                        <extended-item extensionName="CrosstabCell" id="876">
+                            <property name="content">
+                                <label id="879">
+                                    <property name="fontFamily">"Arial"</property>
+                                    <property name="fontSize">11pt</property>
+                                    <property name="fontWeight">bold</property>
+                                    <property name="textAlign">center</property>
+                                    <text-property name="text">Total</text-property>
+                                </label>
+                            </property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">thin</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                        </extended-item>
+                    </property>
                     <property name="views">
                         <extended-item extensionName="DimensionView" id="861">
                             <property name="dimension">Group</property>
@@ -1863,6 +1908,7 @@ else&#13;
                                         <extended-item extensionName="CrosstabCell" id="863">
                                             <property name="content">
                                                 <data name="customer" id="866">
+                                                    <property name="fontFamily">"Arial"</property>
                                                     <list-property name="visibility">
                                                         <structure>
                                                             <property name="format">all</property>
@@ -1880,7 +1926,7 @@ else&#13;
                                             <property name="borderBottomWidth">thin</property>
                                             <property name="borderRightStyle">solid</property>
                                             <property name="borderRightWidth">thin</property>
-                                            <property name="width">86px</property>
+                                            <property name="width">0pt</property>
                                         </extended-item>
                                     </property>
                                 </extended-item>
@@ -1895,6 +1941,7 @@ else&#13;
                                         <extended-item extensionName="CrosstabCell" id="795">
                                             <property name="content">
                                                 <data name="customer_name" id="796">
+                                                    <property name="fontFamily">"Arial"</property>
                                                     <property name="fontWeight">normal</property>
                                                     <property name="resultSetColumn">customer_name</property>
                                                 </data>
@@ -1922,6 +1969,7 @@ else&#13;
                                         <extended-item extensionName="CrosstabCell" id="800">
                                             <property name="content">
                                                 <data name="sales_team" id="802">
+                                                    <property name="fontFamily">"Arial"</property>
                                                     <property name="fontWeight">normal</property>
                                                     <property name="resultSetColumn">sales_team</property>
                                                 </data>
@@ -1949,6 +1997,7 @@ else&#13;
                                         <extended-item extensionName="CrosstabCell" id="806">
                                             <property name="content">
                                                 <data name="township" id="808">
+                                                    <property name="fontFamily">"Arial"</property>
                                                     <property name="fontWeight">normal</property>
                                                     <property name="resultSetColumn">township</property>
                                                 </data>
@@ -1975,6 +2024,7 @@ else&#13;
                                         <extended-item extensionName="CrosstabCell" id="812">
                                             <property name="content">
                                                 <data name="number" id="814">
+                                                    <property name="fontFamily">"Arial"</property>
                                                     <property name="fontWeight">normal</property>
                                                     <property name="fontStyle">normal</property>
                                                     <property name="resultSetColumn">number</property>
@@ -2002,6 +2052,7 @@ else&#13;
                                         <extended-item extensionName="CrosstabCell" id="818">
                                             <property name="content">
                                                 <data name="date_invoice" id="820">
+                                                    <property name="fontFamily">"Arial"</property>
                                                     <property name="fontWeight">normal</property>
                                                     <property name="resultSetColumn">date_invoice</property>
                                                 </data>
@@ -2041,6 +2092,21 @@ else&#13;
                                         <extended-item extensionName="CrosstabCell" id="830">
                                             <property name="content">
                                                 <data name="name_template" id="836">
+                                                    <property name="fontFamily">"Arial"</property>
+                                                    <property name="fontWeight">bold</property>
+                                                    <property name="textAlign">center</property>
+                                                    <list-property name="highlightRules">
+                                                        <structure>
+                                                            <property name="operator">not-in</property>
+                                                            <property name="backgroundColor">#FFFFFF</property>
+                                                            <expression name="testExpr" type="javascript">data["name_template"]</expression>
+                                                            <simple-property-list name="value1">
+                                                                <value type="javascript">'Total Amt.'</value>
+                                                                <value type="javascript">'Total Disc.'</value>
+                                                                <value type="javascript">'Net Amt.'</value>
+                                                            </simple-property-list>
+                                                        </structure>
+                                                    </list-property>
                                                     <property name="resultSetColumn">name_template</property>
                                                 </data>
                                             </property>
@@ -2061,6 +2127,9 @@ else&#13;
                                         <extended-item extensionName="CrosstabCell" id="839">
                                             <property name="content">
                                                 <data name="status" id="845">
+                                                    <property name="fontFamily">"Arial"</property>
+                                                    <property name="fontWeight">bold</property>
+                                                    <property name="textAlign">center</property>
                                                     <property name="resultSetColumn">status</property>
                                                 </data>
                                             </property>
@@ -2097,8 +2166,8 @@ else&#13;
                 <extended-item extensionName="CrosstabCell" id="832">
                     <property name="content">
                         <data id="869">
-                            <property name="fontFamily">serif</property>
-                            <property name="fontWeight">normal</property>
+                            <property name="fontFamily">"Arial"</property>
+                            <property name="fontWeight">bold</property>
                             <property name="dataSet">customer_count</property>
                             <list-property name="boundDataColumns">
                                 <structure>
@@ -2128,7 +2197,8 @@ else&#13;
                 <extended-item extensionName="CrosstabCell" id="835">
                     <property name="content">
                         <data id="870">
-                            <property name="fontWeight">normal</property>
+                            <property name="fontFamily">"Arial"</property>
+                            <property name="fontWeight">bold</property>
                             <property name="dataSet">invoice_count</property>
                             <list-property name="boundDataColumns">
                                 <structure>
@@ -2258,6 +2328,16 @@ else&#13;
                 </extended-item>
             </property>
             <property name="hideMeasureHeader">true</property>
+            <list-property name="highlightRules">
+                <structure>
+                    <property name="operator">eq</property>
+                    <expression name="testExpr" type="javascript">data["status"]</expression>
+                    <simple-property-list name="value1">
+                        <value type="javascript">'Foc Qty'</value>
+                    </simple-property-list>
+                    <property name="backgroundColor">#FFFF97</property>
+                </structure>
+            </list-property>
             <list-property name="boundDataColumns">
                 <structure>
                     <property name="name">customer_name</property>
@@ -2327,6 +2407,24 @@ else&#13;
                     <property name="name">customer</property>
                     <expression name="expression">dimension["Group"]["customer"]</expression>
                     <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">product_quantity_Group4/status</property>
+                    <expression name="expression">measure["product_quantity"]</expression>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Group4/status</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">sum</property>
+                </structure>
+                <structure>
+                    <property name="name">product_quantity_Group4/status_1</property>
+                    <expression name="expression">measure["product_quantity"]</expression>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Group4/status</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">sum</property>
                 </structure>
             </list-property>
         </extended-item>
