@@ -57,8 +57,8 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <property name="label">Pending</property>
                 </structure>
                 <structure>
-                    <property name="value">register</property>
-                    <property name="label">Register</property>
+                    <property name="value">registered</property>
+                    <property name="label">Registered</property>
                 </structure>
             </list-property>
             <property name="paramType">simple</property>
@@ -234,7 +234,7 @@ if (params["customer_status"].value == null ){
 if (params["customer_status"].value == 'pending'){ 
 	this.queryText =this.queryText.replace("--$customer_status$", "and res.active='true'and mobile_customer='true'")
 }
-if (params["customer_status"].value == 'register'){ 
+if (params["customer_status"].value == 'registered'){ 
 	this.queryText =this.queryText.replace("--$customer_status$", "and res.active='true'and mobile_customer='false'")
 }]]></method>
             <property name="dataSource">Data Source</property>
@@ -311,7 +311,7 @@ if (params["customer_status"].value == 'register'){
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select customer_code,res.name as customer_name,res.active,mobile_customer,
-case when res.active='true'and mobile_customer='true' then 'Pending' when res.active='true'and mobile_customer='false' then 'Register' end as customer_status,
+case when res.active='true'and mobile_customer='true' then 'Pending' when res.active='true'and mobile_customer='false' then 'Registered' end as customer_status,
 ccs.name sales_team,rt.code township,street,display_name,mobile  
 from res_partner res,sale_team_customer_rel rel,res_township rt,crm_case_section ccs
 where res.id=rel.partner_id 
