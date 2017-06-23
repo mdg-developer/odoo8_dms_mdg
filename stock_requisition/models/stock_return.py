@@ -268,6 +268,10 @@ class stock_return(osv.osv):
         if  ven_location_id !=team_location_id :
             raise osv.except_osv(_('Warning'),
                      _('Please Check Your Sales Team Location'))
+        cr.execute("select SUM(COALESCE(rec_small_quantity,0) +COALESCE(rec_big_quantity,0) ) as total  from stock_return_line where line_id=%s  group by line_id",(ids[0],)) 
+        total_qty=cr.fetchone()[0]
+        if total_qty==0.0 or total_qty is None   :
+            return self.write(cr, uid, ids, {'state':'received'})  
         cr.execute('select id from stock_picking_type where default_location_dest_id=%s and name like %s', (main_location_id, '%Internal Transfer%',))
         price_rec = cr.fetchone()
         if price_rec: 
@@ -279,11 +283,6 @@ class stock_return(osv.osv):
                                       'date': return_date,
                                       'origin':origin,
                                       'picking_type_id':picking_type_id}, context=context)
-        cr.execute("select SUM(COALESCE(rec_small_quantity,0) +COALESCE(rec_big_quantity,0) ) as total  from stock_return_line where line_id=%s  group by line_id",(ids[0],)) 
-        total_qty=cr.fetchone()[0]
-        if total_qty==0.0 or total_qty is None   :
-            raise osv.except_osv(_('Warning'),
-                                 _('Receive Qty is Zero'))
         for line in return_obj.p_line:
             product_id = line.product_id.id
             name = line.product_id.name_template                                                                               

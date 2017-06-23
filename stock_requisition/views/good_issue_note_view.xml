@@ -45,7 +45,7 @@
 							<group>
 								<field name="request_id" />
 								<field name="from_location_id"  readonly="1"
-									widget="selection" />
+									 />
 								<field name="approve_by"  readonly="1"
 									widget="selection" />
 								<field name="issue_by" attrs="{'readonly':[('state','=','issue')],'required':[('state','=','approve')]}"/>
