@@ -129,11 +129,16 @@ class account_invoice(models.Model):
                 product = self.env['product.product'].browse(line.get('product_id', False))
                 print 'product>>>', product.id
                 print 'line.get>>>', line.get('product_id', False)
-                if  line['is_discount'] == True:
-                    account_id = product.product_tmpl_id.main_group.property_account_discount.id
-                    line['price'] = -1 * line['price']
+                print 'line.get>>>', line.get('type', False)
+
+                if line['type'] =='tax':
+                    account_id =line['account_id']
                 else:
-                    account_id = product.product_tmpl_id.main_group.property_account_receivable.id
+                    if  line['is_discount'] == True:
+                        account_id = product.product_tmpl_id.main_group.property_account_discount.id
+                        line['price'] = -1 * line['price']
+                    else:
+                        account_id = product.product_tmpl_id.main_group.property_account_receivable.id
                                     # acount_id= product.product_tmpl_id.main_group.property_account_payable.id
                 print 'account_id>>>', account_id        
     
@@ -278,6 +283,9 @@ class account_invoice(models.Model):
                 type = type[0]
             else:
                 type = None
+            if line['type'] =='tax':
+                type = None
+
         if type == 'out_invoice'  :
             product = self.env['product.product'].browse(line.get('product_id', False))
             product_code = product.default_code
@@ -289,9 +297,11 @@ class account_invoice(models.Model):
                 if origin and line['is_discount'] == False:
                     cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s", (origin, product.id,))
                     dis_amt = cr.fetchall()
+                    print 'dis_amtssssssssssssss',dis_amt
                     if dis_amt:     
                         for amt in dis_amt:
-                            discount_amt = discount_amt + amt[0];
+                            if amt[0] is not None:
+                                discount_amt = discount_amt + amt[0];
                         line['price'] = line['price'] + discount_amt        
                 if  line['is_discount'] == True:
                     account_id = product.product_tmpl_id.main_group.property_account_discount.id
