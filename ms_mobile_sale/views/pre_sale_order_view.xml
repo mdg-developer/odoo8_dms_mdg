@@ -132,7 +132,7 @@
 												<field name="pro_id" on_change='onchange_promo_id(pro_id)' />
 												<field name="from_date" />
 												<field name="to_date" />
-
+												<field name="manual" />
 											</group>
 
 										</group>
@@ -143,7 +143,7 @@
 										<field name="pro_id" on_change='onchange_promo_id(pro_id)' />
 										<field name="from_date" />
 										<field name="to_date" />
-
+										<field name="manual" />
 									</tree>
 								</field>
 

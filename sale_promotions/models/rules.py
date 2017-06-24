@@ -216,6 +216,7 @@ class PromotionsRules(osv.Model):
 #         'promotion_id_b':fields.many2one('promos.rules' ,'Other Promotion B'),
 #         'promotion_id_c':fields.many2one('promos.rules' ,'Other Promotion C'),
 #         'file_import': fields.binary(string='Files Attachment'),
+        'manual':fields.boolean('Manual'),
     }
     _defaults = {
         'logic':lambda * a:'and',
@@ -223,6 +224,7 @@ class PromotionsRules(osv.Model):
         'coupon_used': '0',
         'state':'draft',
         'monthly_promotion':False,
+        'manual':False,
     }
     _constraints = [(_check_positive_number, 'Coupon Use must be Positive', ['coupon_used'])]
 	

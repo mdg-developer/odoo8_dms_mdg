@@ -371,17 +371,22 @@ class pre_promotion_line(osv.osv):
               'promo_line_id':fields.many2one('pre.sale.order', 'Promotion line'),
               'pro_id': fields.many2one('promos.rules', 'Promotion Rule', change_default=True, readonly=False),
               'from_date':fields.datetime('From Date'),
-              'to_date':fields.datetime('To Date')
+              'to_date':fields.datetime('To Date'),
+              'manual':fields.boolean('Manual'),
               }
+    _defaults = {
+        'manual':False,
+    }
     
     def onchange_promo_id(self, cr, uid, ids, pro_id, context=None):
             result = {}
             promo_pool = self.pool.get('promos.rules')
-            datas = promo_pool.read(cr, uid, pro_id, ['from_date', 'to_date'], context=context)
+            datas = promo_pool.read(cr, uid, pro_id, ['from_date', 'to_date','manual'], context=context)
     
             if datas:
                 result.update({'from_date':datas['from_date']})
                 result.update({'to_date':datas['to_date']})
+                result.update({'manual':datas['manual']})
             return {'value':result}
             
 pre_promotion_line()
