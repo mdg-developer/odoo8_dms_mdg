@@ -470,7 +470,7 @@ order by team.id]]></xml-property>
             <text-property name="text">Sales Denomination Report</text-property>
         </label>
         <table id="614">
-            <property name="width">15in</property>
+            <property name="width">16.4375in</property>
             <property name="dataSet">branch</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -542,7 +542,7 @@ order by team.id]]></xml-property>
             </footer>
         </table>
         <table id="658">
-            <property name="width">15in</property>
+            <property name="width">16.447916666666668in</property>
             <property name="dataSet">Sale_Team</property>
             <list-property name="boundDataColumns">
                 <structure>
