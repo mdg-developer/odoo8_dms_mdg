@@ -270,8 +270,8 @@ class stock_return(osv.osv):
                      _('Please Check Your Sales Team Location'))
         cr.execute("select SUM(COALESCE(rec_small_quantity,0) +COALESCE(rec_big_quantity,0) ) as total  from stock_return_line where line_id=%s  group by line_id",(ids[0],)) 
         total_qty=cr.fetchone()[0]
-        if total_qty==0.0 or total_qty is None   :
-            return self.write(cr, uid, ids, {'state':'received'})  
+#         if total_qty==0.0 or total_qty is None   :
+#             return self.write(cr, uid, ids, {'state':'received'})  
         cr.execute('select id from stock_picking_type where default_location_dest_id=%s and name like %s', (main_location_id, '%Internal Transfer%',))
         price_rec = cr.fetchone()
         if price_rec: 
