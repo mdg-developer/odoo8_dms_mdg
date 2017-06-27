@@ -180,7 +180,7 @@ class good_issue_line(osv.osv):  # #prod_pricelist_update_line
         if product_id:
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             values = {
-                      'big_uom_id':product.product_tmpl_id.uom_id and product.product_tmpl_id.uom_id.id or False,
+                'big_uom_id': product.product_tmpl_id.big_uom_id and product.product_tmpl_id.big_uom_id.id or False,
                 'product_uom': product.product_tmpl_id.uom_id and product.product_tmpl_id.uom_id.id or False,
                 'uom_ratio': product.product_tmpl_id.uom_ratio,
             }
@@ -199,12 +199,12 @@ class good_issue_line(osv.osv):  # #prod_pricelist_update_line
         'line_id':fields.many2one('good.issue.note', 'Line', ondelete='cascade', select=True),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'issue_quantity' : fields.float(string='Qty', digits=(16, 0)),
-        'product_uom': fields.many2one('product.uom', 'Smaller UoM', required=True,readonly=True),
+        'product_uom': fields.many2one('product.uom', 'Smaller UoM'),
                 'uom_ratio':fields.char('Packing Unit'),
                 'batch_no':fields.many2one('stock.production.lot','Batch No'),
                 'expiry_date':fields.date('Expiry'),
                  'remark':fields.char('Remark'),
-        'big_uom_id': fields.many2one('product.uom', 'Bigger UoM', required=True,readonly=True, help="Default Unit of Measure used for all stock operation."),
+        'big_uom_id': fields.many2one('product.uom', 'Bigger UoM', help="Default Unit of Measure used for all stock operation."),
         'big_issue_quantity' : fields.float(string='Qty', digits=(16, 0)),               
          'qty_on_hand':fields.float(string='Qty On Hand', digits=(16, 0),readonly=True),
         'sequence':fields.integer('Sequence'),
