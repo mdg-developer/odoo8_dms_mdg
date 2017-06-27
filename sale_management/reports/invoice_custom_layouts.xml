@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<template id="style">
+			body {
+			color: #000 !important;
+			word-wrap:
+			break-word;
+			}
+			.border-black td {
+			border-top: 1pt solid black !important;
+			}
+			.table-condensed > thead > tr > th {
+			border-bottom: 1pt solid black
+			!important;
+			}
+			.table-condensed > tbody > tr {
+			page-break-inside: avoid
+			!important;
+			}
+			.zero_min_height {
+			min-height: 0pt !important;
+			}
+		</template>
+
+		<template id="invoice_custom_layout">
+			<!-- Multicompany -->
+			<t t-if="o and 'company_id' in o">
+				<t t-set="company" t-value="o.company_id"></t>
+			</t>
+			<t t-if="not o or not 'company_id' in o">
+				<t t-set="company" t-value="res_company"></t>
+			</t>
+
+			<t t-call="sale_management.invoice_custom_layout_header" />
+			<t t-raw="0" />
+			<t t-call="sale_management.invoice_custom_layout_footer" />
+		</template>
+
+		<template id="invoice_custom_layout_header">
+			<div class="header">
+				<div class="row" align="center">
+					<span>
+						<img src="/sale_management/static/description/IEM_Header.png"
+						style="max-height: 700pt;width:500px;" />
+					</span>
+					<hr width="100%" style="height:13px;background-color:black;"></hr>
+				</div>
+			</div>
+		</template>
+
+		<template id="invoice_custom_layout_footer">
+			<div class="footer">
+				<!-- <div style="font-size:10pt; width:936px;height:200px; veritcal-align:bottom" class="row" align="right">
+					<span>
+						<img src="/invoice_customization/static/description/IEM_Footer.png"
+							style="max-height: 100pt;width:100px;" />
+					</span>
+				</div> -->
+			</div>
+		</template>
+	</data>
+</openerp>

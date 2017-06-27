@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="report_invoice_inherit_document">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <xpath expr="//t[@t-call='report.external_layout']" position="replace">
+                    	<t t-call="sale_management.invoice_custom_layout">
+                        <div class="page">
+                        	<div class="row" style="padding-top:-2s0pt;">
+								<center>
+									<span style="align:center;font-size:20pt;">INVOICE</span>
+									<br></br>
+								</center>
+								<left style="padding-left:20pt;">
+								 <b>BILL TO</b>
+								</left>
+							</div>
+							<br></br>
+							<table class="table" style='border:solid;border-color:white;margin-top:-20pt;'>
+								<tr style='border:solid;border-color:white;'>
+									<td style="line-height: .4;">
+										<span t-field="o.partner_id.name" /><br></br>
+										<br></br>
+										<span t-field="o.partner_id.street" />,
+										<span t-field="o.partner_id.township" />,
+										<span t-field="o.partner_id.city" />
+									</td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td class="col-xs-5 pull-right" style='border:solid;border-color:white;line-height: .4;' >
+									    <br></br><br></br>
+										<span t-field="o.company_id" />
+									</td>
+								</tr>
+	
+								<tr style='border:solid;border-color:white;'>
+									<td style="line-height: .4;">
+										Commercial Tax Registration
+										
+									</td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td class="col-xs-5 pull-right" style='border:solid;border-color:white;line-height: .4;'>
+										Commercial Tax Registration
+									</td>
+								</tr>
+								<tr style='border:solid;border-color:white;'>
+									<td style="line-height: .4;">
+										Branch
+										<span t-field="o.branch_id" />
+									</td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td style="line-height: .3;">
+										<table align="right" class="table table-condensed">
+										    <tr>
+										        <td style="border-top-color:white;line-height: .3;">Invoice Date</td>
+										        <td style="border:1pt solid;border-color:black;line-height: .3;"><span t-field="o.date_invoice" /></td>
+										    </tr>
+										    <tr>  
+										         <td style="border-top-color:white;line-height: .3;">Invoice # </td>
+										        <td style="border:1pt solid;border-color:black;line-height: .3;"><span t-field="o.number" /></td>
+										    </tr>
+								  			<tr>  
+										         <td style="border-top-color:white;line-height: .3;">Payment Due Date</td>
+										        <td style="border:1pt solid;border-color:black;line-height: .3;"><span t-field="o.payment_term" /></td>
+										    </tr>
+										    <tr>  
+										         <td style="border-top-color:white;line-height: .3;">Category</td>
+										        <td style="border:1pt solid;border-color:black;line-height: .3;"></td>
+										    </tr>
+									</table>
+									</td>
+								</tr>
+							</table>
+                            <t t-set="total" t-value="0" />
+                            <table class="table table-condensed" style="border:1pt solid;">
+	                            <thead>
+	                                <tr style="background-color:#0052cc;color:#ffffff;" height="10pt;">
+	                                    <th class="text-center" style="border:1pt solid;border-color:black;"><strong>Sr.No</strong></th>
+	                                    <th class="text-center" style="border:1pt solid;border-color:black;"><strong>Gold Code</strong></th>
+	                                    <th class="text-center" style="border:1pt solid;border-color:black;"><strong>Description</strong></th>
+	                                    <th class="text-center" style="border:1pt solid;border-color:black;"><strong>Quantity</strong></th>
+	                                    <th class="text-center" style="border:1pt solid;border-color:black;"><strong>UOM</strong></th>
+	                                    <th class="text-center" style="border:1pt solid;border-color:black;"><strong>Unit Price</strong></th>
+	                                    <th class="text-center" style="border:1pt solid;border-color:black;"><strong>Discount</strong></th>
+	                                    <th class="text-center" style="border:1pt solid;border-color:black;"><strong>Net Price</strong></th>
+	                                    <th class="text-center" style="border:1pt solid;border-color:black;"><strong>Amount</strong></th>
+	                                </tr>
+	                            </thead>
+	                            <tbody>
+	                            	<tr t-foreach="o.invoice_line" t-as="l">
+	                                    <td style="border:1pt solid;border-color:black;" align="center">
+											<t t-esc="l_index+1" />
+										</td>
+	                                    <td style="border:1pt solid;border-color:black;">
+	                                    	<span t-field="l.product_id.name_template"/>
+	                                    </td>
+	                                    <td style="border:1pt solid;border-color:black;">
+	                                    	<span t-field="l.name"/>
+	                                    </td>
+	                                    <td style="border:1pt solid;border-color:black;" class="text-center">
+	                                    	<!-- <span t-field="l.product_uom_qty"/> -->
+	                                    	<span t-esc="'%.0f'% l.quantity"/>
+	                                    </td>
+	                                    <td style="border:1pt solid;border-color:black;" class="text-center">
+	                                    	<span t-field="l.uos_id"/>
+	                                    </td>
+	                                    <td style="border:1pt solid;border-color:black;" class="text-right">
+	                                    	<span t-field="l.price_unit"/>
+	                                    </td>
+	                                    <td style="border:1pt solid;border-color:black;" class="text-center">
+	                                    	<span t-field="l.discount"/>
+	                                    </td>
+	                                    <td style="border:1pt solid;border-color:black;" class="text-right">
+	                                    	<span t-field="l.price_unit"/>
+	                                    </td>
+	                                    <td style="border:1pt solid;border-color:black;" class="text-right">
+	                                    	<span t-field="l.price_subtotal"/>
+	                                    </td>
+		                              </tr>
+		                              <tr style="border:1pt solid;border-color:black;">
+	                                    <td colspan="7" style="border:1pt solid;border-bottom-color:white;border-left-color:white;"></td>
+	                                    <td style="border:1pt solid;border-color:black;">
+	                                        Total(Exclusive)
+	                                    </td>
+	                                    <td class="text-right" style="border:1pt solid;border-color:black;">
+				                                <span t-field="o.amount_untaxed"
+				                                    t-field-options='{"widget": "monetary", "display_currency": "o.pricelist_id.currency_id"}'/>
+				                        </td>
+	                                </tr>
+	                                <tr>
+	                                    <td colspan="7" style="border:1pt solid;border-bottom-color:white;border-left-color:white;"></td>
+	                                    <td style="border:1pt solid;border-color:black;">
+	                                      
+	                                    </td>
+	                                    <td class="text-right" style="border:1pt solid;border-color:black;">
+				                                
+				                        </td>
+	                                </tr>
+	                                <tr>
+	                                    <td colspan="7" style="border:1pt solid;border-bottom-color:white;border-left-color:white;">
+	                                        (In Words .................................................................................)
+	                                    </td>
+	                                    <td style="border:1pt solid;border-color:black;" >
+	                                        C.Tax
+	                                    </td>
+	                                    <td class="text-right" style="border:1pt solid;border-color:black;">
+				                                <span t-field="o.amount_tax"
+				                                    t-field-options='{"widget": "monetary", "display_currency": "o.pricelist_id.currency_id"}'/>
+				                        </td>
+	                                </tr>
+	                                <tr>
+	                                    <td colspan="7" style="border:1pt solid;border-bottom-color:white;border-left-color:white;"></td>
+	                                    <td style="border:1pt solid;border-color:black;">
+	                                      
+	                                    </td>
+	                                    <td class="text-right" style="border:1pt solid;border-color:black;">
+				                                
+				                        </td>
+	                                </tr>
+	                                <tr>
+	                                    <td colspan="7" style="border:1pt solid;border-bottom-color:white;border-left-color:white;"></td>
+	                                    <td style="border:1pt solid;border-color:black;">
+	                                        Total(Inclusive)
+	                                    </td>
+	                                    <td class="text-right" style="border:1pt solid;border-color:black;">
+				                                <span t-field="o.amount_total"
+				                                    t-field-options='{"widget": "monetary", "display_currency": "o.pricelist_id.currency_id"}'/>
+				                        </td>
+	                                </tr>
+	                            </tbody>
+                            </table>
+			                                 
+						<br/><br/>
+						<table class="table table-condensed" >
+				                <thead>
+				                    <tr style='border:solid;border-color:white;'>
+				                        <th class="text-center">Buyer</th>
+				                        <th class="text-center">Sale Promoter</th>
+				                        <th class="text-center">Manager</th>
+				                    </tr>
+				                </thead>
+				               <tbody class="invoice_tbody">
+									<tr style='border:solid;border-color:white;'>
+					                    <td class="text-center">
+					                        (<span t-field="o.partner_id"/>)
+										</td>
+					                    <td class="text-center">
+					                        (<span t-field="o.user_id"/>)
+										</td>
+									</tr>
+				                </tbody>
+							</table>
+                        </div>
+                        </t>
+                     </xpath>
+                 </t>
+             </t>
+        </template>
+    </data>
+</openerp>
