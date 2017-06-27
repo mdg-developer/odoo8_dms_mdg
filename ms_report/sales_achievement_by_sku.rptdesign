@@ -22,6 +22,7 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
             <property name="distinct">true</property>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
             <property name="controlType">text-box</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
@@ -35,6 +36,7 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
             <property name="distinct">true</property>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
             <property name="controlType">text-box</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
@@ -45,7 +47,7 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
         <scalar-parameter name="user_id" id="121" extends="report_library.user_id"/>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="110"
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="688"
  extends="report_library.Data Source"/>
     </data-sources>
     <data-sets>
@@ -226,7 +228,7 @@ target as (
 	and so.section_id=st.sale_team_id and so.month=st.month::int and so.year=st.year::int and so.product_id=stl.product_id and so.branch_id=st.branch_id)
 	
 select row_number() over (order by ach.name_template) as seq,ach.name_template,quantity,ach_amt as ach_amt,case when target_amt is null then 0 else target_amt end as target_amt,
-case when target_amt>0 then concat(round(((target_amt*100)/ach_amt),2),'%') else concat(0,'%') end as percent_target
+case when target_amt>0 then concat(round(((ach_amt*100)/target_amt),2),'%') else concat(0,'%') end as percent_target
 from ach_amt ach
 left join target target on (ach.product_id=target.product_id)
 group by ach.product_id,ach.name_template,target_amt,ach_amt,quantity
@@ -276,6 +278,160 @@ order by name_template]]></xml-property>
  extends="report_library.branch"/>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="Sale_Team" id="118"
  extends="report_library.Sale_Team"/>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="total_percentage" id="687">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">concat</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">concat</text-property>
+                    <text-property name="heading">concat</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">from_date</property>
+                    <property name="paramName">from_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">to_date</property>
+                    <property name="paramName">to_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">2</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">concat</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <method name="beforeOpen"><![CDATA[this.queryText =this.queryText.replace("--$sales_team$", "and section_id  in ("+ params["sales_team_id"].value.join(",")+")")
+this.queryText =this.queryText.replace("--$branch_id$", "and branch_id in ("+ params["branch_id"].value.join(",")+")")
+]]></method>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">concat</property>
+                    <property name="nativeName">concat</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[with sale_order as (
+	select name_template,section_id,
+	case when ail.uos_id=pt.uom_id then quantity when ail.uos_id=pt.big_uom_id then quantity*(select floor(round(1/factor,2)) from product_uom where id=big_uom_id) end as quantity,
+	(price_subtotal-discount_amt)::numeric as ach_amt,date_part('month',date_invoice)::int as month,date_part('year',date_invoice)::int as year,product_id,(date_invoice+ '6 hour'::interval + '30 minutes'::interval)::date as date_order,branch_id
+	from account_invoice ai,account_invoice_line ail,product_product pp,product_template pt
+	where ai.id=ail.invoice_id
+	and ail.product_id=pp.id
+	and pp.product_tmpl_id=pt.id
+	and ai.state!='cancel'
+	and (foc!='true' or foc is null)
+	--$sales_team$
+	--$branch_id$
+	and (date_invoice+ '6 hour'::interval + '30 minutes'::interval)::date between ? and ?),
+
+ach_amt as (	
+	select COALESCE(sum(ach_amt),0) as ach_amt,product_id,name_template,sum(quantity) quantity
+	from sale_order
+	group by product_id,name_template),
+
+target as (
+	select (price_unit*product_uom_qty) as target_amt,sale_team_id,st.month::int,st.year::int,stl.product_id,st.branch_id,pp.name_template
+	from sales_target st,sales_target_line stl,sale_order so,product_product pp
+	where st.id=stl.sale_ids
+	and pp.id=stl.product_id
+	and so.section_id=st.sale_team_id and so.month=st.month::int and so.year=st.year::int and so.product_id=stl.product_id and so.branch_id=st.branch_id),
+	
+result as (
+	select row_number() over (order by ach.name_template) as seq,ach.name_template,quantity,ach_amt as ach_amt,case when target_amt is null then 0 else target_amt end as target_amt,
+	case when target_amt>0 then round(((ach_amt*100)/target_amt),2) else 0 end as percent_target
+	from ach_amt ach
+	left join target target on (ach.product_id=target.product_id)
+	group by ach.product_id,ach.name_template,target_amt,ach_amt,quantity
+	order by name_template)
+
+select concat(sum(percent_target),'%')
+from result]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>2</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>sum</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2</design:nativeDataTypeCode>
+            <design:precision>0</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>sum</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>sum</design:label>
+            <design:formattingHints>
+              <design:displaySize>131089</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
     </data-sets>
     <styles>
         <style name="report" id="4">
@@ -320,7 +476,6 @@ order by name_template]]></xml-property>
                 <ref-entry baseId="40" id="82"/>
                 <ref-entry baseId="41" id="83"/>
                 <ref-entry baseId="42" id="84"/>
-                <ref-entry baseId="58" name="NewImage" id="58"/>
                 <ref-entry baseId="43" id="85"/>
                 <ref-entry baseId="59" name="NewData" id="59"/>
                 <ref-entry baseId="44" id="86"/>
@@ -549,6 +704,54 @@ order by name_template]]></xml-property>
                     <expression name="expression" type="javascript">dataSetRow["quantity"]</expression>
                     <property name="dataType">decimal</property>
                 </structure>
+                <structure>
+                    <property name="name">Aggregation</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["quantity"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation_1</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["ach_amt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation_2</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["target_amt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation_3</property>
+                    <property name="dataType">string</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["percent_target"]+'%'</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
             </list-property>
             <column id="33">
                 <property name="width">0.5277777777777778in</property>
@@ -642,7 +845,7 @@ order by name_template]]></xml-property>
                         <label id="41">
                             <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
-                            <text-property name="text">Target</text-property>
+                            <text-property name="text">Target Amt</text-property>
                         </label>
                     </cell>
                     <cell id="20">
@@ -703,6 +906,10 @@ order by name_template]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="114">
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
+                            </structure>
                             <property name="textAlign">center</property>
                             <property name="resultSetColumn">quantity</property>
                         </data>
@@ -765,6 +972,111 @@ order by name_template]]></xml-property>
                     </cell>
                 </row>
             </detail>
+            <footer>
+                <row id="675">
+                    <cell id="676">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="682">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">center</property>
+                            <text-property name="text">Total</text-property>
+                        </label>
+                    </cell>
+                    <cell id="678">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="683">
+                            <property name="fontWeight">bold</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">Aggregation</property>
+                        </data>
+                    </cell>
+                    <cell id="679">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="684">
+                            <property name="fontWeight">bold</property>
+                            <property name="paddingRight">3pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">Aggregation_1</property>
+                        </data>
+                    </cell>
+                    <cell id="680">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="685">
+                            <property name="fontWeight">bold</property>
+                            <property name="paddingRight">3pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">Aggregation_2</property>
+                        </data>
+                    </cell>
+                    <cell id="681">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="689">
+                            <property name="fontWeight">bold</property>
+                            <property name="paddingRight">3pt</property>
+                            <property name="textAlign">right</property>
+                            <property name="dataSet">total_percentage</property>
+                            <list-property name="boundDataColumns">
+                                <structure>
+                                    <property name="name">concat</property>
+                                    <text-property name="displayName">concat</text-property>
+                                    <expression name="expression" type="javascript">dataSetRow["concat"]</expression>
+                                    <property name="dataType">string</property>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">concat</property>
+                        </data>
+                    </cell>
+                </row>
+            </footer>
         </table>
     </body>
 </report>
