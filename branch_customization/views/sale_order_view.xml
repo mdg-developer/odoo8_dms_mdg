@@ -13,5 +13,18 @@
 				</field>
 			</field>
 		</record>
+		
+		<record id="inherit_view_sale_order_tree1" model="ir.ui.view">
+			<field name="name">sale.order.tree</field>
+			<field name="model">sale.order</field>
+			<field name="inherit_id" ref="mdg_customization.inherit_view_sale_order_tree" />
+			<field name="arch" type="xml">
+				<field name="section_id" position="before">
+					<field name="branch_id" />
+				</field>
+			</field>
+		</record>
+		
+		
 	</data>
 </openerp>
