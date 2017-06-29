@@ -75,6 +75,12 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <text-property name="heading">customer_name</text-property>
                 </structure>
                 <structure>
+                    <property name="columnName">team</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">team</text-property>
+                    <text-property name="heading">team</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">customer_code</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">customer_code</text-property>
@@ -141,26 +147,31 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     </structure>
                     <structure>
                         <property name="position">3</property>
-                        <property name="name">customer_code</property>
+                        <property name="name">team</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">4</property>
+                        <property name="name">customer_code</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
                         <property name="name">date</property>
                         <property name="dataType">date</property>
                     </structure>
                     <structure>
-                        <property name="position">5</property>
+                        <property name="position">6</property>
                         <property name="name">login</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">6</property>
+                        <property name="position">7</property>
                         <property name="name">name_template</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">7</property>
+                        <property name="position">8</property>
                         <property name="name">total_amt</property>
                         <property name="dataType">float</property>
                     </structure>
@@ -184,46 +195,54 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                 </structure>
                 <structure>
                     <property name="position">3</property>
+                    <property name="name">team</property>
+                    <property name="nativeName">team</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
                     <property name="name">customer_code</property>
                     <property name="nativeName">customer_code</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">4</property>
+                    <property name="position">5</property>
                     <property name="name">date</property>
                     <property name="nativeName">date</property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                 </structure>
                 <structure>
-                    <property name="position">5</property>
+                    <property name="position">6</property>
                     <property name="name">login</property>
                     <property name="nativeName">login</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">6</property>
+                    <property name="position">7</property>
                     <property name="name">name_template</property>
                     <property name="nativeName">name_template</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">7</property>
+                    <property name="position">8</property>
                     <property name="name">total_amt</property>
                     <property name="nativeName">total_amt</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select mso.name,rp.name customer_name,mso.customer_code,((mso.date at time zone 'utc' )at time zone 'asia/rangoon')::date date,res.login,pp.name_template,abs(price_unit) total_amt
-from mobile_sale_order mso,mobile_sale_order_line msol,res_partner rp,res_users res,product_product pp
+            <xml-property name="queryText"><![CDATA[select mso.name,rp.name customer_name,cc.name as team,mso.customer_code,((mso.date at time zone 'utc' )at time zone 'asia/rangoon')::date date,res.login,pp.name_template,abs(price_unit) total_amt
+from mobile_sale_order mso,mobile_sale_order_line msol,res_partner rp,res_users res,product_product pp,crm_case_section cc
 where mso.id=msol.order_id
 and mso.partner_id=rp.id
 and mso.user_id=res.id
 and pp.id=msol.product_id
+and cc.id=mso.sale_team
 and price_unit<0
 and ((mso.date at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
 --$branch$
@@ -566,75 +585,6 @@ order by mso.name]]></xml-property>
                 </row>
             </footer>
         </table>
-        <table id="658">
-            <property name="width">10.46875in</property>
-            <property name="dataSet">Sale_Team</property>
-            <list-property name="boundDataColumns">
-                <structure>
-                    <property name="name">id</property>
-                    <text-property name="displayName">id</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["id"]</expression>
-                    <property name="dataType">integer</property>
-                </structure>
-                <structure>
-                    <property name="name">name</property>
-                    <text-property name="displayName">name</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["name"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
-            </list-property>
-            <column id="668">
-                <property name="width">5.052083333333333in</property>
-            </column>
-            <column id="669">
-                <property name="width">5.416666666666667in</property>
-            </column>
-            <header>
-                <row id="659">
-                    <cell id="660">
-                        <data id="670">
-                            <property name="fontSize">12pt</property>
-                            <property name="fontWeight">bold</property>
-                            <list-property name="visibility">
-                                <structure>
-                                    <property name="format">all</property>
-                                    <expression name="valueExpr" type="javascript">true</expression>
-                                </structure>
-                            </list-property>
-                            <property name="resultSetColumn">id</property>
-                        </data>
-                    </cell>
-                    <cell id="661">
-                        <data id="671">
-                            <property name="fontSize">12pt</property>
-                            <property name="fontWeight">bold</property>
-                            <list-property name="visibility">
-                                <structure>
-                                    <property name="format">all</property>
-                                    <expression name="valueExpr" type="javascript">true</expression>
-                                </structure>
-                            </list-property>
-                            <property name="resultSetColumn">name</property>
-                        </data>
-                    </cell>
-                </row>
-            </header>
-            <footer>
-                <row id="665">
-                    <cell id="666">
-                        <property name="colSpan">2</property>
-                        <property name="rowSpan">1</property>
-                        <text-data id="674">
-                            <property name="fontSize">12pt</property>
-                            <property name="fontWeight">bold</property>
-                            <property name="textAlign">center</property>
-                            <expression name="valueExpr">teamList;</expression>
-                            <property name="contentType">html</property>
-                        </text-data>
-                    </cell>
-                </row>
-            </footer>
-        </table>
         <data id="103">
             <property name="fontFamily">"Arial"</property>
             <property name="fontSize">12pt</property>
@@ -652,7 +602,11 @@ order by mso.name]]></xml-property>
         </data>
         <label id="21"/>
         <table id="50">
-            <property name="width">10.45in</property>
+            <property name="borderBottomStyle">none</property>
+            <property name="borderLeftStyle">none</property>
+            <property name="borderRightStyle">none</property>
+            <property name="borderTopStyle">none</property>
+            <property name="width">10.447916666666666in</property>
             <property name="dataSet">Data Set</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -697,27 +651,48 @@ order by mso.name]]></xml-property>
                     <expression name="expression" type="javascript">dataSetRow["total_amt"]</expression>
                     <property name="dataType">float</property>
                 </structure>
+                <structure>
+                    <property name="name">Aggregation</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["total_amt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">team</property>
+                    <text-property name="displayName">team</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["team"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
             </list-property>
             <column id="93">
-                <property name="width">1.5in</property>
+                <property name="width">1.7708333333333333in</property>
             </column>
             <column id="94">
-                <property name="width">1.354in</property>
+                <property name="width">1.3229166666666667in</property>
             </column>
             <column id="95">
-                <property name="width">1.3541666666666667in</property>
+                <property name="width">1.3645833333333333in</property>
             </column>
             <column id="96">
-                <property name="width">1in</property>
+                <property name="width">0.9166666666666666in</property>
+            </column>
+            <column id="705">
+                <property name="width">1.25in</property>
             </column>
             <column id="97">
-                <property name="width">1.53125in</property>
+                <property name="width">1.1041666666666667in</property>
             </column>
             <column id="686">
                 <property name="width">1.6in</property>
             </column>
             <column id="683">
-                <property name="width">1.2in</property>
+                <property name="width">1.125in</property>
             </column>
             <header>
                 <row id="51">
@@ -779,6 +754,21 @@ order by mso.name]]></xml-property>
                             <property name="fontFamily">"Arial"</property>
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Date</text-property>
+                        </label>
+                    </cell>
+                    <cell id="702">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="706">
+                            <property name="fontFamily">"Arial"</property>
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">Sales Team</text-property>
                         </label>
                     </cell>
                     <cell id="56">
@@ -890,6 +880,20 @@ order by mso.name]]></xml-property>
                             <property name="resultSetColumn">date</property>
                         </data>
                     </cell>
+                    <cell id="703">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="707">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">team</property>
+                        </data>
+                    </cell>
                     <cell id="70">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -940,6 +944,47 @@ order by mso.name]]></xml-property>
                     </cell>
                 </row>
             </detail>
+            <footer>
+                <row id="693">
+                    <cell id="694">
+                        <property name="colSpan">7</property>
+                        <property name="rowSpan">1</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="699">
+                            <property name="fontFamily">"Arial"</property>
+                            <property name="fontSize">11pt</property>
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">center</property>
+                            <text-property name="text">Total</text-property>
+                        </label>
+                    </cell>
+                    <cell id="700">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="701">
+                            <property name="fontFamily">"Arial"</property>
+                            <property name="fontSize">11pt</property>
+                            <property name="fontWeight">bold</property>
+                            <property name="paddingRight">3pt</property>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">Aggregation</property>
+                        </data>
+                    </cell>
+                </row>
+            </footer>
         </table>
     </body>
 </report>
