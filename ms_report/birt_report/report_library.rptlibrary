@@ -83,8 +83,8 @@
                 </ex-property>
             </list-property>
             <property name="odaDriverClass">org.postgresql.Driver</property>
-            <property name="odaURL">jdbc:postgresql://localhost:5432/MDG_20062017</property>
-            <property name="odaUser">odoo</property>
+            <property name="odaURL">jdbc:postgresql://localhost:5432/mdg_uat_27062017</property>
+            <property name="odaUser">openerp</property>
             <encrypted-property name="odaPassword" encryptionID="base64">b3BlbnBncHdk</encrypted-property>
             <property name="odaJndiName">java:comp/env/jdbc/ReportDB</property>
         </oda-data-source>
@@ -689,12 +689,6 @@ order by res.name]]></xml-property>
                         <cell id="42">
                             <property name="colSpan">1</property>
                             <property name="rowSpan">2</property>
-                            <image name="NewImage" id="58">
-                                <property name="height">57px</property>
-                                <property name="width">178px</property>
-                                <property name="source">embed</property>
-                                <property name="imageName">company_logo.png</property>
-                            </image>
                         </cell>
                         <cell id="43">
                             <property name="colSpan">1</property>

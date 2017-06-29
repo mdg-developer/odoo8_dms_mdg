@@ -432,15 +432,15 @@ order by team.id]]></xml-property>
     </styles>
     <page-setup>
         <simple-master-page name="NewSimpleMasterPage" id="247" extends="report_library.NewSimpleMasterPage">
-            <property name="type">us-ledger</property>
+            <property name="type">a4</property>
             <property name="orientation">landscape</property>
             <property name="rightMargin">0.25in</property>
             <overridden-values>
-                <ref-entry baseId="37" name="NewGrid" id="248">
+                <ref-entry baseId="37" name="NewGrid" id="718">
                     <property name="verticalAlign">bottom</property>
                     <property name="width">16.5in</property>
                 </ref-entry>
-                <ref-entry baseId="38" id="249">
+                <ref-entry baseId="38" id="719">
                     <property name="width">3.013888888888889in</property>
                 </ref-entry>
                 <ref-entry baseId="39" id="39">
@@ -451,7 +451,6 @@ order by team.id]]></xml-property>
                 </ref-entry>
                 <ref-entry baseId="41" id="41"/>
                 <ref-entry baseId="42" id="42"/>
-                <ref-entry baseId="58" name="NewImage" id="58"/>
                 <ref-entry baseId="43" id="43"/>
                 <ref-entry baseId="59" name="NewData" id="59"/>
                 <ref-entry baseId="44" id="44"/>
@@ -461,16 +460,8 @@ order by team.id]]></xml-property>
         </simple-master-page>
     </page-setup>
     <body>
-        <label id="260">
-            <property name="fontFamily">"Arial"</property>
-            <property name="fontSize">12pt</property>
-            <property name="fontWeight">bold</property>
-            <property name="paddingLeft">440pt</property>
-            <property name="textAlign">left</property>
-            <text-property name="text">Sales Denomination Report</text-property>
-        </label>
         <table id="614">
-            <property name="width">15in</property>
+            <property name="width">11.135416666666666in</property>
             <property name="dataSet">branch</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -488,7 +479,7 @@ order by team.id]]></xml-property>
             </list-property>
             <column id="624"/>
             <column id="625">
-                <property name="width">12.4375in</property>
+                <property name="width">8.572916666666666in</property>
             </column>
             <detail>
                 <row id="618">
@@ -533,6 +524,8 @@ order by team.id]]></xml-property>
                             <property name="fontFamily">sans-serif</property>
                             <property name="fontSize">12pt</property>
                             <property name="fontWeight">bold</property>
+                            <property name="paddingLeft">200pt</property>
+                            <property name="paddingRight">1pt</property>
                             <property name="textAlign">center</property>
                             <expression name="valueExpr">branchList;</expression>
                             <property name="contentType">html</property>
@@ -541,115 +534,63 @@ order by team.id]]></xml-property>
                 </row>
             </footer>
         </table>
-        <table id="658">
-            <property name="width">15in</property>
-            <property name="dataSet">Sale_Team</property>
-            <list-property name="boundDataColumns">
-                <structure>
-                    <property name="name">id</property>
-                    <text-property name="displayName">id</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["id"]</expression>
-                    <property name="dataType">integer</property>
-                </structure>
-                <structure>
-                    <property name="name">name</property>
-                    <text-property name="displayName">name</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["name"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
-            </list-property>
-            <column id="668"/>
-            <column id="669">
-                <property name="width">12.447916666666666in</property>
+        <grid id="702">
+            <property name="width">11.145833333333334in</property>
+            <column id="713">
+                <property name="width">0.5in</property>
             </column>
-            <header>
-                <row id="659">
-                    <cell id="660">
-                        <data id="670">
-                            <property name="fontSize">12pt</property>
-                            <property name="fontWeight">bold</property>
-                            <list-property name="visibility">
-                                <structure>
-                                    <property name="format">all</property>
-                                    <expression name="valueExpr" type="javascript">true</expression>
-                                </structure>
-                            </list-property>
-                            <property name="resultSetColumn">id</property>
-                        </data>
-                    </cell>
-                    <cell id="661">
-                        <data id="671">
-                            <property name="fontSize">12pt</property>
-                            <property name="fontWeight">bold</property>
-                            <list-property name="visibility">
-                                <structure>
-                                    <property name="format">all</property>
-                                    <expression name="valueExpr" type="javascript">true</expression>
-                                </structure>
-                            </list-property>
-                            <property name="resultSetColumn">name</property>
-                        </data>
-                    </cell>
-                </row>
-            </header>
-            <footer>
-                <row id="665">
-                    <cell id="666">
-                        <property name="colSpan">2</property>
-                        <property name="rowSpan">1</property>
-                        <text-data id="674">
-                            <property name="fontSize">12pt</property>
-                            <property name="fontWeight">bold</property>
-                            <property name="textAlign">center</property>
-                            <expression name="valueExpr">teamList;</expression>
-                            <property name="contentType">html</property>
-                        </text-data>
-                    </cell>
-                </row>
-            </footer>
-        </table>
-        <grid id="7">
-            <column id="8"/>
-            <row id="9">
-                <cell id="10">
-                    <grid id="135">
-                        <property name="width">16.4in</property>
-                        <column id="136">
-                            <property name="width">8.13888888888889in</property>
-                        </column>
-                        <column id="137">
-                            <property name="width">2.1944444444444446in</property>
-                        </column>
-                        <row id="138">
-                            <cell id="139">
-                                <label id="141">
-                                    <property name="fontSize">12pt</property>
-                                    <property name="fontWeight">bold</property>
-                                    <property name="textAlign">left</property>
-                                    <text-property name="text">Sales Teams's Daily Cash Sales &amp; Collection Cash Amount,Return To Cashiering Dept;</text-property>
-                                </label>
-                            </cell>
-                            <cell id="140">
-                                <data id="142">
-                                    <property name="fontSize">12pt</property>
-                                    <property name="fontWeight">bold</property>
-                                    <structure name="dateTimeFormat">
-                                        <property name="category">Custom</property>
-                                        <property name="pattern">dd.MM.YY</property>
-                                    </structure>
-                                    <property name="textAlign">right</property>
-                                    <list-property name="boundDataColumns">
-                                        <structure>
-                                            <property name="name">date</property>
-                                            <expression name="expression" type="javascript">params["date"]</expression>
-                                            <property name="dataType">date</property>
-                                        </structure>
-                                    </list-property>
-                                    <property name="resultSetColumn">date</property>
-                                </data>
-                            </cell>
-                        </row>
-                    </grid>
+            <column id="715">
+                <property name="width">1.1354166666666667in</property>
+            </column>
+            <column id="711">
+                <property name="width">0.20833333333333334in</property>
+            </column>
+            <column id="703">
+                <property name="width">9.302083333333334in</property>
+            </column>
+            <row id="705">
+                <cell id="712">
+                    <label id="716">
+                        <property name="fontWeight">bold</property>
+                        <property name="textAlign">right</property>
+                        <text-property name="text">(</text-property>
+                    </label>
+                </cell>
+                <cell id="714">
+                    <data id="709">
+                        <property name="fontSize">12pt</property>
+                        <property name="fontWeight">bold</property>
+                        <structure name="dateTimeFormat">
+                            <property name="category">Custom</property>
+                            <property name="pattern">dd.MM.YY</property>
+                        </structure>
+                        <property name="textAlign">center</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">date</property>
+                                <expression name="expression" type="javascript">params["date"]</expression>
+                                <property name="dataType">date</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">date</property>
+                    </data>
+                </cell>
+                <cell id="710">
+                    <label id="717">
+                        <property name="fontWeight">bold</property>
+                        <property name="textAlign">left</property>
+                        <text-property name="text">)</text-property>
+                    </label>
+                </cell>
+                <cell id="706">
+                    <label id="707">
+                        <property name="fontSize">12pt</property>
+                        <property name="fontWeight">bold</property>
+                        <property name="paddingLeft">1pt</property>
+                        <property name="paddingRight">300pt</property>
+                        <property name="textAlign">left</property>
+                        <text-property name="text">Cash Denomination Summary Report</text-property>
+                    </label>
                 </cell>
             </row>
         </grid>
@@ -666,7 +607,7 @@ order by team.id]]></xml-property>
                             <property name="borderLeftStyle">none</property>
                             <property name="borderBottomStyle">solid</property>
                             <property name="borderBottomWidth">thin</property>
-                            <property name="width">125px</property>
+                            <property name="width">152px</property>
                             <property name="content">
                                 <data id="97">
                                     <property name="paddingRight">1pt</property>
@@ -683,13 +624,14 @@ order by team.id]]></xml-property>
                     <property name="aggregations">
                         <extended-item extensionName="AggregationCell" id="230">
                             <property name="aggregationOnColumn">Group2/notes</property>
-                            <property name="backgroundColor">gray</property>
                             <property name="borderTopStyle">none</property>
                             <property name="borderLeftStyle">none</property>
                             <property name="borderBottomStyle">solid</property>
                             <property name="borderBottomWidth">thin</property>
                             <property name="content">
                                 <data id="231">
+                                    <property name="fontSize">11pt</property>
+                                    <property name="fontWeight">bold</property>
                                     <property name="paddingRight">1pt</property>
                                     <structure name="numberFormat">
                                         <property name="category">Currency</property>
@@ -723,7 +665,7 @@ order by team.id]]></xml-property>
                             <property name="borderBottomWidth">thin</property>
                             <property name="borderRightStyle">solid</property>
                             <property name="borderRightWidth">thin</property>
-                            <property name="width">119px</property>
+                            <property name="width">146px</property>
                             <property name="content">
                                 <data id="118">
                                     <property name="paddingRight">3pt</property>
@@ -746,7 +688,6 @@ order by team.id]]></xml-property>
                     <property name="aggregations">
                         <extended-item extensionName="AggregationCell" id="232">
                             <property name="aggregationOnColumn">Group2/notes</property>
-                            <property name="backgroundColor">gray</property>
                             <property name="borderTopStyle">none</property>
                             <property name="borderLeftStyle">none</property>
                             <property name="borderBottomStyle">solid</property>
@@ -755,6 +696,8 @@ order by team.id]]></xml-property>
                             <property name="borderRightWidth">thin</property>
                             <property name="content">
                                 <data id="233">
+                                    <property name="fontSize">11pt</property>
+                                    <property name="fontWeight">bold</property>
                                     <property name="paddingRight">3pt</property>
                                     <structure name="numberFormat">
                                         <property name="category">Currency</property>
@@ -779,7 +722,7 @@ order by team.id]]></xml-property>
                             <property name="borderBottomWidth">thin</property>
                             <property name="borderRightStyle">solid</property>
                             <property name="borderRightWidth">thin</property>
-                            <property name="width">2.1805555555555554in</property>
+                            <property name="width">522px</property>
                             <property name="content">
                                 <data id="237">
                                     <property name="paddingRight">3pt</property>
@@ -793,7 +736,6 @@ order by team.id]]></xml-property>
                             </property>
                         </extended-item>
                         <extended-item extensionName="AggregationCell" id="238">
-                            <property name="backgroundColor">gray</property>
                             <property name="borderTopStyle">none</property>
                             <property name="borderLeftStyle">none</property>
                             <property name="borderBottomStyle">solid</property>
@@ -802,6 +744,8 @@ order by team.id]]></xml-property>
                             <property name="borderRightWidth">thin</property>
                             <property name="content">
                                 <data id="239">
+                                    <property name="fontSize">11pt</property>
+                                    <property name="fontWeight">bold</property>
                                     <property name="paddingRight">3pt</property>
                                     <structure name="numberFormat">
                                         <property name="category">Currency</property>
@@ -837,12 +781,13 @@ order by team.id]]></xml-property>
                         <extended-item extensionName="CrosstabCell" id="121">
                             <property name="content">
                                 <label id="126">
+                                    <property name="fontSize">11pt</property>
+                                    <property name="fontWeight">bold</property>
                                     <property name="paddingRight">3pt</property>
                                     <property name="textAlign">right</property>
                                     <text-property name="text">Grand Total</text-property>
                                 </label>
                             </property>
-                            <property name="backgroundColor">gray</property>
                             <property name="borderLeftStyle">solid</property>
                             <property name="borderLeftWidth">thin</property>
                             <property name="borderBottomStyle">solid</property>
@@ -873,7 +818,7 @@ order by team.id]]></xml-property>
                                             <property name="borderBottomWidth">thin</property>
                                             <property name="borderRightStyle">solid</property>
                                             <property name="borderRightWidth">thin</property>
-                                            <property name="width">1.1527777777777777in</property>
+                                            <property name="width">125px</property>
                                         </extended-item>
                                     </property>
                                 </extended-item>
@@ -898,7 +843,7 @@ order by team.id]]></xml-property>
                                             <property name="borderBottomWidth">thin</property>
                                             <property name="borderRightStyle">solid</property>
                                             <property name="borderRightWidth">thin</property>
-                                            <property name="width">259px</property>
+                                            <property name="width">125px</property>
                                         </extended-item>
                                     </property>
                                 </extended-item>
@@ -913,8 +858,9 @@ order by team.id]]></xml-property>
                         <extended-item extensionName="CrosstabCell" id="235">
                             <property name="content">
                                 <label id="242">
+                                    <property name="fontWeight">bold</property>
                                     <property name="textAlign">center</property>
-                                    <text-property name="text">Cash Amount(Ks)</text-property>
+                                    <text-property name="text">Total</text-property>
                                 </label>
                             </property>
                             <property name="borderTopStyle">solid</property>
@@ -943,6 +889,7 @@ order by team.id]]></xml-property>
                                         <extended-item extensionName="CrosstabCell" id="229">
                                             <property name="content">
                                                 <data name="notes" id="234">
+                                                    <property name="fontWeight">bold</property>
                                                     <structure name="numberFormat">
                                                         <property name="category">Currency</property>
                                                         <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
@@ -970,6 +917,7 @@ order by team.id]]></xml-property>
                 <extended-item extensionName="CrosstabCell" id="167">
                     <property name="content">
                         <label id="169">
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
                             <text-property name="text">Sales Team</text-property>
                         </label>
@@ -985,8 +933,9 @@ order by team.id]]></xml-property>
                 <extended-item extensionName="CrosstabCell" id="77">
                     <property name="content">
                         <label id="83">
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
-                            <text-property name="text">Name</text-property>
+                            <text-property name="text">Salesperson</text-property>
                         </label>
                     </property>
                     <property name="borderTopStyle">solid</property>
