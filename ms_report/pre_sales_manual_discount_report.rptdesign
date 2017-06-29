@@ -766,6 +766,21 @@ order by pso.name
                 </row>
             </footer>
         </table>
+        <data id="103">
+            <property name="fontFamily">"Arial"</property>
+            <property name="fontSize">12pt</property>
+            <property name="fontWeight">bold</property>
+            <property name="textAlign">right</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">from_date</property>
+                    <expression name="expression" type="javascript">"From Date - "+Formatter.format(params["from_date"],'dd-MM-yy')+"			To Date - "+Formatter.format(params["to_date"],'dd-MM-yy')</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+            </list-property>
+            <property name="resultSetColumn">from_date</property>
+        </data>
         <label id="21"/>
         <table id="50">
             <property name="width">10.45in</property>
