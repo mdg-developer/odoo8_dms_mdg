@@ -41,7 +41,7 @@
                     <property name="dataType">integer</property>
                     <property name="paramType">simple</property>
                     <property name="concealValue">false</property>
-                    <property name="controlType">text-box</property>
+                    <property name="controlType">list-box</property>
                     <property name="mustMatch">true</property>
                     <property name="fixedOrder">false</property>
                     <structure name="format"/>

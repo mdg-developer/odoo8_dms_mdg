@@ -13,14 +13,14 @@ DECLARE
 BEGIN
 	return query	
 	with
-	opening_tbl as (select (bbb.open_amt) as open_amt,123321 as myid from (select sum(debit-credit) as open_amt,l.partner_id as inv_partid 
+	opening_tbl as (select sum(bbb.open_amt) as open_amt,123321 as myid from (select sum(debit-credit) as open_amt,l.partner_id as inv_partid 
 	from account_move_line l,account_move m, sale_order so
 	where l.account_id in (select  id from account_account where user_type in (select id from account_account_type where code in ('Receivable','Payable')))
 	and l.date < from_date
 	and l.move_id = m.id
 	and so.partner_id=m.partner_id
 	and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = from_date
-	and m.period_id in (select p.id  from account_fiscalyear f,account_period p  where  p.fiscalyear_id = f.id and f.date_start <= from_date and  f.date_stop >= from_date)
+	and m.period_id in (select p.id  from account_fiscalyear f,account_period p  where  p.fiscalyear_id = f.id and f.date_start <=from_date and  f.date_stop >= from_date)
 	group by l.partner_id) bbb),
 
 	paidamt_tbl as (select sum(asdf.paidamount)as paidamount,123321 as myid from (select ai.payment_type,sum(avl.amount) as  paidamount,
@@ -67,4 +67,4 @@ $BODY$
   COST 100
   ROWS 1000;
 ALTER FUNCTION calculate_credit_datasum(integer, integer, date)
-  OWNER TO postgres;
+  OWNER TO odoo;

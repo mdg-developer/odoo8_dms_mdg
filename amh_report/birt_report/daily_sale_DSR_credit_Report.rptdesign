@@ -2706,12 +2706,11 @@ inner join sale on pp.id = sale.product_id )AA group by aa.customer_id,AA.custom
             <list-property name="parameters">
                 <structure>
                     <property name="name">param_1</property>
-                    <property name="paramName">from_date</property>
+                    <property name="paramName">branch</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
                     <property name="position">1</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -2851,7 +2850,7 @@ this.queryText =this.queryText.replace("--$pricelist$", "")
 }
 else
 {
-this.queryText =this.queryText.replace("--$pricelist$", "and so.pricelist_id="+params["pricelist"])
+this.queryText =this.queryText.replace("--$pricelist$", "and ppv.pricelist_id="+params["pricelist"])
 }]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
@@ -3085,13 +3084,15 @@ CASE (select dcode(ONE.productid)) WHEN 'S000025' THEN (SELECT CAST(ONE.PRICE AS
 CASE (select dcode(ONE.productid)) WHEN 'S000001' THEN (SELECT CAST(ONE.PRICE AS FLOAT))  END AS PRICE_01VISS_SS
 
 FROM
-(SELECT pp.id AS productid,pp.name_template as description,sol.price_unit as Price
-FROM product_product pp,sale_order_line sol, sale_order so
-WHERE sol.product_id=pp.id
-and so.id=sol.order_id
-and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ? and so.payment_type='credit'
+(select ppi.name,ppi.product_id productid,ppi.new_price Price
+from product_pricelist_version ppv,product_pricelist_item ppi
+where ppv.id=ppi.price_version_id
+and ppv.active='t'
+and ppv.branch_id=?
 --$pricelist$
-group by productid,pp.name_template,sol.price_unit) ONE)TWO]]></xml-property>
+) ONE)TWO
+
+]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -3104,7 +3105,7 @@ group by productid,pp.name_template,sol.price_unit) ONE)TWO]]></xml-property>
             <design:name></design:name>
             <design:position>1</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -5321,7 +5322,7 @@ from res_branch where active='t']]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="1983">
-                            <property name="fontSize">8pt</property>
+                            <property name="fontSize">7pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -5341,7 +5342,7 @@ from res_branch where active='t']]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="1984">
-                            <property name="fontSize">8pt</property>
+                            <property name="fontSize">7pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -5361,7 +5362,7 @@ from res_branch where active='t']]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="1810">
-                            <property name="fontSize">8pt</property>
+                            <property name="fontSize">7pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -5381,7 +5382,7 @@ from res_branch where active='t']]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="1811">
-                            <property name="fontSize">8pt</property>
+                            <property name="fontSize">7pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -5401,7 +5402,7 @@ from res_branch where active='t']]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="1812">
-                            <property name="fontSize">8pt</property>
+                            <property name="fontSize">7pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -5421,7 +5422,7 @@ from res_branch where active='t']]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="1813">
-                            <property name="fontSize">8pt</property>
+                            <property name="fontSize">7pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -5441,7 +5442,7 @@ from res_branch where active='t']]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="1814">
-                            <property name="fontSize">8pt</property>
+                            <property name="fontSize">7pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -5461,7 +5462,7 @@ from res_branch where active='t']]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="1815">
-                            <property name="fontSize">8pt</property>
+                            <property name="fontSize">7pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -5481,7 +5482,7 @@ from res_branch where active='t']]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="1816">
-                            <property name="fontSize">8pt</property>
+                            <property name="fontSize">7pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -5501,7 +5502,7 @@ from res_branch where active='t']]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="1817">
-                            <property name="fontSize">8pt</property>
+                            <property name="fontSize">7pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -5521,7 +5522,7 @@ from res_branch where active='t']]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="1818">
-                            <property name="fontSize">8pt</property>
+                            <property name="fontSize">7pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -5541,7 +5542,7 @@ from res_branch where active='t']]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="1819">
-                            <property name="fontSize">8pt</property>
+                            <property name="fontSize">7pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -5562,7 +5563,7 @@ from res_branch where active='t']]></xml-property>
                         <property name="borderTopWidth">thin</property>
                         <property name="verticalAlign">middle</property>
                         <data id="1994">
-                            <property name="fontSize">8pt</property>
+                            <property name="fontSize">7pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -5583,7 +5584,7 @@ from res_branch where active='t']]></xml-property>
                         <property name="borderTopWidth">thin</property>
                         <property name="verticalAlign">middle</property>
                         <data id="1995">
-                            <property name="fontSize">8pt</property>
+                            <property name="fontSize">7pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -5604,7 +5605,7 @@ from res_branch where active='t']]></xml-property>
                         <property name="borderTopWidth">thin</property>
                         <property name="verticalAlign">middle</property>
                         <data id="1996">
-                            <property name="fontSize">8pt</property>
+                            <property name="fontSize">7pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -5624,7 +5625,7 @@ from res_branch where active='t']]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="1997">
-                            <property name="fontSize">8pt</property>
+                            <property name="fontSize">7pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -5644,7 +5645,7 @@ from res_branch where active='t']]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="1820">
-                            <property name="fontSize">8pt</property>
+                            <property name="fontSize">7pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -5664,7 +5665,7 @@ from res_branch where active='t']]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="1821">
-                            <property name="fontSize">8pt</property>
+                            <property name="fontSize">7pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -5684,7 +5685,7 @@ from res_branch where active='t']]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="1822">
-                            <property name="fontSize">8pt</property>
+                            <property name="fontSize">7pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -5704,7 +5705,7 @@ from res_branch where active='t']]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="1823">
-                            <property name="fontSize">8pt</property>
+                            <property name="fontSize">7pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>

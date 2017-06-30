@@ -71,4 +71,4 @@ $BODY$
   COST 100
   ROWS 1000;
 ALTER FUNCTION calculate_cash_data(integer, integer, integer, date)
-  OWNER TO postgres;
+  OWNER TO odoo;

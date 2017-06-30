@@ -70,4 +70,4 @@ $BODY$
   COST 100
   ROWS 1000;
 ALTER FUNCTION calculate_credit_data(integer, integer, integer, date)
-  OWNER TO openerp;
+  OWNER TO odoo;
