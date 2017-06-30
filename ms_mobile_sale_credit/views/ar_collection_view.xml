@@ -40,6 +40,7 @@
 									<tree string="Payment Lines" editable="bottom">
 										<field name="date" />
 										<field name="journal_id" widget="selection" />
+										<field name="cheque_no" />
 										<field name="amount" sum="Price" />
 										<field name="notes" />
 									</tree>

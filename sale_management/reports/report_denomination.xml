@@ -4,7 +4,7 @@
 		<template id="report_denomination_document">
 			<t t-call="sale_management.custom_layout">
 				<div class="page" style="font-size:10pt;">
-					<table border="0" cellspacing="0" cellpadding="0"  width="100%">
+					<table border="0" cellspacing="0" cellpadding="0" width="100%">
 						<tbody>
 							<tr>
 								<td>
@@ -54,8 +54,9 @@
 															</td>
 														</tr>
 
-														<table t-if="o.denomination_product_line.sorted(key=lambda b: b.sequence)" class="table table-condensed"
-															style="border:1pt solid;">
+														<table
+															t-if="o.denomination_product_line.sorted(key=lambda b: b.sequence)"
+															class="table table-condensed" style="border:1pt solid;">
 															<h6 align="rignt">
 																<span class="text-right">
 																	<U>
@@ -317,13 +318,17 @@
 															<b>
 																<span>Different Amount:</span>
 																<span t-field="o.sign_diff_amount" />
-																<!-- <span t-field="o.sign" />
-																<span t-field="o.sign_amount"/> -->
+																<!-- <span t-field="o.sign" /> <span t-field="o.sign_amount"/> -->
 																<!-- <span t-field="o.diff_amount" /> -->
 
 															</b>
 														</h5>
-														
+														<h5 align="left">
+															<b>
+																<span>Note:</span>
+																<span t-field="o.note" />
+															</b>
+														</h5>
 														<table class="table table-condensed" style="border:0pt;">
 															<thead>
 																<tr>
@@ -383,8 +388,9 @@
 															</td>
 														</tr>
 
-														<table t-if="o.denomination_product_line.sorted(key=lambda b: b.sequence)" class="table table-condensed"
-															style="border:1pt solid;">
+														<table
+															t-if="o.denomination_product_line.sorted(key=lambda b: b.sequence)"
+															class="table table-condensed" style="border:1pt solid;">
 															<h6 align="left">
 																<span class="text-right">
 																	<U>
@@ -646,13 +652,17 @@
 																<!-- <span>Different Amount:</span> -->
 																<span>Different Amount:</span>
 																<span t-field="o.sign_diff_amount" />
-																<!-- <span t-field="o.sign" />
-																<span t-field="o.sign_amount"/> -->
+																<!-- <span t-field="o.sign" /> <span t-field="o.sign_amount"/> -->
 																<!-- <span t-field="o.diff_amount" /> -->
 
 															</b>
 														</h5>
-														
+														<h5 align="left">
+															<b>
+																<span>Note:</span>
+																<span t-field="o.note" />
+															</b>
+														</h5>
 														<table class="table table-condensed" style="border:0pt;">
 															<thead>
 																<tr>
