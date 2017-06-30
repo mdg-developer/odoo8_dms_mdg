@@ -233,10 +233,10 @@ this.queryText =this.queryText.replace("--$branch_id$", "and A.branch_id in ("+ 
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select * from (
-select aj.name,crm.code,ap.amount,u.login,crm.id,crm.branch_id from ar_payment ap , account_journal aj , crm_case_section crm ,res_users u 
+select aj.name,crm.code,ap.amount,cheque_no as login,crm.id,crm.branch_id from ar_payment ap , account_journal aj , crm_case_section crm ,res_users u 
 where ap.journal_id=aj.id and ap.sale_team_id=crm.id and u.id=ap.create_uid and payment_code='CHEQ' and ap.date=?
 union all
-select aj.name,crm.code,ap.amount,u.login,crm.id,crm.branch_id from customer_payment ap , account_journal aj , crm_case_section crm ,res_users u
+select aj.name,crm.code,ap.amount,cheque_no as login,crm.id,crm.branch_id from customer_payment ap , account_journal aj , crm_case_section crm ,res_users u
 where ap.journal_id=aj.id and ap.sale_team_id=crm.id and u.id=ap.create_uid and payment_code='CHEQ' and ap.date=?)A
 --$sales_team$ 
 --$branch_id$ 
@@ -927,7 +927,7 @@ order by crm.name]]></xml-property>
                             <property name="borderBottomWidth">thin</property>
                             <property name="borderRightStyle">solid</property>
                             <property name="borderRightWidth">thin</property>
-                            <property name="width">360px</property>
+                            <property name="width">245px</property>
                             <property name="content">
                                 <data id="284">
                                     <property name="borderBottomStyle">none</property>
@@ -1120,7 +1120,7 @@ order by crm.name]]></xml-property>
                                             <property name="borderBottomWidth">thin</property>
                                             <property name="borderRightStyle">solid</property>
                                             <property name="borderRightWidth">thin</property>
-                                            <property name="width">145px</property>
+                                            <property name="width">262px</property>
                                         </extended-item>
                                     </property>
                                 </extended-item>
@@ -1221,7 +1221,7 @@ order by crm.name]]></xml-property>
                             <property name="borderLeftStyle">none</property>
                             <property name="borderRightStyle">none</property>
                             <property name="borderTopStyle">none</property>
-                            <text-property name="text">Salesperson</text-property>
+                            <text-property name="text">Cheque No</text-property>
                         </label>
                     </property>
                     <property name="fontSize">11pt</property>

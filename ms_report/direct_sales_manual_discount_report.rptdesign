@@ -798,7 +798,7 @@ order by mso.name]]></xml-property>
                         <label id="687">
                             <property name="fontFamily">"Arial"</property>
                             <property name="fontWeight">bold</property>
-                            <text-property name="text">Product Discount Name</text-property>
+                            <text-property name="text">Principle Discount Name</text-property>
                         </label>
                     </cell>
                     <cell id="681">
