@@ -48,6 +48,7 @@ This module manages:
         'views/report_view.xml',
         'views/warehouse_report_view.xml',
         'views/all_report_url_view.xml',
+        'views/account_report_url_view.xml',
     ],
     'test' : [
     ],
