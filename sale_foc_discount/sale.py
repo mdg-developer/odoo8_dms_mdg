@@ -407,6 +407,7 @@ class sale_order(osv.osv):
             'section_id' : order.section_id.id,
             'deduct_amt':order.deduct_amt,
             'discount_total':order.total_dis,
+            'branch_id': order.branch_id.id,
         }
 
         # Care for deprecated _inv_get() hook - FIXME: to be removed after 6.1

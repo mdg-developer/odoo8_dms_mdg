@@ -294,6 +294,21 @@ class account_invoice(models.Model):
                     
                   }
     
-    
+# class stock_move(models.Model):
+#     _inherit = 'stock.move'
+#     
+#     def _prepare_picking_assign(self, cr, uid, move, context=None):
+#         """ Prepares a new picking for this move as it could not be assigned to
+#         another picking. This method is designed to be inherited.
+#         """
+#         values = {
+#             'origin': move.origin,
+#             'company_id': move.company_id and move.company_id.id or False,
+#             'move_type': move.group_id and move.group_id.move_type or 'direct',
+#             'partner_id': move.partner_id.id or False,
+#             'picking_type_id': move.picking_type_id and move.picking_type_id.id or False,
+#             'branch_id':move.branch_id.id,
+#             }
+#         return values    
 
      
