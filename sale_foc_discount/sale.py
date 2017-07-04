@@ -138,11 +138,11 @@ class sale_order_line(osv.osv):
                'discount_amt':fields.float('Discount (amt)',store=True, readonly=True),
                'sale_foc':fields.boolean('FOC', readonly=True),
               # 'show_amt':fields.function(_amount_line2,string='Total Discount(-)',readonly=True)
+              'product_type':fields.char('Product Type'),
                
                }
 
     _default = {
-        
         'discount': 0.0,
         'price_subtotal':0.0,
         'discount_amt':0.0,
