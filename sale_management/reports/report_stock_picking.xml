@@ -68,30 +68,31 @@
 									<span t-field="o.partner_id.customer_code" />
 								</td>
 								<td>
-									<b>Source</b>
+									<b>SO No</b>
 									<br />
 									<span t-field="o.name" />
 								</td>
 								<td>
-									<b>Delivery Remark</b>
-									<br />
-									<span t-field="o.move_type" />
-								</td>	
-								<td>
-									<b>State</b>
-									<br />
-									<span t-field="o.state" />
-								</td>
-								<td>
-									<b>Commitment Date</b>
+									<b>SO Date</b>
 									<br />
 									<span t-field="o.date" />
 								</td>
+								
+								<!-- <td>
+									<b>Status</b>
+									<br />
+									<span t-field="o.state" />
+								</td> -->
 								<td>
-									<b>Schedule Date</b>
+									<b>Delivery Date</b>
 									<br />
 									<span t-field="o.min_date" />
-								</td>						
+								</td>	
+								<td>
+									<b>Delivery Remark</b>
+									<br />
+									<span t-field="o.move_type" />
+								</td>					
 							</tr>
 						</table>
 	
