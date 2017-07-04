@@ -41,10 +41,11 @@
 			<div class="header">
 				<div class="row" align="center">
 					<span>
-						<img src="/sale_management/static/description/IEM_Header.png"
-						style="max-height: 700pt;width:500px;" />
+						<img src="/sale_management/static/description/RB_Logo.png"
+						/>
+						<hr width="100%" style="height:13px;background-color:black;"></hr>
 					</span>
-					<hr width="100%" style="height:13px;background-color:black;"></hr>
+					
 				</div>
 			</div>
 		</template>
