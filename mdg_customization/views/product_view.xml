@@ -21,16 +21,24 @@
 			<field name="model">product.template</field>
 			<field name="inherit_id" ref="product.product_template_tree_view" />
 			<field name="arch" type="xml">
-				<field name="categ_id" position="replace">
-					<field name="categ_id" string="Category" />
+				<field name="name" position="before">
+					<field name="default_code"/>
+				</field>
+				<field name="type" position="before">
+					<field name="group"/>
+					<field name="division"/>
+					<field name="main_group"/>	
+					<field name="uom_id" string="Unit Of Measure" />				
 				</field>
 
-				<field name="categ_id" position="after">
-					<field name="uom_id" string="UOM" />
-					<field name="list_price" string="Price" />
+				<field name="type" position="after">					
+					<field name="list_price" string="Sale Price" />			
 				</field>
 				<field name="type" position="replace">
-					<field name="type" invisible="1" />
+					<field name="type"/>
+				</field>
+				<field name="categ_id" position="replace">
+					<field name="categ_id" string="Internal Category"/>
 				</field>
 				<field name="state" position="replace">
 					<field name="state" invisible="1" />
