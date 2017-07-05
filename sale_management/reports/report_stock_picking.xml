@@ -38,7 +38,7 @@
 								<table class="table" style="border:solid;border-color:white;">
 									<tr style="margin-top:-30pt;border:solid;border-color:white;">
 										<td style="font-size:20pt;" colspan="4">
-											<span t-field="o.picking_type_id" /> : 
+										<!-- <span t-field="o.picking_type_id" /> :  -->	
 											<span t-field="o.name" />
 										</td>
 									</tr>
@@ -70,7 +70,7 @@
 								<td>
 									<b>SO No</b>
 									<br />
-									<span t-field="o.name" />
+									<span t-field="o.origin" />
 								</td>
 								<td>
 									<b>SO Date</b>
