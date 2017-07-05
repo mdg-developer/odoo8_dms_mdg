@@ -880,7 +880,7 @@ order by crm.name]]></xml-property>
             <property name="borderLeftStyle">none</property>
             <property name="borderRightStyle">none</property>
             <property name="borderTopStyle">none</property>
-            <property name="width">7.447916666666667in</property>
+            <property name="width">7.71875in</property>
             <property name="dataSet">Data Set</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -937,7 +937,7 @@ order by crm.name]]></xml-property>
             <column id="739"/>
             <column id="740"/>
             <column id="741">
-                <property name="width">1.3645833333333333in</property>
+                <property name="width">1.6354166666666667in</property>
             </column>
             <header>
                 <row id="719">

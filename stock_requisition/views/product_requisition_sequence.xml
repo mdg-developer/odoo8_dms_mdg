@@ -1,7 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data>
+		<record id="product_picking_sequence" model="ir.sequence.type">
+			<field name="name">Stock Picking Sequence</field>
+			<field name="code">picking.code</field>
+		</record>
 
+		<record id="product_picking_seq" model="ir.sequence">
+			<field name="name">Stock Picking Sequence</field>
+			<field name="code">picking.code</field>
+			<field name="prefix">DO/%(year)s/</field>
+			<field name="padding">7</field>
+		</record>
+	    
+	    
+	    
 		<record id="product_req_sequence" model="ir.sequence.type">
 			<field name="name">Stock Request Sequence</field>
 			<field name="code">request.code</field>
