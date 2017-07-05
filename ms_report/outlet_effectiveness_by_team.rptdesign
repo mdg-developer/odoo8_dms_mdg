@@ -47,7 +47,7 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
         <scalar-parameter name="user_id" id="131" extends="report_library.user_id"/>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="116"
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="676"
  extends="report_library.Data Source"/>
     </data-sources>
     <data-sets>
@@ -625,6 +625,75 @@ order by code)A
  extends="report_library.Sale_Team"/>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="users" id="128"
  extends="report_library.users"/>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="param_sales_team" id="675">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">string_agg</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">string_agg</text-property>
+                    <text-property name="heading">string_agg</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters"/>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">string_agg</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <method name="beforeOpen"><![CDATA[this.queryText =this.queryText.replace("--$branch_id$", "and branch_id in ("+ params["branch_id"].value.join(",")+")")
+this.queryText =this.queryText.replace("--$sales_team$", "and id in ("+ params["sales_team_id"].value.join(",")+")")]]></method>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">string_agg</property>
+                    <property name="nativeName">string_agg</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select string_agg(distinct(name), ',')
+from crm_case_section 
+where 1=1
+--$sales_team$
+--$branch_id$]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>string_agg</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>2147483647</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>string_agg</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>string_agg</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
     </data-sets>
     <styles>
         <style name="report" id="4">
@@ -669,7 +738,6 @@ order by code)A
                 <ref-entry baseId="40" id="109"/>
                 <ref-entry baseId="41" id="110"/>
                 <ref-entry baseId="42" id="111"/>
-                <ref-entry baseId="58" name="NewImage" id="58"/>
                 <ref-entry baseId="43" id="112"/>
                 <ref-entry baseId="59" name="NewData" id="59"/>
                 <ref-entry baseId="44" id="113"/>
@@ -765,71 +833,21 @@ order by code)A
                 </row>
             </footer>
         </table>
-        <table id="658">
-            <property name="width">8in</property>
-            <property name="dataSet">Sale_Team</property>
+        <data id="677">
+            <property name="fontSize">12pt</property>
+            <property name="fontWeight">bold</property>
+            <property name="textAlign">center</property>
+            <property name="dataSet">param_sales_team</property>
             <list-property name="boundDataColumns">
                 <structure>
-                    <property name="name">id</property>
-                    <text-property name="displayName">id</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["id"]</expression>
-                    <property name="dataType">integer</property>
-                </structure>
-                <structure>
-                    <property name="name">name</property>
-                    <text-property name="displayName">name</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["name"]</expression>
+                    <property name="name">string_agg</property>
+                    <text-property name="displayName">string_agg</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["string_agg"]</expression>
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
-            <column id="668"/>
-            <column id="669"/>
-            <header>
-                <row id="659">
-                    <cell id="660">
-                        <data id="670">
-                            <property name="fontSize">12pt</property>
-                            <property name="fontWeight">bold</property>
-                            <list-property name="visibility">
-                                <structure>
-                                    <property name="format">all</property>
-                                    <expression name="valueExpr" type="javascript">true</expression>
-                                </structure>
-                            </list-property>
-                            <property name="resultSetColumn">id</property>
-                        </data>
-                    </cell>
-                    <cell id="661">
-                        <data id="671">
-                            <property name="fontSize">12pt</property>
-                            <property name="fontWeight">bold</property>
-                            <list-property name="visibility">
-                                <structure>
-                                    <property name="format">all</property>
-                                    <expression name="valueExpr" type="javascript">true</expression>
-                                </structure>
-                            </list-property>
-                            <property name="resultSetColumn">name</property>
-                        </data>
-                    </cell>
-                </row>
-            </header>
-            <footer>
-                <row id="665">
-                    <cell id="666">
-                        <property name="colSpan">2</property>
-                        <property name="rowSpan">1</property>
-                        <text-data id="674">
-                            <property name="fontSize">12pt</property>
-                            <property name="fontWeight">bold</property>
-                            <property name="textAlign">center</property>
-                            <expression name="valueExpr">teamList;</expression>
-                            <property name="contentType">html</property>
-                        </text-data>
-                    </cell>
-                </row>
-            </footer>
-        </table>
+            <property name="resultSetColumn">string_agg</property>
+        </data>
         <data id="103">
             <property name="fontSize">12pt</property>
             <property name="fontWeight">bold</property>

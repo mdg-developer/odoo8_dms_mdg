@@ -572,73 +572,7 @@ from result]]></xml-property>
                 </cell>
             </row>
             <row id="107">
-                <cell id="108">
-                    <table id="658">
-                        <property name="width">8in</property>
-                        <property name="dataSet">Sale_Team</property>
-                        <list-property name="boundDataColumns">
-                            <structure>
-                                <property name="name">id</property>
-                                <text-property name="displayName">id</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["id"]</expression>
-                                <property name="dataType">integer</property>
-                            </structure>
-                            <structure>
-                                <property name="name">name</property>
-                                <text-property name="displayName">name</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["name"]</expression>
-                                <property name="dataType">string</property>
-                            </structure>
-                        </list-property>
-                        <column id="668"/>
-                        <column id="669"/>
-                        <header>
-                            <row id="659">
-                                <cell id="660">
-                                    <data id="670">
-                                        <property name="fontSize">12pt</property>
-                                        <property name="fontWeight">bold</property>
-                                        <list-property name="visibility">
-                                            <structure>
-                                                <property name="format">all</property>
-                                                <expression name="valueExpr" type="javascript">true</expression>
-                                            </structure>
-                                        </list-property>
-                                        <property name="resultSetColumn">id</property>
-                                    </data>
-                                </cell>
-                                <cell id="661">
-                                    <data id="671">
-                                        <property name="fontSize">12pt</property>
-                                        <property name="fontWeight">bold</property>
-                                        <list-property name="visibility">
-                                            <structure>
-                                                <property name="format">all</property>
-                                                <expression name="valueExpr" type="javascript">true</expression>
-                                            </structure>
-                                        </list-property>
-                                        <property name="resultSetColumn">name</property>
-                                    </data>
-                                </cell>
-                            </row>
-                        </header>
-                        <footer>
-                            <row id="665">
-                                <cell id="666">
-                                    <property name="colSpan">2</property>
-                                    <property name="rowSpan">1</property>
-                                    <text-data id="674">
-                                        <property name="fontSize">12pt</property>
-                                        <property name="fontWeight">bold</property>
-                                        <property name="textAlign">center</property>
-                                        <expression name="valueExpr">teamList;</expression>
-                                        <property name="contentType">html</property>
-                                    </text-data>
-                                </cell>
-                            </row>
-                        </footer>
-                    </table>
-                </cell>
+                <cell id="108"/>
             </row>
             <row id="100">
                 <cell id="101">
