@@ -118,6 +118,7 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
             </structure>
             <method name="beforeOpen"><![CDATA[this.queryText =this.queryText.replace("--$sales_team$", "and ai.section_id in ("+ params["sales_team_id"].value.join(",")+")")
 this.queryText =this.queryText.replace("--$branch_id$", "and ai.branch_id in ("+ params["branch_id"].value.join(",")+")")]]></method>
+            <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
@@ -307,6 +308,7 @@ order by rp.name,pp.name_template
             </structure>
             <method name="beforeOpen"><![CDATA[this.queryText =this.queryText.replace("--$sales_team$", "and ai.section_id in ("+ params["sales_team_id"].value.join(",")+")")
 this.queryText =this.queryText.replace("--$branch_id$", "and ai.branch_id in ("+ params["branch_id"].value.join(",")+")")]]></method>
+            <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
@@ -583,6 +585,21 @@ and date_invoice between ? and ?
             </row>
             <row id="133">
                 <cell id="135">
+                    <data id="677">
+                        <property name="fontSize">12pt</property>
+                        <property name="fontWeight">bold</property>
+                        <property name="textAlign">center</property>
+                        <property name="dataSet">param_sales_team</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">string_agg</property>
+                                <text-property name="displayName">string_agg</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["string_agg"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">string_agg</property>
+                    </data>
                     <data id="125">
                         <property name="fontSize">12pt</property>
                         <property name="fontWeight">bold</property>
