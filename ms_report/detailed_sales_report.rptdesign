@@ -1480,6 +1480,20 @@ where date_invoice between ? and ?
 else
 {     
    this.queryText =this.queryText.replace("--$sales_team$", "and section_id in ("+params["sales_team_id"].value.join(",")+")")
+}
+if (params["branch_id"].value == null ){     
+   this.queryText =this.queryText.replace("--$branch$", "")
+}
+else
+{     
+   this.queryText =this.queryText.replace("--$branch$", "and ai.branch_id in ("+params["branch_id"].value.join(",")+")")
+}
+if (params["payment_type"].value == null ){     
+   this.queryText =this.queryText.replace("--$payment_type$", "")
+}
+else
+{     
+   this.queryText =this.queryText.replace("--$payment_type$", "and payment_type='"+params["payment_type"]+"'")
 }]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
@@ -1495,7 +1509,9 @@ else
 from account_invoice ai,crm_case_section ccs
 where ai.section_id=ccs.id
 and date_invoice between ? and ?
---$sales_team$]]></xml-property>
+--$sales_team$
+--$branch$
+--$payment_type$]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
