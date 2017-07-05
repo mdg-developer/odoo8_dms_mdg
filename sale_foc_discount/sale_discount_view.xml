@@ -36,7 +36,7 @@
 				<xpath
 					expr="//form/sheet/notebook/page/field/tree/field[@name='price_unit']"
 					position="replace">
-					<field name="product_type"/>
+					<field name="product_type" invisible="1"/>
 					<field name="price_unit"  attrs="{'readonly':[('product_type','!=','service')]}" />
 				</xpath>
 				<xpath
