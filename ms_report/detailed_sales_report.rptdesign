@@ -671,7 +671,7 @@ sale_qty as (
 	order by rp.name,pp.sequence),
 total_amt as (
 	select rp.id customer,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,0,'Total Amt.'::character varying name_template,0,0,0,0,0,
-	round((amount_untaxed-discount_total)+(discount_total*2),0) as product_quantity,''::text as status,2::int as seq	
+	round((amount_untaxed-discount_total),0) as product_quantity,''::text as status,2::int as seq
 	from account_invoice ai,res_partner rp,res_township rt,crm_case_section ccs
 	where ai.partner_id=rp.id	
 	and rp.township=rt.id	
@@ -1601,7 +1601,6 @@ where date_invoice between ? and ?
                 <property name="width">3.4583333333333335in</property>
             </column>
             <row id="427">
-                <property name="height">2px</property>
                 <cell id="428">
                     <property name="colSpan">2</property>
                     <property name="rowSpan">1</property>
@@ -1624,7 +1623,6 @@ where date_invoice between ? and ?
                 </cell>
             </row>
             <row id="421">
-                <property name="height">2px</property>
                 <cell id="422">
                     <property name="colSpan">2</property>
                     <property name="rowSpan">1</property>
@@ -1652,7 +1650,6 @@ else&#13;
                 </cell>
             </row>
             <row id="433">
-                <property name="height">2px</property>
                 <cell id="434">
                     <property name="colSpan">2</property>
                     <property name="rowSpan">1</property>
@@ -1676,7 +1673,6 @@ else&#13;
                         <column id="625"/>
                         <detail>
                             <row id="618">
-                                <property name="height">1px</property>
                                 <cell id="619">
                                     <property name="fontFamily">"Arial"</property>
                                     <property name="fontSize">11pt</property>
@@ -1729,7 +1725,6 @@ else&#13;
                 </cell>
             </row>
             <row id="424">
-                <property name="height">2px</property>
                 <cell id="425">
                     <property name="colSpan">2</property>
                     <property name="rowSpan">1</property>
@@ -1753,7 +1748,6 @@ else&#13;
                         <column id="671"/>
                         <detail>
                             <row id="662">
-                                <property name="height">1px</property>
                                 <cell id="663">
                                     <property name="fontFamily">"Arial"</property>
                                     <property name="fontSize">11pt</property>
