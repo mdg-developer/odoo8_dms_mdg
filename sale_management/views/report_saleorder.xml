@@ -137,6 +137,7 @@
 									<th class="text-center" style="border:1pt solid;border-color:black;">Description
 									</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Uom</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Unit Price</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Total Price</th>
 									<th style="border:1pt solid;border-color:black;" class="text-center"
@@ -159,6 +160,8 @@
 									</td>
 									<td style="border:1pt solid;border-color:black;" align="right">
 										<span t-field="l.product_uom_qty" />
+									</td>
+									<td class="text-right" style="border:1pt solid;border-color:black;">
 										<span t-field="l.product_uom" groups="product.group_uom" />
 									</td>
 									<td class="text-right" style="border:1pt solid;border-color:black;">
@@ -198,30 +201,33 @@
 							</div>
 							<div class="col-xs-4 pull-right">
 								<table class="table">
-<!-- 									<tr> -->
-<!-- 										<td style="border-top-color:white;padding-bottom: 2mm;"> -->
-<!-- 											Sub Total -->
-<!-- 										</td> -->
-<!-- 										<td class="text-right" style="border-top-color:white;padding-bottom: 2mm;"> -->
-<!-- 											<span t-field="o.amount_untaxed" /> -->
-<!-- 										</td> -->
-<!-- 									</tr> -->
-<!-- 									<tr class="border-black"> -->
-<!-- 										<td style="padding-top: 2mm;padding-bottom: 2mm;"> -->
-<!-- 											Total Discount -->
-<!-- 										</td> -->
-<!-- 										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;"> -->
-<!-- 											<span t-field="o.total_dis" /> -->
-<!-- 										</td> -->
-<!-- 									</tr> -->
-<!-- 									<tr class="border-black"> -->
-<!-- 										<td style="padding-top: 2mm;padding-bottom: 2mm;"> -->
-<!-- 											Deduction Amount -->
-<!-- 										</td> -->
-<!-- 										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;"> -->
-<!-- 											<span t-field="o.deduct_amt" /> -->
-<!-- 										</td> -->
-<!-- 									</tr> -->
+									<!-- <tr> -->
+									<!-- <td style="border-top-color:white;padding-bottom: 2mm;"> -->
+									<!-- Sub Total -->
+									<!-- </td> -->
+									<!-- <td class="text-right" style="border-top-color:white;padding-bottom: 
+										2mm;"> -->
+									<!-- <span t-field="o.amount_untaxed" /> -->
+									<!-- </td> -->
+									<!-- </tr> -->
+									<!-- <tr class="border-black"> -->
+									<!-- <td style="padding-top: 2mm;padding-bottom: 2mm;"> -->
+									<!-- Total Discount -->
+									<!-- </td> -->
+									<!-- <td class="text-right" style="padding-top: 2mm;padding-bottom: 
+										2mm;"> -->
+									<!-- <span t-field="o.total_dis" /> -->
+									<!-- </td> -->
+									<!-- </tr> -->
+									<!-- <tr class="border-black"> -->
+									<!-- <td style="padding-top: 2mm;padding-bottom: 2mm;"> -->
+									<!-- Deduction Amount -->
+									<!-- </td> -->
+									<!-- <td class="text-right" style="padding-top: 2mm;padding-bottom: 
+										2mm;"> -->
+									<!-- <span t-field="o.deduct_amt" /> -->
+									<!-- </td> -->
+									<!-- </tr> -->
 									<tr>
 										<td style="padding-top: 2mm;padding-bottom: 2mm;">
 											<strong>Net Amount</strong>
@@ -235,7 +241,8 @@
 						</div>
 						<div class="row" style="padding-top:-2s0pt;width:500px;">
 							<div class="col-xs-4 pull-left" style="width:250px;" align="left">
-								<table class="table" style='border:solid;border-color:white;' align="left">
+								<table class="table" style='border:solid;border-color:white;'
+									align="left">
 									<tr style='border:solid;border-color:white;'>
 										<td style="margin-top:-10pt;" align="left">
 											<span>
@@ -254,7 +261,8 @@
 							</div>
 
 							<div class="col-xs-2 pull-left" style="width:250px;" align="right">
-								<table class="table" style='border:solid;border-color:white;' align="right">
+								<table class="table" style='border:solid;border-color:white;'
+									align="right">
 									<tr style='border:solid;border-color:white;'>
 										<td style="margin-top:-10pt;" align="left">
 											<span>
