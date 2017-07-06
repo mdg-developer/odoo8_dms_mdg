@@ -61,7 +61,7 @@ class mobile_sale_order(osv.osv):
         'balance':fields.float('Balance'),
         'paid_amount':fields.float('Paid Amount'),
         'paid':fields.boolean('Paid'),
-        'direct_credit':fields.boolean('Direct Credit'),
+        #'direct_credit':fields.boolean('Direct Credit'), #disable bcz it is not use anymore !!! (Htoo 6.7.2017)
         'void_flag':fields.selection([
                 ('voided', 'Voided'),
                 ('none', 'Unvoid')
@@ -293,10 +293,10 @@ class mobile_sale_order(osv.osv):
                         product_trans_obj.action_convert_ep(cursor, user, [s_order_id], context=context)
 
                                     
-            print 'Truwwwwwwwwwwwwwwwwwwwwwe'
+            print 'Stock exchange successfully sync !!!'
             return True       
         except Exception, e:
-            print 'False'
+            print 'Stock exchange does not successfully sync !!! Because your code is suck !!!'
             return False 
     
     def create_visit(self, cursor, user, vals, context=None):
@@ -1987,37 +1987,43 @@ class mobile_sale_order(osv.osv):
                     chiller = False;
                     if 'chiller' in partner:
                         chiller = partner['chiller']
-                    partner_result = {                 
-                        'country_id':partner['country_id'],
-                        'state_id':partner['state_id'],
-                        'city':partner['city'],
+                    partner_result = {  
+                        'sales_channel':partner['sales_channel'],
+                        'image':partner['image'],
                         'street':partner['street'],
-                        'street2':partner['street2'],
-                        'display_name':partner['name'],
-                        'name':partner['name'],
-                        'email':partner['email'],
+                        'partner_latitude':partner['partner_latitude'],
+                        'unit':partner['unit'],
+                        'city':partner['city'],
+                        'frequency_id':partner['frequency_id'],
+                        'country_id':partner['country_id'],
+                        'company_id':partner['company_id'],
+                        'pricelist_id':partner['pricelist_id'],
+                        'outlet_type':partner['outlet_type'],
                         'is_company':True,
-                        'customer':True,
-                        'employee':False,
+                        'customer_code':partner['customer_code'],
+                        'branch_id':partner['branch_id'],
+                        'street2':partner['street2'],
                         'phone':partner['phone'],
                         'mobile':partner['mobile'],
-                        'notify_email':'always',
-                        'township':partner['township'],
-                        'partner_latitude':partner['partner_latitude'],
                         'partner_longitude':partner['partner_longitude'],
-                        'branch_id':partner['branch_id'],
-                        'outlet_type':partner['outlet_type'],
-                        'customer_code':partner['customer_code'],
+                        'township':partner['township'],
+                        'name':partner['name'],
+                        'temp_customer':partner['temp_customer'],
+                        'email':partner['email'],
                         'class_id':partner['class_id'],
+                        'state_id':partner['state_id'],
+                        
+                        'display_name':partner['name'],
+                        'customer':True,
+                        'employee':False,
+                        'notify_email':'always',
                         'mobile_customer':True,
-                        'pricelist_id':partner['pricelist_id'],
                         'chiller':chiller,
                         'unit':partner['unit'],
-                        'image':partner['image'],
-                        'sales_channel':partner['sales_channel'],
-                        'temp_customer':partner['temp_customer'],
-                        'frequency_id':partner['frequency_id'],
+                        'section_id':partner['section_id'],
+                        
                     }
+                    
                     partner_id = partner_obj.create(cursor, user, partner_result, context=context)
             return partner_id
         except Exception, e:
