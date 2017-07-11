@@ -323,6 +323,8 @@
 						<field name="class_id" />
 						<field name="sales_channel" string="Sales Channel" />
 						<field name="section_id" string="Sales Teams" />
+						<field name="partner_latitude" />
+						<field name="partner_longitude" />
 
 					</xpath>
 					<xpath expr="//field[@name='phone']" position="replace">
