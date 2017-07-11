@@ -516,11 +516,11 @@ class partner(osv.osv):
                 value = {
                        'customer_code':customer_code,
                        'shop_name':shop_name,
-                       'address':address,
+                       'street':address,
                        'street':street,
                        'outlet_type':shop_ids,
                        'territory':territory,
-                        'township':township_id,
+                       'township':township_id,
                        'village':village,
                        'phone':phone,
                        'brand':brand,
@@ -551,7 +551,8 @@ class partner(osv.osv):
                     if customer_code:
                         cr.execute("""select id from res_partner where lower(customer_code) like %s""", (customer_code.lower(),))
                         data = cr.fetchall()
-                        partner_id = data[0][0]
+                        if data:
+                            partner_id = data[0][0]
                     if not partner_id:
                         try:
                             if customer_code:
