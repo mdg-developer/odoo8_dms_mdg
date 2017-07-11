@@ -100,7 +100,8 @@
 							<field name="product_id" on_change="product_id_change(product_id)" />
 							<field name="name" invisible="1" />
 							<field name="base" invisible="1" />
-							<field name="categ_id" invisible="1" />
+							<field name="categ_id"/>
+							<field name="min_quantity"/>
 							<field name="product_tmpl_id" invisible="1" />
 							<!-- <field name="product_uom_id" /> -->
 							<field name="list_price" />
@@ -174,6 +175,10 @@
 						</group>
 					</group>
 				</xpath>
+				<xpath expr="//field[@name='currency_id']" position="after">
+				    <field name="branch_id" />
+				    <field name="sales_channel" />
+				</xpath>
 			</field>
 		</record>
 
@@ -184,6 +189,8 @@
 			<field name="arch" type="xml">
 				<xpath expr="//field[@name='name']" position="after">
 					<field name="main_group_id" />
+					<field name="branch_id" />
+					<field name="sales_channel" />
 				</xpath>
 			</field>
 		</record>
