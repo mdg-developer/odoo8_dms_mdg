@@ -30,6 +30,9 @@
  ],
  'init_xml': [],
  'data': [
+          'wizard/add_customer_view.xml',
+          'views/sale_plan_day_setting_view.xml',
+          'views/sale_plan_trip_setting_view.xml',
         'views/sale_plan_day_view.xml',
         'views/sale_plan_trip_view.xml',
  ],

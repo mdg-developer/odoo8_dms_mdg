@@ -9,6 +9,7 @@ class res_code(osv.osv):
                'nextnumber':fields.integer(string='Next Number'),
                'padding':fields.integer(string='Padding')
                }
+    
     def generateCode(self, cr, uid, ids, context=None):
         code = city = township = sale_channel = nextNumber = padding = updateNumber = None
         if ids:

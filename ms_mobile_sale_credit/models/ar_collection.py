@@ -1,5 +1,19 @@
 from openerp.osv import fields, osv
 
+class ar_payment(osv.osv):
+    _name = "ar.payment"
+    _columns = {               
+                   'collection_id':fields.many2one('mobile.ar.collection', 'Line'),
+                   'journal_id'  : fields.many2one('account.journal', 'Payment Method' ,domain=[('type','in',('cash','bank'))]),      
+                   'amount':fields.float('Paid Amount'),
+                   'notes':fields.char('Payment Ref'),
+                   'date':fields.date('Date'),
+                   'cheque_no':fields.char('Cheque No'),
+                   'partner_id':fields.many2one('res.partner', 'Customer'),
+                   'sale_team_id':fields.many2one('crm.case.section', 'Sale Team'),
+                   'payment_code':fields.char('Payment Code'),
+        }    
+    
 class mobile_ar_collection(osv.osv):
     _name = "mobile.ar.collection"
     _description = "AR Collections"
@@ -19,12 +33,15 @@ class mobile_ar_collection(osv.osv):
                 'payment_amount':fields.float('Payment'),
                 'so_amount':fields.float('Sale Order Amount'),
                 'credit_limit':fields.float('Credit Limit'),
+                'payment_line_ids':fields.one2many('ar.payment', 'collection_id', 'Payment Lines'),
+                'state':fields.selection([('draft', 'Draft'), ('done', 'Done')], 'Status',readonly=True),
     }
     _defaults = {
+                 'state' : 'draft',
                
     }
+    
     def get_ar_collections_datas(self, cr, uid, todayDateNormal, creditPaymentList, saleOrderNoList, context=None, **kwargs):
-        print "crdit payment list", creditPaymentList
         ar_collection_obj = self.pool.get('mobile.ar.collection')
         list_val = None
         list_val = ar_collection_obj.search(cr, uid, [('date', '>', todayDateNormal), ('ref_no', 'not in', creditPaymentList), ('so_ref', 'in', saleOrderNoList)])

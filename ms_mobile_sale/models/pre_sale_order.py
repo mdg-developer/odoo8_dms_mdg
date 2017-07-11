@@ -1,6 +1,6 @@
 from openerp.osv import fields, osv
 from openerp.osv import orm
-from openerp import _
+from openerp.tools.translate import _
 from datetime import datetime
 import ast
 
@@ -18,12 +18,19 @@ class pre_sale_order(osv.osv):
         'mso_latitude':fields.float('Geo Latitude'),
         'mso_longitude':fields.float('Geo Longitude'),
         'amount_total':fields.float('Total Amount'),
+        'type':fields.selection([
+                ('credit', 'Credit'),
+                ('cash', 'Cash'),
+                ('consignment', 'Consignment'),
+                ('advanced', 'Advanced')
+            ], 'Payment Type'),
         'delivery_remark':fields.selection([
                 ('partial', 'Partial'),
                 ('delivered', 'Delivered'),
                 ('none', 'None')
             ], 'Deliver Remark'),
         'date':fields.datetime('Date'),
+		'due_date':fields.date('Due Date'),
         'note':fields.text('Note'),
         'order_line': fields.one2many('pre.sale.order.line', 'order_id', 'Order Lines', copy=True),
         'delivery_order_line': fields.one2many('pre.products.to.deliver', 'sale_order_id', 'Delivery Order Lines', copy=True),
@@ -35,13 +42,21 @@ class pre_sale_order(osv.osv):
         'location_id'  : fields.many2one('stock.location', 'Location'),
         'deduction_amount':fields.float('Deduction Amount'),
         'm_status':fields.selection([('draft', 'Draft'),
+                                     
                                                       ('done', 'Complete')], string='Status'),
-     'promos_line_ids':fields.one2many('pre.promotion.line', 'promo_line_id', 'Promotion Lines')                
+     'promos_line_ids':fields.one2many('pre.promotion.line', 'promo_line_id', 'Promotion Lines'),
+     'pricelist_id': fields.many2one('product.pricelist', 'Price List', select=True, ondelete='cascade'),
+       'payment_line_ids':fields.one2many('customer.payment', 'pre_order_id', 'Payment Lines'),
+      'branch_id': fields.many2one('res.branch', 'Branch', required=True),
+             'void_flag':fields.selection([
+                ('voided', 'Voided'),
+                ('none', 'Unvoid')
+            ], 'Void'),
     }
     _order = 'id desc'
     _defaults = {
         'date': datetime.now(),
-        'm_status' : 'draft'
+        'm_status' : 'draft',
        
     }
     
@@ -49,6 +64,7 @@ class pre_sale_order(osv.osv):
         print 'vals', vals
         sale_order_name_list = []
         try : 
+            saleManId = branch_id = None
             mobile_sale_order_obj = self.pool.get('pre.sale.order')
             mobile_sale_order_line_obj = self.pool.get('pre.sale.order.line')
             str = "{" + vals + "}"
@@ -73,19 +89,23 @@ class pre_sale_order(osv.osv):
             if sale_order:
                 for so in sale_order:
                     print 'Sale Man Id', so['user_id']
-                    cursor.execute('select id From res_users where partner_id  = %s ', (so['user_id'],))
+                    cursor.execute('select id,branch_id From res_users where id  = %s ', (so['user_id'],))
                     data = cursor.fetchall()
+                    
                     if data:
                         saleManId = data[0][0]
+                        branch_id = data[0][1]
                     else:
-                        saleManId = None
+                        saleManId = None						 
+						 
                     cursor.execute('select id From res_partner where customer_code  = %s ', (so['customer_code'],))
                     data = cursor.fetchall()                
                     if data:
                         partner_id = data[0][0]
+                       
                     else:
                         partner_id = None
-						
+
                     mso_result = {
                         'customer_code':so['customer_code'],
                         'paid': True,
@@ -95,14 +115,19 @@ class pre_sale_order(osv.osv):
                         'location_id':so['location_id'],
                         'user_id':so['user_id'],
                         'name':so['name'],
+                        'type':so['type'],
                         'partner_id':partner_id,
                         'sale_plan_name':so['sale_plan_day_name'],
                         'amount_total':so['amount_total'],
                         'sale_team':so['sale_team'],
                         'date':so['date'],
+						'due_date':so['due_date'],
+						'void_flag':so['void_flag'],
                         'sale_plan_day_id':so['sale_plan_day_id'],
                         'mso_longitude':so['mso_longitude'],
-                        'mso_latitude':so['mso_latitude']
+                        'mso_latitude':so['mso_latitude'],
+                        'pricelist_id':so['pricelist_id'],
+                        'branch_id':branch_id,
                     }
                     s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
                     print "Create Sale Order", so['name']
@@ -127,6 +152,7 @@ class pre_sale_order(osv.osv):
                                   'discount':sol['discount'],
                                   'discount_amt':sol['discount_amt'],
                                   'sub_total':sol['sub_total'],
+                                  'uom_id':sol['uom_id']
                                 }
                                 mobile_sale_order_line_obj.create(cursor, user, mso_line_res, context=context) 
                                 print 'Create Order line', sol['so_name']                     
@@ -149,19 +175,33 @@ class pre_sale_order(osv.osv):
         if ids:
             try:
                 # default price list need in sale order form
-                cr.execute("""select id from product_pricelist""")
-                data = cr.fetchall()
-                if data:
-                    pricelist_id = data[0][0]
+#                 cr.execute("""select id from product_pricelist""")
+#                 data = cr.fetchall()
+#                 if data:
+#                     pricelist_id = data[0][0]
                 for preObj_ids in presaleorderObj.browse(cr, uid, ids[0], context=context):
                     if preObj_ids:
-                        print 'pricelist_id', pricelist_id
+                        print 'Sale Team', preObj_ids.sale_team
+                        cr.execute('select delivery_team_id from crm_case_section where id = %s ', (preObj_ids.sale_team.id,))
+                        data = cr.fetchall()
+                        if data:
+                            delivery_id = data[0][0]
+                        else:
+                            delivery_id = None
+                        cr.execute('select company_id from res_users where id=%s', (preObj_ids.user_id.id,))
+                        company_id = cr.fetchone()[0]
+                        if preObj_ids.void_flag == 'voided':  # they work while payment type not 'cash' and 'credit'
+                            so_state = 'cancel'
+                        elif preObj_ids.void_flag == 'none':
+                            so_state = 'manual'
+                        print 'so_ssssssssssssstae',so_state
                         saleOrderResult = {'partner_id':preObj_ids.partner_id.id,
                                                         'customer_code':preObj_ids.customer_code,
                                                         'sale_plan_name':preObj_ids.sale_plan_name,
                                                         'sale_plan_day_id':preObj_ids.sale_plan_day_id.id,
                                                         'sale_plan_trip_id':preObj_ids.sale_plan_trip_id.id,
                                                         'date_order':preObj_ids.date,
+														'due_date':preObj_ids.due_date,
                                                         'tb_ref_no':preObj_ids.name,
                                                         'warehouse_id':preObj_ids.warehouse_id.id,
                                                         'delivery_remark':preObj_ids.delivery_remark,
@@ -170,9 +210,15 @@ class pre_sale_order(osv.osv):
                                                         'user_id':preObj_ids.user_id.id,
                                                         'section_id':preObj_ids.sale_team.id,
                                                         'deduct_amt':preObj_ids.deduction_amount,
+                                                        'additional_discount':0,
 #                                                         'client_order_ref':preObj_ids.tablet_id.name,
-                                                        'state':'draft',
-                                                        'pricelist_id':pricelist_id
+                                                         'state':so_state,
+                                                         'payment_type':preObj_ids.type,
+                                                        'pricelist_id':preObj_ids.pricelist_id.id,
+                                                        'pre_order':True,
+                                                        'delivery_id':delivery_id,
+                                                        'branch_id':preObj_ids.branch_id.id,
+                                                        'company_id':company_id,
                                                          }
                         so_id = saleOrderObj.create(cr, uid, saleOrderResult, context=context)
                     if so_id and preObj_ids.order_line:
@@ -191,15 +237,21 @@ class pre_sale_order(osv.osv):
                                 detailResult = {'order_id':so_id,
                                                         'product_id':line_id.product_id.id,
                                                         'name':productName,
+                                                        'product_uom':line_id.uom_id.id,
                                                         'product_uom_qty':line_id.product_uos_qty,
                                                         'discount':line_id.discount,
                                                         'discount_amt':line_id.discount_amt,
                                                         'sale_foc':sale_foc,
                                                         'price_unit':priceUnit,
+                                                        'company_id':company_id,  # company_id,
                                                         }   
                                 saleOrderLineObj.create(cr, uid, detailResult, context=context)
-                    if so_id:
+                    if so_id and  so_state != 'cancel':
                         saleOrderObj.button_dummy(cr, uid, [so_id], context=context)
+                        # Do Open
+                        saleOrderObj.action_button_confirm(cr, uid, [so_id], context=context)
+                        
+                        
             except Exception, e:
                 raise orm.except_orm(_('Error :'), _("Error Occured while Convert Mobile Sale Order! \n [ %s ]") % (e))
             self.write(cr, uid, ids[0], {'m_status':'done'}, context=context)                        
@@ -258,7 +310,8 @@ class pre_sale_order_line(osv.osv):
     _columns = {
         'product_id':fields.many2one('product.product', 'Products'),
         'product_uos_qty':fields.float('Quantity'),
-        'uom_id':fields.function(_get_uom_from_product, type='many2one', relation='product.uom', string='UOM'),
+#        'uom_id':fields.function(_get_uom_from_product, type='many2one', relation='product.uom', string='UOM'),
+        'uom_id':fields.many2one('product.uom', 'UOM', readonly=False),
         'price_unit':fields.float('Unit Price'),
         'discount':fields.float('Discount (%)'),
         'discount_amt':fields.float('Discount (Amt)'),

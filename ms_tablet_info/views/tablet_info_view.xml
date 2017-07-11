@@ -46,6 +46,7 @@
 					<field name="sale_team_id" />
 					<field name="date" />
 					<field name="hotline" />
+					<field name="ck_reg_no" />
 				</tree>
 
 			</field>
@@ -63,6 +64,7 @@
 								<field name="model" />
 								<field name="type" />
 								<field name="sale_team_id" />
+								<field name ="is_testing"/>
 
 							</group>
 							<group>
@@ -71,6 +73,7 @@
 								<field name="date" />
 								<field name="storage_day" />
 								<field name="hotline" />
+								<field name="ck_reg_no" />
 							</group>
 						</group>
 						<field name="note" placeholder="Other Informations...." />

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record id="inherit_view_bank_statement_form2" model="ir.ui.view">
+			<field name="name">account.bank.statement.form</field>
+			<field name="model">account.bank.statement</field>
+			<field name="inherit_id" ref="account.view_bank_statement_form2" />
+			<field name="arch" type="xml">
+
+				<xpath expr="//button[@string='Reconcile']" position="replace">
+					<button name="button_confirm_cash" states="open" string="Confirm"
+						type="object" class="oe_highlight" />
+				</xpath>
+
+				<xpath expr="//form/sheet/notebook/page/field/tree/field[@name='date']"
+					position="replace">
+					<field name="date" invisible="1" />
+				</xpath>
+				<xpath
+					expr="//form/sheet/notebook/page/field/tree/field[@name='partner_id']"
+					position="replace">
+				</xpath>
+				<xpath
+					expr="//form/sheet/notebook/page/field/tree/field[@name='ref']"
+					position="replace">
+				</xpath>
+				<xpath expr="//form/sheet/notebook/page/field/tree/field[@name='name']"
+					position="replace">
+					<field name="name" string="Description" />
+				</xpath>
+
+				<xpath expr="//form/sheet/notebook/page/field/tree/field[@name='name']"
+					position="before">
+					<field name="account_id"
+						domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" />
+
+				</xpath>
+				<xpath expr="//form/sheet/notebook/page/field/tree/field[@name='date']"
+					position="before">
+					<field name="sequence" />
+					<field name="partner_id" />
+					<field name="ref" />
+
+				</xpath>
+				<xpath expr="//form/sheet/notebook/page/field/tree/field[@name='amount']"
+					position="before">
+					<field name="income_amt" on_change="onchange_income_amt(income_amt)"
+						sum="Total" />
+					<field name="expense_amt" on_change="onchange_expense_amt(expense_amt)"
+						sum="Total" />
+				</xpath>
+				
+				<xpath expr="//form/sheet/notebook/page/field/tree/field[@name='amount']"
+					position="replace">
+					<field name="amount" invisible="1" />
+<!-- 					<field name="department_id"  domain="[('brand_id', '=', parent.brand_id)]" /> -->
+				</xpath>
+				
+				<xpath expr="//form/sheet/group/group/label[@for='balance_start']"
+					position="replace">
+				</xpath>
+				<xpath expr="//form/sheet/group/group/field[@name='balance_start']"
+					position="replace">
+				</xpath>
+				
+				<xpath expr="//form/sheet/group/group/field[@name='company_id']"
+					position="after">
+					<field name="brand_id" domain="[('res_company_id', '=', company_id)]" />
+
+					<group class="oe_subtotal_footer oe_right">
+						<label for="balance_start" class="oe_subtotal_footer_separator oe_open_balance"
+							string="Opening Balance"
+							style="padding-right: 23px !important; padding-top: 6px !important;" />
+						<field name="balance_start"
+							attrs="{'readonly' : ['|', ('cash_control', '=', True), ('state', '=', 'confirm')]}"
+							nolabel="1" widget="monetary" class="oe_subtotal_footer_separator oe_open_balance"
+							options="{'currency_field': 'currency'}" help="Total of opening cash control lines" />
+					</group>
+				</xpath>
+
+			</field>
+		</record>
+    <menuitem action="account.action_view_bank_statement_tree" id="account.journal_cash_move_lines" name ="Cash Book"
+            parent="account.menu_finance_bank_and_cash"/>       		
+	</data>
+</openerp>

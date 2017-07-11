@@ -38,10 +38,13 @@ Mobile Sales
              'views/convert_sale_orders_view.xml',
              'views/mobile_sale_order_view.xml',
              'views/convert_stock_delivery_view.xml',
-             'views/account_invioce_inherit.xml',
+             'views/stock_move_view.xml',
+           #  'views/account_invioce_inherit.xml',
              'reports/qweb_view.xml',
              'reports/report_pre_sale.xml',
-             'reports/report_mobile_sale.xml'
+             'reports/report_mobile_sale.xml',
+             'wizard/pre_sale_view.xml',
+             'wizard/direct_sale_view.xml',
 
     ],
     'installable': True,

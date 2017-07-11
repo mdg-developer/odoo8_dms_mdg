@@ -29,46 +29,50 @@
 						<group>
 							<group>
 
-								<field name="name" attrs="{'readonly':[('m_status','=','done')]}" />
-								<field name="partner_id" attrs="{'readonly':[('m_status','=','done')]}" />
-								<field name="customer_code" attrs="{'readonly':[('m_status','=','done')]}" />
-								<field name="outlet_type" attrs="{'readonly':[('m_status','=','done')]}" />
-								<field name="user_id" attrs="{'readonly':[('m_status','=','done')]}" />
-								<field name="sale_team" attrs="{'readonly':[('m_status','=','done')]}" />
-								<field name="warehouse_id" attrs="{'readonly':[('m_status','=','done')]}" />
-								<field name="location_id" attrs="{'readonly':[('m_status','=','done')]}" />
-								<field name="sale_plan_name" attrs="{'readonly':[('m_status','=','done')]}" />
-								<field name="sale_plan_day_id" attrs="{'readonly':[('m_status','=','done')]}" />
-								<field name="sale_plan_trip_id" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="name" readonly="1"  />
+								<field name="partner_id" readonly="1"  />
+								<field name="customer_code" readonly="1"  />
+								<field name="outlet_type" readonly="1"  />
+								<field name="user_id" readonly="1"  />
+								<field name="sale_team" readonly="1"  />
+								<field name="warehouse_id" readonly="1"  />
+								<field name="location_id" readonly="1"  />
+								<field name="branch_id" readonly="1"
+									widget="selection" />
+								<field name="sale_plan_name" readonly="1"  />
+								<field name="sale_plan_day_id" readonly="1"  />
+								<field name="sale_plan_trip_id" readonly="1"  />
+								<field name="pricelist_id"  readonly="1" />
 								<field name="mso_latitude" digits="(14,15)"
-									attrs="{'readonly':[('m_status','=','done')]}" />
+									readonly="1"  />
 								<field name="mso_longitude" digits="(14,15)"
-									attrs="{'readonly':[('m_status','=','done')]}" />
+									readonly="1"  />
 
 							</group>
 							<group>
-								<field name="date" attrs="{'readonly':[('m_status','=','done')]}" />
-								<field name="due_date" attrs="{'readonly':[('m_status','=','done')]}" />
-								<field name="payment_term" attrs="{'readonly':[('m_status','=','done')]}" />
-								<field name="type" attrs="{'readonly':[('m_status','=','done')]}" />
-								<field name="tablet_id" attrs="{'readonly':[('m_status','=','done')]}" />
-								<field name="delivery_remark" attrs="{'readonly':[('m_status','=','done')]}" />
-								<field name="amount_total" attrs="{'readonly':[('m_status','=','done')]}" />
-								<field name="additional_discount" attrs="{'readonly':[('m_status','=','done')]}" />
-								<field name="deduction_amount" attrs="{'readonly':[('m_status','=','done')]}" />
-								<field name="net_amount" attrs="{'readonly':[('m_status','=','done')]}" />
-								<field name="paid_amount" attrs="{'readonly':[('m_status','=','done')]}" />
-								<field name="change_amount" attrs="{'readonly':[('m_status','=','done')]}" />
-								<field name="remaining_amount" attrs="{'readonly':[('m_status','=','done')]}" />
-								<field name="paid" attrs="{'readonly':[('m_status','=','done')]}" />
-								<field name="void_flag" attrs="{'readonly':[('m_status','=','done')]}" />
-								<field name="balance" attrs="{'readonly':[('m_status','=','done')]}" />
+								<field name="date" readonly="1"  />
+								<field name="due_date" readonly="1"  />
+								<field name="payment_term" readonly="1"  />
+								<field name="type" readonly="1"  />
+								<field name="tablet_id" readonly="1"  />
+								<field name="delivery_remark" readonly="1"  />
+								<field name="amount_total" readonly="1"  />
+								<field name="additional_discount" readonly="1"  />
+								<field name="deduction_amount" readonly="1"  />
+								<field name="net_amount" readonly="1"  />
+								<field name="paid_amount" readonly="1"  />
+								<field name="change_amount" readonly="1"  />
+								<field name="remaining_amount" readonly="1"  />
+								<field name="paid" readonly="1"  />
+								<field name="void_flag" readonly="1"  />
+								<field name="balance" readonly="1"  />
+
 							</group>
 						</group>
 
 						<notebook>
 							<page string="Order Lines">
-								<field name="order_line" attrs="{'readonly':[('m_status','=','done')]}">
+								<field name="order_line" readonly="1" >
 									<form string="Mobile Sales Order Lines" version="7.0">
 
 										<group>
@@ -87,7 +91,7 @@
 
 									</form>
 									<tree string="Sales Order Lines" editable="bottom"
-										attrs="{'readonly':[('m_status','=','done')]}">
+										readonly="1" >
 
 										<field name="product_id" />
 										<field name="uom_id" />
@@ -102,12 +106,12 @@
 								</field>
 
 								<field name="note" class="oe_inline" placeholder="Terms and conditions..."
-									attrs="{'readonly':[('m_status','=','done')]}" />
+									readonly="1"  />
 
 							</page>
 
 							<page string="Delivery Lines">
-								<field name="delivery_order_line" attrs="{'readonly':[('m_status','=','done')]}">
+								<field name="delivery_order_line" readonly="1" >
 									<form string="Mobile Delivery Order Lines" version="7.0">
 
 										<group>
@@ -123,7 +127,7 @@
 
 									</form>
 									<tree string="Mobile Delivery Order Lines" editable="bottom"
-										attrs="{'readonly':[('m_status','=','done')]}">
+										readonly="1" >
 
 										<field name="product_id" />
 										<field name="uom" />
@@ -134,12 +138,12 @@
 								</field>
 
 								<field name="note" class="oe_inline" placeholder="Terms and conditions..."
-									attrs="{'readonly':[('m_status','=','done')]}" />
+									readonly="1"  />
 
 							</page>
 
 							<page string="Promotion Lines">
-								<field name="promos_line_ids" attrs="{'readonly':[('m_status','=','done')]}">
+								<field name="promos_line_ids" readonly="1" >
 									<form string="Promotion Lines" version="7.0">
 
 										<group>
@@ -154,7 +158,7 @@
 
 									</form>
 									<tree string="Promotion Lines" editable="bottom"
-										attrs="{'readonly':[('m_status','=','done')]}">
+										readonly="1" >
 
 										<field name="pro_id" on_change='onchange_promo_id(pro_id)' />
 										<field name="from_date" />
@@ -164,13 +168,27 @@
 								</field>
 
 							</page>
+							<page string="Payments">
+								<field name="payment_line_ids" readonly="1" >
+									<tree string="Payment Lines" editable="bottom"
+										readonly="1" >
 
+										<field name="date" />
+										<field name="journal_id" widget="selection" />
+										<field name="amount" sum="Price" />
+										<field name="notes" />
+										<field name="cheque_no"/>
 
-
+									</tree>
+								</field>
+							</page>
+							<page string="Google Map">
+								<widget type="gmap_marker" lat="mso_latitude" lng="mso_longitude"
+									description="field_descriptions" />
+							</page>
 						</notebook>
 
-						<widget type="gmap_marker" lat="mso_latitude" lng="mso_longitude"
-							description="field_descriptions" />
+
 					</sheet>
 				</form>
 			</field>
@@ -209,11 +227,11 @@
 			<field name="name">Direct Sale Orders</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">mobile.sale.order</field>
-
 			<field name="view_id" ref="view_mobile_sale_order_tree" />
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form,calendar,graph</field>
-
+			<field name="context">{ 'search_default_state': 1}
+			</field>
 			<field name="help" type="html">
 				<p class="oe_view_nocontent_create">
 					Click to create new mobile sale order.

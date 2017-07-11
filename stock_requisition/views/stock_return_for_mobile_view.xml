@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+
+		<!-- ============================== Content Form ============================== -->
+
+		<record id="stock_return_mobile_form" model="ir.ui.view">
+			<field name="name">Stock Return From Mobile</field>
+			<field name="model">stock.return.mobile</field>
+			<field name="arch" type="xml">
+				<form string="Stock Return From Mobile Form">
+					<sheet>
+						<group>
+							<group>
+								<field name="sale_team_id" />
+								<field name="user_id"  />
+								<field name="branch_id"/>
+							</group>
+							<group>
+								<field name="return_date" />
+								<field name="vehicle_id" />
+								<field name="company_id"/>
+							</group>
+						</group>
+						<group>
+							<notebook>
+								<page string="Stock List">
+									<field name="p_line" >
+										<tree string="Stock Return From Mobile Line" editable="bottom">
+											<field name="product_id"  />
+											<field name="return_quantity" />
+											<field name="sale_quantity" />
+											<field name="foc_quantity" />
+											<field name="product_uom" />
+										</tree>
+									</field>
+								</page>
+							</notebook>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- ============================== Content Tree ============================== -->
+		<record id="stock_return_mobile_tree" model="ir.ui.view">
+			<field name="name">stock_return_mobile_tree</field>
+			<field name="model">stock.return.mobile</field>
+			<field name="arch" type="xml">
+				<tree string="Stock Return From Mobile">
+					<field name="sale_team_id" />
+					<field name="user_id" />
+					<field name="return_date" />
+					<field name="vehicle_id" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Stock Requisition -->
+		<record id="action_stock_return_mobile" model="ir.actions.act_window">
+			<field name="name">Stock Return From Mobile</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">stock.return.mobile</field>
+			<field name="context">{}</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="stock_return_mobile_tree"></field>
+			<field name="domain">[]
+			</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to Register Stock Return From Mobile .
+				</p>
+			</field>
+		</record>
+
+
+		<menuitem action='action_stock_return_mobile'  id="menu_action_stock_return_mobile"
+			parent="stock.menu_stock_warehouse_mgmt" groups="stock.group_stock_manager" />
+
+	</data>
+</openerp>

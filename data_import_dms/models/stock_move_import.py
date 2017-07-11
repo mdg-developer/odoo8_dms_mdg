@@ -28,12 +28,14 @@ import base64
 import logging
 import xlrd
 _logger = logging.getLogger(__name__)
-header_fields = ['from location', 'to location', 'transfer date', 'product', 'uom', 'quantity', 'tg_no']
+header_fields = ['from location', 'to location', 'transfer date', 'product', 'uom', 'quantity', 'tg_no','issue_no']
 
 class stock_move_import(osv.osv):
     _name = 'stock.import'
     _description = 'Import inventory adjust product lines'
     _columns = {
+                
+                'sequence':fields.char('Reference'),
                 'name':fields.char('Description'),
                 'import_date':fields.date('Import Date', readonly=True),
                 'file': fields.binary('File', required=True),
@@ -44,7 +46,6 @@ class stock_move_import(osv.osv):
                 'picking_type':fields.selection([
                     ('receipts', 'Receipts'),
                     ('internal_transfer', 'Internal Transfers'),
-                    ('delivery_order', 'Delivery Order')
                 ], 'Picking Type', required=True),
                 'note':fields.text('Note'),
                 'state':fields.selection([
@@ -52,6 +53,7 @@ class stock_move_import(osv.osv):
                     ('pending', 'Pending'),
                   #  ('confirm', 'Confirm'),
                     ('transfered', 'Transferd'),
+                    ('deleted', 'Deleted'),
                     ('error', 'Error'),
                 ], 'States'),
                'stock_line_ids': fields.one2many('stock.import.line', 'line_id', 'Order Lines', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=True),
@@ -62,6 +64,28 @@ class stock_move_import(osv.osv):
         'date_expected':datetime.now(),
         'state':'draft'
     }
+    
+    def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
+        if vals.get('sequence', '/') == '/':
+            vals['sequence'] = self.pool.get('ir.sequence').get(cr, uid, 'stock.import') or '/'
+        ctx = dict(context or {}, mail_create_nolog=True)
+        print'vals',vals
+        new_id = super(stock_move_import, self).create(cr, uid, vals, context=ctx)
+#         self.message_post(cr, uid, [new_id], body=_("Stock Move created"), context=ctx)
+        return new_id
+    
+    def delete_stock(self, cr, uid, ids, context=None):         
+        cr.execute("""select origin from stock_import_line  where line_id=%s""",(ids[0],))
+        origin=cr.fetchall()
+        if origin:
+            for ori in origin:
+#                 print 'product',product[0]
+                cr.execute("""delete from stock_move where origin=%s  """,(ori[0],))
+                cr.execute("""delete from stock_import_line where origin=%s  """,(ori[0],))
+                self.write(cr, uid, ids[0], {'state': 'deleted'})
+                
     
     def _check_file_ext(self, cursor, user, ids):
         for import_file in self.browse(cursor, user, ids):
@@ -109,6 +133,7 @@ class stock_move_import(osv.osv):
         if line_ids:
             for id in line_ids:
                 data = stock_line_obj.browse(cr, uid, id, context=context)
+#                 print 'issue',data.issue
                 dest_loc_id = data.location_dest_id.id
                 if picking_type:
                     cr.execute("""select id from stock_warehouse where lot_stock_id=%s """, (dest_loc_id,))
@@ -140,7 +165,7 @@ class stock_move_import(osv.osv):
                                 'priority':'1'}
                     picking_id = stock_picking_obj.create(cr, uid, res, context)    
                 move_val = {
-                          'name':'Import',
+                        'name':'Import',
                           'product_id':data.product_id.id,
                           'product_uom_qty':data.product_uom_qty,
                           'product_uos_qty':data.product_uom_qty,
@@ -151,6 +176,7 @@ class stock_move_import(osv.osv):
                           'date_expected':data.date_expected,
                           'date':data.date_expected,
                           'origin':data.origin,
+                          'issue':data.issue,                          
                           'location_id':data.location_id.id,
                           'location_dest_id':dest_loc_id,
                           'create_date':data.create_date,
@@ -178,6 +204,14 @@ class stock_move_import(osv.osv):
         data = self.browse(cr, uid, ids)[0]
         import_file = data.file
         import_filename = data.filename
+        
+        print 'import_id',ids[0]
+        cr.execute("""select sequence from stock_import where id=%s""",(ids[0],))
+        sequence_ids=cr.fetchall()
+        if sequence_ids:
+            tag_seq_no=sequence_ids[0][0]
+            print 'tag',tag_seq_no   
+        
 
         err_log = ''
         header_line = False
@@ -225,7 +259,7 @@ class stock_move_import(osv.osv):
                                 ln.append(str(l))
                             val = len(b3)
                     header_line = True
-                    product_i = product_uom_i = product_qty_i = to_location_id_i = from_location_id_i = transfer_date_i = tg_no_i = None
+                    product_i = product_uom_i = product_qty_i = to_location_id_i = from_location_id_i = transfer_date_i = tg_no_i = issue_no_i=  None
                     column_cnt = 0
                     for cnt in range(len(ln)):
                         if ln[cnt] == '':
@@ -255,8 +289,11 @@ class stock_move_import(osv.osv):
                             transfer_date_i = i
                         elif header_field == 'tg_no':
                             tg_no_i = i
+                        elif header_field == 'issue_no':
+                            issue_no_i = i   
+  
                                                         
-                    for f in [(tg_no_i, 'tg_no'), (transfer_date_i, 'transfer date'), (from_location_id_i, 'from location'), (to_location_id_i, 'to location'), (product_i, 'product'), (product_uom_i, 'uom'), (product_qty_i, 'quantity')]:
+                    for f in [(issue_no_i,'issue_no'),(tg_no_i, 'tg_no'), (transfer_date_i, 'transfer date'), (from_location_id_i, 'from location'), (to_location_id_i, 'to location'), (product_i, 'product'), (product_uom_i, 'uom'), (product_qty_i, 'quantity')]:
                         if not isinstance(f[0], int):
                             err_log += '\n' + _("Invalid Excel file, Header '%s' is missing !") % f[1]
                         
@@ -274,7 +311,10 @@ class stock_move_import(osv.osv):
                     import_vals['from location'] = ln[from_location_id_i]
                     import_vals['to location'] = ln[to_location_id_i]
                     import_vals['transfer date'] = ln[transfer_date_i]
-                    import_vals['tg_no'] = ln[tg_no_i]
+#                     import_vals['tg_no'] = ln[tg_no_i] 
+                    import_vals['tg_no'] = sequence_ids[0][0]
+                    import_vals['issue_no'] = ln[issue_no_i] 
+                    print 'import_vals',import_vals
                     amls.append(import_vals)
                   
         if err_log:
@@ -284,7 +324,7 @@ class stock_move_import(osv.osv):
         else:
             for aml in amls:
                 product_id = uom_id = uom_ids = None
-                product_name = uom_name = total_qty = from_location_id = to_location_id = transfer_date = tg_no = None
+                product_name = uom_name = total_qty = from_location_id = to_location_id = transfer_date = tg_no = issue_no = None
                 quantity = 0.0
                 move_val = {}
                 p_id = c_id = None
@@ -302,6 +342,9 @@ class stock_move_import(osv.osv):
                 if aml['tg_no']:
                     tg_no = str(aml['tg_no'])
                     tg_no = tg_no.strip()
+                if aml['issue_no']:
+                    issue_no = str(aml['issue_no'])
+                    issue_no = issue_no.strip()      
                 if transfer_date:
                     result = xlrd.xldate.xldate_as_tuple(transfer_date, 0)
                     a = str(result[1]) + '/' + str(result[2]) + '/' + str(result[0]) + ' ' + str(result[3]) + ':' + str(result[4]) + ':' + str(result[5])
@@ -365,6 +408,7 @@ class stock_move_import(osv.osv):
                                 move_val['product_uom'] = product_item['product_uom_id']
                                 move_val['theoretical_qty'] = product_item['theoretical_qty']
                                 move_val['origin'] = tg_no
+                                move_val['issue']=issue_no
                                 move_val['line_id'] = data.id
                                 line_id = stock_line_obj.search(cr, uid, ['&', ('date_expected', '=', date_expected), ('line_id', '=', data.id), ('product_id', '=', move_val['product_id']), ('location_id', '=', from_location_id), ('location_dest_id', '=', to_location_id)])
                                 # print 'line -id',id
@@ -399,6 +443,7 @@ class stock_line(osv.osv):
                 'location_dest_id':fields.many2one('stock.location', "Destination Location"),
                   'line_id': fields.many2one('stock.import', 'Order Reference', required=True, ondelete='cascade', select=True, readonly=True, states={'draft':[('readonly', False)]}),
                   'origin':fields.char('Origin'),
+                  'issue':fields.char('Issue No'),
                   'date_expected':fields.date('To Date')
                 }
       

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Denomination -->
+		<report id="report_denomination" model="sales.denomination" string="Denomination Report"
+			report_type="qweb-pdf" name="sale_management.sale_denomination" file="sale_management.sale_denomination"
+			attachment_use="True" attachment="('Sale Denomination')+'.pdf'" />
+	</data>
+</openerp>

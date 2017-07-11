@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+	
+		<record id="view_product_expiry_report_tree" model="ir.ui.view">
+	        <field name="name">Product Expiry Tree</field>
+	        <field name="model">product.expiry.report</field>
+	        <field name="arch" type="xml">
+	            <tree string="Product Expiry Report" create="0">
+	                <field name="product_id" />
+	                <field name="lot_id" />
+	                <field name="location_id"/>
+	                <field name="qty" sum="# of Products "/>	                
+	                <field name="life_date" widget="date"/>
+	                <field name="use_date"  widget="date"/>
+	                <field name="removal_date"  widget="date"/>
+	                <field name="alert_date"  widget="date"/>
+	           </tree>
+        	</field>
+    	</record>
+    	
+		<record model="ir.ui.view" id="view_test_graph">
+			<field name="name">test.report.report_graph</field>
+			<field name="model">product.expiry.report</field>
+			<field name="priority">20</field>
+			<field name="arch" type="xml">
+				<graph string="Product Expiry Report" type="pivot">
+					<field name="product_id" type="row" />						
+				</graph>
+			</field>
+		</record>
+
+		<record id="view_report_test_search" model="ir.ui.view">
+			<field name="name">report.test.search.inherit</field>
+			<field name="model">product.expiry.report</field>
+			<field name="arch" type="xml">
+
+				<search string="Product Expiry Report">
+
+					<group expand="1" string="Group By">
+						<filter string="Product Name" context="{'group_by':'product_id'}" />
+						<filter string="Lot" context="{'group_by':'lot_id'}" />
+						<filter string="Location" context="{'group_by':'location_id'}" />
+						<filter string="End of Life Date" context="{'group_by':'life_date'}" />
+						<filter string="Best Before Date" context="{'group_by':'use_date'}" />						
+						<filter string="Removal Date" context="{'group_by':'removal_date'}" />
+						<filter string="Alert Date" context="{'group_by':'alert_date'}" />
+
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="action_product_expiry_report">
+			<field name="name">Product Expiry Report</field>
+			<field name="res_model">product.expiry.report</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,graph</field>
+			<field name="search_view_id" ref="view_report_test_search" />
+		</record>
+        <record model="ir.actions.act_window.view" id="action_report_test_graph">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="view_test_graph"/>            		
+            <field name="act_window_id" ref="action_product_expiry_report"/>
+        </record>		
+			      			
+		<menuitem name="Product Expiry Report" id="menu_product_expiry_report_tree"
+			action="action_product_expiry_report" parent="stock.menu_stock_inventory_control"
+			sequence="30" />
+
+
+	</data>
+</openerp>
+

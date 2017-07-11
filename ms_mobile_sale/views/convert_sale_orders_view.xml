@@ -50,7 +50,8 @@
 			<field name="model">mobile.sale.order</field>
 			<field name="arch" type="xml">
 				<search string="Filters">
-
+					<filter string="Draft" domain="[ ('m_status', '=', 'draft')]"
+						name="state" />
 					<group expand="0" string="Group By">
 						<filter name="tablet_id" string="Tablet Name" domain="[]"
 							context="{'group_by':'tablet_id'}" />

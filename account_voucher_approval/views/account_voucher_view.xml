@@ -8,7 +8,6 @@
 			<field name="inherit_id" ref="account_voucher.view_vendor_receipt_form" />
 			<field name="arch" type="xml">
 				<data>
-
 					<xpath expr="//button[@name='cancel_voucher']" position="replace">
 					</xpath>
 					<xpath expr="//button[@name='proforma_voucher']" position="replace">
@@ -17,7 +16,7 @@
 						<button name="cashier_approve" string="Cashier Approved"
 							type="object" states="finance_approve" class="oe_highlight"
 							sequence="3" />
-						<button name="proforma_voucher" string="Validate" states="cashier_approve"
+						<button name="proforma_voucher" string="Validate"  states="cashier_approve"
 							class="oe_highlight" />
 						<button name="cancel_voucher" string="Cancel Receipt"
 							states="draft,proforma,finance_approve,cashier_approve" />

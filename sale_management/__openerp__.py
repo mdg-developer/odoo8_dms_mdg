@@ -32,17 +32,18 @@ Sale Management
 """,
     'author': 'Seventh Computing Developer Group',
     'website': 'http://www.7thcomputing.com',
-    'depends': ['base', 'crm', 'sale', 'crm_sale_channel', 'crm_demarcation', 'account', 'account_accountant',
-                'stock', 'sale_stock', 'crm_management', 'ms_sale_plan_setting'
+    'depends': ['base', 'sale', 'crm_demarcation', 'account', 'account_accountant','mdg_customization',
+                'stock', 'sale_stock', 'ms_sale_plan_setting'
     ],
     'data': [
-
        # 'views/product_product_view.xml',
        'views/code_sequence.xml',
        'views/invoice_custom_layouts.xml',
        'views/sale_custom_layouts.xml',
         'views/report_saleorder.xml',
          'views/report_invoice.xml',
+     'wizard/sale_team_date_view.xml',
+      
         'views/sale_team_view.xml',
         'views/sale_order_view.xml',
         'views/sale_return_view.xml',
@@ -50,8 +51,12 @@ Sale Management
 		'views/sales_retal_view.xml',
 		'views/sales_denomation_view.xml',
 		'views/sale_approvel_view.xml',
-        'views/account_invoice_view.xml',
-        'views/sale_promotion_monthly_view.xml'
+         'views/sale_promotion_history_view.xml',
+        'views/sale_promotion_monthly_view.xml',
+        'views/sale_target_view.xml',
+        'reports/qweb_view.xml',
+        'reports/report_denomination.xml',
+        'reports/custom_layout.xml',
     ],
     'installable': True,
     'auto_install': False,

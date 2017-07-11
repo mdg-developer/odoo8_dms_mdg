@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="inherit_view_move_tree" model="ir.ui.view">
+			<field name="name">stock.move.form.inherit</field>
+			<field name="model">stock.move</field>
+			<field name="inherit_id" ref="stock.view_move_tree" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//field[@name='date_expected']" position="replace">
+						<field name="date_expected" string="Transferred Date" />
+					</xpath>
+					<xpath expr="//field[@name='date']" position="replace">
+						<field name="date" string="Imported Date" />
+					</xpath>
+
+				</data>
+			</field>
+		</record>
+		<record id="inherit_view_move_tree" model="ir.ui.view">
+			<field name="name">stock.move.form.inherit</field>
+			<field name="model">stock.move</field>
+			<field name="inherit_id" ref="stock.view_move_form" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//field[@name='purchase_line_id']" position="after">
+						<field name="date_expected" />
+					</xpath>
+					<xpath expr="//field[@name='date']" position="replace">
+						<field name="date" string="Imported Date" />
+					</xpath>
+					<xpath expr="//field[@name='purchase_line_id']" position="before">
+						<field name="issue"/>
+					</xpath>
+				</data>
+			</field>
+		</record>
+
+	</data>
+</openerp>

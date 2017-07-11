@@ -1,0 +1,241 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+		<record id="view_plan_frequency_form" model="ir.ui.view">
+			<field name="name">plan.frequency.form</field>
+			<field name="model">plan.frequency</field>
+			<field name="arch" type="xml">
+				<form>
+					<group>
+						<field name="name" class="oe_inline" />
+					</group>
+				</form>
+			</field>
+		</record>
+
+		<record id="view_sale_plan_for_day_setting_form" model="ir.ui.view">
+			<field name="name">plan.setting.form</field>
+			<field name="model">sale.plan.day.setting</field>
+			<field name="arch" type="xml">
+				<form string="Sale Plans Setting" version="7.0">
+					<header>
+						<button name="confirm" string="Generate" class="oe_highlight"
+							type="object" />
+<!-- 						<button name="refresh" string="Refresh Customer" class="oe_highlight" -->
+<!-- 							type="object" states="draft,confirm" /> -->
+						<field name="state" widget="statusbar" />
+					</header>
+					<group>
+						<group>
+							<field name="name" />
+							<field name="sale_team_id" on_change="on_change_sale_team_id(sale_team_id)" />
+							<field name="principal" string="Principal"   invisible="1"/>
+							<field name="main_group" string="Main Group" widget="many2many_tags"  invisible="1"/>
+							<field name="branch_id" string="Branch"  required="1"/>
+						</group>
+						<group>
+							<field name="date" />
+							<field name="start_date" />
+						</group>
+					</group>
+					    <button name="refresh_customer"  type="object"  string="Refresh Customer" class="oe_highlight"/>		    
+										
+					<notebook>
+						<page string="Plan Setting">
+							<field name="plan_line">
+								<tree default_order="create_date desc" string="Plan Line" editable="bottom" >
+									<field name="code" />
+									<field name="partner_id" />
+									<field name="class" />
+									<field name="frequency" />
+									<field name="purchase_date" />
+									<field name="w1_mon" style="background-color: lightblue;"/>
+         								<field name="w1_tue" style="background-color: lightblue;"/>
+         								<field name="w1_wed" style="background-color: lightblue;"/>
+         								<field name="w1_thur" style="background-color: lightblue;"/>
+         								<field name="w1_fri" style="background-color: lightblue;"/>
+         								<field name="w1_sat" style="background-color: lightblue;"/>
+         								<field name="w2_mon" style="background-color: red"/>
+         								<field name="w2_tue" style="background-color: red"/>
+         								<field name="w2_wed" style="background-color: red"/>
+         								<field name="w2_thur" style="background-color: red"/>
+         								<field name="w2_fri"  style="background-color: red"/>
+        								<field name="w2_sat"  style="background-color: red"/>
+         								<field name="w3_mon" style="background-color: blue;"/>
+         								<field name="w3_tue" style="background-color: blue;"/>
+         								<field name="w3_wed" style="background-color: blue;"/>
+         								<field name="w3_thur" style="background-color: blue;"/>
+         								<field name="w3_fri" style="background-color: blue;"/>
+         								<field name="w3_sat" style="background-color: blue;"/>
+         								<field name="w4_mon" style="background-color: green;"/>
+         								<field name="w4_tue" style="background-color: green;"/>
+         								<field name="w4_wed" style="background-color: green;"/>
+         								<field name="w4_thur" style="background-color: green;"/>
+         								<field name="w4_fri" style="background-color: green;"/>
+        								<field name="w4_sat" style="background-color: green;"/>
+								</tree>
+							</field>
+							<group col="28">
+								<field name="partner_count" class="oe_inline" style="font-size:13pt;" />
+								<label for="w1_count_mon" string="Count" style="font-size:8pt;"
+									id="count" name="count" />
+								<!-- <div> -->
+								<!-- &#x20;&#x20;&#x20; -->
+								<!-- </div> -->
+								<div>
+									<field name="w1_count_mon" class="oe_inline"
+										style="margin-left:5pt; font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w1_count_tue" class="oe_inline"
+										style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w1_count_wed" class="oe_inline"
+										style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w1_count_thur" class="oe_inline"
+										style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w1_count_fri" class="oe_inline"
+										style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w1_count_sat" class="oe_inline"
+										style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w2_count_mon" class="oe_inline"
+										style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w2_count_tue" class="oe_inline"
+										style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w2_count_wed" class="oe_inline"
+										style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w2_count_thur" class="oe_inline"
+										style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w2_count_fri" class="oe_inline"
+										style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w2_count_sat" class="oe_inline"
+										style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w3_count_mon" class="oe_inline"
+										style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w3_count_tue" class="oe_inline"
+										style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w3_count_wed" class="oe_inline"
+										style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w3_count_thur" class="oe_inline"
+										style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w3_count_fri" class="oe_inline"
+										style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w3_count_sat" class="oe_inline"
+										style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w4_count_mon" class="oe_inline"
+										style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w4_count_tue" class="oe_inline"
+										style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w4_count_wed" class="oe_inline"
+										style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w4_count_thur" class="oe_inline"
+										style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w4_count_fri" class="oe_inline"
+										style="margin-left:5pt;font-size:15pt;" />
+								</div>
+								<div>
+									<field name="w4_count_sat" class="oe_inline"
+										style="margin-left:5pt;font-size:15pt;" />
+								</div>
+							</group>
+						</page>
+
+					</notebook>
+
+				</form>
+			</field>
+		</record>
+		<record id="plan_setting_tree" model="ir.ui.view">
+			<field name="name">plan_setting_tree</field>
+			<field name="model">sale.plan.day.setting</field>
+			<field name="arch" type="xml">
+				<tree string="Plan Setting Tree">
+					<field name="name" />
+					<field name="sale_team_id" />
+					<field name="date" />
+					<field name="start_date" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_plan_setting_filter" model="ir.ui.view">
+			<field name="name">Plan Setting Filterr</field>
+			<field name="model">sale.plan.day.setting</field>
+			<field name="arch" type="xml">
+				<search string="Search Plan Setting">
+					<group expand="0" string="Group By...">
+						<filter string="Sale Team" icon="terp-partner" domain="[]"
+							context="{'group_by':'sale_team_id'}" />
+						<filter string="Date" icon="terp-partner" domain="[]"
+							context="{'group_by':'date'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+
+
+		<record id="action_sale_plan_setting" model="ir.actions.act_window">
+			<field name="name">Sale Plan Day Setting</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">sale.plan.day.setting</field>
+			<field name="context">{}</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="plan_setting_tree" />
+			<field name="search_view_id" ref="view_plan_setting_filter" />
+			<field name="domain">[]
+			</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to Register Sale Plan Day Setting.
+				</p>
+			</field>
+		</record>
+
+
+		<menuitem action='action_sale_plan_setting' id="menu_sale_plan_setting"
+			parent="base.menu_mobile_sale_sale_target_menu" sequence="3" />
+	</data>
+</openerp>
+		

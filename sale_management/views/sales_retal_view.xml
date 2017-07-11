@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data>
-		<!-- === Sales rental Form === -->
+		<!-- === Sales Rental Form === -->
 
 		<record id="view_sales_rental_form" model="ir.ui.view">
 			<field name="name">sales.rental.form</field>
@@ -12,9 +12,26 @@
 						<group>
 							<group>
 								<field name="name" colspan="2" />
-								<field name="partner_id" domain="[('customer','=',True)]" />
-								<field name="address" colspan="2" />
+								<field name="partner_id" domain="[('customer','=',True)]"
+									on_change="on_change_partner_id(partner_id)" />
+								<field name="code" />
+								<label for="street" string="Address" />
+								<div>
+									<field name="country_id" placeholder="Country" class="oe_no_button" />
+									<div class="address_format">
+										<field name="state_id" class="oe_no_button" placeholder="State"
+											style="width: 37%%" />
+										<field name="city" placeholder="City" style="width: 40%%" />
+										<field name="township" class="oe_no_button" placeholder="TownShip"
+											style="width: 37%%" />
+									</div>
+
+									<field name="street" placeholder="Street..." />
+									<field name="street2" />
+								</div>
 								<field name="company_id" invisible="1" />
+								<field name="note" />
+
 							</group>
 							<group>
 								<field name="date" />
@@ -26,19 +43,93 @@
 							<group>
 								<field name="total_amt" />
 							</group>
-							<group>
-								<field name="image" widget='image' class="oe_avatar" />
-							</group>
+							<!-- <group> -->
+							<!-- <field name="image" widget='image' class="oe_avatar" /> -->
+							<!-- </group> -->
 
 						</group>
 						<notebook>
-							<page string="Location">
-								<field name="latitude" />
-								<field name="longitude" />
-								<widget type="gmap_marker" lat="latitude" lng="longitude"
-									description="field_descriptions" />
+							<page string="Photo">
+
 							</page>
 						</notebook>
+						<hr />
+						<div class="row">
+							<div class="col-md-2">
+
+								<div id="image">
+									<field name="image" widget='image' class="oe_avatar"
+										options='{"size": [90, 90]}' />
+								</div>
+								<p class="btn btn-default source" data-toggle="modal"
+									data-target=".bs-example-modal-lg" data-backdrop="false"
+									onclick="var list =document.getElementById('image'); var imageName =list.id ; var link = list.getElementsByTagName('img')[0].src;link = link.replace('image','image');var zoom=document.getElementById('zoom'); zoom.src=link;">
+									Zoom
+									<i class="fa fa-plus"></i>
+								</p>
+
+							</div>
+							<div class="col-md-2">
+								<div id="image1">
+									<field name="image1" widget='image' class="oe_avatar"
+										options='{"preview_image": "image_medium1"}' />
+								</div>
+								<p class="btn btn-default source" data-toggle="modal"
+									data-target=".bs-example-modal-lg" data-backdrop="false"
+									onclick="var list =document.getElementById('image1'); var imageName =list.id ; var link = list.getElementsByTagName('img')[0].src;link = link.replace('image_medium1','image1');var zoom=document.getElementById('zoom'); zoom.src=link;">
+									Zoom
+									<i class="fa fa-plus"></i>
+								</p>
+							</div>
+							<div class="col-md-2">
+								<div id="image2">
+									<field name="image2" widget='image' class="oe_avatar"
+										options='{"preview_image": "image_medium2"}' />
+								</div>
+								<p class="btn btn-default source" data-toggle="modal"
+									data-target=".bs-example-modal-lg" data-backdrop="false"
+									onclick="var list =document.getElementById('image2'); var imageName =list.id ; var link = list.getElementsByTagName('img')[0].src;link = link.replace('image_medium2','image2');var zoom=document.getElementById('zoom'); zoom.src=link;">
+									Zoom
+									<i class="fa fa-plus"></i>
+								</p>
+							</div>
+							<div class="col-md-2">
+								<div id="image3">
+									<field name="image3" widget='image' class="oe_avatar"
+										options='{"preview_image": "image_medium3"}' />
+								</div>
+								<p class="btn btn-default source" data-toggle="modal"
+									data-target=".bs-example-modal-lg" data-backdrop="false"
+									onclick="var list =document.getElementById('image3'); var imageName =list.id ; var link = list.getElementsByTagName('img')[0].src;link = link.replace('image_medium3','image3');var zoom=document.getElementById('zoom'); zoom.src=link;">
+									Zoom
+									<i class="fa fa-plus"></i>
+								</p>
+							</div>
+							<div class="col-md-2">
+								<div id="image4">
+									<field name="image4" widget='image' class="oe_avatar"
+										options='{"preview_image": "image_medium4"}' />
+								</div>
+								<p class="btn btn-default source" data-toggle="modal"
+									data-target=".bs-example-modal-lg" data-backdrop="false"
+									onclick="var list =document.getElementById('image4'); var imageName =list.id ; var link = list.getElementsByTagName('img')[0].src;link = link.replace('image_medium4','image4');var zoom=document.getElementById('zoom'); zoom.src=link;">
+									Zoom
+									<i class="fa fa-plus"></i>
+								</p>
+							</div>
+						</div>
+
+						<div class="modal fade bs-example-modal-lg" tabindex="-1"
+							role="dialog" aria-hidden="true">
+							<div class="modal-dialog modal-lg">
+								<div class="modal-content" align="center">
+									<img id="zoom" src="" width="500" height="500" border="1" />
+									<!-- <div class="modal-footer"> <button type="button" class="close" 
+										data-dismiss="modal"> <span>Close</span> </button> </div> -->
+
+								</div>
+							</div>
+						</div>
 					</sheet>
 				</form>
 			</field>
@@ -47,7 +138,7 @@
 			<field name="name">Asset to Customer Filter</field>
 			<field name="model">sales.rental</field>
 			<field name="arch" type="xml">
-				<search string="Search Sales Rental">
+				<search string="Search Space Rental">
 					<group expand="0" string="Group By...">
 						<filter string="Customer" icon="terp-partner" domain="[]"
 							context="{'group_by':'partner_id'}" />
@@ -60,7 +151,7 @@
 			<field name="name">sales.rental.tree</field>
 			<field name="model">sales.rental</field>
 			<field name="arch" type="xml">
-				<tree string="Sales Rental">
+				<tree string="Space Rental">
 					<field name="date" />
 					<field name="partner_id" />
 					<field name="name" />
@@ -70,7 +161,7 @@
 		</record>
 
 		<record id="action_sales_rental_view" model="ir.actions.act_window">
-			<field name="name">Sale Rental</field>
+			<field name="name">Space Rental</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">sales.rental</field>
 			<field name="view_type">form</field>
@@ -85,6 +176,6 @@
 		</record>
 
 		<menuitem id="sales_rental" action="action_sales_rental_view"
-			parent="base.menu_sales" name="Sale Rental" sequence="12" />
+			parent="base.menu_sales" name="Space Rental" sequence="12" />
 	</data>
 </openerp>	    

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<!-- Print Reports -->
+		<record id="view_analytic_accounting_print_reports_form" model="ir.ui.view">
+			<field name="name">analytic.accounting.print.reports.form</field>
+			<field name="model">analytic.accounting.print.reports</field>
+			<field name="arch" type="xml">
+				<form string="Analytic Accounting Print Reports" version="7.0">
+					<group col="1">
+						<b>......Analytic Accounting Report......</b>
+						<a
+							href="http://localhost:8080/birt/frameset?__report=analytic_accounting_report_Profit_Loss.rptdesign"
+							target="_blank">Analytic Accounting Profit and Lost Report</a>
+							<a
+							href="http://localhost:8080/birt/frameset?__report=analytic_accounting_report.rptdesign"
+							target="_blank">Analytic Accounting Report</a>
+					</group>
+
+					<footer>
+						<button string="Close" class="oe_highlight" special="cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="action_analytic_accounting_print_reports" model="ir.actions.act_window">
+			<field name="name">Print Reports</field>
+			<field name="res_model">analytic.accounting.print.reports</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_analytic_accounting_print_reports_form" />
+			<field name="target">new</field>
+		</record>
+
+			<menuitem id="menu_analytic_accounting_print_reports" name="Analytic Accounting Reports" parent="account.menu_finance_reports" action="action_analytic_accounting_print_reports" sequence="60"/>
+
+	</data>
+</openerp>

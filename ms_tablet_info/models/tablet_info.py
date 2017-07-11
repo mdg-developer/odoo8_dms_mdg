@@ -16,9 +16,11 @@ class tablet_information(osv.osv):
                 'storage_day': fields.integer('Data Storage', size=4, required=True, help="Help"),
                 'hotline': fields.char('Hotline'),
                 'device_id': fields.char('Device ID'),
+                'is_testing': fields.boolean('Is Testing'),
+                'ck_reg_no':fields.char('KT REG NO'),
     }
     _defaults = {
-               
+               'is_testing' : False,
     }  
     
     def check_device_id(self, cr, uid, device_id , context=None, **kwargs):    

@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<openerp>
+	<data>
+
+		<record id="wkf" model="workflow">
+			<field name="name">stock.picking</field>
+			<field name="osv">stock.picking</field>
+			<field name="on_create">True</field>
+		</record>
+		<record id="stock.act_done" model="workflow.activity">
+			<field name="wkf_id" ref="wkf" />
+			<field name="name">flow_stop</field>
+			<field name="signal_send">subflow.done</field>
+		</record>
+
+		<record id="stock.act_cancel" model="workflow.activity">
+			<field name="wkf_id" ref="wkf" />
+			<field name="name">cancel</field>
+			<field name="flow_stop">True</field>
+			<field name="kind">stopall</field>
+			<field name="action">action_cancel()</field>
+		</record>
+		<record id="trans_done_cancel" model="workflow.transition">
+			<field name="act_from" ref="stock.act_done" />
+			<field name="act_to" ref="stock.act_cancel" />
+			<field name="signal">button_cancel</field>
+		</record>
+		
+	</data>
+</openerp>

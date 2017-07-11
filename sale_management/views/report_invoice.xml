@@ -8,25 +8,25 @@
 					<div class="page" style="font-size:10pt;">
 						<div class="row" style="padding-top:-2s0pt;">
 							<div class="col-xs-8 pull-left">
-								<table class="table" style='border:solid;border-color:white;'>
+								<table class="table" style="border:solid;border-color:white;">
 									<tr>
 										<td style="margin-top:-10pt;">
 											<div t-field="o.company_id.partner_id"
-												t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' />
+												t-field-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: true}" />
 											<div t-field="o.company_id.phone" />
 										</td>
 									</tr>
 								</table>
 							</div>
 							<div class="col-xs-4 pull-right">
-								<table class="table" style='border:solid;border-color:white;'>
+								<table class="table" style="border:solid;border-color:white;">
 									<tr>
 										<td style="margin-top:-10pt;">
 											<b>Customer address:</b>
 											<address t-field="o.partner_id"
-												t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' />
+												t-field-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: true}" />
 											<span t-field="o.partner_id.vat"
-												t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' />
+												t-field-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: true}" />
 											<div style="margin-top:-15pt;" t-field="o.partner_id.phone" />
 										</td>
 									</tr>
@@ -36,7 +36,7 @@
 						</div>
 						<div class="row">
 							<div class="col-xs-8 pull-left" style="margin-top:-20pt;">
-								<table class="table" style='border:solid;border-color:white;'>
+								<table class="table" style="border:solid;border-color:white;">
 									<tr style="margin-top:-30pt;border:solid;border-color:white;">
 										<td style="font-size:20pt;" colspan="4">
 											<span
@@ -53,7 +53,7 @@
 								</table>
 							</div>
 							<div class="col-xs-4 pull-right" style="margin-top:-20pt;">
-								<table class="table" style='border:solid;border-color:white;'>
+								<table class="table" style="border:solid;border-color:white;">
 									<tr style="margin-top:-30pt;border:solid;border-color:white;">
 										<td style="padding-top:10pt;">
 											<b>Branch Code:</b>
@@ -66,15 +66,15 @@
 
 
 						<table class="table"
-							style='border:solid;border-color:white;margin-top:-20pt;'>
-							<tr style='border:solid;border-color:white;'>
+							style="border:solid;border-color:white;margin-top:-20pt;">
+							<tr style="border:solid;border-color:white;">
 								<td>
-									<b>Your Reference</b>
+									<b>Tab Reference</b>
 									<br />
 									<span t-field="o.sale_order_id.tb_ref_no" />
 								</td>
 								<td>
-									<b>Sales Teams</b>
+									<b>Sales Team</b>
 									<br />
 									<span t-field="o.section_id.name" />
 								</td>
@@ -95,7 +95,7 @@
 								</td>
 							</tr>
 
-							<tr style='border:solid;border-color:white;'>
+							<tr style="border:solid;border-color:white;">
 								<td>
 									<b>Customer Code</b>
 									<br />
@@ -189,7 +189,8 @@
 									</td>
 									<td class="text-center" style="border:1pt solid;border-color:black;">
 										<t t-if="l.foc==True">
-											&#10003; </t>
+											✓
+										</t>
 									</td>
 									<td class="text-right" style="border:1pt solid;border-color:black;">
 										<t t-if="l.foc==True">
@@ -273,15 +274,15 @@
 
 						<div class="row" style="padding-top:-2s0pt;">
 							<div class="col-xs-4 pull-left">
-								<table class="table" style='border:solid;border-color:white;'>
-									<tr style='border:solid;border-color:white;'>
+								<table class="table" style="border:solid;border-color:white;">
+									<tr style="border:solid;border-color:white;">
 										<td style="margin-top:-10pt;" align="center">
 											<span>
 												Cash Paid By
 											</span>
 										</td>
 									</tr>
-									<tr style='border:solid;border-color:white;'>
+									<tr style="border:solid;border-color:white;">
 										<td style="margin-top:-10pt;" align="center">
 											<span>
 												(Customer Name)
@@ -292,15 +293,15 @@
 							</div>
 
 							<div class="col-xs-2 pull-left">
-								<table class="table" style='border:solid;border-color:white;'>
-									<tr style='border:solid;border-color:white;'>
+								<table class="table" style="border:solid;border-color:white;">
+									<tr style="border:solid;border-color:white;">
 										<td style="margin-top:-10pt;" align="center">
 											<span>
 												Cash Received By
 											</span>
 										</td>
 									</tr>
-									<tr style='border:solid;border-color:white;'>
+									<tr style="border:solid;border-color:white;">
 										<td style="margin-top:-10pt;" align="center">
 											<span>
 												(Salesman Name)
@@ -323,7 +324,7 @@
 						<div class="row" style="padding-top:-2s0pt;margin-top:20pt;">
 							<div class="col-xs-12">
 
-								<table class="table" style='border:solid;border-color:white;'>
+								<table class="table" style="border:solid;border-color:white;">
 									<tr>
 										<td style="text-align:center;">
 											For questions concerning this invoice, please

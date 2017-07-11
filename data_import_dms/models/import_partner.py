@@ -19,6 +19,7 @@
 #    along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from __future__ import division
 from openerp.osv import orm
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -29,8 +30,8 @@ import datetime
 _logger = logging.getLogger(__name__)
 header_fields = [ 'sale channel', 'postal code', 'region', 'class', 'outlet id code', 'outlet name',
                  'outlet type', 'address', 'ward', 'district', 'township', 'city/town', 'village/ village group',
-                 'telephone', 'contact person', 'rb code', 'selling brand', 'branch code', 'demarcation code', 'display', 'ka_tha',
-                 'website', 'title', 'job position', 'old code', 'email', 'fax' , 'credit limit', 'credit allow']
+                 'telephone', 'contact person', 'rb code', 'selling brand', 'branch code', 'demarcation code', 'display',
+                  'ka_tha', 'website', 'title', 'job position', 'old code', 'email', 'fax' , 'credit limit', 'credit allow','branch code','country']
 
 class partner(osv.osv):
     _name = 'data_import.partner'
@@ -94,11 +95,19 @@ class partner(osv.osv):
             for row in range(header_row + 1, s.nrows):
                 values = []
                 for col in range(0, s.ncols):
-                    values.append(s.cell(row, col).value)
+                    cell = s.cell(row, col)
+                    cell_value= cell.value
+                    if cell.ctype in (2,3):
+                        value_str = str(cell_value)
+                        value_str = value_str.replace('.0', '') 
+                    else:
+                        value_str = str(cell.value.encode('utf-8'))
+                    values.append(value_str)
                 excel_rows.append(values)
         con_ls = []
         amls = []
         count = val = head_count = 0
+        records = 0;
         for ln in excel_rows:
             # ln = [str(x).strip() for x in ln]
             if not ln or ln and ln in ['', '#']:
@@ -157,6 +166,8 @@ class partner(osv.osv):
                             fax_i = i
                         elif header_field == 'region':
                             region_i = i
+                        elif header_field =='division_code':
+                            division_code_i=i
                         elif header_field == 'sale channel':
                             sale_channel_i = i
                         elif header_field == 'outlet id code':
@@ -207,7 +218,6 @@ class partner(osv.osv):
                 for i in range(0, val):
                     ln.append('')
                 if ln and ln[0] and ln[0][0] not in ['#', '']:
-                    
                     import_vals = {}
                     import_vals['website'] = ln[website_i]
                     import_vals['title'] = ln[title_i]
@@ -238,18 +248,25 @@ class partner(osv.osv):
                     import_vals['display'] = ln[display_i]
                     import_vals['credit allow'] = ln[credit_allow_i]
                     import_vals['credit limit'] = ln[credit_limit_i]
-                    
                     amls.append(import_vals)
-       
         if err_log:
             self.write(cr, uid, ids[0], {'note': err_log})
             self.write(cr, uid, ids[0], {'state': 'error'})
         else:
             error_log = ''
+            country_id = None
+            if not country_id:  # no need to create or update country
+                    cr.execute("""select id from res_country where lower(name) like %s""", ('myanmar',))
+                    data = cr.fetchall()
+                    if data:
+                        country_id = data[0][0]
+                    else:
+                        country_id = None
+                        
             for aml in amls:
-                title_id = branch_id = country_id = sale_channel_ids = township_ids = temp_id = demarcation_id = class_id = township_id = customize_id = sale_channel_id = branch_ids = city_id = sale_channel_idcity_id = shop_id = state_ids = shop_ids = state_id = partner_id = demarcation_ids = class_ids = township_id = partner_ids = None
+                title_id = branch_id  = sale_channel_ids = township_ids = temp_id = demarcation_id = class_id = township_id = customize_id = sale_channel_id = branch_ids = city_id = sale_channel_idcity_id = shop_id = state_ids = shop_ids = state_id = partner_id = demarcation_ids = class_ids = division_code_ids = partner_ids = None
                 value = []
-                website = job_position = old_code = email = fax = title = region = postal_code = class_name = customer_code = shop_name = shop_type = address = street = territory = township = None
+                website = job_position = old_code = email = fax = title = region = postal_code = class_name = customer_code = shop_name = shop_type = address = street = territory = township =division= None
                 village = phone = brand = contact = city = sale_channel = branch_code = demarcation = ka_tha = display = class_val = None
                 credit_limit = 0
                 credit_allow = False
@@ -266,85 +283,58 @@ class partner(osv.osv):
                     credit_limit = float(aml['credit limit'])
                 if aml['website']:
                     website = str(aml['website'])
-                
                 if aml['job position']:
                     job_position = str(aml['job position'])
-                
                 if aml['old code']:
                     old_code = str(aml['old code'])
-                    
                 if aml['email']:
                     email = str(aml['email'])
-                    
                 if aml['fax']:
                     fax = str(aml['fax'])
-                
                 if aml['title']:
                     title = str(aml['title'])
-                    
                 if aml['region']:
                     region = str(aml['region'])
-                
                 if aml['postal code']:
                     postal_code = str(aml['postal code'])
-                    
                 if aml['class']:
                     class_name = str(aml['class'])
-                    
                 if aml['outlet id code']:
                     customer_code = str(aml['outlet id code'])  # #in this case i check the customer id with the customer_code not to be duplicated.i make that there's not contained customer_code ,I fill this blank with customer name + count++
-
                 if aml['outlet name']:
                     shop_name = str(aml['outlet name'])
-                
                 if aml['outlet type']:
                     shop_type = str(aml['outlet type'])
-                    
                 if  aml['address']:
                     address = str(aml['address'])
-                    
                 if aml['ward']:
                     street = str(aml['ward'])
-                    
                 if aml['district']:
                     territory = str(aml['district'])
-                    
                 if aml['township']:
                     township = str(aml['township'])
-                    
                 if aml['village/ village group']:
                     village = str(aml['village/ village group'])
-                    
                 if aml['telephone']:
                     phone = str(aml['telephone'])
-                    
                 if aml['selling brand']:
                     brand = str(aml['selling brand'])
-                    
                 if aml['contact person']:
                     contact = str(aml['contact person'])
-                    
                 if aml['city/town']:
                     city = str(aml['city/town'])
-                    
                 if aml['sale channel']:
                     sale_channel = str(aml['sale channel'])
-                    
                 if aml['branch code']:
                     branch_code = str(aml['branch code'])
-                    
                 if aml['demarcation code']:
                     demarcation = str(aml['demarcation code'])
-                    
                 if aml['ka_tha']:
                     ka_tha = str(aml['ka_tha'])
-                    
                 if aml['display']:
                     display = str(aml['display'])
-                
                 if aml['class']:
                     class_val = str(aml['class'])
-                
                 if website:
                     website = website.strip()
                     website = website.replace('.0', '')
@@ -371,13 +361,8 @@ class partner(osv.osv):
                     else:
                         title_id = title_obj.create(cr, uid, title_rel, context=context)
                         
-                if not country_id:  # no need to create or update country
-                    cr.execute("""select id from res_country where lower(name) like %s""", ('myanmar',))
-                    data = cr.fetchall()
-                    if data:
-                        country_id = data[0][0]
-                    else:
-                        country_id = None
+               
+                    
                         
                 if display:
                     display = display.strip()
@@ -386,14 +371,6 @@ class partner(osv.osv):
                 if branch_code:
                     branch_code = branch_code.strip()
                     branch_code = branch_code.replace('.0', '')
-                    
-                if city:  # no need to create or update city
-                    city = city.strip()
-                    cr.execute("""select id from res_city where lower(name) like %s """, (city.lower(),))
-                    data = cr.fetchall()
-                    if data:
-                        city_id = data[0][0]
-                        
                 if contact:
                     contact = contact.strip()
                 if brand:
@@ -404,14 +381,6 @@ class partner(osv.osv):
                     
                 if village:
                     village = village.strip()
-                    
-                if township:  # no need to update or create township
-                    township = township.strip()
-                    cr.execute("""select id from res_township where lower(name) = %s""", (township.lower(),))
-                    data = cr.fetchall()
-                    
-                    if data:
-                        township_id = data[0][0]
                         
                 if territory:
                     territory = territory.strip()
@@ -441,11 +410,11 @@ class partner(osv.osv):
                     data = cr.fetchall()
                     if data:
                         class_id = data[0][0]
-                    class_res = {'name':class_val, 'class_code':class_val.upper()}
-                    if not class_id:
-                        class_ids = class_obj.create(cr, uid, class_res, context)
-                    else:
-                        class_ids = class_id
+                        class_res = {'name':class_val, 'class_code':class_val.upper()}
+                        if not class_id:
+                            class_ids = class_obj.create(cr, uid, class_res, context)
+                        else:
+                            class_ids = class_id
                         
                 if demarcation:  # no need to update
                     demarcation = demarcation.strip()
@@ -471,7 +440,6 @@ class partner(osv.osv):
                         if not sale_channel_id :
                             sale_channel_ids = sale_channel_obj.create(cr, uid, sale_channel, context)
                         else:
-                           
                             sale_channel_ids = sale_channel_id
                         
                 if region:  # no need to update or create
@@ -480,6 +448,40 @@ class partner(osv.osv):
                     data = cr.fetchall()
                     if data:
                         state_ids = data[0][0]
+                    else:
+                        state_ids = self.pool.get('res.country').create(cr, uid, {
+                                                                                                'code':region[:3],  # get first three words
+                                                                                                'name':region,
+                                                                                                'country_id':country_id
+                                                                                                })
+
+                    
+                if city:  # no need to create or update city
+                    city = city.strip()
+                    cr.execute("""select id from res_city where lower(name) like %s """, (city.lower(),))
+                    data = cr.fetchall()
+                    if data:
+                        city_id = data[0][0]
+                    else:
+                        city_id = self.pool.get('res.city').create(cr, uid, {
+                                                                                                'code':city[:3],  # get first three words
+                                                                                                'name':city,
+                                                                                                'state_id':state_ids
+                                                                                            }, context)
+                    
+                if township:  # no need to update or create township
+                    township = township.strip()
+                    cr.execute("""select id from res_township where lower(name) = %s""", (township.lower(),))
+                    data = cr.fetchall()
+                   
+                    if data:
+                        township_id = data[0][0]
+                    else:
+                        township_id = self.pool.get('res.township').create(cr, uid, {
+                                                                                                'code':township,  # get first three words
+                                                                                                'name':township,
+                                                                                                'city_id':city_id
+                                                                                            }, context)
                         
                 if branch_code:  # no need to update
                     
@@ -541,22 +543,29 @@ class partner(osv.osv):
                         'email':email,
                         'credit_allow':credit_allow,
                         'credit_limit':credit_limit,
+                        'company_id':company_id,
                         'fax':fax}
                 # ##below code is purpose for contained customer_code
-            # #   print 'NOT CONTAIN CUSTOMER_CODE'
 #                 if shop_name or customer_code and shop_ids and sale_channel_ids:
-                if customer_code and shop_name:
-                    cr.execute("""select id from res_partner where lower(customer_code) like %s""", (customer_code.lower(),))
-                    data = cr.fetchall()
-                    if data:
+                if shop_name:
+                    if customer_code:
+                        cr.execute("""select id from res_partner where lower(customer_code) like %s""", (customer_code.lower(),))
+                        data = cr.fetchall()
                         partner_id = data[0][0]
                     if not partner_id:
-                        value['customer_code'] = customer_code
-                        partner_obj.create(cr, uid, value, context)
+                        try:
+                            if customer_code:
+                                value['customer_code'] = customer_code
+                            records=records + 1
+                            #print "record printed count:%s", records
+                            print records,shop_name
+                            partner_obj.create(cr, uid, value, context)
+                        except Exception, e:
+                            error_log += "error running"
+                            
                     else:
                         partner_obj.write(cr, uid, partner_id, value)
                 else:
                     error_log += ' ' + str(customer_code) + '\n'
                 
             self.write(cr, uid, ids[0], {'state': 'completed', 'note':error_log})
-        print amls
