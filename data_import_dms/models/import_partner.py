@@ -287,6 +287,8 @@ class partner(osv.osv):
                     job_position = str(aml['job position'])
                 if aml['old code']:
                     old_code = str(aml['old code'])
+                if aml['rb code']:
+                    rb_code = str(aml['rb code'])   
                 if aml['email']:
                     email = str(aml['email'])
                 if aml['fax']:
@@ -344,6 +346,9 @@ class partner(osv.osv):
                 if old_code:
                     old_code = old_code.strip()
                     old_code = old_code.replace('.0', '')
+                if rb_code:
+                    rb_code = rb_code.strip()
+                    rb_code = rb_code.replace('.0', '')
                 if email:
                     email = email.strip()
                     email = email.replace('.0', '')
@@ -515,11 +520,11 @@ class partner(osv.osv):
                         
                 value = {
                        'customer_code':customer_code,
-                       'shop_name':shop_name,
-                       'street':address,
+                       #'shop_name':shop_name,
+                       'street2':address,
                        'street':street,
                        'outlet_type':shop_ids,
-                       'territory':territory,
+                       'district':territory,
                        'township':township_id,
                        'village':village,
                        'phone':phone,
@@ -527,24 +532,25 @@ class partner(osv.osv):
                        'name':shop_name,
                        'country_id':country_id,
                        'state_id':state_ids,
-                       'zip':postal_code,
+                       'unit':postal_code,
                        'temp_customer':contact,
                        'branch_id':branch_ids,
                        'demarcation_id':demarcation_ids,
                        'sales_channel':sale_channel_ids,
                        'class_id':class_ids,
                        'ref':ka_tha,
-                        'city':city_id,
+                       'city':city_id,
                        'display':display,
                        'title':title_id,
                        'website':website,
                        'function':job_position,
-                        'old_code':old_code,
-                        'email':email,
-                        'credit_allow':credit_allow,
-                        'credit_limit':credit_limit,
-                        'company_id':company_id,
-                        'fax':fax}
+                       'old_code':old_code,
+                       'rb_code':rb_code,
+                       'email':email,
+                       'credit_allow':credit_allow,
+                       'credit_limit':credit_limit,
+                       'company_id':company_id,
+                       'fax':fax}
                 # ##below code is purpose for contained customer_code
 #                 if shop_name or customer_code and shop_ids and sale_channel_ids:
                 if shop_name:

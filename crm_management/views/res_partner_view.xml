@@ -584,41 +584,7 @@
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" ref="view_partner_asset_type_tree" />
 		</record>
-		<!-- for Brand Setup -->
 
-		<record id="view_brand_form" model="ir.ui.view">
-			<field name="name">brand.form</field>
-			<field name="model">brand</field>
-			<field name="arch" type="xml">
-				<form string="Brand Setup" version="7.0">
-					<group>
-						<field name="name" />
-					</group>
-				</form>
-			</field>
-		</record>
-		<record model="ir.ui.view" id="view_brand_tree">
-			<field name="name">brand.tree</field>
-			<field name="model">brand</field>
-			<field name="arch" type="xml">
-				<tree string="Brand Setup">
-					<field name="name" />
-				</tree>
-			</field>
-		</record>
-
-		<record id="action_brand_view" model="ir.actions.act_window">
-			<field name="name">Brand Setup</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">brand</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-			<field name="view_id" eval="view_brand_tree" />
-		</record>
-
-		<menuitem id="config_brand" parent="sale_promotions.sales"
-			name="Brand" action="action_brand_view" groups="base.group_system" />
-		
 		<menuitem id="config_asset_type_action" name="Miscellaneous"
 			parent="base.menu_base_config" sequence="20" />
 		
