@@ -34,6 +34,7 @@
 			    			   	  			 
 			    <xpath expr="//field[@name='state_id']" position="after" >
 			     <field name="city" class="o_address_city" placeholder="City" domain="[('state_id', '=', state_id) ]" style="width: 100%%"/>
+			     
 			    </xpath>
 			    
 	            <xpath expr="//field[@name='zip']" position="replace" >
@@ -41,8 +42,9 @@
 			    </xpath>
 			    
 			    <xpath expr="//field[@name='city']" position="after" >
-			    	 <field name="township" class="o_address_state" placeholder="Township" domain="[('city', '=', city)]" style="width: 66%%" required="1"/>
-			       <field name="zip" class="o_address_city" placeholder="ZIP" style="width: 30%%" invisible="1"/>
+			        <field name="district" placeholder="District" style="width: 60%%"/>
+			    	<field name="township" class="o_address_state" placeholder="Township" domain="[('city', '=', city)]" style="width: 66%%" required="1"/>
+			        <field name="zip" class="o_address_city" placeholder="ZIP" style="width: 30%%" invisible="1"/>
 			    </xpath>
 			    
    	            <xpath expr="//field[@name='street']" position="replace" >
@@ -50,6 +52,7 @@
 			    </xpath>
 			    
 			    <xpath expr="//field[@name='zip']" position="after" >
+			        <field name="village" placeholder="Village..." style="width: 60%%"  required="1"/> 
 	               <field name="street" placeholder="Street..." class="o_address_street"  required="1"/>                            
 	            </xpath>
 	            
@@ -59,7 +62,7 @@
 			    			    
 	            <xpath expr="//field[@name='street']" position="after" >
 	               <field name="street2" placeholder="Street 2..." class="o_address_street"/>                            
-	            </xpath>		  
+	            </xpath>
 
 			</field>
 		</record>        

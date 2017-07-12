@@ -17,6 +17,8 @@
 					<xpath expr="//field[@name='website']" position="after">
 						<field name="outlet_type"
 							attrs="{'invisible':[('customer','=',False)], 'required':[('customer', '=', True)]}" />
+						<field name="brand"
+							attrs="{'invisible':[('customer','=',False)],'required':[('customer', '=', True)]}" />
 						<field name="sales_channel"
 							attrs="{'invisible':[('customer','=',False)],'required':[('customer', '=', True)]}" />
 						<field name="branch_id"
@@ -43,7 +45,8 @@
 						<field name="frequency_id" attrs="{'invisible':[('customer','=',False)]}" />
 
 						<field name="old_code" />
-
+						<field name="display" attrs="{'invisible':[('customer','=',False)]}" />
+						<field name="rb_code" attrs="{'invisible':[('customer','=',False)]}" />
 						<group>
 							<button name="generate_customercode" type="object" string="Generate Code" />
 						</group>

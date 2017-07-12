@@ -262,14 +262,16 @@ class sale_plans_import(osv.osv):
                         print 'sale_team_id>>>', sale_team_id
                         print 'date_data>>>', date_data
                         print 'principal_id>>>', principal_id
-                        if day_plan and sale_team_id and date_data and principal_id:
-                            cr.execute('select id from sale_plan_day where lower(name) like %s and sale_team= %s and date::date =%s ', (day_plan.lower(), sale_team_id, date_data,))
+                        print 'branch>>>',branch_id
+                        if day_plan and sale_team_id and date_data and branch_id:
+                            cr.execute('select id from sale_plan_day where lower(name) like %s and sale_team= %s and date::date =%s and branch_id= %s', (day_plan.lower(), sale_team_id, date_data,branch_id))
                             result = cr.fetchall()
                             if not result:
                                 plan_id = sale_plan_day_obj.create(cr, uid, {'name': day_plan,
                                                                                             'sale_team':sale_team_id,
                                                                                             'date':date_data,
                                                                                             'principal':principal_id,
+                                                                                            'branch_id':branch_id,
                                                                                             'active':True}, context=context)
                                 if plan_id:
                                     # customer link
@@ -502,14 +504,15 @@ class sale_plans_import(osv.osv):
                                         except Exception, e:
                                             raise orm.except_orm(_('Error :'), _("Error while processing Excel Columns. \n\nPlease check your Date!"))
                     
-                    if day_plan and sale_team_id and date_data and principal_id:
-                        cr.execute('select id from sale_plan_trip where lower(name) like %s and sale_team= %s and date::date =%s ', (day_plan.lower(), sale_team_id, date_data,))
+                    if day_plan and sale_team_id and date_data and branch_id:
+                        cr.execute('select id from sale_plan_trip where lower(name) like %s and sale_team= %s and date::date =%s and branch_id= %s', (day_plan.lower(), sale_team_id, date_data,branch_id))
                         result = cr.fetchall()
                         if not result:
                             plan_id = sale_plan_day_obj.create(cr, uid, {'name': day_plan,
                                                                                         'sale_team':sale_team_id,
                                                                                         'date':date_data,
                                                                                         'principal':principal_id,
+																						'branch_id':branch_id,
                                                                                         'active':True}, context=context)
                             if plan_id:
                                 cr.execute("select partner_id from res_partner_sale_plan_trip_rel where sale_plan_trip_id =%s ", (plan_id,))
@@ -521,14 +524,14 @@ class sale_plans_import(osv.osv):
                                     if customer_id:
                                         cr.execute("insert into res_partner_sale_plan_trip_rel(sale_plan_trip_id,partner_id) values(%s,%s)", (plan_id, customer_id,))
                                 # main group link
-                                cr.execute("""select product_maingroup_id from product_maingroup_sale_plan_day_reltrip where sale_plan_trip_id=%s""", (plan_id,))
+                                cr.execute("""select product_maingroup_id from product_maingroup_sale_plan_trip_rel where sale_plan_trip_id=%s""", (plan_id,))
                                 data = cr.fetchall()
                                 if data and main_group_id:
                                     if main_group_id not in data:
-                                        cr.execute("insert into product_maingroup_sale_plan_day_reltrip(sale_plan_trip_id,product_maingroup_id) values(%s,%s)", (plan_id, main_group_id,))
+                                        cr.execute("insert into product_maingroup_sale_plan_trip_rel(sale_plan_trip_id,product_maingroup_id) values(%s,%s)", (plan_id, main_group_id,))
                                 elif not data:
                                     if main_group_id:
-                                        cr.execute("insert into product_maingroup_sale_plan_day_reltrip(sale_plan_trip_id,product_maingroup_id) values(%s,%s)", (plan_id, main_group_id,))
+                                        cr.execute("insert into product_maingroup_sale_plan_trip_rel(sale_plan_trip_id,product_maingroup_id) values(%s,%s)", (plan_id, main_group_id,))
                         else:
                             plan_id = result[0][0]
                             cr.execute("select partner_id from res_partner_sale_plan_trip_rel where sale_plan_trip_id =%s ", (plan_id,))
@@ -540,14 +543,14 @@ class sale_plans_import(osv.osv):
                                 if customer_id:
                                     cr.execute("insert into res_partner_sale_plan_trip_rel(sale_plan_trip_id,partner_id) values(%s,%s)", (plan_id, customer_id,))
                             # main group link
-                            cr.execute("""select product_maingroup_id from product_maingroup_sale_plan_day_reltrip where sale_plan_trip_id=%s""", (plan_id,))
+                            cr.execute("""select product_maingroup_id from product_maingroup_sale_plan_trip_rel where sale_plan_trip_id=%s""", (plan_id,))
                             data = cr.fetchall()
                             if data and main_group_id:
                                 if main_group_id not in data:
-                                    cr.execute("insert into product_maingroup_sale_plan_day_reltrip(sale_plan_trip_id,product_maingroup_id) values(%s,%s)", (plan_id, main_group_id,))
+                                    cr.execute("insert into product_maingroup_sale_plan_trip_rel(sale_plan_trip_id,product_maingroup_id) values(%s,%s)", (plan_id, main_group_id,))
                             elif not data:
                                 if main_group_id:
-                                    cr.execute("insert into product_maingroup_sale_plan_day_reltrip(sale_plan_trip_id,product_maingroup_id) values(%s,%s)", (plan_id, main_group_id,))
+                                    cr.execute("insert into product_maingroup_sale_plan_trip_rel(sale_plan_trip_id,product_maingroup_id) values(%s,%s)", (plan_id, main_group_id,))
                                 
                 self.write(cr, uid, ids, {'state':'completed'}, context=context)                       
             except Exception, e:
