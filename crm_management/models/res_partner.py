@@ -341,9 +341,11 @@ class res_partner(osv.osv):
                 'frequency_id':fields.many2one('plan.frequency','Frequency',required=False),
                 'chiller':fields.boolean('Chiller'),
 		       	'hamper':fields.boolean('Hamper'),
-
+                'rb_code': fields.char('RB Code'),
+                'display': fields.char('Display'),
                 'old_code': fields.char('Old Code'),
                 'sales_channel':fields.many2one('sale.channel', 'Sale Channel'),
+                'brand':fields.many2one('brand', 'Brand'),
                 'address':fields.char('Address'),
                 'branch_id':fields.many2one('res.branch', 'Branch'),
                 'demarcation_id': fields.many2one('sale.demarcation', 'Demarcation'),
@@ -539,3 +541,10 @@ class asset_type(osv.Model):
     _columns = {
                 'name':fields.char('Name',required=True),
                 }
+class brand_setup(osv.osv):
+    _name = 'brand'
+    _columns = {
+                    'name': fields.char('Brand Name', required=True),
+                  
+                }
+brand_setup()
