@@ -57,6 +57,8 @@ Sale Management
         'reports/qweb_view.xml',
         'reports/report_denomination.xml',
         'reports/custom_layout.xml',
+        'reports/invoice_custom_layouts.xml',
+        'reports/report_invoice.xml',
     ],
     'installable': True,
     'auto_install': False,
