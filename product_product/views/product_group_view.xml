@@ -28,7 +28,7 @@
 
 		<!-- Product Group Action -->
 		<record id="action_product_group_view" model="ir.actions.act_window">
-			<field name="name">Sub Group</field>
+			<field name="name">Product Group</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">product.group</field>
 			<field name="view_type">form</field>
@@ -38,7 +38,7 @@
 
 		<!-- Product Group Menu -->
 		<menuitem id="product_group_menu" parent="product_product.product_menu"
-			name="Product Sub Group" action="action_product_group_view" groups="base.group_system" />
+			name="Product Group" action="action_product_group_view" groups="base.group_system" />
 
 	</data>
 </openerp>

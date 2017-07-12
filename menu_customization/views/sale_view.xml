@@ -605,8 +605,11 @@
 			groups="base.group_no_one" id="product.menu_product_category_action_form"
 			parent="product_product.product_menu" sequence="1" />
 		<menuitem id="product_product.product_maingroup_menu" parent="product_product.product_menu"
-			name="Product Principle" action="product_product.action_product_maingroup_view"
+			action="product_product.action_product_maingroup_view"
 			sequence="50" groups="base.group_system" />
+		<menuitem id="product_product.product_devision_menu" parent="product_product.product_menu"
+			action="product_product.action_product_division_view"
+			sequence="51" groups="base.group_system" />
 
 		<!-- Hide Product -->
 		<record model="ir.ui.menu" id="product.prod_config_main">
