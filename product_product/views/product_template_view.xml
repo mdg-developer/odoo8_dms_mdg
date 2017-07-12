@@ -8,8 +8,6 @@
 			<field name="model">product.template</field>
 			<field name="inherit_id" ref="product.product_template_only_form_view" />
 			<field name="arch" type="xml">
-           
-				
 				<!-- "UOM" Tabs -->
 				<xpath expr="//notebook" position="inside">	
 					<page name="uoms" string="UOM">
@@ -35,19 +33,19 @@
 				                                
 				<xpath expr="//page[@string='Accounting']/group/label[@string='Product Category']" position="before">
 <!-- 				<xpath expr="//group[@name='properties']" position="before"> -->					
-<!-- 					<label for="division" string="Division" /> -->
-<!-- 					<div> -->
-<!-- 						<field name="division" colspan="3" nolabel="1" /> -->
-<!-- 					</div>					 -->
+					<label for="division" string="Division" />
+					<div>
+						<field name="division" colspan="3" nolabel="1" />
+					</div>					
 <!-- 					<label for="product_principal_ids" string="Product Principal" /> -->
 <!-- 					<div> -->
 <!-- 						<field name="product_principal_ids" colspan="3" nolabel="1" /> -->
 <!-- 					</div> 					 -->
-					<label for="main_group" string="Product Principal" />
+					<label for="main_group" string="Main Group" />
 					<div>
 						<field name="main_group" colspan="3" nolabel="1" />
 					</div>					
-					<label for="group" string="Sub Group" />
+					<label for="group" string="Group" />
 					<div>
 						<field name="group" colspan="3" nolabel="1" />
 					</div>					
