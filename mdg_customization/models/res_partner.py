@@ -32,8 +32,8 @@ class res_partner(osv.osv):
     _columns = {
                  'is_bank':fields.boolean('Bank Transfer'),
                 'is_cheque':fields.boolean('Cheque'),
-        'partner_latitude': fields.float('Geo Latitude', digits=(16, 5), readonly=True),
-        'partner_longitude': fields.float('Geo Longitude', digits=(16, 5), readonly=True),
+        'partner_latitude': fields.float('Geo Latitude', digits=(16, 5)),
+        'partner_longitude': fields.float('Geo Longitude', digits=(16, 5)),
         'date_localization': fields.date('Geo Localization Date'),
         'contact_note': fields.text('Note'),
        'credit_allow':fields.boolean('Credit Approved'),
