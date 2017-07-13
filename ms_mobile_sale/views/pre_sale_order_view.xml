@@ -219,6 +219,7 @@
 					<field name="sale_plan_day_id" />
 					<field name="user_id" />
 					<field name="sale_team" />
+					<field name="pricelist_id" />
 					<field name="amount_total" />
 					<!-- <field name="type" /> -->
 					<field name="delivery_remark" />
