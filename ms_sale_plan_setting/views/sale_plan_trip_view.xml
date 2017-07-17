@@ -88,6 +88,12 @@
 			<field name="model">sale.plan.trip</field>
 			<field name="arch" type="xml">
 				<search string="Search Sale Plan Trip">
+				    <field name="name"/>
+				    <field name="sale_team"/>
+				    <field name="main_group"/>
+				    <field name="branch_id"/>
+				    <field name="trip_customer_ids"/>
+				    <field name="date"/>
 					<group expand="0" string="Group By...">
 						<filter string="Trip Name" domain="[]"
 							context="{'group_by':'name'}" />
