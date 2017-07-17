@@ -285,9 +285,9 @@ class sale_order(osv.osv):
         return None
 ## customize_model
     _columns={
-              'is_add_discount':fields.boolean('Allow Discount',default=False),
-              'deduct_amt':fields.float('Discount Amount',store=True),
-              'additional_discount':fields.float('Additional Discount',store=True),
+              'is_add_discount':fields.boolean('Allow Discount',default=True),
+              'deduct_amt':fields.float('Deduction Amount',store=True),
+              'additional_discount':fields.float('Additional Discount(%)',store=True),
               'total_dis':fields.function(_amount_all_wrapper, digits_compute=dp.get_precision('Account'), string='Total Discount',
             store={
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
