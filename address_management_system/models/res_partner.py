@@ -11,9 +11,9 @@ class res_partner(osv.osv):
              
             'city':fields.many2one('res.city','City',required=True),
             'township':fields.many2one('res.township','Township',required=True),
-            'village': fields.char('Village',required=True),
+            'village': fields.char('Village'),
             'street': fields.char('Street',required=True),
-            'district': fields.char('District',required=True),
+            'district': fields.char('District'),
                                   
     } 
     

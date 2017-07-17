@@ -18,7 +18,7 @@
 						<field name="outlet_type"
 							attrs="{'invisible':[('customer','=',False)], 'required':[('customer', '=', True)]}" />
 						<field name="brand"
-							attrs="{'invisible':[('customer','=',False)],'required':[('customer', '=', True)]}" />
+							attrs="{'invisible':[('customer','=',False)]}" />
 						<field name="sales_channel"
 							attrs="{'invisible':[('customer','=',False)],'required':[('customer', '=', True)]}" />
 						<field name="branch_id"
