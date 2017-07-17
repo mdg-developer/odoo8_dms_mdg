@@ -6,14 +6,14 @@ class sale_plan_for_day_setup(osv.osv):
                 'name': fields.char('Day Name', required=True),
                 'sale_team':fields.many2one('crm.case.section', 'Sale Team', required=True),
             #    'day_customer_ids': fields.many2many('res.partner', id1='sale_plan_day_id', id2='partner_id', string='Partners'),               
-                 'day_customer_ids':fields.many2many('res.partner', 'res_partner_sale_plan_day_rel', id1='sale_plan_day_id', id2='partner_id', string='Day Customer'),
-                 'trip_customer_ids':fields.many2many('res.partner', 'res_partner_sale_plan_day_rel', id1='sale_plan_day_id', id2='partner_id', string='Trip Customer'),
-                 'date':fields.date('Date'),
+                'day_customer_ids':fields.many2many('res.partner', 'res_partner_sale_plan_day_rel', id1='sale_plan_day_id', id2='partner_id', string='Day Customer'),
+                'trip_customer_ids':fields.many2many('res.partner', 'res_partner_sale_plan_day_rel', id1='sale_plan_day_id', id2='partner_id', string='Trip Customer'),
+                'date':fields.date('Date'),
                 'principal':fields.many2one('product.principal', 'Principal'),
-                 'main_group':fields.many2many('product.maingroup', 'product_maingroup_sale_plan_day_rel', id1='sale_plan_day_id', id2='product_maingroup_id', string='Main Group'),
-                 'branch_id':fields.many2one('res.branch', 'Branch'),                
-                 'active':fields.boolean('Active'),
-                 'week':fields.integer('Week'),                 
+                'main_group':fields.many2many('product.maingroup', 'product_maingroup_sale_plan_day_rel', id1='sale_plan_day_id', id2='product_maingroup_id', string='Main Group'),
+                'branch_id':fields.many2one('res.branch', 'Branch'),                
+                'active':fields.boolean('Active'),
+                'week':fields.integer('Week'),                 
                }
     _defaults = {
                'active':True

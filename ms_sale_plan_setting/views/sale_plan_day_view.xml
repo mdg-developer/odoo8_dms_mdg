@@ -94,6 +94,13 @@
 			<field name="model">sale.plan.day</field>
 			<field name="arch" type="xml">
 				<search string="Search Sale Plan Day">
+				    <field name="name"/>
+				    <field name="sale_team"/>
+				    <field name="main_group"/>
+				    <field name="branch_id"/>
+				    <field name="day_customer_ids"/>
+				    <field name="week"/>
+				    <field name="date"/>
 					<group expand="0" string="Group By...">
 						<filter string="Day Name" domain="[]" context="{'group_by':'name'}" />
 						<filter string="Sales Team" domain="[]"
