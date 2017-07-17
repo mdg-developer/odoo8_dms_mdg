@@ -591,9 +591,9 @@
 		<!-- <record model="ir.ui.menu" id="sale.menu_sale_quotations"> <field 
 			name="groups_id" eval="[(6,0,[ref('make_invisible')])]" /> </record> -->
 		<!-- Import Sale Order -->
-		<record model="ir.ui.menu" id="data_import_dms.menu_data_import_mobile_so">
+		<!-- <record model="ir.ui.menu" id="data_import_dms.menu_data_import_mobile_so">
 			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
-		</record>
+		</record> -->
 		<!-- sale Ordeer Config -->
 		<record model="ir.ui.menu" id="crm_management.config_sale_order">
 			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
