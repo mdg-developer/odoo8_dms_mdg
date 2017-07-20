@@ -497,7 +497,11 @@
 		<!-- Promotion -->
 		<menuitem id="sale_promotions.promos" parent="sale_management.promotions"
 			action="sale_promotions.act_promotion_rules" sequence="1" />
-
+		<!-- Add Cash Denomination in Sales -->
+		<menuitem action="sale_management.action_sales_denomination_view"
+			id="sales_denomination_sales" groups="base.group_sale_admin"
+			name="Cash Denomination" parent="ms_mobile_sale_credit.ar_collection_menu" sequence="1" />
+		
 		<!-- Tools -->
 
 		<record model="ir.ui.menu" id="crm.partner_merge_automatic_menu">
