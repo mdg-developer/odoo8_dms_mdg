@@ -32,13 +32,17 @@ from openerp import workflow
 from openerp.exceptions import except_orm, Warning, RedirectWarning
 from openerp.tools import float_compare
 import openerp.addons.decimal_precision as dp
+
+
+
+
 class sale_order_line(osv.osv):
 
     _inherit='sale.order.line'
     
 ## customize_model need to calculate the dis (%) to dis(amt) or dis(amt) to dis(%)
 
-      
+          
     def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
         tax_obj = self.pool.get('account.tax')
         cur_obj = self.pool.get('res.currency')
@@ -60,11 +64,10 @@ class sale_order_line(osv.osv):
 #                     cur = line.order_id.pricelist_id.currency_id
 #                     res[line.id] = cur_obj.round(cr, uid, cur, taxes['total'])       
             if line.discount_amt>0:
-
-                    price = line.price_unit
+                    price = line.price_unit - (line.discount_amt /line.product_uom_qty)
                     taxes = tax_obj.compute_all(cr, uid, line.tax_id, price, line.product_uom_qty, line.product_id, line.order_id.partner_id)
                     cur = line.order_id.pricelist_id.currency_id
-                    res[line.id] = cur_obj.round(cr, uid, cur, taxes['total']-line.discount_amt) 
+                    res[line.id] = cur_obj.round(cr, uid, cur, taxes['total']) 
             else:
                 price = line.price_unit
                 taxes = tax_obj.compute_all(cr, uid, line.tax_id, price, line.product_uom_qty, line.product_id, line.order_id.partner_id)
@@ -82,7 +85,6 @@ class sale_order_line(osv.osv):
         if context is None:
             context = {}
         for line in self.browse(cr, uid, ids, context=context):
-            
             price = line.price_unit
             qty=line.product_uom_qty
             amount=price*qty
@@ -90,12 +92,13 @@ class sale_order_line(osv.osv):
             cur = line.order_id.pricelist_id.currency_id
             res[line.id] = cur_obj.round(cr, uid, cur, amount)
         return res
-		
+    
     def _get_price_reduce(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, 0.0)
         for line in self.browse(cr, uid, ids, context=context):
             res[line.id] = line.net_total / line.product_uom_qty
         return res
+    
     def onchange_discount_amount(self, cr, uid, ids, discount_amt,product_uom_qty, price_unit,context=None):
         val = {'discount': 0.0}
         print 'discount_amt',discount_amt
@@ -104,12 +107,14 @@ class sale_order_line(osv.osv):
             val['discount'] = discount
             globvar=1
         return {'value': val}
+    
     def onchange_discount_percent(self, cr, uid, ids, discount,product_uom_qty, price_unit,context=None):
         val = {'discount_amt': 0.0}
         if price_unit:
             discount_amt =float(discount) *(float(price_unit*product_uom_qty)) / 100
             val['discount_amt'] = discount_amt
         return {'value': val}     
+    
     def foc_change(self, cr, uid, ids, product, qty=0, context=None):
         product_obj = self.pool.get('product.product')
         domain = {}
@@ -136,7 +141,7 @@ class sale_order_line(osv.osv):
                'net_total':fields.function(_amount_line, string='Total', digits_compute= dp.get_precision('Account')),
                'discount':fields.float('Discount (%)',store=True, readonly=True),
                'discount_amt':fields.float('Discount (amt)',store=True, readonly=True),
-               'sale_foc':fields.boolean('FOC', readonly=True),
+               'sale_foc':fields.boolean('FOC'),
               # 'show_amt':fields.function(_amount_line2,string='Total Discount(-)',readonly=True)
               'product_type':fields.char('Product Type'),
                
@@ -362,6 +367,7 @@ class sale_order(osv.osv):
                 print 'total',total
                 cr.execute('update sale_order so set amount_total=%s,total_dis=%s,deduct_amt=%s,additional_discount=%s where so.id=%s',(total,total_dis_amt,deduct,additional_discount,ids[0]))
         return True
+    
     ## customize_model
     def _prepare_invoice(self, cr, uid, order, lines, context=None):
         """Prepare the dict of values to create the new invoice for a

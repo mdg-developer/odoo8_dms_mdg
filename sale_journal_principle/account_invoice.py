@@ -640,15 +640,15 @@ class account_invoice(models.Model):
                 analytic_account_id = res['analytic_account_id']
             price = credit + debit
             tax = 0.05
-            div_amt = 1 - tax
+            div_amt =( 1 + tax) 
             if price != 0.0:
                 rec = {
                             'date_maturity': date_maturity,
                             'partner_id': partner_id,
                             'name': '/',
                             'date': date,
-                            'debit': debit+(tax * debit / div_amt),
-                            'credit':credit+ (tax * credit / div_amt),
+                            'debit': debit * div_amt,
+                            'credit':credit * div_amt,
                             'account_id': account_id,
                             'analytic_lines': analytic_lines,
                             'amount_currency': amount_currency,
