@@ -71,6 +71,24 @@ class mobile_ar_collection(osv.osv):
 #         datas = cr.fetchall()
 #         cr.execute
 #         return datas
+
+    def on_change_invoice_id(self, cr, uid, ids, invoice_id, context=None):
+        values = {}
+        invoice_obj = self.pool.get('account.invoice')
+        if invoice_id:
+            invoice = invoice_obj.browse(cr, uid, invoice_id, context=context)
+            values = {
+                'partner_id': invoice.partner_id.id,
+                'invoice_date':invoice.date_invoice,
+                'payment_term':invoice.payment_term.id,
+                'sale_team_id':invoice.section_id.id,
+                'user_id':invoice.user_id.id,
+                'branch_id':invoice.branch_id.id,
+                'due_date':invoice.date_due,
+                'so_amount':invoice.amount_total,
+                'credit_limit':invoice.partner_id.credit_limit,
+            }
+        return {'value': values}
      
 mobile_ar_collection()
 
