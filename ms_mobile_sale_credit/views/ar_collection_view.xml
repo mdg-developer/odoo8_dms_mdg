@@ -16,7 +16,7 @@
 								<field name="ref_no" invisible="1" />
 								<field name="name" />
 								<field name="partner_id" />
-								<field name="invoice_id" />
+								<field name="invoice_id" on_change="on_change_invoice_id(invoice_id)" />
 								<field name="invoice_date" />
 								<field name="so_ref" invisible="1" />
 								<field name="payment_term" />

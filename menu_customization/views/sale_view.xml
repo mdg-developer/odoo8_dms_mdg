@@ -497,7 +497,11 @@
 		<!-- Promotion -->
 		<menuitem id="sale_promotions.promos" parent="sale_management.promotions"
 			action="sale_promotions.act_promotion_rules" sequence="1" />
-
+		<!-- Add Cash Denomination in Sales -->
+		<menuitem action="sale_management.action_sales_denomination_view"
+			id="sales_denomination_sales" groups="base.group_sale_admin"
+			name="Cash Denomination" parent="ms_mobile_sale_credit.ar_collection_menu" sequence="1" />
+		
 		<!-- Tools -->
 
 		<record model="ir.ui.menu" id="crm.partner_merge_automatic_menu">
@@ -660,5 +664,25 @@
 
 		<menuitem action='stock_requisition.action_stock_return' id="inherit_menu_action_stock_return"
 			parent="menu_sales_report_menu" groups="base.group_sale_manager" />
+		
+       <record id="action_picking_tree_waiting_1" model="ir.actions.act_window">
+            <field name="name">Waiting Availability Transfers</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="domain"></field>
+            <field name="context">{
+                    'search_default_waiting': 1,
+            }
+            </field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+        </record>		
+		
+        <menuitem
+            action="action_picking_tree_waiting_1"
+            id="menu_action_picking_waiting_form"
+            parent="stock.menu_stock_warehouse_mgmt"  name ='Waiting Availability Transfers'  sequence="2"/>		
+            
 	</data>
 </openerp>
