@@ -289,8 +289,8 @@ class account_invoice(models.Model):
         self.discount_total =total_discount_amt
         self.amount_total = self.amount_untaxed + self.amount_tax - self.deduct_amt -(self.amount_untaxed *(self.additional_discount/100))
          
-    _columns={'deduct_amt':fields.float('Discount Amount'),
-                     'additional_discount':fields.float('Additional Discount'),
+    _columns={'deduct_amt':fields.float('Deduction Amount'),
+                     'additional_discount':fields.float('Additional Discount(%)'),
                   'discount_total':fields.float('Discount Total' ,digits=dp.get_precision('Account'),store=True, readonly=True, compute='_compute_amount', track_visibility='always'),
                     
                   }

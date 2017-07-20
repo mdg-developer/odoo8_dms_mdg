@@ -52,7 +52,7 @@
 			    </xpath>
 			    
 			    <xpath expr="//field[@name='zip']" position="after" >
-			        <field name="village" placeholder="Village..." style="width: 60%%"  required="1"/> 
+			        <field name="village" placeholder="Village..." style="width: 60%%" /> 
 	               <field name="street" placeholder="Street..." class="o_address_street"  required="1"/>                            
 	            </xpath>
 	            

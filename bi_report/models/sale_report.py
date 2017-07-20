@@ -35,6 +35,12 @@ class sale_report(osv.osv):
        'group_id': fields.many2one('product.group','Group of Product', readonly=True),
        'main_group_id': fields.many2one('product.maingroup','Main Group of Product', readonly=True),
        'division_id': fields.many2one('product.division','Division of Product', readonly=True),
+       'township_id': fields.many2one('res.township','Township', readonly=True),
+       'branch_id': fields.many2one('res.branch','Branch', readonly=True),
+       'product_id': fields.many2one('product.product','Product', readonly=True),
+       'district': fields.text('district','District', readonly=True),
+       'demarcation_id': fields.many2one('sale.demarcation','Demarcation', readonly=True),
+       'state_id': fields.many2one('res.country.state','Region', readonly=True),
     }
     
     
@@ -66,6 +72,11 @@ class sale_report(osv.osv):
                     s.pricelist_id as pricelist_id,
                     s.project_id as analytic_account_id,
                     s.section_id as section_id,
+                    s.branch_id as branch_id,
+                    s.township as township_id,
+                    s.state_id as state_id,
+                    rp.district as district,
+                    rp.demarcation_id as demarcation_id,
                     t.group as group_id,
                     t.main_group as main_group_id,
                     t.division as division_id
@@ -75,7 +86,8 @@ class sale_report(osv.osv):
     def _from(self):
         from_str = """
                 sale_order_line l
-                      join sale_order s on (l.order_id=s.id)
+                    join sale_order s on (l.order_id=s.id)
+                    join res_partner rp on (rp.id=s.partner_id)
                     left join product_product p on (l.product_id=p.id)
                     left join product_template t on (p.product_tmpl_id=t.id)
                     left join product_uom u on (u.id=l.product_uom)
@@ -103,9 +115,14 @@ class sale_report(osv.osv):
                     s.pricelist_id,
                     s.project_id,
                     s.section_id,
+                    s.branch_id,
                     t.group,
                     t.main_group,
-                    t.division
+                    t.division,
+                    s.township,
+                    s.state_id,
+                    rp.district,
+                    rp.demarcation_id
         """
         return group_by_str
 
