@@ -78,6 +78,7 @@ class mobile_ar_collection(osv.osv):
         if invoice_id:
             invoice = invoice_obj.browse(cr, uid, invoice_id, context=context)
             values = {
+                'ref_no': invoice.number,
                 'partner_id': invoice.partner_id.id,
                 'invoice_date':invoice.date_invoice,
                 'payment_term':invoice.payment_term.id,
