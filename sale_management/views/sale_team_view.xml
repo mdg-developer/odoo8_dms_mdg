@@ -67,6 +67,7 @@
 				</field>
 				<field name="active" position="after">
 					<field name="allow_foc" />
+					<field name="allow_tax" />
 				</field>
 				<page string="Team Members" position="after">
 					<page string="Products">

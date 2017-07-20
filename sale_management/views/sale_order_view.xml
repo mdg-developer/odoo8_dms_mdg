@@ -77,11 +77,19 @@
 			<field name="model">sale.order</field>
 			<field name="inherit_id" ref="sale.view_order_form" />
 			<field name="arch" type="xml">
+
+				<xpath expr="//button[@string='Create Invoice']" position="replace">
+					<button name="%(sale.action_view_sale_advance_payment_inv)d"
+						string="Create Invoice" type="action" states="manual" class="oe_highlight"
+						groups="base.group_user,base.group_sale_supervisor" />
+				</xpath>
 				<xpath expr="//button[@name='action_quotation_send']"
 					position="after">
 					<button name="is_generate_RFI" string="Missed Order" type="object"
-						class="oe_highlight" states="manual" groups="base.group_user" />
+						class="oe_highlight" states="manual" groups="base.group_user"
+						invisible="1" />
 				</xpath>
+				
 				<xpath expr="//form/sheet/notebook/page/field/tree/field[@name='name']"
 					position="replace">
 					<field name="name" invisible="1" />
@@ -204,7 +212,7 @@
 		</record>
 
 
-		
+
 
 	</data>
 </openerp>

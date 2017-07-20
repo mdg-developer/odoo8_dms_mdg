@@ -6,7 +6,34 @@ from openerp.exceptions import except_orm, Warning, RedirectWarning
 from openerp.tools import float_compare
 import openerp.addons.decimal_precision as dp
 
-
+class account_invoice_tax(models.Model):
+    _inherit = "account.invoice.tax"
+    _description = "Invoice Tax"
+    _order = 'sequence'
+    @api.model
+    def move_line_get(self, invoice_id):
+        res = []
+        self._cr.execute(
+            'SELECT * FROM account_invoice_tax WHERE invoice_id = %s',
+            (invoice_id,)
+        )
+        for row in self._cr.dictfetchall():
+            if not (row['amount'] or row['tax_code_id'] or row['tax_amount']):
+                continue
+            row['is_discount'] = False
+            res.append({
+                'type': 'tax',
+                'name': row['name'],
+                'price_unit': row['amount'],
+                'quantity': 1,
+                'price': row['amount'] or 0.0,
+                'account_id': row['account_id'],
+                'tax_code_id': row['tax_code_id'],
+                'tax_amount': row['tax_amount'],
+                'account_analytic_id': row['account_analytic_id'],
+                'is_discount':False,
+            })
+        return res
 class account_invoice(models.Model):
     _inherit = "account.invoice"
     
@@ -259,7 +286,7 @@ class account_invoice(models.Model):
                     'product_uom_id': line.get('uos_id', False),
                     'analytic_account_id': line.get('account_analytic_id', False),
                     'main_group': account_id,
-                                        'is_discount': line.get('is_discount', False),
+                    'is_discount': line.get('is_discount', False),
 
                 }
                 return res    
@@ -268,7 +295,7 @@ class account_invoice(models.Model):
         account_id = None
         cr = self._cr
         type = 'out_invoice' 
-        discount_amt=0
+        discount_amt = 0
         print 'line_get_convert_newline_get_convert_new', line, part, self.id
         origin = line.get('ref', False)
         if origin:
@@ -278,7 +305,8 @@ class account_invoice(models.Model):
                 type = type[0]
             else:
                 type = None
-        if type == 'out_invoice'  :
+
+        if type == 'out_invoice' and line.get('product_id', False) != False:
             product = self.env['product.product'].browse(line.get('product_id', False))
             product_code = product.default_code
             print 'product_code', product_code
@@ -286,7 +314,7 @@ class account_invoice(models.Model):
                 product = self.env['product.product'].browse(line.get('product_id', False))
                 print 'product>>>', product.id
                 print 'line.get>>>', line.get('product_id', False)
-                if origin and line['is_discount'] == False:
+                if origin and line['is_discount'] == False :
                     cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s", (origin, product.id,))
                     dis_amt = cr.fetchall()
                     if dis_amt:     
@@ -327,7 +355,7 @@ class account_invoice(models.Model):
 
                 }
                 return res
-        if type == 'in_refund' :
+        if type == 'in_refund' and line.get('product_id', False) != False:
             product = self.env['product.product'].browse(line.get('product_id', False))
             product_code = product.default_code
             if line['price'] < 0 or line['is_discount'] == True or product_code == 'discount1' or  product_code == 'discount2' or product_code == 'discount3' or  product_code == 'discount4' or  product_code == 'discount5' :
@@ -375,7 +403,7 @@ class account_invoice(models.Model):
 
                 }
                 return res            
-        if type == 'out_refund' :
+        if type == 'out_refund'  and line.get('product_id', False) != False:
             product = self.env['product.product'].browse(line.get('product_id', False))
             product_code = product.default_code            
             if line['price'] > 0 or line['is_discount'] == True or  product_code == 'discount1' or  product_code == 'discount2' or product_code == 'discount3' or  product_code == 'discount4' or  product_code == 'discount5' :
@@ -388,7 +416,7 @@ class account_invoice(models.Model):
                     if dis_amt:     
                         for amt in dis_amt:
                             discount_amt = discount_amt + amt[0];
-                        line['price'] = line['price']  - discount_amt       
+                        line['price'] = line['price'] - discount_amt       
                 if  line['is_discount'] == True:
                     account_id = product.product_tmpl_id.main_group.property_account_discount.id
                     line['price'] = -1 * line['price']
@@ -424,7 +452,7 @@ class account_invoice(models.Model):
 
                 }
                 return res
-        if type == 'in_invoice' :
+        if type == 'in_invoice' and line.get('product_id', False) != False:
             product = self.env['product.product'].browse(line.get('product_id', False))
             product_code = product.default_code            
             if line['price'] > 0  or line['is_discount'] == True or product_code == 'discount1' or  product_code == 'discount2' or product_code == 'discount3' or  product_code == 'discount4' or  product_code == 'discount5'  :
@@ -611,14 +639,16 @@ class account_invoice(models.Model):
                 product_uom_id = res['product_uom_id']
                 analytic_account_id = res['analytic_account_id']
             price = credit + debit
+            tax = 0.05
+            div_amt = 1 - tax
             if price != 0.0:
                 rec = {
                             'date_maturity': date_maturity,
                             'partner_id': partner_id,
                             'name': '/',
                             'date': date,
-                            'debit': debit,
-                            'credit': credit,
+                            'debit': debit+(tax * debit / div_amt),
+                            'credit':credit+ (tax * credit / div_amt),
                             'account_id': account_id,
                             'analytic_lines': analytic_lines,
                             'amount_currency': amount_currency,
@@ -687,7 +717,7 @@ class account_invoice(models.Model):
                                 'partner_id': partner_id,
                                 'name': name,
                                 'date': date,
-                                'debit': debit,
+                                'debit': debit ,
                                 'credit': credit,
                                 'account_id': account_id,
                                 'analytic_lines': analytic_lines,
@@ -894,7 +924,7 @@ class account_invoice(models.Model):
                 print 'res', res
                 data.append(res)
             iml = data
-            print 'imllllllllllllllllllll',iml
+            print 'imllllllllllllllllllll', iml
             line_cr = [self.line_get_convert_new(l, part.id, date) for l in iml]
             line_tmp = [self.line_get_convert_dr(l, part.id, date) for l in iml]
             line_dr = self.line_dr_convert_account_with_principle(line_tmp)

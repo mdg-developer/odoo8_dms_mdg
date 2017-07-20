@@ -514,7 +514,12 @@ class mobile_sale_order(osv.osv):
                                               'sale_foc':foc
                                            }
                                 
-                                solObj.create(cr, uid, solResult, context=context)
+                                sol_id =solObj.create(cr, uid, solResult, context=context)
+                                cr.execute("select id from account_tax where description ='SCT 5%'")
+                                tax_id=cr.fetchone()
+                                if tax_id:
+                                    tax_id=tax_id[0]
+                                    cr.execute("insert  into sale_order_tax (order_line_id,tax_id) values (%s,%s)",(sol_id,tax_id,))                  
                                 if soId:
                                     soObj.button_dummy(cr, uid, [soId], context=context)  # update the SO
                                     
@@ -1124,7 +1129,7 @@ class mobile_sale_order(osv.osv):
         cr.execute
         return datas
     def sale_team_return(self, cr, uid, section_id , saleTeamId, context=None, **kwargs):
-        cr.execute('''select DISTINCT cr.id,cr.complete_name,cr.warehouse_id,cr.name,sm.member_id,cr.code,pr.product_product_id,cr.location_id,cr.allow_foc
+        cr.execute('''select DISTINCT cr.id,cr.complete_name,cr.warehouse_id,cr.name,sm.member_id,cr.code,pr.product_product_id,cr.location_id,cr.allow_foc,cr.allow_tax
                     from crm_case_section cr, sale_member_rel sm,crm_case_section_product_product_rel pr where sm.section_id = cr.id and cr.id=pr.crm_case_section_id  
                     and sm.member_id =%s 
                     and cr.id = %s
@@ -1255,7 +1260,7 @@ class mobile_sale_order(osv.osv):
                         'promo_line_id':saleOrder_Id,
                         'pro_id':pro_line['pro_id'],
                         'from_date':pro_line['from_date'],
-                        'to_date':pro_line['to_date'] ,
+                        'to_date':pro_line['to_date'],
                         }
                     mso_promotion_line_obj.create(cursor, user, promo_line_result, context=context)
             return True

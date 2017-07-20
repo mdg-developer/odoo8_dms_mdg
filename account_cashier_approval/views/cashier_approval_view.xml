@@ -40,7 +40,7 @@
 						<notebook>
 							<page string="Invoice">
 
-								<field name="cashier_line">
+								<field name="cashier_line" attrs="{'readonly':[('state','=','done')]}">
 									<form string="Invoice Lines">
 
 										<field name="invoice_id" />
@@ -76,7 +76,7 @@
 								<group>
 									<label for="ar_line" string="AR Collection" />
 								</group>
-								<field name="ar_line">
+								<field name="ar_line" attrs="{'readonly':[('state','=','done')]}">
 									<form string="AR Lines">
 
 										<field name="invoice_id" />
@@ -111,17 +111,14 @@
 								<group>
 									<label for="credit_line" string="Credit Note" />
 								</group>
-								<field name="credit_line">
+								<field name="credit_line" attrs="{'readonly':[('state','=','done')]}">
 									<form string="Credit Lines">
-
 										<field name="credit_id" />
 										<field name="invoice_id" />
 										<field name="date" />
 										<field name="partner_id" />
 										<field name="amount" />
 										<field name="selected" />
-
-
 									</form>
 									<tree string="Invoice Lines" editable="bottom">
 										<field name="credit_id" />
@@ -156,7 +153,7 @@
 
 							</page>
 							<page string="Denomination">
-								<field name="denomination_line">
+								<field name="denomination_line" attrs="{'readonly':[('state','=','done')]}">
 									<form string="Denomination Lines">
 										<field name="notes" />
 										<field name="note_qty" />
@@ -179,7 +176,7 @@
 							</page>
 
 							<page string="Payment">
-								<field name="cashier_customer_payment_line">
+								<field name="cashier_customer_payment_line" attrs="{'readonly':[('state','=','done')]}">
 									<form string="Payment Lines">
 										<field name="invoice_id" />
 										<field name="date_invoice" />
@@ -187,7 +184,7 @@
 										<field name="journal_id" />
 										<field name="amount" />
 										<field name="notes" />
-										<field name="selected" invisible="1" />
+										<field name="selected" invisible="0" />
 									</form>
 									<tree string="Payment Lines" editable="bottom">
 										<field name="invoice_id" />
@@ -196,7 +193,7 @@
 										<field name="journal_id" />
 										<field name="amount" />
 										<field name="notes" />
-										<field name="selected" invisible="1" />
+										<field name="selected" invisible="0"  readonly="1"/>
 									</tree>
 								</field>
 							</page>

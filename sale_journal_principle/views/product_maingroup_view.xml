@@ -12,7 +12,6 @@
 					<xpath expr="//field[@name='name']" position="after">
 
 						<field name="property_account_receivable" />
-
 						<field name="property_account_payable" />
 						<field name="property_account_foc" />
 						<field name="property_account_discount" />
