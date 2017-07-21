@@ -4,14 +4,20 @@
 
 
 		<!-- customize form for sale order line view -->
-		<record id="view_account_invoice_report_form" model="ir.ui.view">
-			<field name="name">account.invoice.report</field>
+		<record id="view_account_invoice_inherit_form" model="ir.ui.view">
+			<field name="name">account.invoice</field>
 			<field name="model">account.invoice</field>
 			<field name="inherit_id" ref="account.invoice_form" />
 			<field name="arch" type="xml">
-				<field name="internal_number" position="after">
+				<!-- <field name="internal_number" position="after">
 					<field name="sale_order_id" invisible="1" />
-				</field>
+				</field> -->
+				<xpath expr="//button[@string='Validate']" position="replace">
+				    <button name="invoice_open" states="draft" string="Validate" 
+				        class="oe_highlight" groups="base.group_user,base.group_sale_manager"/>
+				     <button name="invoice_open" states="proforma2" string="Validate" 
+                        groups="base.group_user,base.group_sale_manager"/>
+				</xpath>
 			</field>
 		</record>
 
