@@ -83,6 +83,10 @@
 						string="Create Invoice" type="action" states="manual" class="oe_highlight"
 						groups="base.group_user,base.group_sale_supervisor" />
 				</xpath>
+				<xpath expr="//button[@string='View Invoice']" position="replace">
+				   <button name="action_view_invoice" string="View Invoice" type="object" class="oe_highlight"
+                            attrs="{'invisible': [('invoice_exists', '=', False)]}" groups="base.group_user,base.group_sale_manager"/>
+				</xpath>
 				<xpath expr="//button[@name='action_quotation_send']"
 					position="after">
 					<button name="is_generate_RFI" string="Missed Order" type="object"
