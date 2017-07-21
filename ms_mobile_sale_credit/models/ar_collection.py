@@ -1,10 +1,11 @@
 from openerp.osv import fields, osv
+from libxmlmods.libxml2mod import parent
 
 class ar_payment(osv.osv):
     _name = "ar.payment"
     _columns = {               
                    'collection_id':fields.many2one('mobile.ar.collection', 'Line'),
-                   'journal_id'  : fields.many2one('account.journal', 'Payment Method' ,domain=[('type','in',('cash','bank'))]),      
+                   'journal_id'  : fields.many2one('account.journal', 'Payment Method' ,domain=[('type','in',('cash','bank')),('is_tablet','=','True')]),      
                    'amount':fields.float('Paid Amount'),
                    'notes':fields.char('Payment Ref'),
                    'date':fields.date('Date'),
@@ -13,6 +14,30 @@ class ar_payment(osv.osv):
                    'sale_team_id':fields.many2one('crm.case.section', 'Sale Team'),
                    'payment_code':fields.char('Payment Code'),
         }    
+    
+    def on_change_journal_id(self, cr, uid, ids, journal_id, ref_no, context=None):
+        values = {}
+        journal_obj = self.pool.get('account.journal')
+        print 'ref_no>>>',ref_no
+        if journal_id:
+            journal = journal_obj.browse(cr, uid, journal_id, context=context)
+            if journal.name =='Cash':
+                values = {
+                    'payment_code':'CASH',
+                    'notes':ref_no,
+                    
+                }
+            elif journal.name =='Bank':
+                values = {
+                    'payment_code':'BNK',
+                    'notes':ref_no,
+                }
+            elif journal.name =='Cheque':
+                values = {
+                    'payment_code':'CHEQ',
+                    'notes':ref_no,
+                }
+        return {'value': values}
     
 class mobile_ar_collection(osv.osv):
     _name = "mobile.ar.collection"

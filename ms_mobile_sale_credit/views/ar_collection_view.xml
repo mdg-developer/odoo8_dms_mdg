@@ -39,7 +39,8 @@
 								<field name="payment_line_ids">
 									<tree string="Payment Lines" editable="bottom">
 										<field name="date" />
-										<field name="journal_id" widget="selection" />
+										<field name="journal_id" widget="selection" on_change="on_change_journal_id(journal_id,parent.ref_no)"/>
+										<field name="payment_code"/>
 										<field name="cheque_no" />
 										<field name="amount" sum="Price" />
 										<field name="notes" />
