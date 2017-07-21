@@ -43,7 +43,6 @@ Sale Management
         'views/report_saleorder.xml',
          'views/report_invoice.xml',
      'wizard/sale_team_date_view.xml',
-      
         'views/sale_team_view.xml',
         'views/sale_order_view.xml',
         'views/sale_return_view.xml',
@@ -60,6 +59,7 @@ Sale Management
         'reports/deliver_order_custom_layouts.xml',
         'reports/report_pre_sale_order.xml',
         'reports/report_stock_picking.xml',
+        'wizard/location_assign_view.xml',
     ],
     'installable': True,
     'auto_install': False,
