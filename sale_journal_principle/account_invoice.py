@@ -5,7 +5,7 @@ from openerp import models, fields, api, _
 from openerp.exceptions import except_orm, Warning, RedirectWarning
 from openerp.tools import float_compare
 import openerp.addons.decimal_precision as dp
-
+from decimal import *
 class account_invoice_tax(models.Model):
     _inherit = "account.invoice.tax"
     _description = "Invoice Tax"
@@ -112,15 +112,19 @@ class account_invoice(models.Model):
     def line_get_convert(self, line, part, date):
         print 'check>>>', line
         if line is not None:
-            print 'lineeeeeeeee', line['debit'], line['credit']
-            price = line['debit'] + line['credit'],
+
+            debit = round( line['debit'], 1)
+            credit = round( line['credit'], 1)
+            price = debit+ credit,
+            print 'price',price
+
             return {
                 'date_maturity': line.get('date_maturity', False),
                 'partner_id': part,
                 'name': line['name'][:64],
                 'date': date,
-                'debit': line['debit'],  # line['price']>0 and line['price'],
-                'credit': line['credit'],  # line['price']<0 and -line['price'],
+                'debit': round( line['debit'], 1),  # line['price']>0 and line['price'],
+                'credit':  round( line['credit'], 1),  # line['price']<0 and -line['price'],
                 'account_id': line['account_id'],
                 # 'account_id': account_id,
                 'analytic_lines': line.get('analytic_lines', []),
@@ -317,9 +321,11 @@ class account_invoice(models.Model):
                 if origin and line['is_discount'] == False :
                     cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s", (origin, product.id,))
                     dis_amt = cr.fetchall()
+                    print 'diccccccccccccccccccccc',dis_amt
                     if dis_amt:     
                         for amt in dis_amt:
-                            discount_amt = discount_amt + amt[0];
+                            if amt[0] is not None:
+                                discount_amt = discount_amt + amt[0];
                         line['price'] = line['price'] + discount_amt        
                 if  line['is_discount'] == True:
                     account_id = product.product_tmpl_id.main_group.property_account_discount.id
@@ -932,6 +938,7 @@ class account_invoice(models.Model):
             # line_dr = [(0, 0, self.line_get_convert_accountid(l, part.id, date)) for l in line_cr]
             lines = line_cr + line_dr
             line = [(0, 0, self.line_get_convert(l, part.id, date)) for l in lines  if l is not None]
+            print 'line',line
             
             line = inv.group_lines(iml, line)
 

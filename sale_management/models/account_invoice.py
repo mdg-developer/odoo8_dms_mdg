@@ -37,4 +37,5 @@ class account_invoice(osv.osv):
         return result    
     _columns = {
               'sale_order_id':fields.function(_get_corresponding_sale_order, type='many2one', relation='sale.order', string='Sale Order'),
+                  'origin' : fields.char(string='Source Document',help="Reference of the document that produced this invoice.",readonly=True,required=True, states={'draft': [('readonly', False)]})
               }

@@ -9,14 +9,15 @@
 			<field name="model">account.invoice</field>
 			<field name="inherit_id" ref="account.invoice_form" />
 			<field name="arch" type="xml">
-				<!-- <field name="internal_number" position="after">
-					<field name="sale_order_id" invisible="1" />
-				</field> -->
+				<!-- <field name="internal_number" position="after"> <field name="sale_order_id" 
+					invisible="1" /> </field> -->
+				<xpath expr="//label[@string='Draft Invoice']" position="replace">
+				</xpath>
 				<xpath expr="//button[@string='Validate']" position="replace">
-				    <button name="invoice_open" states="draft" string="Validate" 
-				        class="oe_highlight" groups="base.group_user,base.group_sale_manager"/>
-				     <button name="invoice_open" states="proforma2" string="Validate" 
-                        groups="base.group_user,base.group_sale_manager"/>
+					<button name="invoice_open" states="draft" string="Validate"
+						class="oe_highlight" groups="base.group_user,base.group_sale_manager" />
+					<button name="invoice_open" states="proforma2" string="Validate"
+						groups="base.group_user,base.group_sale_manager" />
 				</xpath>
 			</field>
 		</record>

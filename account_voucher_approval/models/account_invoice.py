@@ -17,15 +17,25 @@ class account_invoice(models.Model):
     _inherit = "account.invoice"
 
     def create(self, cr, uid, vals, context=None):
+        obj_sequence = self.pool.get('ir.sequence')
         """Update the registry when a new rule is created."""
         if vals.get('partner_id'):
                 partner_id=vals['partner_id']
                 part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)    
                 defaults=self.onchange_partner_id(cr, uid, [], 'out_invoice', partner_id)['value']
                 vals = dict(defaults, **vals)
+        cr.execute(" select af.id from account_period ap ,account_fiscalyear af where ap.fiscalyear_id=af.id and ap.date_start <=current_date and ap.date_stop >=current_date")
+        fiscalyear_id=cr.fetchone()[0]
+        c = {'fiscalyear_id': fiscalyear_id}
+        cr.execute("select id from ir_sequence where name='Sales Journal'  and prefix like '%INV%' ")
+        sequence=cr.fetchone()[0]
+        if sequence:      
+            new_name = obj_sequence.next_by_id(cr, uid, sequence , c)
+        vals['number'] = new_name
+        vals['internal_number'] = new_name                
         res_id = super(account_invoice, self).create(
             cr, uid, vals, context=context)
-
+        cr.execute("update account_invoice set number=%s where id =%s",(new_name,res_id,))
         return res_id
         
     def write(self, cursor, user, ids, vals, context=None):
