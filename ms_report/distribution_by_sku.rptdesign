@@ -45,6 +45,29 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
         <scalar-parameter name="branch_id" id="129" extends="report_library.branch_id"/>
         <scalar-parameter name="sales_team_id" id="130" extends="report_library.sales_team_id"/>
         <scalar-parameter name="user_id" id="131" extends="report_library.user_id"/>
+        <scalar-parameter name="status" id="678">
+            <text-property name="promptText">Status</text-property>
+            <property name="valueType">static</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList">
+                <structure>
+                    <property name="value">all</property>
+                    <property name="label">All</property>
+                </structure>
+                <structure>
+                    <property name="value">non_foc</property>
+                    <property name="label">Non FOC</property>
+                </structure>
+            </list-property>
+            <property name="paramType">simple</property>
+            <property name="controlType">list-box</property>
+            <property name="mustMatch">true</property>
+            <property name="fixedOrder">true</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
     </parameters>
     <data-sources>
         <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="676"
@@ -157,10 +180,13 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     </structure>
                 </list-property>
             </structure>
-            <method name="beforeOpen"><![CDATA[ this.queryText =this.queryText.replace("--$sales_team$", "and st.sale_team_id in ("+ params["sales_team_id"].value.join(",")+")")
- this.queryText =this.queryText.replace("--$SalesTeam$", "and section_id in ("+ params["sales_team_id"].value.join(",")+")")
- this.queryText =this.queryText.replace("--$branch_id$", "and branch_id  in ("+ params["branch_id"].value.join(",")+")")
-   ]]></method>
+            <method name="beforeOpen"><![CDATA[this.queryText =this.queryText.replace("--$sales_team$", "and st.sale_team_id in ("+ params["sales_team_id"].value.join(",")+")")
+this.queryText =this.queryText.replace("--$SalesTeam$", "and section_id in ("+ params["sales_team_id"].value.join(",")+")")
+this.queryText =this.queryText.replace("--$branch_id$", "and branch_id  in ("+ params["branch_id"].value.join(",")+")")
+if (params["status"].value == 'non_foc' )
+{     
+   this.queryText =this.queryText.replace("--$status$", "and foc!='false'")
+}  ]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
                 <structure>
@@ -217,6 +243,7 @@ sale AS (
 	and inv.date_invoice between ? and ?
 	--$SalesTeam$ 	
 	--$branch_id$
+	--$status$
 	group by product_id
 )
 
