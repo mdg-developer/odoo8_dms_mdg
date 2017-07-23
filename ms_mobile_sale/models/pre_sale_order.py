@@ -197,11 +197,13 @@ class pre_sale_order(osv.osv):
     
     def action_convert_presaleorder(self, cr, uid, ids, context=None):
         presaleorderObj = self.pool.get('pre.sale.order')
+        mobilesaleorderObj = self.pool.get('mobile.sale.order')
         saleOrderObj = self.pool.get('sale.order')
         saleOrderLineObj = self.pool.get('sale.order.line')
-        
+        invoiceObj = self.pool.get('account.invoice')
         so_id = pricelist_id = sale_foc = productName = None
         priceUnit = 0.0
+        solist = []        
         saleOrderResult = {}
         detailResult = {}
         if ids:
@@ -232,6 +234,8 @@ class pre_sale_order(osv.osv):
                             so_state = 'cancel'
                         elif preObj_ids.void_flag == 'none':
                             so_state = 'manual'
+                        date = datetime.strptime(preObj_ids.date, '%Y-%m-%d %H:%M:%S')
+                        de_date = date.date()                                   
                         print 'so_ssssssssssssstae',so_state
                         saleOrderResult = {'partner_id':preObj_ids.partner_id.id,
                                                         'customer_code':preObj_ids.customer_code,
@@ -285,11 +289,31 @@ class pre_sale_order(osv.osv):
                                                         'price_unit':priceUnit,
                                                         'company_id':company_id,  # company_id,
                                                         }   
-                                saleOrderLineObj.create(cr, uid, detailResult, context=context)
+                                sol_id=saleOrderLineObj.create(cr, uid, detailResult, context=context)
+                                print 'sssssssssssssssssssssssss',sol_id
+                                cr.execute("select id from account_tax where description ='SCT 5%'")
+                                tax_id=cr.fetchone()
+                                if tax_id:
+                                    tax_id=tax_id[0]
+                                    cr.execute("insert  into sale_order_tax (order_line_id,tax_id) values (%s,%s)",(sol_id,tax_id,))                                           
                     if so_id and  so_state != 'cancel':
+                         
                         saleOrderObj.button_dummy(cr, uid, [so_id], context=context)
                         # Do Open
-                        saleOrderObj.action_button_confirm(cr, uid, [so_id], context=context)
+                        solist.append(so_id)
+
+                        saleOrderObj.action_button_confirm(cr, uid, solist, context=context)
+                        invoice_id = mobilesaleorderObj.create_invoices(cr, uid, solist , context=context)
+                        cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s,date_invoice=%s ,section_id =%s where id =%s', ('cash', preObj_ids.branch_id.id, preObj_ids.delivery_remark,de_date, delivery_id,invoice_id,))                            
+                        invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
+                        invoiceObj.write(cr, uid, invoice_id, {'pre_order':True}, context)      
+                        invoice_data=invoiceObj.browse(cr, uid, invoice_id, context=context)
+                        amount_untaxed=invoice_data.amount_untaxed
+                        amount_tax=invoice_data.amount_tax
+                        discount_total=invoice_data.discount_total
+                        amount_total=invoice_data.amount_total
+                        cr.execute("update sale_order set amount_untaxed =%s ,amount_tax=%s,total_dis=%s,amount_total=%s where id=%s",(amount_untaxed,amount_tax,discount_total,amount_total,so_id,))
+                        
                         
             except Exception, e:
                 raise orm.except_orm(_('Error :'), _("Error Occured while Convert Mobile Sale Order! \n [ %s ]") % (e))

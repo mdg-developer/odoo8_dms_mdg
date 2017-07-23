@@ -124,7 +124,7 @@ class account_invoice(models.Model):
                 'name': line['name'][:64],
                 'date': date,
                 'debit': round( line['debit'], 1),  # line['price']>0 and line['price'],
-                'credit':  round( line['credit'], 1),  # line['price']<0 and -line['price'],
+                'credit':  line['credit'],  # line['price']<0 and -line['price'],
                 'account_id': line['account_id'],
                 # 'account_id': account_id,
                 'analytic_lines': line.get('analytic_lines', []),
