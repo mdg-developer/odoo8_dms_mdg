@@ -208,6 +208,7 @@
 					<field name="partner_id" />
 					<field name="customer_code" />
 					<field name="sale_plan_day_id" />
+					<field name="sale_plan_trip_id" />
 					<field name="user_id" />
 					<field name="sale_team" />
 					<field name="pricelist_id" />
