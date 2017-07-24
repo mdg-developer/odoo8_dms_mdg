@@ -315,13 +315,17 @@
 			<field name="arch" type="xml">
 				<data>
 					<xpath expr="//field[@name='display_name']" position="before">
-						<field name="customer_code" />
+						<field name="customer_code" string="Customer Code"/>
 					</xpath>
 					<xpath expr="//field[@name='display_name']" position="after">
+					    <field name="branch_id" />
 						<field name="outlet_type" />
 						<field name="township" />
 						<field name="street" />
-						<field name="branch_id" />
+						<field name="village" />
+						<field name="city" />
+						<field name="brand" />
+						<field name="demarcation_id" />
 						<field name="frequency_id" />
 						<field name="class_id" />
 						<field name="sales_channel" string="Sales Channel" />
