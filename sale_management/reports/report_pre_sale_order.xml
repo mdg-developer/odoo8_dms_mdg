@@ -143,12 +143,12 @@
 									<th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Uom</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Unit Price</th>
-									<th class="text-center" style="border:1pt solid;border-color:black;">Total Price</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Total Amount</th>
 									<th style="border:1pt solid;border-color:black;" class="text-center"
 										groups="sale.group_discount_per_so_line">Disc.(%)</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Disc.(Amt)</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">FOC</th>
-									<th class="text-center" style="border:1pt solid;border-color:black;">Total</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Net Amount</th>
 								</tr>
 							</thead>
 							<tbody class="invoice_tbody">

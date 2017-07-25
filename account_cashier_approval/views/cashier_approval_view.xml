@@ -178,18 +178,20 @@
 							<page string="Payment">
 								<field name="cashier_customer_payment_line" attrs="{'readonly':[('state','=','done')]}">
 									<form string="Payment Lines">
-										<field name="invoice_id" />
+										<field name="invoice_id" on_change="onchange_invoice_id(invoice_id)" domain="[('section_id', '=',parent.sale_team_id)]"/>
 										<field name="date_invoice" />
 										<field name="type" />
+										<field name="cheque_no" />
 										<field name="journal_id" />
 										<field name="amount" />
 										<field name="notes" />
 										<field name="selected" invisible="0" />
 									</form>
 									<tree string="Payment Lines" editable="bottom">
-										<field name="invoice_id" />
+										<field name="invoice_id" on_change="onchange_invoice_id(invoice_id)" domain="[('section_id', '=',parent.sale_team_id)]"/>
 										<field name="date_invoice" />
 										<field name="type" />
+										<field name="cheque_no" />
 										<field name="journal_id" />
 										<field name="amount" />
 										<field name="notes" />
