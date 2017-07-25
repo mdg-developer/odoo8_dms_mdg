@@ -450,13 +450,13 @@ class cashier_approval(osv.osv):
                 user_id = data['user_id'][0]
                 team_id = data['sale_team_id'][0]
             if to_date:
-                cr.execute("""select m.date,a.id,m.partner_id,a.residual
+                cr.execute("""select m.date,a.id,m.partner_id,a.residual,a.section_id
                             from account_invoice as a,mobile_ar_collection as m
                             where m.ref_no = a.number and m.state='draft' and 
                             m.user_id=%s and m.sale_team_id=%s and m.date >= %s and m.date <= %s
                 """, (user_id, team_id, frm_date, to_date,))
             else:
-                cr.execute("""select m.date,a.id,m.partner_id,a.residual
+                cr.execute("""select m.date,a.id,m.partner_id,a.residual,a.section_id
                             from account_invoice as a,sale_order as s,mobile_ar_collection as m
                             where m.ref_no = a.number and  m.state='draft'  and
                             m.user_id=%s and m.sale_team_id=%s and m.date = %s  
@@ -468,11 +468,12 @@ class cashier_approval(osv.osv):
                             'partner_id':val[2],
                             'amount':val[3],
                             'cashier_id':ids[0],
+                            'section_id':val[4],
                             'payment_type':'Credit'}
                 inv_id = invoice_line_obj.create(cr, uid, data_id, context=context)
                 for details in self.browse(cr, uid, ids, context=context):                
                     result[details.id] = inv_id
-            cr.execute("""select m.date,a.id,m.partner_id,a.residual,a.id as invoice_id
+            cr.execute("""select m.date,a.id,m.partner_id,a.residual,a.id as invoice_id,a.section_id
                     from account_invoice as a,sale_order as s,mobile_ar_collection as m
                     where m.ref_no = a.number and  m.state='draft'  and m.user_id=%s and m.sale_team_id=%s and m.unselected=True
         """, (user_id, team_id,))
@@ -484,6 +485,7 @@ class cashier_approval(osv.osv):
                             'partner_id':val_data[2],
                             'amount':val_data[3],
                             'cashier_id':ids[0],
+                            'section_id':val_data[5],
                             'payment_type':'Credit'}
                 inv_id = invoice_line_obj.create(cr, uid, data_id, context=context)                
         return result
@@ -864,6 +866,7 @@ class cashier_approval_ar_line(osv.osv):
         'partner_id':fields.many2one('res.partner', 'Customer', ondelete='cascade'),
         'payment_type': fields.text('Type'),
         'amount':fields.float('Amount'),
+        'section_id': fields.many2one('crm.case.section','Sales Team'),
     }
     
     
@@ -936,6 +939,7 @@ class cashier_customer_payment(osv.osv):
  'pre_so': fields.boolean('Pre So'),
  'selected':fields.boolean('Selected',default=True),
  'cheque_no': fields.integer("Cheque No"),
+
         }      
 		
     def onchange_invoice_id(self, cr, uid, ids, invoice_id, context=None):

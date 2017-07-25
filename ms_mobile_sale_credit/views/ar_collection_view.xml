@@ -31,7 +31,7 @@
 								<field name="payment_amount" />
 								<field name="balance" />
 								<field name="credit_limit" />
-								<field name="state" invisible="1" />
+								<field name="state" />
 							</group>
 						</group>
 						<notebook>
@@ -68,7 +68,7 @@
 					<field name="payment_amount" />
 					<field name="balance" />
 					<field name="void_flag" />
-					<field name="state" invisible="1" />
+					<field name="state" />
 				</tree>
 			</field>
 		</record>
