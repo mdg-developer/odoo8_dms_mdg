@@ -536,7 +536,7 @@ class mobile_sale_order(osv.osv):
                             soObj.action_button_confirm(cr, uid, solist, context=context)
                             # Create Invoice
                             invoice_id = self.create_invoices(cr, uid, solist, context=context)                   
-                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s,date_invoice=%s where id =%s', ('cash', ms_ids.branch_id.id, ms_ids.delivery_remark,de_date, invoice_id,))                            
+                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s,date_invoice=%s ,collection_team_id =%s ,collection_user_id =%s  where id =%s', ('cash', ms_ids.branch_id.id, ms_ids.delivery_remark,de_date,sale_team_id, uid,invoice_id,))                            
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             invoice_data=invoiceObj.browse(cr, uid, invoice_id, context=context)
                             amount_untaxed=invoice_data.amount_untaxed
@@ -571,7 +571,7 @@ class mobile_sale_order(osv.osv):
                             soObj.action_button_confirm(cr, uid, solist, context=context)
                             # Create Invoice
                             invoice_id = self.create_invoices(cr, uid, solist, context=context)                                
-                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s ,date_invoice =%s where id =%s', ('cash', ms_ids.branch_id.id, ms_ids.delivery_remark,de_date, invoice_id,))                            
+                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s ,date_invoice =%s ,collection_team_id =%s ,collection_user_id =%s  where id =%s', ('cash', ms_ids.branch_id.id, ms_ids.delivery_remark,de_date,sale_team_id, uid ,invoice_id,))                            
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             invoice_data=invoiceObj.browse(cr, uid, invoice_id, context=context)
                             amount_untaxed=invoice_data.amount_untaxed
@@ -640,7 +640,7 @@ class mobile_sale_order(osv.osv):
 #                             partner = partner_obj.browse(cr, uid, partner_id, context=context)
 #                             account_id=partner.property_account_receivable.id
 #                             invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)                                    
-                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s,date_invoice=%s  where id =%s', ('cash', ms_ids.branch_id.id, ms_ids.delivery_remark,de_date, invoice_id,))                            
+                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s,date_invoice=%s,collection_team_id =%s ,collection_user_id =%s   where id =%s', ('cash', ms_ids.branch_id.id, ms_ids.delivery_remark,de_date, sale_team_id,uid,invoice_id,))                            
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             invoice_data=invoiceObj.browse(cr, uid, invoice_id, context=context)
                             amount_untaxed=invoice_data.amount_untaxed
@@ -718,7 +718,7 @@ class mobile_sale_order(osv.osv):
 #                             partner = partner_obj.browse(cr, uid, partner_id, context=context)
 #                             account_id=partner.property_account_receivable.id
 #                             invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)                                    
-                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s ,date_invoice=%s where id =%s', ('credit', ms_ids.branch_id.id, ms_ids.delivery_remark,de_date, invoice_id,))                            
+                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s ,date_invoice=%s ,collection_team_id =%s,collection_user_id =%s   where id =%s', ('credit', ms_ids.branch_id.id, ms_ids.delivery_remark,de_date,sale_team_id,uid, invoice_id,))                            
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             invoice_data=invoiceObj.browse(cr, uid, invoice_id, context=context)
                             amount_untaxed=invoice_data.amount_untaxed
@@ -771,7 +771,7 @@ class mobile_sale_order(osv.osv):
 #                             partner = partner_obj.browse(cr, uid, partner_id, context=context)
 #                             account_id=partner.property_account_receivable.id
 #                             invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)                                    
-                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s,date_invoice=%s  where id =%s', ('credit', ms_ids.branch_id.id, ms_ids.delivery_remark,de_date, invoice_id,))                            
+                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s,date_invoice=%s ,collection_team_id=%s ,collection_user_id =%s   where id =%s', ('credit', ms_ids.branch_id.id, ms_ids.delivery_remark,de_date,sale_team_id,uid, invoice_id,))                            
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             invoice_data=invoiceObj.browse(cr, uid, invoice_id, context=context)
                             amount_untaxed=invoice_data.amount_untaxed
@@ -808,7 +808,7 @@ class mobile_sale_order(osv.osv):
 #                             partner = partner_obj.browse(cr, uid, partner_id, context=context)
 #                             account_id=partner.property_account_receivable.id
 #                             invoiceObj.write(cr,uid,invoice_id,{'account_id':account_id}, context)                                    
-                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s ,date_invoice=%s where id =%s', ('credit', ms_ids.branch_id.id, ms_ids.delivery_remark,de_date,invoice_id,))                            
+                            cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s ,date_invoice=%s ,collection_team_id =%s,collection_user_id =%s   where id =%s', ('credit', ms_ids.branch_id.id, ms_ids.delivery_remark,de_date,sale_team_id,uid,invoice_id,))                            
                             
                             invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                             invoice_data=invoiceObj.browse(cr, uid, invoice_id, context=context)
@@ -1878,7 +1878,7 @@ class mobile_sale_order(osv.osv):
                             if invoice_id:
                                 self.pool['account.invoice'].signal_workflow(cr, uid, invoice_id, 'invoice_open')
                                 # pre_order =True
-                                invoiceObj.write(cr, uid, invoice_id, {'pre_order':True,'user_id':uid}, context)                                                                                                                             
+                                invoiceObj.write(cr, uid, invoice_id, {'pre_order':True,'user_id':uid,'section_id':delivery_team_id,'collection_team_id':delivery_team_id,'collection_user_id' :uid ,'date_invoice':datetime.now() }, context)                                                                                                                             
                                                                         
             return True 
           
@@ -2500,7 +2500,7 @@ class mobile_sale_order(osv.osv):
                     and inv.branch_id = %s 
                     and residual > 0
                     and inv.partner_id = rp.id
-                    and inv.section_id = crm.id
+                    and inv.collection_team_id = crm.id
                     and inv.partner_id in %s
                     and inv.id NOT IN %s'''         
                     , (branch_id, partner_list, invoiceList ,))
@@ -2517,7 +2517,7 @@ class mobile_sale_order(osv.osv):
                     and inv.branch_id = %s 
                     and residual > 0
                     and inv.partner_id = rp.id
-                    and inv.section_id = crm.id
+                    and inv.collection_team_id = crm.id
                     and inv.partner_id in %s
                     '''         
                     , (branch_id, partner_list,))            

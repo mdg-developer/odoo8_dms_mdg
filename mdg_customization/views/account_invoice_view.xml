@@ -20,8 +20,9 @@
 			<field name="inherit_id" ref="account.invoice_form" />
 			<field name="arch" type="xml">
 				<xpath expr="//button[@string='Refund Invoice']" position="replace">
-					<button name="%(account.action_account_invoice_refund)d" type='action'
-						string='Refund Invoice' states='open,proforma2,paid' groups="account.group_account_manager" />
+					<button name="%(account.action_account_invoice_refund)d"
+						type='action' string='Refund Invoice' states='open,proforma2,paid'
+						groups="account.group_account_manager" />
 				</xpath>
 				<xpath expr="//button[@string='Re-Open']" position="replace">
 					<button name='%(account.action_account_state_open)d' type='action'
@@ -45,7 +46,8 @@
 				<xpath expr="//field[@name='journal_id']" position="after">
 					<field name="pricelist_id" attrs="{'readonly':[('state','!=','draft')]}" />
 					<field name="delivery_remark" attrs="{'readonly':[('state','!=','draft')]}" />
-<!-- 					<field name="state" readonly="1"/> -->
+					<field name="collection_team_id" />
+					<field name="collection_user_id"  domain="[('default_section_id', '=',section_id)]" />
 				</xpath>
 				<xpath expr="//field[@name='partner_id']" position="replace">
 					<field string="Customer" name="partner_id"
@@ -103,7 +105,6 @@
 				</xpath>
 				<xpath expr="//field[@name='user_id']" position="replace">
 					<field name="user_id" invisible="1" />
-
 				</xpath>
 				<xpath expr="//field[@name='date_due']" position="replace">
 					<field name="date_due" invisible="1" />
@@ -114,15 +115,13 @@
 				</xpath>
 				<xpath expr="//field[@name='currency_id']" position="replace">
 					<field name="currency_id" invisible="1" />
-
 				</xpath>
 				<xpath expr="//field[@name='origin']" position="replace">
 					<field name="origin" invisible="1" />
 
 				</xpath>
 				<xpath expr="//field[@name='residual']" position="replace">
-					<field name="residual" invisible="1"/>
-
+					<field name="residual" invisible="1" />
 				</xpath>
 				<xpath expr="//field[@name='amount_untaxed']" position="replace">
 					<field name="amount_untaxed" invisible="1" />
@@ -133,9 +132,10 @@
 					<field name="number" />
 				</xpath>
 				<xpath expr="//field[@name='amount_total']" position="replace">
+					<field name="collection_team_id" />
 					<field name="amount_total" sum="Total Amount" string="Amount" />
-					<field name="paid_amount"/>
-					<field name="residual"/>
+					<field name="paid_amount" />
+					<field name="residual" />
 					<field name="payment_type" />
 					<field name="branch_id" />
 				</xpath>

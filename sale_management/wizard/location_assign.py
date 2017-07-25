@@ -72,7 +72,7 @@ class sale_make_location(osv.osv_memory):
             picking_type_id=cr.fetchone()[0]
             if picking_type_id:
                 cr.execute("update stock_picking set picking_type_id =%s where id in %s ",(picking_type_id,tuple(picking_ids),))
-            cr.execute("update account_invoice set user_id =%s ,section_id=%s where origin =%s and state ='draft' ",(user_id,section_id,so_no,))
+            cr.execute("update account_invoice set user_id =%s ,section_id=%s,collection_user_id =%s ,collection_team_id=%s where origin =%s and state ='draft' ",(user_id,section_id,user_id,section_id,so_no,))
         return True
 
 

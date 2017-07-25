@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record id="view_invoice_collection_assign" model="ir.ui.view">
+			<field name="name">Collection Team Assign</field>
+			<field name="model">collection.assign</field>
+			<field name="arch" type="xml">
+				<form string="Collection Team Assign">
+					<separator colspan="4" />
+					<group>
+						<field name="section_id" class="oe_inline" />
+						<field name="user_id" domain="[('default_section_id', '=',section_id)]"
+							class="oe_inline" />
+					</group>
+					<footer>
+						<button name="make_assign" string="Assign" type="object"
+							class="oe_highlight" />
+						or
+						<button string="Cancel" class="oe_link" special="cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="action_invoice_collection_assign" model="ir.actions.act_window">
+			<field name="name">Collection Team Assign</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">collection.assign</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="view_invoice_collection_assign" />
+			<field name="target">new</field>
+			<field name="multi">True</field>
+		</record>
+
+		<record model="ir.values" id="invoice_collection_team_assign">
+			<field name="model_id" ref="account.model_account_invoice" />
+			<field name="name">Collection Team Assign</field>
+			<field name="key2">client_action_multi</field>
+			<field name="value"
+				eval="'ir.actions.act_window,' + str(ref('action_invoice_collection_assign'))" />
+			<field name="key">action</field>
+			<field name="model">account.invoice</field>
+			<field name="groups_id" eval="[(4, ref('base.group_no_one'))]" />
+		</record>
+		
+				
+	</data>
+</openerp>
