@@ -8,7 +8,7 @@
     <property name="imageDPI">96</property>
     <list-property name="libraries">
         <structure>
-            <property name="fileName">rb_report/birt_report/report_library.rptlibrary</property>
+            <property name="fileName">rb_report/library/report_library.rptlibrary</property>
             <property name="namespace">report_library</property>
         </structure>
     </list-property>
@@ -81,9 +81,29 @@
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
+        <scalar-parameter name="sales_teams" id="2676">
+            <text-property name="promptText">Choose Teams(null value='All Teams')</text-property>
+            <property name="valueType">dynamic</property>
+            <property name="isRequired">false</property>
+            <property name="dataSetName">sales_teams</property>
+            <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
+            <expression name="labelExpr" type="javascript">dataSetRow["code"]</expression>
+            <expression name="sortByColumn">dataSetRow["code"]</expression>
+            <property name="sortDirection">asc</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">list-box</property>
+            <property name="mustMatch">true</property>
+            <property name="fixedOrder">false</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="2520"
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="2677"
  extends="report_library.Data Source"/>
     </data-sources>
     <data-sets>
@@ -435,9 +455,11 @@ limit 1
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
-                    <property name="name">main_group</property>
+                    <property name="name">date</property>
                     <property name="paramName">main_group</property>
+                    <property name="nativeName">date</property>
                     <property name="dataType">integer</property>
+                    <property name="nativeDataType">91</property>
                     <property name="position">3</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
@@ -445,8 +467,18 @@ limit 1
                 <structure>
                     <property name="name">branch</property>
                     <property name="paramName">branch</property>
+                    <property name="nativeName">vr_no</property>
                     <property name="dataType">integer</property>
+                    <property name="nativeDataType">12</property>
                     <property name="position">4</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">sales_team</property>
+                    <property name="paramName">sales_teams</property>
+                    <property name="dataType">integer</property>
+                    <property name="position">5</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -591,6 +623,11 @@ limit 1
                     <structure>
                         <property name="position">28</property>
                         <property name="name">main_group</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">29</property>
+                        <property name="name">product_category</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
@@ -765,8 +802,14 @@ limit 1
                     <property name="nativeName">main_group</property>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="position">29</property>
+                    <property name="name">product_category</property>
+                    <property name="nativeName">product_category</property>
+                    <property name="dataType">string</property>
+                </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[{ call daily_sale_report_without_user (?,?,?,?) } ]]></xml-property>
+            <xml-property name="queryText"><![CDATA[{ call daily_sale_report_without_user (?,?,?,?,?) } ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -823,6 +866,21 @@ limit 1
           <design:identifier>
             <design:name>vr_no</design:name>
             <design:position>4</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>Out</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>customer_code</design:name>
+            <design:position>5</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
@@ -939,12 +997,14 @@ limit 1
             <list-property name="columnHints">
                 <structure>
                     <property name="columnName">id</property>
+                    <property name="alias">id</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">id</text-property>
                     <text-property name="heading">id</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">branch_code</property>
+                    <property name="alias">branch_code</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">branch_code</text-property>
                     <text-property name="heading">branch_code</text-property>
@@ -972,14 +1032,12 @@ limit 1
                     <property name="name">id</property>
                     <property name="nativeName">id</property>
                     <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
                     <property name="position">2</property>
                     <property name="name">branch_code</property>
                     <property name="nativeName">branch_code</property>
                     <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select id,branch_code 
@@ -1030,6 +1088,109 @@ order by branch_code]]></xml-property>
             <design:label>name</design:label>
             <design:formattingHints>
               <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="sales_teams" id="2675">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">id</property>
+                    <property name="alias">id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">id</text-property>
+                    <text-property name="heading">id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">code</property>
+                    <property name="alias">code</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">code</text-property>
+                    <text-property name="heading">code</text-property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">code</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">id</property>
+                    <property name="nativeName">id</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">code</property>
+                    <property name="nativeName">code</property>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select id,code 
+from crm_case_section 
+order by code]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>id</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>id</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>id</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>code</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>8</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>code</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>code</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
             </design:formattingHints>
           </design:usageHints>
         </design:resultColumnDefinitions>
@@ -1298,6 +1459,45 @@ order by branch_code]]></xml-property>
                     <expression name="expression" type="javascript">dataSetRow["branch"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">product_category</property>
+                    <text-property name="displayName">product_category</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["product_category"]</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation</property>
+                    <text-property name="displayName">sum_qty</text-property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>product_category</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["product_uos_qty"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation_1</property>
+                    <text-property name="displayName">sub_total</text-property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>product_category</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["sub_total"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
             </list-property>
             <column id="1671"/>
             <column id="1672"/>
@@ -1436,11 +1636,7 @@ order by branch_code]]></xml-property>
                             <property name="resultSetColumn">company_name</property>
                         </data>
                     </cell>
-                    <cell id="2508">
-                        <label id="2516">
-                            <text-property name="text">type</text-property>
-                        </label>
-                    </cell>
+                    <cell id="2508"/>
                     <cell id="1806"/>
                     <cell id="2495"/>
                     <cell id="1807"/>
@@ -1961,7 +2157,7 @@ order by branch_code]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="1071">
-                            <text-property name="text">SG</text-property>
+                            <text-property name="text">Sales Teams</text-property>
                         </label>
                     </cell>
                     <cell id="2498">
@@ -2099,28 +2295,6 @@ order by branch_code]]></xml-property>
                     </cell>
                 </row>
             </header>
-            <group id="1704">
-                <property name="groupName">vrn_no_group</property>
-                <expression name="keyExpr" type="javascript">row["vr_no"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["vr_no"]</expression>
-                </structure>
-                <property name="hideDetail">false</property>
-                <header>
-                    <row id="1705">
-                        <cell id="1706">
-                            <property name="colSpan">23</property>
-                            <property name="rowSpan">1</property>
-                            <data id="1239">
-                                <property name="fontSize">8pt</property>
-                                <property name="fontWeight">bold</property>
-                                <property name="color">blue</property>
-                                <property name="resultSetColumn">vr_no</property>
-                            </data>
-                        </cell>
-                    </row>
-                </header>
-            </group>
             <group id="1739">
                 <property name="groupName">vrn_group</property>
                 <expression name="keyExpr" type="javascript">row["vr_no"]</expression>
@@ -2128,6 +2302,174 @@ order by branch_code]]></xml-property>
                     <expression name="expressionValue" type="javascript">row["vr_no"]</expression>
                 </structure>
                 <property name="hideDetail">false</property>
+            </group>
+            <group id="2522">
+                <property name="groupName">product_category</property>
+                <expression name="keyExpr" type="javascript">row["product_category"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["product_category"]</expression>
+                </structure>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="2523">
+                        <cell id="2524">
+                            <data id="2571">
+                                <property name="resultSetColumn">product_category</property>
+                            </data>
+                        </cell>
+                        <cell id="2525"/>
+                        <cell id="2526"/>
+                        <cell id="2527"/>
+                        <cell id="2528"/>
+                        <cell id="2529"/>
+                        <cell id="2530"/>
+                        <cell id="2531"/>
+                        <cell id="2532"/>
+                        <cell id="2533"/>
+                        <cell id="2534"/>
+                        <cell id="2535"/>
+                        <cell id="2536"/>
+                        <cell id="2537"/>
+                        <cell id="2538"/>
+                        <cell id="2539"/>
+                        <cell id="2540"/>
+                        <cell id="2541"/>
+                        <cell id="2542"/>
+                        <cell id="2543"/>
+                        <cell id="2544"/>
+                        <cell id="2545"/>
+                        <cell id="2546"/>
+                    </row>
+                </header>
+                <footer>
+                    <row id="2547">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <cell id="2548">
+                            <property name="colSpan">10</property>
+                            <property name="rowSpan">1</property>
+                            <label id="2623">
+                                <property name="fontSize">10pt</property>
+                                <property name="fontWeight">bold</property>
+                                <property name="textAlign">center</property>
+                                <text-property name="text">Total</text-property>
+                            </label>
+                        </cell>
+                        <cell id="2558">
+                            <data id="2622">
+                                <property name="fontSize">10pt</property>
+                                <property name="fontWeight">bold</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Currency</property>
+                                    <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">center</property>
+                                <property name="resultSetColumn">Aggregation</property>
+                            </data>
+                        </cell>
+                        <cell id="2559"/>
+                        <cell id="2560"/>
+                        <cell id="2561">
+                            <data id="2624">
+                                <property name="fontSize">10pt</property>
+                                <property name="fontWeight">bold</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Currency</property>
+                                    <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">center</property>
+                                <property name="resultSetColumn">Aggregation_1</property>
+                            </data>
+                        </cell>
+                        <cell id="2562"/>
+                        <cell id="2563"/>
+                        <cell id="2564"/>
+                        <cell id="2565"/>
+                        <cell id="2566"/>
+                        <cell id="2567"/>
+                        <cell id="2568"/>
+                        <cell id="2569"/>
+                        <cell id="2570"/>
+                    </row>
+                </footer>
+            </group>
+            <group id="2625">
+                <property name="groupName">vrn_gorup</property>
+                <expression name="keyExpr" type="javascript">row["vr_no"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["vr_no"]</expression>
+                </structure>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="2626">
+                        <cell id="2627">
+                            <data id="2674">
+                                <property name="resultSetColumn">vr_no</property>
+                            </data>
+                        </cell>
+                        <cell id="2628"/>
+                        <cell id="2629"/>
+                        <cell id="2630"/>
+                        <cell id="2631"/>
+                        <cell id="2632"/>
+                        <cell id="2633"/>
+                        <cell id="2634"/>
+                        <cell id="2635"/>
+                        <cell id="2636"/>
+                        <cell id="2637"/>
+                        <cell id="2638"/>
+                        <cell id="2639"/>
+                        <cell id="2640"/>
+                        <cell id="2641"/>
+                        <cell id="2642"/>
+                        <cell id="2643"/>
+                        <cell id="2644"/>
+                        <cell id="2645"/>
+                        <cell id="2646"/>
+                        <cell id="2647"/>
+                        <cell id="2648"/>
+                        <cell id="2649"/>
+                    </row>
+                </header>
+                <footer>
+                    <row id="2650">
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <cell id="2651"/>
+                        <cell id="2652"/>
+                        <cell id="2653"/>
+                        <cell id="2654"/>
+                        <cell id="2655"/>
+                        <cell id="2656"/>
+                        <cell id="2657"/>
+                        <cell id="2658"/>
+                        <cell id="2659"/>
+                        <cell id="2660"/>
+                        <cell id="2661"/>
+                        <cell id="2662"/>
+                        <cell id="2663"/>
+                        <cell id="2664"/>
+                        <cell id="2665"/>
+                        <cell id="2666"/>
+                        <cell id="2667"/>
+                        <cell id="2668"/>
+                        <cell id="2669"/>
+                        <cell id="2670"/>
+                        <cell id="2671"/>
+                        <cell id="2672"/>
+                        <cell id="2673"/>
+                    </row>
+                </footer>
             </group>
             <detail>
                 <row id="1637">
@@ -2587,6 +2929,14 @@ order by branch_code]]></xml-property>
             </detail>
             <footer>
                 <row id="1654">
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
                     <cell id="1655">
                         <property name="colSpan">10</property>
                         <property name="rowSpan">1</property>
@@ -2594,7 +2944,7 @@ order by branch_code]]></xml-property>
                             <property name="fontSize">11pt</property>
                             <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
-                            <text-property name="text">Total</text-property>
+                            <text-property name="text">Grand Total</text-property>
                         </label>
                     </cell>
                     <cell id="1662">
