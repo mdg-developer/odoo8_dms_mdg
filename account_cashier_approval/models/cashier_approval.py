@@ -920,7 +920,7 @@ class cashier_customer_payment(osv.osv):
      'type':fields.selection([
                 ('cash', 'Cash'),
                 ('bank', 'Bank'),
-#                 ('advanced', 'Advanced')
+				('cheque', 'Cheque')
             ], 'Payment Type'),
                 
    # 'payment_id':fields.many2one('mobile.sale.order', 'Line'),
@@ -935,5 +935,16 @@ class cashier_customer_payment(osv.osv):
  'customer_payment_id': fields.integer("Customer Payment ID"),
  'pre_so': fields.boolean('Pre So'),
  'selected':fields.boolean('Selected',default=True),
+ 'cheque_no': fields.integer("Cheque No"),
         }      
+		
+    def onchange_invoice_id(self, cr, uid, ids, invoice_id, context=None):
+        values = {}
+        if invoice_id:
+                invoice = self.pool.get('account.invoice').browse(cr, uid, invoice_id, context=context)
+                values = {  
+                'notes':invoice.number             
+            }
+        return {'value': values}    
+		
 cashier_customer_payment()
