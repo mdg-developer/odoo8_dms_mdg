@@ -30,6 +30,8 @@
 		</record>
 		<!--============ Week Setting ============== -->
 		<!-- tree -->
+		<!--============ Week Setting ============== -->
+		<!-- tree -->
 		<record id="view_week_setting_tree" model="ir.ui.view">
 			<field name="name">Week Setting Tree</field>
 			<field name="model">setting.week</field>
@@ -47,8 +49,9 @@
 		<record id="view_week_setting_form" model="ir.ui.view">
 			<field name="name">Week Setting Form</field>
 			<field name="model">setting.week</field>
+			<field eval="25" name="priority" />
 			<field name="arch" type="xml">
-				<form string="Week Setting Form" version="9.0">
+				<form string="Week Setting Form" version="7.0">
 					<sheet>
 						<group>
 							<group>
@@ -69,7 +72,7 @@
 
 
 		<record id="action_week_setting" model="ir.actions.act_window">
-			<field name="name">Week Setting</field>
+			<field name="name">Week Setting Action</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">setting.week</field>
 			<field name="view_type">form</field>

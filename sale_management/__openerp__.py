@@ -53,7 +53,7 @@ Sale Management
 		'views/sale_approvel_view.xml',
          'views/sale_promotion_history_view.xml',
         'views/sale_promotion_monthly_view.xml',
-        'views/sale_target_view.xml',
+        #'views/sale_target_view.xml',
         'reports/qweb_view.xml',
         'reports/report_denomination.xml',
         'reports/custom_layout.xml',

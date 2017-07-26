@@ -458,11 +458,16 @@
 		<menuitem id="menu_sales_target_menu" parent="base.menu_base_partner"
 			name="Sales Targets" sequence="6" />
 
-		<menuitem id="sale_management.menu_sales_target" action="sale_management.action_sales_target_view"
+		<menuitem id="ms_sale_target_setting.menu_sale_target_menu" action="ms_sale_target_setting.action_sale_target"
 			parent="menu_sales_target_menu" name="Target Setting" sequence="1" />
-		<menuitem action="sale_management.action_sale_target_report"
+		<menuitem id="ms_sale_target_setting.menu_week_setting_menu" action="ms_sale_target_setting.action_week_setting"
+			parent="menu_sales_target_menu" name="Week Setting" sequence="2" />
+		<record model="ir.ui.menu" id="sale_management.menu_sale_target_report">
+			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
+		</record>
+		<!-- <menuitem action="sale_management.action_sale_target_report"
 			id="sale_management.menu_sale_target_report" parent="menu_sales_target_menu"
-			sequence="2" name="Target Analysis" />
+			sequence="3" name="Target Analysis"/> -->
 		<!--<menuitem id="sale_management.menu_week_setting" action="sale_management.action_week_setting"
 			parent="menu_sales_target_menu" name="Week Setting" sequence="3" />-->
 		<!-- Sales Reports -->
