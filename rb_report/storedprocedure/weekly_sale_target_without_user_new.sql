@@ -1,4 +1,4 @@
--- Function: weekly_report_without_user(integer, character varying, integer)
+﻿-- Function: weekly_report_without_user(integer, character varying, integer)
 
 -- DROP FUNCTION weekly_report_without_user(integer, character varying, integer);
 
@@ -53,16 +53,17 @@ BEGIN
 	where product_id = product_data.id;
 	
 	select count(*) into  effective_count from mobile_sale_order mso,tablets_information ti where mso.date>= week_setting_data.from_date and  mso.date<= week_setting_data.to_date and ti.id = mso.tablet_id and ti.sale_team_id = param_sale_team and mso.void_flag = 'none';
-	select count(*) into customer_visit from customer_visit cv where cv.date = weekly_data.date_of_month and cv.sale_team = param_sale_team;
+	select count(*) into visit_count from customer_visit cv where (cv.date+ '6 hour'::interval + '30 minutes'::interval)::date = weekly_data.date_of_month and cv.sale_team = param_sale_team;
+	raise notice 'visit_count(%)', visit_count;
 	select count(*) into outlet_count from res_partner where mobile_customer ='t' and section_id = param_sale_team and create_date::date = weekly_data.date_of_month;
 
 	update weekly_temp set actual_visit = COALESCE(effective_count,null)+COALESCE(visit_count,null), effective_shop = COALESCE(effective_count,null), new_outlet = COALESCE(outlet_count,null) where date = weekly_data.date_of_month and product_id = product_data.id;
 	update weekly_temp set effective_shop= null where effective_shop=0;
 	update weekly_temp set new_outlet= null where new_outlet=0;
 
-	select sum(msol.product_uos_qty) into product_achieved_qty from mobile_sale_order mso,mobile_sale_order_line msol ,tablets_information ti where mso.id = msol.order_id and ti.id = mso.tablet_id and mso.date = weekly_data.date_of_month and ti.sale_team_id = param_sale_team and mso.void_flag = 'none' and msol.product_id = product_data.id;
-	select sum(product_uos_qty) as categ_achi_qty ,sum(sub_total) as categ_achi_amt into categ_achi_record from mobile_sale_order_line msol,mobile_sale_order mso , product_product pp, product_template pt,tablets_information ti where msol.product_id = pp.id and pp.product_tmpl_id = pt.id and mso.date = weekly_data.date_of_month and msol.order_id = mso.id and pt.categ_id = param_categ_id and ti.id = mso.tablet_id and ti.sale_team_id = param_sale_team;
-	select sum(msol.sub_total) into product_achieved_amt from mobile_sale_order mso,mobile_sale_order_line msol ,tablets_information ti where mso.id = msol.order_id and ti.id = mso.tablet_id and ti.sale_team_id = param_sale_team and mso.void_flag = 'none' and mso.date = weekly_data.date_of_month and msol.product_id = product_data.id;
+	select sum(msol.product_uos_qty) into product_achieved_qty from mobile_sale_order mso,mobile_sale_order_line msol ,tablets_information ti where mso.id = msol.order_id and ti.id = mso.tablet_id and (mso.date+ '6 hour'::interval + '30 minutes'::interval)::date = weekly_data.date_of_month and ti.sale_team_id = param_sale_team and mso.void_flag = 'none' and msol.product_id = product_data.id;
+	select sum(product_uos_qty) as categ_achi_qty ,sum(sub_total) as categ_achi_amt into categ_achi_record from mobile_sale_order_line msol,mobile_sale_order mso , product_product pp, product_template pt,tablets_information ti where msol.product_id = pp.id and pp.product_tmpl_id = pt.id and (mso.date+ '6 hour'::interval + '30 minutes'::interval)::date = weekly_data.date_of_month and msol.order_id = mso.id and pt.categ_id = param_categ_id and ti.id = mso.tablet_id and ti.sale_team_id = param_sale_team;
+	select sum(msol.sub_total) into product_achieved_amt from mobile_sale_order mso,mobile_sale_order_line msol ,tablets_information ti where mso.id = msol.order_id and ti.id = mso.tablet_id and ti.sale_team_id = param_sale_team and mso.void_flag = 'none' and (mso.date+ '6 hour'::interval + '30 minutes'::interval)::date = weekly_data.date_of_month and msol.product_id = product_data.id;
 
 	update weekly_temp set product_achieve_amount=COALESCE(product_achieved_amt,null),
 	product_achieve_qty = COALESCE(product_achieved_qty,null) , 
@@ -121,4 +122,3 @@ CREATE TABLE weekly_temp
 WITH (
   OIDS=FALSE
 );
-
