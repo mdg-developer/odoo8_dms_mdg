@@ -1384,5 +1384,117 @@ else&#13;
                 </row>
             </footer>
         </table>
+        <label id="1013"/>
+        <grid id="283">
+            <property name="height">1in</property>
+            <column id="284"/>
+            <column id="285"/>
+            <column id="286">
+                <property name="width">0.5in</property>
+            </column>
+            <column id="287">
+                <property name="width">1.2291666666666667in</property>
+            </column>
+            <column id="288"/>
+            <column id="289">
+                <property name="width">0.5in</property>
+            </column>
+            <column id="290"/>
+            <column id="291"/>
+            <row id="292">
+                <property name="height">0.5729166666666666in</property>
+                <cell id="293">
+                    <label id="320">
+                        <property name="fontFamily">"Arial"</property>
+                        <property name="fontWeight">bold</property>
+                        <property name="paddingRight">3pt</property>
+                        <property name="textAlign">right</property>
+                        <text-property name="text">Prepared By:</text-property>
+                    </label>
+                </cell>
+                <cell id="294">
+                    <label id="321">
+                        <property name="fontFamily">"Arial"</property>
+                        <property name="fontWeight">normal</property>
+                        <property name="paddingLeft">3pt</property>
+                        <property name="textAlign">left</property>
+                        <text-property name="text">_____________</text-property>
+                    </label>
+                </cell>
+                <cell id="295"/>
+                <cell id="296">
+                    <label id="327">
+                        <property name="fontFamily">"Arial"</property>
+                        <property name="fontWeight">bold</property>
+                        <property name="paddingRight">3pt</property>
+                        <property name="textAlign">right</property>
+                        <text-property name="text">Checked By:</text-property>
+                    </label>
+                </cell>
+                <cell id="297">
+                    <label id="323">
+                        <property name="fontFamily">"Arial"</property>
+                        <property name="fontWeight">normal</property>
+                        <property name="paddingLeft">3pt</property>
+                        <property name="textAlign">left</property>
+                        <text-property name="text">_____________</text-property>
+                    </label>
+                </cell>
+                <cell id="298"/>
+                <cell id="299">
+                    <label id="328">
+                        <property name="fontFamily">"Arial"</property>
+                        <property name="fontWeight">bold</property>
+                        <property name="paddingRight">3pt</property>
+                        <property name="textAlign">right</property>
+                        <text-property name="text">Verified By:(Account)</text-property>
+                    </label>
+                </cell>
+                <cell id="300">
+                    <label id="325">
+                        <property name="fontFamily">"Arial"</property>
+                        <property name="fontWeight">normal</property>
+                        <property name="paddingLeft">3pt</property>
+                        <property name="textAlign">left</property>
+                        <text-property name="text">_____________</text-property>
+                    </label>
+                </cell>
+            </row>
+            <row id="301">
+                <property name="height">0.4270833333333333in</property>
+                <cell id="302"/>
+                <cell id="303">
+                    <label id="322">
+                        <property name="fontFamily">"Arial"</property>
+                        <property name="fontWeight">normal</property>
+                        <property name="paddingLeft">3pt</property>
+                        <property name="textAlign">left</property>
+                        <text-property name="text">____________</text-property>
+                    </label>
+                </cell>
+                <cell id="304"/>
+                <cell id="305"/>
+                <cell id="306">
+                    <label id="324">
+                        <property name="fontFamily">"Arial"</property>
+                        <property name="fontWeight">normal</property>
+                        <property name="paddingLeft">3pt</property>
+                        <property name="textAlign">left</property>
+                        <text-property name="text">_____________</text-property>
+                    </label>
+                </cell>
+                <cell id="307"/>
+                <cell id="308"/>
+                <cell id="309">
+                    <label id="326">
+                        <property name="fontFamily">"Arial"</property>
+                        <property name="fontWeight">normal</property>
+                        <property name="paddingLeft">3pt</property>
+                        <property name="textAlign">left</property>
+                        <text-property name="text">_____________</text-property>
+                    </label>
+                </cell>
+            </row>
+        </grid>
     </body>
 </report>
