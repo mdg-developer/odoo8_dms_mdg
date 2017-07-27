@@ -211,8 +211,7 @@ class stock_quant(osv.osv):
         company_to = location_obj._location_owner(cr, uid, location_to, context=context)
         stock_picking_obj = self.pool.get('stock.picking')
         move_obj = self.pool.get('account.move')
-        move_id = None
-        stock_picking = None
+        move_id = stock_picking =None
         if move.product_id.valuation != 'real_time':
             return False
         
