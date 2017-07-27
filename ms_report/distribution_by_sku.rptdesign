@@ -50,6 +50,9 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
             <property name="valueType">static</property>
             <property name="dataType">string</property>
             <property name="distinct">true</property>
+            <simple-property-list name="defaultValue">
+                <value type="constant">all</value>
+            </simple-property-list>
             <list-property name="selectionList">
                 <structure>
                     <property name="value">all</property>
