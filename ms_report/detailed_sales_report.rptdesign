@@ -1742,7 +1742,7 @@ and date_invoice between ? and ?
                             <structure>
                                 <property name="name">payment_type</property>
                                 <expression name="expression" type="javascript">if (params["payment_type"].value == null ){     &#13;
-'Daily Cash Credit Sales Record of Yangon Office'&#13;
+'Daily Cash/Credit Sales Record of Yangon Office'&#13;
 }&#13;
 else&#13;
 {     &#13;
