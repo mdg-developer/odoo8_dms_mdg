@@ -86,8 +86,7 @@ $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100
   ROWS 1000;
-ALTER FUNCTION weekly_report_without_user(integer, character varying, integer)
-  OWNER TO openerp;
+
 
 -- Table: weekly_temp
 
@@ -122,5 +121,4 @@ CREATE TABLE weekly_temp
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE weekly_temp
-  OWNER TO openerp;
+
