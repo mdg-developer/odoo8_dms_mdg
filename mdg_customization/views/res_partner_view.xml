@@ -339,7 +339,7 @@
 					<field name="is_bank" attrs="{'invisible':[('supplier','=',True)]}" />
 					<field name="is_cheque" attrs="{'invisible':[('supplier','=',True)]}" />
 					<field name="is_consignment" attrs="{'invisible':[('supplier','=',True)]}" />
-					<field name="is_tax"  attrs="{'invisible':[('supplier','=',True)]}" />
+					<field name="is_tax"  invisible="1"/>
 					
 				</field>
 			</field>

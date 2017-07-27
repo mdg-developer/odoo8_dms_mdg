@@ -12,6 +12,13 @@ class cashier_approval(osv.osv):
     
     _name = "cashier.approval"
     _description = "Cashier Approval"
+
+    def create(self, cursor, user, vals, context=None):
+        cashier_no = self.pool.get('ir.sequence').get(cursor, user,
+            'cashier.approval') or '/'
+        vals['name'] = cashier_no
+        return super(cashier_approval, self).create(cursor, user, vals, context=context)
+
     
     def _amount_cash(self, cr, uid, ids, field_name, arg, context=None):
         """ Wrapper because of direct method passing as parameter for function fields """
@@ -137,17 +144,17 @@ class cashier_approval(osv.osv):
         return {'value': {'branch_id': branch_id}}     
     
     _columns = {
-        'name': fields.char('Order Reference', size=64),
+        'name': fields.char('Txn', size=64,readonly=True),
         'user_id':fields.many2one('res.users', 'Salesman', required=True),
         'sale_team_id':fields.many2one('crm.case.section', 'Sales Team', required=True),
       'date':fields.date('Date'),
       'to_date':fields.date('To Date'),
-      'cashier_line': fields.one2many('cashier.approval.invoice.line', 'cashier_id', 'Cashier Approval Form'),
-      'ar_line': fields.one2many('cashier.approval.ar.line', 'cashier_id', 'Cashier Approval Form'),
-      'credit_line': fields.one2many('cashier.approval.credit.line', 'cashier_id', 'Cashier Approval Form'),
-      'denomination_line': fields.one2many('cashier.denomination.line', 'cashier_id', 'Cashier Approval Form'),
-      'denomination_product_line': fields.one2many('cashier.denomination.product.line', 'cashier_id', 'Cashier Approval Form'),
-      'cashier_customer_payment_line': fields.one2many('cashier.customer.payment', 'cashier_id', 'Cashier Approval Form'),
+      'cashier_line': fields.one2many('cashier.approval.invoice.line', 'cashier_id', 'Cashier Approval Form', copy=True),
+      'ar_line': fields.one2many('cashier.approval.ar.line', 'cashier_id', 'Cashier Approval Form', copy=True),
+      'credit_line': fields.one2many('cashier.approval.credit.line', 'cashier_id', 'Cashier Approval Form', copy=True),
+      'denomination_line': fields.one2many('cashier.denomination.line', 'cashier_id', 'Cashier Approval Form', copy=True),
+      'denomination_product_line': fields.one2many('cashier.denomination.product.line', 'cashier_id', 'Cashier Approval Form', copy=True),
+      'cashier_customer_payment_line': fields.one2many('cashier.customer.payment', 'cashier_id', 'Cashier Approval Form', copy=True),
       'cash_sub_total': fields.function(_amount_cash, digits_compute=dp.get_precision('Account'), string='SubTotal',
             store={
                 'cashier.approval': (lambda self, cr, uid, ids, c={}: ids, ['cashier_line'], 10),
@@ -186,7 +193,20 @@ class cashier_approval(osv.osv):
        
     } 
     
-   
+    def unlink(self, cr, uid, ids, context=None):
+        for cashier in self.browse(cr, uid, ids, context=context):
+            if cashier.state not in ('draft', 'pending'):
+                raise osv.except_osv(
+                    _('Warning!'),
+                    _('You cannot delete an cashier approval record  which is not draft or pending')
+                )                
+            elif cashier.state in ('pending'):
+                raise osv.except_osv(
+                    _('Warning!'),
+                    _('You cannot delete an cashier approval record   which is not draft . You should set to draft  it instead.')
+                )                     
+        return super(cashier_approval, self).unlink(cr, uid, ids, context=context)
+    
     def confirm_(self, cr, uid, ids, context=None):
         invoiceObj = self.pool.get('account.invoice')
         datas = self.read(cr, uid, ids, ['date', 'to_date', 'user_id', 'sale_team_id'], context=None)
@@ -826,9 +846,9 @@ class cashier_approval(osv.osv):
             # self._amount_denomination_all(cr, uid, ids, ['denomination_sub_total'], None, context)
         return result
     
-    def create(self, cr, uid, vals, context=None):
-        new_id = super(cashier_approval, self).create(cr, uid, vals, context=context)
-        return new_id
+#     def create(self, cr, uid, vals, context=None):
+#         new_id = super(cashier_approval, self).create(cr, uid, vals, context=context)
+#         return new_id
     # {'cashier_line': {'date': '2016-06-23', 'invoice_id': 8, 'amount': 2310.0, 'partner_id': 19, 'payment_type':'Bank'}}  
         # return {'value': {'cashier_line': [{'date': '2016-06-23', 'invoice_id': 8, 'amount': 2310.0, 'partner_id': 19}, {'date': '2016-06-24', 'invoice_id': 14, 'amount': 2912.0, 'partner_id': 122}, {'date': '2016-06-27', 'invoice_id': 62, 'amount': 10070.0, 'partner_id': 87}, {'date': '2016-06-27', 'invoice_id': 63, 'amount': 10070.0, 'partner_id': 49}]}}
 cashier_approval()
@@ -837,7 +857,7 @@ class cashier_approval_invoice_line(osv.osv):
     _name = "cashier.approval.invoice.line"
     _description = "Cashier Approval Invoice Line"
     _columns = {
-        'cashier_id': fields.many2one('cashier.approval', 'Cashier Approval', required=True),
+        'cashier_id': fields.many2one('cashier.approval', 'Cashier Approval'),
         'invoice_id':fields.many2one('account.invoice', 'Invoice No', ondelete='cascade'),
         # 'invoice_id':fields.one2many('account.invoice', 'id', 'Invoice No'),
         'date':fields.date('Date'),
@@ -857,13 +877,13 @@ class cashier_approval_ar_line(osv.osv):
     _name = "cashier.approval.ar.line"
     _description = "Cashier Approval AR Line"
     _columns = {
-        'cashier_id': fields.many2one('cashier.approval', 'Cashier Approval', required=True),
-        'invoice_id':fields.many2one('account.invoice', 'Invoice No', ondelete='cascade'),
+        'cashier_id': fields.many2one('cashier.approval', 'Cashier Approval'),
+        'invoice_id':fields.many2one('account.invoice', 'Invoice No'),
         # 'invoice_id':fields.one2many('account.invoice', 'id', 'Invoice No'),
         'date':fields.date('Date'),
         # 'partner_id':fields.one2many('res.partner','id','Customer'),        
         'selected':fields.boolean('Selected' , default=True),
-        'partner_id':fields.many2one('res.partner', 'Customer', ondelete='cascade'),
+        'partner_id':fields.many2one('res.partner', 'Customer'),
         'payment_type': fields.text('Type'),
         'amount':fields.float('Amount'),
         'section_id': fields.many2one('crm.case.section','Sales Team'),
@@ -877,7 +897,7 @@ class cashier_approval_credit_line(osv.osv):
     _name = "cashier.approval.credit.line"
     _description = "Cashier Approval Credit Line"
     _columns = {
-        'cashier_id': fields.many2one('cashier.approval', 'Cashier Approval', required=True),
+        'cashier_id': fields.many2one('cashier.approval', 'Cashier Approval'),
         # 'invoice_id':fields.many2one('account.invoice', 'Invoice No',ondelete='cascade'),
         'invoice_id':fields.char('Invoice No'),
         # 'invoice_id':fields.one2many('account.invoice', 'id', 'Invoice No'),
@@ -897,7 +917,7 @@ cashier_approval_credit_line()
 class cashier_denomination_line(osv.osv):
     _name = 'cashier.denomination.line'
     _columns = {              
-              'cashier_id':fields.many2one('cashier.approval', 'Cashier Approval', required=True),
+              'cashier_id':fields.many2one('cashier.approval', 'Cashier Approval'),
               # 'notes':fields.char('Notes', required=True),
               'notes':fields.float('Notes', required=True),
               'note_qty':fields.integer('Qty', required=True),
@@ -908,7 +928,7 @@ cashier_denomination_line()
 class cashier_denomination_product_line(osv.osv):
     _name = 'cashier.denomination.product.line'
     _columns = {              
-              'cashier_id':fields.many2one('cashier.approval', 'Cashier Approval', required=True),
+              'cashier_id':fields.many2one('cashier.approval', 'Cashier Approval'),
               # 'notes':fields.char('Notes', required=True),
               'product_id':fields.many2one('product.product', 'Product', required=True),
               'product_uom_qty':fields.integer('Quantity', required=True),
@@ -919,7 +939,7 @@ cashier_denomination_product_line()
 class cashier_customer_payment(osv.osv):
     _name = "cashier.customer.payment"
     _columns = {
-     'cashier_id':fields.many2one('cashier.approval', 'Cashier Approval', required=True),
+     'cashier_id':fields.many2one('cashier.approval', 'Cashier Approval'),
      'type':fields.selection([
                 ('cash', 'Cash'),
                 ('bank', 'Bank'),

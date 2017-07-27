@@ -24,13 +24,15 @@
 						<group col="1" string="Cashier Approval">
 							<group col="2">
 								<group>
-									<field name="date" />
-									<field name="sale_team_id" on_change="onchange_sale_team_id(sale_team_id)" />
-									<field name="user_id" domain="[('default_section_id', '=',sale_team_id)]" />
+									<field name="name"  />
+									<field name="date" attrs="{'readonly':[('state','=','done')]}"/>
+									<field name="sale_team_id" on_change="onchange_sale_team_id(sale_team_id)"  attrs="{'readonly':[('state','=','done')]}"/>
+									<field name="user_id" domain="[('default_section_id', '=',sale_team_id)]" attrs="{'readonly':[('state','=','done')]}"/>
 								</group>
 								<group>
-									<field name="to_date" />
-									<field name="branch_id" />
+									<field name="write_date" readonly="1" />
+									<field name="to_date"  attrs="{'readonly':[('state','=','done')]}"/>
+									<field name="branch_id"  attrs="{'readonly':[('state','=','done')]}"/>
 								</group>
 							</group>
 							<group>
@@ -216,16 +218,34 @@
 			<field name="model">cashier.approval</field>
 			<field name="arch" type="xml">
 				<tree string="Invoice">
+					<field name="name" />
 					<field name="date" />
 					<field name="user_id" />
 					<field name="sale_team_id" />
 					<field name="to_date" />
 					<field name="branch_id" />
+					<field name="state" />
 				</tree>
 			</field>
 		</record>
 
-
+		<!-- filter -->
+		<record id="view_cashier_approval_filter" model="ir.ui.view">
+			<field name="name">Cashier Approval Filter</field>
+			<field name="model">cashier.approval</field>
+			<field name="arch" type="xml">
+				<search string="Search Cashier Approval">
+					<group expand="0" string="Group By...">
+						<filter string="Salesman Name" icon="terp-partner" domain="[]"
+							context="{'group_by':'user_id'}" />
+						<filter string="Sales Team" icon="terp-partner" domain="[]"
+							context="{'group_by':'sale_team_id'}" />
+						<filter string="Branch" icon="terp-partner" domain="[]"
+							context="{'group_by':'branch_id'}" />
+					</group>
+				</search>
+			</field>
+		</record>
 
 		<record id="action_cashier_approval_view" model="ir.actions.act_window">
 			<field name="name">Cashier Approval</field>
@@ -234,6 +254,7 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" eval="view_cashier_approval_tree" />
+			<field name="search_view_id" ref="view_cashier_approval_filter" />
 		</record>
 
 		<menuitem id="menu_cashier_approval" action="action_cashier_approval_view"
