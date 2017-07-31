@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="cashier_code_sequence" model="ir.sequence.type">
+			<field name="name">Cashier Approval Sequence</field>
+			<field name="code">cashier.approval</field>
+		</record>
+
+		<record id="cashier_code_seq"  model="ir.sequence">
+			<field name="name">Cashier Code Sequence</field>
+			<field name="code">cashier.approval</field>
+			<field name="company_id" eval="False" />
+			<field name="prefix">Cash/%(year)s/</field>
+			<field name="padding">7</field>
+		</record>
+
+	</data>
+</openerp>
