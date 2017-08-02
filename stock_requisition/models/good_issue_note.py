@@ -144,6 +144,7 @@ class good_issue_note(osv.osv):
                                               'restrict_lot_id':lot_id,
                                           'product_id': product_id,
                                           'product_uom':product_uom,
+                                          'product_uom_qty':quantity,
                                           'location_id':location_id,
                                           'location_dest_id':from_location_id,
                                           'name':name,
