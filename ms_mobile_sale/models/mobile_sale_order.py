@@ -1842,7 +1842,7 @@ class mobile_sale_order(osv.osv):
                         invoice_id = invoiceObj.search(cr, uid, [('state', '=', 'draft'), ('origin', '=', so_ref_no)], context=context)                        
                         if So_id:
                             solist = So_id                               
-                            cr.execute('select branch_id,section_id,delivery_remark from sale_order where name=%s', (so_ref_no,))
+                            cr.execute('select branch_id,delivery_id,delivery_remark from sale_order where name=%s', (so_ref_no,))
                             data = cr.fetchone()
                             if data:
                                 branch_id = data[0]
@@ -1884,7 +1884,7 @@ class mobile_sale_order(osv.osv):
                             if invoice_id:
                                 self.pool['account.invoice'].signal_workflow(cr, uid, invoice_id, 'invoice_open')
                                 # pre_order =True
-                                invoiceObj.write(cr, uid, invoice_id, {'pre_order':True,'user_id':uid,'section_id':delivery_team_id,'collection_team_id':delivery_team_id,'collection_user_id' :uid ,'date_invoice':datetime.now() }, context)                                                                                                                             
+                                invoiceObj.write(cr, uid, invoice_id, {'pre_order':True,'user_id':uid,'section_id':section_id,'collection_team_id':section_id,'collection_user_id' :uid ,'date_invoice':datetime.now() }, context)                                                                                                                             
                                                                         
             return True 
           
