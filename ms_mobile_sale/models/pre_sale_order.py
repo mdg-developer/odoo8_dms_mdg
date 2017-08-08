@@ -347,12 +347,19 @@ class pre_sale_order(osv.osv):
                         saleOrder_Id = data[0][0]
                     else:
                         saleOrder_Id = None
-                                    
+                    cursor.execute("select manual from promos_rules where id=%s",(pro_line['pro_id'],))
+                    manual =cursor.fetchone()[0]
+                    if manual is not None:
+                        manual=manual
+                    else:
+                        manual=False                                    
                     promo_line_result = {
                         'promo_line_id':saleOrder_Id,
                         'pro_id':pro_line['pro_id'],
                         'from_date':pro_line['from_date'],
                         'to_date':pro_line['to_date'] ,
+                         'manual':manual,
+
                         }
                     mso_promotion_line_obj.create(cursor, user, promo_line_result, context=context)
             return True
