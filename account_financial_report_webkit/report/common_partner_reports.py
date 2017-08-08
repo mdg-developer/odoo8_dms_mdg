@@ -35,7 +35,9 @@ class CommonPartnersReportHeaderWebkit(CommonReportHeaderWebkit):
     ####################Account move line retrieval helper ##########################
     def get_partners_move_lines_ids(self, account_id, main_filter, start, stop, target_move,
                                     exclude_reconcile=False,
-                                    partner_filter=False):
+                                    partner_filter=False,
+                                    branch_filter=False,
+                                    analytic_account_filter=False):
         filter_from = False
         if main_filter in ('filter_period', 'filter_no'):
             filter_from = 'period'
@@ -48,7 +50,9 @@ class CommonPartnersReportHeaderWebkit(CommonReportHeaderWebkit):
                                                     stop,
                                                     target_move,
                                                     exclude_reconcile=exclude_reconcile,
-                                                    partner_filter=partner_filter)
+                                                    partner_filter=partner_filter,
+                                                    branch_filter=branch_filter,
+                                                    analytic_account_filter=analytic_account_filter)
 
     def _get_first_special_period(self):
         """
@@ -145,7 +149,7 @@ class CommonPartnersReportHeaderWebkit(CommonReportHeaderWebkit):
 
     def _get_partners_move_line_ids(self, filter_from, account_id, start, stop,
                                     target_move, opening_mode='exclude_opening',
-                                    exclude_reconcile=False, partner_filter=None):
+                                    exclude_reconcile=False, partner_filter=None, branch_filter=None, analytic_account_filter=None):
         """
 
         :param str filter_from: "periods" or "dates"
@@ -179,6 +183,12 @@ class CommonPartnersReportHeaderWebkit(CommonReportHeaderWebkit):
         if partner_filter:
             sql_where += "   AND account_move_line.partner_id in %(partner_ids)s"
 
+        if branch_filter:
+            sql_where += "   AND account_move_line.branch_id in %(branch_ids)s"
+            
+        if analytic_account_filter:
+            sql_where += "   AND account_move_line.analytic_account_id in %(analytic_account_ids)s"
+            
         if target_move == 'posted':
             sql_joins += "INNER JOIN account_move ON account_move_line.move_id = account_move.id"
             sql_where += " AND account_move.state = %(target_move)s"
@@ -187,6 +197,8 @@ class CommonPartnersReportHeaderWebkit(CommonReportHeaderWebkit):
         search_params.update({
             'account_ids': account_id,
             'partner_ids': tuple(partner_filter),
+            'branch_ids': tuple(branch_filter),
+            'analytic_account_ids': tuple(analytic_account_filter)
         })
 
         sql = ' '.join((sql_select, sql_joins, sql_where))

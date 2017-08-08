@@ -191,6 +191,8 @@ class PartnersOpenInvoicesWebkit(report_sxw.rml_parse, CommonPartnersReportHeade
         if main_filter in ('filter_period', 'filter_no'):
             initial_move_lines_per_account = self._tree_move_line_ids(
                 self._partners_initial_balance_line_ids(accounts_ids,
+                                                        branch_ids, 
+                                                        analytic_account_ids,
                                                         start,
                                                         partner_filter,
                                                         exclude_reconcile=True,

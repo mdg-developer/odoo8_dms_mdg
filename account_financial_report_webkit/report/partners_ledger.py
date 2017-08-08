@@ -52,6 +52,8 @@ class PartnersLedgerWebkit(report_sxw.rml_parse, CommonPartnersReportHeaderWebki
             'initial_balance': self._get_initial_balance,
             'amount_currency': self._get_amount_currency,
             'display_partner_account': self._get_display_partner_account,
+            'branches': self._get_branches_br,
+            'analytic_accounts': self._get_analytic_accounts_br,
             'display_target_move': self._get_display_target_move,
             'additional_args': [
                 ('--header-font-name', 'Helvetica'),
@@ -91,6 +93,8 @@ class PartnersLedgerWebkit(report_sxw.rml_parse, CommonPartnersReportHeaderWebki
         stop_period = self.get_end_period_br(data)
         fiscalyear = self.get_fiscalyear_br(data)
         partner_ids = self._get_form_param('partner_ids', data)
+        branch_ids = self._get_form_param('branch_ids', data)
+        analytic_account_ids = self._get_form_param('analytic_account_ids', data)
         result_selection = self._get_form_param('result_selection', data)
         chart_account = self._get_chart_account_id_br(data)
 
@@ -131,7 +135,9 @@ class PartnersLedgerWebkit(report_sxw.rml_parse, CommonPartnersReportHeaderWebki
         if initial_balance_mode == 'initial_balance':
             initial_balance_lines = self._compute_partners_initial_balances(accounts,
                                                                             start_period,
-                                                                            partner_filter=partner_ids,
+                                                                            branch_ids=branch_ids,
+                                                                            analytic_account_ids=analytic_account_ids,
+                                                                            partner_filter=partner_ids,                                                                            
                                                                             exclude_reconcile=False)
 
         ledger_lines = self._compute_partner_ledger_lines(accounts,
@@ -139,7 +145,9 @@ class PartnersLedgerWebkit(report_sxw.rml_parse, CommonPartnersReportHeaderWebki
                                                           target_move,
                                                           start,
                                                           stop,
-                                                          partner_filter=partner_ids)
+                                                          partner_filter=partner_ids,
+                                                          branch_filter=branch_ids,
+                                                          analytic_account_filter=analytic_account_ids)
         objects = []
         for account in self.pool.get('account.account').browse(self.cursor, self.uid, accounts):
             account.ledger_lines = ledger_lines.get(account.id, {})
@@ -166,6 +174,8 @@ class PartnersLedgerWebkit(report_sxw.rml_parse, CommonPartnersReportHeaderWebki
             'start_period': start_period,
             'stop_period': stop_period,
             'partner_ids': partner_ids,
+            'branch_ids': branch_ids,
+            'analytic_account_ids': analytic_account_ids,
             'chart_account': chart_account,
             'initial_balance_mode': initial_balance_mode,
         })
@@ -173,7 +183,7 @@ class PartnersLedgerWebkit(report_sxw.rml_parse, CommonPartnersReportHeaderWebki
         return super(PartnersLedgerWebkit, self).set_context(objects, data, new_ids,
                                                             report_type=report_type)
 
-    def _compute_partner_ledger_lines(self, accounts_ids, main_filter, target_move, start, stop, partner_filter=False):
+    def _compute_partner_ledger_lines(self, accounts_ids, main_filter, target_move, start, stop, partner_filter=False, branch_filter=False, analytic_account_filter=False):
         res = defaultdict(dict)
 
         for acc_id in accounts_ids:
@@ -183,7 +193,9 @@ class PartnersLedgerWebkit(report_sxw.rml_parse, CommonPartnersReportHeaderWebki
                                                              stop,
                                                              target_move,
                                                              exclude_reconcile=False,
-                                                             partner_filter=partner_filter)
+                                                             partner_filter=partner_filter,
+                                                             branch_filter=branch_filter,
+                                                             analytic_account_filter=analytic_account_filter)
             if not move_line_ids:
                 continue
             for partner_id in move_line_ids:

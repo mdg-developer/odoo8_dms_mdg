@@ -82,6 +82,8 @@ class AccountBalanceCommonWizard(orm.TransientModel):
     _columns = {
         'account_ids': fields.many2many('account.account', string='Filter on accounts',
                                          help="Only selected accounts will be printed. Leave empty to print all accounts."),
+        'branch_ids': fields.many2many('res.branch', string='Filter on branches',
+                                         help="Only selected branches will be printed. Leave empty to print all branches."),
         'filter': fields.selection([('filter_no', 'No Filters'),
                                     ('filter_date', 'Date'),
                                     ('filter_period', 'Periods'),
