@@ -35,6 +35,14 @@
                                 </tree>
                             </field>
                         </page>
+                        <page string="Branches Filters" name="branches">
+                            <separator string="Print only" colspan="4"/>
+                            <field name="branch_ids" colspan="4" nolabel="1"/>                               
+                        </page>
+                        <page string="Analytic Accounts Filters" name="analytic_accounts">
+                            <separator string="Print only" colspan="4"/>
+                            <field name="analytic_account_ids" colspan="4" nolabel="1"/>                              
+                        </page>
                         <page string="Partners Filters" name="accounts">
                             <separator string="Print only" colspan="4"/>
                             <field name="partner_ids" colspan="4" nolabel="1"/>

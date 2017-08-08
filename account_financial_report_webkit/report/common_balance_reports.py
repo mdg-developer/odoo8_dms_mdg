@@ -35,7 +35,7 @@ class CommonBalanceReportHeaderWebkit(CommonReportHeaderWebkit):
     def find_key_by_value_in_list(dic, value):
         return [key for key, val in dic.iteritems() if value in val][0]
 
-    def _get_account_details(self, account_ids, target_move, fiscalyear, main_filter, start, stop, initial_balance_mode, context=None):
+    def _get_account_details(self, account_ids, branch_ids, analytic_account_ids, target_move, fiscalyear, main_filter, start, stop, initial_balance_mode, context=None):
         """
         Get details of accounts to display on the report
         @param account_ids: ids of accounts to get details
@@ -64,9 +64,9 @@ class CommonBalanceReportHeaderWebkit(CommonReportHeaderWebkit):
 
         init_balance = False
         if initial_balance_mode == 'opening_balance':
-            init_balance = self._read_opening_balance(account_ids, start)
+            init_balance = self._read_opening_balance(account_ids, branch_ids, analytic_account_ids, start)
         elif initial_balance_mode:
-            init_balance = self._compute_initial_balances(account_ids, start, fiscalyear)
+            init_balance = self._compute_initial_balances(account_ids, branch_ids, analytic_account_ids, start, fiscalyear)
 
         ctx = context.copy()
         ctx.update({'state': target_move,
@@ -129,7 +129,7 @@ class CommonBalanceReportHeaderWebkit(CommonReportHeaderWebkit):
                 details_filter = 'filter_no'
 
             initial_balance_mode = init_balance and self._get_initial_balance_mode(start) or False
-            accounts_by_ids = self._get_account_details(account_ids, target_move, fiscalyear, details_filter,
+            accounts_by_ids = self._get_account_details(account_ids, branch_ids, analytic_account_ids, target_move, fiscalyear, details_filter,
                                                         start, stop, initial_balance_mode)
             comp_params = {
                 'comparison_filter': comparison_filter,
@@ -198,6 +198,8 @@ class CommonBalanceReportHeaderWebkit(CommonReportHeaderWebkit):
 
     def compute_balance_data(self, data, filter_report_type=None):
         new_ids = data['form']['account_ids'] or data['form']['chart_account_id']
+        branch_ids = data['form']['branch_ids'] 
+        analytic_account_ids = data['form']['analytic_account_ids'] 
         max_comparison = self._get_form_param('max_comparison', data, default=0)
         main_filter = self._get_form_param('filter', data, default='filter_no')
 
@@ -223,7 +225,7 @@ class CommonBalanceReportHeaderWebkit(CommonReportHeaderWebkit):
         account_ids = self.get_all_accounts(new_ids, only_type=filter_report_type)
 
         # get details for each accounts, total of debit / credit / balance
-        accounts_by_ids = self._get_account_details(account_ids, target_move, fiscalyear, main_filter, start, stop, initial_balance_mode)
+        accounts_by_ids = self._get_account_details(account_ids, branch_ids, analytic_account_ids, target_move, fiscalyear, main_filter, start, stop, initial_balance_mode)
 
         comparison_params = []
         comp_accounts_by_ids = []

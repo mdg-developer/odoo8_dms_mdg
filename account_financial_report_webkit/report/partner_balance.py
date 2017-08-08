@@ -52,6 +52,8 @@ class PartnerBalanceWebkit(report_sxw.rml_parse, CommonPartnerBalanceReportHeade
             'display_target_move': self._get_display_target_move,
             'display_partner_account': self._get_display_partner_account,
             'accounts': self._get_accounts_br,
+            'branches': self._get_branches_br,
+            'analytic_accounts': self._get_analytic_accounts_br,
             'additional_args': [
                 ('--header-font-name', 'Helvetica'),
                 ('--footer-font-name', 'Helvetica'),

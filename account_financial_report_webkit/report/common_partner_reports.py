@@ -243,7 +243,7 @@ class CommonPartnersReportHeaderWebkit(CommonReportHeaderWebkit):
                 res[account_id][partner_id] = row
         return res
 
-    def _partners_initial_balance_line_ids(self, account_ids, start_period, partner_filter, exclude_reconcile=False, force_period_ids=False, date_stop=None):
+    def _partners_initial_balance_line_ids(self, account_ids, branch_ids, analytic_account_ids, start_period, partner_filter, exclude_reconcile=False, force_period_ids=False, date_stop=None):
         # take ALL previous periods
         period_ids = force_period_ids \
                      if force_period_ids \
@@ -254,14 +254,20 @@ class CommonPartnersReportHeaderWebkit(CommonReportHeaderWebkit):
         search_param = {
                 'date_start': start_period.date_start,
                 'period_ids': tuple(period_ids),
-                'account_ids': tuple(account_ids),
-            }
+                'account_ids': tuple(account_ids),                
+            }        
         sql = ("SELECT ml.id, ml.account_id, ml.partner_id "
                "FROM account_move_line ml "
                "INNER JOIN account_account a "
                "ON a.id = ml.account_id "
                "WHERE ml.period_id in %(period_ids)s "
-               "AND ml.account_id in %(account_ids)s ")
+               "AND ml.account_id in %(account_ids)s ")        
+        if branch_ids:
+            sql = sql + ("AND ml.branch_id in %(branch_ids)s ")
+            search_param.update({'branch_ids': tuple(branch_ids)})
+        if analytic_account_ids:
+            sql = sql + ("AND ml.analytic_account_id in %(analytic_account_ids)s ")
+            search_param.update({'analytic_account_ids': tuple(analytic_account_ids)})
         if exclude_reconcile:
             if not date_stop:
                 raise Exception("Missing \"date_stop\" to compute the open invoices.")
@@ -271,17 +277,18 @@ class CommonPartnersReportHeaderWebkit(CommonReportHeaderWebkit):
         if partner_filter:
             sql += "AND ml.partner_id in %(partner_ids)s "
             search_param.update({'partner_ids': tuple(partner_filter)})
-
+        print 'sql',sql
+        print 'search_param',search_param
         self.cursor.execute(sql, search_param)
         return self.cursor.dictfetchall()
 
-    def _compute_partners_initial_balances(self, account_ids, start_period, partner_filter=None, exclude_reconcile=False, force_period_ids=False):
+    def _compute_partners_initial_balances(self, account_ids, start_period, branch_ids=None, analytic_account_ids=None, partner_filter=None, exclude_reconcile=False, force_period_ids=False):
         """We compute initial balance.
         If form is filtered by date all initial balance are equal to 0
         This function will sum pear and apple in currency amount if account as no secondary currency"""
         if isinstance(account_ids, (int, long)):
             account_ids = [account_ids]
-        move_line_ids = self._partners_initial_balance_line_ids(account_ids, start_period, partner_filter,
+        move_line_ids = self._partners_initial_balance_line_ids(account_ids, branch_ids, analytic_account_ids, start_period, partner_filter,
                                                                 exclude_reconcile=exclude_reconcile,
                                                                 force_period_ids=force_period_ids)
         if not move_line_ids:

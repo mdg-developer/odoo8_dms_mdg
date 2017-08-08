@@ -36,6 +36,10 @@ class AccountPartnerBalanceWizard(orm.TransientModel):
                                               "Partner's", required=True),
         'partner_ids': fields.many2many('res.partner', string='Filter on partner',
                                          help="Only selected partners will be printed. Leave empty to print all partners."),
+        'branch_ids': fields.many2many('res.branch', string='Filter on branches',
+                                         help="Only selected branches will be printed. Leave empty to print all branches."),
+        'analytic_account_ids': fields.many2many('account.analytic.account', string='Filter on analytic accounts',
+                                         help="Only selected analytic accounts will be printed. Leave empty to print all analytic accounts."),
     }
 
     _defaults = {
@@ -45,7 +49,7 @@ class AccountPartnerBalanceWizard(orm.TransientModel):
     def pre_print_report(self, cr, uid, ids, data, context=None):
         data = super(AccountPartnerBalanceWizard, self).pre_print_report(cr, uid, ids, data, context)
         vals = self.read(cr, uid, ids,
-                         ['result_selection', 'partner_ids'],
+                         ['result_selection', 'partner_ids', 'branch_ids', 'analytic_account_ids'],
                          context=context)[0]
         data['form'].update(vals)
         return data
