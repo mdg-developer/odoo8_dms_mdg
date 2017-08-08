@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- <menuitem id="menu_tablet_pdf_print" name="Print PDF" /> <menuitem 
+			id="menu_tablet_pdf_print_1" name="Print PDF" parent="menu_tablet_pdf_print" 
+			/> -->
+
+		<record id="view_tablet_pdf_print_form" model="ir.ui.view">
+			<field name="name">Tablet Pdf Print Form</field>
+			<field name="model">tablet.pdf.print</field>
+			<field name="arch" type="xml">
+				<form string="Print PDF" version="7.0">
+					<sheet>
+						<group>
+							<field name="name" style="width:320px;" />
+							<field name="section_id"  class="oe_inline" />
+							<field name="user_id"  domain="[('default_section_id', '=',section_id)]"  class="oe_inline" />
+							<field name="print_date"  />
+							<field name="print_file" filename="print_fname" />
+							<field name="print_fname" invisible="1" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="view_tablet_pdf_print_tree" model="ir.ui.view">
+			<field name="name">Tablet Pdf Print Tree</field>
+			<field name="model">tablet.pdf.print</field>
+			<field name="arch" type="xml">
+				<tree string="Print PDF">
+					<field name="print_date" />
+					<field name="section_id" />
+					<field name="user_id" />
+					<field name="name" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Action -->
+		<record id="action_tablet_pdf_print" model="ir.actions.act_window">
+			<field name="name">Tablet Pdf Print</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">tablet.pdf.print</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_tablet_pdf_print_tree" />
+		</record>
+
+		<!-- First level menu -->
+		<menuitem id="menu_tablet_print_import" name="Tablet Pdf Print"  action="action_tablet_pdf_print"
+			sequence="5" parent="menu_customization.menu_sale_team_menu" />
+
+	</data>
+</openerp>
