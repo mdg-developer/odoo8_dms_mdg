@@ -50,6 +50,12 @@ class CommonReportHeaderWebkit(common_report_header):
     def _get_accounts_br(self, data):
         return self._get_info(data, 'account_ids', 'account.account')
 
+    def _get_branches_br(self, data):
+        return self._get_info(data, 'branch_ids', 'res.branch')
+    
+    def _get_analytic_accounts_br(self, data):
+        return self._get_info(data, 'analytic_account_ids', 'account.analytic.account')
+    
     def _get_info(self, data, field, model):
         info = data.get('form', {}).get(field)
         if info:
@@ -361,7 +367,7 @@ class CommonReportHeaderWebkit(common_report_header):
             res[account_id] = self._compute_init_balance(account_id, opening_period_selected, mode='read')
         return res
 
-    def _compute_initial_balances(self, account_ids, start_period, fiscalyear):
+    def _compute_initial_balances(self, account_ids, branch_ids, analytic_account_ids, start_period, fiscalyear):
         """We compute initial balance.
         If form is filtered by date all initial balance are equal to 0
         This function will sum pear and apple in currency amount if account as no secondary currency"""
@@ -389,23 +395,25 @@ class CommonReportHeaderWebkit(common_report_header):
         return res
 
     ####################Account move retrieval helper ##########################
-    def _get_move_ids_from_periods(self, account_id, period_start, period_stop, target_move):
+    def _get_move_ids_from_periods(self, account_id, branch_ids, analytic_account_ids, period_start, period_stop, target_move):
         move_line_obj = self.pool.get('account.move.line')
         period_obj = self.pool.get('account.period')
         periods = period_obj.build_ctx_periods(self.cursor, self.uid, period_start.id, period_stop.id)
         if not periods:
             return []
-        search = [('period_id', 'in', periods), ('account_id', '=', account_id)]
+        search = [('period_id', 'in', periods), ('account_id', '=', account_id), ('branch_id', 'in', branch_ids), ('analytic_account_id', 'in', analytic_account_ids)]
         if target_move == 'posted':
             search += [('move_id.state', '=', 'posted')]
         return move_line_obj.search(self.cursor, self.uid, search)
 
-    def _get_move_ids_from_dates(self, account_id, date_start, date_stop, target_move, mode='include_opening'):
+    def _get_move_ids_from_dates(self, account_id, branch_ids, analytic_account_ids, date_start, date_stop, target_move, mode='include_opening'):
         # TODO imporve perfomance by setting opening period as a property
         move_line_obj = self.pool.get('account.move.line')
         search_period = [('date', '>=', date_start),
                          ('date', '<=', date_stop),
-                         ('account_id', '=', account_id)]
+                         ('account_id', '=', account_id),
+                         ('branch_id', 'in', branch_ids),
+                         ('analytic_account_id', 'in', analytic_account_ids)]
 
         # actually not used because OpenERP itself always include the opening when we
         # get the periods from january to december
@@ -419,16 +427,16 @@ class CommonReportHeaderWebkit(common_report_header):
 
         return move_line_obj.search(self.cursor, self.uid, search_period)
 
-    def get_move_lines_ids(self, account_id, main_filter, start, stop, target_move, mode='include_opening'):
+    def get_move_lines_ids(self, account_id, branch_ids, analytic_account_ids, main_filter, start, stop, target_move, mode='include_opening'):
         """Get account move lines base on form data"""
         if mode not in ('include_opening', 'exclude_opening'):
             raise osv.except_osv(_('Invalid query mode'), _('Must be in include_opening, exclude_opening'))
 
         if main_filter in ('filter_period', 'filter_no'):
-            return self._get_move_ids_from_periods(account_id, start, stop, target_move)
+            return self._get_move_ids_from_periods(account_id, branch_ids, analytic_account_ids, start, stop, target_move)
 
         elif main_filter == 'filter_date':
-            return self._get_move_ids_from_dates(account_id, start, stop, target_move)
+            return self._get_move_ids_from_dates(account_id, branch_ids, analytic_account_ids, start, stop, target_move)
         else:
             raise osv.except_osv(_('No valid filter'), _('Please set a valid time filter'))
 

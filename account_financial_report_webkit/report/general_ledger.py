@@ -54,6 +54,8 @@ class GeneralLedgerWebkit(report_sxw.rml_parse, CommonReportHeaderWebkit):
             'amount_currency': self._get_amount_currency,
             'display_target_move': self._get_display_target_move,
             'accounts': self._get_accounts_br,
+            'branches': self._get_branches_br,
+            'analytic_accounts': self._get_analytic_accounts_br,
             'additional_args': [
                 ('--header-font-name', 'Helvetica'),
                 ('--footer-font-name', 'Helvetica'),
@@ -71,7 +73,8 @@ class GeneralLedgerWebkit(report_sxw.rml_parse, CommonReportHeaderWebkit):
         """Populate a ledger_lines attribute on each browse record that will be used
         by mako template"""
         new_ids = data['form']['account_ids'] or data['form']['chart_account_id']
-
+        branch_ids = data['form']['branch_ids'] 
+        analytic_account_ids = data['form']['analytic_account_ids'] 
         # Account initial balance memoizer
         init_balance_memoizer = {}
 
@@ -104,11 +107,11 @@ class GeneralLedgerWebkit(report_sxw.rml_parse, CommonReportHeaderWebkit):
         # Retrieving accounts
         accounts = self.get_all_accounts(new_ids, exclude_type=['view'])
         if initial_balance_mode == 'initial_balance':
-            init_balance_memoizer = self._compute_initial_balances(accounts, start, fiscalyear)
+            init_balance_memoizer = self._compute_initial_balances(accounts, branch_ids, analytic_account_ids, start, fiscalyear)
         elif initial_balance_mode == 'opening_balance':
-            init_balance_memoizer = self._read_opening_balance(accounts, start)
+            init_balance_memoizer = self._read_opening_balance(accounts, branch_ids, analytic_account_ids, start)
 
-        ledger_lines_memoizer = self._compute_account_ledger_lines(accounts, init_balance_memoizer,
+        ledger_lines_memoizer = self._compute_account_ledger_lines(accounts, branch_ids, analytic_account_ids, init_balance_memoizer,
                                                                    main_filter, target_move, start, stop)
         objects = []
         for account in self.pool.get('account.account').browse(self.cursor, self.uid, accounts):
@@ -182,11 +185,11 @@ class GeneralLedgerWebkit(report_sxw.rml_parse, CommonReportHeaderWebkit):
 
         return centralized_lines
 
-    def _compute_account_ledger_lines(self, accounts_ids, init_balance_memoizer, main_filter,
+    def _compute_account_ledger_lines(self, accounts_ids, branch_ids, analytic_account_ids, init_balance_memoizer, main_filter,
                                       target_move, start, stop):
         res = {}
         for acc_id in accounts_ids:
-            move_line_ids = self.get_move_lines_ids(acc_id, main_filter, start, stop, target_move)
+            move_line_ids = self.get_move_lines_ids(acc_id, branch_ids, analytic_account_ids, main_filter, start, stop, target_move)
             if not move_line_ids:
                 res[acc_id] = []
                 continue

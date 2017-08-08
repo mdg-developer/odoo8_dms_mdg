@@ -47,6 +47,10 @@ class AccountReportGeneralLedgerWizard(orm.TransientModel):
                                             required=True),
         'account_ids': fields.many2many('account.account', string='Filter on accounts',
                                          help="""Only selected accounts will be printed. Leave empty to print all accounts."""),
+        'branch_ids': fields.many2many('res.branch', string='Filter on branches',
+                                         help="""Only selected branches will be printed. Leave empty to print all branches."""),
+        'analytic_account_ids': fields.many2many('account.analytic.account', string='Filter on analytic accounts',
+                                         help="""Only selected analytic accounts will be printed. Leave empty to print all analytic accounts."""),
         'centralize': fields.boolean('Activate Centralization', help='Uncheck to display all the details of centralized accounts.')
     }
     _defaults = {
@@ -74,6 +78,8 @@ class AccountReportGeneralLedgerWizard(orm.TransientModel):
                          ['amount_currency',
                           'display_account',
                           'account_ids',
+                          'branch_ids',
+                          'analytic_account_ids',
                           'centralize'],
                          context=context)[0]
         data['form'].update(vals)
