@@ -64,6 +64,8 @@ class PartnersOpenInvoicesWebkit(report_sxw.rml_parse, CommonPartnersReportHeade
             'target_move': self._get_target_move,
             'amount_currency': self._get_amount_currency,
             'display_partner_account': self._get_display_partner_account,
+            'branches': self._get_branches_br,
+            'analytic_accounts': self._get_analytic_accounts_br,
             'display_target_move': self._get_display_target_move,
             'additional_args': [
                 ('--header-font-name', 'Helvetica'),
@@ -104,6 +106,8 @@ class PartnersOpenInvoicesWebkit(report_sxw.rml_parse, CommonPartnersReportHeade
         stop_period = self.get_end_period_br(data)
         fiscalyear = self.get_fiscalyear_br(data)
         partner_ids = self._get_form_param('partner_ids', data)
+        branch_ids = self._get_form_param('branch_ids', data)
+        analytic_account_ids = self._get_form_param('analytic_account_ids', data)
         result_selection = self._get_form_param('result_selection', data)
         date_until = self._get_form_param('until_date', data)
         chart_account = self._get_chart_account_id_br(data)
@@ -138,7 +142,9 @@ class PartnersOpenInvoicesWebkit(report_sxw.rml_parse, CommonPartnersReportHeade
                                                                       start,
                                                                       stop,
                                                                       date_until,
-                                                                      partner_filter=partner_ids)
+                                                                      partner_filter=partner_ids,
+                                                                      branch_filter=branch_ids,
+                                                                      analytic_account_filter=analytic_account_ids)
         objects = []
         for account in self.pool.get('account.account').browse(self.cursor, self.uid, account_ids):
             account.ledger_lines = ledger_lines_memoizer.get(account.id, {})
@@ -165,13 +171,15 @@ class PartnersOpenInvoicesWebkit(report_sxw.rml_parse, CommonPartnersReportHeade
             'stop_period': stop_period,
             'date_until': date_until,
             'partner_ids': partner_ids,
+            'branch_ids': branch_ids,
+            'analytic_account_ids': analytic_account_ids,
             'chart_account': chart_account,
         })
 
         return super(PartnersOpenInvoicesWebkit, self).set_context(objects, data, new_ids,
                                                             report_type=report_type)
 
-    def _compute_open_transactions_lines(self, accounts_ids, main_filter, target_move, start, stop, date_until=False, partner_filter=False):
+    def _compute_open_transactions_lines(self, accounts_ids, main_filter, target_move, start, stop, date_until=False, partner_filter=False, branch_filter=False, analytic_account_filter=False):
         res = defaultdict(dict)
 
         ## we check if until date and date stop have the same value
@@ -191,8 +199,8 @@ class PartnersOpenInvoicesWebkit(report_sxw.rml_parse, CommonPartnersReportHeade
         if main_filter in ('filter_period', 'filter_no'):
             initial_move_lines_per_account = self._tree_move_line_ids(
                 self._partners_initial_balance_line_ids(accounts_ids,
-                                                        branch_ids, 
-                                                        analytic_account_ids,
+                                                        branch_filter, 
+                                                        analytic_account_filter,
                                                         start,
                                                         partner_filter,
                                                         exclude_reconcile=True,
@@ -209,7 +217,9 @@ class PartnersOpenInvoicesWebkit(report_sxw.rml_parse, CommonPartnersReportHeade
                                                                          stop,
                                                                          target_move,
                                                                          exclude_reconcile=True,
-                                                                         partner_filter=partner_filter)
+                                                                         partner_filter=partner_filter,
+                                                                         branch_filter=branch_filter,
+                                                                         analytic_account_filter=analytic_account_filter)
 
             if not initial_move_lines_ids_per_partner and not move_line_ids_per_partner:
                 continue

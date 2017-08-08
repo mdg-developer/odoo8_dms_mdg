@@ -152,6 +152,8 @@ class open_invoices_xls(report_xls):
             ('df', 2, 0, 'text', _p.filter_form(data) == 'filter_date' and _('Dates Filter') or _('Periods Filter'), None, style_bold_blue_center),
             ('cd', 1 if nbr_columns == 11 else 2 , 0, 'text', _('Clearance Date'), None, style_bold_blue_center),
             ('af', 2, 0, 'text', _('Accounts Filter'), None, style_bold_blue_center),
+            ('bf', 2, 0, 'text', _('Branches Filter'), None, style_bold_blue_center),
+            ('aaf', 2, 0, 'text', _('Analytic Accounts Filter'), None, style_bold_blue_center),
             ('tm', 3 if nbr_columns == 13 else 2, 0, 'text', _('Target Moves'), None, style_bold_blue_center),
         ]       
         row_data = self.xls_row_template(c_specs, [x[0] for x in c_specs])
@@ -176,7 +178,9 @@ class open_invoices_xls(report_xls):
         c_specs += [
             ('df', 2, 0, 'text', df, None, style_center),
             ('cd', 1 if nbr_columns == 11 else 2, 0, 'text', _p.date_until, None, style_center), #clearance date  
-            ('af', 2, 0, 'text', _('Custom Filter') if _p.partner_ids else _p.display_partner_account(data), None, style_center),        
+            ('af', 2, 0, 'text', _('Custom Filter') if _p.partner_ids else _p.display_partner_account(data), None, style_center),   
+            ('bf', 2, 0, 'text', _p.branches(data) and ', '.join([branch.branch_code for branch in _p.branches(data)]) or _('All')),
+            ('aaf', 2, 0, 'text', _p.analytic_accounts(data) and ', '.join([analytic_account.code for analytic_account in _p.analytic_accounts(data)]) or _('All')),     
             ('tm', 3 if nbr_columns == 13 else 2, 0, 'text', _p.display_target_move(data), None, style_center),
         ]              
         row_data = self.xls_row_template(c_specs, [x[0] for x in c_specs])
