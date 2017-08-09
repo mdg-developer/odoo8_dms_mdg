@@ -18,7 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp.osv import orm
+from openerp.osv import fields, orm
 
 
 class AccountAgedTrialBalance(orm.TransientModel):
@@ -31,6 +31,11 @@ class AccountAgedTrialBalance(orm.TransientModel):
     _name = "account.aged.trial.balance.webkit"
     _description = "Aged partner balanced"
 
+    _columns = {    
+                'analytic_account_id': fields.many2many('account.analytic.account', 'aged_trial_balance_webkit_account_analytic_account','aged_trial_balance_webkit_id','account_analytic_account_id', string='Filter on analytic accounts',
+                                                 help="Only selected analytic accounts will be printed. Leave empty to print all analytic accounts."),
+    }
+        
     def _print_report(self, cr, uid, ids, data, context=None):
         # we update form with display account value
         data = self.pre_print_report(cr, uid, ids, data, context=context)

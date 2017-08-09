@@ -162,7 +162,37 @@ class PartnersOpenInvoicesWebkit(report_sxw.rml_parse, CommonPartnersReportHeade
             if group_by_currency:
                 self._group_lines_by_currency(account)
             objects.append(account)
+        
+        partner_objects = self.pool.get('account.account').browse(self.cursor,
+                                                          self.uid,
+                                                          account_ids)
+        ledger_lines = {}
+        init_balance = {}
+        partners_order = {}
+        for account in partner_objects:
+            ledger_lines[account.id] = ledger_lines_memoizer.get(account.id,
+                                                                 {})
+            init_balance[account.id] = init_balance_memoizer.get(account.id,
+                                                                 {})
+            # we have to compute partner order based on inital balance
+            # and ledger line as we may have partner with init bal
+            # that are not in ledger line and vice versa
+            ledg_lines_pids = ledger_lines_memoizer.get(account.id, {}).keys()
+            non_null_init_balances = dict([
+                (ib, amounts) for ib, amounts
+                in init_balance[account.id].iteritems()
+                if amounts['init_balance'] or
+                amounts['init_balance_currency']])
+            init_bal_lines_pids = non_null_init_balances.keys()
 
+            partners_order[account.id] = self._order_partners(
+                ledg_lines_pids, init_bal_lines_pids)
+            ledger_lines[account.id] = ledger_lines_memoizer.get(account.id,
+                                                                 {})
+            if group_by_currency:
+                self._group_lines_by_currency(
+                    account, ledger_lines[account.id])
+                
         self.localcontext.update({
             'fiscalyear': fiscalyear,
             'start_date': start_date,
@@ -174,6 +204,8 @@ class PartnersOpenInvoicesWebkit(report_sxw.rml_parse, CommonPartnersReportHeade
             'branch_ids': branch_ids,
             'analytic_account_ids': analytic_account_ids,
             'chart_account': chart_account,
+            'ledger_lines': ledger_lines,
+            'partners_order': partners_order
         })
 
         return super(PartnersOpenInvoicesWebkit, self).set_context(objects, data, new_ids,

@@ -85,7 +85,7 @@ class AccountAgedTrialBalanceWebkit(PartnersOpenInvoicesWebkit):
             'uid': uid,
             'company': company,
             'ranges': self._get_ranges(),
-            'ranges_titles': self._get_ranges_titles(),
+            'ranges_titles': self._get_ranges_titles(),            
             'report_name': _('Aged Partner Balance'),
             'additional_args': [
                 ('--header-font-name', 'Helvetica'),
@@ -142,7 +142,34 @@ class AccountAgedTrialBalanceWebkit(PartnersOpenInvoicesWebkit):
                 if aged_lines:
                     acc.aged_lines[part_id] = aged_lines
             acc.aged_totals = totals = self.compute_totals(acc.aged_lines.values())
-            acc.aged_percents = self.compute_percents(totals)
+            
+        agged_lines_accounts = {}
+        agged_totals_accounts = {}
+        agged_percents_accounts = {}
+        
+        for acc in self.objects:
+            agged_lines_accounts[acc.id] = {}
+            agged_totals_accounts[acc.id] = {}
+            agged_percents_accounts[acc.id] = {}
+
+            for part_id, partner_lines in\
+                    self.localcontext['ledger_lines'][acc.id].items():
+
+                aged_lines = self.compute_aged_lines(part_id,
+                                                     partner_lines,
+                                                     data)
+                if aged_lines:
+                    agged_lines_accounts[acc.id][part_id] = aged_lines
+            agged_totals_accounts[acc.id] = totals = self.compute_totals(
+                agged_lines_accounts[acc.id].values())
+            agged_percents_accounts[acc.id] = self.compute_percents(totals)
+
+        self.localcontext.update({
+            'agged_lines_accounts': agged_lines_accounts,
+            'agged_totals_accounts': agged_totals_accounts,
+            'agged_percents_accounts': agged_percents_accounts,
+        })    
+        
         #Free some memory
         del(acc.ledger_lines)
         return res
@@ -161,11 +188,13 @@ class AccountAgedTrialBalanceWebkit(PartnersOpenInvoicesWebkit):
                        'aged_lines': {(90, 120): 0.0, ...}
 
         """
+        branch_ids = data['form']['branch_ids']  
+        analytic_account_ids = data['form']['analytic_account_ids']  
         lines_to_age = self.filter_lines(partner_id, ledger_lines)
         res = {}
         end_date = self._get_end_date(data)
         aged_lines = dict.fromkeys(RANGES, 0.0)
-        reconcile_lookup = self.get_reconcile_count_lookup(lines_to_age)
+        reconcile_lookup = self.get_reconcile_count_lookup(branch_ids,analytic_account_ids,lines_to_age)
         res['aged_lines'] = aged_lines
         for line in lines_to_age:
             compute_method = self.get_compute_method(reconcile_lookup,
@@ -370,7 +399,7 @@ class AccountAgedTrialBalanceWebkit(PartnersOpenInvoicesWebkit):
             percents[drange] = (totals[drange] / base) * 100.0
         return percents
 
-    def get_reconcile_count_lookup(self, lines):
+    def get_reconcile_count_lookup(self, branch_ids, analytic_account_ids, lines):
         """Compute an lookup dict
 
         It contains has partial reconcile id as key and the count of lines
@@ -387,11 +416,30 @@ class AccountAgedTrialBalanceWebkit(PartnersOpenInvoicesWebkit):
         # but it seems not really possible for a partner
         # So I'll keep that option.
         l_ids = tuple(x['id'] for x in lines)
-        sql = ("SELECT reconcile_partial_id, COUNT(*) FROM account_move_line"
-               "   WHERE reconcile_partial_id IS NOT NULL"
-               "   AND id in %s"
-               "   GROUP BY reconcile_partial_id")
-        self.cr.execute(sql, (l_ids,))
+        if branch_ids and not analytic_account_ids:
+            sql = ("SELECT reconcile_partial_id, COUNT(*) FROM account_move_line"
+                   "   WHERE reconcile_partial_id IS NOT NULL"
+                   "   AND id in %s and branch_id in %s" 
+                   "   GROUP BY reconcile_partial_id")
+            self.cr.execute(sql, (l_ids,tuple(branch_ids),))
+        if not branch_ids and analytic_account_ids:
+            sql = ("SELECT reconcile_partial_id, COUNT(*) FROM account_move_line"
+                   "   WHERE reconcile_partial_id IS NOT NULL"
+                   "   AND id in %s and analytic_account_id in %s" 
+                   "   GROUP BY reconcile_partial_id")
+            self.cr.execute(sql, (l_ids,tuple(analytic_account_ids),))
+        if branch_ids and analytic_account_ids:
+            sql = ("SELECT reconcile_partial_id, COUNT(*) FROM account_move_line"
+                   "   WHERE reconcile_partial_id IS NOT NULL"
+                   "   AND id in %s and branch_id in %s and analytic_account_id in %s" 
+                   "   GROUP BY reconcile_partial_id")
+            self.cr.execute(sql, (l_ids,tuple(branch_ids),tuple(analytic_account_ids),))
+        if not branch_ids and not analytic_account_ids:
+            sql = ("SELECT reconcile_partial_id, COUNT(*) FROM account_move_line"
+                   "   WHERE reconcile_partial_id IS NOT NULL"
+                   "   AND id in %s" 
+                   "   GROUP BY reconcile_partial_id")
+            self.cr.execute(sql, (l_ids,))
         res = self.cr.fetchall()
         return dict((x[0], x[1]) for x in res)
 

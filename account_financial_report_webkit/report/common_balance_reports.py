@@ -198,8 +198,7 @@ class CommonBalanceReportHeaderWebkit(CommonReportHeaderWebkit):
 
     def compute_balance_data(self, data, filter_report_type=None):
         new_ids = data['form']['account_ids'] or data['form']['chart_account_id']
-        branch_ids = data['form']['branch_ids'] 
-        analytic_account_ids = data['form']['analytic_account_ids'] 
+
         max_comparison = self._get_form_param('max_comparison', data, default=0)
         main_filter = self._get_form_param('filter', data, default='filter_no')
 
@@ -213,6 +212,8 @@ class CommonBalanceReportHeaderWebkit(CommonReportHeaderWebkit):
         target_move = self._get_form_param('target_move', data, default='all')
         start_date = self._get_form_param('date_from', data)
         stop_date = self._get_form_param('date_to', data)
+        branch_ids = self._get_form_param('branch_ids', data)
+        analytic_account_ids = self._get_form_param('analytic_account_ids', data)
         chart_account = self._get_chart_account_id_br(data)
 
         start_period, stop_period, start, stop = \

@@ -326,7 +326,7 @@ class CommonReportHeaderWebkit(common_report_header):
 
     ####################Initial Balance helper #################################
 
-    def _compute_init_balance(self, account_id=None, period_ids=None, mode='computed', default_values=False):
+    def _compute_init_balance(self, account_id=None, branch_ids=None, analytic_account_ids=None, period_ids=None, mode='computed', default_values=False):
         if not isinstance(period_ids, list):
             period_ids = [period_ids]
         res = {}
@@ -335,13 +335,38 @@ class CommonReportHeaderWebkit(common_report_header):
             if not account_id or not period_ids:
                 raise Exception('Missing account or period_ids')
             try:
-                self.cursor.execute("SELECT sum(debit) AS debit, "
-                                    " sum(credit) AS credit, "
-                                    " sum(debit)-sum(credit) AS balance, "
-                                    " sum(amount_currency) AS curr_balance"
-                                    " FROM account_move_line"
-                                    " WHERE period_id in %s"
-                                    " AND account_id = %s", (tuple(period_ids), account_id))
+                if branch_ids and not analytic_account_ids:
+                    self.cursor.execute("SELECT sum(debit) AS debit, "
+                                        " sum(credit) AS credit, "
+                                        " sum(debit)-sum(credit) AS balance, "
+                                        " sum(amount_currency) AS curr_balance"
+                                        " FROM account_move_line"
+                                        " WHERE period_id in %s"
+                                        " AND account_id = %s AND branch_id in %s", (tuple(period_ids), account_id, tuple(branch_ids)))
+                if not branch_ids and analytic_account_ids: 
+                    self.cursor.execute("SELECT sum(debit) AS debit, "
+                                        " sum(credit) AS credit, "
+                                        " sum(debit)-sum(credit) AS balance, "
+                                        " sum(amount_currency) AS curr_balance"
+                                        " FROM account_move_line"
+                                        " WHERE period_id in %s"
+                                        " AND account_id = %s AND analytic_account_id in %s", (tuple(period_ids), account_id, tuple(analytic_account_ids)))
+                if branch_ids and analytic_account_ids: 
+                    self.cursor.execute("SELECT sum(debit) AS debit, "
+                                        " sum(credit) AS credit, "
+                                        " sum(debit)-sum(credit) AS balance, "
+                                        " sum(amount_currency) AS curr_balance"
+                                        " FROM account_move_line"
+                                        " WHERE period_id in %s"
+                                        " AND account_id = %s AND analytic_account_id in %s AND branch_id in %s", (tuple(period_ids), account_id, tuple(analytic_account_ids),tuple(branch_ids)))
+                if not branch_ids and not analytic_account_ids:
+                    self.cursor.execute("SELECT sum(debit) AS debit, "
+                                        " sum(credit) AS credit, "
+                                        " sum(debit)-sum(credit) AS balance, "
+                                        " sum(amount_currency) AS curr_balance"
+                                        " FROM account_move_line"
+                                        " WHERE period_id in %s"
+                                        " AND account_id = %s", (tuple(period_ids), account_id))
                 res = self.cursor.dictfetchone()
 
             except Exception, exc:
@@ -367,7 +392,7 @@ class CommonReportHeaderWebkit(common_report_header):
 
         res = {}
         for account_id in account_ids:
-            res[account_id] = self._compute_init_balance(account_id, opening_period_selected, mode='read')
+            res[account_id] = self._compute_init_balance(account_id, branch_ids, analytic_account_ids, opening_period_selected, mode='read')
         return res
 
     def _compute_initial_balances(self, account_ids, branch_ids, analytic_account_ids, start_period, fiscalyear):
@@ -392,9 +417,9 @@ class CommonReportHeaderWebkit(common_report_header):
                 # we compute the initial balance for close_method == none only when we print a GL
                 # during the year, when the opening period is not included in the period selection!
                 if pnl_periods_ids and not opening_period_selected:
-                    res[acc.id] = self._compute_init_balance(acc.id, pnl_periods_ids)
+                    res[acc.id] = self._compute_init_balance(acc.id, branch_ids, analytic_account_ids, pnl_periods_ids)
             else:
-                res[acc.id] = self._compute_init_balance(acc.id, bs_period_ids)
+                res[acc.id] = self._compute_init_balance(acc.id, branch_ids, analytic_account_ids, bs_period_ids)
         return res
 
     ####################Account move retrieval helper ##########################
