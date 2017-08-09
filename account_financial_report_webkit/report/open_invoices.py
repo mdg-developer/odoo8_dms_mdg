@@ -65,7 +65,7 @@ class PartnersOpenInvoicesWebkit(report_sxw.rml_parse, CommonPartnersReportHeade
             'amount_currency': self._get_amount_currency,
             'display_partner_account': self._get_display_partner_account,
             'branches': self._get_branches_br,
-            'analytic_accounts': self._get_analytic_accounts_br,
+            'analytic_accounts': self._get_analytic_accounts,
             'display_target_move': self._get_display_target_move,
             'additional_args': [
                 ('--header-font-name', 'Helvetica'),
@@ -107,7 +107,7 @@ class PartnersOpenInvoicesWebkit(report_sxw.rml_parse, CommonPartnersReportHeade
         fiscalyear = self.get_fiscalyear_br(data)
         partner_ids = self._get_form_param('partner_ids', data)
         branch_ids = self._get_form_param('branch_ids', data)
-        analytic_account_ids = self._get_form_param('analytic_account_ids', data)
+        analytic_account_ids = self._get_form_param('analytic_account_id', data)
         result_selection = self._get_form_param('result_selection', data)
         date_until = self._get_form_param('until_date', data)
         chart_account = self._get_chart_account_id_br(data)
@@ -220,6 +220,7 @@ class PartnersOpenInvoicesWebkit(report_sxw.rml_parse, CommonPartnersReportHeade
                                                                          partner_filter=partner_filter,
                                                                          branch_filter=branch_filter,
                                                                          analytic_account_filter=analytic_account_filter)
+            print 'move_line_ids_per_partner',move_line_ids_per_partner
 
             if not initial_move_lines_ids_per_partner and not move_line_ids_per_partner:
                 continue

@@ -56,6 +56,9 @@ class CommonReportHeaderWebkit(common_report_header):
     def _get_analytic_accounts_br(self, data):
         return self._get_info(data, 'analytic_account_ids', 'account.analytic.account')
     
+    def _get_analytic_accounts(self, data):
+        return self._get_info(data, 'analytic_account_id', 'account.analytic.account')
+    
     def _get_info(self, data, field, model):
         info = data.get('form', {}).get(field)
         if info:
