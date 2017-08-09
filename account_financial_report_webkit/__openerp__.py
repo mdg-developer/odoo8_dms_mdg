@@ -176,7 +176,7 @@ wkhtmltopdf. The texts are defined inside the report classes.
         'images/ledger.png',],
     'depends': ['account',
                 'report_webkit',
-                'report_aged_partner_xls'],
+                ],
     'init_xml': [],
     'demo_xml' : [],
     'update_xml': ['account_view.xml',
