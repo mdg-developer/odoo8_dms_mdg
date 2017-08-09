@@ -31,12 +31,14 @@ Good Receive Note Module
 
     """,
     'website': 'https://www.odoo.com/page/warehouse',
-    'depends': ['base','sale','stock'],
+    'depends': ['base', 'sale', 'stock'],
     'category': 'stock',
     'sequence': 16,
     'data': [
         'views/sequence.xml',
         'views/good_receive_note_view.xml',
+        'views/pallete_transfer_view.xml',
+
         'reports/qweb_view.xml',
         'reports/report_good_receive_note.xml',
     ],
