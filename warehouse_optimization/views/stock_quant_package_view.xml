@@ -1,0 +1,60 @@
+<openerp>
+  <data>
+   
+    
+    
+     <record model="ir.ui.view" id="view_quant_package_form_inherit_type">
+        <field name="name">stock.quant.package.form</field>
+        <field name="model">stock.quant.package</field>
+        <field name="inherit_id" ref="stock.view_quant_package_form"/>
+        <field name="arch" type="xml"> 
+			
+			<field name="parent_id" position="after">
+				
+				<field name="saleable"/> 
+				<field name="stickering_end_date"/> 
+				<field name="repacking_end_date"/>                 
+            </field>
+            
+            <field name="owner_id" position="after">
+				<field name="stickering_start_date"/>
+				
+				<field name="repacking_start_date"/>				
+				      
+            </field>
+        </field>
+    </record>        
+    
+    <record model="ir.ui.view" id="view_view_location_form_inherit_loc">
+        <field name="name">stock.location.form</field>
+        <field name="model">stock.location</field>
+        <field name="inherit_id" ref="stock.view_location_form"/>
+        <field name="arch" type="xml"> 
+			
+			<field name="active" position="before">
+			    <field name="stickering_location"/>
+			    <field name="repacking_location"/>
+				<field name="drop_point_location"/>
+			
+            </field>
+            
+            <field name="posx" position="replace">
+				<field name="row"/>			
+            </field>
+            
+            <field name="posy" position="replace">
+				<field name="layer"/>			
+            </field>
+            
+            <field name="posz" position="replace">
+				<field name="room"/>
+				<field name="cell"/>
+				<field name="product_move_type_id"/>
+				<field name="maingroup_id"/>			
+            </field>
+            
+        </field>
+    </record>         
+	
+  </data>
+</openerp>
