@@ -1,0 +1,1 @@
+import good_receive_note

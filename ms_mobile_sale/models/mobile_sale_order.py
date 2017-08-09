@@ -1506,7 +1506,39 @@ class mobile_sale_order(osv.osv):
             return True       
         except Exception, e:
             return False
+
+
+    def create_dsr_pdf_form(self, cursor, user, vals, context=None):
         
+         try :
+            print_obj = self.pool.get('tablet.pdf.print')
+            str = "{" + vals + "}"
+            str = str.replace("'',", "',")  # null
+            str = str.replace(":',", ":'',")  # due to order_id
+            str = str.replace("}{", "}|{")
+            new_arr = str.split('|')
+            result = []
+            for data in new_arr:
+                x = ast.literal_eval(data)
+                result.append(x)
+            print_line = []
+            for r in result:                
+                print_line.append(r)  
+            if print_line:
+                for print_date in print_line:
+                    cursor.execute("delete from tablet_pdf_print where print_fname = %s ",(print_date['print_fname'],))
+                    print_result = {
+                        'section_id':print_date['section_id'],
+                        'user_id':user,
+                        'print_date':datetime.now(),
+                        'print_file':print_date['print_file'],
+                        'print_fname':print_date['print_fname'],
+                        }
+                    print_obj.create(cursor, user, print_result, context=context)
+            return True
+         except Exception, e:
+            return False
+                
     def create_ar_collection(self, cursor, user, vals, context=None):
 
         ar_obj = self.pool.get('mobile.ar.collection')

@@ -266,9 +266,9 @@ class account_invoice_line(models.Model):
 #               'discount_total':fields.float('Discount Total',readonly=True)}
 #     
 class account_invoice(models.Model):
-    _inherit='account.invoice'
+    _inherit='account.invoice'    
+    
     @api.depends('invoice_line.price_subtotal', 'invoice_line.discount_amt','tax_line.amount','deduct_amt','additional_discount')
-
     def _compute_amount(self):
         self.amount_untaxed = sum(line.price_subtotal for line in self.invoice_line)
         self.amount_tax = sum(line.amount for line in self.tax_line)
