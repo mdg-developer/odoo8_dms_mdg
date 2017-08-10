@@ -67,6 +67,7 @@ class stock_transfer_details(osv.osv):
         pallet_mapping_obj = self.pool.get('pallet.mapping')
         transfer_details_items_obj = self.pool.get('stock.transfer_details_items')
         uom_obj = self.pool.get('product.uom')
+        stock_quant_package_obj = self.pool.get('stock.quant.package')
         transfer_details_ids = transfer_details_items_obj.search(cr,uid,[('transfer_id', '=', ids)], context=context)
         for transfer in transfer_details_items_obj.browse(cr,uid,transfer_details_ids, context=context):
             uom_id = self.get_uom_id(cr, uid, transfer.transfer_id.picking_id.origin, transfer.product_id.id, context=context)
@@ -152,7 +153,12 @@ class stock_transfer_details(osv.osv):
                                                         })
                               
                             new_id =transfer_details_items_obj.create(cr,uid,item,context=context)
-                            pack_id =transfer_details_items_obj.put_in_pack(cr,uid,new_id,context=context)        
+                            pack_id =transfer_details_items_obj.put_in_pack(cr,uid,new_id,context=context)
+                            if new_id:
+                                details = transfer_details_items_obj.browse(cr, uid, new_id, context=context)
+                                if details:
+                                    if details.product_id.product_tmpl_id.stickering_chk == False and details.product_id.product_tmpl_id.repacking_chk == False:
+                                        stock_quant_package_obj.write(cr,uid,details.result_package_id.id,{'saleable':True},context=context)
                         cr.execute("delete from stock_transfer_details_items where id =%s",(transfer.id,))
                     else:#no need to allocat pallet
                         item = {
@@ -185,7 +191,13 @@ class stock_transfer_details(osv.osv):
                                                         }) 
                         new_id =transfer_details_items_obj.create(cr,uid,item,context=context)
                         pack_id =transfer_details_items_obj.put_in_pack(cr,uid,new_id,context=context)
-                        cr.execute("delete from stock_transfer_details_items where id =%s",(transfer.id,))   
+                        cr.execute("delete from stock_transfer_details_items where id =%s",(transfer.id,))
+                        if new_id:
+                                details = transfer_details_items_obj.browse(cr, uid, new_id, context=context)
+                                if details:
+                                    if details.product_id.product_tmpl_id.stickering_chk == False and details.product_id.product_tmpl_id.repacking_chk == False:
+                                        stock_quant_package_obj.write(cr,uid,details.result_package_id.id,{'saleable':True},context=context)
+                                           
         return self.pool['stock.transfer_details'].wizard_view(cr, uid, ids[0], context)
                           
         
