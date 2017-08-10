@@ -42,18 +42,20 @@
         </field>
     </record>
     
+          
 <!--     <record model="ir.ui.menu" id="stock.menu_batchno"> -->
 <!-- 			<field name="name">Batch No</field> -->
 <!-- 			<field name="parent_id" ref="stock.menu_action_production_lot_form" /> -->
 <!-- 		</record>           -->
 	
-	<!-- <record id="stock.action_production_lot_form" model="ir.actions.act_window">
+	
+	<record id="stock.action_production_lot_form" model="ir.actions.act_window">
             <field name="name">Batch No</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">stock.production.lot</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="view_production_lot_tree"/>
-            <field name="search_view_id" ref="search_product_lot_filter"/>
+            <field name="view_id" ref="stock.view_production_lot_tree"/>
+            <field name="search_view_id" ref="stock.search_product_lot_filter"/>
             <field name="context">{}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
@@ -63,6 +65,9 @@
                 you select a lot, you can get the traceability of the products contained in lot.
               </p>
             </field>
-        </record> -->
+        </record>
+        
+        <menuitem name="Batch No" action="stock.action_production_lot_form" id="stock.menu_action_production_lot_form"
+            parent="stock.menu_traceability" groups="stock.group_production_lot" sequence="1"/>
   </data>
 </openerp>
