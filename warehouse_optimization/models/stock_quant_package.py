@@ -11,7 +11,8 @@ class stock_quant_package(osv.osv):
         'repacking_start_date': fields.datetime('Repacking Start'),
         'repacking_end_date': fields.datetime('Repacking End'),
         'saleable': fields.boolean('Saleable'),       
-       
+        'stickering_chk': fields.boolean("Stickering Process"),
+        'repacking_chk': fields.boolean("Repacking Process"),
         
     }
     

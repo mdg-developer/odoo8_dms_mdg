@@ -157,6 +157,8 @@ class stock_transfer_details(osv.osv):
                             if new_id:
                                 details = transfer_details_items_obj.browse(cr, uid, new_id, context=context)
                                 if details:
+                                    stock_quant_package_obj.write(cr,uid,details.result_package_id.id,{'stickering_chk':details.product_id.product_tmpl_id.stickering_chk,
+                                                                                                       'repacking_chk':details.product_id.product_tmpl_id.repacking_chk},context=context)
                                     if details.product_id.product_tmpl_id.stickering_chk == False and details.product_id.product_tmpl_id.repacking_chk == False:
                                         stock_quant_package_obj.write(cr,uid,details.result_package_id.id,{'saleable':True},context=context)
                         cr.execute("delete from stock_transfer_details_items where id =%s",(transfer.id,))
@@ -195,6 +197,8 @@ class stock_transfer_details(osv.osv):
                         if new_id:
                                 details = transfer_details_items_obj.browse(cr, uid, new_id, context=context)
                                 if details:
+                                    stock_quant_package_obj.write(cr,uid,details.result_package_id.id,{'stickering_chk':details.product_id.product_tmpl_id.stickering_chk,
+                                                                                                       'repacking_chk':details.product_id.product_tmpl_id.repacking_chk},context=context)
                                     if details.product_id.product_tmpl_id.stickering_chk == False and details.product_id.product_tmpl_id.repacking_chk == False:
                                         stock_quant_package_obj.write(cr,uid,details.result_package_id.id,{'saleable':True},context=context)
                                            
