@@ -38,9 +38,9 @@
 								<page string="Stock List">
 									<field name="p_line" attrs="{'readonly':[('state','=','transfer')]}">
 										<tree string="Good Receive Note Line" editable="bottom">
-											<field name="pallet_id" attrs="{'readonly':[('state','=','transfer')]}" />
-											<field name="src_location_id" attrs="{'readonly':[('state','=','transfer')]}" />
-											<field name="dest_location_id" attrs="{'readonly':[('state','=','transfer')]}" />
+											<field name="pallet_id" />
+											<field name="src_location_id" />
+											<field name="dest_location_id" />
 											<field name="remark" />
 										</tree>
 									</field>
@@ -108,7 +108,7 @@
 			</field>
 		</record>
 
-		<menuitem id="menu_action_pallet_transfer"  action="action_pallet_transfer"
-			parent="good_receive_note.menu_action_good_receive_note" sequence="2" />
+		<menuitem id="menu_action_pallet_transfer_1" action="action_pallet_transfer"
+			parent="menu_action_good_receive_note" groups="stock.group_stock_manager" />
 	</data>
 </openerp>

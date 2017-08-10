@@ -193,6 +193,7 @@ class good_receive_line(osv.osv):  # #prod_pricelist_update_line
         
     _columns = {                
         'line_id':fields.many2one('good.receive.note', 'Line', ondelete='cascade', select=True),
+        'state': fields.related('line_id', 'state', type='char', string='Status', readonly=True),
         'description':fields.char('Item Specification'),
         'product_id': fields.many2one('product.product', 'Item Description', required=True),
         'deliver_quantity' : fields.float(string='Qty as per Doc', digits=(16, 0)),

@@ -26,20 +26,20 @@
 						<group>
 							<group>
 								<field name="name" />
-								<field name="rfr_ref_no" attrs="{'readonly':[('state','=','receive')]}" />
-								<field name="purchase_id" attrs="{'readonly':[('state','=','receive')]}"
+								<field name="rfr_ref_no" attrs="{'readonly':[('state','!=','draft')]}" />
+								<field name="purchase_id" attrs="{'readonly':[('state','!=','draft')]}"
 									on_change="on_change_purchase_id(purchase_id)" domain="[('shipped', '=',False)]" />
-								<field name="bl_ref_no" attrs="{'readonly':[('state','=','receive')]}" />
-								<field name="receiver_by" attrs="{'readonly':[('state','=','receive')]}" />
+								<field name="bl_ref_no" attrs="{'readonly':[('state','!=','draft')]}" />
+								<field name="receiver_by" attrs="{'readonly':[('state','!=','draft')]}" />
 								<field name="branch_id" invisible="1" />
 							</group>
 							<group>
-								<field name="invoice_ref_no" attrs="{'readonly':[('state','=','receive')]}" />
-								<field name="start_date" attrs="{'readonly':[('state','=','receive')]}" />
-								<field name="end_date" attrs="{'readonly':[('state','=','receive')]}" />
-								<field name="no_of_container" attrs="{'readonly':[('state','=','receive')]}" />
-								<field name="checked_by" attrs="{'readonly':[('state','=','receive')]}" />
-								<field name="company_id" attrs="{'readonly':[('state','=','receive')]}"
+								<field name="invoice_ref_no" attrs="{'readonly':[('state','!=','draft')]}" />
+								<field name="start_date" attrs="{'readonly':[('state','!=','draft')]}" />
+								<field name="end_date" attrs="{'readonly':[('state','!=','draft')]}" />
+								<field name="no_of_container" attrs="{'readonly':[('state','!=','draft')]}" />
+								<field name="checked_by" attrs="{'readonly':[('state','!=','draft')]}" />
+								<field name="company_id" attrs="{'readonly':[('state','!=','draft')]}"
 									invisible="1" />
 							</group>
 						</group>
@@ -48,17 +48,17 @@
 								<page string="Stock List">
 									<field name="p_line">
 										<tree string="Good receive Note Line" editable="bottom"
-											default_order="sequence asc" attrs="{'readonly':[('state','=','receive')]}">
+											default_order="sequence asc" attrs="{'readonly':[('state','!=','draft')]}">
 											<field name="sequence" invisible="1" />
 											<field name="product_id" on_change="on_change_product_id(product_id)"
-												attrs="{'readonly':[('state','=','receive')]}" />
-											<field name="description" attrs="{'readonly':[('state','=','receive')]}" />
+												attrs="{'readonly':[('state','!=','draft')]}" />
+											<field name="description" attrs="{'readonly':[('state','!=','draft')]}" />
 											<field name="batch_no" domain="[('product_id', '=',product_id)]"
-												on_change="on_change_expired_date(batch_no)" attrs="{'readonly':[('state','=','receive')]}" />
-											<field name="expiry_date" attrs="{'readonly':[('state','=','receive')]}" />
-											<field name="deliver_quantity" attrs="{'readonly':[('state','=','receive')]}" />
-											<field name="receive_quantity" attrs="{'readonly':[('state','=','receive')]}" />
-											<field name="different_quantity" attrs="{'readonly':[('state','=','receive')]}" />
+												on_change="on_change_expired_date(batch_no)" attrs="{'readonly':[('state','!=','draft')]}" />
+											<field name="expiry_date" attrs="{'readonly':[('state','!=','draft')]}" />
+											<field name="deliver_quantity" attrs="{'readonly':[('state','!=','draft')]}" />
+											<field name="receive_quantity" attrs="{'readonly':[('state','!=','draft')]}" />
+											<field name="different_quantity" attrs="{'readonly':[('state','!=','draft')]}" />
 											<field name="remark" />
 										</tree>
 									</field>
