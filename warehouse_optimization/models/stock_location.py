@@ -6,14 +6,13 @@ class stock_location(osv.osv):
     _inherit = "stock.location"
     
     _columns = {
-        
-        'drop_point_location': fields.boolean('Drop Point Location'),       
+        'drop_point_location': fields.boolean('Drop Point Location'),
         'stickering_location': fields.boolean('Stickering Location'),
         'repacking_location': fields.boolean('Repacking Location'),
-        'row': fields.integer('Row'),
-        'layer': fields.integer('Layer'),
-        'room': fields.integer('Room'),
-        'cell': fields.integer('Cell'),
+        'row': fields.char('Row'),
+        'layer': fields.char('Layer'),
+        'room': fields.char('Room'),
+        'cell': fields.char('Cell'),
         'product_move_type_id': fields.many2one('product.move.type', 'Product Nature'),
         'maingroup_id': fields.many2one('product.maingroup', 'Principle'),
     }
