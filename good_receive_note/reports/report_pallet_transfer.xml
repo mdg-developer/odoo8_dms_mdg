@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data>
-		<template id="report_good_receive_note_document">
+		<template id="report_pallet_transfer_document">
 			<div class="page">
 				<t t-foreach="docs" t-as="o">
 					<div class="row">
@@ -34,113 +34,63 @@
 
 					<h4>
 						<strong>
-							Good Recieve Note
+							Pallet Transfer
 						</strong>
 					</h4>
 
 					<table class="table table-condensed">
 						<tr>
 							<td style="border:0pt;font-size:10pt;">
-								<strong>GRN Ref:</strong>
+								<strong>PT-Ref:No</strong>
 							</td>
 							<td style="border:0pt;font-size:10pt;">
 								<strong t-field="o.name"></strong>
 							</td>
 
 							<td style="border:0pt;font-size:10pt;">
-								<strong>Invoice Ref:No:</strong>
+								<strong>Transfer Date:</strong>
 							</td>
 							<td style="border:0pt;font-size:10pt;">
-								<strong t-field="o.invoice_ref_no" />
+								<strong t-field="o.transfer_date" />
 							</td>
 						</tr>
 
 						<tr>
 							<td style="border:0pt;font-size:10pt;">
-								<strong>RFR-Ref No:</strong>
+								<strong>GRN No:</strong>
 							</td>
 							<td style="border:0pt;font-size:10pt;">
-								<span t-field="o.rfr_ref_no" />
+								<span t-field="o.good_receive_id.name" />
 							</td>
 
 							<td style="border:0pt;font-size:10pt;">
-								<strong>Start Unloading Date:</strong>
+								<strong>Receive Date:</strong>
 							</td>
 							<td style="border:0pt;font-size:10pt;">
-								<span t-field="o.start_date" />
+								<span t-field="o.receive_date" />
 							</td>
 						</tr>
-
-						<tr>
-							<td style="border:0pt;font-size:10pt;">
-								<strong>PO-Ref No:</strong>
-							</td>
-							<td style="border:0pt;font-size:10pt;">
-								<span t-field="o.purchase_id" />
-							</td>
-
-							<td style="border:0pt;font-size:10pt;">
-								<strong>End Unloading Date:</strong>
-							</td>
-							<td style="border:0pt;font-size:10pt;">
-								<span t-field="o.end_date" />
-							</td>
-						</tr>
-
-						<tr>
-							<td style="border:0pt;font-size:10pt;">
-								<strong>B/L-Ref No:</strong>
-							</td>
-							<td style="border:0pt;font-size:10pt;">
-								<span t-field="o.bl_ref_no" />
-							</td>
-
-							<td style="border:0pt;font-size:10pt;">
-								<strong>No. Of Container:</strong>
-							</td>
-							<td style="border:0pt;font-size:10pt;">
-								<span t-field="o.no_of_container" />
-							</td>
-						</tr>
-
 					</table>
 
 					<table class="table table-condensed">
 						<thead>
 							<tr>
-								<th>Item Description</th>
-								<th>Item Specification</th>
-								<th>Batch No</th>
-								<th>Expiry</th>
-								<th class="text-center">Qty as per Doc</th>
-								<th class="text-center">Total Recv Qty</th>
-								<th class="text-center">Qty in Diff</th>
+								<th>Pallet Name</th>
+								<th>Source Location</th>
+								<th>Destination Location</th>
 								<th>Remark</th>
 							</tr>
 						</thead>
 						<tbody class="invoice_tbody">
-							<tr t-foreach="o.p_line.sorted(key=lambda b: b.sequence)"
-								t-as="l">
+							<tr t-foreach="o.p_line" t-as="l">
 								<td>
-									<span t-field="l.product_id" />
-								</td>
-								<td>
-									<span t-field="l.description" />
+									<span t-field="l.pallet_id.name" />
 								</td>
 								<td>
-									<span t-field="l.batch_no.name" />
+									<span t-field="l.src_location_id.name" />
 								</td>
 								<td>
-									<span t-field="l.expiry_date" />
-								</td>
-								<td align="right" style="padding-right: 3cm;">
-									<span t-field="l.deliver_quantity" />
-								</td>
-								<td align="right" style="padding-right: 3cm;">
-									<span t-field="l.receive_quantity" />
-								</td>
-								<td align="right" style="padding-right: 3cm;">
-									<span t-field="l.different_quantity" />
+									<span t-field="l.dest_location_id.name" />
 								</td>
 								<td>
 									<span t-field="l.remark" />
@@ -161,10 +111,9 @@
 							<tr t-foreach="o" t-as="l">
 								<td>Name</td>
 								<td>
-									<p t-field="l.receiver_by" />
+									<p t-field="l.transfer_by" />
 								</td>
 								<td>
-									<p t-field="l.checked_by" />
 								</td>
 
 							</tr>
@@ -192,14 +141,6 @@
 			</div>
 		</template>
 
-<!-- 		<template id="good_receive_note_print"> -->
-<!-- 			<t t-call="report.html_container"> -->
-<!-- 				<t t-foreach="doc_ids" t-as="doc_id"> -->
-<!-- 					<t -->
-<!-- 						t-raw="translate_doc(doc_id, doc_model,  -->
-<!-- 			'partner_id.lang', 'good_receive_note.report_good_receive_note_document')" /> -->
-<!-- 				</t> -->
-<!-- 			</t> -->
-<!-- 		</template> -->
+
 	</data>
 </openerp>
