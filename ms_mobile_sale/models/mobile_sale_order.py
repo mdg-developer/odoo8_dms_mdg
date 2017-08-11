@@ -2360,11 +2360,14 @@ class mobile_sale_order(osv.osv):
         except Exception, e:
             return False
 
-    def get_credit_invoice(self, cr, uid, partner_list, branch_id , invoiceList, context=None):
+    def get_credit_invoice(self, cr, uid, partner_list, branch_id , saleTeam, invoiceList, context=None):
         data_line = []
         if partner_list:
             partner_list = str(tuple(partner_list))
             partner_list = eval(partner_list)
+            
+            saleTeam = str(tuple(saleTeam))
+            saleTeam = eval(saleTeam)
 
             invoiceList = str(tuple(invoiceList))
             invoiceList = eval(invoiceList)
@@ -2383,8 +2386,9 @@ class mobile_sale_order(osv.osv):
                     and inv.partner_id = rp.id
                     and inv.section_id = crm.id
                     and inv.partner_id in %s
-                    and inv.id NOT IN %s'''
-                    , (branch_id, partner_list, invoiceList ,))
+                    and inv.id NOT IN %s
+                    and crm.name = %s'''
+                    , (branch_id, partner_list, invoiceList, saleTeam, ))
             else:
                 cr.execute('''
                     select inv.id,inv.number,inv.partner_id,rp.name customer_name,
@@ -2400,10 +2404,11 @@ class mobile_sale_order(osv.osv):
                     and inv.partner_id = rp.id
                     and inv.section_id = crm.id
                     and inv.partner_id in %s
+                    and crm.name = %s
                     '''
-                    , (branch_id, partner_list,))
+                    , (branch_id, partner_list, saleTeam,))
             data_line = cr.fetchall()
-        print 'data_lineeeeeeeeeeeeeee', data_line
+        print 'Credit_Invoice', data_line
         return data_line
 
     def get_credit_invoice_line(self, cr, uid, partner_list, branch_id, invoiceList , context=None):
@@ -2452,7 +2457,7 @@ class mobile_sale_order(osv.osv):
                     , (branch_id, partner_list ,))
 
             data_line = cr.fetchall()
-        print 'data_lineeeeeeeeeeeeeee', data_line
+        print 'Credit_invoice_line', data_line
         return data_line
 
     def create_ar_collection_journal_payment(self, cursor, user, vals, context=None):
