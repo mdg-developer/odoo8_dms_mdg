@@ -22,7 +22,8 @@
 						<button name="cancel" string="Cancel" class="oe_highlight"
 							type="object" states="draft"
 							groups="stock.group_stock_manager,stock.group_stock_user" />
-						<field name="state"  widget="statusbar" />
+						
+						<field name="state"  widget="statusbar" statusbar_visible="draft,reserve,transfer,cancel"  />
 					</header>
 					<sheet>
 						<group>
