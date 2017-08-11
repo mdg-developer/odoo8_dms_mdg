@@ -5,10 +5,10 @@ from openerp import models, fields, api
 
 
 class StockQuantPackageMove(models.TransientModel):
-    _name = 'stock.quant.package.move'
+    _name = 'stock.quant.package.repacking.move'
 
     pack_move_items = fields.One2many(
-        comodel_name='stock.quant.package.move_items', inverse_name='move_id',
+        comodel_name='stock.quant.package.repacking.move_items', inverse_name='move_id',
         string='Packs')
 
     @api.model
@@ -29,14 +29,15 @@ class StockQuantPackageMove(models.TransientModel):
                 items.append(item)
         res.update(pack_move_items=items)
         return res
-
+    
     @api.one
     def do_detailed_transfer(self):
         for item in self.pack_move_items:
-            package_id = location_id = None
+            package_id = location_id = original_location_id = None
             if item.dest_loc is not item.source_loc:
                 for quant in item.package.quant_ids:
                     package_id = quant.package_id.id
+                    original_location_id = quant.location_id.id
                     location_id = item.dest_loc
                     quant.move_to(item.dest_loc)
                     quant.write({'package_id':package_id})
@@ -47,9 +48,11 @@ class StockQuantPackageMove(models.TransientModel):
                         location_id = item.dest_loc
                         quant.write({'package_id':package_id})
                 for packageid in item.package:
-                    packageid.write({'location_id':location_id.id})        
+                    if packageid.strickering_state == 'draft':
+                        packageid.write({'origin_location_id':original_location_id,'strickering_state':'transfer','location_id':location_id.id})
+                    else:    
+                        packageid.write({'location_id':location_id.id})        
         return True
-    
 #     @api.one
 #     def do_detailed_transfer(self):
 #         for item in self.pack_move_items:
@@ -61,22 +64,36 @@ class StockQuantPackageMove(models.TransientModel):
 #                         quant.move_to(item.dest_loc)
 #         return True
 
-class StockQuantPackageMoveItems(models.TransientModel):
-    _name = 'stock.quant.package.move_items'
-    _description = 'Picking wizard items'
 
+class StockQuantPackageMoveItems(models.TransientModel):
+    _name = 'stock.quant.package.repacking.move_items'
+    _description = 'Picking wizard items'
+    
+    
     move_id = fields.Many2one(
-        comodel_name='stock.quant.package.move', string='Package move')
+        comodel_name='stock.quant.package.repacking.move', string='Package move')
     package = fields.Many2one(
         comodel_name='stock.quant.package', string='Quant package',
         domain=[('parent_id', '=', False), ('location_id', '!=', False)])
     source_loc = fields.Many2one(
-        comodel_name='stock.location', string='Source Location', required=True)
-    dest_loc = fields.Many2one(
-        comodel_name='stock.location', string='Destination Location',
+        comodel_name='stock.location', string='Source Location',        
         required=True)
-
+    dest_loc = fields.Many2one(
+        comodel_name='stock.location', string='Destination Location',required=True)
+        
+    @api.one    
+    @api.onchange('source_loc')
+    def onchange_source_loc(self):
+        res = {}
+        if self.source_loc:
+            res['domain'] = {'dest_loc': [('location_id', '=', self.source_loc),('stickering_location','=',True)]}
+        return res
+    
     @api.one
     @api.onchange('package')
     def onchange_quant(self):
         self.source_loc = self.package.location_id
+        res = {}
+        if self.source_loc:
+            res['domain'] = {'dest_loc': [('location_id', '=', self.source_loc),('stickering_location','=',True)]}
+        return res
