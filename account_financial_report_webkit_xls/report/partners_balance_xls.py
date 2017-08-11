@@ -61,6 +61,8 @@ class partners_balance_xls(report_xls):
         c_specs = [
             ('fy', 1, 0, 'text', _('Fiscal Year'), None, cell_style_center),
             ('af', 1, 0, 'text', _('Accounts Filter'), None, cell_style_center),
+            ('bf', 1, 0, 'text', _('Branches Filter'), None, cell_style_center),
+            ('aaf', 1, 0, 'text', _('Analtyic Accounts Filter'), None, cell_style_center),
             ('df', 1, 0, 'text', _p.filter_form(data) == 'filter_date' and _('Dates Filter') or _('Periods Filter'), None, cell_style_center),
             ('pf', 1, 0, 'text',  _('Partners Filter'), None, cell_style_center),
             ('tm', 1, 0, 'text',  _('Target Moves'), None, cell_style_center),
@@ -78,6 +80,8 @@ class partners_balance_xls(report_xls):
         c_specs = [
             ('fy', 1, 0, 'text', _p.fiscalyear.name if _p.fiscalyear else '-', None, cell_style_center),
             ('af', 1, 0, 'text', _p.accounts(data) and ', '.join([account.code for account in _p.accounts(data)]) or _('All'), None, cell_style_center),
+            ('bf', 1, 0, 'text', _p.branches(data) and ', '.join([branch.branch_code for branch in _p.branches(data)]) or _('All'), None, cell_style_center),
+            ('aaf', 1, 0, 'text', _p.analytic_accounts(data) and ', '.join([analytic_account.code for analytic_account in _p.analytic_accounts(data)]) or _('All'), None, cell_style_center),
         ]
         df = _('From') + ': '
         if _p.filter_form(data) == 'filter_date':

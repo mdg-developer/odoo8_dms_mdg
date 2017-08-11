@@ -30,6 +30,8 @@ class AccountReportOpenInvoicesWizard(orm.TransientModel):
 
     _columns = {
         'group_by_currency': fields.boolean('Group Partner by currency'),
+        'analytic_account_id': fields.many2many('account.analytic.account', 'open_invoices_webkit_account_analytic_account','open_invoices_webkit_id','account_analytic_account_id', string='Filter on analytic accounts',
+                                         help="Only selected analytic accounts will be printed. Leave empty to print all analytic accounts."),
         'until_date': fields.date("Clearance date",
                                   required=True,
                                   help="""The clearance date is essentially a tool used for debtors provisionning calculation.
@@ -108,7 +110,7 @@ By amending the clearance date, you will be, for instance, able to answer the qu
     def pre_print_report(self, cr, uid, ids, data, context=None):
         data = super(AccountReportOpenInvoicesWizard, self).pre_print_report(cr, uid, ids, data, context)
         vals = self.read(cr, uid, ids,
-                         ['until_date', 'group_by_currency'],
+                         ['until_date', 'group_by_currency','branch_ids','analytic_account_id'],
                          context=context)[0]
         data['form'].update(vals)
         return data

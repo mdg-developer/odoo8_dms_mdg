@@ -30,7 +30,7 @@ from .common_partner_reports import CommonPartnersReportHeaderWebkit
 class CommonPartnerBalanceReportHeaderWebkit(CommonBalanceReportHeaderWebkit, CommonPartnersReportHeaderWebkit):
     """Define common helper for balance (trial balance, P&L, BS oriented financial report"""
 
-    def _get_account_partners_details(self, account_by_ids, main_filter, target_move, start,
+    def _get_account_partners_details(self, account_by_ids, branch_ids, analytic_account_ids, main_filter, target_move, start,
                                       stop, initial_balance_mode, partner_filter_ids=False):
         res = {}
         filter_from = False
@@ -42,6 +42,8 @@ class CommonPartnerBalanceReportHeaderWebkit(CommonBalanceReportHeaderWebkit, Co
         partners_init_balances_by_ids = {}
         for account_id, account_details in account_by_ids.iteritems():
             partners_init_balances_by_ids.update(self._get_partners_initial_balances(account_id,
+                                                                                     branch_ids, 
+                                                                                     analytic_account_ids,
                                                                                      start,
                                                                                      initial_balance_mode,
                                                                                      partner_filter_ids=partner_filter_ids,
@@ -52,6 +54,8 @@ class CommonPartnerBalanceReportHeaderWebkit(CommonBalanceReportHeaderWebkit, Co
             # get credit and debit for partner
             details = self._get_partners_totals_account(filter_from,
                                                         account_id,
+                                                        branch_ids, 
+                                                        analytic_account_ids,
                                                         start,
                                                         stop,
                                                         target_move,
@@ -73,19 +77,19 @@ class CommonPartnerBalanceReportHeaderWebkit(CommonBalanceReportHeaderWebkit, Co
 
         return res
 
-    def _get_partners_initial_balances(self, account_ids, start_period, initial_balance_mode, partner_filter_ids=None, exclude_reconcile=False):
+    def _get_partners_initial_balances(self, account_ids, branch_ids, analytic_account_ids,start_period, initial_balance_mode, partner_filter_ids=None, exclude_reconcile=False):
         # we get the initial balance from the opening period (opening_balance) when the opening period is included in the start period and
         # when there is at least one entry in the opening period. Otherwise we compute it from previous periods
         if initial_balance_mode == 'opening_balance':
             opening_period_selected = self.get_included_opening_period(start_period)
-            res = self._compute_partners_initial_balances(account_ids, start_period, partner_filter_ids, force_period_ids=opening_period_selected, exclude_reconcile=exclude_reconcile)
+            res = self._compute_partners_initial_balances(account_ids, start_period, branch_ids, analytic_account_ids, partner_filter_ids, force_period_ids=opening_period_selected, exclude_reconcile=exclude_reconcile)
         elif initial_balance_mode == 'initial_balance':
-            res = self._compute_partners_initial_balances(account_ids, start_period, partner_filter_ids, exclude_reconcile=exclude_reconcile)
+            res = self._compute_partners_initial_balances(account_ids, start_period, branch_ids, analytic_account_ids, partner_filter_ids, exclude_reconcile=exclude_reconcile)
         else:
             res = {}
         return res
 
-    def _get_partners_totals_account(self, filter_from, account_id, start, stop, target_move, partner_filter_ids=None, mode='exclude_opening'):
+    def _get_partners_totals_account(self, filter_from, account_id, branch_ids, analytic_account_ids, start, stop, target_move, partner_filter_ids=None, mode='exclude_opening'):
         final_res = defaultdict(dict)
 
         sql_select = """
@@ -95,12 +99,24 @@ class CommonPartnerBalanceReportHeaderWebkit(CommonBalanceReportHeaderWebkit, Co
                  FROM account_move_line"""
         sql_joins = ''
         sql_where = "WHERE account_move_line.account_id = %(account_id)s AND account_move_line.state = 'valid' "
+        print 'sql_where',sql_where
         method = getattr(self, '_get_query_params_from_' + filter_from + 's')
         sql_conditions, search_params = method(start, stop, mode=mode)
         sql_where += sql_conditions
-
+        
+        if branch_ids:
+            sql_where += "   AND account_move_line.branch_id in %(branch_ids)s"          
+            search_params.update({'branch_ids': tuple(branch_ids)})
+            print 'search_params',search_params
+            
+        if analytic_account_ids:
+            sql_where += "   AND account_move_line.analytic_account_id in %(analytic_account_ids)s"          
+            search_params.update({'analytic_account_ids': tuple(analytic_account_ids)})
+            print 'search_params',search_params
+            
         if partner_filter_ids:
             sql_where += "   AND account_move_line.partner_id in %(partner_ids)s"
+            print 'tuple(partner_filter_ids)',tuple(partner_filter_ids)
             search_params.update({'partner_ids': tuple(partner_filter_ids)})
 
         if target_move == 'posted':
@@ -111,8 +127,10 @@ class CommonPartnerBalanceReportHeaderWebkit(CommonBalanceReportHeaderWebkit, Co
         sql_groupby = "GROUP BY account_move_line.partner_id"
 
         search_params.update({'account_id': account_id})
+        
         query = ' '.join((sql_select, sql_joins, sql_where, sql_groupby))
-
+        print 'query',query
+        print 'search_params',search_params
         self.cursor.execute(query, search_params)
         res = self.cursor.dictfetchall()
         if res:
@@ -156,9 +174,10 @@ class CommonPartnerBalanceReportHeaderWebkit(CommonBalanceReportHeaderWebkit, Co
 
             initial_balance_mode = init_balance and self._get_initial_balance_mode(start) or False
 
-            accounts_by_ids = self._get_account_details(account_ids, target_move, fiscalyear, details_filter, start, stop, initial_balance_mode)
+            accounts_by_ids = self._get_account_details(account_ids, branch_ids, analytic_account_ids, target_move, fiscalyear, details_filter, start, stop, initial_balance_mode)
 
-            partner_details_by_ids = self._get_account_partners_details(accounts_by_ids, details_filter,
+            partner_details_by_ids = self._get_account_partners_details(accounts_by_ids, branch_ids, 
+                                                                        analytic_account_ids,details_filter,
                                                                         target_move, start, stop, initial_balance_mode,
                                                                         partner_filter_ids=partner_filter_ids)
 
@@ -178,6 +197,8 @@ class CommonPartnerBalanceReportHeaderWebkit(CommonBalanceReportHeaderWebkit, Co
 
     def compute_partner_balance_data(self, data, filter_report_type=None):
         new_ids = data['form']['account_ids'] or data['form']['chart_account_id']
+        branch_ids = data['form']['branch_ids'] 
+        analytic_account_ids = data['form']['analytic_account_ids'] 
         max_comparison = self._get_form_param('max_comparison', data, default=0)
         main_filter = self._get_form_param('filter', data, default='filter_no')
 
@@ -207,9 +228,11 @@ class CommonPartnerBalanceReportHeaderWebkit(CommonBalanceReportHeaderWebkit, Co
                                             filter_report_type=filter_report_type)
 
         # get details for each accounts, total of debit / credit / balance
-        accounts_by_ids = self._get_account_details(account_ids, target_move, fiscalyear, main_filter, start, stop, initial_balance_mode)
-
+        accounts_by_ids = self._get_account_details(account_ids, branch_ids, analytic_account_ids, target_move, fiscalyear, main_filter, start, stop, initial_balance_mode)
+        print 'accounts_by_ids',accounts_by_ids
         partner_details_by_ids = self._get_account_partners_details(accounts_by_ids,
+                                                                    branch_ids, 
+                                                                    analytic_account_ids,
                                                                     main_filter,
                                                                     target_move,
                                                                     start,
@@ -221,7 +244,7 @@ class CommonPartnerBalanceReportHeaderWebkit(CommonBalanceReportHeaderWebkit, Co
         comp_accounts_by_ids = []
         for index in range(max_comparison):
             if comp_filters[index] != 'filter_no':
-                comparison_result, comp_params = self._get_partners_comparison_details(data, account_ids,
+                comparison_result, comp_params = self._get_partners_comparison_details(data, account_ids, branch_ids, analytic_account_ids,
                                                                                        target_move, comp_filters[index],
                                                                                        index, partner_filter_ids=partner_ids)
                 comparison_params.append(comp_params)

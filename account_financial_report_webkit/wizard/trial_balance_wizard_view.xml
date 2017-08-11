@@ -32,6 +32,10 @@
                             </field>
                         </page>
                         <page name="placeholder"/>
+                        <page string="Branches Filters" name="branches">
+                            <separator string="Print only" colspan="4"/>
+                            <field name="branch_ids" colspan="4" nolabel="1"/>                               
+                        </page>                        
                     </page>
                     <page name="journal_ids" position="attributes">
                         <attribute name="invisible">True</attribute>

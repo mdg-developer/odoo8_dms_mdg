@@ -50,6 +50,15 @@ class CommonReportHeaderWebkit(common_report_header):
     def _get_accounts_br(self, data):
         return self._get_info(data, 'account_ids', 'account.account')
 
+    def _get_branches_br(self, data):
+        return self._get_info(data, 'branch_ids', 'res.branch')
+    
+    def _get_analytic_accounts_br(self, data):
+        return self._get_info(data, 'analytic_account_ids', 'account.analytic.account')
+    
+    def _get_analytic_accounts(self, data):
+        return self._get_info(data, 'analytic_account_id', 'account.analytic.account')
+    
     def _get_info(self, data, field, model):
         info = data.get('form', {}).get(field)
         if info:
@@ -317,7 +326,7 @@ class CommonReportHeaderWebkit(common_report_header):
 
     ####################Initial Balance helper #################################
 
-    def _compute_init_balance(self, account_id=None, period_ids=None, mode='computed', default_values=False):
+    def _compute_init_balance(self, account_id=None, branch_ids=None, analytic_account_ids=None, period_ids=None, mode='computed', default_values=False):
         if not isinstance(period_ids, list):
             period_ids = [period_ids]
         res = {}
@@ -326,13 +335,38 @@ class CommonReportHeaderWebkit(common_report_header):
             if not account_id or not period_ids:
                 raise Exception('Missing account or period_ids')
             try:
-                self.cursor.execute("SELECT sum(debit) AS debit, "
-                                    " sum(credit) AS credit, "
-                                    " sum(debit)-sum(credit) AS balance, "
-                                    " sum(amount_currency) AS curr_balance"
-                                    " FROM account_move_line"
-                                    " WHERE period_id in %s"
-                                    " AND account_id = %s", (tuple(period_ids), account_id))
+                if branch_ids and not analytic_account_ids:
+                    self.cursor.execute("SELECT sum(debit) AS debit, "
+                                        " sum(credit) AS credit, "
+                                        " sum(debit)-sum(credit) AS balance, "
+                                        " sum(amount_currency) AS curr_balance"
+                                        " FROM account_move_line"
+                                        " WHERE period_id in %s"
+                                        " AND account_id = %s AND branch_id in %s", (tuple(period_ids), account_id, tuple(branch_ids)))
+                if not branch_ids and analytic_account_ids: 
+                    self.cursor.execute("SELECT sum(debit) AS debit, "
+                                        " sum(credit) AS credit, "
+                                        " sum(debit)-sum(credit) AS balance, "
+                                        " sum(amount_currency) AS curr_balance"
+                                        " FROM account_move_line"
+                                        " WHERE period_id in %s"
+                                        " AND account_id = %s AND analytic_account_id in %s", (tuple(period_ids), account_id, tuple(analytic_account_ids)))
+                if branch_ids and analytic_account_ids: 
+                    self.cursor.execute("SELECT sum(debit) AS debit, "
+                                        " sum(credit) AS credit, "
+                                        " sum(debit)-sum(credit) AS balance, "
+                                        " sum(amount_currency) AS curr_balance"
+                                        " FROM account_move_line"
+                                        " WHERE period_id in %s"
+                                        " AND account_id = %s AND analytic_account_id in %s AND branch_id in %s", (tuple(period_ids), account_id, tuple(analytic_account_ids),tuple(branch_ids)))
+                if not branch_ids and not analytic_account_ids:
+                    self.cursor.execute("SELECT sum(debit) AS debit, "
+                                        " sum(credit) AS credit, "
+                                        " sum(debit)-sum(credit) AS balance, "
+                                        " sum(amount_currency) AS curr_balance"
+                                        " FROM account_move_line"
+                                        " WHERE period_id in %s"
+                                        " AND account_id = %s", (tuple(period_ids), account_id))
                 res = self.cursor.dictfetchone()
 
             except Exception, exc:
@@ -358,10 +392,10 @@ class CommonReportHeaderWebkit(common_report_header):
 
         res = {}
         for account_id in account_ids:
-            res[account_id] = self._compute_init_balance(account_id, opening_period_selected, mode='read')
+            res[account_id] = self._compute_init_balance(account_id, branch_ids, analytic_account_ids, opening_period_selected, mode='read')
         return res
 
-    def _compute_initial_balances(self, account_ids, start_period, fiscalyear):
+    def _compute_initial_balances(self, account_ids, branch_ids, analytic_account_ids, start_period, fiscalyear):
         """We compute initial balance.
         If form is filtered by date all initial balance are equal to 0
         This function will sum pear and apple in currency amount if account as no secondary currency"""
@@ -383,29 +417,31 @@ class CommonReportHeaderWebkit(common_report_header):
                 # we compute the initial balance for close_method == none only when we print a GL
                 # during the year, when the opening period is not included in the period selection!
                 if pnl_periods_ids and not opening_period_selected:
-                    res[acc.id] = self._compute_init_balance(acc.id, pnl_periods_ids)
+                    res[acc.id] = self._compute_init_balance(acc.id, branch_ids, analytic_account_ids, pnl_periods_ids)
             else:
-                res[acc.id] = self._compute_init_balance(acc.id, bs_period_ids)
+                res[acc.id] = self._compute_init_balance(acc.id, branch_ids, analytic_account_ids, bs_period_ids)
         return res
 
     ####################Account move retrieval helper ##########################
-    def _get_move_ids_from_periods(self, account_id, period_start, period_stop, target_move):
+    def _get_move_ids_from_periods(self, account_id, branch_ids, analytic_account_ids, period_start, period_stop, target_move):
         move_line_obj = self.pool.get('account.move.line')
         period_obj = self.pool.get('account.period')
         periods = period_obj.build_ctx_periods(self.cursor, self.uid, period_start.id, period_stop.id)
         if not periods:
             return []
-        search = [('period_id', 'in', periods), ('account_id', '=', account_id)]
+        search = [('period_id', 'in', periods), ('account_id', '=', account_id), ('branch_id', 'in', branch_ids), ('analytic_account_id', 'in', analytic_account_ids)]
         if target_move == 'posted':
             search += [('move_id.state', '=', 'posted')]
         return move_line_obj.search(self.cursor, self.uid, search)
 
-    def _get_move_ids_from_dates(self, account_id, date_start, date_stop, target_move, mode='include_opening'):
+    def _get_move_ids_from_dates(self, account_id, branch_ids, analytic_account_ids, date_start, date_stop, target_move, mode='include_opening'):
         # TODO imporve perfomance by setting opening period as a property
         move_line_obj = self.pool.get('account.move.line')
         search_period = [('date', '>=', date_start),
                          ('date', '<=', date_stop),
-                         ('account_id', '=', account_id)]
+                         ('account_id', '=', account_id),
+                         ('branch_id', 'in', branch_ids),
+                         ('analytic_account_id', 'in', analytic_account_ids)]
 
         # actually not used because OpenERP itself always include the opening when we
         # get the periods from january to december
@@ -419,16 +455,16 @@ class CommonReportHeaderWebkit(common_report_header):
 
         return move_line_obj.search(self.cursor, self.uid, search_period)
 
-    def get_move_lines_ids(self, account_id, main_filter, start, stop, target_move, mode='include_opening'):
+    def get_move_lines_ids(self, account_id, branch_ids, analytic_account_ids, main_filter, start, stop, target_move, mode='include_opening'):
         """Get account move lines base on form data"""
         if mode not in ('include_opening', 'exclude_opening'):
             raise osv.except_osv(_('Invalid query mode'), _('Must be in include_opening, exclude_opening'))
 
         if main_filter in ('filter_period', 'filter_no'):
-            return self._get_move_ids_from_periods(account_id, start, stop, target_move)
+            return self._get_move_ids_from_periods(account_id, branch_ids, analytic_account_ids, start, stop, target_move)
 
         elif main_filter == 'filter_date':
-            return self._get_move_ids_from_dates(account_id, start, stop, target_move)
+            return self._get_move_ids_from_dates(account_id, branch_ids, analytic_account_ids, start, stop, target_move)
         else:
             raise osv.except_osv(_('No valid filter'), _('Please set a valid time filter'))
 

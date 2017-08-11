@@ -90,6 +90,8 @@ class general_ledger_xls(report_xls):
             ('fy', 1, 0, 'text', _('Fiscal Year')),
             ('df', 3, 0, 'text', _p.filter_form(data) == 'filter_date' and _('Dates Filter') or _('Periods Filter')),
             ('af', 1, 0, 'text', _('Accounts Filter')),
+            ('bf', 1, 0, 'text', _('Branches Filter')),
+            ('aaf', 1, 0, 'text', _('Analytic Accounts Filter')),
             ('tm', 2, 0, 'text',  _('Target Moves')),
             ('ib', 2, 0, 'text',  _('Initial Balance')),
 
@@ -117,6 +119,8 @@ class general_ledger_xls(report_xls):
         c_specs += [
             ('df', 3, 0, 'text', df),
             ('af', 1, 0, 'text', _p.accounts(data) and ', '.join([account.code for account in _p.accounts(data)]) or _('All')),
+            ('bf', 1, 0, 'text', _p.branches(data) and ', '.join([branch.branch_code for branch in _p.branches(data)]) or _('All')),
+            ('aaf', 1, 0, 'text', _p.analytic_accounts(data) and ', '.join([analytic_account.code for analytic_account in _p.analytic_accounts(data)]) or _('All')),
             ('tm', 2, 0, 'text', _p.display_target_move(data)),
             ('ib', 2, 0, 'text', initial_balance_text[_p.initial_balance_mode]),
         ]       

@@ -55,6 +55,8 @@ class TrialBalanceWebkit(report_sxw.rml_parse, CommonBalanceReportHeaderWebkit):
             'target_move': self._get_target_move,
             'display_target_move': self._get_display_target_move,
             'accounts': self._get_accounts_br,
+            'branches': self._get_branches_br,
+            'analytic_accounts': self._get_analytic_accounts_br,
             'additional_args': [
                 ('--header-font-name', 'Helvetica'),
                 ('--footer-font-name', 'Helvetica'),
@@ -71,6 +73,7 @@ class TrialBalanceWebkit(report_sxw.rml_parse, CommonBalanceReportHeaderWebkit):
     def set_context(self, objects, data, ids, report_type=None):
         """Populate a ledger_lines attribute on each browse record that will be used
         by mako template"""
+        print 'set_context',data
         objects, new_ids, context_report_values = self.compute_balance_data(data)
 
         self.localcontext.update(context_report_values)

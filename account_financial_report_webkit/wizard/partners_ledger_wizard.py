@@ -36,6 +36,12 @@ class AccountReportPartnersLedgerWizard(orm.TransientModel):
         'partner_ids': fields.many2many('res.partner', string='Filter on partner',
                                          help="Only selected partners will be printed. "
                                               "Leave empty to print all partners."),
+        'branch_ids': fields.many2many('res.branch', string='Filter on branch',
+                                         help="Only selected branches will be printed. "
+                                              "Leave empty to print all branches."),
+        'analytic_account_ids': fields.many2many('account.analytic.account','partners_ledger_webkit_account_analytic_account','parnter_ledger_webkit_id','account_analytic_account_id',string='Filter on analytic account',
+                                         help="Only selected analytic accounts will be printed. "
+                                              "Leave empty to print all analytic accounts."),
         'filter': fields.selection([('filter_no', 'No Filters'),
                                     ('filter_date', 'Date'),
                                     ('filter_period', 'Periods')], "Filter by", required=True,
@@ -107,7 +113,7 @@ class AccountReportPartnersLedgerWizard(orm.TransientModel):
         # will be used to attach the report on the main account
         data['ids'] = [data['form']['chart_account_id']]
         vals = self.read(cr, uid, ids,
-                         ['amount_currency', 'partner_ids'],
+                         ['amount_currency', 'partner_ids', 'branch_ids','analytic_account_ids'],
                          context=context)[0]
         data['form'].update(vals)
         return data
