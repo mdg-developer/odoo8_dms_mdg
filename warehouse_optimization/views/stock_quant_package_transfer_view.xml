@@ -7,12 +7,12 @@
             <field name="arch" type="xml">
                 <form string="Package">
                 	<header>
-                		<button name="stickering_complete" string="Stickering Complete" type="object"
+                		<button name="stickering_complete" string="Additional Process Complete" type="object"
 							class="oe_highlight" attrs="{'invisible':[('strickering_state','in',('draft','complete','retransfer'))]}" />							
 						<button name="retransfer" string="Retransfer" type="object"
 							class="oe_highlight" attrs="{'invisible':[('strickering_state','in',('draft','transfer','retransfer'))]}" />
-						<button name="%(action_move_packages_stickering)d" attrs="{'invisible':[('strickering_state','in',('transfer','complete','retransfer'))]}" 
-						string="Transfer" type="action" />	
+						<button name="%(stock_quant_packages_moving_wizard.action_move_packages)d" attrs="{'invisible':[('strickering_state','in',('transfer','complete','retransfer'))]}" 
+						string="Transfer" type="action" />
 						<field name="strickering_state" widget="statusbar" statusbar_visible="draft,transfer,complete,retransfer" />
 					</header>
                     <sheet>
@@ -38,11 +38,12 @@
 	                            <field name="location_id"/>
 	                            <field name="parent_id"/>
 	                            <field name="saleable"/> 
-								<field name="repacking_chk"/>
+	                            <field name="origin_location_id"/>
+								<!-- <field name="repacking_chk"/>
 								<field name="repacking_process_chk"/> 				 
 								<field name="repacking_start_date"/>
 								<field name="repacking_end_date"/> 
-								<field name="origin_location_id"/>
+								<field name="origin_location_id"/> -->
                             </group>
                         </group>
                         <notebook>
@@ -110,7 +111,7 @@
         
         <record model="ir.actions.act_window" id="action_package_view_stickering">
             <field name="context">{}</field>
-            <field name="domain">[('stickering_chk','=',True), ('stickering_process_chk','=',False)]</field>
+            <field name="domain">[('stickering_chk','!=',False), ('stickering_process_chk','=',False)]</field>
             <field name="name">Stickering Pallet Transfer</field>
             <field name="res_model">stock.quant.package</field>
             <field name="view_id" eval="view_quant_package_tree_stickering"/>
@@ -132,8 +133,12 @@
             <field name="act_window_id" ref="action_package_view_stickering"/>
         </record>
         
+        <menuitem id="menu_action_pallet" name="Pallet Transfer"
+			parent="stock.menu_stock_root" sequence="3" />
+				
+			
 		<menuitem id="menu_package_view_stickering" action="action_package_view_stickering"
-			parent="good_receive_note.menu_action_good_receive_note" groups="stock.group_stock_manager" sequence="3"/>
+			parent="menu_action_pallet" groups="stock.group_stock_manager" sequence="3"/>
 			
 		<menuitem id="good_receive_note.menu_action_good_receive_note_1" action="good_receive_note.action_good_receive_note"
 			parent="good_receive_note.menu_action_good_receive_note" groups="stock.group_stock_manager" />				

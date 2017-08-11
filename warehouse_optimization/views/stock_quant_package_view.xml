@@ -12,10 +12,10 @@
 			<field name="parent_id" position="after">
 				
 				<field name="saleable"/> 
-				<field name="repacking_chk"/>
+				<!-- <field name="repacking_chk"/>
 				<field name="repacking_process_chk"/> 				 
 				<field name="repacking_start_date"/>
-				<field name="repacking_end_date"/>                 
+				<field name="repacking_end_date"/>  -->                
             </field>
             
             <field name="owner_id" position="after">

@@ -33,17 +33,18 @@ Warehouse Opitimization
     'author': 'Seventh Computing',
     'website': 'http://www.7thcomputing.com',
     'depends': ['base',      
-         "stock",
+         'stock','stock_quant_packages_moving_wizard'
  
     ],
     'data': [
-       #'wizard/stock_quant_package_move_wizard_view.xml', 
-       'wizard/quant_packages_stickering_move_wizard_view.xml',
-       'wizard/quant_packages_repacking_move_wizard_view.xml',     
+        
+       #'wizard/quant_packages_stickering_move_wizard_view.xml',
+       #'wizard/quant_packages_repacking_move_wizard_view.xml',     
        'views/product_product_view.xml',
        'views/stock_quant_package_view.xml',
-       'views/stock_quant_package_transfer_view.xml',
-       'views/stock_quant_package_repacking_transfer_view.xml',
+        'views/stock_quant_package_transfer_view.xml',
+        'views/stock_quant_package_saleable_transfer_view.xml',
+       #'views/stock_quant_package_repacking_transfer_view.xml',
        
        
     ],
