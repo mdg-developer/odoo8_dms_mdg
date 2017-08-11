@@ -97,13 +97,25 @@ class pallet_transfer(osv.osv):
                 quant_id = quant_obj.search(cr, uid, [('location_id', '=', location_id), ('qty', '>', 0)], context=context)         
                 if len(quant_id) == 0:
                     location_data.append(location_id)       
-            cr.execute("select id from stock_location where id in %s order by row ,layer,room,cell", (tuple(location_data),))
+            cr.execute("select id from stock_location where id in %s and id not in (select dest_location_id from pallet_transfer_line where line_id= %s) order by row ,layer,room,cell", (tuple(location_data), ids[0],))
             pallet_location = cr.fetchone()[0]
             transfer_line_obj.write(cr, uid, transfer_id, {'dest_location_id':pallet_location}, context=context)                            
         return self.write(cr, uid, ids, {'state': 'reserve'})
     
     def transfer(self, cr, uid, ids, context=None):
-        
+        transfer_line_obj = self.pool.get('pallet.transfer.line')       
+        quant_obj = self.pool.get('stock.quant')
+        transfer_line_ids = transfer_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context) 
+        for transfer_id in transfer_line_ids:
+            item = transfer_line_obj.browse(cr, uid, transfer_id, context=context)
+            if item.dest_location_id.id is not item.src_location_id.id:
+                for quant in item.pallet_id.quant_ids:
+                    quant.move_to(item.dest_location_id)
+                    quant_obj.write(cr, uid, quant.id, {'package_id':item.pallet_id.id}, context=context)      
+                for package in item.pallet_id.children_ids:
+                    for quant in package.quant_ids:
+                        quant.move_to(item.dest_location_id)
+                        quant_obj.write(cr, uid, quant.id, {'package_id':item.pallet_id.id}, context=context)      
         return self.write(cr, uid, ids, {'state': 'transfer', 'transfer_by':uid, 'transfer_date':datetime.now(), })
     
     def cancel(self, cr, uid, ids, context=None):

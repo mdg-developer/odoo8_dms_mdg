@@ -40,6 +40,7 @@ Good Receive Note Module
         'views/pallete_transfer_view.xml',
         'reports/qweb_view.xml',
         'reports/report_good_receive_note.xml',
+        'reports/report_pallet_transfer.xml',
     ],
     'test': [
 

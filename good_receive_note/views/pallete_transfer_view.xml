@@ -14,15 +14,16 @@
 						<button name="reserve" string="Reserve" class="oe_highlight"
 							type="object" states="draft"
 							groups="stock.group_stock_manager,stock.group_stock_user" />
-						
+
 						<button name="transfer" string="Confirm Transfer" class="oe_highlight"
 							type="object" states="reserve"
 							groups="stock.group_stock_manager,stock.group_stock_user" />
-						
+
 						<button name="cancel" string="Cancel" class="oe_highlight"
 							type="object" states="draft"
 							groups="stock.group_stock_manager,stock.group_stock_user" />
-						<field name="state"  widget="statusbar" />
+
+						<field name="state" widget="statusbar" statusbar_visible="draft,reserve,transfer,cancel" />
 					</header>
 					<sheet>
 						<group>
@@ -40,7 +41,7 @@
 						</group>
 						<group>
 							<notebook>
-								<page string="Stock List">
+								<page string="Pallet Transfer List">
 									<field name="p_line" attrs="{'readonly':[('state','=','transfer')]}">
 										<tree string="Good Receive Note Line" editable="bottom">
 											<field name="pallet_id" />

@@ -53,7 +53,7 @@ class good_receive_note(osv.osv):
         'checked_by':fields.many2one('res.users', "Checked By"),
          'start_date':fields.date('Start Unloading Date', required=True),
          'end_date':fields.date('End Unloading Date', required=True),
-        'no_of_container':fields.char('No of Containers'),
+        'no_of_container':fields.char('No. of Containers'),
         'state': fields.selection([
             ('draft', 'Pending'),
             ('receive', 'Received'),
@@ -68,8 +68,8 @@ class good_receive_note(osv.osv):
                 'company_id':fields.many2one('res.company', 'Company'),
                                 'partner_id':fields.many2one('res.partner', string='Partner'),
              'is_check':fields.selection([ ('deliver', 'Qty as per Doc'), ('receive', 'Total Recv Qty')], 'Check  Avaliable Space', required=True),
-             'no_of_pallet':fields.integer('No of Pallet Required'),
-             'no_of_avspace':fields.integer('No of Space Avaliable this principle'),
+             'no_of_pallet':fields.integer('No. of Pallet Required'),
+             'no_of_avspace':fields.integer('No. of Space Avaliable this principle'),
             'total_space':fields.integer('Total Avaliable Space'),
             'picking_id':fields.many2one('stock.picking', 'Picking'),
 }
@@ -165,6 +165,7 @@ class good_receive_note(osv.osv):
         return self.write(cr, uid, ids, { 'receiver_by':uid,'state':'receive','picking_id':pickList[0]})
     
     def cancel(self, cr, uid, ids, context=None):
+        
         return self.write(cr, uid, ids, {'state':'cancel' })
     
     def check(self, cr, uid, ids, context=None):
