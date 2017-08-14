@@ -117,7 +117,9 @@ class cashier_approval(osv.osv):
     def button_dummy(self, cr, uid, ids, context=None):
         self._amount_total_all(cr, uid, ids, ['total'], None, context)
         self._amount_denomination_all(cr, uid, ids, ['denomination_sub_total'], None, context)
-        return True    
+        self._amount_ar_all(cr, uid, ids, ['ar_sub_total'], None, context)
+
+        return True      
     def _get_ar(self, cr, uid, ids, context=None):
         result = {}
         for line in self.pool.get('cashier.approval.ar.line').browse(cr, uid, ids, context=context):

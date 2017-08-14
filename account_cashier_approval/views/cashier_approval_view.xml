@@ -46,7 +46,6 @@
 
 								<field name="cashier_line" attrs="{'readonly':[('state','=','done')]}">
 									<form string="Invoice Lines">
-
 										<field name="invoice_id" />
 										<field name="date" />
 										<field name="partner_id" />
