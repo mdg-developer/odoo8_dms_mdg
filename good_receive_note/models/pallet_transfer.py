@@ -118,12 +118,16 @@ class pallet_transfer(osv.osv):
                 for quant in item.pallet_id.quant_ids:
                     quant.move_to(item.dest_location_id)
                     quant_obj.write(cr, uid, quant.id, {'package_id':item.pallet_id.id}, context=context) 
-                    package_obj.write(cr, uid, item.pallet_id.id, {'location_id':item.dest_location_id.id}, context=context)        
+                    package_obj.write(cr, uid, item.pallet_id.id, {'location_id':item.dest_location_id.id}, context=context)    
+                    cr.execute("update stock_quant_package set location_id =%s where id=%s",(item.dest_location_id.id,item.pallet_id.id,))
+    
                 for package in item.pallet_id.children_ids:
                     for quant in package.quant_ids:
                         quant.move_to(item.dest_location_id)
                         quant_obj.write(cr, uid, quant.id, {'package_id':item.pallet_id.id}, context=context)      
-                        package_obj.write(cr, uid, item.pallet_id.id, {'location_id':item.dest_location_id.id}, context=context)    
+                        package_obj.write(cr, uid, item.pallet_id.id, {'location_id':item.dest_location_id.id}, context=context) 
+                        cr.execute("update stock_quant_package set location_id =%s where id=%s",(item.dest_location_id.id,item.pallet_id.id,))
+                           
         return self.write(cr, uid, ids, {'state': 'transfer', 'transfer_by':uid, 'transfer_date':datetime.now(), })
     
     def cancel(self, cr, uid, ids, context=None):
