@@ -17,32 +17,19 @@ class StockQuantPackageMove(models.TransientModel):
         packages_ids = self.env.context.get('active_ids', [])
         if not packages_ids:
             return res
+        
         packages_obj = self.env['stock.quant.package']
         packages = packages_obj.browse(packages_ids)
         items = []
         for package in packages:
             res = {}
             value = {}
-#             if package.strickering_state != 'retransfer':
-#                  #res['domain'] = {'dest_loc': [('location_id', '=', self.source_loc),('stickering_location','=',True)]}
-#                  to_loc_id = []
-#                  ids = self.env['stock.location'].search([('location_id', '=', package.location_id.location_id.id),('stickering_location','=',True)])
-#                  
-#                  for loc_ids in ids:
-#                      to_loc_id.append(loc_ids.id)
-#                  res['domain'] = {'dest_loc': [('id', 'in', to_loc_id)]}
-#                  #value = {'domain':{'dest_loc':[('id','in',ids)]}
-#             else:
-#                  ids = self.env['stock.location'].search([('usage', '=', 'internal')])
-#                 
-#                  for loc_ids in ids:
-#                      to_loc_id.append(loc_ids)
-#                  res['domain'] = {'dest_loc': [('id', 'in', to_loc_id)]}        
+      
             if not package.parent_id and package.location_id:
                 item = {
                     'package': package.id,
                     'source_loc': package.location_id.id,
-                    #'dest_loc': res,
+                   
                 }
                 items.append(item)
         res.update(pack_move_items=items)
@@ -86,28 +73,37 @@ class StockQuantPackageMove(models.TransientModel):
 class StockQuantPackageMoveItems(models.TransientModel):
     _inherit = 'stock.quant.package.move_items'
     
-
-#     @api.one
-#     @api.onchange('package')
-#     def onchange_quant(self):
-#         self.source_loc = self.package.location_id
+    @api.model
+    def _default_location(self):
+        res ={}
         
-    @api.one    
-    @api.onchange('source_loc')
-    def onchange_source_loc(self):
-        res = {}
-        if self.source_loc:
-            if self.package.stickering_state != 'retransfer':
-                res['domain'] = {'dest_loc': [('location_id', '=', self.source_loc),('stickering_location','=',True)]}
-        return res
+        packages_ids = self.env.context.get('active_ids', [])
+        if not packages_ids:
+            return res
+        
+        packages_obj = self.env['stock.quant.package']
+        packages = packages_obj.browse(packages_ids)
+        items = []
+        to_loc_id=[]
+        for package in packages:
+            if package.strickering_state != 'retransfer':
+                ids = self.env['stock.location'].search([('location_id', '=', package.location_id.location_id.id),('stickering_location','=',True)])
+                  
+                for loc_ids in ids:
+                    to_loc_id.append(loc_ids.id)
+            else:
+                ids = self.env['stock.location'].search([('usage', '=', 'internal')])
+                for loc_ids in ids:
+                    to_loc_id.append(loc_ids.id)        
+                    
+        domain = [
+            ('id', 'in', to_loc_id),
+            
+        ]
+        
+        return domain 
     
-    @api.one
-    @api.onchange('package')
-    def onchange_quant(self):
-        self.source_loc = self.package.location_id
-        res = {}
-        if self.source_loc:
-            if self.package.stickering_state != 'retransfer':
-                res['domain'] = {'dest_loc': [('location_id', '=', self.source_loc),('stickering_location','=',True)]}
-        return res
+    dest_loc = fields.Many2one(
+        comodel_name='stock.location', string='Destination Location',domain=_default_location, required=True)
+
        

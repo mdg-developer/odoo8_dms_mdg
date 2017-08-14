@@ -16,7 +16,7 @@
                           <field name="product_move_type_id"/>
                           <field name="max_height"/>
                           <field name="stickering_chk"/>
-                          <field name="repacking_chk"/>
+                          <!-- <field name="repacking_chk"/> -->
                     </group>
             </group>
         </field>

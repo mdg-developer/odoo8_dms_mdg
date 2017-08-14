@@ -7,7 +7,7 @@ class stock_location(osv.osv):
     
     _columns = {
         'drop_point_location': fields.boolean('Drop Point Location'),
-        'stickering_location': fields.boolean('Stickering Location'),
+        'stickering_location': fields.boolean('Additional Process Location'),
         'repacking_location': fields.boolean('Repacking Location'),
         'row': fields.char('Row'),
         'layer': fields.char('Layer'),

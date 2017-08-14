@@ -37,7 +37,7 @@
 			
 			<field name="active" position="before">
 			    <field name="stickering_location"/>
-			    <field name="repacking_location"/>
+			    <!-- <field name="repacking_location"/> -->
 				<field name="drop_point_location"/>
 			
             </field>

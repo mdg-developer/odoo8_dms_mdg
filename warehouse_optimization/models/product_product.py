@@ -23,9 +23,9 @@ class product_template(osv.osv):
     
     _columns = {
         
-        'product_move_type_id': fields.many2one('product.move.type', 'Moving Type',required=True),
+        'product_move_type_id': fields.many2one('product.move.type', 'Moving Type'),
         'max_height': fields.integer("Max Shelf Level"),
-        'stickering_chk': fields.boolean("Stickering Process"),
+        'stickering_chk': fields.boolean("Additional Process"),
         'repacking_chk': fields.boolean("Repacking Process"),
     }
 	
