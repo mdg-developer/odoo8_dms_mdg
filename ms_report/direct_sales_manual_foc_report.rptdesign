@@ -347,7 +347,7 @@ and mso.partner_id=rp.id
 and mso.user_id=res.id
 and pp.id=msol.product_id
 and msol.uom_id=uom.id
---and mso.id not in (select promo_line_id from mso_promotion_line where promo_line_id is not null)
+and mso.id  in (select promo_line_id from mso_promotion_line  where manual=True)
 and void_flag='none'
 and foc='true'
 and ((mso.date at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
