@@ -76,6 +76,10 @@
 						<thead>
 							<tr>
 								<th>Pallet Name</th>
+								<th>Product</th>
+								<th>Quantity</th>
+								<th>Lot</th>
+								<th>Expiry</th>
 								<th>Source Location</th>
 								<th>Destination Location</th>
 								<th>Remark</th>
@@ -85,6 +89,18 @@
 							<tr t-foreach="o.p_line" t-as="l">
 								<td>
 									<span t-field="l.pallet_id.name" />
+								</td>
+								<td>
+									<span t-field="l.product_id.name_template" />
+								</td>
+								<td>
+									<span t-field="l.quantity" />
+								</td>
+								<td>
+									<span t-field="l.lot_id.name" />
+								</td>
+								<td>
+									<span t-field="l.expiry_date" />
 								</td>
 								<td>
 									<span t-field="l.src_location_id.name" />
