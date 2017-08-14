@@ -45,6 +45,11 @@
 									<field name="p_line" attrs="{'readonly':[('state','=','transfer')]}">
 										<tree string="Good Receive Note Line" editable="bottom">
 											<field name="pallet_id" />
+											<field name="product_id" />
+											<field name="quantity" />
+											<field name="lot_id" domain="[('product_id', '=',product_id)]"
+												on_change="on_change_expired_date(lot_id)" />
+											<field name="expiry_date" />
 											<field name="src_location_id" />
 											<field name="dest_location_id" />
 											<field name="remark" />

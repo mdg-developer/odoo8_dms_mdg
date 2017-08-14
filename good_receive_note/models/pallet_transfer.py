@@ -100,14 +100,16 @@ class pallet_transfer(osv.osv):
             cr.execute("select id from stock_location where id in %s and id not in (select dest_location_id from pallet_transfer_line where line_id= %s  and  dest_location_id is not null) order by row ,layer,room,cell", (tuple(location_data), ids[0],))
             pallet_location = cr.fetchone()
             if pallet_location:
-                pallet_location=pallet_location[0]
+                pallet_location = pallet_location[0]
             else:
-                pallet_location=None
+                pallet_location = None
             transfer_line_obj.write(cr, uid, transfer_id, {'dest_location_id':pallet_location}, context=context)                            
         return self.write(cr, uid, ids, {'state': 'reserve'})
     
     def transfer(self, cr, uid, ids, context=None):
-        transfer_line_obj = self.pool.get('pallet.transfer.line')       
+        transfer_line_obj = self.pool.get('pallet.transfer.line')     
+        package_obj = self.pool.get('stock.quant.package')     
+          
         quant_obj = self.pool.get('stock.quant')
         transfer_line_ids = transfer_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context) 
         for transfer_id in transfer_line_ids:
@@ -115,11 +117,13 @@ class pallet_transfer(osv.osv):
             if item.dest_location_id.id is not item.src_location_id.id:
                 for quant in item.pallet_id.quant_ids:
                     quant.move_to(item.dest_location_id)
-                    quant_obj.write(cr, uid, quant.id, {'package_id':item.pallet_id.id}, context=context)      
+                    quant_obj.write(cr, uid, quant.id, {'package_id':item.pallet_id.id}, context=context) 
+                    package_obj.write(cr, uid, item.pallet_id.id, {'location_id':item.dest_location_id.id}, context=context)        
                 for package in item.pallet_id.children_ids:
                     for quant in package.quant_ids:
                         quant.move_to(item.dest_location_id)
                         quant_obj.write(cr, uid, quant.id, {'package_id':item.pallet_id.id}, context=context)      
+                        package_obj.write(cr, uid, item.pallet_id.id, {'location_id':item.dest_location_id.id}, context=context)    
         return self.write(cr, uid, ids, {'state': 'transfer', 'transfer_by':uid, 'transfer_date':datetime.now(), })
     
     def cancel(self, cr, uid, ids, context=None):
@@ -128,9 +132,22 @@ class pallet_transfer(osv.osv):
 class pallet_transfer_line(osv.osv):
     _name = 'pallet.transfer.line'
     _description = 'Pallet Transfer Line'        
+    
+    def on_change_expired_date(self, cr, uid, ids, lot_id, context=None):
+        values = {}
+        if lot_id:
+            lot_obj = self.pool.get('stock.production.lot').browse(cr, uid, lot_id, context=context)
+            values = {
+                'expiry_date': lot_obj.life_date,
+            }
+        return {'value': values}        
     _columns = {                
         'line_id':fields.many2one('pallet.transfer', 'Line', ondelete='cascade', select=True),
         'pallet_id': fields.many2one('stock.quant.package', 'Pallet', required=True),
+        'product_id': fields.many2one('product.product', 'Product', required=True),
+        'quantity':fields.float('Quantity'),
+        'lot_id': fields.many2one('stock.production.lot', 'Lot'),
+        'expiry_date':fields.date('Expiry'),
         'src_location_id': fields.many2one('stock.location', 'Source Location'),
         'dest_location_id': fields.many2one('stock.location', 'Destination Location'),
         'remark':fields.char('Remark'),

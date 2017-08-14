@@ -88,9 +88,9 @@ class good_receive_note(osv.osv):
         data_line = []
         if purchase_id:        
             order_data = purchase_order_obj.browse(cr, uid, purchase_id, context=context)
-            po_name=order_data.name
-            order_ids = picking_obj.search(cr, uid, [('origin', '=',po_name),('state','!=','done')], context=context) 
-            move_ids = move_obj.search(cr, uid, [('picking_id', 'in',order_ids),('state','!=','done')], context=context) 
+            po_name = order_data.name
+            order_ids = picking_obj.search(cr, uid, [('origin', '=', po_name), ('state', '!=', 'done')], context=context) 
+            move_ids = move_obj.search(cr, uid, [('picking_id', 'in', order_ids), ('state', '!=', 'done')], context=context) 
             for line in move_ids:          
                 line_data = move_obj.browse(cr, uid, line, context=context)
                 product_id = line_data.product_id.id
@@ -126,43 +126,52 @@ class good_receive_note(osv.osv):
         move_obj = self.pool.get('stock.move')        
         receive_data = self.browse(cr, uid, ids, context=context)
         po_name = receive_data.purchase_id.name
-        pickList = picking_obj.search(cr, uid, [('origin', '=',po_name),('state','!=','done')], context=context) 
+        pickList = picking_obj.search(cr, uid, [('origin', '=', po_name), ('state', '!=', 'done')], context=context) 
         wizResult = picking_obj.do_enter_transfer_details(cr, uid, pickList, context=context)
         detailObj = transfer_obj.browse(cr, uid, wizResult['res_id'], context=context)            
         if detailObj:
             for item in detailObj.item_ids:
                 item_data = transfer_items_obj.browse(cr, uid, item.id, context=context)  
-                product_id=item_data.product_id.id
-                cr.execute('select product_uom,receive_quantity,batch_no from good_receive_note_line where product_id=%s and line_id=%s',(product_id,ids[0],))
-                note_line_data=cr.fetchone()
+                product_id = item_data.product_id.id
+                cr.execute('select product_uom,receive_quantity,batch_no from good_receive_note_line where product_id=%s and line_id=%s', (product_id, ids[0],))
+                note_line_data = cr.fetchone()
                 if note_line_data:
-                    product_uom=note_line_data[0]
-                    receive_quantity=note_line_data[1]
-                    batch_no=note_line_data[2]
+                    product_uom = note_line_data[0]
+                    receive_quantity = note_line_data[1]
+                    batch_no = note_line_data[2]
                 product = product_obj.browse(cr, uid, product_id, context=context)
                 if product_uom == product.product_tmpl_id.big_uom_id.id:                                                                          
                     cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (product.product_tmpl_id.big_uom_id.id,))
                     bigger_qty = cr.fetchone()[0]
                     bigger_qty = int(bigger_qty)
                     receive_quantity = bigger_qty * receive_quantity           
-                transfer_items_obj.write(cr, uid, item_data.id, {'quantity':receive_quantity,'lot_id':batch_no}, context=context)    
+                transfer_items_obj.write(cr, uid, item_data.id, {'quantity':receive_quantity, 'lot_id':batch_no}, context=context)    
             detailObj.allocate_pallet()
             detailObj.do_detailed_transfer()    
-            pallet_id=pallet_transfer_obj.create(cr, uid, {
+            pallet_id = pallet_transfer_obj.create(cr, uid, {
                                                   'good_receive_id': ids[0],
                                                   'receive_date': datetime.now(),
                                                   'transfer_date':datetime.now(),
-                                                  'branch_id':receive_data.branch_id.id,})
-            cr.execute("select location_dest_id,result_package_id from stock_pack_operation where picking_id =%s",(pickList[0],))
-            pallete_data=cr.fetchall()
+                                                  'branch_id':receive_data.branch_id.id, })
+            cr.execute("select location_dest_id,result_package_id,product_qty,lot_id,product_id from stock_pack_operation where picking_id =%s", (pickList[0],))
+            pallete_data = cr.fetchall()
             if pallete_data:
                 for pallete in pallete_data:
+                    if pallete[3] is not None:
+                        cr.execute("select life_date from stock_production_lot where id =%s", (pallete[3],))
+                        expiry_date = cr.fetchone()[0]
+                    else:
+                        expiry_date=None
                     transfer_line_obj.create(cr, uid, {'line_id': pallet_id,
                                                   'pallet_id': pallete[1],
+                                                  'quantity':pallete[2],
+                                                  'lot_id':pallete[3],
+                                                  'expiry_date':expiry_date ,
+                                                  'product_id':pallete[4],
                                                   'src_location_id': pallete[0],
-                                                  'dest_location_id':None,                                          
+                                                  'dest_location_id':None,
                                                   }, context=context)                           
-        return self.write(cr, uid, ids, { 'receiver_by':uid,'state':'receive','picking_id':pickList[0]})
+        return self.write(cr, uid, ids, { 'receiver_by':uid, 'state':'receive', 'picking_id':pickList[0]})
     
     def cancel(self, cr, uid, ids, context=None):
         
@@ -171,7 +180,7 @@ class good_receive_note(osv.osv):
     def check(self, cr, uid, ids, context=None):
 
 
-        return self.write(cr, uid, ids, {'checked_by':uid,'state':'check' })    
+        return self.write(cr, uid, ids, {'checked_by':uid, 'state':'check' })    
     
     
     
