@@ -138,6 +138,7 @@
 					<field name="code" />
 					<field name="name" />
 					<field name="active" />
+					<field name="manual" />
 					<field name="coupon_code" />
 					<field name="main_group" />
 					<field name="from_date" />
