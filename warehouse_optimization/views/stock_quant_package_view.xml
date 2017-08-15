@@ -20,7 +20,7 @@
             
             <field name="owner_id" position="after">
             	<field name="stickering_chk"/>
-            	<field name="stickering_process_chk"/>
+            	<!-- <field name="stickering_process_chk"/> -->
 				<field name="stickering_start_date"/>
 				<field name="stickering_end_date"/> 
 								

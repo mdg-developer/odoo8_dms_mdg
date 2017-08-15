@@ -159,8 +159,9 @@ class stock_transfer_details(osv.osv):
                                 if details:
                                     stock_quant_package_obj.write(cr,uid,details.result_package_id.id,{'stickering_chk':details.product_id.product_tmpl_id.stickering_chk,
                                                                                                        'repacking_chk':details.product_id.product_tmpl_id.repacking_chk},context=context)
-                                    if details.product_id.product_tmpl_id.stickering_chk == False and details.product_id.product_tmpl_id.repacking_chk == False:
-                                        stock_quant_package_obj.write(cr,uid,details.result_package_id.id,{'saleable':True},context=context)
+                                    #if details.product_id.product_tmpl_id.stickering_chk == False and details.product_id.product_tmpl_id.repacking_chk == False:
+                                    if details.product_id.product_tmpl_id.stickering_chk != True:
+                                        stock_quant_package_obj.write(cr,uid,details.result_package_id.id,{'saleable':True,'strickering_state':'retransfer'},context=context)
                         cr.execute("delete from stock_transfer_details_items where id =%s",(transfer.id,))
                     else:#no need to allocat pallet
                         item = {
@@ -199,8 +200,9 @@ class stock_transfer_details(osv.osv):
                                 if details:
                                     stock_quant_package_obj.write(cr,uid,details.result_package_id.id,{'stickering_chk':details.product_id.product_tmpl_id.stickering_chk,
                                                                                                        'repacking_chk':details.product_id.product_tmpl_id.repacking_chk},context=context)
-                                    if details.product_id.product_tmpl_id.stickering_chk == False and details.product_id.product_tmpl_id.repacking_chk == False:
-                                        stock_quant_package_obj.write(cr,uid,details.result_package_id.id,{'saleable':True},context=context)
+                                    #if details.product_id.product_tmpl_id.stickering_chk == False and details.product_id.product_tmpl_id.repacking_chk == False:
+                                    if details.product_id.product_tmpl_id.stickering_chk != True :
+                                        stock_quant_package_obj.write(cr,uid,details.result_package_id.id,{'saleable':True,'strickering_state':'retransfer'},context=context)
                                            
         return self.pool['stock.transfer_details'].wizard_view(cr, uid, ids[0], context)
                           
