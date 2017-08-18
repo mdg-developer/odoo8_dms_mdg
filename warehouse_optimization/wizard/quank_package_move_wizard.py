@@ -34,24 +34,48 @@ class StockQuantPackageMove(models.TransientModel):
                 items.append(item)
         res.update(pack_move_items=items)
         return res
-
+    
+    def get_package_id(self,quant_id,loc_id):
+        package_id = None
+        self.env.cr.execute("""select package_id from stock_quant where package_id is not null and id in(
+        select quant_id from stock_quant_move_rel where move_id in(
+        select move_id from stock_quant_move_rel where quant_id=%s))""",(quant_id,))
+        package_data = self.env.cr.fetchall()
+        if package_data:
+            package_id = package_data[0][0]
+            self.env.cr.execute("""update stock_quant set package_id=%s where id in(
+            select max(quant_id) from stock_quant_move_rel where move_id in(
+            select move_id from stock_quant_move_rel where quant_id=%s)) and location_id=%s""",(package_id,quant_id,loc_id,))
+        return package_id    
     @api.one
     def do_detailed_transfer(self):
         for item in self.pack_move_items:
-            package_id = location_id = original_location_id = None
+            package_id = location_id = original_location_id = lot_id = None
             if item.dest_loc is not item.source_loc:
                 for quant in item.package.quant_ids:
                     package_id = quant.package_id.id
                     original_location_id = quant.location_id.id
                     location_id = item.dest_loc
+                    lot_id = quant.lot_id.id
                     quant.move_to(item.dest_loc)
-                    quant.write({'package_id':package_id})
+                    quant.write({'package_id':package_id,'lot_id':lot_id})
+                    
+                    package_id = self.get_package_id(quant.id,item.dest_loc.id)
+#                     if package_id is None:
+#                         package_id = self.get_package_id(quant)
+#                         quant.write({'package_id':package_id,'lot_id':lot_id})
                 for package in item.package.children_ids:
                     for quant in package.quant_ids:
                         package_id = quant.package_id.id
+                        lot_id = quant.lot_id.id
                         quant.move_to(item.dest_loc)
                         location_id = item.dest_loc
-                        quant.write({'package_id':package_id})
+                        quant.write({'package_id':package_id,'lot_id':lot_id})
+                        
+                        package_id = self.get_package_id(quant.id,item.dest_loc.id)
+#                         if package_id is None:
+#                             package_id = self.get_package_id(quant)
+#                             quant.write({'package_id':package_id,'lot_id':lot_id})
                 for packageid in item.package:
                     if packageid.strickering_state == 'draft':
                         packageid.write({'origin_location_id':original_location_id,'strickering_state':'transfer','location_id':location_id.id})
