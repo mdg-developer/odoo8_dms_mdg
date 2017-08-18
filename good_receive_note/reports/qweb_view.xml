@@ -8,7 +8,7 @@
 			attachment_use="True" attachment="('Good Receive Note')+'.pdf'" />
 
 		<report id="report_pallet_transfer" model="pallet.transfer"
-			string="Pallet Trasfer Report" report_type="qweb-pdf"
+			string="Pallet Transfer Report" report_type="qweb-pdf"
 			name="good_receive_note.report_pallet_transfer_document" file="good_receive_note.report_pallet_transfer_document"
 			attachment_use="True" attachment="('Pallet Transfer Report')+'.pdf'" />
 
