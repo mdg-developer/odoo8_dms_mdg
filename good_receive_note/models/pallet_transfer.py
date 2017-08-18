@@ -150,7 +150,7 @@ class pallet_transfer_line(osv.osv):
         'pallet_id': fields.many2one('stock.quant.package', 'Pallet', required=True),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'quantity':fields.float('Quantity'),
-        'lot_id': fields.many2one('stock.production.lot', 'Lot'),
+        'lot_id': fields.many2one('stock.production.lot', 'Batch No'),
         'expiry_date':fields.date('Expiry'),
         'src_location_id': fields.many2one('stock.location', 'Source Location'),
         'dest_location_id': fields.many2one('stock.location', 'Destination Location'),

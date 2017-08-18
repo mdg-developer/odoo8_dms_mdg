@@ -51,8 +51,8 @@ class good_receive_note(osv.osv):
        'branch_id':fields.many2one('res.branch', 'Branch'),
        'receiver_by':fields.many2one('res.users', "Received By"),
         'checked_by':fields.many2one('res.users', "Checked By"),
-         'start_date':fields.date('Start Unloading Date', required=True),
-         'end_date':fields.date('End Unloading Date', required=True),
+         'start_date':fields.date('Start Unloading Date'),
+         'end_date':fields.date('End Unloading Date'),
         'no_of_container':fields.char('No. of Containers'),
         'state': fields.selection([
             ('draft', 'Pending'),
@@ -98,6 +98,7 @@ class good_receive_note(osv.osv):
                 quantity = line_data.product_uom_qty
                 sequence = line_data.product_id.product_tmpl_id.sequence
                 product_uom = line_data.product_uom.id
+                
                 data_line.append({
                                       'sequence':sequence,
                                         'product_id':product_id,
@@ -185,6 +186,7 @@ class good_receive_note(osv.osv):
     
     
     def check_space(self, cr, uid, ids, context=None):
+        
         if ids:
             receive_line_obj = self.pool.get('good.receive.note.line')
             product_obj = self.pool.get('product.product')
@@ -194,6 +196,7 @@ class good_receive_note(osv.osv):
             require_pallet = 0
             avaliable_space = 0
             total_space = 0
+            line_require_pallet = 0
             receive_data = self.browse(cr, uid, ids, context=context)
             is_check = receive_data.is_check
             drop_location_id = receive_data.purchase_id.picking_type_id.default_location_dest_id.id
@@ -220,11 +223,15 @@ class good_receive_note(osv.osv):
                 smaller_qty = mapping_data.smaller_qty
                 if total_qty <= smaller_qty:
                     require_pallet = require_pallet + 1;
+                    line_require_pallet=1;
                 else:
                     require_pallet = require_pallet + (total_qty / smaller_qty)
+                    line_require_pallet=round((total_qty / smaller_qty))
                     lastest_qty = (total_qty % smaller_qty)          
                     if lastest_qty > 0:
                         require_pallet = require_pallet + 1;
+                        line_require_pallet =line_require_pallet +1;
+                receive_line_obj.write(cr, uid, line_id, {'no_of_pallet_required': line_require_pallet})           
             cr.execute("""select sl.id from product_product pp ,product_template pt ,stock_location sl 
             where pp.product_tmpl_id =pt.id 
             and pt.main_group=sl.maingroup_id
@@ -301,6 +308,7 @@ class good_receive_line(osv.osv):  # #prod_pricelist_update_line
          'remark':fields.char('Remark'),
         'sequence':fields.integer('Sequence'),
         'product_uom':fields.many2one('product.uom', 'UOM'),
+        'no_of_pallet_required':fields.integer('No of pallet required'),
     }
         
    
