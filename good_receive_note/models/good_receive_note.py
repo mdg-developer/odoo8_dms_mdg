@@ -308,7 +308,7 @@ class good_receive_line(osv.osv):  # #prod_pricelist_update_line
          'remark':fields.char('Remark'),
         'sequence':fields.integer('Sequence'),
         'product_uom':fields.many2one('product.uom', 'UOM'),
-        'no_of_pallet_required':fields.integer('No of pallet required'),
+        'no_of_pallet_required':fields.integer('No. of pallet required'),
     }
         
    
