@@ -73,7 +73,7 @@ class stock_quant_package(osv.osv):
         'stickering_process_chk': fields.boolean("Additional Process Complete"),
         'repacking_process_chk': fields.boolean("Repacking Process Complete"),
         'strickering_state':fields.selection([('draft', 'Draft'), ('transfer', 'Transfer'), ('complete', 'Additional Process Complete'), ('retransfer', 'Retransfer')], 'Status'),
-        'repacking_state':fields.selection([('draft', 'Draft'), ('transfer', 'Transfer'), ('complete', 'Repacking Complete'), ('retransfer', 'Retransfer')], 'Status'),
+        'repacking_state':fields.selection([('draft', 'Process Required'), ('transfer', 'Transfer'), ('complete', 'Repacking Complete'), ('retransfer', 'Retransfer')], 'Status'),
         'origin_location_id': fields.many2one('stock.location', 'Original Location'),
         'location_id': fields.function(_get_package_info_new, type='many2one', relation='stock.location', string='Location', multi="package",
                                     store={
