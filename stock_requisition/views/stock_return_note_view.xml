@@ -3,7 +3,7 @@
 	<data>
 
 
-		<!-- ============================== Content Form ============================== -->
+		<!-- ==============================Content Form============================== -->
 
 		<record id="stock_return_note_form" model="ir.ui.view">
 			<field name="name">Stock Return Note Form</field>

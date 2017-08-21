@@ -3,19 +3,16 @@ Created on Auguest 31, 2016
 
 @author: Administrator
 '''
-import time
-
-import os
+from openerp import api,models,fields
+from openerp.osv import fields, osv
+from openerp.osv import orm
+from openerp import _
 from datetime import datetime
-from datetime import timedelta  
-from dateutil.relativedelta import relativedelta
-from dateutil import parser
+import ast
 import time
-from openerp.osv import fields , osv
-from openerp.tools.translate import _
-import datetime
-import math
-from datetime import datetime, timedelta
+import openerp.addons.decimal_precision as dp
+import webbrowser
+import subprocess
 
 class pallet_transfer(osv.osv):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
@@ -103,7 +100,8 @@ class pallet_transfer(osv.osv):
                 pallet_location = pallet_location[0]
             else:
                 pallet_location = None
-            transfer_line_obj.write(cr, uid, transfer_id, {'dest_location_id':pallet_location}, context=context)                            
+            domain = {'dest_location_id': [('id', 'in', location_ids)]}
+            transfer_line_obj.write(cr, uid, transfer_id, {'dest_location_id':pallet_location,'domain': domain}, context=context)                            
         return self.write(cr, uid, ids, {'state': 'reserve'})
     
     def transfer(self, cr, uid, ids, context=None):
@@ -145,7 +143,41 @@ class pallet_transfer_line(osv.osv):
                 'expiry_date': lot_obj.life_date,
             }
         return {'value': values}   
-         
+    
+#     @api.model    
+#     def _default_location(self):
+#         res ={}
+#         cr=self.env.cr
+#         uid=self.env.uid
+#         ids = self.env.context.get('active_ids', [])
+#   
+#         if not ids:
+#             return res
+#         line_data = self.browse(ids)
+#         product_obj = self.pool.get('product.product')      
+#         if ids:
+#             src_location_id = line_data.src_location_id.id
+#             pallet_id = line_data.pallet_id.id
+#             cr.execute("select product_id from stock_quant where package_id =%s", (pallet_id,))
+#             product_id = cr.fetchone()
+#             if product_id:
+#                 product_id = product_id[0]
+#                 product_data = product_obj.browse(cr, uid, product_id, context=None)
+#                 principle_id = product_data.product_tmpl_id.main_group.id
+#             else:
+#                 raise osv.except_osv(_('Warning'),
+#                                      _('Please Press Your Pallet'))              
+#             cr.execute("""select sl.id from product_product pp ,product_template pt ,stock_location sl
+#             where pp.product_tmpl_id =pt.id
+#             and pt.main_group=sl.maingroup_id
+#             and sl.location_id=%s
+#             and pt.main_group = %s
+#             group by  sl.id,pt.main_group""", (src_location_id, principle_id,))
+#             location_ids = cr.fetchall()      
+#         domain = [
+#             ('id', 'in', location_ids),]
+#         return domain  
+       
     def on_change_location_id(self, cr, uid, ids, location_id, context=None):
         if not location_id:
             return {}
@@ -187,6 +219,5 @@ class pallet_transfer_line(osv.osv):
         'dest_location_id': fields.many2one('stock.location', 'Destination Location'),
         'remark':fields.char('Remark'),
     }
-    
    
     
