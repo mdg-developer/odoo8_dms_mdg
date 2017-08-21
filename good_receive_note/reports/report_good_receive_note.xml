@@ -112,9 +112,10 @@
 								<th>Item Specification</th>
 								<th>Batch No</th>
 								<th>Expiry</th>
-								<th class="text-center">Qty as per Doc</th>
-								<th class="text-center">Total Recv Qty</th>
-								<th class="text-center">Qty in Diff</th>
+								<th>Qty as per Doc</th>
+								<th>Total Recv Qty</th>
+								<th>Qty in Diff</th>
+								<th>No. of pallet required</th>
 								<th>Remark</th>
 							</tr>
 						</thead>
@@ -139,8 +140,12 @@
 								<td align="right" style="padding-right: 3cm;">
 									<span t-field="l.receive_quantity" />
 								</td>
+
 								<td align="right" style="padding-right: 3cm;">
 									<span t-field="l.different_quantity" />
+								</td>
+								<td align="right" style="padding-right: 3cm;">
+									<span t-field="l.no_of_pallet_required" />
 								</td>
 								<td>
 									<span t-field="l.remark" />
@@ -192,14 +197,15 @@
 			</div>
 		</template>
 
-<!-- 		<template id="good_receive_note_print"> -->
-<!-- 			<t t-call="report.html_container"> -->
-<!-- 				<t t-foreach="doc_ids" t-as="doc_id"> -->
-<!-- 					<t -->
-<!-- 						t-raw="translate_doc(doc_id, doc_model,  -->
-<!-- 			'partner_id.lang', 'good_receive_note.report_good_receive_note_document')" /> -->
-<!-- 				</t> -->
-<!-- 			</t> -->
-<!-- 		</template> -->
+		<!-- <template id="good_receive_note_print"> -->
+		<!-- <t t-call="report.html_container"> -->
+		<!-- <t t-foreach="doc_ids" t-as="doc_id"> -->
+		<!-- <t -->
+		<!-- t-raw="translate_doc(doc_id, doc_model, -->
+		<!-- 'partner_id.lang', 'good_receive_note.report_good_receive_note_document')" 
+			/> -->
+		<!-- </t> -->
+		<!-- </t> -->
+		<!-- </template> -->
 	</data>
 </openerp>

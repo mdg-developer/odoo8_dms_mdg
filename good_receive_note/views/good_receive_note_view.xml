@@ -56,8 +56,8 @@
 								<field name="company_id" attrs="{'readonly':[('state','!=','draft')]}"
 									invisible="1" />
 								<field name="picking_id" attrs="{'readonly':[('state','!=','draft')]}"
-									invisible="1" />								
-								
+									invisible="1" />
+
 							</group>
 						</group>
 						<group>
@@ -73,11 +73,11 @@
 												on_change="on_change_expired_date(batch_no)" />
 											<field name="expiry_date" />
 											<field name="product_uom" />
-											<field name="no_of_pallet_required" />
 											<field name="deliver_quantity" />
 											<field name="receive_quantity"
 												on_change="on_change_different_qty(deliver_quantity,receive_quantity)" />
 											<field name="different_quantity" />
+											<field name="no_of_pallet_required" />
 											<field name="remark" />
 										</tree>
 									</field>

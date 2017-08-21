@@ -51,7 +51,7 @@
 												on_change="on_change_expired_date(lot_id)" />
 											<field name="expiry_date" />
 											<field name="src_location_id" />
-											<field name="dest_location_id" />
+											<field name="dest_location_id" on_change="on_change_location_id(dest_location_id)" domain="[('location_id', '=',src_location_id)]" />
 											<field name="remark" />
 										</tree>
 									</field>
