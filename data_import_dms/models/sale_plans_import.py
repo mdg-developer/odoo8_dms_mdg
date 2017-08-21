@@ -272,7 +272,8 @@ class sale_plans_import(osv.osv):
                                                                                             'date':date_data,
                                                                                             'principal':principal_id,
                                                                                             'branch_id':branch_id,
-                                                                                            'active':True}, context=context)
+                                                                                            'active':True,
+                                                                                            'week':0}, context=context)
                                 if plan_id:
                                     # customer link
                                     cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id =%s ", (plan_id,))
@@ -513,7 +514,8 @@ class sale_plans_import(osv.osv):
                                                                                         'date':date_data,
                                                                                         'principal':principal_id,
 																						'branch_id':branch_id,
-                                                                                        'active':True}, context=context)
+                                                                                        'active':True,
+                                                                                        'week':0}, context=context)
                             if plan_id:
                                 cr.execute("select partner_id from res_partner_sale_plan_trip_rel where sale_plan_trip_id =%s ", (plan_id,))
                                 res_ids = cr.fetchall()
