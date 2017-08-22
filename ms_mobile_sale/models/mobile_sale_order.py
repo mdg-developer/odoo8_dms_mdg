@@ -2751,7 +2751,14 @@ class mobile_sale_order(osv.osv):
         cr.execute('''select * from promotion_rule_category_rel''')
         datas = cr.fetchall()
         return datas
-
+    
+    def get_sale_order(self, cr, uid,name , context=None):
+        cr.execute('''select name from mobile_sale_order
+                where name= %s
+                ''',(name,))
+        datas = cr.fetchall()
+        return datas
+    
     def get_partner_category_rel(self, cr, uid,section_id , context=None):
         cr.execute('''select a.* from res_partner_res_partner_category_rel a,
                  res_partner_sale_plan_day_rel b
