@@ -208,8 +208,8 @@ class sale_plans_import(osv.osv):
                                 main_group_id = main_group_ids[0]
                             else:
                                 main_group_id = maingroup_obj.create(cr, uid, {'name':main_group}, context=context)
-                        else:
-                            main_group_id = maingroup_obj.create(cr, uid, {'name':main_group}, context=context)
+#                         else:
+#                             main_group_id = maingroup_obj.create(cr, uid, {'name':main_group}, context=context)
     
                         if aml['branch']:
                             branch = str(aml['branch']).strip()
@@ -262,7 +262,8 @@ class sale_plans_import(osv.osv):
                         print 'sale_team_id>>>', sale_team_id
                         print 'date_data>>>', date_data
                         print 'principal_id>>>', principal_id
-                        if day_plan and sale_team_id and date_data and principal_id:
+                        #if day_plan and sale_team_id and date_data and principal_id:
+                        if day_plan and sale_team_id and date_data and branch_id:
                             cr.execute('select id from sale_plan_day where lower(name) like %s and sale_team= %s and date::date =%s ', (day_plan.lower(), sale_team_id, date_data,))
                             result = cr.fetchall()
                             if not result:
@@ -270,7 +271,9 @@ class sale_plans_import(osv.osv):
                                                                                             'sale_team':sale_team_id,
                                                                                             'date':date_data,
                                                                                             'principal':principal_id,
-                                                                                            'active':True}, context=context)
+                                                                                            'active':True,
+                                                                                            'branch_id':branch_id,
+                                                                                            'week':0}, context=context)
                                 if plan_id:
                                     # customer link
                                     cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id =%s ", (plan_id,))
@@ -510,7 +513,8 @@ class sale_plans_import(osv.osv):
                                                                                         'sale_team':sale_team_id,
                                                                                         'date':date_data,
                                                                                         'principal':principal_id,
-                                                                                        'active':True}, context=context)
+                                                                                        'active':True,
+                                                                                        'week':0}, context=context)
                             if plan_id:
                                 cr.execute("select partner_id from res_partner_sale_plan_trip_rel where sale_plan_trip_id =%s ", (plan_id,))
                                 res_ids = cr.fetchall()

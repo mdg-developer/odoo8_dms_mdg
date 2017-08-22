@@ -1,5 +1,4 @@
 from openerp.osv import fields, osv
-from libxmlmods.libxml2mod import parent
 
 class ar_payment(osv.osv):
     _name = "ar.payment"

@@ -480,7 +480,7 @@ class partner(osv.osv):
                         township_id = self.pool.get('res.township').create(cr, uid, {
                                                                                                 'code':township,  # get first three words
                                                                                                 'name':township,
-                                                                                                'city_id':city_id
+                                                                                                'city':city_id
                                                                                             }, context)
                         
                 if branch_code:  # no need to update
@@ -551,7 +551,8 @@ class partner(osv.osv):
                     if customer_code:
                         cr.execute("""select id from res_partner where lower(customer_code) like %s""", (customer_code.lower(),))
                         data = cr.fetchall()
-                        partner_id = data[0][0]
+                        if data:
+                            partner_id = data[0][0]
                     if not partner_id:
                         try:
                             if customer_code:
