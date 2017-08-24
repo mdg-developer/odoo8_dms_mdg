@@ -35,6 +35,8 @@
 					<field name="big_uom_id" string="B.UOM" />
 					<field name="big_list_price" string="B.Price" />
 					<field name="uom_ratio" />
+					<field name="sequence" />
+					
 				</field>
 				<field name="type" position="replace">
 					<field name="type" invisible="1" />

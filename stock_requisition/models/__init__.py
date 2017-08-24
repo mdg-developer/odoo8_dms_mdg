@@ -7,3 +7,4 @@ import request_for_issue
 import stock_taking_loading_instruction
 import way_bill
 import stock_return_note
+import stock

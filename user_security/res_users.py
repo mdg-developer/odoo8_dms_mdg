@@ -8,6 +8,6 @@ class res_users(osv.osv):
     _description = "Users"
     
     _columns = {
-        'section_ids':fields.many2many('crm.case.section','section_users_rel','section_id','uid','Teams',required=True),
+        'section_ids':fields.many2many('crm.case.section','section_users_rel','uid','section_id','Teams',required=True),
     }
 res_users()

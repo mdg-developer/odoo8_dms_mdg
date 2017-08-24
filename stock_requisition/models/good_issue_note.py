@@ -89,6 +89,16 @@ class good_issue_note(osv.osv):
         return self.write(cr, uid, ids, {'state': 'approve','approve_by':uid})
     
     def cancel(self, cr, uid, ids, context=None):
+        req_obj = self.pool.get('stock.requisition')
+        sale_order_obj = self.pool.get('sale.order')
+        req_id = req_obj.search(cr, uid, [('good_issue_id', '=', ids[0])], context=context)
+        req_value = req_obj.browse(cr, uid, req_id, context=context)
+        for order in req_value.order_line:
+            so_name = order.name
+            order_id = sale_order_obj.search(cr, uid, [('name', '=', so_name)], context=context) 
+            sale_order_obj.write(cr, uid, order_id, {'is_generate':False})    
+        print 'res'
+        req_obj.write(cr, uid, req_id, {'state':'cancel'})    
         return self.write(cr, uid, ids, {'state':'cancel' })
     
 #     def unlink(self, cr, uid, ids, context=None):
@@ -189,12 +199,12 @@ class good_issue_line(osv.osv):  # #prod_pricelist_update_line
         'line_id':fields.many2one('good.issue.note', 'Line', ondelete='cascade', select=True),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'issue_quantity' : fields.float(string='Qty', digits=(16, 0)),
-        'product_uom': fields.many2one('product.uom', 'Smaller UoM', required=True,readonly=True),
+        'product_uom': fields.many2one('product.uom', 'Smaller UoM'),
                 'uom_ratio':fields.char('Packing Unit'),
                 'batch_no':fields.many2one('stock.production.lot','Batch No'),
                 'expiry_date':fields.date('Expiry'),
                  'remark':fields.char('Remark'),
-        'big_uom_id': fields.many2one('product.uom', 'Bigger UoM', required=True,readonly=True, help="Default Unit of Measure used for all stock operation."),
+        'big_uom_id': fields.many2one('product.uom', 'Bigger UoM', help="Default Unit of Measure used for all stock operation."),
         'big_issue_quantity' : fields.float(string='Qty', digits=(16, 0)),               
          'qty_on_hand':fields.float(string='Qty On Hand', digits=(16, 0),readonly=True),
         'sequence':fields.integer('Sequence'),

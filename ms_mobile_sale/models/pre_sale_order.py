@@ -257,6 +257,7 @@ class pre_sale_order(osv.osv):
                                                         'delivery_id':delivery_id,
                                                         'branch_id':preObj_ids.branch_id.id,
                                                         'company_id':company_id,
+                                                        'note':preObj_ids.note,
                                                          }
                         so_id = saleOrderObj.create(cr, uid, saleOrderResult, context=context)
                     if so_id and preObj_ids.order_line:
@@ -322,12 +323,19 @@ class pre_sale_order(osv.osv):
                         saleOrder_Id = data[0][0]
                     else:
                         saleOrder_Id = None
-                                    
+                    cursor.execute("select manual from promos_rules where id=%s",(pro_line['pro_id'],))
+                    manual =cursor.fetchone()[0]
+                    if manual is not None:
+                        manual=manual
+                    else:
+                        manual=False                                    
                     promo_line_result = {
                         'promo_line_id':saleOrder_Id,
                         'pro_id':pro_line['pro_id'],
                         'from_date':pro_line['from_date'],
                         'to_date':pro_line['to_date'] ,
+                         'manual':manual,
+
                         }
                     mso_promotion_line_obj.create(cursor, user, promo_line_result, context=context)
             return True
@@ -370,17 +378,22 @@ class pre_promotion_line(osv.osv):
               'promo_line_id':fields.many2one('pre.sale.order', 'Promotion line'),
               'pro_id': fields.many2one('promos.rules', 'Promotion Rule', change_default=True, readonly=False),
               'from_date':fields.datetime('From Date'),
-              'to_date':fields.datetime('To Date')
+              'to_date':fields.datetime('To Date'),
+              'manual':fields.boolean('Manual'),
               }
+    _defaults = {
+        'manual':False,
+    }
     
     def onchange_promo_id(self, cr, uid, ids, pro_id, context=None):
             result = {}
             promo_pool = self.pool.get('promos.rules')
-            datas = promo_pool.read(cr, uid, pro_id, ['from_date', 'to_date'], context=context)
+            datas = promo_pool.read(cr, uid, pro_id, ['from_date', 'to_date','manual'], context=context)
     
             if datas:
                 result.update({'from_date':datas['from_date']})
                 result.update({'to_date':datas['to_date']})
+                result.update({'manual':datas['manual']})
             return {'value':result}
             
 pre_promotion_line()

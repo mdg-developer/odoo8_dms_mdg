@@ -72,7 +72,7 @@ class stock_return_from_mobile(osv.osv):
                               'foc_quantity':0,
                               'product_uom': small_uom_id ,
                         }, context=context)
-            order_ids = account_inv_obj.search(cr, uid, [('section_id', '=', sale_team_id),('user_id','=',user_id),('pre_order','!=',True), ('state', '=', 'open'),('date_invoice','=',return_date)], context=context) 
+            order_ids = account_inv_obj.search(cr, uid, [('section_id', '=', sale_team_id),('user_id','=',user_id), ('state', '=', 'open'),('date_invoice','=',return_date)], context=context) 
             order_list = str(tuple(order_ids))
             order_list = eval(order_list)
             if order_list:

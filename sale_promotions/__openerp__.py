@@ -41,6 +41,7 @@
 	 'views/sale_view.xml',
      'wizard/foc_any_product_view.xml',
      'views/code_setting_view.xml',
+     'views/res_users_view.xml',
 
         # odoo8 need to include  sale_view
                 ],

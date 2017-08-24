@@ -10,25 +10,29 @@
 					<header>
 
 						<button name="confirm_" string="Confirm" type="object"
-							class="oe_highlight" attrs="{'invisible':[('state','not in',('draft'))]}"   groups="base.group_cashier_confirm"/>
+							class="oe_highlight" attrs="{'invisible':[('state','not in',('draft'))]}"
+							groups="base.group_cashier_confirm" />
 						<button name="cashier_approve" string="Cashier Approve"
 							type="object" class="oe_highlight" groups="base.group_cashier_confirm"
 							attrs="{'invisible':[('state','not in',('pending'))]}" />
 						<button name="set_to_draft" string="Set to draft" type="object"
-							class="oe_highlight" attrs="{'invisible':[('state','in',('done','draft'))]}"  groups="base.group_cashier_confirm"/>
+							class="oe_highlight" attrs="{'invisible':[('state','in',('done','draft'))]}"
+							groups="base.group_cashier_confirm" />
 						<field name="state" widget="statusbar" statusbar_visible="draft,pending,done" />
 					</header>
 					<sheet>
 						<group col="1" string="Cashier Approval">
 							<group col="2">
 								<group>
-									<field name="date" />
-									<field name="sale_team_id"  on_change="onchange_sale_team_id(sale_team_id)" />
-									<field name="user_id" domain="[('default_section_id', '=',sale_team_id)]" />
+									<field name="name"  />
+									<field name="date" attrs="{'readonly':[('state','=','done')]}"/>
+									<field name="sale_team_id" on_change="onchange_sale_team_id(sale_team_id)"  attrs="{'readonly':[('state','=','done')]}"/>
+									<field name="user_id" domain="[('default_section_id', '=',sale_team_id)]" attrs="{'readonly':[('state','=','done')]}"/>
 								</group>
 								<group>
-									<field name="to_date" />
-									<field name="branch_id" />
+									<field name="write_date" readonly="1" />
+									<field name="to_date"  attrs="{'readonly':[('state','=','done')]}"/>
+									<field name="branch_id"  attrs="{'readonly':[('state','=','done')]}"/>
 								</group>
 							</group>
 							<group>
@@ -40,9 +44,8 @@
 						<notebook>
 							<page string="Invoice">
 
-								<field name="cashier_line">
+								<field name="cashier_line" attrs="{'readonly':[('state','=','done')]}">
 									<form string="Invoice Lines">
-
 										<field name="invoice_id" />
 										<field name="date" />
 										<field name="partner_id" />
@@ -76,10 +79,11 @@
 								<group>
 									<label for="ar_line" string="AR Collection" />
 								</group>
-								<field name="ar_line">
+								<field name="ar_line" attrs="{'readonly':[('state','=','done')]}">
 									<form string="AR Lines">
 
 										<field name="invoice_id" />
+										<field name="section_id" />
 										<field name="date" />
 										<field name="partner_id" />
 										<field name="payment_type" />
@@ -91,6 +95,7 @@
 									<tree string="Invoice Lines" editable="bottom">
 
 										<field name="invoice_id" />
+										<field name="section_id" />
 										<field name="date" />
 										<field name="partner_id" />
 										<field name="payment_type" />
@@ -106,22 +111,20 @@
 									<group>
 										<label string="SubTotal" class="oe_inline" />
 										<field name="ar_sub_total" nolabel="1" class="oe_inline" />
+										
 									</group>
 								</group>
 								<group>
 									<label for="credit_line" string="Credit Note" />
 								</group>
-								<field name="credit_line">
+								<field name="credit_line" attrs="{'readonly':[('state','=','done')]}">
 									<form string="Credit Lines">
-
 										<field name="credit_id" />
 										<field name="invoice_id" />
 										<field name="date" />
 										<field name="partner_id" />
 										<field name="amount" />
 										<field name="selected" />
-
-
 									</form>
 									<tree string="Invoice Lines" editable="bottom">
 										<field name="credit_id" />
@@ -156,7 +159,7 @@
 
 							</page>
 							<page string="Denomination">
-								<field name="denomination_line">
+								<field name="denomination_line" attrs="{'readonly':[('state','=','done')]}">
 									<form string="Denomination Lines">
 										<field name="notes" />
 										<field name="note_qty" />
@@ -179,24 +182,28 @@
 							</page>
 
 							<page string="Payment">
-								<field name="cashier_customer_payment_line">
+								<field name="cashier_customer_payment_line" attrs="{'readonly':[('state','=','done')]}">
 									<form string="Payment Lines">
-										<field name="invoice_id" />
+										<field name="invoice_id" on_change="onchange_invoice_id(invoice_id)"
+											domain="[('section_id', '=',parent.sale_team_id)]" />
 										<field name="date_invoice" />
 										<field name="type" />
+										<field name="cheque_no" />
 										<field name="journal_id" />
 										<field name="amount" />
 										<field name="notes" />
-										<field name="selected" invisible="1" />
+										<field name="selected" invisible="0" />
 									</form>
 									<tree string="Payment Lines" editable="bottom">
-										<field name="invoice_id" />
+										<field name="invoice_id" on_change="onchange_invoice_id(invoice_id)"
+											domain="[('section_id', '=',parent.sale_team_id)]" />
 										<field name="date_invoice" />
 										<field name="type" />
+										<field name="cheque_no" />
 										<field name="journal_id" />
 										<field name="amount" />
 										<field name="notes" />
-										<field name="selected" invisible="1" />
+										<field name="selected" invisible="0" readonly="1" />
 									</tree>
 								</field>
 							</page>
@@ -211,16 +218,34 @@
 			<field name="model">cashier.approval</field>
 			<field name="arch" type="xml">
 				<tree string="Invoice">
+					<field name="name" />
 					<field name="date" />
 					<field name="user_id" />
 					<field name="sale_team_id" />
 					<field name="to_date" />
 					<field name="branch_id" />
+					<field name="state" />
 				</tree>
 			</field>
 		</record>
 
-
+		<!-- filter -->
+		<record id="view_cashier_approval_filter" model="ir.ui.view">
+			<field name="name">Cashier Approval Filter</field>
+			<field name="model">cashier.approval</field>
+			<field name="arch" type="xml">
+				<search string="Search Cashier Approval">
+					<group expand="0" string="Group By...">
+						<filter string="Salesman Name" icon="terp-partner" domain="[]"
+							context="{'group_by':'user_id'}" />
+						<filter string="Sales Team" icon="terp-partner" domain="[]"
+							context="{'group_by':'sale_team_id'}" />
+						<filter string="Branch" icon="terp-partner" domain="[]"
+							context="{'group_by':'branch_id'}" />
+					</group>
+				</search>
+			</field>
+		</record>
 
 		<record id="action_cashier_approval_view" model="ir.actions.act_window">
 			<field name="name">Cashier Approval</field>
@@ -229,6 +254,7 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" eval="view_cashier_approval_tree" />
+			<field name="search_view_id" ref="view_cashier_approval_filter" />
 		</record>
 
 		<menuitem id="menu_cashier_approval" action="action_cashier_approval_view"

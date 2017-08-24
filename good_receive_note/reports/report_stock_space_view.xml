@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="report_stock_space_graph" model="ir.ui.view">
+			<field name="name">report.stock.space.graph</field>
+			<field name="model">report.stock.space</field>
+			<field name="arch" type="xml">
+				<graph string="Sales Analysis" type="pivot" stacked="True">
+					<field name="name" type="row" />
+					<field name="maingroup_id" type="col" />
+					<field name="product_move_type_id" type="col" />
+
+				</graph>
+			</field>
+		</record>
+
+		<record id="report_stock_space_tree" model="ir.ui.view">
+			<field name="name">report.stock.space.tree</field>
+			<field name="model">report.stock.space</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="name" />
+					<field name="maingroup_id" />
+					<field name="product_move_type_id" />
+					<field name="row" />
+					<field name="layer" />
+					<field name="cell" />
+					<field name="room" />
+				</tree>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="report_stock_space_search">
+			<field name="name">report.stock.space.search</field>
+			<field name="model">report.stock.space</field>
+			<field name="arch" type="xml">
+				<search string="Space Availability Report Search">
+					<field name="name" />
+				</search>
+			</field>
+		</record>
+
+
+
+
+		<record model="ir.actions.act_window" id="action_stock_space_report">
+			<field name="name">Location Space Availability Report</field>
+			<field name="res_model">report.stock.space</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,graph</field>
+			<field name="search_view_id" ref="report_stock_space_search" />
+			<!-- <field name="view_id" ref="report_stock_space_graph" /> -->
+		</record>
+
+		<menuitem id="menu_report_stock_space_1" action="action_stock_space_report"
+			parent="menu_action_good_receive_note" groups="stock.group_stock_manager" />
+
+	</data>
+</openerp>

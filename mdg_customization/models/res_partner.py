@@ -32,6 +32,7 @@ class res_partner(osv.osv):
     _columns = {
                  'is_bank':fields.boolean('Bank Transfer'),
                 'is_cheque':fields.boolean('Cheque'),
+                'is_tax':fields.boolean('WithHolding Tax Allow'),
         'partner_latitude': fields.float('Geo Latitude', digits=(16, 5), readonly=True),
         'partner_longitude': fields.float('Geo Longitude', digits=(16, 5), readonly=True),
         'date_localization': fields.date('Geo Localization Date'),
@@ -68,6 +69,6 @@ class res_partner(osv.osv):
                'end_time':'01',
                'start_rate':'am',
                'end_rate':'pm',
-               
+               'is_tax':False,
     }
     

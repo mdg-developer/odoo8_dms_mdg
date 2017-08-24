@@ -77,7 +77,7 @@ class stock_return(osv.osv):
 #             if note:
 #                 note_id=note[0]
 #            print 'rereturn_date',return_date,sale_team_id
-            note_ids = note_obj.search(cr, uid, [('sale_team_id', '=', sale_team_id), ('issue_date', '=', return_date),('state','!=','cancel')])
+            note_ids = note_obj.search(cr, uid, [('sale_team_id', '=', sale_team_id), ('issue_date', '=', return_date),('state','=','issue')])
             if  note_ids:        
                 cr.execute('select gin.from_location_id as location_id,product_id,big_uom_id,sum(big_issue_quantity) as big_issue_quantity,sum(issue_quantity) as issue_quantity,product_uom  as small_uom_id from good_issue_note gin ,good_issue_note_line  ginl where gin.id = ginl.line_id and gin.id in %s group by product_id,from_location_id,big_uom_id,product_uom', (tuple(note_ids),))
                 p_line = cr.fetchall()            
@@ -259,6 +259,7 @@ class stock_return(osv.osv):
         note_obj = self.pool.get('good.issue.note') 
         return_obj = self.browse(cr, uid, ids, context=context)    
         team_location_id=return_obj.sale_team_id.location_id.id
+        tmp_location_id=return_obj.sale_team_id.temp_location_id.id
         origin = return_obj.name
         return_date = return_obj.return_date   
         main_location_id = return_obj.to_location.id    
@@ -267,6 +268,10 @@ class stock_return(osv.osv):
         if  ven_location_id !=team_location_id :
             raise osv.except_osv(_('Warning'),
                      _('Please Check Your Sales Team Location'))
+        cr.execute("select SUM(COALESCE(rec_small_quantity,0) +COALESCE(rec_big_quantity,0) ) as total  from stock_return_line where line_id=%s  group by line_id",(ids[0],)) 
+        total_qty=cr.fetchone()[0]
+#        if total_qty==0.0 or total_qty is None   :
+#            return self.write(cr, uid, ids, {'state':'received'})  
         cr.execute('select id from stock_picking_type where default_location_dest_id=%s and name like %s', (main_location_id, '%Internal Transfer%',))
         price_rec = cr.fetchone()
         if price_rec: 
@@ -278,13 +283,9 @@ class stock_return(osv.osv):
                                       'date': return_date,
                                       'origin':origin,
                                       'picking_type_id':picking_type_id}, context=context)
-        cr.execute("select SUM(COALESCE(rec_small_quantity,0) +COALESCE(rec_big_quantity,0) ) as total  from stock_return_line where line_id=%s  group by line_id",(ids[0],)) 
-        total_qty=cr.fetchone()[0]
-        if total_qty==0.0 or total_qty is None   :
-            raise osv.except_osv(_('Warning'),
-                                 _('Receive Qty is Zero'))
         for line in return_obj.p_line:
             product_id = line.product_id.id
+            name = line.product_id.name_template                                                                               
             rec_big_uom_id = line.rec_big_uom_id.id
             rec_big_quantity = line.rec_big_quantity
             rec_small_quantity = line.rec_small_quantity
@@ -293,6 +294,50 @@ class stock_return(osv.osv):
             big_return_quantity=line.return_quantity_big
             return_quantity=line.return_quantity
             different_qty=0
+            cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (rec_big_uom_id,))
+            big_qty = cr.fetchone()
+            if big_qty:
+                bigger_qty = big_qty[0] * rec_big_quantity      
+                return_big_qty = big_qty[0] * big_return_quantity 
+                total_return_qty=  return_big_qty +  return_quantity        
+                total_rec_qty=  bigger_qty +  rec_small_quantity        
+#                         if total_return_qty < total_rec_qty:
+#                             raise osv.except_osv(_('Warning'),
+#                                 _('Please Check Receive Qty (%s)') % (name,))    
+#                         if  total_return_qty > total_rec_qty:
+                if ex_return_id is False:
+                    different_qty   = total_return_qty - total_rec_qty
+                    cr.execute("update stock_return_line set different_qty= %s where id=%s",(different_qty,line.id,))            
+                if different_qty:
+                    if different_qty <0:
+                        # Tmp===> Car
+                        move_id = move_obj.create(cr, uid, {
+                                              'product_id': product_id,
+                                              'product_uom_qty': -1* different_qty ,
+                                              'product_uos_qty':  -1* different_qty,
+                                              'product_uom':rec_small_uom_id,
+                                              'location_id':tmp_location_id,
+                                              'location_dest_id':team_location_id,
+                                              'name':name,
+                                               'origin':origin,
+                                               'manual':True,
+                                              'state':'confirmed'}, context=context)     
+                        move_obj.action_done(cr, uid, move_id, context=context)
+                    if different_qty >0:
+    #                         Car===> tmp                    
+                        move_id = move_obj.create(cr, uid, {
+                                              'product_id': product_id,
+                                              'product_uom_qty':  different_qty ,
+                                              'product_uos_qty':  different_qty,
+                                              'product_uom':rec_small_uom_id,
+                                              'location_id':team_location_id,
+                                              'location_dest_id':tmp_location_id,
+                                              'name':name,
+                                               'origin':origin,
+                                             'manual':True,
+                                              'state':'confirmed'}, context=context)     
+                        move_obj.action_done(cr, uid, move_id, context=context)        
+                                
             if (rec_small_quantity + rec_big_quantity > 0) and ex_return_id is False:
                 product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)       
                 name = line.product_id.name_template                                                                               
@@ -303,12 +348,12 @@ class stock_return(osv.osv):
                         return_big_qty = big_qty[0] * big_return_quantity 
                         total_return_qty=  return_big_qty +  return_quantity        
                         total_rec_qty=  bigger_qty +  rec_small_quantity        
-                        if total_return_qty < total_rec_qty:
-                            raise osv.except_osv(_('Warning'),
-                                _('Please Check Receive Qty (%s)') % (name,))    
-                        if  total_return_qty > total_rec_qty:
-                            different_qty   = total_return_qty - total_rec_qty
-                        cr.execute("update stock_return_line set different_qty= %s where id=%s",(different_qty,line.id,))
+#                         if total_return_qty < total_rec_qty:
+#                             raise osv.except_osv(_('Warning'),
+#                                 _('Please Check Receive Qty (%s)') % (name,))    
+#                         if  total_return_qty > total_rec_qty:
+#                         different_qty   = total_return_qty - total_rec_qty
+#                         cr.execute("update stock_return_line set different_qty= %s where id=%s",(different_qty,line.id,))
                         move_id = move_obj.create(cr, uid, {'picking_id': picking_id,
                                                   'picking_type_id':picking_type_id,
                                                 #  'restrict_lot_id':lot_id,

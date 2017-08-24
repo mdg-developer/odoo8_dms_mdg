@@ -57,21 +57,21 @@
 						</group>
 						<notebook>
 							<page string="Order Lines">
-								<field name="order_line" >
+								<field name="order_line">
 									<form string="Pre Sales Order Lines" version="7.0">
 
 										<group>
 											<group>
-												<field name="product_type"   invisible="1"/>
+												<field name="product_type" invisible="1" />
 												<field name="product_id"
 													attrs="{'readonly':[('product_type','!=','service')]}" />
-												<field name="uom_id"  readonly="1"/>
-												<field name="product_uos_qty"  readonly="1"/>
-												<field name="price_unit"  readonly="1"/>
-												<field name="discount"  readonly="1"/>
-												<field name="discount_amt"  readonly="1"/>
-												<field name="foc"  readonly="1"/>
-												<field name="sub_total"  readonly="1"/>
+												<field name="uom_id" readonly="1" />
+												<field name="product_uos_qty" readonly="1" />
+												<field name="price_unit" readonly="1" />
+												<field name="discount" readonly="1" />
+												<field name="discount_amt" readonly="1" />
+												<field name="foc" readonly="1" />
+												<field name="sub_total" readonly="1" />
 											</group>
 
 										</group>
@@ -79,7 +79,7 @@
 									</form>
 									<tree string="Sales Order Lines" editable="bottom">
 
-										<field name="product_type"   invisible="1"/>
+										<field name="product_type" invisible="1" />
 										<field name="product_id"
 											attrs="{'readonly':[('product_type','!=','service')]}" />
 										<field name="uom_id" readonly="1" />
@@ -132,6 +132,7 @@
 												<field name="pro_id" on_change='onchange_promo_id(pro_id)' />
 												<field name="from_date" />
 												<field name="to_date" />
+												<field name="manual" />
 
 											</group>
 
@@ -143,6 +144,7 @@
 										<field name="pro_id" on_change='onchange_promo_id(pro_id)' />
 										<field name="from_date" />
 										<field name="to_date" />
+										<field name="manual" />
 
 									</tree>
 								</field>

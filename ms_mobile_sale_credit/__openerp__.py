@@ -35,7 +35,8 @@ Mobile Sale Credit
     'depends': ['base','ms_mobile_sale','sale','ms_tablet_info'
     ],
     'data': [        
-        'views/ar_collection_view.xml'
+        'views/ar_collection_view.xml',
+        'views/ar_number_sequence.xml'
     ],
     'installable': True,
     'auto_install': False,

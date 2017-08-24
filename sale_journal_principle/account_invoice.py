@@ -268,6 +268,7 @@ class account_invoice(models.Model):
         account_id = None
         cr = self._cr
         type = 'out_invoice' 
+        discount_amt=0
         print 'line_get_convert_newline_get_convert_new', line, part, self.id
         origin = line.get('ref', False)
         if origin:
@@ -287,9 +288,11 @@ class account_invoice(models.Model):
                 print 'line.get>>>', line.get('product_id', False)
                 if origin and line['is_discount'] == False:
                     cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s", (origin, product.id,))
-                    discount_amt = cr.fetchone()[0]      
-                    if discount_amt:     
-                            line['price'] = line['price'] + discount_amt                
+                    dis_amt = cr.fetchall()
+                    if dis_amt:     
+                        for amt in dis_amt:
+                            discount_amt = discount_amt + amt[0];
+                        line['price'] = line['price'] + discount_amt        
                 if  line['is_discount'] == True:
                     account_id = product.product_tmpl_id.main_group.property_account_discount.id
                 else:
@@ -333,9 +336,11 @@ class account_invoice(models.Model):
                 print 'line.get>>>', line.get('product_id', False)
                 if origin and line['is_discount'] == False:
                     cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s", (origin, product.id,))
-                    discount_amt = cr.fetchone()[0]      
-                    if discount_amt:     
-                            line['price'] = line['price'] + discount_amt                
+                    dis_amt = cr.fetchall()
+                    if dis_amt:     
+                        for amt in dis_amt:
+                            discount_amt = discount_amt + amt[0];
+                        line['price'] = line['price'] + discount_amt                
                 if  line['is_discount'] == True:
                     account_id = product.product_tmpl_id.main_group.property_account_discount.id
                 else:
@@ -379,9 +384,11 @@ class account_invoice(models.Model):
                 print 'line.get>>>', line.get('product_id', False)
                 if origin and line['is_discount'] == False:
                     cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s", (origin, product.id,))
-                    discount_amt = cr.fetchone()[0]      
-                    if discount_amt:     
-                            line['price'] = line['price'] - discount_amt
+                    dis_amt = cr.fetchall()
+                    if dis_amt:     
+                        for amt in dis_amt:
+                            discount_amt = discount_amt + amt[0];
+                        line['price'] = line['price']  - discount_amt       
                 if  line['is_discount'] == True:
                     account_id = product.product_tmpl_id.main_group.property_account_discount.id
                     line['price'] = -1 * line['price']
@@ -426,9 +433,11 @@ class account_invoice(models.Model):
                 print 'line.get>>>', line.get('product_id', False)
                 if origin and line['is_discount'] == False:
                     cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s", (origin, product.id,))
-                    discount_amt = cr.fetchone()[0]      
-                    if discount_amt:     
-                            line['price'] = line['price'] - discount_amt
+                    dis_amt = cr.fetchall()
+                    if dis_amt:     
+                        for amt in dis_amt:
+                            discount_amt = discount_amt + amt[0];
+                        line['price'] = line['price'] - discount_amt       
                 if  line['is_discount'] == True:
                     account_id = product.product_tmpl_id.main_group.property_account_discount.id
                     line['price'] = -1 * line['price']
@@ -885,6 +894,7 @@ class account_invoice(models.Model):
                 print 'res', res
                 data.append(res)
             iml = data
+            print 'imllllllllllllllllllll',iml
             line_cr = [self.line_get_convert_new(l, part.id, date) for l in iml]
             line_tmp = [self.line_get_convert_dr(l, part.id, date) for l in iml]
             line_dr = self.line_dr_convert_account_with_principle(line_tmp)

@@ -44,7 +44,8 @@
 								<field name="pricelist_id" readonly="1" />
 								<field name="mso_latitude" digits="(14,15)" readonly="0" />
 								<field name="mso_longitude" digits="(14,15)" readonly="0" />
-
+								<field name="note" class="oe_inline" placeholder="Terms and conditions..."
+									readonly="1" />
 							</group>
 							<group>
 								<field name="date" readonly="1" />
@@ -73,7 +74,7 @@
 									<form string="Mobile Sales Order Lines" version="7.0">
 										<group>
 											<group>
-												<field name="product_type"   invisible="1"/>
+												<field name="product_type" invisible="1" />
 												<field name="product_id" readonly="1" />
 												<field name="uom_id" readonly="1" />
 												<field name="product_uos_qty" readonly="1" />
@@ -88,7 +89,7 @@
 
 									</form>
 									<tree string="Sales Order Lines" editable="bottom">
-										<field name="product_type"  invisible="1"/>
+										<field name="product_type" invisible="1" />
 										<field name="product_id"
 											attrs="{'readonly':[('product_type','!=','service')]}" />
 										<field name="uom_id" readonly="1" />
@@ -101,10 +102,6 @@
 
 									</tree>
 								</field>
-
-								<field name="note" class="oe_inline" placeholder="Terms and conditions..."
-									readonly="1" />
-
 							</page>
 
 							<page string="Delivery Lines">
@@ -134,9 +131,6 @@
 									</tree>
 								</field>
 
-								<field name="note" class="oe_inline" placeholder="Terms and conditions..."
-									readonly="1" />
-
 							</page>
 
 							<page string="Promotion Lines">
@@ -148,6 +142,7 @@
 												<field name="pro_id" on_change='onchange_promo_id(pro_id)' />
 												<field name="from_date" />
 												<field name="to_date" />
+												<field name="manual" />
 
 											</group>
 
@@ -159,6 +154,7 @@
 										<field name="pro_id" on_change='onchange_promo_id(pro_id)' />
 										<field name="from_date" />
 										<field name="to_date" />
+										<field name="manual" />
 
 									</tree>
 								</field>
@@ -178,7 +174,7 @@
 								</field>
 							</page>
 							<page string="Google Map">
-								<widget type="gmap_marker" lat="mso_latitude"  lng="mso_longitude"
+								<widget type="gmap_marker" lat="mso_latitude" lng="mso_longitude"
 									description="field_descriptions" />
 							</page>
 						</notebook>

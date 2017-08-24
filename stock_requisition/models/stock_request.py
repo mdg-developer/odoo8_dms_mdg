@@ -121,10 +121,11 @@ class stock_requisition(osv.osv):
                but waiting for the scheduler to run on the order date.", select=True),
         'p_line':fields.one2many('stock.requisition.line', 'line_id', 'Product Lines',
                               copy=True),
-                'company_id':fields.many2one('res.company', 'Company'),
-                 'order_line': fields.one2many('stock.requisition.order', 'stock_line_id', 'Sale Order', copy=True),
-                 'pre_order':fields.boolean('Pre Order'),
-         'partner_id':fields.many2one('res.partner', string='Partner'),
+    'company_id':fields.many2one('res.company', 'Company'),
+     'order_line': fields.one2many('stock.requisition.order', 'stock_line_id', 'Sale Order', copy=True),
+     'pre_order':fields.boolean('Pre Order'),
+     'partner_id':fields.many2one('res.partner', string='Partner'),
+    'good_issue_id':fields.many2one('good.issue.note', 'GIN No' ,readonly=True),
 
 }
     _defaults = {
@@ -216,6 +217,24 @@ class stock_requisition(osv.osv):
             #raise message 
         return True
     
+    def updateQtyOnHand(self, cr, uid, ids, context=None):
+        product_line_obj = self.pool.get('stock.requisition.line')
+        if ids:
+            stock_request_data = self.browse(cr, uid, ids[0], context=context)
+            location_id = stock_request_data.to_location_id.id
+            req_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
+            for data in req_line_id:
+                req_line_value = product_line_obj.browse(cr, uid, data, context=context)
+                line_id= req_line_value.id
+                product_id = req_line_value.product_id.id
+                cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (location_id, product_id,))
+                qty_on_hand = cr.fetchone()
+                if qty_on_hand:
+                    qty_on_hand = qty_on_hand[0]
+                else:
+                    qty_on_hand = 0
+                cr.execute("update stock_requisition_line set qty_on_hand=%s where product_id=%s and id=%s", (qty_on_hand, product_id,line_id,))
+    
     def approve(self, cr, uid, ids, context=None):
         product_line_obj = self.pool.get('stock.requisition.line')
         requisition_obj = self.pool.get('stock.requisition')
@@ -288,7 +307,7 @@ class stock_requisition(osv.osv):
                                                   'qty_on_hand':qty_on_hand,
                                                   'sequence':sequence,
                                                   }, context=context)
-        return self.write(cr, uid, ids, {'state':'approve' , 'approve_by':uid})    
+        return self.write(cr, uid, ids, {'state':'approve' , 'approve_by':uid,'good_issue_id':good_id})    
     
     def cancel(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state':'cancel' })    
@@ -367,10 +386,10 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
         'pre_order' :fields.related('line_id', 'pre_order', type='boolean', string='Pre Order'),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'req_quantity' : fields.float(string='Qty', digits=(16, 0)),
-        'product_uom': fields.many2one('product.uom', 'Smaller UOM',readonly=True),
+        'product_uom': fields.many2one('product.uom', 'Smaller UOM'),
         'uom_ratio':fields.char('Packing Unit'),
          'remark':fields.char('Remark'),
-        'big_uom_id': fields.many2one('product.uom', 'Bigger UOM',  help="Default Unit of Measure used for all stock operation.",readonly=True),
+        'big_uom_id': fields.many2one('product.uom', 'Bigger UOM',  help="Default Unit of Measure used for all stock operation."),
         'big_req_quantity' : fields.float(string='Qty', digits=(16, 0)),
         'sale_req_quantity' : fields.float(string='Small Req Qty', digits=(16, 0)),
         'addtional_req_quantity' : fields.float(string='Small Add Qty', digits=(16, 0)),

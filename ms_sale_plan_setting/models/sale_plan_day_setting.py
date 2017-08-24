@@ -21,7 +21,7 @@ class sale_plan_for_day_setting(osv.osv):
         values = {}
         data_line = []
         if sale_team_id:            
-            partner_ids = customer_obj.search(cr, uid, [('section_id', '=', sale_team_id)], context=context)
+            partner_ids = customer_obj.search(cr, uid, [('section_id', '=', sale_team_id),('mobile_customer','!=',True),('active','=',True)], context=context)
             if  partner_ids:                
                 for line in partner_ids:
                     print ' line', line
@@ -954,7 +954,7 @@ class sale_plan_for_day_setting(osv.osv):
             cr.execute("update sale_plan_day_setting_line set code =%s where partner_id=%s and id = %s",(partner_code,partner_id,plan_line_id.id,))
             data_line.append(partner_id)
         sale_team_id=plan.sale_team_id.id
-        partner_ids = customer_obj.search(cr, uid, [('section_id', '=', sale_team_id),('id','not in',data_line)], context=context)
+        partner_ids = customer_obj.search(cr, uid, [('section_id', '=', sale_team_id),('id','not in',data_line),('mobile_customer','!=',True),('active','=',True)], context=context)
         if  partner_ids:
                 count=len(partner_ids)                
                 for line in partner_ids:

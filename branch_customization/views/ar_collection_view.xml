@@ -8,7 +8,7 @@
 			<field name="model">mobile.ar.collection</field>
 			<field name="inherit_id" ref="ms_mobile_sale_credit.view_mobile_ar_collection_form" />
 			<field name="arch" type="xml">
-				<field name="date" position="before">
+				<field name="due_date" position="before">
 					<field name="branch_id" />
 				</field>
 			</field>
