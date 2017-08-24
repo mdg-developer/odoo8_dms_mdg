@@ -1,73 +1,81 @@
 <openerp>
-  <data>
-   
-    
-    
-     <record model="ir.ui.view" id="stock_view_production_lot_form_inherit">
-        <field name="name">stock.production.lot.form</field>
-        <field name="model">stock.production.lot</field>
-        <field name="inherit_id" ref="stock.view_production_lot_form"/>
-        <field name="arch" type="xml">   
-                
-            <xpath expr="//group[@name='main_group']" position="after">
-            	<group string="Sealing" >
-				   <group >
-				   		<field name="arrival_date"/>
-				   		<field name="unseal"/>  
-				   </group>
-				   <group>
-				   		<field name="seal_start_date"/>
-				   		<field name="unseal_date"/>  
-				   </group>
-				</group>
-            </xpath>
+	<data>
+		<record model="ir.ui.view" id="stock_view_production_lot_form_inherit">
+			<field name="name">stock.production.lot.form</field>
+			<field name="model">stock.production.lot</field>
+			<field name="inherit_id" ref="stock.view_production_lot_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//form/div[@class='oe_button_box oe_right']" position="before">
+					<header>
+						<button name="start_sealing" string="Start Sealing" type="object"
+							class="oe_highlight" states="draft" />
+						<button name="unseal_button" string="Unseal" type="object" class="oe_highlight"
+							states="confirm" />
+						<field name="state" widget="statusbar" statusbar_visible="draft,confirm,complete" />
+					</header>
+				</xpath>
+				<xpath expr="//group[@name='main_group']" position="after">
+					<group string="Sealing">
 
-			
-        </field>
-    </record>
-    
-    <record model="ir.ui.view" id="stock_view_production_lot_tree_inherit">
-        <field name="name">stock.production.lot.tree</field>
-        <field name="model">stock.production.lot</field>
-        <field name="inherit_id" ref="stock.view_production_lot_tree"/>
-        <field name="arch" type="xml">   
-                
-            <xpath expr="//field[@name='name']" position="replace">
-            	
-			   		<field name="name" string="Batch No"/>
-				   		
-            </xpath>
+						<group>
+							<field name="arrival_date" />
+							<field name="unseal" />
+						</group>
+						<group>
+							<field name="seal_start_date" />
+							<field name="unseal_date" />
+						</group>
+					</group>
+				</xpath>
+			</field>
+		</record>
 
-			
-        </field>
-    </record>
-    
-          
-<!--     <record model="ir.ui.menu" id="stock.menu_batchno"> -->
-<!-- 			<field name="name">Batch No</field> -->
-<!-- 			<field name="parent_id" ref="stock.menu_action_production_lot_form" /> -->
-<!-- 		</record>           -->
-	
-	
-	<record id="stock.action_production_lot_form" model="ir.actions.act_window">
-            <field name="name">Batch No</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">stock.production.lot</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="stock.view_production_lot_tree"/>
-            <field name="search_view_id" ref="stock.search_product_lot_filter"/>
-            <field name="context">{}</field>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to add a serial number.
-              </p><p>
-                This is the list of all the production lots you recorded. When
-                you select a lot, you can get the traceability of the products contained in lot.
-              </p>
-            </field>
-        </record>
-        
-        <menuitem name="Batch No" action="stock.action_production_lot_form" id="stock.menu_action_production_lot_form"
-            parent="stock.menu_traceability" groups="stock.group_production_lot" sequence="1"/>
-  </data>
+		<record model="ir.ui.view" id="stock_view_production_lot_tree_inherit">
+			<field name="name">stock.production.lot.tree</field>
+			<field name="model">stock.production.lot</field>
+			<field name="inherit_id" ref="stock.view_production_lot_tree" />
+			<field name="arch" type="xml">
+
+				<xpath expr="//field[@name='name']" position="replace">
+
+					<field name="name" string="Batch No" />
+
+				</xpath>
+
+
+			</field>
+		</record>
+
+
+		<!-- <record model="ir.ui.menu" id="stock.menu_batchno"> -->
+		<!-- <field name="name">Batch No</field> -->
+		<!-- <field name="parent_id" ref="stock.menu_action_production_lot_form" 
+			/> -->
+		<!-- </record> -->
+
+
+		<record id="stock.action_production_lot_form" model="ir.actions.act_window">
+			<field name="name">Batch No</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">stock.production.lot</field>
+			<field name="view_type">form</field>
+			<field name="view_id" ref="stock.view_production_lot_tree" />
+			<field name="search_view_id" ref="stock.search_product_lot_filter" />
+			<field name="context">{}</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to add a serial number.
+				</p>
+				<p>
+					This is the list of all the production lots you recorded. When
+					you select a lot, you can get the traceability of the products
+					contained in lot.
+				</p>
+			</field>
+		</record>
+
+		<menuitem name="Batch No" action="stock.action_production_lot_form"
+			id="stock.menu_action_production_lot_form" parent="stock.menu_traceability"
+			groups="stock.group_production_lot" sequence="1" />
+	</data>
 </openerp>

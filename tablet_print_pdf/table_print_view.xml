@@ -13,11 +13,14 @@
 					<sheet>
 						<group>
 							<field name="name" style="width:320px;" />
-							<field name="section_id"  class="oe_inline" />
-							<field name="user_id"  domain="[('default_section_id', '=',section_id)]"  class="oe_inline" />
-							<field name="print_date"  />
+							<field name="section_id" class="oe_inline" />
+							<field name="user_id" domain="[('default_section_id', '=',section_id)]"
+								class="oe_inline" />
+							<field name="print_date" />
 							<field name="print_file" filename="print_fname" />
 							<field name="print_fname" invisible="1" />
+							<field name="write_date" />
+
 						</group>
 					</sheet>
 				</form>
@@ -48,8 +51,9 @@
 		</record>
 
 		<!-- First level menu -->
-		<menuitem id="menu_tablet_print_import" name="Tablet Pdf Print"  action="action_tablet_pdf_print"
-			sequence="5" parent="menu_customization.menu_sale_team_menu" />
+		<menuitem id="menu_tablet_print_import" name="Tablet Pdf Print"
+			action="action_tablet_pdf_print" sequence="5"
+			parent="menu_customization.menu_sale_team_menu" />
 
 	</data>
 </openerp>

@@ -32,24 +32,25 @@ Warehouse Opitimization
 """,
     'author': 'Seventh Computing',
     'website': 'http://www.7thcomputing.com',
-    'depends': ['base',      
-         'stock','stock_quant_packages_moving_wizard'
+    'depends': ['base',
+         'stock', 'stock_quant_packages_moving_wizard'
  
     ],
     'data': [
         
-       #'wizard/quant_packages_stickering_move_wizard_view.xml',
-       #'wizard/quant_packages_repacking_move_wizard_view.xml',     
+       # 'wizard/quant_packages_stickering_move_wizard_view.xml',
+       # 'wizard/quant_packages_repacking_move_wizard_view.xml',     
        'views/product_product_view.xml',
        'views/stock_quant_package_view.xml',
         'views/stock_quant_package_transfer_view.xml',
         'views/stock_quant_package_saleable_transfer_view.xml',
-       #'views/stock_quant_package_repacking_transfer_view.xml',
+        'views/stock_quant_view.xml',
+       # 'views/stock_quant_package_repacking_transfer_view.xml',
        
        
     ],
-    #'demo': ['hr_recruitment_demo.xml'],
-    #'test': ['test/recruitment_process.yml'],
+    # 'demo': ['hr_recruitment_demo.xml'],
+    # 'test': ['test/recruitment_process.yml'],
     'installable': True,
     'auto_install': False,
     'application': True,

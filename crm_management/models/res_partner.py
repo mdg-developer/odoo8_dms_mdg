@@ -509,7 +509,8 @@ class res_partner(osv.osv):
                                 code = codeObj.generateCode(cr, uid, codeId, context=context)
                 if code:
                     from datetime import datetime
-                    cr.execute("update res_partner set customer_code=%s ,date_partnership=now()::date ,mobile_customer=False where id=%s",(code,ids[0], ))
+                    cr.execute("update res_partner set customer_code=%s ,date_partnership=now()::date ,mobile_customer=False where id=%s",(code,ids[0],))
+                    cr.execute("update sale_order set customer_code =%s where partner_id =%s",(code,ids[0],))
                     #self.write(cr, uid, ids, {'customer_code':code,'date_partnership':datetime.now().date(),'mobile_customer':False}, context=context)
             return True
 res_partner()
