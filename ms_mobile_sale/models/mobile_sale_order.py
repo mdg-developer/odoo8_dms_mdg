@@ -2394,10 +2394,11 @@ class mobile_sale_order(osv.osv):
                     select inv.id,inv.number,inv.partner_id,rp.name customer_name,
                            rp.customer_code customer_code,inv.origin so_no,inv.date_invoice,
                            inv.amount_total,inv.residual balance,inv.payment_type,
-                           inv.journal_id,crm.name,inv.date_due
-                    from account_invoice inv, res_partner rp, crm_case_section crm
+                           inv.journal_id,crm.name,inv.date_due, so.tb_ref_no
+                    from account_invoice inv, res_partner rp, crm_case_section crm, sale_order so
                     where inv.payment_type='credit'
                     and inv.state='open'
+                    and inv.reference = so.name
                     and inv.type = 'out_invoice'
                     and inv.branch_id = %s
                     and residual > 0
