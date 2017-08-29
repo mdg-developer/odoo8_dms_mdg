@@ -122,6 +122,12 @@
                     <text-property name="displayName">exclusive_price</text-property>
                     <text-property name="heading">exclusive_price</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">isexclusive</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">isexclusive</text-property>
+                    <text-property name="heading">isexclusive</text-property>
+                </structure>
             </list-property>
             <list-property name="parameters">
                 <structure>
@@ -206,6 +212,11 @@
                         <property name="position">14</property>
                         <property name="name">exclusive_price</property>
                         <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">15</property>
+                        <property name="name">isexclusive</property>
+                        <property name="dataType">integer</property>
                     </structure>
                 </list-property>
             </structure>
@@ -309,12 +320,20 @@
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
+                <structure>
+                    <property name="position">15</property>
+                    <property name="name">isexclusive</property>
+                    <property name="nativeName">isexclusive</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">-7</property>
+                </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select distinct h.name,h.date::date,v.display_name partner,t.name payment_due_date,
 b.name branch,mg.name brand,
 p.default_code ||' '|| p.name_template description,
 u.name uom,d.product_uos_qty qty,d.discount,d.price_unit unit_price,d.sub_total amount , psi.product_code gold_code,
-(CASE WHEN v.isexclusive = true THEN (d.price_unit - ((d.price_unit / 100) * 5)) ELSE 0 END) as exclusive_price
+(CASE WHEN v.isexclusive = true THEN (d.price_unit - ((d.price_unit / 100) * 5)) ELSE 0 END) as exclusive_price,
+v.isexclusive
 
 from mobile_sale_order h,mobile_sale_order_line d,res_branch b,
 product_product p,product_template pt,product_uom u,account_payment_term t,
@@ -1654,7 +1673,7 @@ and h.name = ?]]></xml-property>
                     <list-property name="arguments">
                         <structure>
                             <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["discount"]</expression>
+                            <expression name="value" type="javascript">row["discount"]</expression>
                         </structure>
                     </list-property>
                     <property name="allowExport">true</property>
@@ -1667,7 +1686,7 @@ and h.name = ?]]></xml-property>
                     <list-property name="arguments">
                         <structure>
                             <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["amount"]</expression>
+                            <expression name="value" type="javascript">row["amount"]</expression>
                         </structure>
                     </list-property>
                     <property name="allowExport">true</property>
@@ -1680,7 +1699,14 @@ and h.name = ?]]></xml-property>
                     <list-property name="arguments">
                         <structure>
                             <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["amount"]</expression>
+                            <expression name="value" type="javascript">if (dataSetRow["isexclusive"]== true)&#13;
+{&#13;
+(row["amount"]* 100) / 105&#13;
+}&#13;
+else&#13;
+{ &#13;
+row["amount"]&#13;
+}</expression>
                         </structure>
                     </list-property>
                     <property name="allowExport">true</property>
@@ -1706,7 +1732,14 @@ and h.name = ?]]></xml-property>
                     <list-property name="arguments">
                         <structure>
                             <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["exclusive_price"]</expression>
+                            <expression name="value" type="javascript">if (dataSetRow["isexclusive"]== true)&#13;
+{&#13;
+(row["amount"]) - ((row["amount"]* 100) / 105)&#13;
+}&#13;
+else&#13;
+{ &#13;
+(row["amount"]) - ((row["amount"]* 100) / 105)&#13;
+}</expression>
                         </structure>
                     </list-property>
                     <property name="allowExport">true</property>
