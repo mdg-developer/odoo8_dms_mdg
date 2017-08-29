@@ -1732,14 +1732,7 @@ row["amount"]&#13;
                     <list-property name="arguments">
                         <structure>
                             <property name="name">Expression</property>
-                            <expression name="value" type="javascript">if (dataSetRow["isexclusive"]== true)&#13;
-{&#13;
-(row["amount"]) - ((row["amount"]* 100) / 105)&#13;
-}&#13;
-else&#13;
-{ &#13;
-(row["amount"]) - ((row["amount"]* 100) / 105)&#13;
-}</expression>
+                            <expression name="value" type="javascript">(row["amount"]) - ((row["amount"]* 100) / 105)</expression>
                         </structure>
                     </list-property>
                     <property name="allowExport">true</property>
