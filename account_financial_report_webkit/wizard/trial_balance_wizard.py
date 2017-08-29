@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp.osv import orm
+from openerp.osv import fields, orm
 
 
 class AccountTrialBalanceWizard(orm.TransientModel):
@@ -29,6 +29,19 @@ class AccountTrialBalanceWizard(orm.TransientModel):
     _name = "trial.balance.webkit"
     _description = "Trial Balance Report"
 
+    _columns = {
+        'analytic_account_ids': fields.many2many('account.analytic.account', 'trial_balance_webkit_account_analytic_account','trial_balance_webkit_id','account_analytic_account_id', string='Filter on analytic accounts',
+                                         help="Only selected analytic accounts will be printed. Leave empty to print all analytic accounts."),
+    }
+    
+    def pre_print_report(self, cr, uid, ids, data, context=None):
+        data = super(AccountTrialBalanceWizard, self).pre_print_report(cr, uid, ids, data, context)
+        vals = self.read(cr, uid, ids,
+                         ['branch_ids','analytic_account_ids'],                         
+                         context=context)[0]
+        data['form'].update(vals)
+        return data
+       
     def _print_report(self, cursor, uid, ids, data, context=None):
         context = context or {}
         # we update form with display account value

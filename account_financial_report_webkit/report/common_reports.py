@@ -367,8 +367,7 @@ class CommonReportHeaderWebkit(common_report_header):
                                         " FROM account_move_line"
                                         " WHERE period_id in %s"
                                         " AND account_id = %s", (tuple(period_ids), account_id))
-                res = self.cursor.dictfetchone()
-
+                res = self.cursor.dictfetchone()                
             except Exception, exc:
                 self.cursor.rollback()
                 raise
@@ -379,7 +378,7 @@ class CommonReportHeaderWebkit(common_report_header):
                 'init_balance_currency': res.get('curr_balance') or 0.0,
                 'state': mode}
 
-    def _read_opening_balance(self, account_ids, start_period):
+    def _read_opening_balance(self, account_ids, branch_ids, analytic_account_ids, start_period):
         """ Read opening balances from the opening balance
         """
         opening_period_selected = self.get_included_opening_period(start_period)

@@ -71,6 +71,8 @@ class trial_balance_xls(report_xls):
         c_specs = [
             ('fy', 1, 0, 'text', _('Fiscal Year')),
             ('af', 2, 0, 'text', _('Accounts Filter')),
+            ('bf', 2, 0, 'text', _('Branches Filter')),
+            ('aaf', 2, 0, 'text', _('Analytic Accounts Filter')),
             ('df', 1, 0, 'text', _p.filter_form(data) == 'filter_date' and _('Dates Filter') or _('Periods Filter')),
             ('tm', 2, 0, 'text',  _('Target Moves'), None, cell_style_center),
             ('ib', 1, 0, 'text',  _('Initial Balance'), None, cell_style_center),
@@ -85,6 +87,8 @@ class trial_balance_xls(report_xls):
         c_specs = [
             ('fy', 1, 0, 'text', _p.fiscalyear.name if _p.fiscalyear else '-'),
             ('af', 2, 0, 'text', _p.accounts(data) and ', '.join([account.code for account in _p.accounts(data)]) or _('All')),
+            ('bf', 2, 0, 'text', _p.branches(data) and ', '.join([branch.branch_code for branch in _p.branches(data)]) or _('All')),
+            ('aaf', 2, 0, 'text', _p.analytic_accounts(data) and ', '.join([analytic_account.code for analytic_account in _p.analytic_accounts(data)]) or _('All')),
         ]
         df = _('From') + ': '
         if _p.filter_form(data) == 'filter_date':

@@ -71,20 +71,23 @@ class CommonBalanceReportHeaderWebkit(CommonReportHeaderWebkit):
         ctx = context.copy()
         ctx.update({'state': target_move,
                     'all_fiscalyear': True})
-
+        if branch_ids:
+            ctx.update({'branch_ids': branch_ids})
+        if analytic_account_ids:
+            ctx.update({'analytic_account_ids': analytic_account_ids})
         if use_period_ids:
             ctx.update({'periods': period_ids})
         elif main_filter == 'filter_date':
             ctx.update({'date_from': start,
                         'date_to': stop})
-
+        print 'ctx',ctx
         accounts = account_obj.read(
                 self.cursor,
                 self.uid,
                 account_ids,
                 ['type', 'code', 'name', 'debit', 'credit',  'balance', 'parent_id', 'level', 'child_id'],
                 ctx)
-
+        print 'accounts',accounts
         accounts_by_id = {}
         for account in accounts:
             if init_balance:
@@ -112,6 +115,8 @@ class CommonBalanceReportHeaderWebkit(CommonReportHeaderWebkit):
         @param index: index of the fields to get (ie. comp1_fiscalyear_id where 1 is the index)
         @return: dict of account details (key = account id)
         """
+        branch_ids = data['form']['branch_ids'] 
+        analytic_account_ids = data['form']['analytic_account_ids'] 
         fiscalyear = self._get_info(data, "comp%s_fiscalyear_id" % (index,), 'account.fiscalyear')
         start_period = self._get_info(data, "comp%s_period_from" % (index,), 'account.period')
         stop_period = self._get_info(data, "comp%s_period_to" % (index,), 'account.period')
@@ -227,7 +232,7 @@ class CommonBalanceReportHeaderWebkit(CommonReportHeaderWebkit):
 
         # get details for each accounts, total of debit / credit / balance
         accounts_by_ids = self._get_account_details(account_ids, branch_ids, analytic_account_ids, target_move, fiscalyear, main_filter, start, stop, initial_balance_mode)
-
+        print 'accounts_by_ids',accounts_by_ids
         comparison_params = []
         comp_accounts_by_ids = []
         for index in range(max_comparison):
@@ -238,6 +243,12 @@ class CommonBalanceReportHeaderWebkit(CommonReportHeaderWebkit):
 
         to_display = dict.fromkeys(account_ids, True)
         objects = []
+        context = {}
+        ctx = context.copy()
+        if branch_ids:
+            ctx.update({'branch_ids': branch_ids})
+        if analytic_account_ids:
+            ctx.update({'analytic_account_ids': analytic_account_ids})
         for account in self.pool.get('account.account').browse(self.cursor, self.uid, account_ids):
             if not account.parent_id:  # hide top level account
                 continue
@@ -279,5 +290,7 @@ class CommonBalanceReportHeaderWebkit(CommonReportHeaderWebkit):
             'initial_balance': init_balance,
             'initial_balance_mode': initial_balance_mode,
             'comp_params': comparison_params,
+            'branch_ids': branch_ids,
+            'analytic_account_ids': analytic_account_ids
         }
         return objects, new_ids, context_report_values

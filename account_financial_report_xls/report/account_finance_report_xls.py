@@ -96,7 +96,7 @@ class account_financial_report_xls_parser(report_sxw.rml_parse,common_report_hea
     def get_lines(self, data):
         lines = []
         account_obj = self.pool.get('account.account')
-
+        print 'data',data
         currency_obj = self.pool.get('res.currency')
         context=data['form']['used_context']
         comparison_context = data['form']['comparison_context']
