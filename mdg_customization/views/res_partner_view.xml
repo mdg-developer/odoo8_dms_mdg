@@ -256,13 +256,13 @@
 					<xpath
 						expr="//page[@name='sales_purchases']/group/group/field[@name='customer']"
 						position="replace">
-						<field name="customer" attrs="{'invisible':[('supplier','=',True)]}"  readonly="1"/>
+						<field name="customer" /> 
 
 					</xpath>
 					<xpath
 						expr="//page[@name='sales_purchases']/group/group/field[@name='supplier']"
 						position="replace">
-						<field name="supplier" attrs="{'invisible':[('customer','=',True)]}" />
+						<field name="supplier" />
 
 					</xpath>
 
@@ -324,6 +324,9 @@
 					<!-- </field> -->
 					<field name="debit" position="replace">
 						<field name="debit" attrs="{'invisible':[('customer','=',True)]}" />
+					</field>
+					<field name="property_supplier_payment_term" position="after">
+						<field name="isexclusive" />
 					</field>
 				</data>
 			</field>
