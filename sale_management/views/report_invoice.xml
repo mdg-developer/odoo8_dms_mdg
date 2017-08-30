@@ -172,23 +172,28 @@
 										</t>
 									</td>
 									<td class="text-right" style="border:1pt solid;border-color:black;" >
-										<span t-field="l.quantity" />
+										<!-- <span t-field="l.quantity" /> -->
+										<span t-esc="'%.0f'%l.quantity"/>
 									</td>
 									<td class="text-right" style="border:1pt solid;border-color:black;" >
 										<span t-field="l.uos_id" groups="product.group_uom" />
 									</td>
 									<td class="text-right" style="border:1pt solid;border-color:black;">
-										<span t-field="l.price_unit" />
+										<!-- <span t-field="l.price_unit" /> -->
+										<span t-esc="'%.0f'%(l.price_unit)"/>
 									</td>
 									<td class="text-right" style="border:1pt solid;border-color:black;">
-										<span t-field="l.net_total" />
+										<!-- <span t-field="l.net_total" /> -->
+										<span t-esc="'%.0f'%l.net_total"/>
 									</td>
 									<td class="text-right" groups="sale.group_discount_per_so_line"
 										style="border:1pt solid;border-color:black;">
-										<span t-field="l.discount" />
+										<!-- <span t-field="l.discount" /> -->
+										<span t-esc="'%.0f'%l.discount"/>
 									</td>
 									<td class="text-right" style="border:1pt solid;border-color:black;">
-										<span t-field="l.discount_amt" />
+										<!-- <span t-field="l.discount_amt" /> -->
+										<span  t-esc="'%.0f'%l.discount_amt"/>
 									</td>
 									<td class="text-center" style="border:1pt solid;border-color:black;">
 										<t t-if="l.foc==True">
@@ -201,7 +206,10 @@
 										</t>
 
 										<t t-if="l.foc==False">
-											<span t-field="l.price_subtotal" />
+											<!-- <span t-field="l.price_subtotal" /> -->
+											
+											<span  t-esc="'%.0f'%l.price_subtotal"/>
+											
 										</t>
 									</td>
 								</tr>
@@ -228,7 +236,8 @@
 													<span t-field="t.base" />
 												</td>
 												<td class="text-right">
-													<span t-field="t.amount" />
+													<!-- <span t-field="t.amount" /> -->
+													<span  t-esc="'%.0f'%t.amount"/>
 												</td>
 											</tr>
 										</tbody>
@@ -269,7 +278,8 @@
 											<strong>Net Amount</strong>
 										</td>
 										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
-											<span t-field="o.amount_total" />
+											<!-- <span t-field="o.amount_total" /> -->
+											<span  t-esc="'%.0f'%o.amount_total"/>
 										</td>
 									</tr>
 								</table>
