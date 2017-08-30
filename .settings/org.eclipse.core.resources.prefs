@@ -1,4 +1,5 @@
 eclipse.preferences.version=1
+encoding//account_voucher_approval/models/account_journal.py=utf-8
 encoding//branch_customization/__openerp__.py=utf-8
 encoding//crm_demarcation/__openerp__.py=utf-8
 encoding//crm_management/wizard/remove_sale_team.py=utf-8

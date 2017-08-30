@@ -190,6 +190,10 @@ class account_invoice(models.Model):
 #                     ('advanced', 'Advanced')
                     ],string= 'Payment Type',default='cash')
     
+    #direct_credit= fields.Boolean('Direct Credit',default=False)
+    direct_credit = fields.Boolean(string='Direct Credit',default=False
+        
+        ) 
 
     
     account_id = fields.Many2one('account.account', string='Account',
