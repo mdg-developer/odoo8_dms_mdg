@@ -64,11 +64,14 @@ class account_voucher(osv.osv):
         if debit < 0: credit = -debit; debit = 0.0
         if credit < 0: debit = -credit; credit = 0.0
         sign = debit - credit < 0 and -1 or 1
+        for l in voucher.line_cr_ids:
+            credit += l.amount
+        print 'credit', credit
         #set the first line of the voucher
         move_line = {
                 'name': voucher.number or '/',
                 'debit': debit,
-                'credit': voucher.line_dr_ids.amount,
+                'credit':credit,
                 'account_id': voucher.account_id.id,
                 'move_id': move_id,
                 'journal_id': voucher.journal_id.id,

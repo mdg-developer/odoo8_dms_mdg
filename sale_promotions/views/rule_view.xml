@@ -139,7 +139,7 @@
 					<field name="name" />
 					<field name="active" />
 					<field name="manual" />
-					<field name="coupon_code" />
+					<field name="state" />
 					<field name="main_group" />
 					<field name="from_date" />
 					<field name="to_date" />
