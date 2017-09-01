@@ -888,13 +888,27 @@ class mobile_sale_order(osv.osv):
             cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,
                         logic ,expected_logic_result ,special, special1, special2, special3 ,description,
                         promotion_count,monthly_promotion
-                        from promos_rules pr ,promos_rules_res_branch_rel pro_br_rel
+                        from promos_rules pr ,promos_rules_res_branch_rel pro_br_rel,crm_case_section_promos_rules_rel team_promo_rel
                         where pr.active = true
                         and pr.id = pro_br_rel.promos_rules_id
                         and pro_br_rel.res_branch_id = %s
+                        and team_promo_rel.promos_rules_id = pr.id
                         and pr.state = %s
+                        and team_promo_rel.crm_case_section_id = %s
                         and  now()::date  between from_date::date and to_date::date
-                        ''', (branch_id, status,))
+                        ''', (branch_id, status, team_id,))
+            
+            # The below query will fetch all the promotion without filtering by sale team in promotion tab.
+#             cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,
+#                         logic ,expected_logic_result ,special, special1, special2, special3 ,description,
+#                         promotion_count,monthly_promotion
+#                         from promos_rules pr ,promos_rules_res_branch_rel pro_br_rel
+#                         where pr.active = true
+#                         and pr.id = pro_br_rel.promos_rules_id
+#                         and pro_br_rel.res_branch_id = %s
+#                         and pr.state = %s
+#                         and  now()::date  between from_date::date and to_date::date
+#                         ''', (branch_id, status,))
         else:
             status = 'approve', 'draft'
             cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,
