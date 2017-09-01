@@ -41,7 +41,7 @@ class trial_balance_xls(report_xls):
         ws.portrait = 0 # Landscape
         ws.fit_width_to_pages = 1
         row_pos = 0
-        
+        total_init_balance = total_debit = total_credit = total_balance = 0.0
         # set print header/footer
         ws.header_str = self.xls_headers['standard']
         ws.footer_str = self.xls_footers['standard']
@@ -254,7 +254,24 @@ class trial_balance_xls(report_xls):
                         
             c_specs += [('type', 1, 0, 'text', current_account.type, None, cell_style_center)]          
             row_data = self.xls_row_template(c_specs, [x[0] for x in c_specs])
-            row_pos = self.xls_write_row(ws, row_pos, row_data, row_style=cell_style)
+            row_pos = self.xls_write_row(ws, row_pos, row_data, row_style=cell_style)            
+            total_init_balance += current_account.init_balance
+            total_debit += current_account.debit
+            total_credit += current_account.credit
+            total_balance += current_account.balance
+        total_cell_format = _xs['bold'] 
+        total_cell_style = xlwt.easyxf(total_cell_format)
+        total_cell_style_center = xlwt.easyxf(total_cell_format + _xs['right'], num_format_str = report_xls.decimal_format) 
+        total_style_center = xlwt.easyxf(total_cell_format + _xs['center'])   
+        t_specs = [
+            ('total', 3, 0, 'text', _('TOTAL'), None, total_style_center),   
+            ('init_bal', 1, 0, 'number', total_init_balance, None, total_cell_style_center),
+            ('debit', 1, 0, 'number', total_debit, None, total_cell_style_center), 
+            ('credit', 1, 0, 'number', total_credit, None, total_cell_style_center),
+            ('balance', 1, 0, 'number', total_balance, None, total_cell_style_center),      
+        ]       
+        row_data = self.xls_row_template(t_specs, [x[0] for x in t_specs])        
+        row_pos = self.xls_write_row(ws, row_pos, row_data, row_style=cell_style)
             
 trial_balance_xls('report.account.account_report_trial_balance_xls', 'account.account',
     parser=TrialBalanceWebkit)
