@@ -335,15 +335,16 @@ u.name uom,d.product_uos_qty qty,d.discount,d.price_unit unit_price,d.sub_total 
 (CASE WHEN v.isexclusive = true THEN (d.price_unit - ((d.price_unit / 100) * 5)) ELSE 0 END) as exclusive_price,
 v.isexclusive
 
-from mobile_sale_order h,mobile_sale_order_line d,res_branch b,
-product_product p,product_template pt,product_uom u,account_payment_term t,
-res_partner v, product_maingroup mg,product_supplierinfo psi
-
-where h.id=d.order_id and d.product_id=p.id and d.uom_id=u.id 
-and h.payment_term=t.id and h.branch_id=b.id  and h.partner_id=v.id 
-and pt.id=p.product_tmpl_id and mg.id=pt.main_group 
-and psi.name=h.partner_id 
-and psi.product_tmpl_id=pt.id
+FROM mobile_sale_order h
+INNER JOIN mobile_sale_order_line d on h.id=d.order_id
+INNER JOIN product_product p on d.product_id=p.id 
+INNER JOIN product_uom u on d.uom_id=u.id
+INNER JOIN account_payment_term t on h.payment_term=t.id
+INNER JOIN res_branch b on h.branch_id=b.id  
+INNER JOIN res_partner v on h.partner_id=v.id 
+INNER JOIN product_template pt on pt.id=p.product_tmpl_id 
+INNER JOIN product_maingroup mg on mg.id=pt.main_group 
+LEFT JOIN product_supplierinfo psi on psi.product_tmpl_id=pt.id and psi.name=h.partner_id 
 and h.name =?]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
