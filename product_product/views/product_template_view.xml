@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
 	<data>
-
+		
+	    
+	    
 		<!-- Product template Form -->
 		<record id="product_template_form_view_inherit" model="ir.ui.view">
 			<field name="name">product.template.form.view.inherit</field>
@@ -67,10 +69,39 @@
 				<xpath expr="//field[@name='default_code']" position="after">
 					<field name="uom_ratio" />
 					<field name="sequence" />
+					
 				</xpath>
 			</field>
 		</record>
+		
+		<record id="product.product_template_tree_view" model="ir.ui.view">
+            <field name="name">product.template.product.tree</field>
+            <field name="model">product.template</field>
+            <field name="arch" type="xml">
+                <tree string="Product" default_order='sequence_new, name'>
+                    <field name="sequence"/>
+                    <field name="name"/>
+                    <field name="categ_id"/>
+                    <field name="type"/>
+                    <field name="state"/>
+                    <field name="uom_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+        
+		<record id="inherit_sequence_product_template_tree_view" model="ir.ui.view">
+			<field name="name">product.template.product.tree</field>
+			<field name="model">product.template</field>
+			<field name="inherit_id" ref="product.product_template_tree_view" />
+			<field name="arch" type="xml">
+				
+				<field name="sequence" position="replace">
+					<field name="sequence_new" />
+				</field>
+				
 
+			</field>
+		</record>
 		<record id="product_template_search_view_inherit" model="ir.ui.view">
 			<field name="name">product.template.search.inherit</field>
 			<field name="model">product.template</field>

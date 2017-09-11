@@ -3,7 +3,9 @@ import openerp.addons.decimal_precision as dp
 
 class product_template(osv.osv):
     _inherit = 'product.template'
-
+    
+    
+    
     def _product_available(self, cr, uid, ids, name, arg, context=None):
         res = dict.fromkeys(ids, 0)
         for product in self.browse(cr, uid, ids, context=context):
@@ -15,6 +17,8 @@ class product_template(osv.osv):
                 "incoming_qty": sum([p.incoming_qty for p in product.product_variant_ids]),
                 "outgoing_qty": sum([p.outgoing_qty for p in product.product_variant_ids]),
             }
+            for p in product.product_variant_ids:
+                self.write(cr,uid,p.product_tmpl_id.id,{'sequence_new':p.sequence},context=None)
         return res
     
     def _search_product_quantity(self, cr, uid, obj, name, domain, context):
@@ -72,13 +76,32 @@ class product_template(osv.osv):
                 'uom_ratio':fields.char('Packing Size'),
                 'weight_liter': fields.float('Net Weight (Liter)', digits_compute=dp.get_precision('Stock Weight'), help="The net weight in Kg."),
                 'weight_net': fields.float('Net Weight(Viss)', digits_compute=dp.get_precision('Stock Weight'), help="The net weight in Kg."),  
-                'sequence': fields.related('product_variant_ids', 'sequence', type='integer', string='Sequence', required=True),
+                'sequence': fields.related('product_variant_ids', 'sequence', type='integer', string='Sequence', required=True,),
+                'sequence_new': fields.integer('Sequence', size=3),
+                #'company_id': fields.related('journal_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
                       }
      
     _defaults = {
         'valuation': 'manual_periodic',
     }
     
-     
+    def create(self, cr, uid,  vals, context=None):
+        sequence = 0
+        if vals.get('sequence'):
+            sequence = vals['sequence']
+            print 'vals[sequence]>>>>',vals['sequence']
+        new_id = super(product_template, self).create(cr, uid, vals, context=context)
+        if sequence != 0: 
+           self.write(cr,uid,new_id,{'sequence_new':sequence,'sequence':sequence},context=None)
+        return new_id    
+    def write(self, cr, uid, ids, vals, context=None):   
+        
+        if vals.get('sequence'):
+            sequence = vals['sequence']
+            self.write(cr,uid,ids,{'sequence_new':sequence},context=None)
+        
+        new_id = super(product_template, self).write(cr, uid, ids, vals, context=context)
+        return new_id 
+    
 product_template()
 
