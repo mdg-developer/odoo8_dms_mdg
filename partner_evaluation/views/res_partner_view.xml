@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		  <record id="view_partner_form_inherit1" model="ir.ui.view">
+            <field name="name">res.partner.form</field>
+            <field name="model">res.partner</field>
+           <!--  <field eval="1" name="priority"/> -->
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+            <xpath expr="//group/group[2]" position="after">
+            	<group>
+            	<!-- <label for="iso"  string="Has your company's quality system been independently certified?(eg/ISO-9001)
+            		If yes,please attach a copy of the certificate" style="width:100px;word-wrap: break-word;" ></label> -->
+            	 <text>Has your company's quality system been independently certified?(eg/ISO-9001)<br/>
+            	If yes,please attach a copy of the certificate</text>           	
+					<div>					
+						<field name="iso" widget="radio"></field>
+					</div>					
+	                <div class="oe_import_box">
+		                <input type="file" id-attf-id="file_#{_id}"
+		                       name="file" class="oe_import_file" attrs="{'invisible':[('iso','not in',('yes'))]}" style="height:20px;"/>
+	               </div>
+				</group>  
+				 </xpath>
+            </field>
+          </record>
+	</data>
+</openerp>
+		
