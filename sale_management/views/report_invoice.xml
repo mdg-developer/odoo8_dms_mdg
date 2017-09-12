@@ -149,8 +149,10 @@
 									</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Description
 									</th>
-									<th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th>
-									<th class="text-center" style="border:1pt solid;border-color:black;">Uom</th>
+									<!-- <th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Uom</th> -->
+									<th class="text-center" style="border:1pt solid;border-color:black;">Qty B/S</th>
+									<th class="text-center" style="border:1pt solid;border-color:black;">Uom B/S</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Unit Price</th>
 									<th class="text-center" style="border:1pt solid;border-color:black;">Total Amount</th>
 									<th style="border:1pt solid;border-color:black;" class="text-center"
@@ -173,10 +175,11 @@
 									</td>
 									<td class="text-right" style="border:1pt solid;border-color:black;" >
 										<!-- <span t-field="l.quantity" /> -->
-										<span t-esc="'%.0f'%l.quantity"/>
+										<span t-esc="'%.0f'%l.bigger_qty"/> / <span t-esc="'%.0f'%l.smaller_qty"/>
 									</td>
 									<td class="text-right" style="border:1pt solid;border-color:black;" >
-										<span t-field="l.uos_id" groups="product.group_uom" />
+										<!-- <span t-field="l.uos_id" groups="product.group_uom" /> -->
+										<span t-field="l.big_uom_id" groups="product.group_uom" /> / <span t-field="l.smaller_uom_id" groups="product.group_uom" />
 									</td>
 									<td class="text-right" style="border:1pt solid;border-color:black;">
 										<!-- <span t-field="l.price_unit" /> -->

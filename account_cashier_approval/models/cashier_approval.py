@@ -479,7 +479,7 @@ class cashier_approval(osv.osv):
                 """, (user_id, team_id, frm_date, to_date,))
             else:
                 cr.execute("""select m.date,a.id,m.partner_id,a.residual,a.section_id
-                            from account_invoice as a,sale_order as s,mobile_ar_collection as m
+                            from account_invoice as a,mobile_ar_collection as m
                             where m.ref_no = a.number and  m.state='draft'  and
                             m.user_id=%s and m.sale_team_id=%s and m.date = %s  
                 """, (user_id, team_id, frm_date,))
@@ -496,7 +496,7 @@ class cashier_approval(osv.osv):
                 for details in self.browse(cr, uid, ids, context=context):                
                     result[details.id] = inv_id
             cr.execute("""select m.date,a.id,m.partner_id,a.residual,a.id as invoice_id,a.section_id
-                    from account_invoice as a,sale_order as s,mobile_ar_collection as m
+                    from account_invoice as a,mobile_ar_collection as m
                     where m.ref_no = a.number and  m.state='draft'  and m.user_id=%s and m.sale_team_id=%s and m.unselected=True
         """, (user_id, team_id,))
             data = cr.fetchall()             

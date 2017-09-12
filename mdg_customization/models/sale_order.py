@@ -130,6 +130,17 @@ class sale_order_line(osv.osv):
             )
             price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
                     product, qty or 1.0, partner_id, ctx)[pricelist]
+            if uom != False:
+                if uom == product_obj.big_uom_id.id:
+                    pricelist_ids = self.pool.get('product.pricelist.version').search(cr,uid,[('pricelist_id','=',pricelist)])
+                    if pricelist_ids:
+                        for pricelist_id in pricelist_ids:
+                            product_pricelist_item_obj = self.pool.get('product.pricelist.item')                        
+                            item_id = product_pricelist_item_obj.search(cr, uid, ['&', ('price_version_id', '=', pricelist_id), ('product_id', '=', product), ('product_uom_id', '=', uom)])
+                            if item_id:
+                               product_pricelist_item_data=product_pricelist_item_obj.browse(cr,uid,item_id,context=None)
+                               if product_pricelist_item_data:
+                                   price = product_pricelist_item_data.new_price            
             if price is False:
                 warn_msg = _("Cannot find a pricelist line matching this product and quantity.\n"
                         "You have to change either the product, the quantity or the pricelist.")
