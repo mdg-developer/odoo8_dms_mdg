@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record model="ir.ui.view" id="view_sale_team_form">
+			<field name="name">crm</field>
+			<field name="model">crm.case.section</field>
+			<field name="inherit_id" ref="sales_team.crm_case_section_view_form" />
+			<field name="priority" eval="20" />
+			<field name="arch" type="xml">
+	           <xpath expr="//group[@name='left']" position="after">
+	            <group>			
+	                 <field name="weekly_sales_target" string="Weekly Sales Target" class="oe_inline"/> 
+	                 <field name="monthly_sales_target" string="Monthly Sales Target" class="oe_inline"/> 
+	                 <field name="annual_sales_target" string="Annual Sales Target" class="oe_inline"/> 
+               </group>	
+                </xpath>		        			
+			</field>
+		</record>
+	</data>
+</openerp>
+		
