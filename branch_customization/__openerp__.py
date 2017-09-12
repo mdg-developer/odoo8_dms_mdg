@@ -47,6 +47,7 @@ Branch Customization
          'views/sale_team_view.xml',
          'views/customer_asset_view.xml',
          'views/ar_collection_view.xml',
+         'views/purchase_view.xml'
                 ],
     'installable': True,
     'auto_install': False,
