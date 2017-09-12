@@ -34,7 +34,7 @@
 
 					<h4>
 						<strong>
-							Good Recieve Note
+							Good Receive Note
 						</strong>
 					</h4>
 
@@ -102,12 +102,21 @@
 								<span t-field="o.no_of_container" />
 							</td>
 						</tr>
+						<tr>
+						<td style="border:0pt;font-size:10pt;">
+							<strong>Last Updated on:</strong>
+						</td>
+						<td style="border:0pt;font-size:10pt;">
+							<span t-field="o.write_date" />
+						</td>
+					</tr>
 
 					</table>
 
 					<table class="table table-condensed">
 						<thead>
 							<tr>
+								<th>No</th>
 								<th>Item Description</th>
 								<th>Item Specification</th>
 								<th>Batch No</th>
@@ -122,6 +131,9 @@
 						<tbody class="invoice_tbody">
 							<tr t-foreach="o.p_line.sorted(key=lambda b: b.sequence)"
 								t-as="l">
+								<td style="border:0pt solid;border-color:black;" align="center">
+										<t t-esc="l_index+1" />
+								</td>
 								<td>
 									<span t-field="l.product_id" />
 								</td>
