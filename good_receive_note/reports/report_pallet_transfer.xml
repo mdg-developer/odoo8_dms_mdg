@@ -70,6 +70,14 @@
 								<span t-field="o.receive_date" />
 							</td>
 						</tr>
+						<tr>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Last Updated on:</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.write_date" />
+							</td>
+						</tr>
 					</table>
 
 					<table class="table table-condensed">

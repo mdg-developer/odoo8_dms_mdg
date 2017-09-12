@@ -94,7 +94,8 @@ class good_receive_note(osv.osv):
             for line in move_ids:          
                 line_data = move_obj.browse(cr, uid, line, context=context)
                 product_id = line_data.product_id.id
-                description = line_data.product_id.name_template
+#                description = line_data.product_id.name_template
+                description = line_data.product_id.product_tmpl_id.description_sale
                 quantity = line_data.product_uom_qty
                 sequence = line_data.product_id.product_tmpl_id.sequence
                 product_uom = line_data.product_uom.id
@@ -264,7 +265,8 @@ class good_receive_line(osv.osv):  # #prod_pricelist_update_line
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             values = {
                 'sequence': product.product_tmpl_id.sequence,
-                'description':product.name_template,
+#                'description':product.name_template,
+                'description':product.product_tmpl_id.description_sale,
                 'product_uom':product.product_tmpl_id.uom_id,
             }
         return {'value': values}
