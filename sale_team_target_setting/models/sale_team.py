@@ -9,8 +9,8 @@ class crm_case_section(osv.osv):
     _inherit = 'crm.case.section'
   
     _columns = {
-               'weekly_sales_target': fields.char('Weekly Sales Target'),
-               'monthly_sales_target': fields.char('Monthly Sales Target'),
-               'annual_sales_target': fields.char('Annual Sales Target'),
+               'weekly_sales_target': fields.float('Weekly Sales Target'),
+               'monthly_sales_target': fields.float('Monthly Sales Target'),
+               'annual_sales_target': fields.float('Annual Sales Target'),
                            
         }

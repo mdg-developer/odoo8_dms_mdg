@@ -151,8 +151,7 @@
 					<!-- </kanban> -->
 					<!-- </field> -->
 					<!-- </page> -->
-				</page>
-
+				</page>				   
 			</field>
 		</record>
 
@@ -330,6 +329,7 @@
 			name ="Sales Teams" -->
 		<!-- sequence="1" parent="base.menu_sales" groups="base.group_multi_salesteams" 
 			/> -->
+			
 	</data>
 </openerp>
 		

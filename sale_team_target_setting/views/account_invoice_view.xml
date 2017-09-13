@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		 <!--  <record id="invoice_form_inherit1" model="ir.ui.view">
+            <field name="name">account.invoice.form1</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form" />
+            <field name="arch" type="xml">
+            <xpath expr="//notebook/page[string='Payments']/field[name='payment_ids']/tree/field[name='amount_currency']" position="before">
+            	<field name="amount_total"/>
+            </xpath>
+            <xpath expr="//form/sheet/notebook/page[3]/field[name='payment_ids']/tree[string='Payments']/field[name='amount_currency']" position="after">
+            <field name="paid_amount"/>
+            <field name="residual" />
+            </xpath>
+            </field>
+          </record> -->
+          <record id="invoice_form_inherit1" model="ir.ui.view">
+			<field name="name">invoice_form_inherit1</field>
+			<field name="model">account.invoice</field>
+			<field name="inherit_id" ref="account.invoice_form" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath
+						expr="//tree/field[@name='amount_currency']"
+						position="before">
+						 <field name="amount_total" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>                       
+					</xpath>
+					<xpath
+						expr="//tree/field[@name='amount_currency']"
+						position="after">						 
+                         <field name="residual" groups="account.group_account_user" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+					</xpath>
+				</data>
+			</field>
+		</record>
+
+			
+	</data>
+</openerp>
+		
