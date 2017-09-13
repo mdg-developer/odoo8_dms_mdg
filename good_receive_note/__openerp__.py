@@ -42,6 +42,8 @@ Good Receive Note Module
         'reports/report_good_receive_note.xml',
         'reports/report_pallet_transfer.xml',
         'reports/report_stock_space_view.xml',
+        'views/purchase_view.xml',
+        'reports/report_pallet_stock_view.xml'
     ],
     'test': [
 

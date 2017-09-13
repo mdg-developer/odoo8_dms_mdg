@@ -20,6 +20,6 @@
 ##############################################################################
 
 import report_stock_space
-
+import report_pallet_stock
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

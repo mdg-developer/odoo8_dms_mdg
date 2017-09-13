@@ -10,7 +10,6 @@
 					<field name="name" type="row" />
 					<field name="maingroup_id" type="col" />
 					<field name="product_move_type_id" type="col" />
-
 				</graph>
 			</field>
 		</record>
@@ -30,6 +29,8 @@
 				</tree>
 			</field>
 		</record>
+		
+		
 		<record model="ir.ui.view" id="report_stock_space_search">
 			<field name="name">report.stock.space.search</field>
 			<field name="model">report.stock.space</field>
