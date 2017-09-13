@@ -1,0 +1,98 @@
+<openerp>
+  <data>  
+    <record model="ir.ui.view" id="view_ot_approval_tree">
+        <field name="name">Attendance Report</field>
+        <field name="model">attendance.data.import</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Attendance Data Report">      								
+ 				<field name="employee_id" attrs="{'readonly': ['|',('state', '=', 'draft')]}"/> 
+				<field name="department_id" attrs="{'readonly': ['|',('state', '=', 'draft')]}"/> 
+				<field name="onduty" attrs="{'readonly': ['|',('state', '=', 'draft')]}"/> 
+				<field name="offduty" attrs="{'readonly': ['|',('state', '=', 'draft')]}"/> 
+				<field name="clockin" attrs="{'readonly': ['|',('state', '=', 'draft')]}"/> 
+				<field name="clockout" attrs="{'readonly': ['|',('state', '=', 'draft')]}"/> 
+				<field name="date" attrs="{'readonly': ['|',('state', '=', 'draft')]}"/> 
+				<field name="timetable" attrs="{'readonly': ['|',('timetable', '=', 'Morning')]}"/> 
+				<field name="ot_time" attrs="{'readonly': ['|',('state', '=', 'draft')]}"/> 
+				<field name="state" attrs="{'readonly': ['|',('state', '=', 'draft')]}"/>      
+            </tree>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="view_ot_report_form">
+        <field name="name">OT Report Form</field>
+        <field name="model">attendance.data.import</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Attendance">
+                	<header>
+ 						<button name="approve" string="Approve" type="object"
+							class="oe_highlight" attrs="{'invisible':[('state','in',('approve','decline'))]}"/>	
+						<button name="decline" string="Decline" type="object"
+							class="oe_highlight" attrs="{'visible':[('state','in',('approve','decline'))]}"/>	
+						<field name="state" widget="statusbar" statusbar_visible="draft,approve,decline" />
+					</header>
+					<sheet>
+	                <group>
+							<group>
+								<field name="fingerprint_id" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>									
+								<field name="employee_id" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>
+								<field name="department_id" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>
+								<field name="onduty" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>
+								<field name="clockin" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>
+								<field name="normal" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>
+								<field name="late" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>
+								<field name="absent" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>
+<!-- 								<field name="work_time" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>							 -->
+							</group>
+							<group>
+								<field name="date" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>
+								<field name="timetable" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>
+								<field name="ndays" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>
+								<field name="offduty" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>
+								<field name="clockout" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>
+								<field name="realtime" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>
+								<field name="early" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>
+								<field name="ot_time" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>
+							</group>
+						</group>               
+	               </sheet>                
+            </form>
+        </field>
+    </record>
+    
+    <record id="view_ot_filter" model="ir.ui.view">
+            <field name="name">Attendance</field>
+            <field name="model">attendance.data.import</field>
+            <field name="arch" type="xml">
+                <search string="Attendance">
+                    <field name="employee_id" />
+                    <field name="department_id" />                    
+                    <group expand="0" string="Group By">
+                        <filter string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
+                        <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
+                        <filter string="Status" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'state'}"/>
+                        
+                    </group>
+                </search>
+             </field>
+         </record>
+    
+    <record model="ir.actions.act_window" id="open_view_ot_approval_form">
+        <field name="name">Attendance Report</field>
+        <field name="res_model">attendance.data.import</field>
+		<field name="view_id" ref="ot_approval_v2.view_ot_approval_tree" />
+		<field name="search_view_id" ref="ot_approval_v2.view_ot_filter" />
+		<field name="view_type">form</field>
+        <field name="view_mode">form,tree</field>
+        <field name="domain">[('state','=','draft'),('ot_time','>',0)]</field>
+    </record>
+
+    <menuitem name="OT Approval"
+              parent="attendance_data_import_v2.menu_hr_attendance_parent" 
+              id="menu_ot_approval_report"
+              action="ot_approval_v2.open_view_ot_approval_form" sequence="3" />        
+     
+  </data>
+</openerp>

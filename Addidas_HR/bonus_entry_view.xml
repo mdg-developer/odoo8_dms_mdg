@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<menuitem id="menu_bonus" name="Bonus Entry Forms" sequence="18"
+			parent="hr.menu_hr_root" />
+		<record id="view_bonus_entry_form" model="ir.ui.view">
+			<field name="name">hr.bonus.entry.form.inherit.2</field>
+			<field name="model">hr.bonus.entry</field>
+			<field name="arch" type="xml">
+				<form string="Bonus Entry" version="7.0">
+					<header>
+						<button name="confirm" string="Confirm" states='draft' class="oe_highlight"
+							type="object" />
+
+						<field name="state" widget="statusbar" statusbar_visible="draft,confirm"
+							statusbar_colors='{"draft,confirm":"blue"}' />
+					</header>
+					<sheet>
+						<group>
+							<group>
+								<field name="employee_id" on_change="onchange_employee_id(employee_id)" />
+								<field name="entry_date" />
+							</group>
+							<group>
+								<field name="department_id" />
+
+							</group>
+
+						</group>
+						<notebook>
+							<page string="Bonus Entry">
+
+
+								<group>
+									<group string="Skill Bonus">
+										<field name="skill_type_id" />
+									</group>
+									<group string="Critical Skill Bonus">
+										<field name="critical_grade_id" />
+									</group>
+									<group string="Position Bonus">
+										<field name="position_grade_id" />
+										<field name="special_amount" />
+
+									</group>
+									<group string="Language Bonus">
+										<field name="language_grade_id" />
+									</group>
+									<group string="Special Skill Bonus">
+										<field name="amount" />
+										<field name="internal_note" />										
+									</group>
+									<group>
+										<field name="factory_driver_license_amt" />
+										<field name="electricity_certificate_amt" />
+									</group>
+								</group>
+
+							</page>
+						</notebook>
+					</sheet>
+
+				</form>
+			</field>
+
+		</record>
+		<record model="ir.ui.view" id="view_hr_bonus_entry_tree">
+			<field name="name">hr.bonus.entry List</field>
+			<field name="model">hr.bonus.entry</field>
+			<field name="arch" type="xml">
+				<tree string="Bonus Entry" colors="red:state=='draft';blue:state=='confirm'">
+					<field name="employee_id" />
+					<field name="entry_date" />
+					<field name="department_id" />
+					<field name="state"/>
+				</tree>
+			</field>
+		</record>
+		<record id="open_view_hr_bonus_entry" model="ir.actions.act_window">
+			<field name="name">Bonus Entry</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">hr.bonus.entry</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_hr_bonus_entry_tree" />
+		</record>
+		<menuitem action="open_view_hr_bonus_entry" id="menu_open_view_hr_loan"
+			name="Bouns Entry For Each Employee" parent="menu_bonus" sequence="1" /> 
+	</data>
+</openerp>

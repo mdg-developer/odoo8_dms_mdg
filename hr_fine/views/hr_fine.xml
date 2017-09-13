@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record model="ir.ui.view" id="view_fine_reason_form">
+			<field name="name">hr_fine_reason_form</field>
+			<field name="model">hr.fine.reason</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="HR Fine Reason">
+					<sheet>
+						<group>
+							<field name="code" /> 
+							<field name="name" />	
+							<field name="fine_amount" />						
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		<record id="view_hr_fine_reason_tree" model="ir.ui.view">
+			<field name="name">hr_fine_reason_tree</field>
+			<field name="model">hr.fine.reason</field>
+			<field name="arch" type="xml">
+				<tree string="Fine" colors="red:state=='draft';blue:state=='pending';black:state=='paid'">
+					<field name="code" /> 
+					<field name="name" />
+					<field name="fine_amount" />
+				</tree>
+			</field>
+		</record>
+		<record id="hr_fine_reason_all" model="ir.actions.act_window">
+			<field name="name">Fine_Reason</field>
+			<field name="res_model">hr.fine.reason</field>
+			<field name="view_type">form</field>
+			<field name="view_id" ref="view_hr_fine_reason_tree" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to register new Fine Reason for Company's employee.
+				</p>
+			</field>
+		</record>
+		
+		<record model="ir.ui.view" id="view_fine_form">
+			<field name="name">hr_fine_form</field>
+			<field name="model">hr.fine</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="HR Fine">
+					<sheet>
+						<group>
+							<field name="employee_id" on_change="onchange_employee_id(employee_id)"/> 
+							<field name="badge_id"/>
+							<field name="lost_date" />
+							<field name="department_id" />
+					        <field name="job_id"/>
+							<field name="reason_id" on_change="onchange_reason_id(reason_id)"/>
+							<field name="fine_amount" />									
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		<record id="view_hr_fine_tree" model="ir.ui.view">
+			<field name="name">hr_fine_tree</field>
+			<field name="model">hr.fine</field>
+			<field name="arch" type="xml">
+				<tree string="Fine">
+				    <field name="badge_id" />
+					<field name="employee_id" />				
+					<field name="department_id" />
+					<field name="job_id" />
+					<field name="lost_date" />
+					<field name="reason_id" />
+					<field name="fine_amount" />
+				</tree>
+			</field>
+		</record>
+		
+		<record id="hr_fine_all" model="ir.actions.act_window">
+			<field name="name">Fine</field>
+			<field name="res_model">hr.fine</field>
+			<field name="view_type">form</field>
+			<field name="view_id" ref="view_hr_fine_tree" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to register new Fine for Company's employee.
+				</p>
+			</field>
+		</record>
+		<menuitem id="menu_hr_fine_parent" parent='hr.menu_hr_root'  name="Fine" sequence="16"/>	
+		<menuitem id="menu_hr_fine" name="Fine"
+			parent="hr_fine.menu_hr_fine_parent" action="hr_fine_all"
+			sequence="1" />			
+		
+	</data>
+</openerp>

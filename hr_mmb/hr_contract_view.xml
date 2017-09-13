@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+      <record id="hr_contract_view_form" model="ir.ui.view">
+            <field name="name">hr.contract.view.form.contract_init</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='job_id']" position="replace">
+                    <field name="job_id" on_change="onchange_job(job_id)"/>
+                </xpath>
+            </field>
+        </record>
+    
+		<record id="mmb_hr_hr_employee_view_form2" model="ir.ui.view">
+			<field name="name">hr.contract.view.form</field>
+			<field name="model">hr.contract</field>
+			<field name="inherit_id" ref="hr_payroll.hr_contract_form_inherit" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//field[@name='struct_id']" position="before">
+						<field name="allowance" />
+						<field name="contribution" />
+						<field name="s_wage" />
+						<field name="s_allowance" />
+						<field name="s_contribution" />
+						<field name="life_insurance" />
+						<field name="year" />
+						<field name="allowance_amount" />
+					</xpath>
+
+				</data>
+			</field>
+		</record>
+		</data>
+</openerp>

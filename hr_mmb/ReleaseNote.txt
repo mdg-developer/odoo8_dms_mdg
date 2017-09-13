@@ -1,0 +1,137 @@
+hr_mmb --> Update
+hr_expense --> Update
+hr_holidays_ext  --> Update
+hr_payroll_extension  --> Update
+hr_family --> Update
+
+
+for birt
+-- from temp table
+emp-temp1 --> Delete the existing one and run the script again
+Run Salary_payslip_report.sql (StoreProcedure > salary_calculation_employee)
+
+
+----------------------------------------------------------------------------------
+hr_mmb---> Update
+Change leave and late Report
+Change leave_balance.sql
+Change incometax_calculation.sql
+Run incometax_temp table script
+Change incometax_calculation_report.rptdesign
+Change Late Report
+
+
+branch policy >
+WORKLD4 ,WORKLD5,WORKLD6<<TO Change Pay Day So late Policy Calculation For this Day.
+-----------------------------------------------------------------------------------
+Run Late and Leave Detail Report.sql 
+Run Leave Balance.Sqls
+
+
+----------------------
+2015-08-11
+----------
+Run all_employee_history.sql for All Employee Report (Female/male count)
+Run Employee_history Temp (File path >>>hr_mmb>temp_table>report_temp.sql>employee_history temp
+Deploy all_employee_count.rptdesign
+---------------------------------------
+Run employee_dep_history.sql for All Employee list Report with each department
+Run dep_history Temp (File path >>>hr_mmb>temp_table>report_temp.sql>dep_history temp
+Deploy all_dep_emp_list.rptdesign
+-------------------------------------------
+2015-08-18
+----------
+length_service_report.rptdesign
+emp_count_with_job_by_dep.rptdesign
+employee_age_greater_than_60year.rptdesign
+employee_list_by_job.rptdesign
+incometax_calculation_report.rptdesign
+late_report.rptdesign
+leaves_and_lates_for_month.rptdesign
+ssb_with_employee_employer.rptdesign
+total_amount_overtime_for_branch.rptdesign
+total_ot_amt_by_each_dept.rptdesign
+------------------------------------
+employee_dep_history.sql
+all_employee_history.sql
+incometax_calculation.sql
+Late And Leave Detail Report.sql
+leave_balance.sql
+overtime_report_by_month.sql
+-------------------------------------------------
+2015-08-19
+
+Run income_tax_monthly_report.sql for Income Tax MonthlyReport
+Run monthly_incometax_temp (File path >>>hr_mmb>temp_table>report_temp.sql>monthly_incometax_temp
+Deploy income_tax_monthly_report.rptdesign
+
+--------------------
+
+Run ssb_monthly_report.sql for SSB Monthly Report
+Run ssb_monthly_temp (File path >>>hr_mmb>temp_table>report_temp.sql>ssb_monthly_temp
+Deploy ssb_monthly_report.rptdesign
+----------------------
+19-08_2015
+---------
+hr_mmb/birt_report/all_dep_emp_list.rptdesign
+hr_mmb/birt_report/all_employee_count.rptdesign
+hr_mmb/birt_report/basicsalary_for_ssbfee.rptdesign
+hr_mmb/birt_report/child_age_report.rptdesign
+hr_mmb/birt_report/emp_count_with_job_by_dep.rptdesign
+hr_mmb/birt_report/employee_list_by_dep.rptdesign
+hr_mmb/birt_report/employee_list_by_job.rptdesign
+hr_mmb/birt_report/length_of_service.rptdesign
+hr_mmb/birt_report/salary_calculation_employee.rptdesign
+hr_mmb/birt_report/salary_calculation_report.rptdesign
+hr_mmb/birt_report/salary_dept_calculation_report.rptdesign
+hr_mmb/birt_report/total_amount_overtime_for_branch.rptdesign 
+--
+incometax_monthly_report.sql
+incometax_payment.sql
+-------------------------------
+-21-08-2015--
+salary_calculation_employee.sql
+salary_calculation.sql
+salary_dept_calculation.sql
+run scrpit employee_dept_temp_table(odoo-hr/hr_mmb/temp_table/report_temp.sql)
+run script employee_temp_table(odoo-hr/hr_mmb/temp_table/report_temp.sql)
+------------
+25-08-2015
+run 
+salary_calculation_employee.sql
+salary_calculation.sql 
+
+------------
+run fp_out_absence
+run sign_out_absence.sql
+deploy sign_out_absence.rptdesign
+
+-----------------
+Date (15-10-2015)
+insert python code In Each Rule
+
+Look hr_mmb>SalaryRuleReq
+
+Copy 
+-Aid to Staff(Per)
+-Aid to Staff(Pro)
+-Basic Salary(Per)
+-Basic Salary(Pro)
+-Labour Welfare(Per)
+-Labour Welfare(Pro)
+
+Run /odoo-hr/hr_mmb/storeprocedure/salary_calculation_employee.sql
+Change odoo-hr/hr_mmb/birt_report/emp_payslip_monthly_report.rptdesign
+ ---------------------------
+ Date(30-12-2015)
+ -incometax_report.rptdesign
+ -Fix incometax_payment.sql
+ -Run incometax_payment_temp
+ -incometax_calculation_report.rptdesign
+ -Run incometax_calculation.sql
+ 
+ ------------------------------
+ Date (31-12-2015)
+ ------------------
+ -incometax_monthly_report.rptdesign
+ -Run incometax_monthly_report.sql

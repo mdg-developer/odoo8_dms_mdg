@@ -1,0 +1,98 @@
+<openerp>
+  <data>
+  
+  
+      <!-- Add trial_end_date,wage in Employee Tree -->
+    <record id="view_employee_trial_end_tree_view" model="ir.ui.view">
+			<field name="name">hr.employee.tree.inheritance</field>
+			<field name="model">hr.employee</field>
+			<field name="type">tree</field>
+			<field name="inherit_id" ref="hr.view_employee_tree" />
+			<field name="arch" type="xml">			
+				<field name="department_id" position="before">
+					<field name="trial_end_date" />
+					<field name="date_end" />
+					<field name="effective_date" />
+				</field>
+				<field name="job_id" position="after">
+				    <field name="struct_id" />
+					<field name="wage" />
+				</field>
+				<field name="work_phone" position="replace">
+					<field name="work_phone" invisible="1"/>
+				</field>
+				<field name="work_email" position="replace">
+					<field name="work_email" invisible="1"/>
+				</field>
+				<field name="work_phone" position="after">
+					<field name="mobile_phone"/>
+					<field name="fam_father"/>
+					<field name="initial_employment_date"/>
+				</field>
+				<field name="name" position="after">
+					<field name="identification_id"/>
+					<field name="gender"/>
+				</field>	
+			</field>
+	</record>
+	
+     <!-- Add labour_card,ssb in Employee Form -->
+     <record model="ir.ui.view" id="view_employee_ssb_form_inherit">
+        <field name="name">hr.training.employee.form</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">  
+       
+        	<field name="manager" position="after">
+					<field name="first_aider"/>
+					<field name="fire_figher"/>
+					<field name="ohs"/>
+					<field name="restricted_allowed"/>
+			</field>
+			
+			<xpath expr="//group[@name='active_group']" position="before" sequence="4">
+			     <group string="SSB">
+			        <field name="ssb"/>
+					<field name="ssb_effective_date"/>
+			     </group>
+			</xpath>
+			<xpath expr="//group[@name='active_group']" position="before" sequence="3">
+                 <group string="Labour">
+		            <field name="labour_card"/>
+					<field name="labour_referenceno"/>
+					<field name="labour_card_release_date"/>
+                 </group>
+           </xpath>
+        </field>
+    </record>  
+     
+	<!-- Add Today Trial End Date in Employee Filter-->
+     <record id="view_employee_trial_end_filter" model="ir.ui.view">
+            <field name="name">Employees Trial End Date</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_filter"/>
+            <field name="arch" type="xml">
+                <field name="department_id" position="after">
+                    <filter string="Today Trial End Date" domain="[('trial_end_date', '&gt;=', datetime.datetime.now().strftime('%Y-%m-%d 00:00:00')),('trial_end_date', '&lt;=', datetime.datetime.now().strftime('%Y-%m-%d 23:23:59'))]"/>
+                    <filter string="Today Contract End Date" domain="[('date_end', '&gt;=', datetime.datetime.now().strftime('%Y-%m-%d 00:00:00')),('date_end', '&lt;=', datetime.datetime.now().strftime('%Y-%m-%d 23:23:59'))]"/>
+                   	<filter string="This Month Contract End Date" 
+                   	domain="[('date_end','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%Y-%m-%d')),('date_end','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%Y-%m-%d'))]"/>
+                   	<filter string="This Month Initial Date of Employment" 
+                   	domain="[('initial_employment_date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%Y-%m-%d')),('initial_employment_date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%Y-%m-%d'))]"/>		                
+               		<filter string="First Aider" icon="terp-personal" domain="[]" context="{'group_by':'first_aider'}"/>
+					 <filter string="Fire Fighter" icon="terp-personal" domain="[]" context="{'group_by':'fire_figher'}"/>
+					 <filter string="OHS Member" icon="terp-personal" domain="[]" context="{'group_by':'ohs'}"/>
+					 <filter string="Allowed Restricted Area" icon="terp-personal" domain="[]" context="{'group_by':'restricted_allowed'}"/>	
+                </field>
+                
+                <group>	
+	                <field name="job_id" position="after" sequence="2">
+		                <filter string="Gender" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'gender'}"/>
+		                <filter string="Salary Structure" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'struct_id'}"/>
+		            </field>
+	            </group>
+            </field>
+    </record>
+     
+  </data>
+</openerp>

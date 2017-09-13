@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+
+		<record id="ir_seq_type_hr_employee" model="ir.sequence.type">
+			<field name="name">Employee</field>
+			<field name="code">hr.employee.code</field>
+		</record>
+		
+		<!--
+			Sequence
+		-->
+		
+		<record id="ir_seq_hr_employee" model="ir.sequence">
+			<field name="name">Loan Request</field>
+			<field name="code">hr.employee.code</field>
+			<field name="prefix"></field>
+			<field name="padding">6</field>
+			<field name="number_increment">1</field>
+			<field name="number_next_actual">1</field>			
+		</record>
+		
+		<record id="ir_seq_type_hr_fingerprint" model="ir.sequence.type">
+			<field name="name">Finger Print</field>
+			<field name="code">hr.employee.prefix</field>
+		</record>
+		
+		<record id="ir_seq_hr_fingerprint" model="ir.sequence">
+			<field name="name">Finger Print</field>
+			<field name="code">hr.employee.prefix</field>
+			<field name="prefix">%(year)s</field>
+			<field name="padding">4</field>
+			<field name="number_increment">1</field>
+			<field name="number_next_actual">1</field>			
+		</record>
+		
+		
+		
+	</data>
+</openerp>

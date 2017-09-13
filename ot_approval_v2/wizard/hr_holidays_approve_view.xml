@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_hr_holidays_approve" model="ir.ui.view">
+            <field name="name">Approve Leave</field>
+            <field name="model">hr.holidays.approve</field>
+            <field name="arch" type="xml">
+                <form string="Approve Leave">
+                    <separator colspan="4" string="Do you really want to approve the Leave(s)?" />
+                    <footer>
+                        <button name="approve_request" string="Approve Leaves" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_hr_holidays_approve" model="ir.actions.act_window">
+            <field name="name">Approve</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.holidays.approve</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_hr_holidays_approve"/>
+            <field name="target">new</field>
+            <field name="multi">True</field>
+        </record>
+
+
+        <record model="ir.values" id="hr_holidays_approve">
+            <field name="name">Make Approval</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_hr_holidays_approve'))" />
+            <field name="key">action</field>
+            <field name="model">hr.holidays</field>
+        </record>
+
+    </data>
+</openerp>

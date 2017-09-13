@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+ <data>
+
+  <template id="custom_layout">
+
+   <t t-call="hr_customization.custom_layout_header" />
+   <t t-raw="0" />
+   <t t-call="hr_customization.custom_layout_footer" />
+  </template>
+
+  <template id="custom_layout_header">
+
+  </template>
+
+  <template id="custom_layout_footer">
+   
+  </template>
+ </data>
+</openerp>

@@ -1,0 +1,191 @@
+Income tax (Python Code)
+(
+mon_salary=contract.tax_wage*12
+per_salary=mon_salary*0.20
+ssb_fee=contract.tax_wage*0.02
+is_father=employee.is_fam_father
+is_mother=employee.is_fam_mother
+is_f_inlaw=employee.is_father_inlaw
+is_m_inlaw=employee.is_mother_inlaw
+if (is_father==True and is_mother==True and is_f_inlaw==True and is_m_inlaw==True):
+    f_amount=4000000.00;
+elif (is_father==True and is_mother==True and is_f_inlaw==True and is_m_inlaw==False):
+    f_amount=3000000.00;
+elif (is_father==True and is_mother==True and is_f_inlaw==False and is_m_inlaw==False):
+    f_amount=2000000.00;
+elif (is_father==True and is_mother==False and is_f_inlaw==False and is_m_inlaw==False):
+    f_amount=1000000.00;
+elif (is_father==False and is_mother==True and is_f_inlaw==True and is_m_inlaw==True):
+    f_amount=3000000.00;
+elif (is_father==False and is_mother==True and is_f_inlaw==False and is_m_inlaw==True):
+    f_amount=2000000.00;
+elif (is_father==False and is_mother==True and is_f_inlaw==True and is_m_inlaw==False):
+    f_amount=2000000.00;
+elif (is_father==False and is_mother==True and is_f_inlaw==False and is_m_inlaw==False):
+    f_amount=1000000.00;
+elif (is_father==False and is_mother==False and is_f_inlaw==True and is_m_inlaw==True):
+    f_amount=2000000.00;
+elif (is_father==False and is_mother==False and is_f_inlaw==False and is_m_inlaw==True):
+    f_amount=1000000.00;
+elif (is_father==False and is_mother==False and is_f_inlaw==True and is_m_inlaw==False):
+    f_amount=1000000.00;
+elif (is_father==True and is_mother==False and is_f_inlaw==True and is_m_inlaw==True):
+    f_amount=3000000.00;
+elif (is_father==True and is_mother==False and is_f_inlaw==False and is_m_inlaw==True):
+    f_amount=2000000.00;
+elif (is_father==True and is_mother==True and is_f_inlaw==False and is_m_inlaw==True):
+    f_amount=3000000.00;
+elif (is_father==True and is_mother==False and is_f_inlaw==True and is_m_inlaw==False):
+    f_amount=2000000.00;
+else:
+    f_amount=0.00;
+first_amount=(mon_salary)-(per_salary+ssb_fee)
+first_amount_with_f_amount=(first_amount-f_amount)
+children=employee.children
+if(employee.children>0):
+  amount=1000000.00+(children*500000.00);
+else:
+  amount=1000000.00;
+last_amount=(first_amount_with_f_amount-amount)
+result=0
+if(employee.marital=='single'):
+  if(first_amount_with_f_amount<2000000):
+      result=0;
+  else:
+       amount1=first_amount_with_f_amount-2000000
+       if(amount1>3000000):
+           amount2=amount1-3000000
+           result=((3000000*0.05)/12);
+           if(amount2>5000000):
+              amount3=amount2-5000000
+              result=(((5000000*0.10)+150000)/12);
+              if(amount3>10000000):
+                 amount4=amount3-10000000
+                 result=(((10000000*0.15)+650000)/12);
+                 if(amount4>10000000):
+                    amount5=amount4-10000000
+                    result=(((10000000*0.20)+2150000)/12);
+                    if(amount5>30000000):
+                        result=(((30000000*0.25)+4150000)/12);
+                 else:
+                    result=((((amount4)*0.20)+2150000)/12);
+              else:
+                 result=((((amount3)*0.15)+650000)/12);
+           else:
+              result=((((amount2)*0.10)+150000)/12);
+       else:
+           result=(((amount1)*0.05)/12);
+else:
+      if(last_amount<2000000):
+          result=0;
+      else:
+           amount1=last_amount-2000000
+           if(amount1>3000000):
+               amount2=amount1-3000000
+               result=((3000000*0.05)/12);
+               if(amount2>5000000):
+                  amount3=amount2-5000000
+                  result=(((5000000*0.10)+150000)/12);
+                  if(amount3>10000000):
+                     amount4=amount3-10000000
+                     result=(((10000000*0.15)+650000)/12);
+                     if(amount4>10000000):
+                        amount5=amount4-10000000
+                        result=(((10000000*0.20)+2150000)/12);
+                        if(amount5>30000000):
+                            result=(((30000000*0.25)+4150000)/12);
+                     else:
+                        result=((((amount4)*0.20)+2150000)/12);
+                  else:
+                        result=((((amount3)*0.15)+650000)/12);
+               else:
+                        result=((((amount2)*0.10)+150000)/12);
+           else:
+                        result=(((amount1)*0.05)/12);
+    
+
+
+)
+-----------------------------------------------------------------
+ssb fee(python code)
+
+(
+result = -(contract.wage * 0.02);
+)
+  -------------------------------------------------------------
+unpaid leave (python code)
+(
+result = worked_days.UNPAID_LEAVE and worked_days.UNPAID_LEAVE.number_of_days or False
+result *=-(contract.wage/worked_days.MAX.total_month_day)
+)
+---------------------------------------------------------------
+fine (python code)
+input code  FE
+(
+result = inputs.FE.amount
+)
+----------------------------------------------------------------
+Late (python code)
+(
+frist_amount = 500*worked_days.LATE100.number_of_late_minute
+result = -(frist_amount) 
+)
+---------------------------------------------------------------------
+
+Basic Salary (python code)
+(
+result = contract.wage
+)
+------------------------------------------------------------------
+Absent Leave
+(
+result = worked_days.ABSENT_LEAVE and worked_days.ABSENT_LEAVE.number_of_days or False
+result *=-((contract.wage/worked_days.MAX.total_month_day)*2)
+
+)
+---------------
+New Appointment deduction
+(
+result = -(inputs.NAD.amount)
+)
+--------------------
+Net (USD)
+(
+result = categories.BASIC + categories.ALW + categories.DED
+)
+-----------------------
+Net(MMK)
+(
+result = categories.BASIC + categories.ALW + categories.DED
+)
+---------------
+Service Charge 
+
+inputs name : Service Charge 
+inputs code :SCG
+python code :(
+unpaid=worked_days.UNPAID_LEAVE and worked_days.UNPAID_LEAVE.number_of_days or False
+sick=worked_days.SICK_LEAVE and worked_days.SICK_LEAVE.number_of_days or False
+if(unpaid>0 or sick>0):
+  result=0;
+else:
+  result=inputs.SCG.amount
+)
+
+
+ 
+
+    
+
+  
+
+  
+
+    
+
+    
+
+   
+
+  
+  

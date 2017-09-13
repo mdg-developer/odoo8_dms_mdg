@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+	
+		<!-- ============================== Employee Bonus Form ============================== -->
+
+		<record id="employee_bonus_form" model="ir.ui.view">
+			<field name="name">Employee Bonus Setting Form</field>
+			<field name="model">hr.emp.bonus.settings</field>
+			<field name="arch" type="xml">
+				<form string="Fine Sheet">
+					<notebook>
+						<page string="Direct">
+							<sheet>
+								<group>
+		                             <group string="Week 1">
+		                                <field name="worker_w1_hit_ration"/>
+		                                <field name="factory_w1_hit_ration" />
+		                             </group>
+		                             <group string="Week 2">
+		                                 <field name="worker_w2_hit_ration" />
+		                                 <field name="factory_w2_hit_ration"/>
+		                             </group>
+		                             <group string="Week 3">
+		                                <field name="worker_w3_hit_ration"/>
+		                                <field name="factory_w3_hit_ration"/>
+		                             </group>
+		                             <group string="Week 4">
+		                                <field name="worker_w4_hit_ration" />	
+										<field name="factory_w4_hit_ration"/>
+		                             </group>
+		                             <group string="Overtarget Amount">
+		                             	<field name="over_target_amount" />
+		                             </group>
+		                        </group>
+							</sheet>
+						</page>
+						<page string="Indirect">
+							<sheet>
+								<group>
+		                             <group string="Grade A">
+		                                <field name="grade_a_emp"/>
+		                                <field name="grade_a_sup" />
+		                             </group>
+		                             <group string="Grade B">
+		                                 <field name="grade_b_emp" />
+		                                 <field name="grade_b_sup"/>
+		                             </group>
+		                             <group string="Grade C">
+		                                <field name="grade_c_emp"/>
+		                                <field name="grade_c_sup"/>
+		                             </group>
+		                             <group string="Grade D">
+		                                <field name="grade_d_emp" />	
+										<field name="grade_d_sup"/>										
+		                             </group>
+		                        </group>
+							</sheet>
+						</page>
+					</notebook>
+					
+				</form>
+			</field>
+		</record>
+
+		<!-- ============================== Employee Bonus Tree ============================== -->
+		<record id="employee_bonus_tree" model="ir.ui.view">
+			<field name="name">Employee Bonus Tree</field>
+			<field name="model">hr.emp.bonus.settings</field>
+			<field name="arch" type="xml">
+				<tree string="Employee Performance">
+					<field name="worker_w1_hit_ration"/>
+					<field name="factory_w1_hit_ration" />
+					<field name="over_target_amount" />
+				</tree>
+			</field>
+		</record>
+		<!-- ============================== Employee bonus setting Action ============================== -->
+		<record id="action_employee_bonus" model="ir.actions.act_window">
+			<field name="name">Employee Bonus Setting</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">hr.emp.bonus.settings</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="employee_bonus_tree" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to register new Employee Bonus Setting
+				</p>
+			</field>
+		</record>
+		<!--  <menuitem id="employee_bonus_setting_id" action="action_employee_bonus" 
+			name="Emloyee Bonus Setting" parent="hr.menu_hr_configuration" sequence="17"/> -->
+		
+		<menuitem action="action_employee_bonus" id="employee_bonus_setting_id"
+			name="Hit Rate Target" parent="Productivity_Bonus.productivity_bonus" sequence="2" /> 
+</data>
+</openerp>
+	

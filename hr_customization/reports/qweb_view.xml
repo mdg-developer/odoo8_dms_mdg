@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		
+		<report id="report_employee_card" model="hr.employee"
+			string="Employee Card" report_type="qweb-pdf"
+			name="hr_customization.report_employee_card_document" file="hr_customization.report_employee_card_document"
+			attachment_use="True" attachment="('Employee Card')+'.pdf'" />		
+		
+		<report id="report_employee_contract" model="hr.contract"
+			string="Employee Contract" report_type="qweb-html"
+			name="hr_customization.report_employee_contract_document" file="hr_customization.report_employee_contract_document"
+			attachment_use="True" attachment="('Contract')+'.pdf'" />	
+	</data>
+</openerp>

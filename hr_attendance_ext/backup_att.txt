@@ -1,0 +1,61 @@
+ def create_attendance_new(self, cr, uid, lines, context=None):
+        employee_pool = self.pool.get("hr.employee")
+        emp_fingerprint = {}
+        emp_new_emp=[]
+        emp_ids = employee_pool.search(cr, uid, [])
+        hr_emp_data = employee_pool.read(cr, uid,emp_ids, ['id', 'fingerprint_id'])
+        
+        for emp in hr_emp_data:
+            if emp['fingerprint_id']:
+                emp_fingerprint[int(emp['fingerprint_id'])] = emp['id']  
+        attendances = self.prepared_attendance(cr,uid,lines,context)
+        print "Total Number of attendance records %d" % len(attendances)
+        invalid_ids = []
+        for attance_line in attendances:
+            try:
+                entry_date = attance_line['date']
+                #print str(attance_line['id']).split()
+                cr.execute("select name_related from hr_employee where fingerprint_id  = %s",(str(attance_line['id']).split()))
+                employee_code =cr.fetchone()
+                if employee_code is None and invalid_ids.count(attance_line['id']) == 0:
+                    invalid_ids.append(attance_line['id'])
+                else:
+                    if 'Name' in attance_line:
+                        employee_code =  attance_line['Name']
+                        #e_id = employee_pool.search(cr,uid,[('fingerprint_id','=',attance_line['id'])])
+                        if not attance_line['id'] in emp_fingerprint :
+                            employee_ids = [employee_pool.create(cr, uid, {'name': employee_code, 'fingerprint_id':attance_line['id']})]
+                            employee_id = employee_ids[0]
+                            emp_fingerprint[attance_line['id']] = employee_id
+                    elif int(attance_line['id']) in emp_fingerprint:
+                        employee_id = emp_fingerprint[int(attance_line['id'])]
+                   # if employee_code is None and 'Name' in attance_line:
+                   #     employee_code =  attance_line['Name']            
+                                 
+                    #e_id = employee_pool.search(cr,uid,[('fingerprint_id','=',attance_line['id'])])
+                    #if not(attance_line['id'] in emp_fingerprint and e_id and employee_code):
+                     #   employee_ids = [employee_pool.create(cr, uid, {'name': employee_code, 'fingerprint_id':attance_line['id']})]
+                      #  employee_id = employee_ids[0]
+                       # emp_fingerprint[attance_line['id']] = employee_id
+                    #else:
+                    in_time = None
+                    out_time = None
+                    break_in_time = None
+                    break_out_time = None
+                    if 'inTime' in attance_line:
+                        in_time = attance_line['inTime']
+                    if 'outTime' in attance_line:
+                        out_time= attance_line['outTime']
+                    if 'Breakout' in attance_line:
+                        break_out_time = attance_line['Breakout']
+                    if 'Breakin' in attance_line:
+                        break_in_time= attance_line['Breakin']
+                        
+                    if employee_code and employee_id and entry_date:
+                        self.create_attendance_line(cr, uid, employee_id, entry_date, in_time, out_time,break_out_time , break_in_time, employee_code)
+            except Exception, e:
+                logger.error('Error %s', e)
+        if len(invalid_ids)>0:
+            raise osv.except_osv(('Invalid Id[s]!'), ('User Id[s]: %s are not register as users!!' % (invalid_ids)))
+        logger.info("Import Attendance Completed.")
+        return True

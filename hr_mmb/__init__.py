@@ -1,0 +1,9 @@
+import hr_payroll
+import hr_job
+import hr_contract
+import hr_employee
+import training_report
+import uniform_report
+#import wizard
+import incometax_detail_report
+import ssbfee_report

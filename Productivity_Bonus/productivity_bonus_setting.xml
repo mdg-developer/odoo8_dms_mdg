@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<menuitem id="productivity_bonus" name="Productivity Bonus Setting" sequence="19"
+			parent="hr.menu_hr_configuration" />
+		<!-- ============================== Productivity Bonus Setting Form ============================== -->
+
+		<record id="view_productivity_bonus_tree" model="ir.ui.view">
+			<field name="name">Productivity Bonus Tree</field>
+			<field name="model">productivity.bonus</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="date" />
+					<field name="name" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_productivity_bonus_form" model="ir.ui.view">
+			<field name="name">Productivity Bonus Entry</field>
+			<field name="model">productivity.bonus</field>
+			<field name="arch" type="xml">
+				<form string="Productivity Bonus Entry">
+					<sheet>
+						<group col="2">
+							<group>
+								<field name="date" />							
+							</group>
+							<group>
+								<field name="name"/>
+							</group>
+						</group>
+						<notebook>
+							<page string="Hit Rate">
+								<field name="rate_line_ids" colspan="3" nolabel="1">
+									<form string="Hit Rate">
+										<group col="3">
+											<!-- <field name="department_id" /> -->
+											<field name="emp_type" />
+											<field name="from_percentage" />
+											<field name="to_percentage"/>
+											<field name="grade"/>
+											<field name="productivity_bonus"/>
+											<!-- <field name="hite_rate_id" /> -->
+										</group>
+									</form>
+									<tree string="Hite Rate" editable="bottom">
+										<!-- <field name="department_id" /> -->
+											<field name="emp_type" />
+											<field name="from_percentage" />
+											<field name="to_percentage"/>
+											<field name="grade"/>
+											<field name="productivity_bonus"/>
+											<!-- <field name="hite_rate_id" /> -->
+									</tree>
+								</field>
+							</page>	
+							<page string="B/C Grade">
+								<field name="bc_line_ids" colspan="2" nolabel="1">
+									<form string="B/C Grade">
+										<group col="2">
+											<field name="emp_type" />
+											<field name="from_percentage" />
+											<field name="to_percentage" />
+											<field name="bc_amount" />
+										</group>
+									</form>
+									<tree string="B/C Grade" editable="bottom">
+										<field name="emp_type" />
+											<field name="from_percentage" />
+											<field name="to_percentage" />
+											<field name="bc_amount" />
+									</tree>
+								</field>
+							</page>							
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+
+		<!-- action bonus setting -->
+		<record id="action_view_productivity_bonus_tree" model="ir.actions.act_window">
+			<field name="name">Productivity Bonus Setting</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">productivity.bonus</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_productivity_bonus_tree" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to register new Productivity Bonus Setting
+				</p>
+			</field>
+		</record>
+
+		<!-- <menuitem id="productivity_bonus_setting_id" action="action_view_productivity_bonus_tree" 
+			name="Productivity Bonus Setting" parent="hr.menu_hr_configuration" sequence="13"/> -->
+
+		<menuitem action="action_view_productivity_bonus_tree" id="productivity_bonus_setting_id"
+			name="Hit Rate And B/C Rate" parent="productivity_bonus" />	
+	</data>
+</openerp>

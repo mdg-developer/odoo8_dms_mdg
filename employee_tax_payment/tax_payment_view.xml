@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<menuitem name="Tax Payment"
+            id="submenu_tax_payment"
+            parent="hr.menu_hr_main"/>
+              
+		<!-- ============================== Tax Payment Form ============================== -->
+
+		<record id="tax_payment_form" model="ir.ui.view">
+			<field name="name">Tax Payment Form</field>
+			<field name="model">tax.payment</field>
+			<field name="arch" type="xml">
+				<form string="Fine Sheet">
+					<sheet>
+						<group>
+							<field name="employee_id" on_change="onchange_job(employee_id)" />
+							<field name="description" />
+							<field name="amount" />
+							<field name="from_date"/>
+							<field name="to_date"/>
+							<field name="job"/>
+							<field name="date"/>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		<!-- ============================== Tax Payment Tree ============================== -->
+		<record id="tax_payment_tree" model="ir.ui.view">
+			<field name="name">tax_payment_tree</field>
+			<field name="model">tax.payment</field>
+			<field name="arch" type="xml">
+				<tree string="TaxPayment">
+					<field name="employee_id" />
+					<field name="description" />
+					<field name="amount" />
+					<field name="from_date"/>
+					<field name="to_date"/>
+					<field name="job"/>
+					<field name="date"/>
+				</tree>
+			</field>
+		</record>
+
+		<!-- ==============================Tax Payment Action================================ -->
+		<record id="action_tax_payment" model="ir.actions.act_window">
+			<field name="name">Tax Payment Form</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">tax.payment</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form,kanban</field>
+			<field name="view_id" ref="tax_payment_tree"></field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to register Tax Payment Form .
+				</p>
+			</field>
+		</record>
+		<menuitem action='action_tax_payment' id="second_tax_payment" parent="submenu_tax_payment" name="Tax Payment"/>
+	</data>
+</openerp>

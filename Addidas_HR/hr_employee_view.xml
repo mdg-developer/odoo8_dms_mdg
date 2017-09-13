@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record model="ir.ui.view" id="view_hr_employee_form">
+			<field name="name">hr.employee.info.inherit</field>
+			<field name="model">hr.employee</field>
+			<field name="inherit_id" ref="hr.view_employee_form" />
+			<field name="priority" eval="20" />
+			<field name="arch" type="xml">
+ 				<xpath expr="//label[@for='name']" position='before'>
+					<label for="working_no" class="oe_edit_only" groups="base.group_hr_user" />
+					<h1>
+						<field name="working_no" />
+					</h1>
+				</xpath>
+		
+                 <xpath expr="//field[@name='manager']" position="after">
+					<field name="supervisor" />
+					<field name="employee_type" />
+					
+				</xpath>
+				<xpath expr="//field[@name='education']" position="replace">
+					<field name="education_id" />
+				</xpath>
+				<xpath expr="//field[@name='education_id']" position="after">
+					<field name="working_exp" />
+					<field name="other" />
+					
+				</xpath>
+			</field>
+		</record>	
+		
+
+
+	</data>
+</openerp>
+
+ 

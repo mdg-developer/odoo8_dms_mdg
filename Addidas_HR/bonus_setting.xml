@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		
+		<!-- ============================== HR Bonus Setting Form ============================== -->
+
+		<record id="view_hr_bonus_tree" model="ir.ui.view">
+			<field name="name">hr.bonus.tree</field>
+			<field name="model">hr.bonus</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="full_skill_amt" />
+					<field name="multi_skill_amt" />
+					<field name="factory_driver_license_amt" />
+					<field name="electricity_certificate_amt" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_hr_bonus_form" model="ir.ui.view">
+			<field name="name">hr.bonus.form</field>
+			<field name="model">hr.bonus</field>
+			<field name="arch" type="xml">
+				<form string="Bonus Setting">
+					<sheet>
+						<group col="4">
+							<group>
+								<field name="full_skill_amt" />
+								<field name="multi_skill_amt" />
+							</group>
+							<group>
+								<field name="factory_driver_license_amt" />
+								<field name="electricity_certificate_amt" />
+							</group>
+						</group>
+						<notebook>
+							<page string="Language Bonus">
+								<field name="language_line_ids" colspan="4" nolabel="1">
+
+
+									<form string="Language Bonus">
+										<group col="4">
+											<field name="name" />
+											<field name="language_capacity" />
+											<field name="language_bonus_amt" />
+										</group>
+									</form>
+									<tree string="Language Bonus" editable="bottom">
+										<field name="name" />
+										<field name="language_capacity" />
+										<field name="language_bonus_amt" />
+
+									</tree>
+								</field>
+							</page>
+							<page string="Position Bonus">
+								<field name="position_line_ids" colspan="4" nolabel="1">
+									<form string="Position Bonus">
+										<group col="4">
+											<field name="name" />
+											<field name="job_id" invisible="1"/>
+											<field name="job_position_amt" />
+										</group>
+									</form>
+									<tree string="Position Bonus" editable="bottom">
+										<field name="name" />
+										<field name="job_id" invisible="1"/>
+										<field name="job_position_amt" />
+
+
+									</tree>
+
+								</field>
+							</page>
+							<page string="Critical Skill Bonus">
+								<field name="critical_line_ids" colspan="4" nolabel="1">
+									<form string="Critical Skill Bonus">
+										<group col="4">
+											<field name="name" />
+											<field name="critical_skill_amt" />
+											<field name="critical_skill_terms" />
+										</group>
+									</form>
+									<tree string="Critical Skill Bonus" editable="bottom">
+										<field name="name" />
+										<field name="critical_skill_amt" />
+										<field name="critical_skill_terms" />
+
+									</tree>
+
+								</field>
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+
+		<!-- action bonus setting -->
+		<record id="action_view_hr_bonus_tree" model="ir.actions.act_window">
+			<field name="name">Bonus Setting</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">hr.bonus</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_hr_bonus_tree" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to register new Bonus Setting
+
+				</p>
+			</field>
+		</record>
+
+		<menuitem action="action_view_hr_bonus_tree" id="menu_bonus_setting_id"
+			name="Bonus Setting" parent="hr.menu_hr_configuration" sequence="1"/>
+
+	</data>
+</openerp>

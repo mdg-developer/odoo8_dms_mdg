@@ -1,0 +1,46 @@
+Leave Types
+-----------
+    Name			 CODE
+Medical Leave		LVMEDICAL
+Casual Leave		LVCASUAL 
+Maternity Leave		LVMATERNITY
+Married Leave		LVMARRIED
+Annual Leave		LVANNUAL
+Funeral Leave		LVFUNERAL
+Vacation Leave		LVVACATION
+Unpaid Leave		LVUNPAID
+Absent Leave		LVABSENT
+
+
+Late Deduction Policy (Normal Late and Saturday Late) In Late Policy
+-------------------------------------------------------------------
+ Name                                    	 Code   	Type    					Rate   Active After Active Start Time Active End Time   Saturday late
+------------------------------------------------------------------------------------------------------------------
+Sign In Late(09:35 AM To 09:45 AM)			WORKLD1		Daily						0.00	0				09:35			09:45				False
+Sign In Late(09:46 AM To 09:55 AM)			WORKLD2		Daily						0.00	0				09:46			09:55				False
+Sign In Late(09:56 AM To 10:05 AM)			WORKLD3		Daily						0.00	0				09:56			10:05				False
+Sign In Late(10:06 AM To 14:00 AM)			WORKLD4		Daily						0.00	0				10:06			14:00				False
+Saturday Sign In Late(09:01 AM To 09:30 AM)	WORKLD5		Daily						0.00	0				09:01			09:30   			True	
+Saturday Sign In Late (Above 09:31 AM)		WORKLD6		Daily						0.00	0				09:31			12:59   			True	
+Break Over 45min							BRO			Break Over 45min			0.00	0	
+Break In,Break Out Absence					BA			Break In,Break Out Absence	0.00	0	
+-----------------------------
+Early Sign Out Deduction Policy (In OT policy)
+----------------------------------------------
+ Name                                    	 Code   Type    Rate   Active After Active Start Time Active End Time
+------------------------------------------------------------------------------------------------------------------
+
+Early Sign Out  (17:31 to 17:40)			ESO3	Daily	0.00	0					17:31		17:40
+Early Sign Out  (17:41 to 17:50)			ESO2	Daily	0.00	0					17:40		17:50
+Early Sign Out  (17:51 to 18:00)			ESO1	Daily	0.00	0					17:50		18:00
+----------------------------------------------------------------------
+
+Overtime Policies
+-----------------
+ Name                                    	 Code   Type    Rate   Active After Active Start Time Active End Time   OT Day Specific 
+-----------------------------------------------------------------------------------------------------------------------------------
+Normal OT (After 18:30 PM)					WORKOT1	Daily	0.00	0			18:30			  23:59
+Gazetted Holiday OT							WORKOT2	Public Holiday	0.00	0		
+Sunday OT									WORKOT3	Rest Day	0.00	0		
+Staturday OT (After 14:00)					WORKOT4	Daily	0.00	0		    14:00          	  23:59                (Saturday)
+--------------------------------------------------------------------------

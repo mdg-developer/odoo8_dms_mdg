@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<template id="style">
+			body {
+			color: #000 !important;
+			word-wrap:
+			break-word;
+			}
+			.border-black td {
+			border-top: 1pt solid black !important;
+			}
+			.table-condensed > thead > tr > th {
+			border-bottom: 1pt solid black
+			!important;
+			}
+			.table-condensed > tbody > tr {
+			page-break-inside: avoid
+			!important;
+			}
+			.zero_min_height {
+			min-height: 0pt !important;
+			}
+		</template>
+
+		<template id="ot_custom_layout1">
+			<!-- Multicompany -->
+			<t t-if="o and 'company_id' in o">
+				<t t-set="company" t-value="o.company_id"></t>
+			</t>
+			<t t-if="not o or not 'company_id' in o">
+				<t t-set="company" t-value="res_company"></t>
+			</t>
+
+			<t t-call="ot_approval_v2.ot_custom_layout_header1" />
+			<t t-raw="0" />
+			<t t-call="ot_approval_v2.ot_custom_layout_footer" />
+		</template>
+
+		<template id="ot_custom_layout_header1">
+			<div class="header">
+				<div class="row">
+ 					<h1 align="center" style="font-size:25pt;padding-top:3px;" ><b>Overtime Application Form</b></h1> 
+				</div>
+			</div>
+		</template>
+
+		<template id="ot_custom_layout_footer">
+			<div class="footer">
+				<div >
+				</div>
+			</div>
+		</template>
+	</data>
+</openerp>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		
+
+		<!--First level menu -->
+		
+		<record id="view_report_form" model="ir.ui.view">
+			<field name="name">MMB Salary Calculation Form</field>
+			<field name="model">salary.report</field>
+			<field name="arch" type="xml">
+				<form string="Salary Calculation report" version="7.0">
+ 
+				 
+					<group col="1">
+						<b>Salary Calculation Report</b><br/>
+						<a href="http://localhost:8080/birt/frameset?__report=salary_calculation_report.rptdesign" target="_blank"> Salary Calculation Report</a><br/>
+						<a href="http://localhost:8080/birt/frameset?__report=salary_calculation_employee.rptdesign" target="_blank"> Salary Calculation For Each Employee Report</a><br/>
+					</group> 
+					
+					
+					<footer>
+						<button string="Close" class="oe_highlight" special="cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+ 
+		
+		 <record id="action_salary_report" model="ir.actions.act_window">
+			<field name="name">Salary Report</field>
+			<field name="res_model">salary.report</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_report_form" />
+			<field name="target">new</field>
+		</record>
+		
+		
+		 <menuitem action="action_salary_report" id="menu_salary_sub1" name="Salary Report" parent="hr.menu_hr_reporting" sequence="1"/>
+			</data>
+			</openerp>
+			
+	    
+			 	

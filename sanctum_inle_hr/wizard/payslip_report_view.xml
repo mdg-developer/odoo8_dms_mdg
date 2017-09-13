@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		 
+	 
+		<record id="view_report_payslip_form" model="ir.ui.view">
+			<field name="name">Inle Payslip Form</field>
+			<field name="model">inle.payslip.report</field>
+			<field name="arch" type="xml">
+				<form string="payslip reports" version="7.0">
+ 
+				 
+					<group col="1">
+						<b>Payslip Report</b><br/>
+						
+						<a href="http://localhost:8080/birt/frameset?__report=payslip_report.rptdesign" target="_blank"> PaySlip Report</a><br/>
+						<a href="http://localhost:8080/birt/frameset?__report=summary_report_by_department.rptdesign" target="_blank">Summary Payslip Report By Department</a><br/>
+			
+				
+					</group> 
+					
+					
+					<footer>
+						<button string="Close" class="oe_highlight" special="cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+ 
+		
+		 <record id="action_report_payslip_report" model="ir.actions.act_window">
+			<field name="name">Print Report</field>
+			<field name="res_model">inle.payslip.report</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_report_payslip_form" />
+			<field name="target">new</field>
+		</record>
+		
+		
+	    <menuitem action="action_report_payslip_report" id="menu_inle_payslip_report"
+			name="Payslip Report" parent="hr_payroll.menu_hr_root_payroll"
+			sequence="10" />
+			</data>
+			</openerp>
+			
+	    
+			 	

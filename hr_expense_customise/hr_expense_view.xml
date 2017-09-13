@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- ============================== Add Uniform Record Form ============================== -->
+	
+		<record model="ir.ui.view" id="edit_uniform_name_form">
+			<field name="name">uniform.name.form</field>
+			<field name="model">uniform.name</field>
+			<field name="arch" type="xml">
+				<form>
+					<group>
+						<field name="name" />
+					</group>
+				</form>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="view_holiday_status_normal_tree">
+			<field name="name">uniform.name.normal.tree</field>
+			<field name="model">uniform.name</field>
+			<field name="priority">35</field>
+			<field name="arch" type="xml">
+				<tree string="Uniform Name">
+					<field name="name" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_hr_uniform_name_search" model="ir.ui.view">
+			<field name="name">uniform.name.search</field>
+			<field name="model">uniform.name</field>
+			<field name="arch" type="xml">
+				<search string="Uniform Name">
+					<field name="name" />
+				</search>
+			</field>
+		</record>
+
+		<record id="open_view_holiday_status" model="ir.actions.act_window">
+			<field name="name">Uniform Names</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">uniform.name</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" eval="view_holiday_status_normal_tree" />
+			<field name="search_view_id" ref="view_hr_uniform_name_search" />
+		</record>
+		<menuitem name="Uniform Name" action="open_view_holiday_status"
+			id="menu_open_view_uniform_status" parent="hr.menu_hr_configuration"
+			sequence="13" />	
+		<menuitem id="next_id_60" name="Expenses" sequence="17"
+			parent="hr.menu_hr_root" />
+		<!-- Expenses -->
+		<!-- ============================== United Living Employee Expense ============================== -->
+
+		<record id="view_ulm_expenses_line_tree" model="ir.ui.view">
+			<field name="name">hr_ulm_expense_line_tree</field>
+			<field name="model">hr.ulm.expense.line</field>
+			<field name="arch" type="xml">
+				<tree string="Expense Lines">
+					<field name="sequence" invisible="1" />
+					<field name="date_value" />
+					<field name="name" />
+					<field name="ref" />
+					<field name="unit_amount" />
+					<field name="unit_quantity" />
+					<field name="total_amount" sum="Total" />
+				</tree>
+			</field>
+		</record>
+
+
+		<record id="view_ulm_expenses_tree" model="ir.ui.view">
+			<field name="name">hr_ulm_expense_tree</field>
+			<field name="model">hr.ulm.expense</field>
+			<field name="arch" type="xml">
+				<tree string="Expenses" colors="red:state=='draft';blue:state=='pending';black:state=='paid'">
+					<field name="employee_id" />
+					<field name="department_id" invisible="1" />
+					<field name="job_id" invisible="1" />
+					<field name="date" />
+					<field name="name" />
+					<field name="amount" sum="Total Expense" />
+					<field name="paid_amount" sum="Total Paid Amount" />
+					<field name="balance" sum="Balance" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_editable_expenses_tree" model="ir.ui.view">
+			<field name="name">hr_ulm_expense_tree</field>
+			<field name="model">hr.ulm.expense</field>
+			<field name="arch" type="xml">
+				<tree colors="blue:state == 'draft';black:state in ('done');"
+					string="Expenses" editable="top">
+					<field name="employee_id" />
+					<field name="date" />
+					<field name="department_id" />
+					<field name="name" />
+					<field name="amount" />
+					<field name="balance" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+
+
+		<record id="view_expenses_form" model="ir.ui.view">
+			<field name="name">hr_ulm_expense_form</field>
+			<field name="model">hr.ulm.expense</field>
+			<field eval="25" name="priority" />
+			<field name="arch" type="xml">
+				<form string="Expenses Sheet" version="7.0">
+					<header>
+						<field name="state" widget="statusbar" statusbar_visible="draft,pending,paid"
+							statusbar_colors='{"draft,pending":"blue"}' />
+					</header>
+					<sheet>
+						<group>
+							<group>
+								<field name="employee_id" on_change="onchange_employee_id(employee_id)" />
+								<field name="date" />
+								<field name="department_id" />
+					            <field name="job_id"/>
+								<field name="company_id" groups="base.group_multi_company" />
+							</group>
+							<group>
+								<field name="name" />
+								<field name="paid_amount" state="pending,paid"/>
+								<field name="balance" />
+								<field name="currency_id" groups="base.group_multi_currency" />
+							</group>
+						</group>
+						<notebook>
+							<page string="Expenses">
+								<field name="line_ids" context="{'currency_id': currency_id}">
+									<form string="Expense Lines" version="7.0">
+										<group>
+											<group>
+												<field name="name" />
+												<field name="ref" />
+											</group>
+											<group>
+												<field name="unit_amount" />
+												<label for="unit_quantity" />
+												<div>
+													<field name="unit_quantity" class="oe_inline" />
+												</div>
+												<field name="date_value" />
+											</group>
+										</group>
+									</form>
+									<tree string="Expense Lines" editable="bottom">
+										<field name="sequence" invisible="1" />
+										<field name="date_value" string="Expense Date" />
+										<field name="name" />
+										<field name="ref" />
+										<field name="unit_amount" />
+										<field name="unit_quantity" />
+										<field name="total_amount" sum="Total" />
+									</tree>
+								</field>
+								<group>
+									<div>
+										<separator string="Notes" />
+										<field name="note" placeholder="Free Notes" />
+									</div>
+									<group class="oe_subtotal_footer oe_right">
+										<field name="amount" widget="monetary"
+											options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator" />
+									</group>
+								</group>
+							</page>
+							<page string="Payment" states='pending,paid'>
+								<field name="payments">
+									<form string="Payment Lines" version="7.0">
+										<group>
+											<group>
+												<field name="name" />
+												<field name="payment_type" />
+												<field name="is_paid"/>
+												<field name="amount" />
+											</group>
+										</group>
+									</form>
+									<tree string="Payment Lines" editable="bottom">
+										<field name="name" />
+										<field name="payment_type" />
+										<field name="is_paid"/>
+										<field name="amount" />
+									</tree>
+								</field>
+							</page>
+
+						</notebook>
+					</sheet>
+
+				</form>
+			</field>
+		</record>
+
+		<record id="ulm_expense_all" model="ir.actions.act_window">
+			<field name="name">Expenses</field>
+			<field name="res_model">hr.ulm.expense</field>
+			<field name="view_type">form</field>
+			<field name="view_id" ref="view_ulm_expenses_tree" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to register new expenses for Company's employee.
+				</p>
+			</field>
+		</record>
+
+		<!-- Register Payment Form -->
+		<record model="ir.ui.view" id="view_payment_dialog_form">
+			<field name="name">hr_ulm_expense_payment_dialog_form</field>
+			<field name="model">hr.ulm.expense</field>
+			<field name="priority">30</field>
+			<field name="arch" type="xml">
+				<form string="Payments" version="7.0">
+					<group>
+						<field name="payments">
+							<form string="Payment Lines" version="7.0">
+								<group>
+									<field name="name" />
+									<field name="payment_type" />
+									<field name="amount" />
+								</group>
+							</form>
+						</field>
+					</group>
+					<footer>
+						<button name="make_payment" string="Pay" class="oe_highlight"
+							type="object" />
+						or
+						<button string="Cancel" class="oe_link" special="cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+
+		<menuitem action="ulm_expense_all" id="menu_ulm_expense_all"
+			name="Expenses" parent="next_id_60" />
+
+	</data>
+</openerp>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+		<record model="ir.ui.view" id="view_hr_employee_form">
+			<field name="name">hr.employee.info.inherit</field>
+			<field name="model">hr.employee</field>
+			<field name="inherit_id" ref="hr.view_employee_form" />
+			<field name="priority" eval="20" />
+			<field name="arch" type="xml">
+
+				<xpath expr="//form/sheet/div/label[@for='category_ids']" position="before">
+				    <label for="english_name" class="oe_edit_only"/>
+					<h1>
+						<field name="english_name" />
+					</h1>
+				</xpath>
+				<field name="bank_account_id" position="before">
+					<field name="ssn_no" />
+				</field>
+				<field name="country_id" position="after">
+					<field name="race" />
+					<field name="religion" />
+				</field>
+				<xpath expr="//field[@name='education']" position="replace">
+					<field name="education_id" />
+				</xpath>
+				<xpath expr="//field[@name='education_id']" position="after">
+					<field name="working_exp" />
+					<field name="other" />
+
+				</xpath>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="hr_employee_view_form">
+			<field name="name">hr.employee.info.inherit</field>
+			<field name="model">hr.employee</field>
+			<field name="priority" eval="20" />
+			<field name="inherit_id" ref="hr_family.hr_employee_view_form" />
+
+			<field name="arch" type="xml">
+
+				<field name="fam_father" position="after">
+					<field name="is_fam_father" />
+				</field>
+				<field name="fam_mother" position="after">
+					<field name="is_fam_mother" />
+				</field>
+				<field name="fam_mother_dob" position="after">
+					<field name="f_name" />
+					<field name="is_father_inlaw" />
+					<field name="m_name" />
+					<field name="is_mother_inlaw" />
+
+				</field>
+				<xpath expr="//page[@string='HR Settings']" position='inside'>
+					<group>
+						<group string="Payroll">
+							<field name="payroll_cash" />
+							<field name="payroll_bank" />
+
+						</group>
+					</group>
+				</xpath>
+			</field>
+		</record>
+		<record id="view_employee_tree" model="ir.ui.view">
+			<field name="name">hr.employee.tree</field>
+			<field name="model">hr.employee</field>
+			<field name="inherit_id" ref="hr.view_employee_tree" />
+			<field name="arch" type="xml">
+				<field name="name" position="after">
+					<field name="english_name" />
+
+
+				</field>
+			</field>
+		</record>
+		<record id="view_employee_filter" model="ir.ui.view">
+			<field name="name">Employees</field>
+			<field name="model">hr.employee</field>
+			<field name="inherit_id" ref="hr.view_employee_filter" />
+			<field name="arch" type="xml">
+				<field name="name" position="after">
+					<field name="english_name" string="English Name" />
+
+				</field>
+			</field>
+
+		</record>
+
+	</data>
+</openerp>

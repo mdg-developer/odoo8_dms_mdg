@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+ <data>
+
+  <template id="contract_layout">
+
+   <t t-call="hr_customization.contract_layout_header" />
+   <t t-raw="0" />
+   <t t-call="hr_customization.contract_layout_footer" />
+  </template>
+
+  <template id="contract_layout_header">
+
+  </template>
+
+  <template id="contract_layout_footer">
+   
+  </template>
+  	<head>
+	    <link href='http://mywebfont.appspot.com/css?font=yunghkio' rel='stylesheet' type='text/css'>
+	    <link href='http://mywebfont.appspot.com/css?font=myanmar3' rel='stylesheet' type='text/css'>
+	    <link href='http://mywebfont.appspot.com/css?font=padauk' rel='stylesheet' type='text/css'>
+	    <link href='http://mywebfont.appspot.com/css?font=parabaik' rel='stylesheet' type='text/css'>
+	    <link href='http://mywebfont.appspot.com/css?font=zawgyi' rel='stylesheet' type='text/css'>
+	    <style>
+	        .yunghkio {
+	            font-family:"Masterpiece Uni Sans",Yunghkio;
+	        }
+	        .myanmar3 {
+	            font-family:"Masterpiece Uni Sans",Myanmar3;
+	        }
+	        .padauk {
+	            font-family:"Masterpiece Uni Sans",Padauk;
+	        }
+	        .zawgyi {
+	            font-family:Zawgyi-One;
+	        }
+	        .parabaik {
+	            font-family:"Masterpiece Uni Sans",Parabaik;
+	        }
+	    </style>
+	</head>
+				<body>
+				    <p class="yunghkio">Yunghkio ျမန္မာစာ</p>
+				    <p class="myanmar3">Myanmar 3 ျမန္မာစာ</p>
+				    <p class="padauk">Padauk ျမန္မာစာ</p>
+				    <p class="parabaik">Parabaik ျမန္မာစာ</p>
+				    <p class="zawgyi">ေေနကာင္းလား</p>
+				</body>	
+ </data>
+</openerp>

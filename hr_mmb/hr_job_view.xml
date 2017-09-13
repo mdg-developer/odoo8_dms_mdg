@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+
+		
+		<record id="view_job_form" model="ir.ui.view">
+			<field name="name">hr.job.form.inherit</field>
+			<field name="model">hr.job</field>
+			<field name="inherit_id" ref="hr.view_hr_job_form" />
+			<field name="arch" type="xml">
+				<data>
+				    
+
+                 <xpath expr="//div[@class='oe_title']" position="inside">
+                    <label for="myanmar_jb_name" class="oe_edit_only" groups="base.group_hr_manager"/>
+
+					<h1><field name="myanmar_jb_name" groups="base.group_hr_manager"/></h1>
+			     </xpath>
+
+				    
+					<xpath expr="//field[@name='department_id']" position="after">
+						<field name="sequence" />
+						<field name="cla_amount" />
+						<field name="day" />
+						<field name="wage" />
+						<field name="allowance" />						
+						<field name="contribution" />
+						<field name="s_wage" />						
+						<field name="s_allowance" />
+						<field name="s_contribution" />
+					</xpath>
+				</data>
+			</field>
+		</record>
+		</data>
+		</openerp>

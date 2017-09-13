@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+
+		<record id="view_ssb_report_form" model="ir.ui.view">
+			<field name="name">Report Form</field>
+			<field name="model">salary.report</field>
+			<field name="arch" type="xml">
+				<form string="Customize Reports" version="7.0">
+
+
+					<group col="1">
+						<b>Reports</b>
+						<br />
+
+						<a href="http://localhost:8080/birt/frameset?__report=basicsalary_for_ssbfee.rptdesign"
+							target="_blank">Break Down Salary for SSB Report</a>
+						<a href="http://localhost:8080/birt/frameset?__report=ssbwith_month_filter.rptdesign"
+							target="_blank">SSB Report With Month Filter</a>
+		
+						<br />
+
+					</group>
+
+
+					<footer>
+						<button string="Close" class="oe_highlight" special="cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+
+		<record id="action_ssb_salary_report" model="ir.actions.act_window">
+			<field name="name">Print Report</field>
+			<field name="res_model">salary.report</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_ssb_report_form" />
+			<field name="target">new</field>
+		</record>
+
+
+		<menuitem id="menu_salary_report"
+			name="SSB Fee Reports" parent="hr.menu_hr_reporting" sequence="11"/>
+		<menuitem action="action_ssb_salary_report" id="menu_salary_report1"
+			name="Break Down Salary for SSB Report" parent="menu_salary_report" sequence="1"/>			
+	</data>
+</openerp>
+			
+	    
+			 	

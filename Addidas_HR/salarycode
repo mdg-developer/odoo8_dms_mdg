@@ -1,0 +1,55 @@
+ Name                  Code                       Category          
+ 			
+စုစုေပါင္းေငြ					NET							Net				
+လုပ္သက္ေၾကး				SNB							Allowance		
+ဘာသာစကားကၽြမ္းက်င္			LGB							Allowance		
+အလုပ္ခံစားခြင့္				POB							Allowance	
+ကၽြမ္းက်င္ေၾကး				CTB							Allowance	
+လူမႈဖူလံုေရး				SCI							Deduction	
+ပ်က္ကြက္					LVS							Deduction	
+ေထာက္ပံ႔ေၾကး				LSB							Allowance	
+ရက္မွန္ေၾကး				ATB							Allowance	
+အခ်ိန္ပိုေၾကး				OTA							Allowance	
+ထုတ္လုပ္မႈဆုေၾကး			PDB							Allowance	
+အထူးခံစားခြင့္				CFB							Allowance	
+လူမႈေရးခြင့္					LVP							Deduction	
+ေပးေလ်ာ္ေငြ				PAY							Deduction	
+ေဆးခြင့္					LVM							Deduction	
+အ ေျခခံလစာ				BASIC						Basic	 			
+အပိုင္းလိုက္ စုစုေပါင္းေငြ	       NETDED						Net					
+အပိုင္းလိုက္ စုစုေပါင္းေငြ	      NETAL						Net					
+------------------------------------------------------------------------------------
+Leave Type                              Code
+----------------------------------------------------------------
+Sick Leave(Pay)		    			SICK_LEAVE
+Annual Leave						ANNUAL_LEAVE
+Maternity Leave						MATERNITY_LEAVE
+Medical Leave (PAY)					MEDICAL_LEAVE
+Leave Without notice				UNPAID_LEAVE
+Personal Leave 						PERSONAL_LEAVE
+Nursy								NURSY_LEAVE
+Casual Leave						CASUAL_LEAVE
+Sick Leave(No Pay) 					SICK_NOPAY_LEAVE
+Medical Leave(NO PAY)				MEDICAL_NOPAY_LV
+)
+
+--------------------------------------------------------------------------------------
+Policy Confrigation
+-------------------
+OT policy
+--------
+Race=0.0
+Active=0
+Name						 Code             Type       Active Start Time          Active End Time   OT Day Specific  Specific Working Hours 
+OT(16:30 PM To 20:00 PM)	  WORKOT	      Daily			16:31						22:00
+Public Holiday				  PH			Public Holiday			
+Saturday Half OT			  SOT			  Daily      	11:30						18:00          Saturday				4
+Sunday OT					  SOT1			Rest Day			
+Morning OT	                   MOT				Daily		7:00				          7:30
+-----------------------
+Present policy( Working Days/Month =26)
+-------------
+Name 						Code				Type			Rate				Active After		Duration
+Normal Working Day Present	PRES		Normal Working Hours	1.00					0					0
+Holiday Present				HOPR		Holidays				1.00					0					0
+

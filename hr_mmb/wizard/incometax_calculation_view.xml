@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+
+		<record id="view_income_report_form" model="ir.ui.view">
+			<field name="name">Report Form</field>
+			<field name="model">incometax_cal.report</field>
+			<field name="arch" type="xml">
+				<form string="Customize Reports" version="7.0">
+
+
+					<group col="1">
+						<b>Reports</b>
+						<br />
+
+						<a href="http://localhost:8080/birt/frameset?__report=incometax_calculation_report.rptdesign"
+							target="_blank">IncomeTax Calculation for One year</a>
+
+						<br />
+
+					</group>
+
+
+					<footer>
+						<button string="Close" class="oe_highlight" special="cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+
+		<record id="action_incometax_cal_report" model="ir.actions.act_window">
+			<field name="name">Print Report</field>
+			<field name="res_model">incometax_cal.report</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_income_report_form" />
+			<field name="target">new</field>
+		</record>
+
+		<menuitem action="action_incometax_cal_report" id="menu_incometax_cal_report1"
+			name="IncomeTax Calculation for One year" parent="menu_hr_available_incometaxs_report" sequence="2"/>			
+	</data>
+</openerp>
+			

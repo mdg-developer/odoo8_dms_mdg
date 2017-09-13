@@ -1,0 +1,28 @@
+ Name                  Code                        Category          Sequence
+Basic Salary	       BASIC	                     Basic               0
+Gross	               GROSS	                     Gross              400
+Net	                    NET	                           Net              500
+OverTime	            OTD	                         Overtime            2
+Late Deduction	        LD	                         Deduction           3
+Leave Deduction	        AWOL	                     Deduction           4
+Allowance	            ALL	                         Allowance           2
+Contribution	        CON	                         Allowance           1
+Income Tax	            ICT	                         Deduction          10
+SSB Fee for Employee	SSBE	                     Deduction           5
+SSB Fee for Employeer	SSBER	                     Deduction           5
+Travelling Allowance    TAL							 Allowance
+-------------------------------------------------------------------------------
+Leave Type
+(
+Maternity Leave
+Earn Leave
+Unpaid Leave Weekdays
+Causal Leave
+Medical Leave(first Approvel)
+Absent Leave
+Unpaid Leave Weekend
+Medical Leave(Second Approvel)
+Medical Leave(Third Approvel)
+Absent Leave for permanent
+Absent Leave for probation
+)

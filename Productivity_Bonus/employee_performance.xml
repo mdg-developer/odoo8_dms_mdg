@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- ============================== Employee Performance Form ============================== -->
+
+		<record id="employee_performance_form" model="ir.ui.view">
+			<field name="name">employee_performance_form</field>
+			<field name="model">employee.performance</field>
+			<field eval="25" name="priority" />
+			<field name="arch" type="xml">
+				<form string="Fine Sheet">
+					<sheet>
+						<group>
+							<field name="department_id" />
+							<field name="employee_id" on_change="onchange_employee(department_id,employee_id)"/>
+							<field name="job_id" />
+							<field name="performance" />
+					        <field name="abnormal" />
+							<field name="contribution" />
+							<field name="date" />
+							<field name="month" />
+							<field name="emp_type" attrs="{'invisible': 'true'}" />
+							<field name="type" attrs="{'invisible': 'true'}" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- ============================== Employee Performance Tree ============================== -->
+		<record id="employee_performance_tree" model="ir.ui.view">
+			<field name="name">employee_performance_tree</field>
+			<field name="model">employee.performance</field>
+			<field name="arch" type="xml">
+				<tree string="Employee Performance">
+					<field name="department_id" />
+					<field name="employee_id" />
+					<field name="job_id" />
+					<field name="performance" />
+					<field name="abnormal" />
+					<field name="contribution" />
+					<field name="date" />
+					
+				</tree>
+			</field>
+		</record>
+		<!-- ============================== Employee Performance Action ============================== -->
+		<record id="action_employee_performance" model="ir.actions.act_window">
+			<field name="name">Employee Performance</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">employee.performance</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="employee_performance_tree" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to register new Employee Performance
+				</p>
+			</field>
+		</record>
+		<!-- <menuitem id="employee_performance_id" action="action_employee_performance" 
+			name="Emloyee Performance Entry" parent="hr.menu_hr_configuration" sequence="14"/> -->
+		
+		<menuitem action="action_employee_performance" id="employee_performance_id"
+			name="Employee Performance Entry" parent="Addidas_HR.menu_bonus" sequence="3" />	
+		
+</data>
+</openerp>
+	

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<template id="report_employee_card_document">
+			<t t-call="hr_customization.custom_layout">	
+			   <div class="page" align="center" style="font-size:10pt;">
+			        <style>
+						.fixed-ratio-resize { /* basic responsive img */
+							max-width: 30mm;
+							height: 35mm;
+							width: auto\9; /* IE8 */
+						}
+						</style>
+					<tr  style="height: 15mm;font-size:10pt">
+			   					
+	   					<img class="img img-responsive" src='/hr_customization/static/src/img/skyway.jpg' />
+	   					
+	   				</tr> 		
+			   		<t t-foreach="docs" t-as="o">
+			   			<table  cellspacing="0" align="center">
+			   				<!-- <tr  style="height: 15mm;font-size:10pt">
+			   					
+			   					<img class="img img-responsive" src='/hr_customization/static/src/img/skyway.png' />
+			   					
+			   				</tr> -->
+			   				
+				   				<tr style="height: 5mm;font-size:10pt">
+				   				
+				   				</tr>
+			   				
+				   				<tr align="center" style="height: 35mm;font-size:10pt">
+				   				    
+				   					<td align="left" style="width: 30mm;padding: 0mm 0mm 1mm 0mm">
+				   					    
+				   						<span style="width: 30mm;padding: 0mm 0mm 1mm 0mm" t-field="o.image_medium" t-field-options='{"widget": "image"}'/>
+				   						
+				   					</td>
+				   					<td align="center" >
+				   					   <table cellspacing="0" > 
+					   					   	<tr align="left">
+					   					   	    
+					   					   	    <t t-if="o.first_aider ==True">
+							   					   <td >     
+						   					        <img class="img img-responsive" src='/hr_customization/static/src/img/first_aid.png' />
+						   					       </td>
+						   					    </t>
+						   					    
+					   					   	    <t t-if="o.fire_figher ==True">
+									   				<td >	         
+						   					        <img class="img img-responsive" src='/hr_customization/static/src/img/fire_fighter.png' />
+						   					        </td>
+						   					    </t>
+						   					    
+					   					   	</tr>
+				   					   	
+					   					   	<tr align="left">
+					   					   	 	<t t-if="o.ohs ==True">
+							   					    <td >     
+						   					        <img class="img img-responsive" src='/hr_customization/static/src/img/ohs.png' />
+						   					        </td>
+						   					    </t>
+						   					    
+						   					    <t t-if="o.manager ==True">
+									   				<td >	         
+						   					        <img class="img img-responsive" src='/hr_customization/static/src/img/R.png' />
+						   					        </td>
+						   					    </t>
+						   					      
+					   					   	</tr>
+					   					   	
+				   					   </table> 
+				   					    
+				   					     
+				   					</td>
+				   					
+				   						
+				   				</tr>
+			   				</table>
+			   				<table  cellspacing="0" align="center">
+				   				<tr align="left" style="text-align:left;font-size:14pt">
+				   				      
+				   				      <p align="left" style="font-size:14pt;"> 
+				   				          <strong><span  t-field="o.name_related" /></strong>
+				   				          
+				   				      </p>
+				   						
+				   				   
+				   				</tr> 
+				   		    </table>		
+			   				<table  cellspacing="0" align="center">
+				   				
+			   				 
+				   				<tr align="left" style="text-align:left;font-size:14pt">
+				   				    <td width="40%" style="position: relative;">			   					    
+				   						
+				   						<span><strong>Badge # : </strong></span>			   						
+				   						<br></br>
+				   						<br></br>		   						
+				   					</td>
+				   					<td width="60%" style="position: relative;">
+				   					   
+				   					   <strong><span t-field="o.employee_id" /></strong>
+				   					   <br></br>
+				   					   <br></br>
+				   					</td>
+				   				</tr>
+				   				
+				   				<tr align="left" style="text-align:left;font-size:14pt">
+				   				    <td width="40%" style="position: relative;">
+				   					   	
+				   						<strong><span>Dept: </span></strong>
+				   						<br></br>
+				   						<br></br>
+				   						
+				   					</td>
+				   					<td width="60%" style="position: relative;">
+				   					   
+				   					   <strong><span t-field="o.department_id.name" /></strong>
+				   					   <br></br>
+				   					   <br></br>	
+				   					</td>
+				   				</tr>
+				   				
+				   				<tr align="left" style="text-align:left;font-size:14pt">
+				   				    <td width="40%" style="position: relative;">				   					   			   						
+				   										   						
+				   						<strong><span>Post: </span></strong>
+				   					</td>
+				   					<td width="60%" style="position: relative;">
+				   					   
+				   					   <strong><span t-field="o.job_id.name" /></strong>
+				   					</td>
+				   				</tr>
+				   				
+			   			</table>
+			   				   			
+			   		</t>
+			   </div>
+		   </t>		  
+  	  </template>	   
+  		  
+		
+	</data>
+</openerp>

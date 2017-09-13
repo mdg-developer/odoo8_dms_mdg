@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record id="view_hr_applicant_form_inherit" model="ir.ui.view">
+			<field name="name">Applications</field>
+			<field name="model">hr.applicant</field>
+			<field name="inherit_id" ref="hr_recruitment.crm_case_form_view_job" />
+			<field name="priority" eval="20" />
+			<field name="arch" type="xml">
+					<field name="type_id" position="after">
+						<!-- <field name="dob"  on_change="onchange_getage(dob)"/> -->
+						<field name="dob"/>
+						<field name="nrc_prefix_id" class="o_nrc_prefix" placeholder="NRC Prefix" style="width: 66%%"/>
+            			<field name="nrc_number" class="o_nrc_number" placeholder="NRC Number" />
+						<field name="identification_id"/>
+					</field>
+					
+					<field name="department_id" position="after">
+						<field name="section_id" domain="[('department_id','=',department_id)]"/>
+					</field>
+					<xpath expr="//label[@for='salary_expected']" position='before'>
+						<field name="initial_employment_date"/>
+					</xpath>
+			</field>
+		</record>
+		
+		<record id="view_hr_job_form_inherit_new" model="ir.ui.view">
+			<field name="name">hr.job.form</field>
+			<field name="model">hr.job</field>
+			<field name="inherit_id" ref="hr.view_hr_job_form" />
+			<field name="priority" eval="20" />
+			<field name="arch" type="xml">
+					
+					<field name="department_id" position="after">
+						<field name="section_id" domain="[('department_id','=',department_id)]" class="oe_inline"/>
+					</field>
+					
+			</field>
+		</record>			
+	</data>
+</openerp>

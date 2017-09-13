@@ -1,0 +1,63 @@
+<openerp>
+  <data>
+    
+    
+           
+    
+    <!-- Section tree -->
+    <record model="ir.ui.view" id="view_data_import_attendance_tree">
+        <field name="name">data_import.attendance.tree</field>
+        <field name="model">data_import.attendance</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Attendance Data Import">
+                <field name="import_date" />
+				<field name="name" />
+				<field name="import_fname" />
+				<field name="note" />
+				<field name="company_id" />
+				<field name="state" />           
+            </tree>
+        </field>
+    </record>
+     <!-- Section form -->
+    <record model="ir.ui.view" id="view_data_import_attendance_form">
+        <field name="name">data_import.attendance.form</field>
+        <field name="model">data_import.attendance</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+           <form string="Attendance" version="7.0">
+					<header>
+						<button name="import_data" string="Import Attendance" type="object"
+							class="oe_highlight" />
+						<field name="state" widget="statusbar" statusbar_visible="draft,completed,error" />
+					</header>
+					<sheet>
+						<group>
+							<field name="name" />
+							<field name="import_date" />
+							<field name="import_file" filename="import_fname" />
+							<field name="import_fname" invisible="1" class="oe_inline oe_right" />
+							<field name="company_id" />
+							<field name="note" />
+						</group>
+					</sheet>
+				</form>
+        </field>
+    </record>
+     <!-- Menu -->
+    <record model="ir.actions.act_window" id="open_view_data_import_attendance_form">
+        <field name="name">Attendance Upload</field>
+        <field name="res_model">data_import.attendance</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    
+                
+	<menuitem id="menu_hr_attendance_parent" parent='hr.menu_hr_root'  name="Attendance" sequence="16"/>
+	<menuitem name="Attendance Upload"
+              parent="attendance_data_import_v2.menu_hr_attendance_parent" 
+              id="menu_data_import_attendance_form"
+              action="open_view_data_import_attendance_form" sequence="1" />  
+  </data>
+</openerp>

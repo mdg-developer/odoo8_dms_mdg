@@ -1,0 +1,103 @@
+<openerp>
+  <data>
+  
+<!--         <record id="view_holidays_status_filter" model="ir.ui.view"> -->
+<!--             <field name="name">hr.holidays.status.filter</field> -->
+<!--             <field name="model">hr.holidays.status</field> -->
+<!--             <field name="arch" type="xml"> -->
+<!--                 <search string="Search Leave Type"> -->
+<!--                     <field name="name" string="Leave Types"/> -->
+<!--                     <field name="categ_id"/> -->
+<!--                 </search> -->
+<!--             </field> -->
+<!--         </record> -->
+
+        <record model="ir.ui.view" id="edit_leave_type_form">
+            <field name="name">hr.leave.type.form</field>
+            <field name="model">hr.leave.type</field>
+            <field name="arch" type="xml">
+                <form string="Leave Type">
+                <sheet string="Leave Type">
+<!--                 <header> -->
+<!--                 		<button name="calculate_no_of_att_days" string="Testing" type="object"	class="oe_highlight" />	 -->
+<!--                 		<button name="auto_allocate_leaves" string="Auto Allocate" type="object"	class="oe_highlight" />	 -->
+<!-- 					</header> -->
+                    <group col="4">
+                        <field name="holiday_status_id" on_change="on_change_leavetype(holiday_status_id)"/>
+                        <field name="name" invisible="1"/>
+                         <field name="categ_id"/>
+                        
+                    </group>
+                    <notebook>
+                      <page string="Details">
+                         <group>                             
+                             <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time" groups="base.group_hr_user"/>
+                             <field name="gender" groups="base.group_hr_user" />
+                             <label for="based_on" string="Validity"/>
+                                 <div>
+                                       <field name="validity" groups="base.group_hr_user" style="width:120px"/> years
+                                 </div>
+							 <field name="based_on" groups="base.group_hr_user" style="width:100px"/>
+                             <label for="duration_before_allocation" string="Duration Before Allocation"/>
+                                 <div>
+                                       <field name="duration_before_allocation" style="width:100px" groups="base.group_hr_user" /> - <field name="duration_before_allocation_type" style="width:100px"/>
+                                 </div>
+                             <field name="max_days_tobe_allocated" groups="base.group_hr_user" />
+                             <field name="min_days_per_month" groups="base.group_hr_user" />
+                             <field name="deduct_per_month" groups="base.group_hr_user" />
+                             <field name="allocate_frequency" groups="base.group_hr_user" />
+                          </group>
+                      </page>
+                    </notebook>
+                </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_holiday_status_tree">
+            <field name="name">hr.leave.type.tree</field>
+            <field name="model">hr.leave.type</field>
+            <field name="arch" type="xml">
+                <tree string="Leave Type">
+                    <field name="name"/>
+                    <field name="max_days_tobe_allocated"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_leavetype_tree">
+            <field name="name">hr.leave.type.normal.tree</field>
+            <field name="model">hr.leave.type</field>
+            <field name="priority">35</field>
+            <field name="arch" type="xml">
+                <tree string="Leave Type">
+                    <field name="name"/>
+                    <field name="max_days_tobe_allocated"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_hr_leavetype_search" model="ir.ui.view">
+            <field name="name">hr.leave.type.search</field>
+            <field name="model">hr.leave.type</field>
+            <field name="arch" type="xml">
+                <search string="Leave Type">
+                    <field name="name" string="Leave Types"/>
+                    <field name="categ_id"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="open_view_leavetype" model="ir.actions.act_window">
+            <field name="name">Leave Types</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.leave.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="view_leavetype_tree"/>
+            <field name="search_view_id" ref="view_hr_leavetype_search"/>
+        </record>
+   
+	<menuitem name="Leave Type" parent="hr_holidays.menu_open_ask_holidays" id="menu_leave_test" action="hr_leave_type_customization.open_view_leavetype" sequence="41"/>
+  </data>
+</openerp>

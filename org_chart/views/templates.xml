@@ -1,0 +1,12 @@
+<openerp>
+    <data>
+        <template id="assets_backend_inherit" name="org_chart_assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/org_chart/static/src/js/org_chart.js"></script>
+                <script type="text/javascript" src="/org_chart/static/src/js/primitives.min.js"></script>
+                <link rel="stylesheet" href="/org_chart/static/src/css/primitives.latest.css"/>
+                <link rel="stylesheet" href="/org_chart/static/src/css/print_org_chart.css"/>
+            </xpath>
+        </template>
+    </data>
+</openerp>

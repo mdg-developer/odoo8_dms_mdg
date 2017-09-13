@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="late_policy_line_form_view" model="ir.ui.view">
+			<field name="name">hr.policy.line.late.form</field>
+			<field name="model">hr.policy.line.late</field>
+				<field name="inherit_id" ref="hr_policy_late.late_policy_line_form_view" />
+				<field name="arch" type="xml">
+					<data>
+						<xpath expr="//field[@name='pay_day']" position="after">
+							<field name="sat_late" />
+						</xpath>
+					</data>
+				</field>
+		</record>
+		
+		<record id="late_policy_line_form_view1" model="ir.ui.view">
+			<field name="name">hr.policy.line.late.form1</field>
+			<field name="model">hr.policy.line.late</field>
+				<field name="inherit_id" ref="hr_policy_late.late_policy_line_form_view" />
+				<field name="arch" type="xml">
+					<data>
+						<xpath expr="/form/sheet/group/group/field[@name='type']" position="replace">
+							<field name="type" />
+						</xpath>
+					</data>
+				</field>
+		</record>
+	</data>
+</openerp>
+            

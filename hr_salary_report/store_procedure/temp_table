@@ -1,0 +1,143 @@
+-- Table: emp_temp1
+
+-- DROP TABLE emp_temp1;
+
+CREATE TABLE emp_temp1
+(
+  emp_cla integer,
+  job_id integer,
+  hp_id integer,
+  job character varying,
+  emp_id integer,
+  emp_name character varying,
+  basic_salary numeric,
+  allowance numeric,
+  contribution numeric,
+  cla numeric,
+  cla1 numeric,
+  cla_day numeric,
+  total numeric,
+  ssb numeric,
+  total_value numeric,
+  income_tax numeric,
+  causlv numeric,
+  annuallv numeric,
+  unplv1 numeric,
+  unplv2 numeric,
+  medlv1 numeric,
+  medlv2 numeric,
+  medlv3 numeric,
+  matlv numeric,
+  abslv1 numeric,
+  abslv2 numeric,
+  workld1 numeric,
+  workld2 numeric,
+  workld3 numeric,
+  workld4 numeric,
+  workld5 numeric
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE emp_temp1
+  OWNER TO postgres;
+
+
+-- Table: emp_temp2
+
+-- DROP TABLE emp_temp2;
+
+CREATE TABLE emp_temp2
+(
+  emp_cla integer,
+  emp_name character varying,
+  job character varying,
+  job_id integer,
+  total_emp integer,
+  basic_salary numeric,
+  allowance numeric,
+  contribution numeric,
+  cla numeric,
+  total numeric,
+  ssb numeric,
+  total_value numeric,
+  income_tax numeric,
+  cla1 numeric,
+  cla_day numeric
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE emp_temp2
+  OWNER TO postgres;
+
+
+-- Table: employee_temp
+
+-- DROP TABLE employee_temp;
+
+CREATE TABLE employee_temp
+(
+  emp_cla integer,
+  job character varying,
+  job_id integer,
+  total_emp integer,
+  basic_salary numeric,
+  allowance numeric,
+  contribution numeric,
+  cla numeric,
+  total numeric,
+  ssb numeric,
+  total_value numeric,
+  income_tax numeric
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE employee_temp
+  OWNER TO postgres;
+
+
+
+
+-- Table: employee_temp_table
+
+-- DROP TABLE employee_temp_table;
+
+CREATE TABLE employee_temp_table
+(
+  emp_cla integer,
+  job_id integer,
+  hp_id integer,
+  job character varying,
+  emp_id integer,
+  emp_name character varying,
+  basic_salary numeric,
+  allowance numeric,
+  contribution numeric,
+  cla numeric,
+  total numeric,
+  ssb numeric,
+  total_value numeric,
+  income_tax numeric,
+  causlv numeric,
+  annuallv numeric,
+  unplv1 numeric,
+  unplv2 numeric,
+  medlv1 numeric,
+  medlv2 numeric,
+  medlv3 numeric,
+  matlv numeric,
+  abslv1 numeric,
+  abslv2 numeric,
+  workld1 numeric,
+  workld2 numeric,
+  workld3 numeric,
+  workld4 numeric,
+  workld5 numeric
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE employee_temp_table
+  OWNER TO postgres;
