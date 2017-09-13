@@ -20,10 +20,10 @@ class customer_visit(osv.osv):
         'sale_plan_day_id':fields.many2one('sale.plan.day', 'Sale Plan Day'),
         'sale_plan_trip_id':fields.many2one('sale.plan.trip', 'Sale Plan Trip'),
         'tablet_id':fields.many2one('tablets.information', 'Tablet ID'),
-        'latitude':fields.float('Geo Latitude'),
-        'longitude':fields.float('Geo Longitude'),
-       'sale_team_id':fields.many2one('crm.case.section', 'Sale Team'),
-       'date':fields.datetime('Date'),
+        'latitude':fields.float('Geo Latitude',digits=(16,5)),
+        'longitude':fields.float('Geo Longitude',digits=(16,5)),
+        'sale_team_id':fields.many2one('crm.case.section', 'Sale Team'),
+        'date':fields.datetime('Date'),
         'visit_reason':fields.selection([
                 ('no_shopkeeper', 'No Shopkeeper'),
                 ('no_authorized_person', 'No Authorized Person'),
@@ -34,7 +34,7 @@ class customer_visit(osv.osv):
                 'other_reason':fields.text('Remark'),
         'm_status':fields.selection([('pending', 'Pending'), ('approved', 'Approved'),
                                                       ('reject', 'Reject')], string='Status'),
-   'branch_id': fields.many2one('res.branch', 'Branch',required=True),
+        'branch_id': fields.many2one('res.branch', 'Branch',required=True),
                 
     }
     _defaults = {        
