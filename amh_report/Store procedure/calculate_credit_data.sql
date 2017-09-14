@@ -3,13 +3,14 @@
 -- DROP FUNCTION calculate_credit_data(integer, integer, integer, date);
 
 CREATE OR REPLACE FUNCTION calculate_credit_data(IN customer_id integer, IN section_ids integer, IN user_ids integer, IN from_date date)
-  RETURNS TABLE(deduction_amt double precision, paidamount numeric, open_amt numeric, amount_total numeric) AS
+  RETURNS TABLE(deduction_amt double precision, paidamount numeric, open_amt numeric, amount_total numeric, sale_amt numeric) AS
 $BODY$
 DECLARE
 	deduction_amt double precision;	
 	paidamount numeric;	
 	open_amt numeric;	
-	amount_total numeric;		
+	amount_total numeric;	
+	sale_amt numeric;		
 BEGIN
 	return query	
 	with 
@@ -47,9 +48,20 @@ BEGIN
 	and so.user_id  = user_ids
 	and so.payment_type='credit' 
 	and rp.id=customer_id	
+	group by rp.name,rp.id),
+
+	saleamtbl as (select rp.id,rp.name,sum(sol.product_uom_qty * sol.price_unit) as sale_amt
+	from sale_order so, sale_order_line sol, res_partner rp	
+	where  rp.id=so.partner_id
+	and sol.order_id=so.id
+	and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = from_date
+	and so.section_id =section_ids
+	and so.user_id  = user_ids
+	and so.payment_type='credit' 
+	and rp.id=customer_id		
 	group by rp.name,rp.id)
 
-	Select deductamttbl.deduct_amt,paidamounttbl.paidamount,openingamounttbl.open_amt,netamttbl.amount_total
+	Select deductamttbl.deduct_amt,paidamounttbl.paidamount,openingamounttbl.open_amt,netamttbl.amount_total,saleamtbl.sale_amt
 	from (select sum(so.amount_total) as amount_total,rp.name as customer_name,rp.id as customer_id
 	from sale_order so,res_partner rp
 	where  rp.id=so.partner_id	
@@ -62,6 +74,7 @@ BEGIN
 
 	left join deductamttbl on deductamttbl.id=netamttbl.customer_id
 	left join paidamounttbl on paidamounttbl.customer_id=netamttbl.customer_id
+	left join saleamtbl on saleamtbl.id=netamttbl.customer_id
 	left join openingamounttbl on openingamounttbl.inv_partid=netamttbl.customer_id;
 			
 END;

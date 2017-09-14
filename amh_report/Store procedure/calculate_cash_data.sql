@@ -3,13 +3,14 @@
 -- DROP FUNCTION calculate_cash_data(integer, integer, integer, date);
 
 CREATE OR REPLACE FUNCTION calculate_cash_data(IN customer_id integer, IN section_ids integer, IN user_ids integer, IN from_date date)
-  RETURNS TABLE(open_amt numeric, deduct_amt double precision, paidamount numeric, amount_total numeric) AS
+  RETURNS TABLE(open_amt numeric, deduct_amt double precision, paidamount numeric, amount_total numeric, sale_amt numeric) AS
 $BODY$
 DECLARE
 	open_amt numeric;	
 	deduct_amt double precision;	
 	paidamount numeric;	
-	amount_total numeric;		
+	amount_total numeric;	
+	sale_amt numeric;		
 BEGIN
 	return query	
 	with 
@@ -41,6 +42,17 @@ BEGIN
 	and rp.id=customer_id
 	group by rp.name,rp.id),
 
+	saleamtbl as (select rp.id,rp.name,sum(sol.product_uom_qty * sol.price_unit) as sale_amt
+	from sale_order so, sale_order_line sol, res_partner rp	
+	where  rp.id=so.partner_id
+	and sol.order_id=so.id
+	and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = from_date
+	and so.section_id =section_ids
+	and so.user_id  = user_ids
+	and so.payment_type='cash'
+	and rp.id=customer_id		
+	group by rp.name,rp.id),
+
 	opening_tbl as (select sum(debit-credit) as open_amt,l.partner_id as inv_partid 
 	from account_move_line l,account_move m
 	where l.account_id in (select  id from account_account where user_type in (select id from account_account_type where code in ('Receivable','Payable')))
@@ -50,7 +62,7 @@ BEGIN
 	and m.period_id in (select p.id  from account_fiscalyear f,account_period p  where  p.fiscalyear_id = f.id and f.date_start <= from_date and  f.date_stop >= from_date)
 	group by l.partner_id) 
 
-	select opening_tbl.open_amt,deduction_tbl.deduct_amt,cd_amount_tbl.paidamount,netsale_tbl.amount_total
+	select opening_tbl.open_amt,deduction_tbl.deduct_amt,cd_amount_tbl.paidamount,netsale_tbl.amount_total,saleamtbl.sale_amt
 
 	from (select rp.id,rp.name,sum(so.amount_total) amount_total
 	from sale_order so, res_partner rp
@@ -63,6 +75,7 @@ BEGIN
 	group by rp.name,rp.id)  netsale_tbl
 	left join opening_tbl on opening_tbl.inv_partid=netsale_tbl.id
 	left join deduction_tbl on deduction_tbl.id=netsale_tbl.id
+	left join saleamtbl on saleamtbl.id=netsale_tbl.id
 	left join cd_amount_tbl on  cd_amount_tbl.customer_id=netsale_tbl.id;
 			
 END;
