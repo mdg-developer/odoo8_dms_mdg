@@ -184,6 +184,8 @@
 					<field name="tablet_id" />
 					<field name="sale_team_id" />
 					<field name="visit_reason" />
+					<field name="latitude" />
+					<field name="longitude" />
 					<field name="other_reason" />
 				</tree>
 			</field>

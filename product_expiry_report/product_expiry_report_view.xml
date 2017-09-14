@@ -45,7 +45,9 @@
 						<filter string="Best Before Date" context="{'group_by':'use_date'}" />						
 						<filter string="Removal Date" context="{'group_by':'removal_date'}" />
 						<filter string="Alert Date" context="{'group_by':'alert_date'}" />
-
+						<filter string="Under 6 Months"  domain="[('use_date','&lt;=',(context_today()+relativedelta(months=6)).strftime('%Y-%m-%d'))]"/>	
+						<filter string="Between 6 Months and 1 year"  domain="[('use_date','&lt;=',(context_today()+relativedelta(years=1)).strftime('%Y-%m-%d')),
+						('use_date','&gt;=',(context_today()+relativedelta(months=6)).strftime('%Y-%m-%d'))]"/>	
 					</group>
 				</search>
 			</field>
