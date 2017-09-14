@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>   
+	<record id="view_account_fiscalyear_form_inherit" model="ir.ui.view">
+         <field name="name">account.fiscalyear.form</field>
+         <field name="model">account.fiscalyear</field> 
+         <field name="inherit_id" ref="account.view_account_fiscalyear_form" />
+         <field name="arch" type="xml">            	 
+		    <field name="end_journal_period_id" position="after">
+		    	<field name="trading_no(ka_tha)"/>
+		    </field>			    
+        </field>
+        </record>
+	</data>
+</openerp>
+		

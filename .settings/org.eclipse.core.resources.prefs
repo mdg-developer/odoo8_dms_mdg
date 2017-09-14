@@ -7,6 +7,7 @@ encoding//data_import_dms/models/stock_move_import.py=utf-8
 encoding//pallet_mapping/__openerp__.py=utf-8
 encoding//sale_foc_discount/account_invoice.py=utf-8
 encoding//sale_management/__openerp__.py=utf-8
+encoding//sale_team_target_setting/__openerp__.py=utf-8
 encoding//stock_quant_packages_moving_wizard/__openerp__.py=utf-8
 encoding//stock_quant_packages_moving_wizard/models/stock.py=utf-8
 encoding//warehouse_optimization/__openerp__.py=utf-8
