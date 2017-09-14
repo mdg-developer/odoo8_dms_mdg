@@ -78,8 +78,11 @@ class stock_transfer_request(osv.osv):
         transfer_data=self.browse(cr, uid, ids[0], context=context)
         transfer_line_obj = self.pool.get("stock.transfer.request.line")
         proc_obj = self.pool.get("procurement.order")
+        new_group = self.pool.get("procurement.group").create(cr, uid, {'name': transfer_data.name}, context=context)
+
         for  line_data in transfer_data.p_line:
                 line=transfer_line_obj.browse(cr, uid,line_data.id, context=context)
+
                 vals = {
                     'name': line.description,
                     'warehouse_id':transfer_data.warehouse_id.id,
@@ -92,9 +95,11 @@ class stock_transfer_request(osv.osv):
                     'product_uom': line.uom_id.id,
                     'product_uos_qty': line.uom_id.id,
                     'product_uos': line.uom_id.id,
+                    'group_id':new_group,
                     }
                 proc = proc_obj.create(cr, uid, vals, context=context)
               #  proc_obj.run(cr, uid, [proc], context=context)
+        cr.execute("update stock_picking set is_transfer_request =True where group_id =%s",(new_group,))
         return self.write(cr, uid, ids, {'state':'approve' , 'approve_by':uid})    
     
     def cancel(self, cr, uid, ids, context=None):
@@ -132,7 +137,7 @@ class stock_transfer_request_line(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'description':fields.char('Item Specification', required=True),
         'quantity' : fields.float(string='Qty', digits=(16, 0), required=True),
-        'uom_id': fields.many2one('product.uom', 'Smaller UOM'),
+        'uom_id': fields.many2one('product.uom', 'UOM'),
         'uom_ratio':fields.char('Packing Unit'),
          'remark':fields.char('Remark'),
         'sequence':fields.integer('Sequence'),

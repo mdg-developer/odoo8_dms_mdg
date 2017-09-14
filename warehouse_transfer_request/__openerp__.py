@@ -37,6 +37,10 @@ Stock Transfer Request' Module
     'data': [
         'views/sequence.xml',
         'views/stock_transfer_request_view.xml',
+        'views/stock_picking_view.xml',
+        'reports/mdg_custom_layouts.xml',
+        'reports/qweb_view.xml',
+        'reports/report_stock_transfer.xml',
     ],
     'test': [
 
