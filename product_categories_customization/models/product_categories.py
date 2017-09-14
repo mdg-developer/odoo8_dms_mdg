@@ -25,6 +25,7 @@ class product_category(osv.osv):
     _inherit = "product.category"
     _columns = {
         'code':fields.char('Code'),
+		'is_oldproduct':fields.boolean('Is Old Product'),
         'property_whole_account_income_categ': fields.property(
                     type='many2one',
                     relation='account.account',
