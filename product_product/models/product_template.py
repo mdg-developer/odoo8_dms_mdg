@@ -73,11 +73,12 @@ class product_template(osv.osv):
                  "or any of its children.\n"
                  "Otherwise, this includes goods stored in any Stock Location "
                  "with 'internal' type."),
-                'uom_ratio':fields.char('Packing Size'),
+                'uom_ratio':fields.char('Packing Type'),
                 'weight_liter': fields.float('Net Weight (Liter)', digits_compute=dp.get_precision('Stock Weight'), help="The net weight in Kg."),
                 'weight_net': fields.float('Net Weight(Viss)', digits_compute=dp.get_precision('Stock Weight'), help="The net weight in Kg."),  
                 'sequence': fields.related('product_variant_ids', 'sequence', type='integer', string='Sequence', required=True,),
                 'sequence_new': fields.integer('Sequence', size=3),
+				'packing_unit':fields.char('Packing Unit'),
                 #'company_id': fields.related('journal_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
                       }
      
