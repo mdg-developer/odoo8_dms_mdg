@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<template id="report_ot_inherit" >
+			<xpath expr="//t[@t-call='report.external_layout']" position="replace">
+				<t t-call="ot_approval_v2.ot_custom_layout1">
+					<div class="page" style="font-size:14pt; top:1px;" >
+						<div class="oe_structure"/>
+							<table class="table" style='border:solid;border-color:white;margin-left:30pt;top:10px;'>
+								<tr style='border:solid;border-color:white;'>
+									<td style="line-height: 1.5;">
+										<b>
+											Employee No :
+										</b>
+										<b><![CDATA[&nbsp;]]></b>
+										<span t-field="o.fingerprint_id" />
+									</td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td class="col-xs-4 pull-right" style="line-height: 1.5;">
+										<b>Date :</b>
+										<b><![CDATA[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]]></b>
+										<span t-field="o.date" t-field-options='{"format": "dd/MM/y"}'/>
+									</td>
+								</tr>
+								<tr style='border:solid;border-color:white;'>
+									<td style="line-height: 1.5;">
+										<b>Name :</b>
+										<b><![CDATA[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]]></b>
+										<span t-field="o.employee_id.name_related" />
+									</td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td class="col-xs-4 pull-right" style="line-height: 1.5;">
+										<b>Shift : </b>
+										<b><![CDATA[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]]></b>
+										<span t-field="o.timetable" />
+									</td>
+								</tr>
+								<tr style='border:solid;border-color:white;'>
+									<td style="line-height: 1.5;">
+										<b>Department :</b>
+										<b><![CDATA[&nbsp;&nbsp;&nbsp;&nbsp;]]></b>
+										<span t-field="o.department_id" />
+									</td>
+								</tr>
+								<tr style='border:solid;border-color:white;'>
+									<td style="line-height: 1;">
+									
+									</td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td class="col-xs-4 pull-right" style="line-height: 1;">
+									
+									</td>
+								</tr>							
+								<tr style='border:solid;border-color:white;'>
+									<td style="line-height: 1.5;">
+										<b>On Duty :</b>
+										<b><![CDATA[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]]></b>
+										<span t-field="o.onduty" />
+									</td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td class="col-xs-4 pull-right" style="line-height: 1.5;">
+										<b>Off Duty :</b>
+										<b><![CDATA[&nbsp;&nbsp;&nbsp;&nbsp;]]></b>
+										<span t-field="o.offduty" />
+									</td>
+								</tr>
+								<tr style='border:solid;border-color:white;'>
+									<td style="line-height: 1.5;">
+										<b>Clock In :</b>
+										<b><![CDATA[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]]></b>
+										<span t-field="o.clockin" />
+									</td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td class="col-xs-4 pull-right" style="line-height: 1.5;">
+										<b>Clock Out :</b>
+										<b><![CDATA[&nbsp;]]></b>
+										<span t-field="o.clockout" />
+									</td>
+								</tr>
+								<tr style='border:solid;border-color:white;'>					
+									<td class="col-xs-4 pull-right" style="line-height: 1.5;">
+										<b>OT Time :</b>
+										<b><![CDATA[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]]></b>
+										<span t-field="o.ot_time" />
+										<b><![CDATA[&nbsp;&nbsp;]]></b>
+										<b>(Minutes)</b>
+									</td>
+								</tr>
+								<tr style='border:solid;border-color:white;'>
+									<td style="line-height: 3;">									
+									</td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td class="col-xs-4 pull-right" style="line-height: 3;">
+									
+									</td>
+								</tr>		
+								<tr style='border:solid;border-color:white;'>
+									<td style="line-height: 3.5;">
+										<b><strong>Requested By</strong></b>
+									</td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td class="col-xs-4 pull-right" style="line-height: 3.5;">
+										<b><strong>Approved By</strong></b>
+									</td>
+								</tr>
+								<tr style='border:solid;border-color:white;'>
+									<td style="line-height: 5;">
+										<b><strong>- - - - - - - - - - - -</strong></b>
+									</td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td class="col-xs-4 pull-right" style="line-height: 5;">
+										<b><strong>- - - - - - - - - - - -</strong></b>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</t>
+			</xpath>
+		</template>	
+		<template id="report_ot_form_temp">
+    		<t t-call="report.html_container">
+        		<t t-foreach="doc_ids" t-as="doc_id">
+        			<t t-raw="translate_doc(doc_id, doc_model, 'employee_id.name', 'ot_approval_v2.report_ot_inherit')"/>
+       			</t>
+    		</t>
+    	</template>
+	</data>
+</openerp>

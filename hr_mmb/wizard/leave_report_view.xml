@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+
+		<record id="view_leave_report_form" model="ir.ui.view">
+			<field name="name">Report Form</field>
+			<field name="model">leave.report</field>
+			<field name="arch" type="xml">
+				<form string="Account Report" version="7.0">
+					<group col="1">
+						<b>Leave Report</b>
+						<br />
+
+						<a href="http://localhost:8080/birt/frameset?__report=leave_balance.rptdesign"
+							target="_blank">Leave Balance Report</a>
+						<br />
+						<a href="http://localhost:8080/birt/frameset?__report=late_report.rptdesign"
+							target="_blank">Late Count Report</a>
+						<br />
+						<a href="http://localhost:8080/birt/frameset?__report=leave_and_late_report.rptdesign"
+						       target="_blank">Leave And Late Report</a>
+						      <br />						
+					</group>
+
+
+					<footer>
+						<button string="Close" class="oe_highlight" special="cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+
+		<record id="action_leave_report" model="ir.actions.act_window">
+			<field name="name">Print Report</field>
+			<field name="res_model">leave.report</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_leave_report_form" />
+			<field name="target">new</field>
+		</record>
+
+
+		<menuitem action="action_leave_report" id="menu_account_report"
+			name="Leave And Late Report" parent="hr.menu_hr_reporting" sequence="9" />
+	</data>
+</openerp>
+
+			
+	    
+			 	

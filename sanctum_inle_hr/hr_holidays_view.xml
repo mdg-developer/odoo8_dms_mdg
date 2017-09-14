@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<openerp>
+	<data>
+
+
+		<record id="view_leave_request_button_form" model="ir.ui.view">
+			<field name="name">Leave Request</field>
+			<field name="model">hr.holidays</field>
+			<field name="priority">1</field>
+			<field name="inherit_id" ref="hr_holidays_extension.view_leave_request_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//header" position="replace">
+					<header>
+						<button string="Confirm" name="confirm" states="draft"
+							type="workflow" class="oe_highlight" />							
+						<button string="Manager Approve" name="validate" states="confirm"
+							type="object" groups="base.group_hr_manager" class="oe_highlight" />			
+						<button string="EAM Approve" name="first_validate" states="validate1"
+							type="object" groups="base.group_hr_eam" class="oe_highlight" />
+						<button string="GM Approve" name="second_validate" states="validate2"
+							type="object" groups="base.group_hr_gm" class="oe_highlight" />
+						<button string="Refuse" name="refuse" states="confirm,validate1"
+							type="workflow" groups="base.group_hr_user" />
+						<button string="Reset to Draft" name="reset" type="workflow"
+							states="validate1"
+							attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse'])]}" />
+						<field name="state" widget="statusbar"
+							statusbar_visible="draft,confirm,validate1,validate,validate2"
+							statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}' />
+					</header>
+				</xpath>
+			</field>
+		</record>
+	</data>
+</openerp>

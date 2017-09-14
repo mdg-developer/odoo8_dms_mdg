@@ -1,0 +1,80 @@
+# Brazilian Portuguese translation for openerp-hr
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openerp-hr package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openerp-hr\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-11-15 14:23+0000\n"
+"PO-Revision-Date: 2014-09-28 11:59+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2014-09-29 05:20+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
+
+#. module: hr_resume
+#: report:hr.resume.report:0
+msgid "Certifications"
+msgstr ""
+
+#. module: hr_resume
+#: report:hr.resume.report:0
+msgid "Resume"
+msgstr ""
+
+#. module: hr_resume
+#: report:hr.resume.report:0
+msgid "Academic Background"
+msgstr ""
+
+#. module: hr_resume
+#: report:hr.resume.report:0
+msgid "Professional Experiences"
+msgstr ""
+
+#. module: hr_resume
+#: report:hr.resume.report:0
+msgid "Diploma:"
+msgstr ""
+
+#. module: hr_resume
+#: report:hr.resume.report:0
+msgid "Field of Study:"
+msgstr ""
+
+#. module: hr_resume
+#: report:hr.resume.report:0
+msgid "Languages"
+msgstr ""
+
+#. module: hr_resume
+#: model:ir.model,name:hr_resume.model_hr_employee
+msgid "Employee"
+msgstr ""
+
+#. module: hr_resume
+#: model:ir.actions.report.xml,name:hr_resume.hr_resume_report
+msgid "Print Resume"
+msgstr ""
+
+#. module: hr_resume
+#: report:hr.resume.report:0
+msgid "Skills"
+msgstr ""
+
+#. module: hr_resume
+#: report:hr.resume.report:0
+msgid "Certification Number:"
+msgstr ""
+
+#. module: hr_resume
+#: view:hr.employee:0
+#: field:hr.employee,biography:0
+#: report:hr.resume.report:0
+msgid "Biography"
+msgstr ""

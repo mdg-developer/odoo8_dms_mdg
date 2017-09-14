@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- ============================== Add Seniority Setting Form ============================== -->
+	
+		<record model="ir.ui.view" id="edit_seniority_form">
+			<field name="name">hr.seniority.form</field>
+			<field name="model">hr.seniority</field>
+			<field name="arch" type="xml">
+				<form>
+					<group>
+						<field name="from_month" />
+						<field name="to_month" />
+						<field name="amount" />
+					</group>
+				</form>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="view_seniority_tree">
+			<field name="name">hr.seniority.tree</field>
+			<field name="model">hr.seniority</field>
+			<field name="priority">35</field>
+			<field name="arch" type="xml">
+				<tree string="Seniority Setting">
+						<field name="from_month" />
+						<field name="to_month" />
+						<field name="amount" />				
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_hr_seniority_search" model="ir.ui.view">
+			<field name="name">hr.seniority.search</field>
+			<field name="model">hr.seniority</field>
+			<field name="arch" type="xml">
+				<search string="Seniority Setting">
+	                   <field name="from_month" />
+						<field name="to_month" />
+						<field name="amount" />	
+				</search>
+			</field>
+		</record>
+
+		<record id="open_view_seniority_status" model="ir.actions.act_window">
+			<field name="name">Seniority Setting</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">hr.seniority</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" eval="view_seniority_tree" />
+			<field name="search_view_id" ref="view_hr_seniority_search" />
+		</record>
+		<menuitem name="Seniority Setting" action="open_view_seniority_status"
+			id="menu_open_view_seniority_status" parent="hr.menu_hr_configuration"
+			sequence="2" />	
+
+</data>
+</openerp>

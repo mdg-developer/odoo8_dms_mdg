@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="org_chart">
+        <div class="contentpanel" >
+            <button id="toogl_button" class="btn" type="button">Vertical layout</button>
+            <button id="toogl_expand" class="btn" type="button">Expand</button>
+            <button id="print" class="btn" type="button">Print</button>
+        </div>
+    </t>
+</templates>

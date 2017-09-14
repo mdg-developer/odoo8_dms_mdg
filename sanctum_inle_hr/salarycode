@@ -1,0 +1,30 @@
+Name            Code          Category
+
+Basic	        BASIC	       Basic
+Net (MMK)	    NET	            Net
+Absent Leave	ALVD	        Deduction
+Late Deduction	LAT	            Deduction
+Income Tax	    ICT	            Deduction
+Fine	        FINE	        Deduction
+Unpaid Leave	LVD	            Deduction
+SSB Fees	    SSB	            Deduction
+New Appointment NAD	            Deduction
+deduction	
+Net (USD)	    USD	            Allowance
+Service Charge  SCG             Allowance
+
+
+
+
+
+Leave Type
+(
+Unpaid
+Sick
+Maternity
+Absent
+Annual
+Funeral
+Married
+PublicHoliday
+)

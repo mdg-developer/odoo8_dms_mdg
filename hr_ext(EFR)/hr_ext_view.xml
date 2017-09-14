@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record id="view_employee_filter" model="ir.ui.view">
+			<field name="name">Employees</field>
+			<field name="model">hr.employee</field>
+			<field name="inherit_id" ref="hr.view_employee_filter" />
+			<field name="priority" eval="20" />
+			<field name="arch" type="xml">
+				<xpath expr="//search/group/filter[@string='Company']"
+					position="after">
+					<filter string="DOB" icon="terp-personal" domain="[]"
+						context="{'group_by':'birthday'}" />
+				</xpath>
+				<xpath expr="//search/group/filter[@string='DOB']" position="after">
+					<filter string="Company" icon="terp-personal" domain="[]"
+						context="{'group_by':'company_id'}" />
+				</xpath>
+			</field>
+		</record>
+
+		<record id="view_hr_holidays_filter" model="ir.ui.view">
+			<field name="name">hr.holidays.filter</field>
+			<field name="model">hr.holidays</field>
+			<field name="inherit_id" ref="hr_holidays.view_hr_holidays_filter" />
+			<field name="arch" type="xml">
+				<xpath expr="//search/group/filter[@name='group_employee']"
+					position="after">
+					<filter string="Company" icon="terp-personal" domain="[]"
+						context="{'group_by':'company_id'}" />
+				</xpath>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="view_hr_attendance_graph">
+			<field name="name">hr.attendance.graph</field>
+			<field name="model">hr.attendance</field>
+			<field name="inherit_id" ref="hr_attendance.view_hr_attendance_filter" />
+			<field name="priority" eval="20" />
+			<field name="arch" type="xml">
+
+				<xpath expr="//search/group/filter[@name='employee']" position="after">
+					<filter string="Company" icon="terp-personal" domain="[]"
+						context="{'group_by':'company_id'}" />
+				</xpath>
+
+			</field>
+		</record>
+		<record model="ir.ui.view" id="view_fingerprint_employee_form">
+			<field name="name">hr.employee</field>
+			<field name="model">hr.employee</field>
+			<field name="priority" eval="1" />
+			<field name="inherit_id" ref="hr.view_employee_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//sheet/notebook/page/group/group/field[@name='active']"
+					position="replace">
+					<field name="active"/>
+				</xpath>
+				<xpath expr="//sheet/notebook/page/group/group/field[@name='birthday']"
+					position="replace">
+					<field name="birthday" on_change="get_month(birthday)" />
+				</xpath>
+				<xpath expr="//sheet/notebook/page/group/group/field[@name='birthday']"
+					position="before">
+					<field name="birthday_month" />
+				</xpath>
+			</field>
+		</record>
+
+		<record id="view_attendance_form" model="ir.ui.view">
+			<field name="name">hr.attendance.form</field>
+			<field name="model">hr.attendance</field>
+			<field name="inherit_id" ref="hr_attendance.view_attendance_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//sheet/group/field[@name='name']" position="replace">
+					<field name="company_id" />
+					<field name="name"/>
+					<field name="date_related"/>
+				</xpath>
+				
+			</field>
+		</record>
+		
+				<record id="view_attendance_tree" model="ir.ui.view">
+			<field name="name">hr.attendance.tree</field>
+			<field name="model">hr.attendance</field>
+			<field name="inherit_id" ref="hr_attendance.view_attendance_who" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='name']" position="replace">
+					<field name="company_id" />
+					<field name="name"/>
+					<field name="date_related"/>
+				</xpath>
+				
+			</field>
+		</record>
+
+
+		<record model="ir.ui.view" id="edit_holiday_new">
+			<field name="name">Leave Request</field>
+			<field name="model">hr.holidays</field>
+			<field name="inherit_id" ref="hr_holidays.edit_holiday_new" />
+			<field name="arch" type="xml">
+				<xpath expr="//sheet/group/group/field[@name='department_id']"
+					position="after">
+					<field name="company_id" />
+				</xpath>
+			</field>
+		</record>
+	</data>
+</openerp>

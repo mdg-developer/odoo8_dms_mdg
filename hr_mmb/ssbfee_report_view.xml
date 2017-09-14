@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+		<record model="ir.ui.view" id="view_ssbfee_graph">
+			<field name="name">ssbfee.report.report_graph</field>
+			<field name="model">ssbfee.report</field>
+			<field name="priority">20</field>
+			<field name="arch" type="xml">
+				<graph string="ssbfee Summary" type="pivot">
+					<field name="employee_id" type="row" />
+					<field name="job_id" type="row" />
+					<field name="date" type="col" />
+					<field name="ssn_no" type="row" />
+				</graph>
+			</field>
+		</record>
+
+		<record id="view_report_ssbfee_search" model="ir.ui.view">
+			<field name="name">report.ssbfee.search.inherit</field>
+			<field name="model">ssbfee.report</field>
+			<field name="arch" type="xml">
+
+				<search string="Event on Registration">
+
+					<group expand="1" string="Group By">
+						<filter string="Employee Name" context="{'group_by':'employee_id'}" />
+						<filter string="Post" context="{'group_by':'job_id'}" />
+						<filter string="Date" context="{'group_by':'date'}" />
+						<filter string="SSN.No" context="{'group_by':'ssn_no'}" />
+
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="action_hr_available_ssbfees_report">
+			<field name="name">ssbfee Analysis</field>
+			<field name="res_model">ssbfee.report</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">graph</field>
+			<field name="search_view_id" ref="view_report_ssbfee_search" />
+		</record>
+        <record model="ir.actions.act_window.view" id="action_report_ssbfee_graph">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="view_ssbfee_graph"/>
+            <field name="act_window_id" ref="action_hr_available_ssbfees_report"/>
+        </record>		
+        			
+		<menuitem name="SSB Report For Every Month" id="menu_hr_available_ssbfees_report_tree"
+			action="action_hr_available_ssbfees_report" parent="hr.menu_hr_reporting"
+			sequence="2" />
+
+
+	</data>
+</openerp>
+

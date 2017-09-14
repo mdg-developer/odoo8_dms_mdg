@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+
+		<record id="view_ot_report_form" model="ir.ui.view">
+			<field name="name">OT Report Form</field>
+			<field name="model">overtime.report</field>
+			<field name="arch" type="xml">
+				<form string="Overtime Reports" version="7.0">
+					<group col="1">
+						<b>Overtime Reports</b>
+						<br />
+
+						<a href="http://localhost:8080/birt/frameset?__report=total_ot_amt_by_all_dept.rptdesign"
+							target="_blank">Total Amount Of Overtime By All Department</a>
+						<br />
+						<a href="http://localhost:8080/birt/frameset?__report=total_ot_amt_by_each_dept.rptdesign"
+							target="_blank">Total Amount Of Overtime By Each Department</a>
+						<br />
+						<a href="http://localhost:8080/birt/frameset?__report=overtime_report_by_month.rptdesign"
+							target="_blank">Overtime report by month</a>
+						<br />
+
+					</group>
+
+
+					<footer>
+						<button string="Close" class="oe_highlight" special="cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+
+		<record id="action_ot_report" model="ir.actions.act_window">
+			<field name="name">Print Report</field>
+			<field name="res_model">overtime.report</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_ot_report_form" />
+			<field name="target">new</field>
+		</record>
+
+
+		<menuitem action="action_ot_report" id="menu_account_report1"
+			name="Overtime Reports" parent="hr.menu_hr_reporting" sequence="10" />
+	</data>
+</openerp>
+
+			
+	    
+			 	

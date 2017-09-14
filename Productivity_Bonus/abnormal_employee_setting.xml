@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+		<!-- ============================== Abnormal Employee Setting Form ============================== -->
+
+		<record id="view_abnormal_employee_tree" model="ir.ui.view">
+			<field name="name">hrabnormal.employee.tree</field>
+			<field name="model">hrabnormal.employee</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="employee_id"/>
+					<field name="job_id" />
+					<field name="employee_performance" />
+					<field name="employee_abnormal" />
+					<field name="employee_contribution" />
+					<field name="abnormal_date" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_hr_abnormal_employee_form" model="ir.ui.view">
+			<field name="name">hrabnormal.employee.form</field>
+			<field name="model">hrabnormal.employee</field>
+			<field name="arch" type="xml">
+				<form string="Abnormal Employee Setting">
+					<sheet>
+						<group col="4">
+							<group>
+								<field name="employee_id" on_change="onchange_employee_id(employee_id)" />
+								<field name="job_id" />
+								<field name="employee_performance" />
+							</group>
+							<group>
+								<field name="employee_abnormal" />
+								<field name="employee_contribution" />
+								<field name="abnormal_date" />
+							</group>
+						</group>
+
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+
+		<!-- action bonus setting -->
+		<record id="action_view_abnormal_employee_tree" model="ir.actions.act_window">
+			<field name="name">Abnormal Employee Setting</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">hrabnormal.employee</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_abnormal_employee_tree" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to register Abnormal Employee Setting
+				</p>
+			</field>
+		</record>
+
+		<!-- <menuitem action="action_view_abnormal_employee_tree" id="menu_abnormal_employee_id"
+			name="Abnormal Employee Setting" parent="hr.menu_hr_configuration"
+			sequence="200" /> -->
+
+	</data>
+</openerp>

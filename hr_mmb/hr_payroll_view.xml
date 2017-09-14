@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>		
+		<record id="view_event_form_inherit" model="ir.ui.view">
+			<field name="name">view_event_form_inherit</field>
+			<field name="model">event.event</field>
+			<field name="inherit_id" ref="event.view_event_form" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//form/sheet/group/group//field[@name='organizer_id']"
+						position="after">
+						<field name="fee" />
+						<field name="other_fee" />	
+						<field name="amount"  />	
+											
+						<field name="certificate" />
+						<field name="status" />
+					</xpath>
+					<xpath expr="//form/sheet/group/group/field[@name='date_begin']"
+						position="replace">
+						<field name="date_begin" />
+					</xpath>					
+					<xpath expr="//form/sheet/group/group/field[@name='date_end']"
+						position="replace">
+						<field name="date_end" />
+					</xpath>		
+					<xpath expr="//form/sheet/notebook/page/field/tree/field[@name='name']"
+						position="replace">
+						<field name="employee_id" on_change="onchange_employee_id(employee_id)" />
+						<field name="job_id" />
+						<field name="exam_remark" />
+						<field name="remark" />
+					</xpath>
+
+
+				</data>
+			</field>
+		</record>
+		<!-- 		Edit OT hour -->
+		<record model="ir.ui.view" id="view_hr_attendance_form">
+			<field name="name">hr.attendance.inherit</field>
+			<field name="model">hr.attendance</field>
+			<field name="inherit_id" ref="hr_attendance.view_attendance_form" />
+			<field name="priority" eval="20" />
+			<field name="arch" type="xml">
+                    <xpath expr="//header" position="replace">
+					<header>
+						<button name="approve" states="draft"  string="Approve" class="oe_highlight"  type="object"/>
+						<field name="state" widget="statusbar" statusbar_visible="approve,draft"
+								statusbar_colors='{"approve":"blue","draft":"blue"}' />
+					</header>
+				</xpath>
+			<!-- 	<xpath expr="//field[@name='action']" position="after">
+					<field name="sign" />
+				</xpath> -->				
+			</field>
+		</record>
+		<record model="ir.ui.view" id="view_hr_attendance_tree">
+			<field name="name">hr.attendance.inherit</field>
+			<field name="model">hr.attendance</field>
+			<field name="inherit_id" ref="hr_attendance.view_attendance_who" />
+			<field name="priority" eval="20" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='action']" position="after">
+					<field name="state" />
+				</xpath>
+			</field>
+		</record>
+	</data>
+</openerp>
+		

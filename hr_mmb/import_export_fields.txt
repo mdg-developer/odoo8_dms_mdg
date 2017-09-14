@@ -1,0 +1,63 @@
+Training Import/Export  Fields
+-------------------------------
+
+Certificate
+
+Company
+
+End Date
+
+Event Name
+
+Location
+
+Maximum Available Seats
+
+Minimum Reserved Seats
+Organier
+
+Other Fee
+Registration 
+Confirmation Email
+
+Responsible User
+
+Start Date
+Timezone
+
+Training & Seminar
+
+Type of Event
+Registration/Email
+Registration/Employee Name
+Registration/Exam Remark
+Registration/Job Position
+Registration/Name
+Registration/Number of Participants
+Registration/Phone
+Registration/Remark
+
+Uniform Import/Export
+---------------------
+Description
+Date
+Employee/Name
+Expense Lines/Date
+Expense Lines/Quantities
+Expense Lines/Times
+Expense Lines/Total
+Expense Lines/Uniform Name/Uniform Name
+Expense Lines/Unit Price
+Job Position/Job Name
+Paid Amount
+Payment Lines/Date
+Payment Lines/Is Paid
+Payment Lines/Pay Amount
+Payment Lines/Payment Type
+Department/Department Name
+
+
+
+
+
+

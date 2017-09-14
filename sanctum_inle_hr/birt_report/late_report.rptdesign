@@ -1,0 +1,1339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
+    <property name="units">in</property>
+    <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <property name="imageDPI">96</property>
+    <parameters>
+        <scalar-parameter name="from_date" id="366">
+            <text-property name="promptText">From Date:</text-property>
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="to_date" id="367">
+            <text-property name="promptText">To Date:</text-property>
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="7">
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>metadataBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledMetadataBidiFormatStr</name>
+                </ex-property>
+                <ex-property>
+                    <name>contentBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledContentBidiFormatStr</name>
+                </ex-property>
+            </list-property>
+            <property name="odaDriverClass">org.postgresql.Driver</property>
+            <property name="odaURL">jdbc:postgresql://localhost:5432/sanctum_UAT</property>
+            <property name="odaUser">openerp</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">b3BlbnBncHdk</encrypted-property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="late_report" id="8">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">id</text-property>
+                    <text-property name="heading">id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">dept_name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">dept_name</text-property>
+                    <text-property name="heading">dept_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">emp_name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">emp_name</text-property>
+                    <text-property name="heading">emp_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">job_name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">job_name</text-property>
+                    <text-property name="heading">job_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">count</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">count</text-property>
+                    <text-property name="heading">count</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">param_1</property>
+                    <property name="paramName">from_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_2</property>
+                    <property name="paramName">to_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">2</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">id</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">dept_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">emp_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">job_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">count</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">id</property>
+                    <property name="nativeName">id</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">-5</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">dept_name</property>
+                    <property name="nativeName">dept_name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">emp_name</property>
+                    <property name="nativeName">emp_name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">job_name</property>
+                    <property name="nativeName">job_name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">count</property>
+                    <property name="nativeName">count</property>
+                    <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select row_number() over (order by emp_name) as id,dept_name,emp_name,job_name,(WORKLD+WORKLD1+WORKLD2+WORKLD3+WORKLD4+WORKLD5+WORKLD6+WORKLD7+WORKLD8+WORKLD9
++WORKLD10+WORKLD11+WORKLD12+WORKLD13+WORKLD14+WORKLD15+WORKLD16+WORKLD17+WORKLD18+WORKLD19
++WORKLD20+WORKLD21+WORKLD22+WORKLD23) as count
+
+from
+(
+	select dept_name, emp_name, job_name,
+	sum(coalesce(child.WORKLD, 0)) as WORKLD,
+	sum(coalesce(child.WORKLD1, 0)) as WORKLD1,
+	sum(coalesce(child.WORKLD2, 0)) as WORKLD2,
+	sum(coalesce(child.WORKLD3, 0)) as WORKLD3,
+	sum(coalesce(child.WORKLD4, 0)) as WORKLD4,
+	sum(coalesce(child.WORKLD5, 0)) as WORKLD5,
+	sum(coalesce(child.WORKLD6, 0)) as WORKLD6,
+	sum(coalesce(child.WORKLD7, 0)) as WORKLD7,
+	sum(coalesce(child.WORKLD8, 0)) as WORKLD8,
+	sum(coalesce(child.WORKLD9, 0)) as WORKLD9,
+	sum(coalesce(child.WORKLD10, 0)) as WORKLD10,
+	sum(coalesce(child.WORKLD11, 0)) as WORKLD11,
+	sum(coalesce(child.WORKLD12, 0)) as WORKLD12,
+	sum(coalesce(child.WORKLD13, 0)) as WORKLD13,
+	sum(coalesce(child.WORKLD14, 0)) as WORKLD14,
+	sum(coalesce(child.WORKLD15, 0)) as WORKLD15,
+	sum(coalesce(child.WORKLD16, 0)) as WORKLD16,
+	sum(coalesce(child.WORKLD17, 0)) as WORKLD17,
+	sum(coalesce(child.WORKLD18, 0)) as WORKLD18,
+	sum(coalesce(child.WORKLD19, 0)) as WORKLD19,
+	sum(coalesce(child.WORKLD20, 0)) as WORKLD20,
+	sum(coalesce(child.WORKLD21, 0)) as WORKLD21,
+	sum(coalesce(child.WORKLD22, 0)) as WORKLD22,
+	sum(coalesce(child.WORKLD23, 0)) as WORKLD23
+
+
+
+	
+	from
+	(
+		select payslip.*,
+
+		case
+			when lower(payslip_line.code) = lower('WORKLD')
+			then payslip_line.number_of_days
+		end as WORKLD,
+
+		case
+			when lower(payslip_line.code) = lower('WORKLD1')
+			then payslip_line.number_of_days
+		end as WORKLD1,
+
+		case
+			when lower(payslip_line.code) = lower('WORKLD2')
+			then payslip_line.number_of_days
+		end as WORKLD2,
+
+		case
+			when lower(payslip_line.code) = lower('WORKLD3')
+			then payslip_line.number_of_days
+		end as WORKLD3,
+
+		case
+			when lower(payslip_line.code) = lower('WORKLD4')
+			then payslip_line.number_of_days
+		end as WORKLD4,
+
+		case
+			when lower(payslip_line.code) = lower('WORKLD5')
+			then payslip_line.number_of_days
+		end as WORKLD5,
+
+		case
+			when lower(payslip_line.code) = lower('WORKLD6')
+			then payslip_line.number_of_days
+		end as WORKLD6,
+
+		case
+			when lower(payslip_line.code) = lower('WORKLD7')
+			then payslip_line.number_of_days
+		end as WORKLD7,
+		
+		case
+			when lower(payslip_line.code) = lower('WORKLD8')
+			then payslip_line.number_of_days
+		end as WORKLD8,
+		
+		case
+			when lower(payslip_line.code) = lower('WORKLD9')
+			then payslip_line.number_of_days
+		end as WORKLD9,
+		case
+			when lower(payslip_line.code) = lower('WORKLD10')
+			then payslip_line.number_of_days
+		end as WORKLD10,
+
+		case
+			when lower(payslip_line.code) = lower('WORKLD11')
+			then payslip_line.number_of_days
+		end as WORKLD11,
+
+		case
+			when lower(payslip_line.code) = lower('WORKLD12')
+			then payslip_line.number_of_days
+		end as WORKLD12,
+
+		case
+			when lower(payslip_line.code) = lower('WORKLD13')
+			then payslip_line.number_of_days
+		end as WORKLD13,
+
+		case
+			when lower(payslip_line.code) = lower('WORKLD14')
+			then payslip_line.number_of_days
+		end as WORKLD14,
+
+		case
+			when lower(payslip_line.code) = lower('WORKLD15')
+			then payslip_line.number_of_days
+		end as WORKLD15,
+
+		case
+			when lower(payslip_line.code) = lower('WORKLD16')
+			then payslip_line.number_of_days
+		end as WORKLD16,
+
+		case
+			when lower(payslip_line.code) = lower('WORKLD17')
+			then payslip_line.number_of_days
+		end as WORKLD17,
+		
+		case
+			when lower(payslip_line.code) = lower('WORKLD18')
+			then payslip_line.number_of_days
+		end as WORKLD18,
+		
+		case
+			when lower(payslip_line.code) = lower('WORKLD19')
+			then payslip_line.number_of_days
+		end as WORKLD19,
+                case
+			when lower(payslip_line.code) = lower('WORKLD20')
+			then payslip_line.number_of_days
+		end as WORKLD20,
+
+		case
+			when lower(payslip_line.code) = lower('WORKLD21')
+			then payslip_line.number_of_days
+		end as WORKLD21,
+
+		case
+			when lower(payslip_line.code) = lower('WORKLD22')
+			then payslip_line.number_of_days
+		end as WORKLD22,
+
+		case
+			when lower(payslip_line.code) = lower('WORKLD23')
+			then payslip_line.number_of_days
+		end as WORKLD23
+
+			
+		FROM
+		(
+			select he.name_related as emp_name, he.manager as emp_is_manager,
+			hp.date_from, hp.date_to,he.id as employee_id,
+			hj.name as job_name, hd.name as dept_name, hp.id as id,
+			extract(month from hp.date_to) as month,
+			extract(year from hp.date_to) as year
+			from hr_payslip hp, hr_employee he, hr_job hj, hr_department hd,hr_contract hc
+			where hp.employee_id = he.id
+			and hp.contract_id=hc.id
+			and hc.job_id=hj.id
+			and he.department_id = hd.id
+			and hp.date_to between ? and ?
+		)payslip,
+		(
+			select code,number_of_days,payslip_id as slip_id from hr_payslip_worked_days
+
+		)payslip_line		
+		
+		where payslip.id = payslip_line.slip_id
+
+	
+	)child
+
+	group by dept_name, emp_name, job_name
+	order by dept_name
+)parent;
+
+]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>2</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>id</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>-5</design:nativeDataTypeCode>
+            <design:precision>19</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>id</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>id</design:label>
+            <design:formattingHints>
+              <design:displaySize>20</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>emp_name</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>0</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>emp_name</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>emp_name</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>job_name</design:name>
+              <design:position>3</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>0</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>job_name</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>job_name</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>dep_name</design:name>
+              <design:position>4</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>0</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>dep_name</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>dep_name</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>late_count</design:name>
+              <design:position>5</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>8</design:nativeDataTypeCode>
+            <design:precision>17</design:precision>
+            <design:scale>17</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>late_count</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>late_count</design:label>
+            <design:formattingHints>
+              <design:displaySize>24</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="report" id="420">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">id</text-property>
+                    <text-property name="heading">id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">dept_name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">dept_name</text-property>
+                    <text-property name="heading">dept_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">emp_name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">emp_name</text-property>
+                    <text-property name="heading">emp_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">job_name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">job_name</text-property>
+                    <text-property name="heading">job_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">count</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">count</text-property>
+                    <text-property name="heading">count</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">param_1</property>
+                    <property name="paramName">from_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_2</property>
+                    <property name="paramName">to_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">2</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">id</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">dept_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">emp_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">job_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">count</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">id</property>
+                    <property name="nativeName">id</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">-5</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">dept_name</property>
+                    <property name="nativeName">dept_name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">emp_name</property>
+                    <property name="nativeName">emp_name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">job_name</property>
+                    <property name="nativeName">job_name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">count</property>
+                    <property name="nativeName">count</property>
+                    <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select row_number() over (order by emp_name) as id,dept_name,emp_name,job_name,(WORKLD+WORKLD1+WORKLD2+WORKLD3+WORKLD4+WORKLD5+WORKLD6+WORKLD7+WORKLD8+WORKLD9
++WORKLD10+WORKLD11+WORKLD12+WORKLD13+WORKLD14+WORKLD15+WORKLD16+WORKLD17+WORKLD18+WORKLD19
++WORKLD20+WORKLD21+WORKLD22+WORKLD23) as count
+
+from
+(
+	select dept_name, emp_name, job_name,
+	sum(coalesce(child.WORKLD, 0)) as WORKLD,
+	sum(coalesce(child.WORKLD1, 0)) as WORKLD1,
+	sum(coalesce(child.WORKLD2, 0)) as WORKLD2,
+	sum(coalesce(child.WORKLD3, 0)) as WORKLD3,
+	sum(coalesce(child.WORKLD4, 0)) as WORKLD4,
+	sum(coalesce(child.WORKLD5, 0)) as WORKLD5,
+	sum(coalesce(child.WORKLD6, 0)) as WORKLD6,
+	sum(coalesce(child.WORKLD7, 0)) as WORKLD7,
+	sum(coalesce(child.WORKLD8, 0)) as WORKLD8,
+	sum(coalesce(child.WORKLD9, 0)) as WORKLD9,
+	sum(coalesce(child.WORKLD10, 0)) as WORKLD10,
+	sum(coalesce(child.WORKLD11, 0)) as WORKLD11,
+	sum(coalesce(child.WORKLD12, 0)) as WORKLD12,
+	sum(coalesce(child.WORKLD13, 0)) as WORKLD13,
+	sum(coalesce(child.WORKLD14, 0)) as WORKLD14,
+	sum(coalesce(child.WORKLD15, 0)) as WORKLD15,
+	sum(coalesce(child.WORKLD16, 0)) as WORKLD16,
+	sum(coalesce(child.WORKLD17, 0)) as WORKLD17,
+	sum(coalesce(child.WORKLD18, 0)) as WORKLD18,
+	sum(coalesce(child.WORKLD19, 0)) as WORKLD19,
+	sum(coalesce(child.WORKLD20, 0)) as WORKLD20,
+	sum(coalesce(child.WORKLD21, 0)) as WORKLD21,
+	sum(coalesce(child.WORKLD22, 0)) as WORKLD22,
+	sum(coalesce(child.WORKLD23, 0)) as WORKLD23
+
+
+
+	
+	from
+	(
+		select payslip.*,
+
+		case
+			when lower(payslip_line.code) = lower('WORKLD')
+			then payslip_line.number_of_days
+		end as WORKLD,
+
+		case
+			when lower(payslip_line.code) = lower('WORKLD1')
+			then payslip_line.number_of_days
+		end as WORKLD1,
+
+		case
+			when lower(payslip_line.code) = lower('WORKLD2')
+			then payslip_line.number_of_days
+		end as WORKLD2,
+
+		case
+			when lower(payslip_line.code) = lower('WORKLD3')
+			then payslip_line.number_of_days
+		end as WORKLD3,
+
+		case
+			when lower(payslip_line.code) = lower('WORKLD4')
+			then payslip_line.number_of_days
+		end as WORKLD4,
+
+		case
+			when lower(payslip_line.code) = lower('WORKLD5')
+			then payslip_line.number_of_days
+		end as WORKLD5,
+
+		case
+			when lower(payslip_line.code) = lower('WORKLD6')
+			then payslip_line.number_of_days
+		end as WORKLD6,
+
+		case
+			when lower(payslip_line.code) = lower('WORKLD7')
+			then payslip_line.number_of_days
+		end as WORKLD7,
+		
+		case
+			when lower(payslip_line.code) = lower('WORKLD8')
+			then payslip_line.number_of_days
+		end as WORKLD8,
+		
+		case
+			when lower(payslip_line.code) = lower('WORKLD9')
+			then payslip_line.number_of_days
+		end as WORKLD9,
+		case
+			when lower(payslip_line.code) = lower('WORKLD10')
+			then payslip_line.number_of_days
+		end as WORKLD10,
+
+		case
+			when lower(payslip_line.code) = lower('WORKLD11')
+			then payslip_line.number_of_days
+		end as WORKLD11,
+
+		case
+			when lower(payslip_line.code) = lower('WORKLD12')
+			then payslip_line.number_of_days
+		end as WORKLD12,
+
+		case
+			when lower(payslip_line.code) = lower('WORKLD13')
+			then payslip_line.number_of_days
+		end as WORKLD13,
+
+		case
+			when lower(payslip_line.code) = lower('WORKLD14')
+			then payslip_line.number_of_days
+		end as WORKLD14,
+
+		case
+			when lower(payslip_line.code) = lower('WORKLD15')
+			then payslip_line.number_of_days
+		end as WORKLD15,
+
+		case
+			when lower(payslip_line.code) = lower('WORKLD16')
+			then payslip_line.number_of_days
+		end as WORKLD16,
+
+		case
+			when lower(payslip_line.code) = lower('WORKLD17')
+			then payslip_line.number_of_days
+		end as WORKLD17,
+		
+		case
+			when lower(payslip_line.code) = lower('WORKLD18')
+			then payslip_line.number_of_days
+		end as WORKLD18,
+		
+		case
+			when lower(payslip_line.code) = lower('WORKLD19')
+			then payslip_line.number_of_days
+		end as WORKLD19,
+                case
+			when lower(payslip_line.code) = lower('WORKLD20')
+			then payslip_line.number_of_days
+		end as WORKLD20,
+
+		case
+			when lower(payslip_line.code) = lower('WORKLD21')
+			then payslip_line.number_of_days
+		end as WORKLD21,
+
+		case
+			when lower(payslip_line.code) = lower('WORKLD22')
+			then payslip_line.number_of_days
+		end as WORKLD22,
+
+		case
+			when lower(payslip_line.code) = lower('WORKLD23')
+			then payslip_line.number_of_days
+		end as WORKLD23
+
+			
+		FROM
+		(
+			select he.name_related as emp_name, he.manager as emp_is_manager,
+			hp.date_from, hp.date_to,he.id as employee_id,
+			hj.name as job_name, hd.name as dept_name, hp.id as id,
+			extract(month from hp.date_to) as month,
+			extract(year from hp.date_to) as year
+			from hr_payslip hp, hr_employee he, hr_job hj, hr_department hd,hr_contract hc
+			where hp.employee_id = he.id
+			and hp.contract_id=hc.id
+			and hc.job_id=hj.id
+			and he.department_id = hd.id
+			and hp.date_to between ? and ?
+		)payslip,
+		(
+			select code,number_of_days,payslip_id as slip_id from hr_payslip_worked_days
+
+		)payslip_line		
+		
+		where payslip.id = payslip_line.slip_id
+
+	
+	)child
+
+	group by dept_name, emp_name, job_name
+	order by dept_name
+)parent;
+
+]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>2</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>id</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>-5</design:nativeDataTypeCode>
+            <design:precision>19</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>id</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>id</design:label>
+            <design:formattingHints>
+              <design:displaySize>20</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>dept_name</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>0</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>dept_name</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>dept_name</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>emp_name</design:name>
+              <design:position>3</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>0</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>emp_name</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>emp_name</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>job_name</design:name>
+              <design:position>4</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>0</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>job_name</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>job_name</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>count</design:name>
+              <design:position>5</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>8</design:nativeDataTypeCode>
+            <design:precision>17</design:precision>
+            <design:scale>17</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>count</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>count</design:label>
+            <design:formattingHints>
+              <design:displaySize>24</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+    </data-sets>
+    <styles>
+        <style name="report" id="4">
+            <property name="fontFamily">sans-serif</property>
+            <property name="fontSize">10pt</property>
+        </style>
+        <style name="crosstab-cell" id="5">
+            <property name="borderBottomColor">#CCCCCC</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">1pt</property>
+            <property name="borderLeftColor">#CCCCCC</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">1pt</property>
+            <property name="borderRightColor">#CCCCCC</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">1pt</property>
+            <property name="borderTopColor">#CCCCCC</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">1pt</property>
+        </style>
+        <style name="crosstab" id="6">
+            <property name="borderBottomColor">#CCCCCC</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">1pt</property>
+            <property name="borderLeftColor">#CCCCCC</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">1pt</property>
+            <property name="borderRightColor">#CCCCCC</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">1pt</property>
+            <property name="borderTopColor">#CCCCCC</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">1pt</property>
+        </style>
+    </styles>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <page-footer>
+                <text id="3">
+                    <property name="contentType">html</property>
+                    <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
+                </text>
+            </page-footer>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <grid id="403">
+            <property name="width">7.947916666666667in</property>
+            <column id="404">
+                <property name="width">1.3333333333333333in</property>
+            </column>
+            <column id="405">
+                <property name="width">1.84375in</property>
+            </column>
+            <column id="418">
+                <property name="width">1.1354166666666667in</property>
+            </column>
+            <column id="406">
+                <property name="width">0.14583333333333334in</property>
+            </column>
+            <column id="407">
+                <property name="width">2.1666666666666665in</property>
+            </column>
+            <column id="408">
+                <property name="width">1.3229166666666667in</property>
+            </column>
+            <row id="409">
+                <cell id="410"/>
+                <cell id="411">
+                    <label id="402">
+                        <property name="fontSize">11pt</property>
+                        <property name="fontWeight">bold</property>
+                        <property name="textAlign">right</property>
+                        <text-property name="text">Late Report</text-property>
+                    </label>
+                </cell>
+                <cell id="417">
+                    <data id="415">
+                        <property name="fontSize">11pt</property>
+                        <property name="fontWeight">bold</property>
+                        <structure name="dateTimeFormat">
+                            <property name="category">Custom</property>
+                            <property name="pattern">dd.MM.yyyy</property>
+                        </structure>
+                        <property name="textAlign">right</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">from_date</property>
+                                <expression name="expression" type="javascript">params["from_date"]</expression>
+                                <property name="dataType">date</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">from_date</property>
+                    </data>
+                </cell>
+                <cell id="412">
+                    <label id="419">
+                        <property name="fontSize">11pt</property>
+                        <property name="fontWeight">bold</property>
+                        <property name="textAlign">center</property>
+                        <text-property name="text">-</text-property>
+                    </label>
+                </cell>
+                <cell id="413">
+                    <data id="416">
+                        <property name="fontSize">11pt</property>
+                        <property name="fontWeight">bold</property>
+                        <structure name="dateTimeFormat">
+                            <property name="category">Custom</property>
+                            <property name="pattern">dd.MM.yyyy</property>
+                        </structure>
+                        <property name="textAlign">left</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">to_date</property>
+                                <expression name="expression" type="javascript">params["to_date"]</expression>
+                                <property name="dataType">date</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">to_date</property>
+                    </data>
+                </cell>
+                <cell id="414"/>
+            </row>
+        </grid>
+        <table id="421">
+            <property name="width">7.34375in</property>
+            <property name="dataSet">report</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">id</property>
+                    <text-property name="displayName">id</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["id"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">emp_name</property>
+                    <text-property name="displayName">emp_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["emp_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">dept_name</property>
+                    <text-property name="displayName">dept_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["dept_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">job_name</property>
+                    <text-property name="displayName">job_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["job_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">count</property>
+                    <text-property name="displayName">count</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["count"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+            </list-property>
+            <column id="440">
+                <property name="width">0.6458333333333334in</property>
+            </column>
+            <column id="441">
+                <property name="width">2.4375in</property>
+            </column>
+            <column id="442">
+                <property name="width">1.5520833333333333in</property>
+            </column>
+            <column id="443">
+                <property name="width">1.7291666666666667in</property>
+            </column>
+            <column id="444">
+                <property name="width">0.9791666666666666in</property>
+            </column>
+            <header>
+                <row id="422">
+                    <cell id="423">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="445">
+                            <text-property name="text">No</text-property>
+                        </label>
+                    </cell>
+                    <cell id="424">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="446">
+                            <text-property name="text">Name</text-property>
+                        </label>
+                    </cell>
+                    <cell id="425">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="447">
+                            <text-property name="text">Position</text-property>
+                        </label>
+                    </cell>
+                    <cell id="426">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="448">
+                            <text-property name="text">Department</text-property>
+                        </label>
+                    </cell>
+                    <cell id="427">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="449">
+                            <text-property name="text">Late Count</text-property>
+                        </label>
+                    </cell>
+                </row>
+            </header>
+            <detail>
+                <row id="428">
+                    <cell id="429">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="450">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">id</property>
+                        </data>
+                    </cell>
+                    <cell id="430">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="451">
+                            <property name="paddingLeft">5pt</property>
+                            <property name="resultSetColumn">emp_name</property>
+                        </data>
+                    </cell>
+                    <cell id="431">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="453">
+                            <property name="paddingLeft">5pt</property>
+                            <property name="resultSetColumn">job_name</property>
+                        </data>
+                    </cell>
+                    <cell id="432">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="452">
+                            <property name="paddingLeft">5pt</property>
+                            <property name="resultSetColumn">dept_name</property>
+                        </data>
+                    </cell>
+                    <cell id="433">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="454">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">count</property>
+                        </data>
+                    </cell>
+                </row>
+            </detail>
+        </table>
+    </body>
+</report>

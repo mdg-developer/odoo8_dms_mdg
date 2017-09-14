@@ -1,0 +1,100 @@
+<openerp>
+  <data>
+    <menuitem id="menu_hr_nrc_prefix" parent="hr.menu_hr_configuration"  name="NRC" sequence="41"/>
+    <!-- <menuitem id="menu_hr_gamification" parent="hr.menu_hr_root" name="Engagement" sequence="40"/> -->
+    
+    <record id="view_employee_bus_stop_tree_view" model="ir.ui.view">
+			<field name="name">hr.employee.tree.inheritance</field>
+			<field name="model">hr.employee</field>
+			<field name="type">tree</field>
+			<field name="inherit_id" ref="hr.view_employee_tree" />
+			<field name="arch" type="xml">			
+				<field name="department_id" position="before">
+					<field name="bus_stop_id" />
+					<field name="trial_end_date" />
+					
+					<!-- <field name="qty_available_text" /> -->
+					
+				</field>				
+			</field>
+	</record>
+	
+		
+    <record id="view_employee_filter" model="ir.ui.view">
+            <field name="name">Employees</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_filter"/>
+            <field name="arch" type="xml">
+                <field name="department_id" position="after">
+                    <field name="bus_stop_id"/>
+                    <filter string="Bus Stop " icon="terp-personal" domain="[]" context="{'group_by':'bus_stop_id'}"/>
+                    <filter string="Today Trial End Date" domain="[('trial_end_date', '&gt;=', datetime.datetime.now().strftime('%Y-%m-%d 00:00:00')),('trial_end_date', '&lt;=', datetime.datetime.now().strftime('%Y-%m-%d 23:23:59'))]"/>
+                </field>
+            <!--     <filter string="Length " position="after">
+                	<filter string="Bus Stop " icon="terp-personal" domain="[]" context="{'group_by':'bus_stop_id'}"/>
+                </filter> -->
+            </field>
+    </record>
+        
+     <record model="ir.ui.view" id="view_employee_nrc_form_inherit">
+        <field name="name">hr.training.employee.form</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">   
+                
+            <xpath expr="//field[@name='identification_id']" position="replace">
+            	<field name="nrc_prefix_id" class="o_nrc_prefix" placeholder="NRC Prefix" style="width: 66%%"/>
+            	<field name="nrc_number" class="o_nrc_number" placeholder="NRC Number" />
+            	<field name="identification_id"/>
+			</xpath>
+			
+			<xpath expr="//field[@name='work_location']" position="after">
+				<field name="bus_stop_id" />
+			</xpath>
+			
+			<field name="vehicle_distance" position="after">
+					<field name="labour_card"/>
+				</field>
+        </field>
+    </record>   
+    
+    <!-- NRC Prefix tree -->
+    <record model="ir.ui.view" id="view_prefix_tree">
+        <field name="name">hr.nrc.prefix.tree</field>
+        <field name="model">hr.nrc.prefix</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="NRC Prefix">
+                <field name="name"/>                                
+            </tree>
+        </field>
+    </record>
+     <!-- NRC Prefix form -->
+    <record model="ir.ui.view" id="view_hr_section_form">
+        <field name="name">hr.nrc.prefix.form</field>
+        <field name="model">hr.nrc.prefix</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="NRC Prefix">
+                <group col="4">
+	                <field name="name"/>              
+	            </group>               
+               
+            </form>
+        </field>
+    </record>
+     <!-- Menu -->
+    <record model="ir.actions.act_window" id="open_view_nrc_prefix_form">
+        <field name="name">NRC Prefix</field>
+        <field name="res_model">hr.nrc.prefix</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    
+    <menuitem name="NRC Prefix"
+              parent="hr.menu_hr_configuration"
+              id="menu_open_view_nrc_prefix_form"
+              action="open_view_nrc_prefix_form" sequence="6" />
+
+  </data>
+</openerp>

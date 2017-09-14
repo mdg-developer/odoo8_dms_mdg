@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- QWeb Reports -->
+        <!-- Invoice -->
+
+        <report 
+            id="ot_approval_v2.ot_form"
+            model="attendance.data.import"
+            string="OT Form"
+            report_type="qweb-pdf"
+            name="ot_approval_v2.report_ot_form_temp"
+            file="ot_approval_v2.report_ot_form_temp"  />
+    </data>
+</openerp>

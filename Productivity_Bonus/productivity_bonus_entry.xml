@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<template id="assets_backend" name="ccoffee_page_view_width assets" inherit_id="web.assets_backend">
+			<xpath expr="." position="inside">
+				<link rel="stylesheet" href="/Productivity_Bonus/static/src/css/productivity.css"/>
+			</xpath>
+		</template>
+		
+		<!-- ============================== Productivity Bonus Setting Form ============================== -->
+
+		<record id="productivity_bonus_entry_tree" model="ir.ui.view">
+			<field name="name">productivity.bonus.entry.tree</field>
+			<field name="model">productivity.bonus.entry</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="date" />
+					<field name="name" />
+					<field name="month" />
+					<field name="department_id" />
+				</tree>
+			</field>
+		</record>
+		<record id="productivity_bonus_entry_form" model="ir.ui.view">
+			<field name="name">productivity.bonus.entry.form</field>
+			<field name="model">productivity.bonus.entry</field>
+			<field name="arch" type="xml">
+			<form>
+					<group col="2">
+							<group>
+								<field name="date" />	
+								<field name="department_id" />						
+							</group>
+							<group>
+								<field name="name" attrs="{'readonly':[('state','=','direct_confirm')]}"/>
+								<field name="month" />
+							</group>
+						</group>
+				<notebook>
+					<page string="Direct" attrs="{'invisible': [('name','=', 'indirect')]}">
+					<form string="Productivity Bonus Entry">
+								<header>
+									<button name="confirm" string="Confirm" class="oe_highlight"  type="object" attrs="{'invisible': [('state','!=','draft')]}"/>
+									<button name="done" string="Done" class="oe_highlight"  type="object" attrs="{'invisible': [('state','=','done')]}"/>
+									<field name="state" widget="statusbar" statusbar_colors='{"draft":"blue","confirm":"blue","done":"red"}' statusbar_visible="draft,direct_confirm,done"/>
+								</header>
+								<sheet>
+									<!-- <xpath expr="//sheet" position="attributes">
+    									<attribute name="class">oe_form_sheet_width_wider</attribute>
+									</xpath> -->
+									<group> 
+										<group string="Week 1">
+												<field name="week1" on_change="onchange_week1(week1,'w1')"/>			
+												<field name="w1_show" />
+												<field name="target1" />
+												<field name="actual1" on_change="onchange_achieve_rate(target1,actual1,'w1')"/>	
+												<field name="a_rate1" />
+												<field name="grade1" />	
+												<field name="p_bonus1" />	
+										</group>
+										<group string="Week 2">
+												<field name="week2" on_change="onchange_week1(week2,'w2')"/>
+												<field name="w2_show" />
+												<field name="target2" />
+												<field name="actual2" on_change="onchange_achieve_rate(target2,actual2,'w2')"/>	
+												<field name="a_rate2" />
+												<field name="grade2" />	
+												<field name="p_bonus2" />
+										</group>
+										<group string="Week 3">
+												<field name="week3" on_change="onchange_week1(week3,'w3')" />
+												<field name="w3_show" />	
+												<field name="target3" />
+												<field name="actual3" on_change="onchange_achieve_rate(target3,actual3,'w3')"/>
+												<field name="a_rate3" />
+												<field name="grade3" />	
+												<field name="p_bonus3" />	
+										</group>
+										<group string="Week 4">
+												<field name="week4" on_change="onchange_week1(week4,'w4')"/>
+												<field name="w4_show" />
+												<field name="target4" />
+												<field name="actual4" on_change="onchange_achieve_rate(target4,actual4,'w4')"/>
+												<field name="a_rate4" />	
+												<field name="grade4" />	
+												<field name="p_bonus4" />
+										</group>
+										<group string="BC Grade">
+												<field name="bc_grade" on_change="onchange_bonus(bc_grade)"/>
+												<field name="bc_amount" />	
+										</group>
+										<group string="Over Target">
+												<field name="o_target" on_change="onchange_target(o_target)"/>
+												<field name="o_target_amount"/>
+										</group>
+										
+									</group>
+									<notebook attrs="{'invisible': [('state','=','draft')]}">
+										<page string="Productivity Bonus">
+											 <field name="detail_line_id" colspan="3" nolabel="1" readonly="1">
+												<form string="Productivity Bonus">
+													<group>
+														<field name="employee_id" />
+														<field name="position" />
+														<field name="performance" />
+														<field name="abnormal" />
+														<field name="contribution"/>
+														<field name="total_percent"/>
+														<field name="total_amount"/>
+													</group>
+												</form>
+												<tree string="Hite Rate" editable="bottom">
+														<field name="employee_id" />
+														<field name="position" />
+														<field name="performance" />
+														<field name="abnormal" />
+														<field name="contribution"/>
+														<field name="total_percent"/>
+														<field name="total_amount"/>
+												</tree>
+											</field> 
+										</page>							
+									</notebook>
+								</sheet>
+							</form>
+						</page>
+						<page string="Indirect" attrs="{'invisible': [('name','=', 'direct')]}">
+							<form string="Indirect Productivity Bonus">
+								<header>
+									<button name="indirect_confirm" string="Confirm"  class="oe_highlight"  type="object" attrs="{'invisible': [('state','!=','draft')]}"/>
+									<button name="done" string="Done" class="oe_highlight"  type="object" attrs="{'invisible': [('state','=','done')]}"/>
+									<field name="state" widget="statusbar" statusbar_visible="indirect_confirm,done" />
+								</header>
+								<sheet>
+									<group col="2">
+										<field name="a_rate" on_change="onchange_grade(a_rate)"/>
+										<field name="grade"/>	
+										<field name="productivity_bounus" />
+									</group>
+									<notebook attrs="{'invisible': [('state','=','draft')]}">
+										<page string="Productivity Bonus" >
+											 <field name="indirect_line_id" colspan="3" nolabel="1" readonly="1">
+												<form string="Productivity Bonus">
+													<group>
+														<field name="employee_id" />
+														<field name="position" />
+														<field name="performance" />
+														<field name="abnormal" />
+														<field name="contribution"/>
+														<field name="total_percent"/>
+														<field name="total_amount"/>
+													</group>
+												</form>
+												<tree string="Hite Rate" editable="bottom">
+														<field name="employee_id" />
+														<field name="position" />
+														<field name="performance" />
+														<field name="abnormal" />
+														<field name="contribution"/>
+														<field name="total_percent"/>
+														<field name="total_amount"/>
+												</tree>
+											</field> 
+										</page>							
+									</notebook>
+								</sheet>
+							</form>
+						</page>
+					
+				</notebook>	
+				</form>						
+			</field>
+		</record>
+
+		<!-- action bonus setting -->
+		<record id="action_productivity_bonus_entry_tree" model="ir.actions.act_window">
+			<field name="name">Productivity Bonus Entry</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">productivity.bonus.entry</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="productivity_bonus_entry_tree" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to register new Productivity Bonus Entry
+				</p>
+			</field>
+		</record>		
+		<menuitem action="action_productivity_bonus_entry_tree" id="productivity_bonus_entry_id"
+			name="Productivity Bonus Entry" parent="Addidas_HR.menu_bonus" sequence="2" />
+
+	</data>
+</openerp>

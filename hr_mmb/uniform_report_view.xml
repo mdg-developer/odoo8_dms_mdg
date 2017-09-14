@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+		<record model="ir.ui.view" id="view_uniform_graph">
+			<field name="name">uniform.report.report_graph</field>
+			<field name="model">uniform.report</field>
+			<field name="priority">20</field>
+			<field name="arch" type="xml">
+				<graph string="Uniform Summary" type="pivot">
+					<field name="employee_id" type="row" />
+					<field name="uni_name" type="row" />
+					<field name="date" type="col" />
+					<field name="e_id" type="measure" />
+				</graph>
+			</field>
+		</record>
+
+		<record id="view_report_uniform_search" model="ir.ui.view">
+			<field name="name">report.uniform.search.inherit</field>
+			<field name="model">uniform.report</field>
+			<field name="arch" type="xml">
+
+				<search string="Event on Registration">
+
+					<group expand="1" string="Group By">
+						<filter string="Employee Name" context="{'group_by':'employee_id'}" />
+						<filter string="Uniform Name" context="{'group_by':'uni_name'}" />
+						<filter string="Date" context="{'group_by':'date'}" />
+
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="action_hr_available_uniforms_report">
+			<field name="name">Uniform Analysis</field>
+			<field name="res_model">uniform.report</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">graph</field>
+			<field name="search_view_id" ref="view_report_uniform_search" />
+		</record>
+        <record model="ir.actions.act_window.view" id="action_report_uniform_graph">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="view_uniform_graph"/>
+            <field name="act_window_id" ref="action_hr_available_uniforms_report"/>
+        </record>		
+        			
+		<menuitem name="Uniform Analysis" id="menu_hr_available_uniforms_report_tree"
+			action="action_hr_available_uniforms_report" parent="hr.menu_hr_reporting"
+			sequence="10" />
+
+
+	</data>
+</openerp>
+

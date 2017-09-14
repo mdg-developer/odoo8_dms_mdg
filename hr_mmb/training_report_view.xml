@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+		<!-- Event on Registration search view -->
+		<record id="inherit_view_report_event_registration_search_inherit" model="ir.ui.view" >
+			<field name="name">report.event.registration.search.inherit</field>
+			<field name="model">report.event.registration</field>
+			<field name="inherit_id" ref="event.view_report_event_registration_search" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//filter[@string ='Participant']" position="after">
+						<filter string="Employee Name" context="{'group_by':'employee_id'}" />
+						<filter string="Training Type" context="{'group_by':'tr_location'}" />
+						<filter string="Exam Remark" context="{'group_by':'exam_remark'}" />
+                        <filter string="Post" context="{'group_by':'job_id'}" />
+					</xpath>
+				</data>
+			</field>
+		</record>
+	</data>
+</openerp>

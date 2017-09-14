@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+         <!--============ Week Setting ============== -->
+
+		<!-- form -->
+		<record id="view_week_setting_form" model="ir.ui.view">
+			<field name="name">Week Setting Form</field>
+			<field name="model">setting.week</field>
+			<field eval="25" name="priority" />
+			<field name="arch" type="xml">
+				<form string="Week Setting Form" version="7.0">
+					<sheet>
+						<group>
+							<group>
+								<field name="name" />
+								<field name="from_date" />
+								<field name="to_date" />
+								<field name="year"/>
+								<field name="month"/>
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		<!-- tree -->
+		<record id="view_week_setting_tree" model="ir.ui.view">
+			<field name="name">Week Setting Tree</field>
+			<field name="model">setting.week</field>
+			<field name="arch" type="xml">
+				<tree string="Week Setting Tree">
+					<field name="name" />
+					<field name="from_date" />
+					<field name="to_date" />
+					<field name="year"/>
+					<field name="month"/>
+					
+				</tree>
+
+			</field>
+		</record>
+
+
+		<!-- action form -->
+
+
+		<record id="action_week_setting" model="ir.actions.act_window">
+			<field name="name">Week Setting Action</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">setting.week</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_week_setting_tree" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create new Week.
+				</p>
+			</field>
+		</record>
+
+		<!-- menu item -->
+		<!--  <menuitem id="menu_week_setting_id" parent="hr.menu_hr_configuration"
+			name="Weeks Setting" action="action_week_setting" sequence="3" />  -->
+			
+		 <menuitem action="action_week_setting" id="menu_week_setting_id"
+			name="Weeks Setting" parent="Productivity_Bonus.productivity_bonus" sequence="3" />
+			
+		
+	</data>
+</openerp>			

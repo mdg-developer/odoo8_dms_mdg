@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <report
+            auto="True"
+            id="hr_attendance_report"
+            model="hr.attendance"
+            name="hr.attendance.report"
+            rml="hr_attendance_ex/report/employee_attendance_report.rptdesign"
+            string="HR Attendance Report"
+            header="False"
+        />
+    </data>
+</openerp>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+	    
+		<menuitem id="menu_uniform" name="Import Uniform Data" parent="menu_master_data_import" />
+		
+		<record id="view_uniform_import_form" model="ir.ui.view">
+			<field name="name">Uniform Import Form</field>
+			<field name="model">data_import.uniform</field>
+			<field name="arch" type="xml">
+				<form string="Uniform Import" version="7.0">
+					<header>
+						<button name="import_data" string="Import Uniform" type="object"
+							class="oe_highlight" />
+						<field name="state" widget="statusbar" statusbar_visible="draft,completed,error" />
+					</header>
+					<sheet>
+						<group>
+							<field name="name" />
+							<field name="import_date" />
+							<field name="import_file" filename="import_fname" />
+							<field name="import_fname" invisible="1" class="oe_inline oe_right" />
+							<field name="company_id" />
+							<field name="note" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="view_uniform_import_tree" model="ir.ui.view">
+			<field name="name">Data Import Uniform Tree</field>
+			<field name="model">data_import.uniform</field>
+			<field name="arch" type="xml">
+				<tree string="Data Import Uniform">
+					<field name="import_date" />
+					<field name="name" />
+					<field name="import_fname" />
+					<field name="note" />
+					<field name="company_id" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Action -->
+		<record id="action_uniform_import" model="ir.actions.act_window">
+			<field name="name">Uniform Import</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">data_import.uniform</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_uniform_import_tree" />
+		</record>
+
+		<!-- First level menu -->
+		<menuitem id="menu_uniform_import" name="Uniform Import Files"
+			action="action_uniform_import" parent="menu_uniform" />
+		
+	</data>
+</openerp>

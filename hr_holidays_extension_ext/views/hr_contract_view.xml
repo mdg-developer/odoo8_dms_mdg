@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<openerp>
+	<data>
+
+		<record id="view_hr_contract_leave_control_form" model="ir.ui.view">
+			<field name="name">HR Contract Leave Control</field>
+			<field name="model">hr.contract</field>
+			<field name="inherit_id" ref="hr_contract.hr_contract_view_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//page/group/group/label" position="before">
+					<label for="leave_control" string="Leave Control" />
+					<div>
+						<field name="leave_control" class="oe_inline" />
+					</div>
+
+				</xpath>
+			</field>
+		</record>
+	</data>
+</openerp>

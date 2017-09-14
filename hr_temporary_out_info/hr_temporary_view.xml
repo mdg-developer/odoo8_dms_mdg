@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<openerp>
+	<data>
+
+		<record id="temporary_out_tree_view" model="ir.ui.view">
+			<field name="name">hr.temporary.out.tree</field>
+			<field name="model">hr.temporary.out</field>
+			<field name="arch" type="xml">
+				<tree string="Temporary Out">
+					<field name="badge_id" />
+					<field name="employee_id" />
+					<field name="department_id" />
+					<field name="section_id" />
+					<field name="date" />
+					<field name="out_time" />
+					<field name="in_time" />
+					<field name="duration" />
+					<field name="note" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="temporary_out_form_view" model="ir.ui.view">
+			<field name="name">hr.temporary.out.form</field>
+			<field name="model">hr.temporary.out</field>
+			<field name="arch" type="xml">
+				<form string="Temporary Out" version="7.0">
+					<sheet>
+						<group>
+							<group>
+								<field name="employee_id" on_change="onchange_employee_id(employee_id)" />
+								<field name="badge_id" />
+								<field name="department_id" />
+								<field name="section_id" />
+								<field name="job_id" />
+							</group>
+							<group>
+								<field name="date" />
+								<field name="out_time" />
+								<field name="in_time" on_change="calculate_on_change(date,out_time,in_time)" />
+								<field name="duration" />
+								<field name="note" />
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="view_temporary_out_filter" model="ir.ui.view">
+			<field name="name">Temporary Out</field>
+			<field name="model">hr.temporary.out</field>
+			<field name="arch" type="xml">
+				<search string="Temporary Out">
+					<filter string="Under 30 Mins" domain="[('duration', '&lt;=', 30)]" />
+					<filter string="Above 30 Mins And Under 1 Hour"
+						domain="['&amp;',('duration', '&gt;', 30),('duration', '&lt;=', 60)]" />
+					<filter string="Above 1 Hour And Under 2 Hour"
+						domain="['&amp;',('duration', '&gt;', 60),('duration', '&lt;=', 120)]" />
+					<filter string="Above 2 Hour" domain="[('duration', '&gt;', 120)]" />
+
+					<group expand="0" string="Group By">
+						<filter string="Employee" icon="terp-personal" domain="[]"
+							context="{'group_by':'employee_id'}" />
+						<filter string="Department" icon="terp-personal+" domain="[]"
+							context="{'group_by':'department_id'}" />
+						<filter string="Section" icon="terp-personal+" domain="[]"
+							context="{'group_by':'section_id'}" />
+						<filter string="Date" icon="terp-personal+" domain="[]"
+							context="{'group_by':'date'}" />
+						<filter string="Position" icon="terp-gtk-select-all"
+							domain="[]" context="{'group_by':'job_id'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+		<record id="open_hr_temporary_out" model="ir.actions.act_window">
+			<field name="name">Temporary Out Data</field>
+			<field name="res_model">hr.temporary.out</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem id="menu_hr_temporary_out_parent" parent='hr.menu_hr_root'
+			name="Temporary Out" sequence="17" />
+
+		<menuitem id="menu_hr_temporary_out" parent="menu_hr_temporary_out_parent"
+			action="open_hr_temporary_out" sequence="1" />
+
+	</data>
+</openerp>

@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+		<menuitem id="menu_fingerprint_machine" name="Finger Print"
+			parent="hr.menu_hr_root" sequence="10" groups="base.group_hr_user" />
+
+		<record id="view_hr_fingerprint_device_form" model="ir.ui.view">
+			<field name="name">Finger Print Device</field>
+			<field name="model">hr.fingerprint.device</field>
+			<field name="arch" type="xml">
+				<form string="HR Finger Print Device" version="7.0">
+					<sheet>
+						<group>
+							<field name="name" />
+							<field name="address" />
+							<field name="location" />
+							<field name="company_id" groups="base.group_multi_company"/>
+							<field name="active" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="view_hr_fingerprint_device_tree" model="ir.ui.view">
+			<field name="name">Finger Print Machine Tree</field>
+			<field name="model">hr.fingerprint.device</field>
+			<field name="arch" type="xml">
+				<tree string="Finger Print Device">
+					<field name="name" />
+					<field name="address" />
+					<field name="location" />
+					<field name="company_id" groups="base.group_multi_company"/>
+					<field name="active" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Action -->
+		<record id="action_finger_print_device" model="ir.actions.act_window">
+			<field name="name">Finger Print Device</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">hr.fingerprint.device</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_hr_fingerprint_device_tree" />
+		</record>
+
+
+		<menuitem id="menu_fingerprint_device" name="Finger Print Device"
+			parent="menu_fingerprint_machine" action="action_finger_print_device"
+			groups="base.group_hr_manager" sequence="21" />
+
+		<record model="ir.ui.view" id="view_figerprint_attachment_tree">
+			<field name="name">hr.fingerprint.attedance.file</field>
+			<field name="model">hr.fingerprint.attedance.file</field>
+			<field name="priority" eval="1" />
+			<field name="arch" type="xml">
+				<tree string="Finger Print Attendance Files">
+					<field name="name" />
+					<field name="fingerprint_device" />
+					<field name="fingerprint_device" />
+					<field name="attendance_date" />
+					<field name="upload_date" />
+					<field name="company_id" groups="base.group_multi_company"/>
+				</tree>
+			</field>
+		</record>
+
+
+		<record model="ir.actions.act_window" id="action_fingerprint_attendance_file_form">
+			<field name="name">Finger Print Attendance Upload</field>
+			<field name="res_model">hr.fingerprint.attedance.file</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_figerprint_attachment_tree" />
+		</record>
+
+		<menuitem name="Attendance Upload" action="action_fingerprint_attendance_file_form"
+			id="menu_fingerprint_attendance_files" parent="menu_fingerprint_machine"
+			groups="base.group_hr_user" sequence="22" />
+
+
+		<record model="ir.ui.view" id="view_fingerprint_employee_form">
+			<field name="name">hr.employee</field>
+			<field name="model">hr.employee</field>
+			<field name="priority" eval="1" />
+			<field name="inherit_id" ref="hr.view_employee_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//label[@for='name']" position='before'>
+					<label for="fingerprint_id" class="oe_edit_only" groups="base.group_hr_user" />
+					<h1>
+						<field name="fingerprint_id" />
+					</h1>
+				</xpath>
+
+				<xpath expr="//field[@name='passport_id']" position="replace">
+				</xpath>
+				<xpath expr="//field[@name='otherid']" position="replace">
+				</xpath>
+
+				<xpath
+					expr="//group[@string='Citizenship &amp; Other Info']/field[@name='bank_account_id']"
+					position="after">
+					<field name="father_name" />
+				</xpath>
+				
+				<xpath expr="//group[@string='Birth']" position='after'>
+					<group string="Image Files" colspan="4">
+						<field name="nrc_file" widget="image" colspan="4" />
+						<field name="house_hold_file" widget="image" colspan="4" />
+					</group>
+				</xpath>
+				<field name="birthday" position="after">
+			       <group string ="Medical Status">			       
+				    <field name="blood_group" />	
+				    </group>
+				   </field>	   	
+
+			</field>
+		</record>
+		<record id="view_fingerprint_employee__tree_view" model="ir.ui.view">
+			<field name="name">hr.employee.tree.inheritance</field>
+			<field name="model">hr.employee</field>
+			<field name="type">tree</field>
+			<field name="inherit_id" ref="hr.view_employee_tree" />
+			<field name="arch" type="xml">
+				<field name="name" position="before">
+					<field name="fingerprint_id" />
+				</field>
+			</field>
+		</record>
+
+		<record id="hr_kanban_view_employees_ext" model="ir.ui.view">
+			<field name="name">HR - Employess Kanban</field>
+			<field name="model">hr.employee</field>
+			<field name="inherit_id" ref="hr.hr_kanban_view_employees" />
+			<field name="arch" type="xml">
+				<xpath expr="//div[@class='oe_employee_details']" position="replace">
+					<div class="oe_employee_details">
+						<h4>
+							<a type="open">
+								<field name="name" />
+								<t t-if="record.login.raw_value">
+									(
+									<field name="login" />
+									)
+								</t>
+							</a>
+						</h4>
+						<ul>
+							<li id="last_login">
+								<span
+									t-if="record.last_login.raw_value &amp;&amp; record.last_login.raw_value.is().today()"
+									class="oe_kanban_button" style="font-size: 100%%">
+									<t t-esc="record.last_login.raw_value.toString('HH:mm')" />
+								</span>
+							</li>
+							<li t-if="record.fingerprint_id.raw_value">
+								Employee ID:
+								<field name="fingerprint_id" />
+							</li>
+							<li t-if="record.job_id.raw_value">
+								<field name="job_id" />
+							</li>
+							<li t-if="record.work_location.raw_value">
+								<field name="work_location" />
+							</li>
+							<li t-if="record.work_phone.raw_value">
+								Tel:
+								<field name="work_phone" />
+							</li>
+							<li t-if="record.mobile_phone.raw_value">
+								Mobile:
+								<field name="mobile_phone" />
+							</li>
+							<li t-if="record.work_email.raw_value">
+								<a t-attf-href="mailto:#{record.work_email.value}">
+									<field name="work_email" />
+								</a>
+							</li>
+						</ul>
+					</div>
+				</xpath>
+			</field>
+		</record>
+		<!-- Thazin Khaing Adding Break_in Break_out -->
+
+		<record model="ir.ui.view" id="view_hr_attendance_form">
+			<field name="name">hr.attendance.inherit</field>
+			<field name="model">hr.fingerprint.attedance.file</field>
+			<field name="priority" eval="20" />
+			<field name="arch" type="xml">
+				<form>
+					<header>
+						<button name="att_create" string="Import Data" type="object"
+							class="oe_highlight" />
+						<field name="state" widget="statusbar" statusbar_visible="draft,completed" />
+					</header>
+					<sheet>
+						<group>
+							<field name="name" colspan="4" />
+							<newline />
+							<separator string="Select your file :" colspan="4" />
+							<field name="datas" filename="att_fname" />
+							<field name="att_fname" invisible="1" class="oe_inline oe_right" />
+
+							<field name="fingerprint_device" />
+							<newline />
+							<field name="attendance_date" />
+							<field name="attendance_date_to" />
+							<field name="upload_date" />
+ 							<field name="company_id" groups="base.group_multi_company"/>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+
+
+
+		<record id="hr_contract_view_form" model="ir.ui.view">
+			<field name="name">hr.contract.view.form</field>
+			<field name="model">hr.contract</field>
+			<field name="inherit_id" ref="hr_contract.hr_contract_view_form" />
+			<field name="arch" type="xml">
+				<field name="type_id" position="after">
+					<field name="joining_date" />
+				</field>
+			</field>
+		</record>
+		
+		<record id="view_partner_form" model="ir.ui.view">
+			<field name="name">res.partner.form</field>
+			<field name="model">res.partner</field>
+			<field eval="1" name="priority" />
+			<field name="inherit_id" ref="base.view_partner_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//sheet/group/group/field[@name='fax']" postion="after">
+					
+					<field name="department_id" string="Department"/>
+				</xpath>
+			</field>
+		</record>
+
+<record id="view_hr_attendance_inherit_form" model="ir.ui.view">
+	<field name="name">hr.attendance.inherit.form</field>
+	<field name="model">hr.attendance</field>
+	<field eval="1" name="priority"/>
+	<field name="inherit_id" ref="hr_attendance.view_attendance_form"/>
+	<field name="arch" type="xml">
+		<xpath expr="//form/sheet/group/field[@name='action_desc']" position="after">
+		<field name="upload" attrs="{'invisible':True}"/>
+		</xpath>
+	</field>
+</record>
+
+
+
+	</data>
+</openerp>

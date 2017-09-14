@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_ot_make_decline" model="ir.ui.view">
+            <field name="name">Decline OT</field>
+            <field name="model">ot.make.decline</field>
+            <field name="arch" type="xml">
+                <form string="Decline OT">
+                    <separator colspan="4" string="Do you really want to decline the OT(s)?" />
+                    <footer>
+                        <button name="decline_ot" string="Decline OTs" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_ot_make_decline" model="ir.actions.act_window">
+            <field name="name">Decline</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ot.make.decline</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_ot_make_decline"/>
+            <field name="target">new</field>
+            <field name="multi">True</field>
+        </record>
+
+        <record model="ir.values" id="ot_make_decline">
+<!--             <field name="model_id" ref="ot_approval_v2.model_attendance_data_import" /> -->
+            <field name="name">Make Declines</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_ot_make_decline'))" />
+            <field name="key">action</field>
+            <field name="model">attendance.data.import</field>
+        </record>
+    </data>
+</openerp>

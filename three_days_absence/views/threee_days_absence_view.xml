@@ -1,0 +1,25 @@
+<openerp>
+  <data>   
+    <record id="view_attendance_filter" model="ir.ui.view">
+            <field name="name">Three Days Absence</field>
+            <field name="model">attendance.data.import</field>
+            <field name="inherit_id" ref="attendance_data_import_v2.view_attendance_filter" />
+            <field name="arch" type="xml">
+            	<filter string="Irregular" position="after">            
+					<filter string="Three Day Absent" name="threedays_absent" icon="terp-gtk-select-all" domain="[('three_day_absent','=',True)]" context="{'order_by':'date'}"/>
+				</filter>
+             </field>
+     </record>
+<!--      <record model="ir.ui.view" id="view_attendance_data_import_forme"> -->
+<!--         <field name="name">Attendance</field> -->
+<!--         <field name="model">attendance.data.import</field> -->
+<!--         <field name="type">form</field> -->
+<!--         <field name="inherit_id" ref="attendance_data_import_v2.view_attendance_data_import_form" /> -->
+<!--         <field name="arch" type="xml">           -->
+<!-- 			<button name="approve" string="Approve" position="after"> -->
+<!-- 				<button name="threedays_absent" string="3Days" type="object" class="oe_highlight"  />							 -->
+<!-- 			</button> -->
+<!--         </field> -->
+<!--     </record>      -->
+  </data>
+</openerp>

@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+		<record model="ir.ui.view" id="view_incometax_graph">
+			<field name="name">incometax.report.report_graph</field>
+			<field name="model">incometax.report</field>
+			<field name="priority">20</field>
+			<field name="arch" type="xml">
+				<graph string="Incometax Summary" type="pivot">
+					<field name="employee_id" type="row" />
+					<field name="job_id" type="row" />
+					<field name="date" type="col" />
+				</graph>
+			</field>
+		</record>
+
+		<record id="view_report_incometax_search" model="ir.ui.view">
+			<field name="name">report.incometax.search.inherit</field>
+			<field name="model">incometax.report</field>
+			<field name="arch" type="xml">
+
+				<search string="Event on Registration">
+
+					<group expand="1" string="Group By">
+						<filter string="Employee Name" context="{'group_by':'employee_id'}" />
+						<filter string="Post" context="{'group_by':'job_id'}" />
+						<filter string="Date" context="{'group_by':'date'}" />
+
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="action_hr_available_incometaxs_report">
+			<field name="name">Incometax Analysis</field>
+			<field name="res_model">incometax.report</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">graph</field>
+			<field name="search_view_id" ref="view_report_incometax_search" />
+		</record>
+        <record model="ir.actions.act_window.view" id="action_report_incometax_graph">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="view_incometax_graph"/>
+            <field name="act_window_id" ref="action_hr_available_incometaxs_report"/>
+        </record>		
+<!-- 		<menuitem id="menu_hr_available_incometaxs_report"
+			name="Income Tax Reports" parent="hr.menu_hr_reporting" sequence="12"/> -->
+			      			
+		<menuitem name="Incometax Detail Report" id="menu_hr_available_incometaxs_report_tree"
+			action="action_hr_available_incometaxs_report" parent="hr.menu_hr_reporting"
+			sequence="1" />
+
+
+	</data>
+</openerp>
+

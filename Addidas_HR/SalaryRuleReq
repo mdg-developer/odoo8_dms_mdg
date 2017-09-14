@@ -1,0 +1,149 @@
+အ ေျခခံလစာ
+------------
+python code(
+
+result =(contract.wage+inputs.SNB.amount)*( ((worked_days.PRES.number_of_days*8)-(worked_days.PRES.total_month_day*4)-(worked_days.HOPR.number_of_days*8))/((worked_days.MAX.number_of_days*8)-(worked_days.PRES.total_month_day*4)))
+
+)
+-----------------------------------------
+လုပ္သက္ေၾကး
+----------
+input name :Seniority Bonus (SNB)
+python code(
+result = inputs.SNB.amount 
+)
+---------------------------------------------
+ဘာသာစကားကၽြမ္းက်င္
+--------------
+input name :Language Bonus
+input code :LGB
+python code(
+result = inputs.LGB.amount
+)
+----------------------------------------------------------
+အလုပ္ခံစားခြင့္
+--------------
+Description                     Code
+----------------------------------------
+Position Bonus	                POB
+Special Amount	            	SPA
+
+python code(
+result = inputs.POB.amount +inputs.SPA.amount 
+)
+----------------------------------------------------------------
+ကၽြမ္းက်င္ေၾကး 
+-----------
+Description                     Code
+------------------------------------
+Critical Bonus	                CTB
+Experience Bonus	            EPB
+Factory Diver Bonus	            FDB
+Electricity Certification Bonus	ECB
+---
+python code(
+result=inputs.CTB.amount+ inputs.EPB.amount+inputs.FDB.amount +inputs.ECB.amount 
+)
+-----------------------------------------------------------------------------
+လူမႈဖူလံုေရး
+--------
+python code(
+result = contract.wage * 0.02
+)
+--------------------------------------------------------------------------------
+ပ်က္ကြက္ 
+-------
+python code(
+unpaid = worked_days.UNPAID_LEAVE and worked_days.UNPAID_LEAVE.number_of_days or False 
+result=(contract.wage/30)*unpaid;
+ )
+---------------------------------------------------------------------------------------
+ေထာက္ပံ႔ေၾကး
+----------
+python code(
+sick1 = worked_days.SICK_LEAVE  and worked_days.SICK_LEAVE.number_of_days or False 
+sick2 = worked_days.SICK_NOPAY_LEAVE and worked_days.SICK_NOPAY_LEAVE.number_of_days or False 
+personal = worked_days.PERSONAL_LEAVE and worked_days.PERSONAL_LEAVE.number_of_days or False  
+maternity = worked_days.MATERNITY_LEAVE and worked_days.MATERNITY_LEAVE.number_of_days or False 
+sick=sick1+sick2
+if ( worked_days.PRES.number_of_days==worked_days.MAX.number_of_days or  worked_days.PRES.number_of_days ==worked_days.MAX.number_of_days-1 or worked_days.PRES.number_of_days > worked_days.MAX.number_of_days):
+   result=5000;
+else:
+   result=(((worked_days.MAX.number_of_days -sick-personal-maternity)/25)*5000) ;
+)
+---------------------------------------------------------------------------------------
+ရက္မွန္ေၾကး
+--------
+python code(
+unpaid = worked_days.UNPAID_LEAVE  and worked_days.UNPAID_LEAVE .number_of_days or False
+sick1 = worked_days.SICK_LEAVE  and worked_days.SICK_LEAVE .number_of_days or False
+sick2 = worked_days.SICK_NOPAY_LEAVE  and worked_days.SICK_NOPAY_LEAVE.number_of_days or False 
+sick=sick1+sick2
+data=unpaid+sick
+if (data>0):
+    result = 10000-(((10000)*0.05)*(data*8)); 
+else:    
+    result=10000;
+)
+-----------------------------------------------------------------------------------------------
+အခ်ိန္ပိုေၾကး
+--------
+python code(
+result=0
+first=worked_days.WORKOT and worked_days.WORKOT.number_of_hours or False
+second=worked_days.SOT and worked_days.SOT.number_of_hours or False
+third=worked_days.PH and worked_days.PH.number_of_hours or False
+fourth=worked_days.SOT1 and worked_days.SOT1.number_of_hours or False
+week_day=((contract.wage *12)/(52*44))*2
+holiday=(((week_day*8)*6)/44)*2
+result =((week_day*(first+second))+(holiday*(third+fourth)))
+)
+--------------------------------------------------------------------------------------------------
+ထုတ္လုပ္မႈဆုေၾကး
+------------------
+input name :Productivity Bonus
+input code:PDB
+python code(
+result =inputs.PDB.amount
+)
+-------------------------------------------------------------------------------------------------------
+အထူးခံစားခြင့္ 
+---------
+input name:Special Bonus(CFB)
+python code(
+result = inputs.CFB.amount
+)
+----------------------------------------------------------------------------------------------------
+လူမႈေရးခြင့္
+-------
+python code(
+personal = worked_days.PERSONAL_LEAVE  and worked_days.PERSONAL_LEAVE .number_of_days or False  
+result=(contract.wage/30)*personal;
+)
+-----------------------------------------------------------------------------------------------------
+ေပးေလ်ာ္ေငြ
+--------
+input name:ေပးေလွ်ာ္ေငြ(PAY)
+python code(
+
+result = inputs.PAY.amount
+)
+-------------------------------------------------------------------------------------------------------
+ေဆးခြင့္
+-----
+python code(
+medical = worked_days.MEDICAL_NOPAY_LV and worked_days.MEDICAL_NOPAY_LV.number_of_days or False  
+result=(contract.wage/30)*medical;
+)
+--------------------------------------------------------------------------------------------------------
+စုစုေပါင္းေငြ	
+--------
+python code(
+result = categories.BASIC + categories.OT + categories.ALW - categories.FITCALC - categories.DED
+)
+
+------------------------------------------------    
+
+
+
+  

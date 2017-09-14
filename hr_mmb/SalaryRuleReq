@@ -1,0 +1,610 @@
+Basic Salary
+------------
+python code(
+
+ result = contract.wage 
+)
+-----------------------------------------
+Gross
+-----
+python code(
+result = categories.BASIC + categories.OT + categories.ALW
+)
+-----------------------------------------
+Net
+---
+python code(
+result = categories.BASIC + categories.OT + categories.ALW - categories.FITCALC - categories.DED
+)
+------------------------------------------
+OverTime
+--------
+python code(
+result=0
+first=worked_days.WORKOT1 and worked_days.WORKOT1.number_of_days or False
+second=worked_days.WORKOT2 and worked_days.WORKOT2.number_of_days or False
+third=worked_days.WORKOT3 and worked_days.WORKOT3.number_of_days or False
+fourth=worked_days.WORKOT4 and worked_days.WORKOT4.number_of_days or False
+fifth=worked_days.WORKOT5 and worked_days.WORKOT5.number_of_days or False
+one=0;
+two=0;
+three=0;
+four=0;
+five=0;
+if(first>0):
+    one=(600)*first;
+if(second>0):
+    two=(800)*second;
+if(third>0):
+    three=(1000)*third;
+if(fourth>0):
+    four=(1200)*fourth;
+if(fifth>0):
+    five=(700)*fifth;
+result=one+two+three+four+five;
+)
+-----------------------------------------------
+late deduction 
+-------------- 
+input name:CRL amount
+input code:CRL
+python code(
+result=0
+first=worked_days.WORKLD1 and worked_days.WORKLD1.number_of_days or False
+second=worked_days.WORKLD2 and worked_days.WORKLD2.number_of_days or False
+third=worked_days.WORKLD4 and worked_days.WORKLD4.number_of_days or False
+fourth=worked_days.WORKLD5 and worked_days.WORKLD5.number_of_days or False
+fifth=inputs.SFF.amount
+one=0;
+two=0;
+three=0;
+four=0;
+if(first>2 and first<=4):
+    one=(inputs.CLA.amount*2);
+if(first>4 and first<=7 ):
+    one=(inputs.CLA.amount*4);
+if(first>7 and first<=15 ):
+    one=(inputs.CLA.amount*5);
+if(first>15):
+    one=(inputs.CLA.amount*30);
+if(second>0):
+    two=(inputs.CLA.amount*0.5)*second;
+if(third>2 and third<=4):
+    three=(inputs.CLA.amount*2);
+if(third>4 and third<=7 ):
+    three=(inputs.CLA.amount*4);
+if(third>7 and third<=15 ):
+    three=(inputs.CLA.amount*5);
+if(third>15):
+    three=(inputs.CLA.amount*30);
+if(fourth>0):
+    four=(inputs.CLA.amount*0.5)*fourth;
+result=one+two+three+four+fifth;
+
+)
+----------------------------------------------------------------------------------------
+Leave Deduction(PRO)
+---------------
+casual = worked_days.CAUSLV and worked_days.CAUSLV.number_of_days or False
+annual = worked_days.EARNLV and worked_days.EARNLV.number_of_days or False
+unpaid1 = worked_days.UNPLV1 and worked_days.UNPLV1.number_of_days or False
+unpaid2 = worked_days.UNPLV2 and worked_days.UNPLV2.number_of_days or False
+medical1 = worked_days.MEDLV1 and worked_days.MEDLV1.number_of_days or False
+medical2 = worked_days.MEDLV2 and worked_days.MEDLV2.number_of_days or False
+medical3 = worked_days.MEDLV3 and worked_days.MEDLV3.number_of_days or False
+maternity = worked_days.MATLV and worked_days.MATLV.number_of_days or False
+absent1 = worked_days.ABSLV1 and worked_days.ABSLV1.number_of_days or False
+absent2 = worked_days.ABSLV2 and worked_days.ABSLV2.number_of_days or False
+wage=contract.wage
+allowance=contract.allowance
+contribution=contract.contribution
+casual_amt=0
+annual_amt =0
+unpaid1_amt=0
+unpaid2_amt=0
+medical1_amt =0
+medical2_amt =0
+medical3_amt =0
+maternity_amt =0
+absent1_amt=0
+absent2_amt=0
+if (casual>0):
+    casual_amt =(inputs.CLA.amount)*casual;
+if (annual>0):
+    annual_amt =(inputs.CLA.amount)*annual;
+if (unpaid1>0):
+    unpaid1_amt =((wage+allowance+contribution)*unpaid1/30)+(inputs.CLA.amount);
+if (unpaid2>0):
+    unpaid2_amt =(wage+allowance+contribution)*unpaid2/30;
+if (medical1>0):
+    medical1_amt =(inputs.CLA.amount)*medical1;
+if (medical2>0):
+    medical2_amt =((wage+allowance+contribution)*1/3*medical2/30)+(medical2*inputs.CLA.amount);
+if (medical3>0):
+    medical3_amt =((wage+allowance+contribution)*1/2*medical3/30)+(medical3*inputs.CLA.amount);
+if (maternity>0):
+    maternity_amt =(inputs.CLA.amount)*maternity;
+if (absent2>0 and absent2<3 ):
+    absent2_amt =((wage+allowance+contribution)*absent2/30)+((inputs.CLA.amount)*absent2);
+if(absent2>3): 
+    absent2_amt =(inputs.CLA.amount*7)+((wage+allowance+contribution)*absent2/30)+((inputs.CLA.amount)*absent2);
+result=casual_amt+annual_amt+unpaid1_amt+unpaid2_amt+medical1_amt+medical2_amt+medical3_amt+maternity_amt+absent1_amt+absent2_amt
+
+)
+-----------------------------------------------
+Leave Deduction (PER)
+--------------------
+casual = worked_days.CAUSLV and worked_days.CAUSLV.number_of_days or False
+annual = worked_days.EARNLV and worked_days.EARNLV.number_of_days or False
+unpaid1 = worked_days.UNPLV1 and worked_days.UNPLV1.number_of_days or False
+unpaid2 = worked_days.UNPLV2 and worked_days.UNPLV2.number_of_days or False
+medical1 = worked_days.MEDLV1 and worked_days.MEDLV1.number_of_days or False
+medical2 = worked_days.MEDLV2 and worked_days.MEDLV2.number_of_days or False
+medical3 = worked_days.MEDLV3 and worked_days.MEDLV3.number_of_days or False
+maternity = worked_days.MATLV and worked_days.MATLV.number_of_days or False
+absent1 = worked_days.ABSLV1 and worked_days.ABSLV1.number_of_days or False
+absent2 = worked_days.ABSLV2 and worked_days.ABSLV2.number_of_days or False
+wage=contract.s_wage
+allowance=contract.s_allowance
+contribution=contract.s_contribution
+casual_amt=0
+annual_amt =0
+unpaid1_amt=0
+unpaid2_amt=0
+medical1_amt =0
+medical2_amt =0
+medical3_amt =0
+maternity_amt =0
+absent1_amt=0
+absent2_amt=0
+if (casual>0):
+    casual_amt =(inputs.CLA.amount)*casual;
+if (annual>0):
+    annual_amt =(inputs.CLA.amount)*annual;
+if (unpaid1>0):
+    unpaid1_amt =((wage+allowance+contribution)*unpaid1/30)+(inputs.CLA.amount);
+if (unpaid2>0):
+    unpaid2_amt =(wage+allowance+contribution)*unpaid2/30;
+if (medical1>0):
+    medical1_amt =(inputs.CLA.amount)*medical1;
+if (medical2>0):
+    medical2_amt =((wage+allowance+contribution)*1/3*medical2/30)+(medical2*inputs.CLA.amount);
+if (medical3>0):
+    medical3_amt =((wage+allowance+contribution)*1/2*medical3/30)+(medical3*inputs.CLA.amount);
+if (maternity>0):
+    maternity_amt =(inputs.CLA.amount)*maternity;
+if (absent2>0 and absent2<3 ):
+    absent2_amt =((wage+allowance+contribution)*absent2/30)+((inputs.CLA.amount)*absent2);
+if(absent2>3): 
+    absent2_amt =(inputs.CLA.amount*7)+((wage+allowance+contribution)*absent2/30)+((inputs.CLA.amount)*absent2);
+result=casual_amt+annual_amt+unpaid1_amt+unpaid2_amt+medical1_amt+medical2_amt+medical3_amt+maternity_amt+absent1_amt+absent2_amt
+
+
+----------------------------------
+Income Tax
+----------
+python code(
+working_month=0
+working_month=worked_days.MAX.working_month
+mon_salary=(contract.wage+contract.contribution+contract.allowance+(inputs.CLA.amount*22))*working_month
+per_salary=mon_salary*0.20
+ssb_fee=(contract.wage*12)*0.02
+year=contract.year
+l_insurance=contract.life_insurance
+if(l_insurance>0 and year>0 ):
+  l_amount=l_insurance/year;
+else:
+  l_amount=0;
+is_father=employee.is_fam_father
+is_mother=employee.is_fam_mother
+is_f_inlaw=employee.is_father_inlaw
+is_m_inlaw=employee.is_mother_inlaw
+if (is_father==True and is_mother==True and is_f_inlaw==True and is_m_inlaw==True):
+    f_amount=4000000.00;
+elif (is_father==True and is_mother==True and is_f_inlaw==True and is_m_inlaw==False):
+    f_amount=3000000.00;
+elif (is_father==True and is_mother==True and is_f_inlaw==False and is_m_inlaw==False):
+    f_amount=2000000.00;
+elif (is_father==True and is_mother==False and is_f_inlaw==False and is_m_inlaw==False):
+    f_amount=1000000.00;
+elif (is_father==False and is_mother==True and is_f_inlaw==True and is_m_inlaw==True):
+    f_amount=3000000.00;
+elif (is_father==False and is_mother==True and is_f_inlaw==False and is_m_inlaw==True):
+    f_amount=2000000.00;
+elif (is_father==False and is_mother==True and is_f_inlaw==True and is_m_inlaw==False):
+    f_amount=2000000.00;
+elif (is_father==False and is_mother==True and is_f_inlaw==False and is_m_inlaw==False):
+    f_amount=1000000.00;
+elif (is_father==False and is_mother==False and is_f_inlaw==True and is_m_inlaw==True):
+    f_amount=2000000.00;
+elif (is_father==False and is_mother==False and is_f_inlaw==False and is_m_inlaw==True):
+    f_amount=1000000.00;
+elif (is_father==False and is_mother==False and is_f_inlaw==True and is_m_inlaw==False):
+    f_amount=1000000.00;
+elif (is_father==True and is_mother==False and is_f_inlaw==True and is_m_inlaw==True):
+    f_amount=3000000.00;
+elif (is_father==True and is_mother==False and is_f_inlaw==False and is_m_inlaw==True):
+    f_amount=2000000.00;
+elif (is_father==True and is_mother==True and is_f_inlaw==False and is_m_inlaw==True):
+    f_amount=3000000.00;
+elif (is_father==True and is_mother==False and is_f_inlaw==True and is_m_inlaw==False):
+    f_amount=2000000.00;
+else:
+    f_amount=0.00;
+first_amount=(mon_salary)-(per_salary+ssb_fee+l_amount)
+first_amount_with_f_amount=(first_amount-f_amount)
+children=employee.children
+if(employee.children>0):
+  amount=1000000.00+(children*500000.00);
+else:
+  amount=1000000.00;
+last_amount=(first_amount_with_f_amount-amount)
+result=0
+if(employee.marital=='single'):
+  if(first_amount_with_f_amount<2000000):
+      result=0;
+  else:
+       amount1=first_amount_with_f_amount-2000000
+       if(amount1>3000000):
+           amount2=amount1-3000000
+           result=((3000000*0.05)/12);
+           if(amount2>5000000):
+              amount3=amount2-5000000
+              result=(((5000000*0.10)+150000)/12);
+              if(amount3>10000000):
+                 amount4=amount3-10000000
+                 result=(((10000000*0.15)+650000)/12);
+                 if(amount4>10000000):
+                    amount5=amount4-10000000
+                    result=(((10000000*0.20)+2150000)/12);
+                    if(amount5>30000000):
+                        result=(((30000000*0.25)+4150000)/12);
+                 else:
+                    result=((((amount4)*0.20)+2150000)/12);
+              else:
+                 result=((((amount3)*0.15)+650000)/12);
+           else:
+              result=((((amount2)*0.10)+150000)/12);
+       else:
+           result=(((amount1)*0.05)/12);
+else:
+      if(last_amount<2000000):
+          result=0;
+      else:
+           amount1=last_amount-2000000
+           if(amount1>3000000):
+               amount2=amount1-3000000
+               result=((3000000*0.05)/12);
+               if(amount2>5000000):
+                  amount3=amount2-5000000
+                  result=(((5000000*0.10)+150000)/12);
+                  if(amount3>10000000):
+                     amount4=amount3-10000000
+                     result=(((10000000*0.15)+650000)/12);
+                     if(amount4>10000000):
+                        amount5=amount4-10000000
+                        result=(((10000000*0.20)+2150000)/12);
+                        if(amount5>30000000):
+                            result=(((30000000*0.25)+4150000)/12);
+                     else:
+                        result=((((amount4)*0.20)+2150000)/12);
+                  else:
+                        result=((((amount3)*0.15)+650000)/12);
+               else:
+                        result=((((amount2)*0.10)+150000)/12);
+           else:
+                        result=(((amount1)*0.05)/12);   
+
+)
+------------------------------------------------    
+SSB Fee for Employee
+--------------------
+python code(
+result = contract.wage * 0.02
+)
+-----------------------------------------------
+SSB Fee for Employeer
+---------------------
+python code(
+result = contract.wage * 0.03
+)----------------------------------------------
+Aid to Staff(Per)
+-------------------
+python code(
+
+medical_LV2= worked_days.MEDLV2 and worked_days.MEDLV2.number_of_days or False
+medical_LV3= worked_days.MEDLV3 and worked_days.MEDLV3.number_of_days or False
+MLV2_AS=worked_days.MEDLV2 and worked_days.MEDLV2.total_month_day or False
+MLV3_AS=worked_days.MEDLV3 and worked_days.MEDLV3.total_month_day or False 
+ABSLV1= worked_days.ABSLV1 and worked_days.ABSLV1.number_of_days or False
+ABSLV2= worked_days.ABSLV2 and worked_days.ABSLV2.number_of_days or False
+ABSLV3= worked_days.ABSLV1 and worked_days.ABSLV1.total_month_day or False
+ABSLV4= worked_days.ABSLV2 and worked_days.ABSLV2.total_month_day or False
+UNPLV1= worked_days.UNPLV1 and worked_days.UNPLV1.number_of_days or False
+UNPLV2= worked_days.UNPLV2 and worked_days.UNPLV2.number_of_days or False
+UNPLV3= worked_days.UNPLV1 and worked_days.UNPLV1.total_month_day or False
+UNPLV4= worked_days.UNPLV2 and worked_days.UNPLV2.total_month_day or False
+medical2=medical_LV2+MLV2_AS
+medical3=medical_LV3+MLV3_AS
+unpaid=UNPLV1+UNPLV2+ABSLV1+ABSLV2+ABSLV3+ABSLV4+UNPLV3+UNPLV4
+month_day=worked_days.MAX.total_month_day
+medical3_total=0.0
+medical2_total=0.0
+unpaid_total=0.0
+if unpaid>0:
+  unpaid_total=(contract.s_allowance)*(unpaid/month_day)
+if medical2>0:
+  leave_day=medical2*(2/3.0)
+  total_work_day=month_day-medical2
+  total=leave_day+total_work_day
+  result=(contract.s_allowance*total)/month_day-unpaid_total
+if medical3>0:
+  leave_day=medical3*(1/5.0)
+  total_work_day=month_day-medical3
+  total=leave_day+total_work_day
+  result=(contract.s_allowance*total)/month_day-unpaid_total
+if (medical2==0 and medical3==0 and unpaid>0):
+    result=contract.s_allowance-unpaid_total
+if((medical2+medical3+unpaid)==0):
+    result=contract.s_allowance
+    
+    )
+--------------------------------------------
+Aid to Staff(Pro)
+----------------
+python(
+
+medical_LV2= worked_days.MEDLV2 and worked_days.MEDLV2.number_of_days or False
+medical_LV3= worked_days.MEDLV3 and worked_days.MEDLV3.number_of_days or False
+MLV2_AS=worked_days.MEDLV2 and worked_days.MEDLV2.total_month_day or False
+MLV3_AS=worked_days.MEDLV3 and worked_days.MEDLV3.total_month_day or False 
+ABSLV1= worked_days.ABSLV1 and worked_days.ABSLV1.number_of_days or False
+ABSLV2= worked_days.ABSLV2 and worked_days.ABSLV2.number_of_days or False
+ABSLV3= worked_days.ABSLV1 and worked_days.ABSLV1.total_month_day or False
+ABSLV4= worked_days.ABSLV2 and worked_days.ABSLV2.total_month_day or False
+UNPLV1= worked_days.UNPLV1 and worked_days.UNPLV1.number_of_days or False
+UNPLV2= worked_days.UNPLV2 and worked_days.UNPLV2.number_of_days or False
+UNPLV3= worked_days.UNPLV1 and worked_days.UNPLV1.total_month_day or False
+UNPLV4= worked_days.UNPLV2 and worked_days.UNPLV2.total_month_day or False
+medical2=medical_LV2+MLV2_AS
+medical3=medical_LV3+MLV3_AS
+unpaid=UNPLV1+UNPLV2+ABSLV1+ABSLV2+ABSLV3+ABSLV4+UNPLV3+UNPLV4
+month_day=worked_days.MAX.total_month_day
+medical3_total=0.0
+medical2_total=0.0
+unpaid_total=0.0
+if unpaid>0:
+  unpaid_total=(contract.allowance)*(unpaid/month_day)
+if medical2>0:
+  leave_day=medical2*(2/3.0)
+  total_work_day=month_day-medical2
+  total=leave_day+total_work_day
+  result=(contract.allowance*total)/month_day-unpaid_total
+if medical3>0:
+  leave_day=medical3*(1/5.0)
+  total_work_day=month_day-medical3
+  total=leave_day+total_work_day
+  result=(contract.allowance*total)/month_day-unpaid_total
+if (medical2==0 and medical3==0 and unpaid>0):
+    result=contract.allowance-unpaid_total
+if((medical2+medical3+unpaid)==0):
+    result=contract.allowance
+    
+    
+    )
+---------------------------------------------------------------
+Basic Salary(Per)
+------------------
+python code(
+
+medical_LV2= worked_days.MEDLV2 and worked_days.MEDLV2.number_of_days or False
+medical_LV3= worked_days.MEDLV3 and worked_days.MEDLV3.number_of_days or False
+MLV2_AS=worked_days.MEDLV2 and worked_days.MEDLV2.total_month_day or False
+MLV3_AS=worked_days.MEDLV3 and worked_days.MEDLV3.total_month_day or False 
+ABSLV1= worked_days.ABSLV1 and worked_days.ABSLV1.number_of_days or False
+ABSLV2= worked_days.ABSLV2 and worked_days.ABSLV2.number_of_days or False
+ABSLV3= worked_days.ABSLV1 and worked_days.ABSLV1.total_month_day or False
+ABSLV4= worked_days.ABSLV2 and worked_days.ABSLV2.total_month_day or False
+UNPLV1= worked_days.UNPLV1 and worked_days.UNPLV1.number_of_days or False
+UNPLV2= worked_days.UNPLV2 and worked_days.UNPLV2.number_of_days or False
+UNPLV3= worked_days.UNPLV1 and worked_days.UNPLV1.total_month_day or False
+UNPLV4= worked_days.UNPLV2 and worked_days.UNPLV2.total_month_day or False
+medical2=medical_LV2+MLV2_AS
+medical3=medical_LV3+MLV3_AS
+unpaid=UNPLV1+UNPLV2+ABSLV1+ABSLV2+ABSLV3+ABSLV4+UNPLV3+UNPLV4
+month_day=worked_days.MAX.total_month_day
+medical3_total=0.0
+medical2_total=0.0
+unpaid_total=0.0
+if unpaid>0:
+  unpaid_total=(contract.s_wage)*(unpaid/month_day)
+if medical2>0:
+  leave_day=medical2*(2/3.0)
+  total_work_day=month_day-medical2
+  total=leave_day+total_work_day
+  result=(contract.s_wage*total)/month_day-unpaid_total
+if medical3>0:
+  leave_day=medical3*(1/5.0)
+  total_work_day=month_day-medical3
+  total=leave_day+total_work_day
+  result=(contract.s_wage*total)/month_day-unpaid_total
+if (medical2==0 and medical3==0 and unpaid>0):
+    result=contract.s_wage-unpaid_total
+if((medical2+medical3+unpaid)==0):
+    result=contract.s_wage
+
+
+    
+ )
+---------------------------------
+Basic Salary(Pro)
+------------------
+python code(
+
+medical_LV2= worked_days.MEDLV2 and worked_days.MEDLV2.number_of_days or False
+medical_LV3= worked_days.MEDLV3 and worked_days.MEDLV3.number_of_days or False
+MLV2_AS=worked_days.MEDLV2 and worked_days.MEDLV2.total_month_day or False
+MLV3_AS=worked_days.MEDLV3 and worked_days.MEDLV3.total_month_day or False 
+ABSLV1= worked_days.ABSLV1 and worked_days.ABSLV1.number_of_days or False
+ABSLV2= worked_days.ABSLV2 and worked_days.ABSLV2.number_of_days or False
+ABSLV3= worked_days.ABSLV1 and worked_days.ABSLV1.total_month_day or False
+ABSLV4= worked_days.ABSLV2 and worked_days.ABSLV2.total_month_day or False
+UNPLV1= worked_days.UNPLV1 and worked_days.UNPLV1.number_of_days or False
+UNPLV2= worked_days.UNPLV2 and worked_days.UNPLV2.number_of_days or False
+UNPLV3= worked_days.UNPLV1 and worked_days.UNPLV1.total_month_day or False
+UNPLV4= worked_days.UNPLV2 and worked_days.UNPLV2.total_month_day or False
+medical2=medical_LV2+MLV2_AS
+medical3=medical_LV3+MLV3_AS
+unpaid=UNPLV1+UNPLV2+ABSLV1+ABSLV2+ABSLV3+ABSLV4+UNPLV3+UNPLV4
+month_day=worked_days.MAX.total_month_day
+medical3_total=0.0
+medical2_total=0.0
+unpaid_total=0.0
+if unpaid>0:
+  unpaid_total=(contract.wage)*(unpaid/month_day)
+if medical2>0:
+  leave_day=medical2*(2/3.0)
+  total_work_day=month_day-medical2
+  total=leave_day+total_work_day
+  result=(contract.wage*total)/month_day-unpaid_total
+if medical3>0:
+  leave_day=medical3*(1/5.0)
+  total_work_day=month_day-medical3
+  total=leave_day+total_work_day
+  result=(contract.wage*total)/month_day-unpaid_total
+if (medical2==0 and medical3==0 and unpaid>0):
+    result=contract.wage-unpaid_total
+if((medical2+medical3+unpaid)==0):
+    result=contract.wage
+    
+    )
+---------------------------------  
+Labour Welfare(Per)
+-------------------
+python code(
+
+medical_LV2= worked_days.MEDLV2 and worked_days.MEDLV2.number_of_days or False
+medical_LV3= worked_days.MEDLV3 and worked_days.MEDLV3.number_of_days or False
+MLV2_AS=worked_days.MEDLV2 and worked_days.MEDLV2.total_month_day or False
+MLV3_AS=worked_days.MEDLV3 and worked_days.MEDLV3.total_month_day or False 
+ABSLV1= worked_days.ABSLV1 and worked_days.ABSLV1.number_of_days or False
+ABSLV2= worked_days.ABSLV2 and worked_days.ABSLV2.number_of_days or False
+ABSLV3= worked_days.ABSLV1 and worked_days.ABSLV1.total_month_day or False
+ABSLV4= worked_days.ABSLV2 and worked_days.ABSLV2.total_month_day or False
+UNPLV1= worked_days.UNPLV1 and worked_days.UNPLV1.number_of_days or False
+UNPLV2= worked_days.UNPLV2 and worked_days.UNPLV2.number_of_days or False
+UNPLV3= worked_days.UNPLV1 and worked_days.UNPLV1.total_month_day or False
+UNPLV4= worked_days.UNPLV2 and worked_days.UNPLV2.total_month_day or False
+medical2=medical_LV2+MLV2_AS
+medical3=medical_LV3+MLV3_AS
+unpaid=UNPLV1+UNPLV2+ABSLV1+ABSLV2+ABSLV3+ABSLV4+UNPLV3+UNPLV4
+month_day=worked_days.MAX.total_month_day
+medical3_total=0.0
+medical2_total=0.0
+unpaid_total=0.0
+if unpaid>0:
+  unpaid_total=(contract.s_contribution)*(unpaid/month_day)
+if medical2>0:
+  leave_day=medical2*(2/3.0)
+  total_work_day=month_day-medical2
+  total=leave_day+total_work_day
+  result=(contract.s_contribution*total)/month_day-unpaid_total
+if medical3>0:
+  leave_day=medical3*(1/5.0)
+  total_work_day=month_day-medical3
+  total=leave_day+total_work_day
+  result=(contract.s_contribution*total)/month_day-unpaid_total
+if (medical2==0 and medical3==0 and unpaid>0):
+    result=contract.s_contribution-unpaid_total
+if((medical2+medical3+unpaid)==0):
+    result=contract.s_contribution
+)
+------------------------------------------------------
+Labour Welfare(Pro)
+=------------------
+python code(
+
+medical_LV2= worked_days.MEDLV2 and worked_days.MEDLV2.number_of_days or False
+medical_LV3= worked_days.MEDLV3 and worked_days.MEDLV3.number_of_days or False
+MLV2_AS=worked_days.MEDLV2 and worked_days.MEDLV2.total_month_day or False
+MLV3_AS=worked_days.MEDLV3 and worked_days.MEDLV3.total_month_day or False 
+ABSLV1= worked_days.ABSLV1 and worked_days.ABSLV1.number_of_days or False
+ABSLV2= worked_days.ABSLV2 and worked_days.ABSLV2.number_of_days or False
+ABSLV3= worked_days.ABSLV1 and worked_days.ABSLV1.total_month_day or False
+ABSLV4= worked_days.ABSLV2 and worked_days.ABSLV2.total_month_day or False
+UNPLV1= worked_days.UNPLV1 and worked_days.UNPLV1.number_of_days or False
+UNPLV2= worked_days.UNPLV2 and worked_days.UNPLV2.number_of_days or False
+UNPLV3= worked_days.UNPLV1 and worked_days.UNPLV1.total_month_day or False
+UNPLV4= worked_days.UNPLV2 and worked_days.UNPLV2.total_month_day or False
+medical2=medical_LV2+MLV2_AS
+medical3=medical_LV3+MLV3_AS
+unpaid=UNPLV1+UNPLV2+ABSLV1+ABSLV2+ABSLV3+ABSLV4+UNPLV3+UNPLV4
+month_day=worked_days.MAX.total_month_day
+medical3_total=0.0
+medical2_total=0.0
+unpaid_total=0.0
+if unpaid>0:
+  unpaid_total=(contract.contribution)*(unpaid/month_day)
+if medical2>0:
+  leave_day=medical2*(2/3.0)
+  total_work_day=month_day-medical2
+  total=leave_day+total_work_day
+  result=(contract.contribution*total)/month_day-unpaid_total
+if medical3>0:
+  leave_day=medical3*(1/5.0)
+  total_work_day=month_day-medical3
+  total=leave_day+total_work_day
+  result=(contract.contribution*total)/month_day-unpaid_total
+if (medical2==0 and medical3==0 and unpaid>0):
+    result=contract.contribution-unpaid_total
+if((medical2+medical3+unpaid)==0):
+    result=contract.contribution    
+)
+-------------------------------------------------------------------
+Travelling ALlowance
+--------------------
+inputs name  -Travelling Allowance
+inputs code  -TAL
+Python Code
+(
+
+first=worked_days.WORKLD1 and worked_days.WORKLD1.number_of_days or False
+second=worked_days.WORKLD2 and worked_days.WORKLD2.number_of_days or False
+third=worked_days.WORKLD4 and worked_days.WORKLD4.number_of_days or False
+fourth=worked_days.WORKLD5 and worked_days.WORKLD5.number_of_days or False
+casual = worked_days.CAUSLV and worked_days.CAUSLV.number_of_days or False
+annual = worked_days.EARNLV and worked_days.EARNLV.number_of_days or False
+unpaid1 = worked_days.UNPLV1 and worked_days.UNPLV1.number_of_days or False
+unpaid2 = worked_days.UNPLV2 and worked_days.UNPLV2.number_of_days or False
+medical1 = worked_days.MEDLV1 and worked_days.MEDLV1.number_of_days or False
+medical2 = worked_days.MEDLV2 and worked_days.MEDLV2.number_of_days or False
+medical3 = worked_days.MEDLV3 and worked_days.MEDLV3.number_of_days or False
+maternity = worked_days.MATLV and worked_days.MATLV.number_of_days or False
+absent1 = worked_days.ABSLV1 and worked_days.ABSLV1.number_of_days or False
+absent2 = worked_days.ABSLV2 and worked_days.ABSLV2.number_of_days or False
+late=first+second+third+fourth
+leave=casual +annual +unpaid1 + unpaid2 +medical1 +medical2 +medical3 +maternity +absent1 +absent2 
+day=inputs.TAL.amount
+if leave>=7:
+  leave=leave-day
+if late >=3 and late<5:
+   result=contract.allowance_amount-5000
+if late >=5:
+   result=contract.allowance_amount-10000
+if leave>=7:
+   result=0
+if late<3 and leave<7:
+   result=contract.allowance_amount
+   
+)
+--------------------------------------------------------
+  
+
+    
+
+    
+
+   
+
+  
+  

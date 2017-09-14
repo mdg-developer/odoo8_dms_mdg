@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<!-- HR Contract -->
+		<record id="hr_contract_view_form" model="ir.ui.view">
+			<field name="name">hr.contract.view.form</field>
+			<field name="model">hr.contract</field>
+			<field name="inherit_id" ref="hr_contract.hr_contract_view_form" />
+			<field name="arch" type="xml">
+				<field name="wage" position="after">
+					<field name="is_daily" />
+					<field name="trans_amt" />
+				</field>
+				<field name="type_id" position="after">
+					<field name="contract_no" />
+				</field>
+			</field>
+		</record>
+	</data>
+</openerp>
+		

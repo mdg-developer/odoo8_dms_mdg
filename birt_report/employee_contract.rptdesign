@@ -1,0 +1,853 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
+    <property name="units">in</property>
+    <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <property name="imageDPI">96</property>
+    <list-property name="libraries">
+        <structure>
+            <property name="fileName">birt_report/report_library.rptlibrary</property>
+            <property name="namespace">report_library</property>
+        </structure>
+    </list-property>
+    <parameters>
+        <scalar-parameter name="employee_id" id="1625">
+            <property name="valueType">dynamic</property>
+            <property name="isRequired">true</property>
+            <property name="dataSetName">employee</property>
+            <expression name="valueExpr" type="javascript">dataSetRow["employee_id"]</expression>
+            <expression name="labelExpr" type="javascript">dataSetRow["employee_id"]</expression>
+            <expression name="sortByColumn">dataSetRow["employee_id"]</expression>
+            <property name="sortDirection">asc</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">list-box</property>
+            <property name="mustMatch">true</property>
+            <property name="fixedOrder">false</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="1626"
+ extends="report_library.Data Source"/>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="sample" id="5">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">id</text-property>
+                    <text-property name="heading">id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">name_template</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">name_template</text-property>
+                    <text-property name="heading">name_template</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">param_1</property>
+                    <property name="paramName">employee_id</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">name_template</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">id</property>
+                    <property name="nativeName">id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">name_template</property>
+                    <property name="nativeName">name_template</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[WITH x AS(
+select h.name_related as name,
+COALESCE(h.identification_id,'')identification_id,
+ h.birthday,
+COALESCE(h.fam_father,'')fam_father, 
+COALESCE(p.phone,'')phone,
+COALESCE(p.email,'')email,
+COALESCE(h.ssb,'')ssb,
+h.ssb_effective_date,
+COALESCE(j.name,'') as job_position,
+COALESCE(d.name,'') as department,
+COALESCE(to_char(c.trial_date_start, 'YYYY-MM-DD'), '---------------') AS trial_date_start, 
+COALESCE(to_char(c.trial_date_end, 'YYYY-MM-DD'), '---------------') AS trial_date_end, 
+COALESCE(to_char(c.date_start, 'YYYY-MM-DD'), '---------------') AS join_date, 
+COALESCE(to_char(c.date_start, 'YYYY-MM-DD'), '---------------') AS date_start, 
+COALESCE(to_char(c.date_end, 'YYYY-MM-DD'), '---------------') AS date_end,
+c.wage
+from hr_employee h LEFT JOIN res_partner p
+ON h.address_id=p.id
+LEFT JOIN hr_job j on h.job_id=j.id
+LEFT JOIN hr_department d on h.department_id=d.id
+LEFT JOIN hr_contract c on h.id=c.employee_id
+where h.employee_id=?
+)
+
+select A.* from 
+(
+select 5 as id ,'ျမန္မာနိုင္ငံ၊ ပဲခူးတိုင္းေဒသႀကီး၊ ပဲခူးျမိဳ႕၊ အမွတ္္(၅၉) အထူးဇုန္(၂) ဥႆာ(၉) ရပ္ကြက္ တြင္တည္ရွိေသာ Skyway (Myanmar) Apparel Limited' as name_template
+union
+select 6 as id, 'စက္ရံုကို ဖြင့္လွစ္လုပ္ ကိုင္သူ Mr. Shum Ho Chi၊ နိုင္ငံသားစိစစ္ေရး ကတ္ျပားအမွတ္ (သို႕မဟုတ္) နိုင္ငံကူး လက္မွတ္အမွတ္ K00978457
+ကိုင္ေဆာင္သူ  (အလုပ္ရွင္) ႏွင့္' as name_template
+union
+select 7 as id,'ျမန္မာနိုင္ငံ၊ပဲခူးတိုင္းေဒသႀကီး၊ပဲခူးျမိဳ႕တြင္ ေနထိုင္၍' || job_position  as name_template from x
+union
+select 8 as id,'ကၽြမ္းက်င္မႈျဖင့္ အထည္ခ်ဳပ္ လုပ္ငန္းဌာနတြင္ အလုပ္လုပ္ကိုင္သူ ဦး/ေဒၚ' || name  as name_template from x
+union
+select 9 as id,'အဘအမည္' || fam_father   as name_template from x
+union
+select 11 as id, 'နိုင္ငံသားစိစစ္ေရးကတ္ျပားအမွတ္ (သို႕မဟုတ္) နိုင္ငံကူး လက္မွတ္အမွတ္' || identification_id as name_template from x
+union
+select 12 as id, 'ကိုင္ေဆာင္သူ (အလုပ္သမား)တို႔သည္' as name_template
+union
+select 13 as id, 'Skyway (Myanmar) Apparel Limited ေနရာတြင္  ေအာက္ေဖာ္ျပပါအတိုင္း အလုပ္ခန္႔ထားမႈဆိုင္ရာသေဘာတူစာခ်ဳပ္ကို အလုပ္အကိုင္ႏွင့္ ကၽြမ္းက်င္ မႈဖြံ႔ၿဖိဳးတိုးတက္ေရး ဥပေဒႏွင့္အညီႏွစ္ဦးႏွစ္ဘက္ သေဘာတူလက္မွတ္ေရးထိုး ခ်ဳပ္ဆိုၾကပါသည္။' as name_template
+union
+select 14 as id, '၁။    အလုပ္အကိုင္အမိ်ဳးအစား 
+       (က)  လုပ္ငန္းအမိ်ဳးအမည္        အထည္ခ်ဳပ္လုပ္ငန္း(CMPစနစ္)
+       ( ခ ) အလုပ္အကိုင္အမိ်ဳးအစား  အထည္ခ်ဳပ္
+              (အလုပ္သမားအလုပ္လုပ္ရမည့္ အလုပ္အကိုင္အမ်ိဳးအစားကို ဆိုလိုသည္။)
+' as name_template
+union
+select 15 as id, '( ဂ ) ရာထူး/အဆင့္ ' || job_position as name_template from x
+union
+select 16 as id, '၂။     အစမ္းခန္႔ကာလ'
+union
+select 17 as id, '(က) သံုးလထက္မပို္ေသာ အစမ္းခန္႔ကာလကို ' || trial_date_start || '  ရက္ေန႕မွ ' || trial_date_end || ' ရက္ေန႕အထိ သတ္မွတ္သည္။' as name_template from x
+--union
+--select 18 as id, '(က) သံုးလထက္မပို္ေသာ အစမ္းခန္႔ကာလကို ' || trial_date_end || ' ရက္ေန႕အထိ သတ္မွတ္သည္။' as name_template  from x
+union
+select 19 as id, '( ခ )	အစမ္းခန္႕ကာလတြင္ အေျခခံလုပ္ခ၏ ၇၅ ရာခိုင္ႏွဳန္းထက္ အနည္းေသာ လုပ္ခကို ေပးရ မည္။
+( ဂ ) 	အလုပ္ရွင္အေနျဖင့္ အစမ္းခန္႔ကာလျပည့္ေျမာက္ေသာအခါ အဆိုပါကာလအတြင္း အလုပ္သမား၏ လုပ္ငန္းလုပ္ေဆာင္မႈ အရည္အခ်င္းသည္ အလုပ္ရွင္၏ သတ္မွတ္သည့္ လုိအပ္ခ်က္ ႏွင့္ကိုက္ညီမႈရွိပါက ထိုသတ္မွတ္သည့္ရာထူးတြင္ ဆက္လက္ခန္႔ထားမည္။
+(ဃ)	အလုပ္ရွင္အေနျဖင့္ အစမ္းခန္႔ကာလအတြင္း အလုပ္သမားအား အလုပ္ရပ္ဆဲျခင္းႏွင့္ ထုတ္ပယ္ျခင္းကို ခုိင္လံုေသာအေၾကာင္းျပခ်က္ျဖင့္ အနည္းဆံုး တစ္လ ႀကိဳတင္အသိေပးအေၾကာင္းၾကားစာ (ႏို႔တစ္စာ) ေပး၍ အလုပ္ရပ္ဆဲမႈ နစ္နာေၾကးေပးရန္မလိုဘဲ အလုပ္မွရပ္စဲ ႏိုင္သည္။ အကယ္၍ တစ္လႀကိဳတင္အသိေပးအေၾကာင္း မၾကားပါက သို႔အဟုတ္ အေၾကာင္းၾကားရန္ အခ်ိန္ကာလ တစ္လမက်န္ပါက အစမ္းခန္႔ကာလတြင္ ရရွိသည့္ လုပ္ခတစ္လစာေပး၍ ရပ္စဲႏိုင္သည္။
+( င )	အကယ္၍ အလုပ္သမားျဖစ္သူသည္ မစမ္းခန္႔ကာလအတြင္း အလုပ္မွ ႏႈတ္ထြက္လိုပါက ႏႈတ္ထြက္စာကို သက္ဆိုင္ရာ အလုပ္ရွင္ သို႔ိအဟုတ္ မန္ေနဂ်ာ သို႔အဟုတ္ စီမံအုပ္ခ်ဳပ္သူထံ အနည္းဆံုးခုႏွစ္ရက္ ႀကိဳတင္ေပးပို႔ အေၾကာင္းၾကားရမည္။ သို႔မွသာ အလုပ္မွႏႈတ္ထြက္သည့္ေန႔တြင္ လုပ္ခက်န္ေငြကို အလုပ္ရွင္မွ ထုတ္ေပးမည္။ ထိုသို႔အလုပ္မွႏႈတ္ထြက္လိုေၾကာင္း ခုႏွစ္ရက္ႀကိဳတင္၍ အေၾကာင္းၾကားရန္ ပ်က္ကြက္ပါက အလုပ္မွႏႈတ္ထြက္ သည့္ေန႔ရက္၏ ေနာက္ေန႔အလုပ္္ဖြင့္ရက္၌သာ အလုပ္သမားအား လုပ္ခက်န္ေငြကို ထုတ္ေပးမည္။
+( စ )	အလုပ္သမားအသစ္အျဖစ္ ခန္႔ထားလုိသူမ်ားအတြက္ အလုပ္သင္(သင္တန္း) ကာလကို သံုးလထက္မပို ေစရ။ အလုပ္သင္(သင္တန္း) ကာလတြင္ အေျခခံလုပ္ခ၊ လစာ၏ ၅၀ရာခိုင္ ႏႈန္းေအာက္ အနည္းေသာ လုပ္ခ ကိုေပးရမည္။ 
+(ဆ) 	အလုပ္သင္အလုပ္သမားအား အလုပ္ရပ္စဲျခင္းႏွင့္ ထုတ္ပယ္ျခင္း၊ အလုပ္သင္အလုပ္ သမားက အလုပ္သင္(သင္တန္း) ကာလအတြင္ ႏႈတ္ထြက္လုိျခင္းစသည့္ ကိစၥရပ္မ်ားႏွင့္ပတ္ သက္၍ အထက္အပိုဒ္ခြဲ (ဃ)ႏွင့္ (င)ပါအတိုင္း ေဆာင္ရြက္ရမည္။
+၃။	လုပ္ခ၊ လစာ
+	(က)	ေန႔စားေန႔ရွင္း (က်ပ္/ႏိုင္ငံျခားေငြ)	 -------------------------------------------
+   	( ခ )	ေန႔စားလရွင္း (က်ပ္/ႏိုင္ငံျခားေငြ)	 -------------------------------------------
+	( ဂ )	ပုတ္္ျပတ္ (က်ပ္/ႏိုင္ငံျခားေငြ)	 -------------------------------------------' as name_template
+union
+select 20 as id, '(ဃ)လစား (က်ပ္/ႏိုင္ငံျခားေငြ) ' || wage as name_template from x
+union
+select 21 as id, '( င )ထုပ္ေပးမည့္ရက္' as name_template 
+union
+select 22 as id, '' as name_template 
+union
+select 23 as id,'မွတ္ခ်က္။	
+(၁) 	လုပ္ခ၊ လစာေပးေရးႏွင့္ ပတ္သတ္၍ တည္ဆဲအလုပ္သမား ဥပေဒ               မ်ားႏွင့္အညီ အလုပ္ရွင္ႏွင့္အလုပ္သမားတို႔က လိုက္နာလုပ္ေဆာင္ရမည္။
+(၂)	ေန႔စား၊ လုပ္ခ၊ လစာႏွင့္ပတ္သတ္၍ ေန႔စားလရွင္းဟုတိက်စြာ ေဖာ္ျပရ မည္။
+(၃)	လုပ္ခ၊လစာတြင္ အလုပ္သမား လစဥ္အလုပ္လုပ္၍ ခံစားခြင့္ျပဳသည့္ အေျခခံလုပ္ခ၊ လစာကို တိက်စြာေဖာ္ျပရမည္။
+၄။	လုပ္ငန္းတည္ေနရာႏွင့္ အမိ်ဳးအစား
+ျမန္မာနိုင္ငံ၊ ပဲခူးတိုင္းေဒသႀကီး၊ပဲခူးျမိဳ႕၊ အမွတ္္(၅၉)၊ အထူးဇုန္(၂)၊ ဥႆာ(၉) ရပ္ကြက္ တြင္တည္ရွိ ေသာ Skyway (Myanmar) Apparel Limited စက္ရံုျဖစ္ၿပီး ဆက္သြယ္ ႏိုင္သည့္ ဖုန္း 09-952115959 ၊ အီးေမးလ္ hra@skywayapparel.com ျဖစ္ပါသည္။
+၅။	သေဘာတူစာခ်ဳပ္သက္တမ္း' as name_template
+union
+
+select 25 as id,  '(က)	ဤသေဘာတူစာခ်ဳပ္ သက္တမ္းမွာ ' || date_start || ' ရက္ေန႔မွ                      ' || date_end || ' ရက္ေန႔အထိ
+(-------------------) ႏွစ္၊ (---------------) လ၊ ရက္(----------------) ျဖစ္ပါသည္။
+( ခ )	အလုပ္သမားမ်ားဘက္မွ စာခ်ဳပ္ပါအခ်က္မ်ားကို ေဖာက္ဖ်က္ျခင္းမရွိပါက ဤသ ေဘာတူစာခ်ဳပ္ သက္တမ္းကာလ မကုန္ဆံုးမီ အနည္းဆံုး တစ္လ ႀကိဳတင္၍ အလုပ္ရွင္ႏွင့္ အလုပ္သမား ႏွစ္ဦးႏွစ္ဘက္ ညွိႏႈင္းသေဘာတူညီခ်က္ျဖင့္ စာခ်ဳပ္သက္တမ္းတိုးျခင္း သို႔မ ဟုတ္ အသစ္ခ်ဳပ္ဆိုျခင္း သို႔မဟုတ္ ျပင္ဆင္ျဖည့္စြက္ျခင္းတို႔ကို ျပဳလုပ္ႏိုင္သည္။' as name_template from x
+
+union
+select 26 as id,'
+၆။	အလုပ္ခ်ိန္
+အလုပ္ခ်ိန္
+အလုပ္သမားတစ္ဦးအတြက္ ပံုမွန္အလုပ္ခ်ိန္ကို တစ္ရက္လွ်င္ ၈ နာရီႏွင့္ ရက္သတၱပတ္  တစ္ပတ္လွ်င္ ၄၈ နာရီ တက္မပိုရန္္ သတ္မွတ္ပါသည္။ ပံုမွန္အလုပ္ခ်ိန္ကို ေအာက္ပါ အ တိုင္း သတ္မွတ္ပါသည္။
+	(က)	ပံုမွန္/အဆိုင္း  ေန႔ဆိုင္း
+	( ခ )	အလုပ္စခ်ိန္  မနက္ (     7:30    )နာရီမွ အလုပ္ျပီးဆံုးခ်ိန္ ညေန(   4:30     )နာရီ အထိ
+	( ဂ )	အားလပ္ခိ်န္ -----------------
+	(ဃ)	ထမင္းစားခိ်န္ (-----11:30--------) နာရီမွ (------12:30------)နာရီအထိ
+မွတ္ခ်က္။	
+(၁)	လုပ္ငန္းသေဘာသဘာ၀အရ	အလုပ္ခ်ိန္သီးျခားသတ္မွတ္ေပးရန္ လိုိအပ္ ပါက အလုပ္ရွင္ႏွင့္ အလုပ္သမား သေဘာတူညီခ်က္ျဖင့္ သတ္မွတ္ေဆာင္ ရြက္ ႏိုင္သည္။
+(၂)	လုပ္ငန္းသေဘာသဘာ၀အရ အလုပ္ခိ္်န္ေျပာင္းလဲလိုပါက သက္ဆိုင္ရာ ၿမိဳ႕နယ္/ခရိုင္ အလုပ္ရံုႏွင့္ အလုပ္သမားဥပေဒ စစ္ေဆးေရးဦးစီးဌာနသို႔ ႀကိဳတင္ အသိေပးရပါမည္။
+၇။	နားရက္၊ အလုပ္ပိတ္ရက္ႏွင့္ ခြင့္ရက္
+(က)	နားရက္။	ရက္သတၱပတ္ တစ္ပတ္လွ်င္ သာမန္အားျဖင့္ တနဂၤေႏြေန႔ကို နား ရက္အျဖစ္လည္းေကာင္း၊ လုပ္ငန္းသေဘာသဘာ၀ႏွင့္ ေနရာေဒသ၏ ဓေလ့ထံုးစံအရ တစ္ပတ္ လွ်င္ အလုပ္နားရက္ တစ္ရက္ကို အလုပ္ရွင္ႏွင့္ အလုပ္သမားတို႔၏ သေဘာတူ ညီခ်က္ျဖင့္လည္းေကာင္း၊ သတ္မွတ္ႏိုင္သည္။ နားရက္တြင္ တည္ဆဲအလုပ္သမား ဥပ ေဒမ်ားႏွင့္အညီ လုပ္ခလစာ ခံစားခြင့္ရွိသည္။
+	( ခ )	အလုပ္ပိတ္ရက္
+(၁)	ျပည္ေထာင္စုုအစိုးရက ႏွစ္စဥ္အမိန္႕ေၾကာျငာစာျဖင့္ သတ္မွတ္ထားေသာ အမ်ားျပည္သူ အလုပ္ပိတ္ရက္မ်ားတြင္ လုပ္ခလစာအျပည့္ျဖင့္ အနားေပးရမည္။
+(၂)	အကယ္၍ အမ်ားျပည္သူ အလုပ္ပိတ္ရက္ႏွင့္ ရက္သတၱပတ္ အလုပ္ပိတ္ ရက္ တိုက္ဆိုင္ေနပါက ထိုေန႔ကို အမ်ားျပည္သူ အလုပ္ပိ္တ္ရက္အျဖစ္ သတ္မွတ္ ရမည္။
+( ဂ )	ခြင့္ရက္မ်ား အလုပ္သမားက ဥပေဒႏွင့္အညီ ခြင့္တိုင္ၾကားလွ်င္ ေအာက္ပါ အတိုင္း  ခြင့္ခံစားခြင့္ရွိသည္။
+(၁)	ေရွာင္တခင္ခြင့္။ အလုပ္စတင္ ၀င္ေရာင္သည့္ေန႔ရက္မွ ၁၂ လအတြက္ ေရွာင္တခင္ခြင့္ ၆ ရက္ကို လုပ္ခ၊ လစာအျပည့္ျဖင့္ ခံစားခြင့္ရွိသည္။ သက္ဆိုင္ ရာႏွစ္ အတြင္း ခြင့္မယူလွ်င္ ထိုခြင့္ ပ်က္ျပယ္သည္။ ဘာသာေရး၊ သာေရး၊ နာေရး ကိစၥမ်ားႏွင့္ အေၾကာင္းထူးကိစၥ ရွိသည္မွလြဲ၍ တစ္ႀကိမ္လွ်င္ တစ္ဆက္တည္း ၃ရက္ထက္ပို၍ ခြင့္ခံစားခြင့္မရွိပါ။ အျခားမည္သည့္ ခြင့္ႏွင့္မွ် ေပါင္းစပ္ခံစား ခြင့္မ ရွိပါ။ အေရးေပၚကိစၥရပ္မ်ားအတြက္ စာျဖင့္ျဖစ္ေစ၊ ဖုန္းျဖင့္ျဖစ္ေစ၊ အလုပ္ရွင္ သို႔မဟုတ္ မန္ေနဂ်ာ သို႔မဟုတ္ စီမံအုပ္္ခ်ဳပ္သူ သိရွိေစရန္ အေၾကာင္းၾကားရမည္။ ထိုသို႔အေၾကာင္းၾကား ျခင္းကိုလည္း စက္ရံု/ အလုပ္ရံုႏွင့္ အလုပ္ဌာနမ်ားတြင္ မွတ္တမ္းထား ရွိရ မည္ျဖစ္ၿပီး အလုပ္သမားက အလုပ္ျပန္၀င္သည့္ေန႔ရက္တြင္ ခြင့္တင္ရမည္။
+(၂)	လုပ္သက္ခြင့္။	လုပ္သက္ ၁၂လ တစ္ဆက္တည္းျပည့္ၿပီး လစဥ္အနည္းဆံုး အလုပ္ဆင္း ရက္ ၂၀ရက္ရွိပါက အေျခခံလုပ္ခ၊ လစာျဖင့္ တစ္ႏွစ္လွ်င္ ၁၀ရက္ တစ္ဆက္တည္း သို႔မဟုတ္ ခြဲ၍ံစားခြင့္ရွိသည္။ ၂၀ရက္အျပည့္ အလုပ္ခဲ့ေသာ လတိုင္းအတြက္ မိမိလုပ္သက္ခြင့္ တစ္ရက္ က်စီအျဖတ္ခံရမည္။
+(၃)	ေဆးခြင့္။
+(ကက)	 ၂၀၁၂ခုႏွစ္ လူမႈဖူလံုေရးဥပေဒအရျဖစ္ေစ၊ ၁၉၅၁ခုႏွစ္ ခြင့္ရက္ႏွင့္ အလုပ္ပိတ္ ရက္ဥပေဒအရျဖစ္ေစ ဥပေဒတစ္ခုခုအရ အကိ်ဳးခံစားခြင့္ရွိသည္။
+( ခခ )	လူမႈဖူလံုေရးဥပေဒႏွင့္ အက်ဳံးမ၀င္ေသာ အလုပ္သမားမ်ားအတြက္ လုပ္သက္ ၆ လျပည့္ၿပီးသူသည္ အေျခခံလစာျဖင့္ တစ္ႏွစ္လွ်င္ ေဆးခြင့္ ၃၀ရက္ကို ခံစားခြင့္ရွိသည္။
+( ဂဂ )	လူမႈဖူလံုေရးဥပေဒႏွင့္ အက်ဳံးမ၀င္ေသာ အလုပ္သမားမ်ားအတြက္ လုပ္သက္ ၆ လမျပည့္ေသးသူသည္ လစာမဲ့ျဖင့္ တစ္ႏွစ္လွ်င္ ေဆးခြင့္ ၃၀ရက္ကို ခံစားခြင့္ရွိသည္။
+(ဃဃ) လုပ္ငန္းခြင္အတြင္း အလုပ္တာ၀န္ထမ္းေဆာင္ေနစဥ္ အေတာ္တဆ ထိခိုက္ဒဏ္ ရာရရွိပါက သက္ဆိုင္ရာဥပေဒႏွင့္ အညီ ေဆးခြင့္ခံစားခြင့္ရွိသည္။
+(၄)	မီးဖြားခြင့္
+(ကက) လူမႈဖူလံုေရးဥပေဒႏွင့္ အက်ဳံး၀င္ေသာ အလုပ္သမားမ်ားသည္ ၂၀၁၂ခုႏွစ္ လူမႈဖူ လံုေရးဥပေဒအရျဖစ္ေစ၊ ၁၉၅၁ခုႏွစ္ ခြင့္ရက္ႏွင့္ အလုပ္ပိတ္ရက္ ဥပေဒအရျဖစ္ေစ ဥပေဒတစ္ခုခုအရ အကိ်ဳးခံစားခြင့္ရွိသည္။
+( ခခ )	လူမႈဖူလံုေရးဥပေဒႏွင့္ အက်ဳံးမ၀င္ေသာ အလုပ္သမားမ်ားသည္ ၁၉၅၁ခုႏွစ္ ခြင့္ ရက္ႏွင့္ အလုပ္ပိတ္ရက္ဥပေဒႏွင့္အညီသာ အကိ်ဳးခံစားခြင့္ရွိသည္။
+(၅)	ခြင့္မဲ့ပ်က္ကြက္ျခင္း
+(ကက)	 ခြင့္ျပဳထားေသာ ကာလထက္ပိုမို၍ ခြင့္ခံစားျခင္း၊ ခြင့္တိုင္ၾကားျခင္းအရွိဘဲ လုပ္ငန္း ခြင္သို႔ လာေရာက္ရန္ ပ်က္ကြက္ျခင္းတို႔ကို ခြင့္မဲ့ပ်က္ကြက္မႈအျဖစ္ သတ္မွတ္သည္။
+	( ခခ )	ခြင့္မဲ့ပ်က္ကြက္ရက္မ်ားအတြက္ လုပ္ခ၊ လစာခံစားခြင့္မရွိေစရ။
+	( ဂဂ )	အလုပ္ရွင္ သို႔မဟုတ္ မန္ေနဂ်ာ သို႔အဟုတ္ စီမံအုပ္ခ်ဳပ္သူတို႔၏ ခြင့္ျပဳခ်က္ တစ္စံု  တစ္ရာ မရရွိဘဲ တစ္ဆက္တည္း ခြင့္မဲ့ ၃ရက္ပ်က္ကြက္ပါက လိုအပ္သလို အေရးယူျခင္း သို႔မဟုတ္ တာ၀န္မွရပ္စဲျခင္းမ်ား ျပဳလုပ္ႏိုင္သည္။ တာ၀န္မွ ရပ္ဆဲျခင္းအတြက္ မည္သည့္ နစ္နာေၾကးမွ် ခံစား ခြင့္မရိွေစရ။
+၈။	အခ်ိန္ပို လုပ္ကိုင္ျခင္း
+(က)	အလုပ္ရွင္ႏွင့္ အလုပ္သမား သေဘာတူညီ္ခ်က္ျဖင့္ ဥပေဒသတ္မွတ္ ခ်က္မ်ားႏွင့္ အညီ အခ်ိန္ပို လုပ္ကိုင္ႏိုင္သည္။
+(ခ)	အခ်ိန္ပိုုလုပ္ခကို သက္ဆိုင္ရာဥပေဒ သတ္မွတ္ခ်က္မ်ားႏွင့္အညီ တြက္ခ်က္ေပး ေခ်ရမည္။
+၉။ 	အလုပ္ခ်္ိန္အတြင္ အစားအေသာက္အစီအစဥ္
+	(က) 	နံနက္စာ (ေကၽြး/မေကၽြး)		မေကၽြး
+	( ခ)	ေန႔လည္စာ (ေကၽြး/မေကၽြး)		မေကၽြး
+	( ဂ)  	ညေနစာ(ေကၽြး/မေကၽြး)		မေကၽြး
+
+
+၁၀။	ေနရာထုိင္ခင္းႏွင့္ ၀တ္စံု
+	(က)	အလုပ္ရွင္၏ ေနရာထုိင္ခင္းစီၤစဥ္ေပးမႈ ရွိ/မရွိ			 မရွိ
+	( ခ)	တစ္ႏွစ္လွ်င္ ေထာက္ပံ့ေပးမည့္ လုပ္ငန္းခြင္ ၀တ္စံု ရွိ/မရွိ	--------------------
+(ရွိိလွ်င္ ----------------- စံု)
+
+( ဂ)	တစ္ႏွစ္လွ်င္ ေထာက္ပံ့ေပးမည့္ လုပ္ငန္းခြင္ေဘးအႏၱရာယ္ကင္းရွင္းေရး၀တ္စံု ရွိ/မရွိ								--------------------
+(ရွိလွ်င္ ------------------- စံု)
+၁၁။	ေဆး၀ါးကုသျခင္း
+(က)	၂၀၁၂ခုႏွစ္ လူမႈဖူလံုေရးဥပေဒႏွင့္ အက်ံဳးမ၀င္ေသာ အလုပ္သမားမ်ားအား ေအာက္ပါတို႔အတြက္ အလုပ္ရွင္၏ ကုန္က်စရိတ္ျဖင့္ ေဆး၀ါးကုသရန္ စီစဥ္ေပးရမည္။
+		(၁)	လုပ္ငန္းခြင္ ထိခိုက္ဒဏ္ရာရရွိမႈ၊
+		(၂)	လုပ္ငန္းခြင္ဆိုင္ရာ ေရာဂါရရွိမႈ၊
+		(၃)	လုပ္ငန္းခြင္အတြင္း ဖ်ားနာမႈ။
+( ခ)	၂၀၁၂ခုႏွစ္ လူမႈဖူလံုေရးဥပေဒႏွင့္ အက်ဳံး၀င္ေသာ အလုပ္သမားအတြက္ သက္ ဆိုင္ရာဥပေဒႏွင့္အညီ ေဆး၀ါးကုသခြင့္ရွိသည္။
+( ဂ)	၂၀၁၂ခုႏွစ္ လူမႈဖူလံုေရးဥပေဒႏွင့္ အက်ံဳးအ၀င္ေသာ အလုပ္သမားမ်ားအတြက္ အလုပ္ကိုအေၾကာင္းျပဳ၍ ထိခိုက္ဒဏ္ရာရမႈမ်ားအတြက္ သက္ဆိုင္ရာ အလုပ္သမားမ်ား ေလ်ာ္ေၾကးဥပေဒႏွင့္အညီ ေဆာင္ရြက္ေပးရမည္။
+
+၁၂။	အလုပ္ခြင္သို႔ ႀကိဳ၊ ပို႔ယာဥ္ စီစဥ္ေပးျခင္း
+	(က)	အလုပ္ခြင္သို႔ ႀကိဳ၊ ပို႔ယာဥ္ စီစဥ္ေပးျခင္း
+		(၁)	အလုပ္ရွင္၏ အစီအစဥ္				-
+		(၂)	ႀကိဳ၊ ပို႔ယာဥၤေပး/ ခရီးစရိတ္ေပး		- ဖယ္ရီကား
+		(၃)	မိမိအစီအစဥ္					-
+( ခ)	ခရီးသြားလာျခင္း။	လုင္ငန္းတာ၀န္ျဖင့္ ျပည္တြင္းႏွင့္ ျပည္ပသို႔ ခရီးသြားလာ ျခင္းမ်ားအတြက္ အလုပ္ရွင္က ေအာက္ပါတို႔ကို က်ခံေပးရမည္။
+		(၁)	၀တ္စံုစရိတ္ (ျပည္ပခရီးစဥ္အတြက္သာ)	---------------------------
+		(၂)	ေနထိုင္စရိတ္ 					---------------------------
+		(၃)	စားေသာက္စရိတ္္				---------------------------
+		(၄)	ခရီးစရိတ္ (အသက္အာမခံအပါအ၀င္)		---------------------------
+(၅)	ေန႔တြက္စရိတ္					---------------------------
+		(၆)	အျခားစရိတ္					---------------------------
+၁၃။	သင္တန္း
+(က)	အလုပ္သမားမ်ား တက္ေရာက္ခြင့္ရွိသည့္ လုပ္ငန္းခြင္ကၽြမ္းက်င္မႈဆိုင္ရာ  သင္ တန္းမ်ားအား တက္ေရာက္ႏိုင္ေရးအတြက္ အလုပ္ရွင္က တာ၀န္ယူရမည္။
+( ခ)	လုပ္ငန္းခြင္ကၽြမ္းက်င္မႈဆိုင္ရာ သင္တန္းတက္ေရာက္ျခင္းႏွင့္ စပ္လ်ဥ္း၍ သေဘာ တူစာခ်ဳပ္ကို ဥပေဒႏွင့္အညီ သီးျခားခ်ဳပ္ဆိုရမည္။
+၁၄။	အလုပ္မွ ႏႈတ္ထြက္္ျခင္းႏွင့္ အလုပ္မွရပ္ဆဲျခင္း
+	(က)	အလုပ္မွ ႏႈတ္္ထြက္ျခင္း
+(၁)	အတည္ျပဳခန္႔ထားေသာ အလုပ္သမားသည္ စာခ်ဳပ္သက္တမ္းျပည့္ၿပီး ေနာက္ အလုပ္တာ၀န္မွ ႏႈတ္ထြက္လိုပါက ႏႈတ္ထြက္လိုေၾကာင္း အေၾကာင္းၾကား စာကို သက္ဆိုင္ ရာလုပ္ငန္းခြဲ တာ၀န္ခံမွတဆင့္ အလုပ္ရွင္ သို႔အဟုတ္ မန္ေနဂ်ာ သို႔မဟုတ္ စီမံအုပ္ခ်ဳပ္သူထံသို႔ စာခ်ဳပ္သက္တမ္းမကုန္ဆံုးမီ အနည္းဆံုးတစ္လ ႀကိဳတင္၍အေၾကာင္းၾကားရမည္။
+(၂)	အလုပ္မွ တရား၀င္ႏႈတ္ထြက္ခြင့္ျပဳရာတြင္ အလုပ္သမားသည္ မိမိိအား ထုတ္ေပးထားသည့္ လစာထုတ္ေပးမႈမွတ္တမ္းစာအုပ္၊ ၀န္ထမ္းကတ္၊ လုပ္ငန္း သံုးပစၥည္းႏွင့္ ကိရိယာမ်ားကို ျပန္လည္ေပးအပ္ရမည့္အျပင္ မိမိတာ၀န္ယူထား သည့္ စာရင္းမ်ား၊ ေငြေၾကးမ်ား၊ ပစၥည္းမ်ားကိုလည္း အလုပ္ရွင္ထံသို႔ စနစ္တက် လႊဲေျပာင္းေပးအပ္ရမည္။
+(၃)	အလုပ္သမားသည္ စာခ်ဳပ္သက္တမ္းမျပည့္မီ အလုပ္မွႏႈတ္ထြက္လိုပါက အနည္းဆံုးတစ္လ ႀကိဳတင္၍အေၾကာင္းၾကားရမည္ျဖစ္ၿပီး အလုပ္ရွင္မွ အလုပ္ ရပ္စဲမႈ နစ္နာေၾကးေပးရန္မလိုဘဲ ရရန္ရွိသည့္ အမွန္တကယ္ အလုပ္လုပ္ ခဲ့သည့္ လုပ္ရက္ မ်ားအတြက္ လုပ္ခက်န္ေငြႏွင့္ လုပ္သက္ခြင့္ကို ခံစားခြင့္ေပးၿပီး ႏႈတ္ထြက္ ခြင့္ျပဳရမည္။ 
+(၄)	အထက္အပိုဒ္ခြဲငယ္(၃)ပါအတိုင္း အလုပ္မွႏႈတ္ထြက္ခြင့္ျပဳရာတြင္ အလုပ္ ရွင္၏ ကုန္က် စရိတ္ျဖင့္ ကၽြမ္းက်င္မႈသင္တန္းမ်ား တက္ေရာက္ထားသည့္ အလုပ္ သမား မ်ားအား အလုပ္ရွင္က ကုန္က်ထားသည့္ေငြကို ေပးေလ်ာ္ေစၿပီးမွ ႏႈတ္ထြက္ ခြင့္ျပဳရမည္။ သင္တန္းမွျပန္လာၿပီး လုပ္သက္(၃)ႏွစ္ႏွင့္အထက္ တာ၀န္ထမ္း ေဆာင္ၿပီးပါက သင္တန္း ကုန္က်စရိတ္ကို ေပးေလ်ာ္ရန္မလိုပါ။ 
+
+	( ခ)	အလုပ္မွရပ္စဲျခင္း
+(၁)	သတ္မွတ္ထားေသာ စည္းကမ္းခ်က္မ်ားကို ေဖာက္ဖ်က္က်ဳးလြန္သည့္ အလုပ္သမားမ်ားအား သာမန္ျပစ္မႈမ်ားအတြက္ ပထမအႀကိိမ္ ႏႈတ္ျဖင့္သတိေပး ျခင္း၊ ဒုတိယအႀကိမ္ စာျဖင့္သတိေပးျခင္း၊ တတိယအႀကိမ္ ၀န္ခံကတိလက္မွတ္ ေရးထိုးေစျခင္း၊ စသည့္သတိေပးျခင္း (၃)ႀကိမ္ျပဳလုပ္ၿပီးေနာက္ ထပ္မံက်ဳးလြန္ လွ်င္ျဖစ္ေစ၊ ႀကီးေလးေသာျပစ္ မႈတစ္ႀကိမ္၊ က်ဳးလြန္ခဲ့လွ်င္ျဖစ္ေစ၊ အလုပ္ရွင္က ယင္းအလုပ္သမားမ်ားအား အလုပ္ရပ္စဲမႈ နစ္နာေၾကးေပးရန္မလိုဘဲ ရရန္ရွိသည့္ အမွန္တကယ္အလုပ္လုပ္ခဲ့သည့္ လုပ္ရက္မ်ားအတြက္ လုပ္ခက်န္ေငြကိုေပး၍ အ လုပ္မွရပ္စဲႏိုင္သည္။
+(၂)	အထက္အပိုဒ္ခြဲငယ္ (၁)မွအပ အလုပ္သမားမ်ားအား တည္ဆဲဥပေဒ၊ နည္း ဥပေဒ၊ စည္းမ်ဥ္းစည္းကမ္းမ်ားႏွင့္အညီ အလုပ္ရွင္က အနည္းဆံုး တစ္လ ႀကိဳတင္ အေၾကာင္းၾကား၍ သတ္မွတ္ထားသည့္ နစ္နာေၾကးေပးၿပီး အလုပ္မွရပ္ စဲႏို္င္သည္။ 
+(၃)	တည္ဆဲဥပေဒ၊ နည္းဥပေဒႏွင့္ ဤအလုပ္ခန္႔ထားမႈဆိုင္ရာ သေဘာတူ စာခ်ဳပ္ပါ စည္းမ်ဥ္းစည္းကမ္းမ်ားကို ေဖာက္ဖ်က္ျခင္းမရွိသည့္ အလုပ္သမားအား အလုပ္မွရပ္စဲျခင္းမျပဳရ။ ျပဳလုပ္ခဲ့လွ်င္ တည္ဆဲဥပေဒမ်ားအရ အေရးယူျခင္းခံရ မည္။ 
+
+စာခ်ဳပ္ရပ္ဆဲျခင္း။	ေအာက္ပါအခ်က္မ်ားေၾကာင့္ သေဘာတူစာခ်ဳပ္ရပ္ဆဲႏိုင္သည္။
+	(က)	သေဘာတူစာခ်ဳပ္သက္တမ္းကုန္ဆံုးျခင္း၊
+	( ခ)	စက္ရံုဖ်က္သိမ္းျခင္း၊
+( ဂ)	အလုပ္ရွင္ေၾကာင့္မဟုတ္သည့္ မေမွ်ာ္မွန္းႏိုင္ေသာ ျဖစ္ရပ္ေၾကာင့္ လုပ္ငန္းရပ္ ဆိုင္းသြားျခင္း၊ 
+(ဃ)	အလုပ္ရွင္ သို႔မဟုတ္ အလုပ္သမား တစ္ဖက္ဖက္မွ အလုပ္ခန္႔ထားမႈဆိုင္ရာ သ ေဘာတူစာခ်ဳပ္ပါ စည္းမ်ဥ္းစည္းကမ္းမ်ားကို လိုက္နာမႈမရွိျခင္း၊ 
+	( င)	အလုပ္သမားေသဆံုးျခင္း၊ 
+	( စ)	အလုပ္သမားသည္ ျပစ္မႈက်ဳးလြန္၍ အျပစ္ေပးခံရျခင္း၊
+၁၆။ အလုပ္ရွင္၏ တာ၀န္၀တၱရားမ်ား
+(က)	အလုပ္ရွင္က စာခ်ဳပ္ေဖာက္ဖ်က္ျခင္း၊ လုပ္ငန္းအၿပီးပိတ္သိမ္းျခင္း၊ လႊဲေျပာင္း ေရာင္းခ်ျခင္း၊ လုပ္ငန္းရပ္ဆိုင္းျခင္း၊ လုပ္သားအင္အားေလွ်ာ့ခ်ျခင္းတို႔အတြက္ အလုပ္ သမားမ်ားအား သက္ဆိုင္ရာဥပေဒမ်ားႏွင့္အညီ နစ္နာေၾကးေပးရမည္။ 
+( ခ)	ခိုင္လံုေသာအေၾကာင္းျပခ်က္ျဖင့္ အလုပ္ရွင္က လုပ္ငန္းယာယီပိတ္သိမ္းရပါက ပိတ္သိမ္းထားရသည့္ကာလအတြက္ အလုပ္ရွင္ႏွင့္ အလုပ္သမား ညွိႏႈိင္းသေဘာတူညီ သည့္ႏႈန္းထားျဖင့္ လုပ္ခလစာကိုေပးရမည္။
+( ဂ) အလုပ္ေၾကာင့္ ထိခိုက္ဒဏ္ရာရရွိိမႈ၊ ကိုယ္အဂၤါအစိတ္အပိုင္း ခ်ိဳ႕ယြင္းဆံုးရွဳံးမႈ၊ ေရာဂါရရွိမႈ၊ ေသဆံုးမႈတို႔အတြက္ ဥပေဒႏွင့္အညီ သက္ဆိုင္ရာ အလုပ္သမား သို႔အဟုတ္ အေမြဆက္ခံခြင့္ရွိသူအား ရထိုင္သည့္ ေလ်ာ္ေၾကးကိုေပးရမည္။
+(ဃ)	လုပ္ခ၊ လစာမ်ားကို လုပ္သားအင္အား ၁၀၀ဦးထက္မပိုပါက လုပ္ခေပးရန္ကာလ အပိုင္းအျခား ကုန္ဆံုးသည့္ေန႔တြင္လည္းေကာင္း၊ လုပ္သားအင္အား ၁၀၀ဦးထက္ပိုၿပီး ၅၀၀ဦးထက္မပိုပါက လုပ္ခေပးရန္ကာလအပိုင္းအျခား ကုန္ဆံုးၿပီးေနာက္ ငါးရက္အတြင္း ၌လည္းေကာင္း၊ လုပ္သားအင္အား ၅၀၀ဦးထက္ပိုၿပီး ၁၀၀၀ဦးထက္မပိုပါက လုပ္ခေပးရန္ ကာလ အပိုင္းအျခား ကုန္္ဆံုးၿပီးေနာက္ ခုႏွစ္ရက္အတြင္း၌လည္းေကာင္း၊ လုပ္သား အင္အား ၁၀၀၀ဦးထက္ပိုပါက လုပ္ခေပးရန္ကာ အပိုင္းအျခား ကုန္ဆံုးၿပီးေနာက္ တစ္ ဆယ္ရက္အတြင္း၌လည္းေကာင္း ေပးေခ်ရမည္။ အဆိုပါေန႔ရက္သည္ အလုပ္ပိတ္ရက္ႏွင့္ တိုက္ဆိုင္ေနလွ်င္ ထိုေန႔မတိုင္မီ တစ္ရက္အလိုတြင္ ထုတ္ေပးသည္။ လုပ္ခေပးေရးကာ လကို တစ္လထက္မပိုေစရ၊
+
+( င)	အလုပ္သမားအဖြဲ႔အစည္း၀င္ျဖစ္မႈ၊ လူမ်ိဳး၊ ဘာသာ၊ က်ား/မ၊ အသက္အရြယ္ ကြာျခားမႈတို႔အေပၚ မူတည္၍ ခြဲျခားဆက္ဆံျခင္း၊ တန္းတူအခြင့္အေရး မေပးျခင္းတို႔ကို မျပဳလုပ္ရဈ
+( စ)	ျမန္မာႏိုင္ငံသို႔ လာေရာက္အလုပ္လုပ္ကိုင္ၾကသည့္ ႏိုင္ငံျခားသား အလုပ္ရွင္မ်ား၊ ႀကီးၾကပါသူမ်ား၊ ပညာရွင္မ်ားႏွင့္ မိသားစု၀င္မ်ားသည္ ျမန္မာႏိုင္ငံ၏ တည္ဆဲဥပေဒမ်ား၊ ယဥ္ေက်းမႈႏွင့္ ဓေလ့ထံုးစံမ်ားကို ေလးစားလုိက္နာရမည့္အျပင္ ျမန္မာႏိုင္ငံ၏ ျပည္တြင္း ေရးရာကိစၥရပ္မ်ားတြင္ ၀င္ေရာက္စြက္ဖက္ျခင္း မျပဳလုပ္ရန္ တာ၀န္ယူရမည္၊
+	(ဆ)	တည္ဆဲအလုပ္သမားေရးရာ ဥပေဒမ်ားကို ေလးစားလိုက္နာရမည္၊
+	( ဇ)	ဥပေဒႏွင့္အညီ တရားစြဲဆိုခြင့္ႏွင့္ တရားစဲြဆိုခံႏိုင္ခြင့္ ရွိရမည္။
+၁၇။	အလုပ္သမားမ်ား၏ တာ၀န္၀တၱရားမ်ား
+(က)	မိမိလုပ္ငန္းအေပၚတြင္ သစၥာရွိစြာျဖင့္ က်ိဳးေၾကာင္းေလ်ာ္ညီစြာ သတ္မွတ္ေပးထား သည့္ ကုန္ထုတ္စြမ္းအား ျပည့္မီေအာင္ လုပ္ကိုင္ရမည္၊
+( ခ)	အလုပ္သမားမ်ား၏ ဂရုစိုက္မႈ၊ ေပါ့ေလ်ာ့မႈႏွင့္ အလြဲသံုးမႈတို႔ေၾကာင့္ လုပ္ငန္းသံုး ပစၥည္းမ်ား ပ်က္စီးျခင္း၊ ေပ်ာက္ဆံုးျခင္းမရွိေအာင္ ထိန္းသိမ္းကာကြယ္ရမည္။
+( ဂ)	အလုပ္သမားမ်ား၏ ဂရုမစိုက္မႈ၊ ေပါ့ေလ်ာ့မႈႏွင့္ အလြဲသံုးမႈတို႔ေၾကာင့္ လုပ္ငန္းသံုး ပစၥည္းမ်ား ပ်က္စီးျခင္းႏွင့္ ေပ်ာက္ဆံုးျခင္းရွိပါက သတ္မွတ္တန္ဖိုးကို ဥပေဒႏွင့္အညီေပး ေလ်ာ္ရမည္။
+(ဃ)	ကိန္းဂဏန္းမ်ား၊ စာရင္းဇယားအခ်က္အလက္မ်ား၊ အေရးႀကီးသည့္သတင္းအ ခ်က္အလက္မ်ားႏွင့္ လုပ္ငန္း၏ လွ်ဳိ႕၀ွက္ခ်က္မ်ားကို ျပင္ပသို႔ မေပါက္ၾကားေစရန္ ထိ္္္န္းသိမ္းရမည္။
+( င)	ခြင့္ျပဳခ်က္မရရွိဘဲ ရံုးတြင္းစာတမ္းမ်ား၊ စာရင္းမ်ား၊ မွတ္တမ္းမ်ားကို ထုတ္ႏႈတ္ အသံုးျပဳျခင္း၊ ကူးယူျခင္း၊ ဖယ္ရွားျခင္း၊ ေဖ်ာက္ဖ်က္ျခင္း၊ ျပင္းပသို႔ယူေဆာင္သြားျခင္း မျပရ။
+( စ)	ကုမၸဏီ၊ စက္ရံု၊ လုုပ္ငန္းအမ်ိဳးအစားအလိုက္ လုပ္ငန္းသေဘာသဘာ၀အရ ထုတ္ ျပန္ထားေသာ အလုပ္သမားမ်ား လိုက္နာရမည့္ အလုပ္ခ်ိန္စည္းကမ္းမ်ား၊ တာ၀န္ထမ္းေဆာင္မႈဆိုင္ရာ စည္းကမ္းမ်ား၊ လုပ္ငန္းခြင္အတြင္း ျပဳမူဆက္ဆံမႈ စည္းကမ္းမ်ားကို အျပည့္အ၀လိုက္နာရမည္။
+(ဆ)	လုပ္ငန္းခြင္ေအးခ်မ္းသာယာေရးႏွင့္ လုပ္ငန္းခြင္တည္ၿမဲေရးတို႔ကို ထိခိုက္ေစမည့္ အျပဳအမူ၊ အေျပာအဆိုႏွင့္ လုပ္ေဆာင္မႈမ်ားကို ေရွာင္ရွားရမည္။
+( ဇ)	တည္ဆဲအလုပ္သမားေရးရာ ဥပေဒမ်ားကို ေလးစားလိုက္နာရမည္။
+(ဈ )	ဥပေဒႏွင့္အညီ တရားစဲြဆိုခြင့္ႏွင့္ တရားစဲြဆိုခံႏိုင္ခြင့္ ရွိရမည္။
+(ည)	ျမန္မာႏိုင္ငံသို႔လာေရာက္အလုပ္လုပ္ကိုင္ၾကသည့္ ႏိုင္ငံျခားသား အလုပ္သမားမ်ားႏွင့္ မိသားစု၀င္မ်ားသည္ ျမန္မာႏိုင္ငံ၏ တည္ဆဲဥပေဒမ်ား၊ ယဥ္ေက်းမႈႏွင့္ ဓေလ့ထံုးစံ မ်ားကိုေလးစား လုိက္နာရမည့္အျပင္ ျမန္မာႏိုင္ငံ၏ ျပည္တြင္းေရးရာကိစၥမ်ားတြင္ ၀င္ေရာက္စြက္ဖက္ျခင္းမျပဳရ။
+(ဋ)	အလုပ္ရွင္၏ တာ၀န္ႏွင့္ တရားနည္းလမ္းတက် စီးမံခန္႔ခဲြမႈဆိုင္ရာ ကိစၥရပ္မ်ားတြင္၀င္ေရာက္ စြက္ဖက္ျခင္း မျပဳရ။
+(ဌ)	စက္ရံု၊ အလုပ္ရံု၊ ကုမၸဏီမ်ား၏ လုပ္ငန္းသေဘာသဘာ၀၊ လုပ္ငန္းအမ်ိဳးအစား အလိုက္အလုပ္ သမားညႊန္ၾကားေရးဦးစီးဌာန၏ စိစစ္အတည္ျပဳခ်က္ျဖင့္ အလုပ္ရွင္ကထုတ္ျပန္ ထားသည့္ စည္းမ်ဥ္းစည္း ကမ္းမ်ားကို လိုက္နာရမည္။
+ 
+၁၈။	အလုပ္ခန္႔ထားမႈဆိုင္ရာ သေဘာတူစာခ်ဳပ္အား အလုပ္ရွင္ႏွင့္အလုပ္သမား ႏွစ္ဦးသေဘာတူဖ်က္သိမ္း ျခင္းႏွင့္ အသစ္ခ်ဳပ္ဆိုျခင္း
+(က)	စာခ်ဳပ္သက္တမ္း ျပည့္သည္ျဖစ္ေစ၊ မျပည့္သည္ျဖစ္ေစ၊ အလုပ္ရွင္ႏွင့္အလုပ္သမား ႏွစ္ဦးႏွစ္ဖက္ သေဘာတူညီခ်က္ျဖင့္ မူလခ်ဳပ္ဆိုထားေသာ အလုပ္ခန္႔ထားမႈဆိုင္ရာ သေဘာတူစာခ်ဳပ္အားဖ်က္သိမ္း ႏိုင္သည္။
+( ခ)	အလုပ္ခန္႔ထားမႈဆိုင္ရာသေဘာတူစာခ်ဳပ္အသစ္ကို ခ်ဳပ္ဆိုလိုပါက မူလစာခ်ဳပ္သက္တမ္း မကုန္ဆံုးမီ ရက္ေပါင္း ၃၀အတြင္း ျပန္လည္ခ်ဳပ္ဆိုရမည္။
+၁၉။	အလုပ္ရွင္ႏွင့္အလုပ္သမား အျငင္းပြားမႈမ်ားကို ေျဖရွင္းျခင္း
+(က)	အလုပ္ရွင္ႏွင့္ အလုပ္သမားမ်ားအၾကား အျငင္းပြားမႈေပၚေပါက္လာပါက ႏွစ္ဦးႏွစ္ဖက္ညွိႏိႈင္း ေျဖသည့္နည္းျဖင့္ ေျဖရွင္းရမည္။
+( ခ)	အကယ္၍ အထက္အပိုဒ္ခြဲ (က) ပါအတိုင္း ေျဖရွင္း၍မရပါက ၂၀၁၂ ခုႏွစ္ အလုပ္သမားေရးရာ တည္ဆဲဥပေဒမ်ားႏွင့္အညီေျဖရွင္း ေဆာင္ရြက္ရမည္။
+၂၀။	စာခ်ဳပ္စည္းကမ္းမ်ားကို ျပင္ဆင္ျခင္းႏွင့္ ျဖည့္စြက္ျခင္း	
+(က)	အတည္ျပဳလက္မွတ္ေရးထိုးၿပီးေသာ အလုပ္ခန္႔ထားမႈဆိုင္ရာသေဘာတူစာခ်ဳပ္ကိုတည္ဆဲ အလုပ္သမားေရးရာဥပေဒမ်ားႏွင့္အညီ ျပင္ဆင္ျခင္းႏွင့္ျဖည့္စြက္ျခင္း ျပဳလုပ္လိုပါကအလုပ္ရွင္ႏွင့္ အလုပ္သမား ႏွစ္ဦးႏွစ္ဖက္ ညွိႏိႈင္းေဆြးေႏြးျပင္ဆင္ျဖည့္စြက္လိုသည့္ အခ်က္မ်ားကို သက္ဆိုင္ရာ ၿမိဳ႕နယ္ အလုပ္အကိုင္ႏွင့္ အလုပ္သမားရွာေဖြေရးရံုးမ်ားသို႔ ေပးပို႔တင္ျပရမည္။
+( ခ)	သက္ဆိုင္ရာၿမိဳ႕နယ္ အလုပ္အကိုင္ႏွင့္ အလုပ္သမားရွာေဖြရံုးမ်ားသည္ အဆိုပါ တင္ျပခ်က္ကို လက္ခံရရွိၿပီးေနာက္ စိစစ္၍ အလုပ္သမားညႊန္ၾကားေရးဦးစီးဌာနသို႔ ဆက္ လက္တင္ျပခြင့္ျပဳခ်က္ရရွိၿပီး မွသာ သေဘာတူစာခ်ဳပ္တြင္ ျပင္ဆင္ျခင္းႏွင့္ ျဖည့္စြက္ျခင္းတို႔ကို ျပဳလုပ္ရမည္။
+၂၁။	စာခ်ဳပ္အသက္၀င္သည့္ ရက္စြဲ
+(က)	ဤအလုပ္ခန္႔ထားမႈဆိုင္ရာ သေဘာတူစာခ်ဳပ္သည္ အလုပ္ရွင္ႏွင့္ အလုပ္သမား ႏွစ္ဦးႏွစ္ဖက္ တရား၀င္လက္မွတ္ေရးထိုးၿပီး သက္ဆိုင္ရာ ၿမိဳ႕နယ္အလုပ္အကိုင္ႏွင့္ အလုပ္သမားရွာေဖြေရးရံုးမွ အ တည္ျပဳေပးသည့္ ေန႔ရက္မွစ၍ အသက္၀င္သည္။
+( ခ)	သက္ဆိုင္ရာ ၿမိဳ႕နယ္အလုပ္အကိုင္ႏွင့္ အလုပ္သမားရွာေဖြေရးရံုးသည္ အလုပ္ခန္႔ထားမႈဆိုင္ရာ သေဘာတူစာခ်ဳပ္ လက္ခံရရွိၿပီးေနာက္ စိစစ္၍ ငါးရက္အတြင္း အတည္ ျပဳလက္မွတ္ ေရးထိုးေပးရမည္။
+၂၂။ တာ၀န္ရွိမႈမ်ား
+(က)	အလုပ္ရွင္ႏွင့္ အလုပ္သမားမ်ားသည္ မိမိတို႔၏ တာ၀န္၀တၱရားမ်ားကို အျပည့္အ၀လုိက္နာေဆာင္ ရြက္ရန္ တာ၀န္ခံရမည့္အျပင္ ဤအလုပ္ခန္႔ထားမႈဆိုင္ရာသေဘာတူ စာခ်ဳပ္ပါ အခ်က္အလက္မ်ားႏွင့္ အ ညီ စာခ်ဳပ္ခ်ဳပ္ဆို၍ တိက်စြာ လိုက္နာေဆာင္ရြက္ရမည္။
+( ခ)	ဤအလုပ္ခန္႔ထားမႈဆိုင္ရာသေဘာတူစာခ်ဳပ္ကို မူရင္းသံုးစံုျပဳစုၿပီး အလုပ္သမားၫႊန္ၾကားေရး ဦးစီးဌာန၊ အလုပ္ရွင္ႏွင့္ အလုပ္သမားတို႔အတြက္ တစ္စံုစီ ျဖန္႔ေ၀ေပးရမည္။
+
+အေထြေထြ
+(က)	ေဒသႏၱရေပ်ာ္ပြဲရႊင္ပဲြမ်ား၊ အားကစားပြဲမ်ား၊ လူမႈေရးႏွင့္ သက္သာေခ်ုာင္္ခ်ိေရး အစီအစဥ္မ်ားအား အလုပ္ရွင္ႏွင့္အလုပ္သမားကိုယ္စားလွယ္တို႔ ညွိႏႈိင္းသေဘာတူညီခ်က္ ျဖင့္ ေဆာင္ရြက္ရမည္။
+( ခ)	တည္ဆဲဥပေဒမ်ားအရ အလုပ္ရွင္ႏွင့္အလုပ္သမားမ်ားက ေပးသြင္းရမည့္ အခြန္အခမ်ားႏွင့္ ထည့္၀င္ေၾကးမ်ားကို အလုပ္ရွင္က ေကာက္ခံ၍ စုစည္းၿပီး သက္ဆိုင္ရာ လုပ္ထံုး လုပ္နည္းမ်ားႏွင့္အညီ တာ၀န္ယူေပးသြင္းရမည္။
+( ဂ)	လုပ္ငန္းခြင္သေဘာသဘာ၀ႏွင့္အညီ လုိက္နာရမည့္ စည္းမ်ဥ္းစည္းကမ္းမ်ား၊ သာမန္ျပစ္မႈမ်ား၊ ႀကီးေလးေသာျပစ္မႈမ်ားကို အလုပ္သမား သိရွိလိုက္နာႏိုင္ရန္ ဤအလုပ္ ခန္႔ထားမႈဆိုင္ရာသေဘာတူ စာခ်ဳပ္တြင္ ေနာက္ဆက္တြဲျဖင့္ ထည့္သြင္းေဖာ္ျပရမည္။
+(ဃ)	သဘာ၀ေဘးအႏၱရာယ္ႏွင့္ မေမွ်ာ္မွန္းႏိုင္ေသာ အျခားအႏၱရာယ္မ်ား က်ေရာက္လာပါက အလုပ္ရွင္သည္ အလုပ္သမားအတြက္ လိုအပ္ေသာ ေဘးကင္းမႈအစီအမံမ်ားႏွင့္ လိုအပ္ေသာေထာက္ပံ့ ကူညီမႈမ်ားကို ေဆာင္ရြက္ေပးရမည္။
+( င)	လုပ္ငန္းခြင္ေဘးအႏၱရာယ္ကင္းရွင္းေရးႏွင့္ က်န္းမာေရးအတြက္ လိုအပ္သည့္အစီ အမံမ်ားႏွင့္ ပညာေပးမႈမ်ားကို စီမံေဆာင္ရြက္ထားရမည္။
+( စ)	အလုပ္ရွင္သည္ လုပ္ငန္းခြင္ႏွင့္ အလုပ္သမားမ်ားအတြက္ လူမႈေရးဆိုင္ရာတာ၀န္ မႈ(CSR) လုပ္ငန္းမ်ားကိုလည္း မျဖစ္မေနေဆာင္ရြက္ေပးရမည္။
+(ဆ)	အလုပ္ရွင္သည္ အလုပ္သမားမ်ား၏ ကၽြမ္းက်င္မႈဖြြြံ႕ၿဖိဳးတိုးတက္ေရး လုပ္ငန္းမ်ားကိုလည္းအ စဥ္ဆက္မျပတ္ ေဆာင္ရြက္ေပးရမည္။
+အထက္ပါသေဘာတူူညီခ်က္မ်ားကို ဖတ္ရွဳ၍ ေကာင္းစြာနားလည္ သေဘာေပါက္ၾကၿပီး ေနာက္ေအာက္ ပါ ႏွစ္ဖက္သက္ေသမ်ားေရွ႕ေမွာက္တြင္ မိမိတို႔အသီးသီး၏ လြတ္လပ္ေသာသေဘာဆႏၵအရ ရိုးေျဖာင့္ ေသာ သေဘာျဖင့္ ဤအလုပ္ခန္႔ထားမႈဆိုင္ရာသေဘာ တူစာခ်ဳပ္ကို လက္မွတ္ေရးထုိးခ်ဳပ္ဆိုၾကပါသည္။' as name_template
+--page 9 end
+
+
+) A order by A.id;
+]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>id</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>id</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>id</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>name_template</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>2147483647</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>name_template</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>name_template</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="test" id="35">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">id</text-property>
+                    <property name="onColumnLayout">false</property>
+                    <text-property name="heading">id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">name_template</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">name_template</text-property>
+                    <property name="onColumnLayout">false</property>
+                    <text-property name="heading">name_template</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters"/>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">name_template</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">id</property>
+                    <property name="nativeName">id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">name_template</property>
+                    <property name="nativeName">name_template</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select * from(
+select 27 as id, 'အလုပ္သမား' || '          '|| '          '|| '          '|| '          '||'          '||'          '||'အလုပ္ရွင္ (သို႔အဟုတ္) မန္ေနဂ်ာ' as name_template
+union
+select 28 as id, '(သို႔မဟုတ္)'  as name_template
+union
+select 29 as id, '(Employee)' || '          '||'          '||'          '||'          '||'          '||'          '||'စီမံအုပ္ခ်ဳပ္သူ'  as name_template
+union
+select 30 as id,'' as name_template
+union
+select 31 as id,'လက္မွတ္		-----------------------' || '                                '||' 		လက္မွတ္		-----------Fixed------------' as name_template
+union 
+select 32 as id,'အမည္		-----------------------' || '                                '||' 		အမည္		----------------------------' as name_template
+union 
+select 33 as id,'ရာထူး/အဆင့္	-----------------------' || '                                '||' 		ရာထူး/အဆင့္		----------------------------' as name_template
+union 
+select 34 as id,'ႏိုင္ငံသားစိစစ္ေရး	-----------------------' || '                                '||' 		ႏိုင္ငံသားစိစစ္ေရး	----------------------------' as name_template
+union 
+select 35 as id,'ကတ္ျပားအမွတ္ (သို႔မဟုတ္)                       ' || '                                '||' 		ကတ္ျပားအမွတ္ (သို႔မဟုတ္)		                    ' as name_template
+union 
+select 36 as id,'ႏိုင္ငံကူးလက္မွတ္အမွတ္                         ' || '                                '||' 		ႏိုင္ငံကူးလက္မွတ္အမွတ္	                            ' as name_template
+union 
+select 37 as id,'လုပ္ငန္း/ဌာန                              ' || '                                '||' 		လုပ္ငန္း/ဌာန 	                            ' as name_template
+union 
+select 38 as id,'ရက္စြဲ                                  ' || '                                '||' 		ရက္စြဲ    	                                    ' as name_template
+
+)A order by id ;]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>id</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>id</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>id</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>name_template</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>2147483647</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>name_template</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>name_template</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="employee" id="1624">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">employee_id</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">employee_id</text-property>
+                    <text-property name="heading">employee_id</text-property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">employee_id</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">employee_id</property>
+                    <property name="nativeName">employee_id</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select employee_id from hr_employee;]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>employee_id</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>2147483647</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>employee_id</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>employee_id</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+    </data-sets>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <page-footer>
+                <text id="3">
+                    <property name="contentType">html</property>
+                    <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
+                </text>
+            </page-footer>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <grid id="1600">
+            <column id="1601"/>
+            <column id="1602"/>
+            <column id="1603"/>
+            <row id="1604">
+                <cell id="1605">
+                    <property name="colSpan">3</property>
+                    <property name="rowSpan">1</property>
+                    <label id="7">
+                        <property name="fontFamily">"Zawgyi-One"</property>
+                        <property name="fontSize">12pt</property>
+                        <property name="fontWeight">bold</property>
+                        <property name="textAlign">center</property>
+                        <text-property name="text">Sky Way (Myanmar) Company Limited</text-property>
+                    </label>
+                </cell>
+            </row>
+            <row id="1608">
+                <cell id="1609">
+                    <property name="colSpan">3</property>
+                    <property name="rowSpan">1</property>
+                    <label id="8">
+                        <property name="fontFamily">"Zawgyi-One"</property>
+                        <property name="fontSize">12pt</property>
+                        <property name="fontWeight">bold</property>
+                        <property name="textAlign">center</property>
+                        <text-property name="text">အလုပ္ခန္႔ထားမွဳဆိုင္ရာသေဘာတူစာခ်ဳပ္</text-property>
+                    </label>
+                </cell>
+            </row>
+            <row id="1612">
+                <cell id="1613">
+                    <property name="colSpan">3</property>
+                    <property name="rowSpan">1</property>
+                    <label id="9">
+                        <property name="fontFamily">"Zawgyi-One"</property>
+                        <property name="fontSize">12pt</property>
+                        <property name="fontWeight">bold</property>
+                        <property name="textAlign">center</property>
+                        <text-property name="text">အလုပ္အကိုင္နွင့္ကၽြမ္းက်င္မွဳဖြံ႕ျဖိဳးတိုးတက္ေရးသပေဒ ပုဒ္မ ၅၊ ပုဒ္မခြဲ (က) အရ</text-property>
+                    </label>
+                </cell>
+            </row>
+            <row id="1616">
+                <cell id="1617">
+                    <property name="colSpan">3</property>
+                    <property name="rowSpan">1</property>
+                    <property name="textAlign">center</property>
+                    <label id="10">
+                        <property name="fontFamily">"Zawgyi-One"</property>
+                        <property name="fontSize">12pt</property>
+                        <text-property name="text">(အလုပ္သမားတစ္ဦးခ်င္းခ်ဳပ္ဆိုရန္)</text-property>
+                    </label>
+                </cell>
+            </row>
+        </grid>
+        <table id="6">
+            <property name="dataSet">sample</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">name_template</property>
+                    <text-property name="displayName">name_template</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["name_template"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <column id="19"/>
+            <column id="20"/>
+            <column id="21"/>
+            <detail>
+                <row id="11">
+                    <cell id="12">
+                        <property name="colSpan">3</property>
+                        <property name="rowSpan">1</property>
+                        <data id="22">
+                            <property name="fontFamily">"Zawgyi-One"</property>
+                            <property name="resultSetColumn">name_template</property>
+                        </data>
+                    </cell>
+                </row>
+            </detail>
+        </table>
+        <grid id="1580">
+            <property name="height">30.447916666666668in</property>
+            <column id="1581"/>
+            <column id="1582"/>
+            <column id="1583"/>
+            <row id="1620">
+                <property name="height">4in</property>
+                <cell id="1621"/>
+                <cell id="1622"/>
+                <cell id="1623"/>
+            </row>
+            <row id="1584">
+                <cell id="1585">
+                    <label id="1567">
+                        <property name="fontFamily">"Zawgyi-One"</property>
+                        <property name="textAlign">left</property>
+                        <text-property name="text">               အလုပ္သမား(Employee)&#13;
+&#13;
+လက္မွတ္		          &#13;
+အမည္		          &#13;
+ရာထူး/အဆင့္                    &#13;
+ကတ္ျပားအမွတ္ (သို႔မဟုတ္) &#13;
+ႏိုင္ငံကူးလက္မွတ္အမွတ္				&#13;
+လုပ္ငန္း/ဌာန	          &#13;
+ရက္စြဲ		          &#13;
+&#13;
+&#13;
+&#13;
+&#13;
+         အလုပ္သမားအသိသက္ေသ			         (Responsible person)&#13;
+&#13;
+လက္မွတ္		          &#13;
+အမည္		          &#13;
+ရာထူး/အဆင့္                    &#13;
+ကတ္ျပားအမွတ္ (သို႔မဟုတ္) &#13;
+ႏိုင္ငံကူးလက္မွတ္အမွတ္				&#13;
+လုပ္ငန္း/ဌာန	          &#13;
+ရက္စြဲ	</text-property>
+                    </label>
+                </cell>
+                <cell id="1586"/>
+                <cell id="1587">
+                    <label id="1568">
+                        <property name="fontFamily">"Zawgyi-One"</property>
+                        <property name="textAlign">left</property>
+                        <text-property name="text">  အလုပ္ရွင္ (သို႔အဟုတ္) မန္ေနဂ်ာ    (သို႔မဟုတ္) စီမံအုပ္ခ်ဳပ္သူ&#13;
+&#13;
+လက္မွတ္		          &#13;
+အမည္		          &#13;
+ရာထူး/အဆင့္                    &#13;
+ကတ္ျပားအမွတ္ (သို႔မဟုတ္) &#13;
+ႏိုင္ငံကူးလက္မွတ္အမွတ္				&#13;
+လုပ္ငန္း/ဌာန	          &#13;
+ရက္စြဲ		          &#13;
+&#13;
+&#13;
+&#13;
+&#13;
+အလုပ္ရွင္အသိသက္ေသ&#13;
+&#13;
+လက္မွတ္		          &#13;
+အမည္		          &#13;
+ရာထူး/အဆင့္                    &#13;
+ကတ္ျပားအမွတ္ (သို႔မဟုတ္) &#13;
+ႏိုင္ငံကူးလက္မွတ္အမွတ္				&#13;
+လုပ္ငန္း/ဌာန	          &#13;
+ရက္စြဲ	</text-property>
+                    </label>
+                </cell>
+            </row>
+            <row id="1588">
+                <cell id="1589"/>
+                <cell id="1590">
+                    <label id="1569">
+                        <property name="fontFamily">"Zawgyi-One"</property>
+                        <property name="textAlign">left</property>
+                        <text-property name="text">အတည္ျပဳလက္မွတ္ ေရးထိုးပါသည္။&#13;
+&#13;
+&#13;
+လက္မွတ္	----------------------------&#13;
+</text-property>
+                    </label>
+                </cell>
+                <cell id="1591"/>
+            </row>
+            <row id="1592">
+                <cell id="1593"/>
+                <cell id="1594">
+                    <property name="colSpan">2</property>
+                    <property name="rowSpan">1</property>
+                    <label id="1574">
+                        <property name="fontFamily">"Zawgyi-One"</property>
+                        <property name="textAlign">left</property>
+                        <text-property name="text">အမည္		----------------------------&#13;
+ခရိုင္/ၿမိဳ႕နယ္ဦးစီးအရာရွိ၊&#13;
+အလုပ္သမား ၫႊန္ၾကားေရးုဦးစီးဌာန&#13;
+			&#13;
+--------------------------------------- ခရိုင္/ၿမိဳ႕နယ္&#13;
+--------------------------------------- တိုင္းေဒသႀကီး/ျပည္နယ္&#13;
+ရက္စြဲ၊ </text-property>
+                    </label>
+                </cell>
+            </row>
+            <row id="1596">
+                <cell id="1597">
+                    <property name="colSpan">3</property>
+                    <property name="rowSpan">1</property>
+                    <label id="1558">
+                        <property name="fontFamily">"Zawgyi-One"</property>
+                        <property name="textAlign">left</property>
+                        <text-property name="text">စက္ရံု၊ အလုပ္ရံု၊ အလုပ္ဌာနမ်ားမွ အလုပ္သမားမ်ားလိုက္နာရမည့္ စည္းကမ္းခ်က္မ်ား&#13;
+	အလုပ္သမား၀န္ထမ္းမ်ားသည္ ေအာက္ေဖာ္ျပပါသာမန္ျပစ္မႈစည္းကမ္းခ်က္ တစ္ခုခုကို လိုက္နာရန္၊ လုပ္ေဆာင္ရန္ပ်က္ကြက္ေၾကာင္း၊ တားျမစ္ခ်က္မ်ားကို ေဖာက္ဖ်က္က်ဴးလြန္ေၾကာင္း ထင္ရွားပါက ပထမအႀကိမ္တြင္ ႏႈတ္ျဖင့္သတိေပး၍ေသာ္လည္းေကာင္း၊ ဒုတိယႀကိမ္တြင္စာျဖင့္ သတိေပး၍ေသာ္လည္းေကာင္း၊ တတိယအႀကိမ္တြင္ ၀န္ခံကတိေရးထိုးေစလ်က္ ျပင္းထန္စြာသ တိေပးၿပီးေနာက္ ထပ္မံက်ဴးလြန္ပါက နစ္နာေၾကးမေပးဘဲအလုပ္မွ ရပ္စဲသည္အထိ အျပစ္ေပး ျခင္းခံရမည္-&#13;
+(၁)	စက္ရံုမွသတ္မွတ္ထားေသာ အလုပ္ခ်ိန္ႏွင့္အညီ အခ်ိန္မွန္စြာအလုပ္တက္ျခင္း၊ ဆင္းျခင္း ျပဳရမည္။ အလုပ္ခြင္သို႔ေရာက္ရွိၿပီးပါကျပင္ပသို႔ ထြက္ခြာျခင္းမျပဳရ၊ ျပင္ပသို႔ ထြက္ခြာလို ပါက တာ၀န္ရွိသူအဆင့္ဆင့္၏ ခြင့္ျပဳခ်က္ရယူၿပီးမွသာ Gate-Pass ျဖင့္ထြက္ရမည္။ သတ္ မွတ္ထားေသာအလုပ္ခ်ိန္ထက္ေနာက္က်ျခင္း၊ ေစာ ၍ျပန္ျခင္းမ်ားမျပဳလုပ္ရ။&#13;
+(၂)	အလုပ္တက္/ဆင္းလက္မွတ္ထိုးျခင္းႏွင့္ အလုပ္တက္/ဆင္းမွတ္တမ္းအျဖစ္ အသံုး ျပဳသည့္ စက္ပစၥည္းကိရိယာကုိ ကိုယ္တိုင္လုပ္ေဆာင္ရမည္။ လက္မွတ္ထိုးျခင္း၊ ကိုယ္စား ထိုးေပးျခင္း၊ လိမ္လည္လက္မွတ္ေရးထိုးျခင္း၊ ျပင္ဆင္ျခင္း၊ ျဖည့္စြက္ျခင္း မျပဳလုပ္ရ။&#13;
+(၃)	စက္ရံု၏၀န္ထမ္းျဖစ္ေၾကာင္း သိသာထင္ရွားေစရန္ ၀န္ထမ္းကဒ္ကို အလုပ္ခိ်န္အတြင္း အၿမဲတမ္းခိ်တ္ဆြဲထားရန္ႏွင့္ တူညီ၀တ္စံု (Uniform) သတ္မွတ္ေပးထားပါက ၀တ္ဆင္ရ မည္။&#13;
+(၄)	လုပ္ငန္းႏွင့္ပတ္သတ္၍ ဌာနအႀကီးအကဲ၊ တာ၀န္ခံမ်ားကေပးအပ္သည့္ တာ၀န္မ်ား၊ ၫႊန္ ၾကားခ်က္မ်ားကို လုိက္နာေဆာင္ရြက္ရမည္။&#13;
+(၅)	သက္ဆိုင္ရာတာ၀န္ရွိသူမ်ားက အဆင့္လိုက္သတ္မွတ္ေပးထားသည့္ လုပ္ငန္းတာ ၀န္မ်ား ကို ေက်ပြန္ေအာင္ေဆာင္ရြက္ရန္ႏွင့္ အလုပ္ခ်ိန္အတြင္းၿပီးစီးေအာင္ ေဆာင္ရြက္ရမည္။&#13;
+(၆)	သတ္မွတ္ထားသည့္ စံခိ်န္စံၫႊန္းမ်ားႏွင့္အညီ အရည္အေသြးႏွင့္ အေရအတြက္ စံႏႈန္း (Tatrget) ကိုျပည့္မီ္ေအာင္ထုတ္လုပ္ႏိုင္စြမ္းရွိရမည္။&#13;
+(၇)	ကုန္ၾကမ္းပစၥည္္းမ်ားျပတ္ေတာက္ျခင္းႏွင့္ စက္ရံုဘက္မွအလုပ္အေပးႏိုင္ျခင္းအပ စက္ရံု လုပ္ငန္းဌာနခြဲအလိုက္ ေန႔စဥ္သတ္မွတ္ေပးထားသည့္စံႏႈန္း (Target) ကိုသတ္မွတ္ထား ေသာကာလအတြင္း ျပည့္မီေအာင္ေဆာင္ရြက္ရမည္။&#13;
+(၈)	အလုပ္တာ၀န္ၿပီးဆံုးခ်ိန္တြင္ မိမိ၏လုပ္ငန္းေနရာ သန္႔ရွင္းေရးကို ေကာင္းမြန္ေအာင္ျပဳ လုပ္ရမည္။ လုပ္ငန္းသံုးပစၥည္းမ်ားကို စနစ္တက်သပ္ရပ္စြာ သိမ္းဆည္းထားရမည္။ မိမိ ကိုင္တြယ္ေမာင္းႏွင္ခဲ့ေသာစက္အား သန္႔ရွင္းေရးျပဳလုပ္ခဲ့ရမည္၊ မလိုအပ္သည့္ မီးခလုတ္ မ်ားကို ပိတ္ထားရမည္။&#13;
+(၉) 	စက္ရံုပိုင္၊ ကုမၸဏီပိုင္ပစၥည္းမ်ားကို မိမိကိုယ္က်ိဳးအတြက္ အသံုးမျပဳရ။&#13;
+(၁၀) 	လုပ္ငန္း/ရံုးႏွင့္မသက္ဆိုင္ေသာျပင္ပမွ ပစၥည္းမ်ားအားယူေဆာင္လာျခင္း၊ ျပင္ဆင္ျခင္း၊  အသံုးျပဳျခင္းမျပဳရ။&#13;
+(၁၁)	လုပ္ငန္းမွထုတ္ေပးထားသည့္ပစၥည္းမ်ားအား အလုပ္မွႏႈတ္ထြက္သည့္အခါ၊ အလုပ္မွ ထုတ္ပယ္ျခင္းခံရသည့္အခါ စနစ္တက်ျပန္လည္အပ္ႏွံႏိုင္ျခင္းမရွိပါက ၄င္းပစၥည္း၏တန္ ဘိုးႏွင့္ညီမွ်ေသာ ေငြေၾကးကိုေပးအပ္ရမည္။&#13;
+(၁၂)	တာ၀န္ရွိသူမ်ားႏွင့္ ၀န္ထမ္းအခ်င္းခ်င္းအား မရိုမေသမေလးမစားျပဳျခင္း၊ မထီမဲ့ျမင္ ျပဳျခင္းကို ေရွာင္ၾကဥ္ရမည္။ ၀န္ထမ္းအခ်င္းခ်င္းအရွက္ရေစရန္၊ သရုပ္ပ်က္ေစရန္ ရည္ ရြယ္ခ်က္ ျဖင့္ေနာက္ေျပာင္ျခင္း၊ ေအာ္ဟစ္ဆူညံျခင္း၊ အေျပာအဆိုအျပဳအမူူ ရိုင္း ိုင္း ၾကမ္းတမ္းျခင္း မျပဳလုပ္ ရ။&#13;
+(၁၃)	၀န္ထမ္းအခ်င္းခ်င္းစည္းလံုးညီၫြတ္မႈကို ထိန္းသိမ္းၾကရမည္။&#13;
+(၁၄)	အလုပ္ခြင္အတြင္း၌လုပ္ငန္းထိခိုက္ေအာင္ၿခိမ္းေျခာက္ျခင္း၊ အႏိုင္က်င့္ကိုယ္ထိလက္ေရာက္က်ဴးလြန္ျခင္း မျပဳလုပ္ရ။&#13;
+(၁၅)	မိမ္ိတာ၀န္က်သည့္ေနရာမွ အေၾကာင္းမဲ့ကင္းကြာျခင္းမျပဳလုပ္ရ။&#13;
+(၁၆)	မိမိတာ၀န္က်ခိ္်န္မွအပ သက္ဆိုင္ရာ၏ခြင့္ျပဳခ်က္မရရွိဘဲ စက္ရံု(သို႔မဟုတ္)၀င္းအတြင္း ၀င္/ထြက္သြားလာျခင္း၊ ၀င္ေရာက္ေနထိုင္ျခင္းမျပဳရ။&#13;
+(၁၇)	တားျမစ္ထားသည့္ေနရာမ်ားကို ခြင့္ျပဳခ်က္မရွိဘဲ ၀င္ေရာက္ေနထိုင္ျခင္းမျပဳရ။&#13;
+(၁၈)	စက္ရံု၀င္းႏွင့္အေဆာက္မဦးအတြင္းသို႔ေက်ာ္တက္၀င္ထြက္ျခင္းမျပဳရ။&#13;
+(၁၉)	စက္ရံုအေဆာက္အဦး၊ နံရံ/တံခါး/ျပဴတင္းေပါက္၊ ပစၥည္းကိရိယာ၊ အသံုးအေဆာင္မ်ားေပၚ တြင္ အရုပ္မ်ား၊ စာမ်ား၊ ရုပ္ေျပာင္(ကာတြန္း)မ်ားေရးဆြဲျခင္း၊ ေၾကျငာျခင္း၊ ညစ္ပတ္ေပက်ံ ေအာင္ျပဳလုပ္ျခင္း မျပဳရ။&#13;
+(၂၀)	မိမိ၏စားစရာမ်ား၊ ထမင္းခ်ိဳင့္မ်ားကို သတ္မွတ္ထားေသာေနရာတြင္ထားရမည္။&#13;
+(၂၁)	သန္႔စင္ခန္းမ်ားကို စည္းကမ္းတက္ သန္႔ရွင္းစင္ၾကယ္စြာ အသံုးျပဳရမည္။ ေရငုတ္တိုင္မ်ား၊ လက္ေဆးကန္မ်ားမွ ေရပိုက္ေခါင္းမ်ားကို စနစ္တက်ဖြင့္/ပိတ္ရမည္။&#13;
+(၂၂)	အလုပ္ခိ်န္အတြင္း လုပ္ငန္းႏွင့္အသက္ဆိုင္သည့္ဧည့္သည္မ်ားကို လက္ခံေတြ႔ဆံုျခင္း၊ ခြင့္ ျပဳခ်က္အရဘဲ ျပင္ပမွလူကိုေခၚေဆာင္လာျခင္း(သို႔မဟုတ္)လက္ခံထားျခင္း မျပဳလုပ္ရ။&#13;
+(၂၃)	အလုပ္ခ်ိန္အတြင္းအိပ္ငိုက္ျခင္း၊ လဲေလ်ာင္းျခင္း၊ အိပ္စက္ျခင္း၊ ထမင္းစားျခင္း၊ မုန္႔စားျခင္း၊ ကစားျခင္း၊ အလုပ္မလုပ္ဘဲထိုင္ေနျခင္း မျပဳလုပ္ရ။&#13;
+(၂၄)	လုပ္ငန္းခြင္အတြင္းကြမ္းစားျခင္း၊ ကြမ္းတံေတြးေထြးျခင္း၊ ပီေကစားျခင္းလံုး၀မျပဳလုပ္ရ။&#13;
+(၂၅)	အလုပ္ခ်ိန္အတြင္းခြင့္ျပဳခက္မရရွိဘဲ ေငြေၾကးႏွင့္ပတ္သတ္ေသာကိစၥမ်ားေဆာင္ရြက္ျခင္းမျပဳရ။(ဥပမာ အားျဖင့္အလွဴခံျခင္း၊ ရန္ပံုေငြ လက္မွတ္မ်ားေရာင္းခ်ျခင္း၊ အတိုးေပးျခင္း၊ လစာလႊဲေျပာင္းျခင္း)&#13;
+(၂၆)	အလုပ္ခိ်န္အတြင္းလုပ္ငန္းႏွင့္မသက္ဆိုင္ေသာကိစၥရပ္မ်ားလံုး၀ခြင့္မျပဳရ။&#13;
+(၂၇)	ေၾကျငာသင္ပုန္းတြင္ ကပ္ထားေသာအမိန္႔၊ ေၾကာ္ျငာစာတမ္းမ်ားကို တမင္သက္သက္ ဖ်က္ဆီးျခင္း၊ ထပ္မံေရးျခစ္ ပံုပ်က္ေစျခင္းမျပဳရ။&#13;
+(၂၈)	လုပ္ငန္းခြင္ ေဘးအႏၱရာယ္ကင္းရွင္းေရးဆိုင္ရာစည္းကမ္းမ်ားကို အေလးထားလုိက္နာရ မည္။ ကိရိယာတန္ဆာပလာမ်ားကို ခြင့္ျပဳခ်က္မရဘဲသံုးစြဲျခင္း၊ ပ်က္စီးေအာင္ျပဳလုပ္ျခင္း မျပဳလုပ္ရ။&#13;
+(၂၉)	လုပ္ငန္းခြင္အတြင္းသက္ဆိုင္ရာမွ ခြင့္ျပဳခ်က္မရရွိဘဲ စာရြက္စာတမ္းမ်ားျဖန္႔ေ၀ျခင္း (သုိ႔မဟုတ္)ေရာင္းခ်ျခင္းမျပဳရ။&#13;
+(၃၀)	ကုမၸဏီ/စက္ရံု၏ ဂုဏ္သိကၡာက်ဆင္းေစရန္ျပဳမူေျပာဆိုျခင္း၊ စည္းရံုးျခင္း၊ လႈံ႔ေဆာ္ျခင္း မျပဳရ။&#13;
+(၃၁)	တာ၀န္အရစစ္ေဆးျခင္းအေပၚျငင္းပယ္ျခင္း၊ မေခ်မငံျပဳမူေျပာဆိုဆက္ဆံျခင္းမျပဳရ။&#13;
+(၃၂)	အခါအားေလ်ာ္စြာလိုအပ္ခ်က္အရထုတ္ျပန္ေသာ ေဒသႏၱရအမိန္႔ႏွင့္ၫႊန္ၾကားခ်က္မ်ားကိုလိုက္နာရမည္။&#13;
+(၃၃)	ရည္ရြယ္ခ်က္ျဖင့္ တမင္လုပ္ငန္းက်ဆင္းေစရန္ စြမ္းေဆာင္ရည္ေလွ်ာ့ခ်ျခင္းမျပဳရ။&#13;
+(၃၄)	အလုပ္သမားသည္ တမင္ရည္ရြယ္ခ်က္၍ ထုတ္ကုန္ပစၥည္းဖ်က္ဆီးျခင္း၊ အမိ်ဳးအစားလဲြ မွား၍ ထုပ္ပိုးျခင္းမ်ားမျဖစ္ေစရ၊ ျဖစ္ပါကကုမၸဏီ၏အမည္ႏွင့္ ဂုဏ္သတင္းထိခိုက္မႈအ ေျခအေနေပၚမူတည္၍ ပစၥည္း၏တန္ဖိုးကိုေပးေလ်ာ္ရမည္။&#13;
+(၃၅)	လုပ္ငန္းခြင္အတြင္း လုပ္ငန္းေအးခ်မ္းသာယာေရးကိုေသာ္လည္းေကာင္း၊ ကုန္ထုတ္လုပ္မႈ တိုးတက္ေရးကိုေသာ္လည္းေကာင္း၊ ထိခိုက္ေစသည့္ တရားမ၀င္အဖြဲ႔အစည္းမ်ား ဖဲြ႔စည္း ျခင္း၊ ဖြဲ႔စည္းရန္စည္းရံုးလႈံ႔ေဆာ္ျခင္း၊ လႈပ္ရွားေဆာင္ရြက္ျခင္း၊ ၀န္ထမ္းမ်ားအလုပ္မဆင္း ရန္ႏႈိုးေဆာ္ျခင္းမ်ား မျပဳလုပ္ရ။&#13;
+အလုပ္သမားတစ္ဦးသည္ ေအာက္ေဖာ္ျပပါႀကီးေလးေသာျပစ္မႈတစ္ခုခုကို က်ဴးလြန္ေၾကာင္းထင္ ရွားလွ်င္ အလုပ္မွရပ္စဲသည္အထိ အျပစ္ေပးခံရမည့္အျပင္ မည္သည့္နစ္နာေၾကးအကိ်ဳးခံစားခြင့္မွ် ရမည္မဟုတ္ပါ။&#13;
+(၁)	ခိုးမႈက်ဳးလြန္ျခင္း၊ ခိုးရပါပစၥည္းလက္ခံထားျခင္း၊ အလဲြသံုးစားျပဳလုပ္ျခင္း၊ အလြြဲသံုးစားျပဳ လုပ္ရာတြင္ပါ၀င္ကူညီျခင္း။&#13;
+(၂)	စက္ရံု၊ ကုမၸဏီလုပ္ငန္းပိုင္ပစၥည္းတစ္ခုခုကို တမင္သက္သက္ဖ်က္ဆီးျခင္း၊ ပ်က္စီးေစ ျခင္း၊ ဆံုးရႈံးေစျခင္း။&#13;
+(၃)	လုပ္ငန္းခြင္အတြင္း၀န္ထမ္းအခ်င္းခ်င္းကိုယ္ထိလက္ေရာက္ခိုက္ရန္ျဖစ္ပြားျခင္း၊ရုန္းရင္း ဆန္ခတ္ျဖစ္ေစျခင္း၊ တစ္စံုတစ္ဦးအားအျပင္းအထန္ နာက်င္ေစမႈျဖစ္ေစရန္ ကိုယ္ထိလက္ ေရာက္က်ဴးလြန္ျခင္း၊ စကားမ်ားရန္ျဖစ္ ရိုက္ႏွက္ျခင္း။&#13;
+(၄)	အက်င့္စာရိတၱပ်က္ျပားမႈႏွင့္စပ္လ်ဥ္းသည့္ ရာဇ၀တ္မႈက်ဴးလြန္္ျခင္း။&#13;
+(၅)	မရိုးသားမႈ၊ လိမ္လည္မႈ၊ လာဘ္ေပး၊ လာဘ္ယူမႈျပဳလုပ္ျခင္း။&#13;
+(၆)	လုပ္ငန္းခြင္အတြင္း အရက္ေသစာယူေဆာင္လာျခင္း၊ ေသာက္စားမူးယစ္ျခင္း၊ ေရာင္း၀ယ္ ျခင္း။&#13;
+(၇)	လုပ္ငန္းခြင္၌ ေလာင္းကစားမႈက်ဴးလြန္ျခင္း။&#13;
+(၈)	မူးယစ္ေဆး၀ါးမ်ားကို လက္၀ယ္ထားရွိျခင္း၊ ေသာက္စားမူးယစ္ျခင္း၊ ေရာင္း၀ယ္ျခင္း၊ လုပ္ ငန္းခြင္အတြင္း ေဆးလိပ္ေသာက္ျခင္း၊ မီးကိုအသံုးျပဳျခင္း။&#13;
+(၉)	လုပ္ငန္းခြင္အတြင္းသို႔ လက္နက္ဥပေဒအရ ကိုင္ေဆာင္ရန္တားျမစ္ထားသည့္ လက္နက္ (သို႔မဟုတ္)ေပါက္ကြဲေစတတ္ေသာ ခဲယမ္းႏွင့္ပစၥည္းမ်ားယူေဆာင္လာျခင္း။&#13;
+(၁၀)	စက္ရံု၏ေပါက္ကြဲမီးေလာင္ႏိုင္သည့္ေနရာႏွင့္ အလုပ္ခြင္အတြင္းတားျမစ္ထားေသာေနရာမ်ားသို႔ ခြင့္ျပဳခ်က္မရိွဘဲသြားလာျခင္း။&#13;
+(၁၁)	မိမိကုမၸဏီ၏အထူးလွ်ဳိ႕၀ွက္ထားရမည့္ သတင္းအခ်က္အလက္မ်ား၊ စာရင္းဇယားမ်ား၊ Formula မ်ား၊ နည္းပညာဆိုင္ရာထုတ္္လုပ္မႈလုပ္ငန္းမ်ား စသည့္အေရးႀကီးကိစၥမ်ားကို အျခားတစ္ေနရာသို႔ေပါက္ၾကားေစျခင္း၊ သတင္းေပးမႈမ်ားျပဳလုပ္ျခင္း၊ ခြင့္ျပဳခ်က္မရဘဲ တယ္လီဖုန္း၊ ကင္မရာတို႔ျဖင့္ဓါတ္ပံုမ်ားရိုက္ျခင္း။&#13;
+(၁၂)	ျပစ္မႈဆိုင္ရာဥပေဒတစ္ရပ္အရဖမ္းဆီးခံရျခင္း၊ တရားစြဲဆိုခံရၿပီးျပစ္ဒဏ္စီရင္ခံရျခင္း။&#13;
+(၁၃)	သက္ဆိုင္ရာဌာနအႀကီးအကဲ၊ တာ၀န္ခံမ်ား၏ခြင့္ျပဳခ်က္တစ္စံုတစ္ရာမရွိဘဲ အေၾကာင္းမဲ့ ခြင့္မဲ့တစ္ဆက္တည္း(၃)ရက္ပ်က္ကြက္ျခင္း(သို႔မအဟုတ္)တစ္လအတြင္းခြင့္မဲ့အလီလီ(၅)ရက္ပ်က္ကြက္ျခင္း မျပဳရ။&#13;
+</text-property>
+                    </label>
+                </cell>
+            </row>
+        </grid>
+    </body>
+</report>

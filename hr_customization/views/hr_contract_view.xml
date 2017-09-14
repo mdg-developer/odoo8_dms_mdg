@@ -1,0 +1,30 @@
+<openerp>
+  <data>
+   
+     <!-- Add labour_card,ssb in Employee Form -->
+     <record model="ir.ui.view" id="view_inactive_wizard_inherit">
+        <field name="name">hr.contract.end.form</field>
+        <field name="model">hr.contract.end</field>
+        <field name="inherit_id" ref="hr_employee_state.view_inactive_wizard"/>
+        <field name="arch" type="xml">   
+            <xpath expr="//field[@name='employee_id']" position="after">
+                <field name="badge_id" />
+            </xpath>
+        </field>
+    </record> 
+    
+     <record id="hr_contract_view_search_inherit" model="ir.ui.view">
+            <field name="name">hr.contract.view.search</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_search"/>
+            <field name="arch" type="xml">
+                <field name="employee_id" position="after">
+                    <field name="struct_id"/>
+                </field>
+                <group>
+                    <filter string="Salary Structure" icon="terp-personal" domain="[]" context="{'group_by':'struct_id'}"/>
+                </group>
+            </field>
+        </record>
+  </data>
+</openerp>

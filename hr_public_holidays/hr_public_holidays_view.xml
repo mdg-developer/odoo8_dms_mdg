@@ -48,7 +48,7 @@
         </record>
         <menuitem action="open_public_holidays_view"
                   id="menu_public_holidays_view"
-                  parent="base.menu_base_config"
+                  parent="hr.menu_hr_configuration"
                   sequence="20"/>
         
     </data>

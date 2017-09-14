@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<openerp>
+	<data>
+		<record id="view_employee_form_fingerprintid" model="ir.ui.view">
+			<field name="name">hr.employee.form.inherit</field>
+			<field name="model">hr.employee</field>
+			<field name="inherit_id" ref="hr.view_employee_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//label[@for='name']" position='before'>
+					<label for="employee_id" class="oe_edit_only" groups="base.group_hr_user" />
+					<h1>
+						<field name="employee_id" />
+					</h1>
+					<label for="fingerprint_id" class="oe_edit_only" groups="base.group_hr_user" />
+					<h1>
+						<field name="fingerprint_id" />
+					</h1>
+				</xpath>
+			</field>
+		</record>
+		<!-- Add employee_id,fingerprint_id in Tree -->
+		<record id="view_employee_fingerprintid_tree" model="ir.ui.view">
+			<field name="name">hr.employee.tree.inheritance</field>
+			<field name="model">hr.employee</field>
+			<field name="type">tree</field>
+			<field name="inherit_id" ref="hr.view_employee_tree" />
+			<field name="arch" type="xml">			
+				<field name="name" position="before">
+					<field name="employee_id" />
+					<field name="fingerprint_id" />					
+				</field>				
+			</field>
+		</record>
+	<!--  Add fingerprint_id search filter-->
+		<record id="view_employee_fingerprintid_filter" model="ir.ui.view">
+            <field name="name">Employees</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_filter"/>
+            <field name="arch" type="xml">
+                <field name="department_id" position="before">
+                    <field name="fingerprint_id" />
+                </field>
+            </field>
+    	</record>
+	</data>
+</openerp>

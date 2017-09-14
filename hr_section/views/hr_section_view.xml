@@ -1,0 +1,124 @@
+<openerp>
+  <data>
+    <menuitem id="menu_hr_section" parent='base.menu_config'  name="Section" sequence="5"/>
+    
+    
+     <record model="ir.ui.view" id="view_employee_section_form_inherit">
+        <field name="name">hr.training.employee.form</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">   
+                
+            <xpath expr="//field[@name='department_id']" position="after">
+            	<field name="section_id" domain="[('department_id','=',department_id)]"/>
+			</xpath>
+			
+        </field>
+    </record>
+    
+    <!-- Add section_id in Employee Tree  -->
+    <record id="view_employee_section_tree_inherit" model="ir.ui.view">
+			<field name="name">hr.employee.tree.inheritance</field>
+			<field name="model">hr.employee</field>
+			<field name="type">tree</field>
+			<field name="inherit_id" ref="hr.view_employee_tree" />
+			<field name="arch" type="xml">			
+				<field name="department_id" position="after">
+					<field name="section_id" />
+				</field>				
+			</field>
+	</record>
+	<!-- Add section_id in Employee Group By  -->
+    <record id="view_employee_section_filter" model="ir.ui.view">
+            <field name="name">Employees</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_filter" />
+            <field name="arch" type="xml">
+                <group>
+	                <field name="job_id" position="after">
+	                	<filter string="Section" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'section_id'}"/>
+	                </field>
+                </group>
+             </field>
+    </record>
+    
+    <!-- Section tree -->
+    <record model="ir.ui.view" id="view_section_tree">
+        <field name="name">hr.section.tree</field>
+        <field name="model">hr.section</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Section">
+            	<field name="code"/>
+                <field name="complete_name"/>
+                <field name="department_id"/>                
+            </tree>
+        </field>
+    </record>
+     <!-- Section form -->
+    <record model="ir.ui.view" id="view_hr_section_form">
+        <field name="name">hr.section.form</field>
+        <field name="model">hr.section</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Section">
+                
+	                <group col="4">
+	                	<group><field name="code"/></group>
+	                	<group><field name="name"/></group>		                
+		                          
+		            </group>
+	               
+	               <group col="4">
+	               		<group><field name="department_id"/></group>    
+	               		<group><field name="parent_section_id"/></group>             
+		                		                
+	               </group>
+                
+            </form>
+        </field>
+    </record>
+     <!-- Menu -->
+    <record model="ir.actions.act_window" id="open_view_section_form">
+        <field name="name">Section</field>
+        <field name="res_model">hr.section</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    
+    <record model="ir.ui.view" id="department_transfer_form_view_inherit">
+        <field name="name">hr.department.transfer.form</field>
+        <field name="model">hr.department.transfer</field>
+        <field name="inherit_id" ref="hr_transfer.department_transfer_form_view"/>
+        <field name="arch" type="xml">   
+                
+            <xpath expr="//field[@name='src_department_id']" position="after">
+            	<field name="frm_section_id" domain="[('department_id','=',src_department_id)]"/>
+			</xpath>
+			
+			<xpath expr="//field[@name='dst_department_id']" position="after">
+            	<field name="to_section_id" domain="[('department_id','=',dst_department_id)]"/>
+			</xpath>
+			<field name="employee_id" position="after">
+				<field name="badge_id" />
+			</field>
+        </field>
+    </record>
+    <record id="department_transfer_tree_view_inherit" model="ir.ui.view">
+            <field name="name">hr.department.transfer.tree</field>
+            <field name="model">hr.department.transfer</field>
+            <field name="inherit_id" ref="hr_transfer.department_transfer_tree_view" />
+            <field name="arch" type="xml">
+                <field name="employee_id" position="before">
+                	<field name="badge_id"/>
+                </field>
+            </field>
+    </record>
+    
+    <menuitem name="Sections"
+              parent="hr.menu_hr_configuration" 
+              id="menu_open_view_section_form"
+              action="open_view_section_form" sequence="5" />   
+              
+  </data>
+</openerp>

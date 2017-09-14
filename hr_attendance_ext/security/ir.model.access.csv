@@ -1,0 +1,6 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_hr_fingerprint_device_manager","hr.fingerprint.device manager","model_hr_fingerprint_device","base.group_hr_manager","1","1","1","1"
+"access_hr_fingerprint_device_user","hr.fingerprint.device user","model_hr_fingerprint_device","base.group_hr_user","1","0","0","0"
+"access_hr_gazetted_holiday_manager","hr.gazetted.holiday manager","model_hr_gazetted_holiday","base.group_hr_manager","1","1","1","1"
+"access_hr_gazetted_holiday_user","hr.gazetted.holiday user","model_hr_gazetted_holiday","base.group_hr_user","1","1","1","0"
+"access_hr_gazetted_holiday_base","hr.gazetted.holiday base","model_hr_gazetted_holiday","base.group_user","1","0","0","0"

@@ -1,0 +1,151 @@
+-------------------------Salary Name And Code-----------------------------------
+ Name							Code						Category
+Basic Salary					BASIC						Allowance
+Net								NET							Net
+Late Deduction					DED							Deduction
+Early Sign Out Deduction		ESOD						Deduction
+No Finger print Deduction		NFPD						Deduction
+Lunch Time Deduction			LTD							Deduction
+Leave Deduction					LVD							Deduction
+Overtime	                   	OT			   		        Allowance
+Bonus							BON					        Allowance
+Attendance Bonus                ATB                         Allowance
+------------------------Salary Rule Calculation-----------------------------------
+
+Basic Salary
+------------ 
+Python Code(
+result = contract.wage
+)
+
+Net
+---
+Python Code(
+result = categories.BASIC + categories.OT + categories.ALW - categories.FITCALC - categories.DED
+)
+
+Late Deduction
+--------------
+Python Code(
+first_late=worked_days.WORKLD1.number_of_days
+second_late=worked_days.WORKLD2.number_of_days
+third_late=worked_days.WORKLD3.number_of_days
+fourth_late=worked_days.WORKLD4.number_of_days
+fifth_late=worked_days.WORKLD5.number_of_days
+six_late=worked_days.WORKLD6.number_of_days
+result = first_late*((contract.wage/30)*0.1)+ second_late*((contract.wage/30)*0.2)+ third_late*((contract.wage/30)*0.3)+fourth_late*((contract.wage/30)*0.5)+fifth_late*(5000)+six_late*(contract.wage/30)
+
+)
+
+Early Sign Out Deduction
+------------------------
+Python Code(
+early_out1=worked_days.ESO1.number_of_days
+early_out2=worked_days.ESO2.number_of_days
+early_out3=worked_days.ESO3.number_of_days
+result =early_out1*((contract.wage/30)*0.1)+early_out2*((contract.wage/30)*0.2)+early_out3*((contract.wage/30)*0.3)
+
+)
+
+No Finger print Deduction 
+-------------------------
+Input Code And Name(
+Name=No FingerPrint Deduction	
+Code=NFPD
+)
+Python Code (
+result = inputs.NFPD.amount
+)
+
+Lunch Time Deduction
+--------------------
+Python Code(
+br_over=0
+br_absence=0
+count=0
+break_over=worked_days.BRO.number_of_days
+break_absence=worked_days.BA.number_of_days
+if break_absence>=4:
+   count=break_absence-3
+   if count>0:
+     br_absence=count*5000
+if break_over>0:
+   br_over=break_over*5000
+result=br_absence+br_over
+)
+
+Leave Deduction
+------------------------
+Python Code(
+unpaid= worked_days.LVUNPAID and worked_days.LVUNPAID.number_of_days or False
+absent= worked_days.LVABSENT and worked_days.LVABSENT.number_of_days or False
+unpaidamt=0
+absentamt=0
+result=0
+if (unpaid >0 ):
+   unpaidamt = unpaid*(contract.wage/30)
+if (absent >0 ):
+   absentamt=(absent*(contract.wage/30))*2
+result = unpaidamt+absentamt
+)
+
+Attendance Bonus
+-------------------------
+Python Code(
+
+annual= worked_days.LVANNUAL and worked_days.LVANNUAL.number_of_days or False
+casual=worked_days.LVCASUAL and worked_days.LVCASUAL.number_of_days or False
+funeral=worked_days.LVFUNERAL and worked_days.LVFUNERAL.number_of_days or False
+married= worked_days.LVMARRIED and worked_days.LVMARRIED.number_of_days or False
+maternity=worked_days.LVMATERNITY and worked_days.LVMATERNITY.number_of_days or False
+medical= worked_days.LVMEDICAL and worked_days.LVMEDICAL.number_of_days or False
+absent= worked_days.LVABSENT and worked_days.LVABSENT.number_of_days or False
+unpaid= worked_days.LVUNPAID and worked_days.LVUNPAID.number_of_days or False
+vacation= worked_days.LVVACATION and worked_days.LVVACATION.number_of_days or False
+totalLeave=annual+casual+funeral+married+maternity+medical+absent+unpaid+vacation
+first_late=worked_days.WORKLD1.number_of_days
+second_late=worked_days.WORKLD2.number_of_days
+third_late=worked_days.WORKLD3.number_of_days
+fourth_late=worked_days.WORKLD4.number_of_days
+fifth_late=worked_days.WORKLD5.number_of_days
+six_late=worked_days.WORKLD6.number_of_days
+early_out1=worked_days.ESO1.number_of_days
+early_out2=worked_days.ESO2.number_of_days
+early_out3=worked_days.ESO3.number_of_days
+total_late = first_late+ second_late+ third_late+fourth_late+fifth_late+six_late+early_out1+early_out2+early_out3
+result=0
+leave=0
+late=0
+if ( totalLeave==0):    
+     leave= 20000;
+     if ( total_late ==0 and inputs.NFPD.amount==0 ):
+          late=10000;
+result=leave+late
+)
+
+Bonus
+-----------------------------------
+Input Code and Name (
+Name     		Code
+Annual Bonus    ABON
+)
+
+Python Code(
+result= inputs.ABON.amount
+)
+
+
+Overtime
+-------------------------------------
+Python Code(
+normalot=(worked_days.WORKOT1.number_of_hours) *60.00
+gazettedholidayot=(worked_days.WORKOT2.number_of_hours *60)*2
+sundayot=(worked_days.WORKOT3.number_of_hours*60)*2
+saturdayot=(worked_days.WORKOT4.number_of_hours)*60.00
+totalot = normalot+gazettedholidayot+sundayot+saturdayot
+result = ((contract.wage/24)/465) * int(totalot)
+)
+
+
+
+
