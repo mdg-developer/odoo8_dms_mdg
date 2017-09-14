@@ -149,15 +149,13 @@
             <property name="dataSetName">branchDS</property>
             <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
             <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
-            <expression name="sortByColumn">dataSetRow["id"]</expression>
-            <property name="sortDirection">asc</property>
             <property name="dataType">integer</property>
             <property name="distinct">true</property>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
             <property name="controlType">list-box</property>
             <property name="mustMatch">true</property>
-            <property name="fixedOrder">false</property>
+            <property name="fixedOrder">true</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
             </structure>
@@ -4035,34 +4033,31 @@ from res_branch where active='t']]></xml-property>
             <list-property name="parameters">
                 <structure>
                     <property name="name">param_1</property>
-                    <property name="paramName">from_date</property>
+                    <property name="paramName">Team Member</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
                     <property name="position">1</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_2</property>
-                    <property name="paramName">from_date</property>
+                    <property name="paramName">branch</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
                     <property name="position">2</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_3</property>
-                    <property name="paramName">from_date</property>
+                    <property name="paramName">Sale Team</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
                     <property name="position">3</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -4090,34 +4085,31 @@ from res_branch where active='t']]></xml-property>
                 </structure>
                 <structure>
                     <property name="name">param_6</property>
-                    <property name="paramName">from_date</property>
+                    <property name="paramName">Team Member</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
                     <property name="position">6</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_7</property>
-                    <property name="paramName">from_date</property>
+                    <property name="paramName">branch</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
                     <property name="position">7</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_8</property>
-                    <property name="paramName">from_date</property>
+                    <property name="paramName">Sale Team</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
                     <property name="position">8</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -4145,34 +4137,31 @@ from res_branch where active='t']]></xml-property>
                 </structure>
                 <structure>
                     <property name="name">param_11</property>
-                    <property name="paramName">from_date</property>
+                    <property name="paramName">Team Member</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
                     <property name="position">11</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_12</property>
-                    <property name="paramName">from_date</property>
+                    <property name="paramName">branch</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
                     <property name="position">12</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_13</property>
-                    <property name="paramName">from_date</property>
+                    <property name="paramName">Sale Team</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
                     <property name="position">13</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -4189,18 +4178,17 @@ from res_branch where active='t']]></xml-property>
                 </structure>
                 <structure>
                     <property name="name">param_15</property>
-                    <property name="paramName">Team Member</property>
+                    <property name="paramName">from_date</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
                     <property name="position">15</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_16</property>
-                    <property name="paramName">branch</property>
+                    <property name="paramName">Team Member</property>
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
@@ -4211,7 +4199,7 @@ from res_branch where active='t']]></xml-property>
                 </structure>
                 <structure>
                     <property name="name">param_17</property>
-                    <property name="paramName">Sale Team</property>
+                    <property name="paramName">branch</property>
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
@@ -4222,151 +4210,301 @@ from res_branch where active='t']]></xml-property>
                 </structure>
                 <structure>
                     <property name="name">param_18</property>
-                    <property name="paramName">presale</property>
+                    <property name="paramName">Sale Team</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">boolean</property>
-                    <property name="nativeDataType">-7</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
                     <property name="position">18</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_19</property>
-                    <property name="paramName">directsale</property>
+                    <property name="paramName">from_date</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">boolean</property>
-                    <property name="nativeDataType">-7</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
                     <property name="position">19</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_20</property>
-                    <property name="paramName">presale</property>
+                    <property name="paramName">from_date</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">boolean</property>
-                    <property name="nativeDataType">-7</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
                     <property name="position">20</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_21</property>
-                    <property name="paramName">directsale</property>
+                    <property name="paramName">from_date</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">boolean</property>
-                    <property name="nativeDataType">-7</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
                     <property name="position">21</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_22</property>
-                    <property name="paramName">presale</property>
+                    <property name="paramName">from_date</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">boolean</property>
-                    <property name="nativeDataType">-7</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
                     <property name="position">22</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_23</property>
-                    <property name="paramName">directsale</property>
+                    <property name="paramName">from_date</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">boolean</property>
-                    <property name="nativeDataType">-7</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
                     <property name="position">23</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_24</property>
-                    <property name="paramName">presale</property>
+                    <property name="paramName">Team Member</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">boolean</property>
-                    <property name="nativeDataType">-7</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
                     <property name="position">24</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_25</property>
-                    <property name="paramName">directsale</property>
+                    <property name="paramName">branch</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">boolean</property>
-                    <property name="nativeDataType">-7</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
                     <property name="position">25</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_26</property>
-                    <property name="paramName">newproduct</property>
+                    <property name="paramName">Sale Team</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">boolean</property>
-                    <property name="nativeDataType">-7</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
                     <property name="position">26</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_27</property>
-                    <property name="paramName">oldproduct</property>
+                    <property name="paramName">from_date</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">boolean</property>
-                    <property name="nativeDataType">-7</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
                     <property name="position">27</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_28</property>
-                    <property name="paramName">newproduct</property>
+                    <property name="paramName">from_date</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">boolean</property>
-                    <property name="nativeDataType">-7</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
                     <property name="position">28</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_29</property>
-                    <property name="paramName">oldproduct</property>
+                    <property name="paramName">Team Member</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">boolean</property>
-                    <property name="nativeDataType">-7</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
                     <property name="position">29</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_30</property>
-                    <property name="paramName">newproduct</property>
+                    <property name="paramName">branch</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">boolean</property>
-                    <property name="nativeDataType">-7</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
                     <property name="position">30</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_31</property>
-                    <property name="paramName">oldproduct</property>
+                    <property name="paramName">Sale Team</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">boolean</property>
-                    <property name="nativeDataType">-7</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
                     <property name="position">31</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_32</property>
+                    <property name="paramName">from_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">32</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_34</property>
+                    <property name="paramName">presale</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">33</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_35</property>
+                    <property name="paramName">directsale</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">34</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_36</property>
+                    <property name="paramName">presale</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">35</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_37</property>
+                    <property name="paramName">directsale</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">36</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_38</property>
+                    <property name="paramName">presale</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">37</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_39</property>
+                    <property name="paramName">directsale</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">38</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_40</property>
+                    <property name="paramName">presale</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">39</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_41</property>
+                    <property name="paramName">directsale</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">40</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_42</property>
                     <property name="paramName">newproduct</property>
                     <property name="nativeName"></property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
-                    <property name="position">32</property>
+                    <property name="position">41</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_43</property>
+                    <property name="paramName">oldproduct</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">42</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_44</property>
+                    <property name="paramName">newproduct</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">43</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_45</property>
+                    <property name="paramName">oldproduct</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">44</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_46</property>
+                    <property name="paramName">newproduct</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">45</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_47</property>
+                    <property name="paramName">oldproduct</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">46</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_48</property>
+                    <property name="paramName">newproduct</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">47</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -4376,17 +4514,17 @@ from res_branch where active='t']]></xml-property>
                     <property name="nativeName"></property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
-                    <property name="position">33</property>
+                    <property name="position">48</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
-                    <property name="name">param_34</property>
+                    <property name="name">param_49</property>
                     <property name="paramName">branch</property>
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
-                    <property name="position">34</property>
+                    <property name="position">49</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -4497,7 +4635,7 @@ this.queryText =this.queryText.replace("--$pricelistppv$", "")
 }
 else
 {
-this.queryText =this.queryText.replace("--$pricelist$", "and pricelist_id="+params["pricelist"])
+this.queryText =this.queryText.replace("--$pricelist$", "and so.pricelist_id="+params["pricelist"])
 this.queryText =this.queryText.replace("--$pricelistppv$", "and ppv.pricelist_id="+params["pricelist"])
 }]]></method>
             <property name="dataSource">Data Source</property>
@@ -4651,6 +4789,10 @@ sale_qty as (select distinct product_id,sum(product_uom_qty) as sale_qty,
 	and pt.group=pg.id
 	and pc.id=pt.categ_id
 	and so.state!='cancel' 
+	and so.user_id=?
+	and so.branch_id=?
+	and so.section_id=?
+	--$pricelist$
 	and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ? and rp.active='t' 
 	and so.payment_type='credit' 
 	group by rp.id,rp.customer_code,product_id,rp.name,pg.name ,pmg.name ,pt.uom_ratio,pp.sequence ,so.pre_order,so.user_id,so.branch_id,so.section_id,so.pricelist_id,pc.is_oldproduct
@@ -4668,7 +4810,11 @@ deduct_amt as (select distinct 0,(select deduction_amt from calculate_credit_dat
 	and pt.main_group=pmg.id
 	and pt.group=pg.id
 	and pc.id=pt.categ_id
-	and so.state!='cancel' 
+	and so.state!='cancel'
+	and so.user_id=?
+	and so.branch_id=?
+	and so.section_id=?
+	--$pricelist$ 
 	and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ? and rp.active='t' 
 	and so.payment_type='credit' 
 	order by seq),
@@ -4685,7 +4831,11 @@ sale_amt as (select distinct 0,(select sale_amt from calculate_credit_data(rp.id
 	and pt.main_group=pmg.id
 	and pt.group=pg.id
 	and pc.id=pt.categ_id
-	and so.state!='cancel' 
+	and so.state!='cancel'
+	and so.user_id=?
+	and so.branch_id=?
+	and so.section_id=?
+	--$pricelist$  
 	and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ? and rp.active='t' 
 	and so.payment_type='credit' 
 	order by seq),
@@ -4703,6 +4853,10 @@ open_amt as (select distinct 0,(select open_amt from calculate_credit_data(rp.id
 	and pt.group=pg.id
 	and pc.id=pt.categ_id
 	and so.state!='cancel' 
+	and so.user_id=?
+	and so.branch_id=?
+	and so.section_id=?
+	--$pricelist$ 
 	and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ? and rp.active='t' 
 	and so.payment_type='credit' 
 	order by seq),
@@ -4728,6 +4882,10 @@ Balance as (select distinct 0,
 	and pt.group=pg.id
 	and pc.id=pt.categ_id
 	and so.state!='cancel' 
+	and so.user_id=?
+	and so.branch_id=?
+	and so.section_id=?
+	--$pricelist$ 
 	and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ? and  rp.active='t' 
 	and so.payment_type='credit')one order by seq),
 
@@ -4743,7 +4901,11 @@ paidamount as (select distinct 0,(select paidamount from calculate_credit_data(r
 	and pt.main_group=pmg.id
 	and pt.group=pg.id
 	and pc.id=pt.categ_id
-	and so.state!='cancel' 
+	and so.state!='cancel'
+	and so.user_id=?
+	and so.branch_id=?
+	and so.section_id=?
+	--$pricelist$  
 	and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ? and rp.active='t' 
 	and so.payment_type='credit' 
 	order by seq),
@@ -4772,9 +4934,6 @@ result as (
 select *
 from result
 where 1=1 
-and user_id=?
-and branch_id=?
-and section_id=?
 and case 
 when ? = TRUE and ? = TRUE then pre_order in (TRUE,FALSE) 
 When ? = FALSE and ? = FALSE then pre_order in (TRUE,FALSE) 
@@ -4783,9 +4942,8 @@ When ? = FALSE and ? = TRUE then pre_order in (FALSE) end
 and case 
 when ? = TRUE and ? = TRUE then is_oldproduct in (TRUE,FALSE) 
 When ? = FALSE and ? = FALSE then is_oldproduct in (TRUE,FALSE) 
-When ? = TRUE and ? = FALSE then is_oldproduct in (TRUE) 
-When ? = FALSE and ? = TRUE then is_oldproduct in (FALSE) end 
---$pricelist$
+When ? = TRUE and ? = FALSE then is_oldproduct in (FALSE) 
+When ? = FALSE and ? = TRUE then is_oldproduct in (TRUE) end 
 order by seq)main
 
 left join (select ppi.name,ppi.product_id productid,ppi.new_price Price
@@ -4806,7 +4964,7 @@ and ppv.branch_id=?) sprice on main.product_id=sprice.productid)hhh order by seq
             <design:name></design:name>
             <design:position>1</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -4821,7 +4979,7 @@ and ppv.branch_id=?) sprice on main.product_id=sprice.productid)hhh order by seq
             <design:name></design:name>
             <design:position>2</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -4836,7 +4994,7 @@ and ppv.branch_id=?) sprice on main.product_id=sprice.productid)hhh order by seq
             <design:name></design:name>
             <design:position>3</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -4881,7 +5039,7 @@ and ppv.branch_id=?) sprice on main.product_id=sprice.productid)hhh order by seq
             <design:name></design:name>
             <design:position>6</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -4896,7 +5054,7 @@ and ppv.branch_id=?) sprice on main.product_id=sprice.productid)hhh order by seq
             <design:name></design:name>
             <design:position>7</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -4911,7 +5069,7 @@ and ppv.branch_id=?) sprice on main.product_id=sprice.productid)hhh order by seq
             <design:name></design:name>
             <design:position>8</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -4956,7 +5114,7 @@ and ppv.branch_id=?) sprice on main.product_id=sprice.productid)hhh order by seq
             <design:name></design:name>
             <design:position>11</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -4971,7 +5129,7 @@ and ppv.branch_id=?) sprice on main.product_id=sprice.productid)hhh order by seq
             <design:name></design:name>
             <design:position>12</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -4986,7 +5144,7 @@ and ppv.branch_id=?) sprice on main.product_id=sprice.productid)hhh order by seq
             <design:name></design:name>
             <design:position>13</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -5016,7 +5174,7 @@ and ppv.branch_id=?) sprice on main.product_id=sprice.productid)hhh order by seq
             <design:name></design:name>
             <design:position>15</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -5061,7 +5219,7 @@ and ppv.branch_id=?) sprice on main.product_id=sprice.productid)hhh order by seq
             <design:name></design:name>
             <design:position>18</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -5076,7 +5234,7 @@ and ppv.branch_id=?) sprice on main.product_id=sprice.productid)hhh order by seq
             <design:name></design:name>
             <design:position>19</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -5091,7 +5249,7 @@ and ppv.branch_id=?) sprice on main.product_id=sprice.productid)hhh order by seq
             <design:name></design:name>
             <design:position>20</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -5106,7 +5264,7 @@ and ppv.branch_id=?) sprice on main.product_id=sprice.productid)hhh order by seq
             <design:name></design:name>
             <design:position>21</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -5121,7 +5279,7 @@ and ppv.branch_id=?) sprice on main.product_id=sprice.productid)hhh order by seq
             <design:name></design:name>
             <design:position>22</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -5136,7 +5294,7 @@ and ppv.branch_id=?) sprice on main.product_id=sprice.productid)hhh order by seq
             <design:name></design:name>
             <design:position>23</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -5151,7 +5309,7 @@ and ppv.branch_id=?) sprice on main.product_id=sprice.productid)hhh order by seq
             <design:name></design:name>
             <design:position>24</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -5166,7 +5324,7 @@ and ppv.branch_id=?) sprice on main.product_id=sprice.productid)hhh order by seq
             <design:name></design:name>
             <design:position>25</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -5181,7 +5339,7 @@ and ppv.branch_id=?) sprice on main.product_id=sprice.productid)hhh order by seq
             <design:name></design:name>
             <design:position>26</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -5196,7 +5354,7 @@ and ppv.branch_id=?) sprice on main.product_id=sprice.productid)hhh order by seq
             <design:name></design:name>
             <design:position>27</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -5211,7 +5369,7 @@ and ppv.branch_id=?) sprice on main.product_id=sprice.productid)hhh order by seq
             <design:name></design:name>
             <design:position>28</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -5226,7 +5384,7 @@ and ppv.branch_id=?) sprice on main.product_id=sprice.productid)hhh order by seq
             <design:name></design:name>
             <design:position>29</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -5241,7 +5399,7 @@ and ppv.branch_id=?) sprice on main.product_id=sprice.productid)hhh order by seq
             <design:name></design:name>
             <design:position>30</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -5256,7 +5414,7 @@ and ppv.branch_id=?) sprice on main.product_id=sprice.productid)hhh order by seq
             <design:name></design:name>
             <design:position>31</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -5271,7 +5429,7 @@ and ppv.branch_id=?) sprice on main.product_id=sprice.productid)hhh order by seq
             <design:name></design:name>
             <design:position>32</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -5300,6 +5458,231 @@ and ppv.branch_id=?) sprice on main.product_id=sprice.productid)hhh order by seq
           <design:identifier>
             <design:name></design:name>
             <design:position>34</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>35</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>36</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>37</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>38</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>39</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>40</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>41</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>42</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>43</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>44</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>45</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>46</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>47</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>48</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>49</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
