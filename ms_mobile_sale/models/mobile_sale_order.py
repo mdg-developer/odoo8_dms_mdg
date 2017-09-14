@@ -1124,7 +1124,7 @@ class mobile_sale_order(osv.osv):
         return datas
 
     def get_company_datas(self, cr, uid , context=None):
-        cr.execute('''select id,name from res_company''')
+        cr.execute('''select id,name,kha_tha_number from res_company''')
         datas = cr.fetchall()
         return datas
 
