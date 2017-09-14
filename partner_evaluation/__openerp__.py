@@ -23,9 +23,9 @@
 {
     'name': 'Partner Evaluation',
     'version': '1.0',
-    'category': 'Partner Evaluation',
+    'category': 'Sale Team',
     'sequence': 30,
-    'summary': 'Partner Evaluation',
+    'summary': 'Sale Team',
     'description': """
 Sale Management
 

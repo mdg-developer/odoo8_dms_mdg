@@ -255,7 +255,6 @@ class crm_case_section(osv.osv):
                'branch_id':fields.many2one('res.branch', 'Branch'),
                'allow_foc':fields.boolean('Allow FOC'),
                'allow_tax':fields.boolean('Allow Tax'),
-              
                            
         }
     _sql_constraints = [

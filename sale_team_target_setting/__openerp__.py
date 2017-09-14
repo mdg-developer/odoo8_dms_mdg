@@ -37,7 +37,6 @@ Sale Management
     ],
     'data': [       
        'views/sale_team_view.xml',
-       'views/account_invoice_view.xml',
     ],
     'installable': True,
     'auto_install': False,
