@@ -15,8 +15,8 @@ class product_template(osv.osv):
     _inherit = "purchase.order.line"
 
     _columns = {   
-            'supplier_name': fields.text('Supplier Code', required=True),
-            'supplier_code':fields.integer( string = 'Supplier'),
+            'supplier_name': fields.text('Supplier Code'),
+            'supplier_code':fields.integer('Supplier'),
                 }
     
     DEFAULT_SERVER_DATE_FORMAT = "%Y-%m-%d"

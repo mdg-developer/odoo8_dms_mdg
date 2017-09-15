@@ -9,9 +9,10 @@
 			<field name="arch" type="xml">
 	           <xpath expr="//group[@name='left']" position="after">
 	            <group>			
-	                 <field name="weekly_sales_target" string="Weekly Sales Target" class="oe_inline"/> 
-	                 <field name="monthly_sales_target" string="Monthly Sales Target" class="oe_inline"/> 
-	                 <field name="annual_sales_target" string="Annual Sales Target" class="oe_inline"/> 
+	                 <field name="weekly_sales_target" string="Weekly Sales Target"  widget="monetary" options="{'currency_field': 'currency_id'}"/> 
+	                 <field name="currency_symbol"/> 
+	                 <field name="monthly_sales_target" string="Monthly Sales Target"  widget="monetary" options="{'currency_field': 'currency_id'}"/> 
+	                 <field name="annual_sales_target" string="Annual Sales Target"  widget="monetary" options="{'currency_field': 'currency_id'}"/>     
                </group>	
                 </xpath>		        			
 			</field>

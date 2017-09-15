@@ -247,7 +247,7 @@
 			<field name="arch" type="xml">
 				<data>
 					<field name="fax" position="replace">
-						<field name="fax" invisible="1" />
+						<field name="fax"/>
 					</field>
 					<!-- <field name="active" position="replace" /> <notebook position="inside"> 
 						<page string="Marketing"> <label for="active" /> <field name="active" /> 
