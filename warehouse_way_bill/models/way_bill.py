@@ -77,23 +77,30 @@ class way_bill(osv.osv):
         vals['name'] = id_code
         return super(way_bill, self).create(cursor, user, vals, context=context)
     
-    def on_change_transfer_id(self, cr, uid, ids, transfer_id, context=None):
+    def on_change_transfer_id(self, cr, uid, ids, transfer_id,from_warehouse_id,context=None):
         procurement_order_obj = self.pool.get('procurement.order')      
         transfer_obj = self.pool.get('stock.transfer.request')      
         picking_obj = self.pool.get('stock.picking')        
         move_obj = self.pool.get('stock.move')        
+        warehouse_obj = self.pool.get('stock.warehouse')        
+        group_obj=self.pool.get('procurement.group')        
+        
         values = {}
         data_line = []
         if transfer_id:        
             transfer_data = transfer_obj.browse(cr, uid, transfer_id, context=context)
             tr_no = transfer_data.name
-            order_ids = procurement_order_obj.search(cr, uid, [('origin', '=', tr_no)], context=context) 
-            for line in order_ids:          
-                order_data = procurement_order_obj.browse(cr, uid, line, context=context)
-                to_warehouse = order_data.warehouse_id.id
+            to_warehouse=transfer_data.warehouse_id.id
+            warehouse_data = warehouse_obj.browse(cr, uid, from_warehouse_id, context=context)
+            from_location_id=warehouse_data.lot_stock_id.id
+            group_id=group_obj.search(cr, uid, [('name', '=', tr_no)], context=context) 
+            picking_ids = picking_obj.search(cr, uid, [('group_id', '=', group_id)], context=context) 
+            move_ids=move_obj.search(cr, uid, [('location_id', '=', from_location_id),('picking_id','in',picking_ids)], context=context) 
+            for line in move_ids:          
+                order_data = move_obj.browse(cr, uid, line, context=context)
                 product_id = order_data.product_id.id
                 description = order_data.product_id.product_tmpl_id.description_sale
-                quantity = order_data.product_qty
+                quantity = order_data.product_uom_qty
                 uom_id = order_data.product_uom.id
                 sequence = order_data.product_id.product_tmpl_id.sequence
                 uom_ratio = order_data.product_id.uom_ratio
