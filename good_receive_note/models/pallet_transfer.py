@@ -34,6 +34,7 @@ class pallet_transfer(osv.osv):
     _columns = {
         'name': fields.char('PT-Ref:No', readonly=True),
          'good_receive_id':fields.many2one('good.receive.note', 'GRN No'),
+         'purchase_id':fields.many2one('purchase.order','PO- Ref:No'),
          'transfer_date':fields.date('Transfer Date', required=True),
          'receive_date':fields.date('Receive Date', required=True),
          'transfer_by':fields.many2one('res.users', 'Transfer By'),

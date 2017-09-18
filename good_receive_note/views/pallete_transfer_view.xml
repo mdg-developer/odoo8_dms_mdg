@@ -12,16 +12,13 @@
 				<form string="Good Receive Note Form">
 					<header>
 						<button name="reserve" string="Reserve" class="oe_highlight"
-							type="object" states="draft"
-							groups="stock.group_stock_manager,stock.group_stock_user" />
+							type="object" states="draft" groups="stock.group_stock_manager" />
 
 						<button name="transfer" string="Confirm Transfer" class="oe_highlight"
-							type="object" states="reserve"
-							groups="stock.group_stock_manager,stock.group_stock_user" />
+							type="object" states="reserve" groups="stock.group_stock_manager" />
 
 						<button name="cancel" string="Cancel" class="oe_highlight"
-							type="object" states="draft"
-							groups="stock.group_stock_manager,stock.group_stock_user" />
+							type="object" states="draft" groups="stock.group_stock_manager" />
 
 						<field name="state" widget="statusbar" statusbar_visible="draft,reserve,transfer,cancel" />
 					</header>
@@ -30,6 +27,7 @@
 							<group>
 								<field name="name" />
 								<field name="good_receive_id" attrs="{'readonly':[('state','=','transfer')]}" />
+								<field name="purchase_id" attrs="{'readonly':[('state','=','transfer')]}" />
 								<field name="transfer_by" attrs="{'readonly':[('state','=','transfer')]}" />
 								<field name="branch_id" invisible="1" />
 							</group>
@@ -51,7 +49,7 @@
 												on_change="on_change_expired_date(lot_id)" />
 											<field name="expiry_date" />
 											<field name="src_location_id" />
-											<field name="dest_location_id"  domain="[('location_id', '=',src_location_id)]" />
+											<field name="dest_location_id" domain="[('location_id', '=',src_location_id)]" />
 											<field name="remark" />
 										</tree>
 									</field>
@@ -77,6 +75,7 @@
 			<field name="arch" type="xml">
 				<tree string="Contents">
 					<field name="name" />
+					<field name="purchase_id" />
 					<field name="good_receive_id" />
 					<field name="receive_date" />
 					<field name="transfer_date" />

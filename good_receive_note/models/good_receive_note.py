@@ -128,6 +128,7 @@ class good_receive_note(osv.osv):
         move_obj = self.pool.get('stock.move')        
         receive_data = self.browse(cr, uid, ids, context=context)
         po_name = receive_data.purchase_id.name
+        purchase_id=receive_data.purchase_id.id
         pickList = picking_obj.search(cr, uid, [('origin', '=', po_name), ('state', '!=', 'done')], context=context) 
         wizResult = picking_obj.do_enter_transfer_details(cr, uid, pickList, context=context)
         detailObj = transfer_obj.browse(cr, uid, wizResult['res_id'], context=context)            
@@ -152,6 +153,7 @@ class good_receive_note(osv.osv):
             detailObj.do_detailed_transfer()    
             pallet_id = pallet_transfer_obj.create(cr, uid, {
                                                   'good_receive_id': ids[0],
+                                                  'purchase_id':purchase_id,
                                                   'receive_date': datetime.now(),
                                                   'transfer_date':datetime.now(),
                                                   'branch_id':receive_data.branch_id.id, })
