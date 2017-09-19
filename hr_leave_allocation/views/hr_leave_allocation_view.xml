@@ -76,7 +76,7 @@
                         <group>
                             <field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')], 'required': [('type', '=', 'add')]}"/>
                             <field name="holiday_status_id" on_change="onchange_leave_type(holiday_status_id)" context="{'employee_id':employee_id}"/> 
-                            <field name="effective_date" />
+                            <field name="effective_date" attrs="{'invisible': [('type', '=', 'remove')]}"/>
                                 <label for="number_of_days_temp" string="Duration"/>
                             <div>
                                 <group col="3" attrs="{'invisible': [('type', '=', 'add')]}">
@@ -92,7 +92,7 @@
                             <field name="holiday_type" on_change="onchange_type(holiday_type)" attrs="{'readonly':[('type', '=', 'remove'),('state','!=','draft')]}" string="Mode" groups="base.group_hr_user" context="{'employee_id':employee_id}" />
                             <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','=','category')]}" on_change="onchange_employee(employee_id)" groups="base.group_hr_user"/>
                             <field name="badge_id" attrs="{'readonly':['|', ('type','=','add'),('holiday_type','=','category')],'invisible':[('holiday_type','=','category')]}" groups="base.group_hr_user"/>
-                            <field name="expiry_date" />
+                            <field name="expiry_date" attrs="{'invisible': [('type', '=', 'remove')],'required': [('type', '!=', 'remove')]}"/>
                             <field name="category_id" attrs="{'required':[('holiday_type','=','category')], 'readonly': [('type', '=', 'remove'),('state','!=','draft'), ('state','!=','confirm')], 'invisible':[('holiday_type','=','employee')]}"/>
                             <field name="department_id" attrs="{'readonly':['|', ('type','=','add'),('holiday_type','=','category')],'invisible':[('holiday_type','=','category')]}" groups="base.group_hr_user"/>
                             <field name="section_id" attrs="{'readonly':['|', ('type','=','add'),('holiday_type','=','category')],'invisible':[('holiday_type','=','category')]}" groups="base.group_hr_user"/>

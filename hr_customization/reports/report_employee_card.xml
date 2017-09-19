@@ -60,7 +60,7 @@
 						   					        </td>
 						   					    </t>
 						   					    
-						   					    <t t-if="o.manager ==True">
+						   					    <t t-if="o.restricted_allowed ==True">
 									   				<td >	         
 						   					        <img class="img img-responsive" src='/hr_customization/static/src/img/R.png' />
 						   					        </td>
@@ -77,15 +77,16 @@
 				   				</tr>
 			   				</table>
 			   				<table  cellspacing="0" align="center">
-				   				<tr align="left" style="text-align:left;font-size:14pt">
+			   				   
+				   				<tr align="center" style="text-align:left;font-size:14pt">
 				   				      
-				   				      <p align="left" style="font-size:14pt;"> 
+				   				      <p align="center" style="font-size:14pt;"> 
 				   				          <strong><span  t-field="o.name_related" /></strong>
 				   				          
-				   				      </p>
-				   						
+				   				      </p>				   						
 				   				   
-				   				</tr> 
+				   				</tr>
+				   				 
 				   		    </table>		
 			   				<table  cellspacing="0" align="center">
 				   				
@@ -93,7 +94,7 @@
 				   				<tr align="left" style="text-align:left;font-size:14pt">
 				   				    <td width="40%" style="position: relative;">			   					    
 				   						
-				   						<span><strong>Badge # : </strong></span>			   						
+				   						<span><strong>Badge #:</strong></span>			   						
 				   						<br></br>
 				   						<br></br>		   						
 				   					</td>
