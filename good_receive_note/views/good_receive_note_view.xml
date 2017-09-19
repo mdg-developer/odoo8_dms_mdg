@@ -26,7 +26,8 @@
 						<group>
 							<group>
 								<field name="name" />
-								<field name="rfr_ref_no" attrs="{'readonly':[('state','!=','draft')],'required':[('state','!=','receive')]}" />
+								<field name="rfr_ref_no"
+									attrs="{'readonly':[('state','!=','draft')],'required':[('state','!=','receive')]}" />
 								<field name="purchase_id" attrs="{'readonly':[('state','!=','draft')]}"
 									on_change="on_change_purchase_id(purchase_id)" domain="[('shipped', '=',False)]" />
 								<field name="bl_ref_no" attrs="{'readonly':[('state','!=','draft')]}" />
@@ -83,6 +84,11 @@
 										</tree>
 									</field>
 								</page>
+								<page string="Attachment">
+									<field name="document_ids">
+									</field>
+								</page>
+
 							</notebook>
 
 						</group>

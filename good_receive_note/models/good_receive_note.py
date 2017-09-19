@@ -42,6 +42,22 @@ class good_receive_note(osv.osv):
             raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
         return company_id   
     
+    def _get_attached_docs(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        attachment_obj = self.pool.get('ir.attachment')
+        good_receive_data=self.browse(cr, uid, ids, context=context)
+        for receive in self.browse(cr, uid, ids, context=context):
+            res[receive.id] = {                
+                'document_ids': None,
+            }        
+        if good_receive_data:
+            purchase_id =good_receive_data.purchase_id.id
+            purchase_ids = self.pool.get('purchase.order').search(cr, uid, [('id', '=', purchase_id)], context=context)
+            res[receive.id] = attachment_obj.search(
+                cr, uid, [ ('res_model', '=', 'purchase.order'), ('res_id', 'in', purchase_ids)
+                ], context=context)
+        return res
+    
     _columns = {
         'name': fields.char('GRN-Ref:No', readonly=True),
         'invoice_ref_no' : fields.char('Invoice Ref:No'),
@@ -72,6 +88,7 @@ class good_receive_note(osv.osv):
              'no_of_avspace':fields.integer('No. of Space Avaliable this principle'),
             'total_space':fields.integer('Total Avaliable Space'),
             'picking_id':fields.many2one('stock.picking', 'Picking'),
+        'document_ids': fields.function(_get_attached_docs, type='one2many', relation='ir.attachment', string='Applications'),            
 }
     _defaults = {
         'state' : 'draft',
@@ -84,9 +101,13 @@ class good_receive_note(osv.osv):
         purchase_order_obj = self.pool.get('purchase.order')        
         picking_obj = self.pool.get('stock.picking')        
         move_obj = self.pool.get('stock.move')        
+        attachment_obj = self.pool.get('ir.attachment')
         values = {}
         data_line = []
-        if purchase_id:        
+        if purchase_id: 
+            attachment_ids= attachment_obj.search(
+                cr, uid, [ ('res_model', '=', 'purchase.order'), ('res_id', '=', purchase_id)
+                ], context=context)       
             order_data = purchase_order_obj.browse(cr, uid, purchase_id, context=context)
             po_name = order_data.name
             order_ids = picking_obj.search(cr, uid, [('origin', '=', po_name), ('state', '!=', 'done')], context=context) 
@@ -109,6 +130,7 @@ class good_receive_note(osv.osv):
                                           })                
             values = {
                 'p_line': data_line,
+                'document_ids':attachment_ids,
             }
         return {'value': values}    
         
