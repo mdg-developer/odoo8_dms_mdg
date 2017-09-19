@@ -5,8 +5,8 @@ from openerp.tools.translate import _
 import ast
 import time
 from openerp import netsvc
-
 DEFAULT_SERVER_DATE_FORMAT = "%Y-%m-%d"
+
 class customer_payment(osv.osv):
     _name = "customer.payment"
     _columns = {               
@@ -61,7 +61,7 @@ class mobile_sale_order(osv.osv):
         'balance':fields.float('Balance'),
         'paid_amount':fields.float('Paid Amount'),
         'paid':fields.boolean('Paid'),
-        #'direct_credit':fields.boolean('Direct Credit'), #disable bcz it is not use anymore !!! (Htoo 6.7.2017)
+#        'direct_credit':fields.boolean('Direct Credit'), #disable bcz it is not use anymore !!! (Htoo 6.7.2017)
         'void_flag':fields.selection([
                 ('voided', 'Voided'),
                 ('none', 'Unvoid')
@@ -1965,6 +1965,9 @@ class mobile_sale_order(osv.osv):
         cr.execute('''select id,name from plan_frequency''')
         datas = cr.fetchall()        
         return datas
+    
+    
+    
     # Create New Customer from Tablet by kzo
     def create_new_customer(self, cursor, user, vals, context=None):
         try:
@@ -1986,46 +1989,59 @@ class mobile_sale_order(osv.osv):
                 for partner in new_partner:
                     chiller = False;
                     if 'chiller' in partner:
-                        chiller = partner['chiller']
-                    partner_result = {  
-                        'sales_channel':partner['sales_channel'],
-                        'image':partner['image'],
-                        'street':partner['street'],
-                        'partner_latitude':partner['partner_latitude'],
-                        'unit':partner['unit'],
-                        'city':partner['city'],
-                        'frequency_id':partner['frequency_id'],
-                        'country_id':partner['country_id'],
-                        'company_id':partner['company_id'],
-                        'pricelist_id':partner['pricelist_id'],
-                        'outlet_type':partner['outlet_type'],
-                        'is_company':True,
-                        'customer_code':partner['customer_code'],
-                        'branch_id':partner['branch_id'],
-                        'street2':partner['street2'],
-                        'phone':partner['phone'],
-                        'mobile':partner['mobile'],
-                        'partner_longitude':partner['partner_longitude'],
-                        'township':partner['township'],
-                        'name':partner['name'],
-                        'temp_customer':partner['temp_customer'],
-                        'email':partner['email'],
-                        'class_id':partner['class_id'],
-                        'state_id':partner['state_id'],
+                        chiller = True  ;
+                                        
+#                     partner_result = {  
+#                         'sales_channel':partner['sales_channel'],
+#                         'notify_email':'always',
+#                         'image':partner['image'], 
+#                         'street':partner['street'],
+#                         'partner_latitude':partner['partner_latitude'],
+#                         'unit':partner['unit'],
+#                         'branch_id':partner['branch_id'],
+#                         'display_name':partner['name'],
+#                         'mobile_customer':True,
+#                         'frequency_id':partner['frequency_id'],
+#                         'country_id':partner['country_id'],
+#                         'company_id':partner['company_id'],
+#                         'employee':False,
+#                         'pricelist_id':partner['pricelist_id'],
+#                         'email':partner['email'],
+#                         'is_company':True,     
+#                         'customer_code':partner['customer_code'],
+#                         'city':partner['city'],
+#                         'street2':partner['street2'],
+#                         'phone':partner['phone'],
+#                         'partner_longitude':partner['partner_longitude'],    
+#                         'township':partner['township'],
+#                         'customer':True,
+#                         'name':partner['name'],
+#                         'mobile':partner['mobile'],
+#                         'class_id':partner['class_id'],   
+#                         'outlet_type':partner['outlet_type'],
+#                         'temp_customer':partner['temp_customer'],
+#                         'chiller':chiller,
+#                         'state_id':partner['state_id'],
+#                         'section_id':partner['section_id'],
+#                           
+#                     }
+# #                     
+#                     partner_id = partner_obj.create(cursor, user, partner_result, context=context)
                         
-                        'display_name':partner['name'],
-                        'customer':True,
-                        'employee':False,
-                        'notify_email':'always',
-                        'mobile_customer':True,
-                        'chiller':chiller,
-                        'unit':partner['unit'],
-                        'section_id':partner['section_id'],
-                        
-                    }
-                    
-                    partner_id = partner_obj.create(cursor, user, partner_result, context=context)
-            return partner_id
+                    cursor.execute("""INSERT INTO res_partner (sales_channel, notify_email, image, street, partner_latitude, unit, branch_id, display_name, mobile_customer, frequency_id,
+                                country_id, company_id, employee, pricelist_id, email, is_company, customer_code, city, street2, phone, partner_longitude, township, customer, name, mobile,
+                                class_id, outlet_type, temp_customer, chiller, state_id, section_id, active, supplier)
+                                VALUES (%s, 'always', %s, %s, %s, %s, %s, %s, True, %s, %s, %s, False, %s, %s, True, %s, %s, %s, %s, %s, %s, True, %s, %s, %s, %s,
+                                %s, %s, %s, %s, True, False)""",
+                                (partner['sales_channel'], partner['image'], partner['street'], partner['partner_latitude'], partner['unit'], partner['branch_id'],
+                                 partner['name'], partner['frequency_id'], partner['country_id'], partner['company_id'], partner['pricelist_id'], partner['email'],
+                                 partner['customer_code'],partner['city'], partner['street2'], partner['phone'], partner['partner_longitude'],partner['township'],
+                                 partner['name'], partner['mobile'], partner['class_id'], partner['outlet_type'], partner['temp_customer'], chiller, partner['state_id'],
+                                 partner['section_id'],))
+             
+                    cursor.execute('''select id from res_partner where customer_code = %s''', (partner['customer_code'],))
+                    id = cursor.fetchall()
+            return id
         except Exception, e:
             print 'False'
             return 0

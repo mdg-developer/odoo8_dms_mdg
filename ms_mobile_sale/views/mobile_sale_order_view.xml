@@ -64,7 +64,7 @@
 								<field name="change_amount" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="remaining_amount" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="paid" attrs="{'readonly':[('m_status','=','done')]}" />
-								<field name="direct_credit" attrs="{'readonly':[('m_status','=','done')]}" />
+	<!-- 							<field name="direct_credit" attrs="{'readonly':[('m_status','=','done')]}" /> -->
 								<field name="void_flag" attrs="{'readonly':[('m_status','=','done')]}" />
 								<field name="balance" attrs="{'readonly':[('m_status','=','done')]}" />
 
