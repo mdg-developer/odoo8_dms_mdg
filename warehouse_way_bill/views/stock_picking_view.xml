@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="view_picking_form_warehouse_inherit" model="ir.ui.view">
+			<field name="name">stock.pricking.form</field>
+			<field name="model">stock.picking</field>
+			<field name="inherit_id" ref="stock.view_picking_form" />
+			<field name="arch" type="xml">
+				<field name="partner_id" position="after">
+					<field name="loading_date"
+						attrs="{'invisible':[('is_transfer_request','!=',True)]}" />
+					<field name="loading_by"
+						attrs="{'invisible':[('is_transfer_request','!=',True)]}" />
+					<field name="checked_by"
+						attrs="{'invisible':[('is_transfer_request','!=',True)]}" />
+					<field name="approved_by"
+						attrs="{'invisible':[('is_transfer_request','!=',True)]}" />
+					<field name="consignee"
+						attrs="{'invisible':[('is_transfer_request','!=',True)]}" />
+				</field>
+				<field name="origin" position="after">
+					<field name="transport_type"
+						attrs="{'invisible':[('is_transfer_request','!=',True)]}" />
+					<field name="transport_mode"
+						attrs="{'invisible':[('is_transfer_request','!=',True)]}" />
+					<field name="vehicle_no"
+						attrs="{'invisible':[('is_transfer_request','!=',True)]}" />
+					<field name="departure_date"
+						attrs="{'invisible':[('is_transfer_request','!=',True)]}" />
+					<field name="transported_by"
+						attrs="{'invisible':[('is_transfer_request','!=',True)]}" />
+					<field name="received_by"
+						attrs="{'invisible':[('is_transfer_request','!=',True)]}" />
+				</field>
+			</field>
+		</record>
+
+	</data>
+</openerp>
+		

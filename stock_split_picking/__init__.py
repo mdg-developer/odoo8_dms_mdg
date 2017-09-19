@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Author: Nicolas Bessi
+#    Copyright 2013 Camptocamp SA
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -18,29 +18,4 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-{
-    'name': 'Way Bill',
-    'version': '1.1',
-    'author': '7th Computing',
-    'summary': 'Way Bill',
-    'description': """
-
-Way Bill' Module
-===============================
-
-    """,
-    'website': 'https://www.odoo.com/page/warehouse',
-    'depends': ['base', 'sale', 'stock','warehouse_transfer_request'],
-    'category': 'stock',
-    'sequence': 16,
-    'data': [
-        'views/sequence.xml',
-        'views/way_bill_view.xml',
-        'views/stock_picking_view.xml',
-    ],
-    'test': [
-
-    ],
-    'installable': True,
-}
+from . import model
