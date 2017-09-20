@@ -22,10 +22,6 @@
     <property name="imageDPI">120</property>
     <list-property name="libraries">
         <structure>
-            <property name="fileName">report_library.rptlibrary</property>
-            <property name="namespace">report_library</property>
-        </structure>
-        <structure>
             <property name="fileName">amh_library.rptlibrary</property>
             <property name="namespace">amh_library</property>
         </structure>
@@ -149,13 +145,15 @@
             <property name="dataSetName">branchDS</property>
             <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
             <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
+            <expression name="sortByColumn">dataSetRow["id"]</expression>
+            <property name="sortDirection">asc</property>
             <property name="dataType">integer</property>
             <property name="distinct">true</property>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
             <property name="controlType">list-box</property>
             <property name="mustMatch">true</property>
-            <property name="fixedOrder">true</property>
+            <property name="fixedOrder">false</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
             </structure>
@@ -6478,6 +6476,10 @@ and ppv.branch_id=?) sprice on main.product_id=sprice.productid)hhh order by seq
             <property name="borderTopStyle">solid</property>
             <property name="borderTopWidth">1pt</property>
         </style>
+        <style name="no_border" id="3710">
+            <property name="borderBottomStyle">none</property>
+            <property name="borderRightStyle">none</property>
+        </style>
     </styles>
     <page-setup>
         <simple-master-page name="Simple MasterPage" id="2">
@@ -7114,6 +7116,16 @@ and ppv.branch_id=?) sprice on main.product_id=sprice.productid)hhh order by seq
                                                     <property name="fontSize">8pt</property>
                                                     <property name="fontWeight">normal</property>
                                                     <property name="textAlign">center</property>
+                                                    <list-property name="highlightRules">
+                                                        <structure>
+                                                            <property name="operator">ne</property>
+                                                            <expression name="testExpr" type="javascript">data["maingroup"]</expression>
+                                                            <simple-property-list name="value1">
+                                                                <value type="javascript">'Peanut Oil'</value>
+                                                            </simple-property-list>
+                                                            <property name="style">no_border</property>
+                                                        </structure>
+                                                    </list-property>
                                                     <property name="resultSetColumn">maingroup</property>
                                                 </data>
                                             </property>
@@ -7145,6 +7157,7 @@ and ppv.branch_id=?) sprice on main.product_id=sprice.productid)hhh order by seq
                                         <extended-item extensionName="CrosstabCell" id="3656">
                                             <property name="content">
                                                 <data name="uom_ratio2" id="3658">
+                                                    <property name="style">no_border</property>
                                                     <property name="fontFamily">"Zawgyi-One"</property>
                                                     <property name="fontSize">8pt</property>
                                                     <property name="fontWeight">normal</property>

@@ -22,10 +22,6 @@
     <property name="imageDPI">120</property>
     <list-property name="libraries">
         <structure>
-            <property name="fileName">report_library.rptlibrary</property>
-            <property name="namespace">report_library</property>
-        </structure>
-        <structure>
             <property name="fileName">amh_library.rptlibrary</property>
             <property name="namespace">amh_library</property>
         </structure>
@@ -149,13 +145,15 @@
             <property name="dataSetName">branchDS</property>
             <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
             <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
+            <expression name="sortByColumn">dataSetRow["id"]</expression>
+            <property name="sortDirection">asc</property>
             <property name="dataType">integer</property>
             <property name="distinct">true</property>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
             <property name="controlType">list-box</property>
             <property name="mustMatch">true</property>
-            <property name="fixedOrder">true</property>
+            <property name="fixedOrder">false</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
             </structure>

@@ -142,6 +142,34 @@
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
+        <scalar-parameter name="newproduct" id="2952">
+            <text-property name="promptText">New Product</text-property>
+            <property name="valueType">static</property>
+            <property name="isRequired">false</property>
+            <property name="dataType">boolean</property>
+            <property name="distinct">true</property>
+            <simple-property-list name="defaultValue">
+                <value type="constant">False</value>
+            </simple-property-list>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">check-box</property>
+            <structure name="format"/>
+        </scalar-parameter>
+        <scalar-parameter name="oldproduct" id="2953">
+            <text-property name="promptText">Old Product</text-property>
+            <property name="valueType">static</property>
+            <property name="isRequired">false</property>
+            <property name="dataType">boolean</property>
+            <property name="distinct">true</property>
+            <simple-property-list name="defaultValue">
+                <value type="constant">False</value>
+            </simple-property-list>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">check-box</property>
+            <structure name="format"/>
+        </scalar-parameter>
     </parameters>
     <data-sources>
         <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="2463"
@@ -572,6 +600,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">1</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -593,6 +622,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">3</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -603,6 +633,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">4</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -613,6 +644,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">5</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -623,6 +655,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">6</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -633,6 +666,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">7</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -643,6 +677,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">8</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -653,6 +688,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">9</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -663,6 +699,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">10</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -673,6 +710,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">11</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -683,6 +721,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">12</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -693,6 +732,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">13</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -703,6 +743,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">14</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -713,6 +754,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">15</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -723,6 +765,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">16</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -733,6 +776,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">17</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -743,6 +787,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">18</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -753,6 +798,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">19</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -763,6 +809,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">20</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -773,6 +820,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">21</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -783,6 +831,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">22</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -793,6 +842,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">23</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -803,6 +853,88 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">24</property>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_25</property>
+                    <property name="paramName">newproduct</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">25</property>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_26</property>
+                    <property name="paramName">oldproduct</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">26</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_27</property>
+                    <property name="paramName">newproduct</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">27</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_28</property>
+                    <property name="paramName">oldproduct</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">28</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_29</property>
+                    <property name="paramName">newproduct</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">29</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_30</property>
+                    <property name="paramName">oldproduct</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">30</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_31</property>
+                    <property name="paramName">newproduct</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">31</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_32</property>
+                    <property name="paramName">oldproduct</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">32</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -924,7 +1056,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
             </list-property>
             <xml-property name="queryText"><![CDATA[select * From (
 (select rp.name as customer_name,rp.id as customer_id,
-CASE so.pricelist_id WHEN 5 THEN sum(avl.amount) ELSE 0 END AS wholesale_paidamount, CASE so.pricelist_id WHEN 1 THEN sum(avl.amount)
+CASE WHEN so.pricelist_id in (5,12) THEN sum(avl.amount) ELSE 0 END AS wholesale_paidamount, CASE WHEN so.pricelist_id in (1,12) THEN sum(avl.amount)
 ELSE 0 END AS retail_paidamount
 FROM sale_order so, res_partner rp, account_invoice ai,account_move_line aml ,account_voucher_line avl,account_voucher  av
 where ai.move_id=aml.move_id 
@@ -933,7 +1065,7 @@ where ai.move_id=aml.move_id
 	and ai.origin=so.name
 	and ai.partner_id=so.partner_id
 	and av.id = avl.voucher_id
-	and so.pricelist_id in (1,5)	
+	and so.pricelist_id in (1,11,12,5)	
 	and so.section_id = ?
 	and so.user_id  = ?
 	and ai.payment_type='cash'
@@ -949,24 +1081,24 @@ When ? = FALSE and ? = TRUE then so.pre_order in (FALSE) end
 (SELECT  customerss,customer_id,sum(SesamePC) as sesamepc,sum(PeanutPC) as peanutpc,sum(PremierPeanutPC) as premierpc
 FROM
 (SELECT customerss,customer_id,
-CASE cat
-WHEN 'Sesame Oil' THEN (saleViss + (saleliter * 0.575))
+CASE pccode
+WHEN 'PC8' THEN (saleliter + (saleViss/0.575))
 ELSE 0 END AS SesamePC,
-CASE cat
-WHEN 'Peanut Oil' THEN (saleViss + (saleliter * 0.575))
+CASE pccode
+WHEN 'PC7' THEN (saleliter + (saleViss/0.575))
 ELSE 0 END AS PeanutPC,
 CASE cat
-WHEN 'Premier Peanut Oil' THEN (saleViss + (saleliter * 0.575))
+WHEN 'Premier Peanut Oil' THEN (saleliter + (saleViss/0.575))
 ELSE 0 END AS PremierPeanutPC 
 FROM
 (with
-sale as (select sum(sol.product_uom_qty) as qty,rp.name as customer_name,sol.product_id,pc.name as categoryname,rp.id as cus_id
+sale as (select sum(sol.product_uom_qty) as qty,rp.name as customer_name,sol.product_id,pc.name as categoryname,pc.code as pccode,rp.id as cus_id
 FROM sale_order so,sale_order_line sol,account_voucher av,res_partner rp,product_product pp ,product_template pt,product_category pc
 WHERE  so.id = sol.order_id and so.partner_id=rp.id and so.partner_id=av.partner_id  and pp.product_tmpl_id=pt.id and  pc.id=pt.categ_id and sol.product_id=pp.id
 AND so.state!='cancel' 
 --AND ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ?
 and so.section_id = ? and so.user_id  = ? --and so.warehouse_id = ?
-and so.pricelist_id in (1,5)
+and so.pricelist_id in (1,11,12,5)
 and so.payment_type='cash'
 and av.type='receipt' 
 and av.state='posted' 
@@ -977,8 +1109,13 @@ when ? = TRUE and ? = TRUE then so.pre_order in (TRUE,FALSE)
 When ? = FALSE and ? = FALSE then so.pre_order in (TRUE,FALSE) 
 When ? = TRUE and ? = FALSE then so.pre_order in (TRUE) 
 When ? = FALSE and ? = TRUE then so.pre_order in (FALSE) end 
+and case 
+when ? = TRUE and ? = TRUE then pc.is_oldproduct in (TRUE,FALSE) 
+When ? = FALSE and ? = FALSE then pc.is_oldproduct in (TRUE,FALSE) 
+When ? = TRUE and ? = FALSE then pc.is_oldproduct in (FALSE) 
+When ? = FALSE and ? = TRUE then pc.is_oldproduct in (TRUE) end  
 
-GROUP BY product_id,so.partner_id,so.payment_type,rp.name,sol.product_id,pc.name,rp.id)
+GROUP BY product_id,so.partner_id,so.payment_type,rp.name,sol.product_id,pc.code,pc.name,rp.id)
 
 SELECT sale.*,pc.name,sale.customer_name as customerss,sale.categoryname as cat,sale.cus_id as customer_id,
 CASE pt.packing_unit WHEN 'Viss' 
@@ -1358,6 +1495,126 @@ ORDER BY pp.id)a )b group by b.customerss,customer_id)sale_qty on sale_qty.custo
         </design:attributes>
       </design:ParameterDefinition>
     </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>25</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>26</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>27</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>28</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>29</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>30</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>31</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>32</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
   </DataSetParameters>
   <design:ResultSets derivedMetaData="true">
     <design:resultSetDefinitions>
@@ -1622,6 +1879,7 @@ ORDER BY pp.id)a )b group by b.customerss,customer_id)sale_qty on sale_qty.custo
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">1</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -1643,6 +1901,7 @@ ORDER BY pp.id)a )b group by b.customerss,customer_id)sale_qty on sale_qty.custo
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">3</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -1653,6 +1912,7 @@ ORDER BY pp.id)a )b group by b.customerss,customer_id)sale_qty on sale_qty.custo
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">4</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -1663,6 +1923,7 @@ ORDER BY pp.id)a )b group by b.customerss,customer_id)sale_qty on sale_qty.custo
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">5</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -1673,6 +1934,7 @@ ORDER BY pp.id)a )b group by b.customerss,customer_id)sale_qty on sale_qty.custo
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">6</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -1683,6 +1945,7 @@ ORDER BY pp.id)a )b group by b.customerss,customer_id)sale_qty on sale_qty.custo
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">7</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -1693,6 +1956,7 @@ ORDER BY pp.id)a )b group by b.customerss,customer_id)sale_qty on sale_qty.custo
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">8</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -1703,6 +1967,7 @@ ORDER BY pp.id)a )b group by b.customerss,customer_id)sale_qty on sale_qty.custo
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">9</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -1713,6 +1978,7 @@ ORDER BY pp.id)a )b group by b.customerss,customer_id)sale_qty on sale_qty.custo
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">10</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -1723,6 +1989,7 @@ ORDER BY pp.id)a )b group by b.customerss,customer_id)sale_qty on sale_qty.custo
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">11</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -1733,6 +2000,7 @@ ORDER BY pp.id)a )b group by b.customerss,customer_id)sale_qty on sale_qty.custo
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">12</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -1743,6 +2011,7 @@ ORDER BY pp.id)a )b group by b.customerss,customer_id)sale_qty on sale_qty.custo
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">13</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -1753,6 +2022,7 @@ ORDER BY pp.id)a )b group by b.customerss,customer_id)sale_qty on sale_qty.custo
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">14</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -1763,6 +2033,7 @@ ORDER BY pp.id)a )b group by b.customerss,customer_id)sale_qty on sale_qty.custo
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">15</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -1773,6 +2044,7 @@ ORDER BY pp.id)a )b group by b.customerss,customer_id)sale_qty on sale_qty.custo
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">16</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -1783,6 +2055,7 @@ ORDER BY pp.id)a )b group by b.customerss,customer_id)sale_qty on sale_qty.custo
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">17</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -1793,6 +2066,7 @@ ORDER BY pp.id)a )b group by b.customerss,customer_id)sale_qty on sale_qty.custo
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">18</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -1803,6 +2077,7 @@ ORDER BY pp.id)a )b group by b.customerss,customer_id)sale_qty on sale_qty.custo
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">19</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -1813,6 +2088,7 @@ ORDER BY pp.id)a )b group by b.customerss,customer_id)sale_qty on sale_qty.custo
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">20</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -1823,6 +2099,7 @@ ORDER BY pp.id)a )b group by b.customerss,customer_id)sale_qty on sale_qty.custo
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">21</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -1833,6 +2110,7 @@ ORDER BY pp.id)a )b group by b.customerss,customer_id)sale_qty on sale_qty.custo
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">22</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -1843,6 +2121,7 @@ ORDER BY pp.id)a )b group by b.customerss,customer_id)sale_qty on sale_qty.custo
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">23</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -1853,6 +2132,95 @@ ORDER BY pp.id)a )b group by b.customerss,customer_id)sale_qty on sale_qty.custo
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">24</property>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_25</property>
+                    <property name="paramName">newproduct</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">25</property>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_26</property>
+                    <property name="paramName">oldproduct</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">26</property>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_27</property>
+                    <property name="paramName">newproduct</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">27</property>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_28</property>
+                    <property name="paramName">oldproduct</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">28</property>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_29</property>
+                    <property name="paramName">newproduct</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">29</property>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_30</property>
+                    <property name="paramName">oldproduct</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">30</property>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_31</property>
+                    <property name="paramName">newproduct</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">31</property>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_32</property>
+                    <property name="paramName">oldproduct</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">32</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -1974,7 +2342,7 @@ ORDER BY pp.id)a )b group by b.customerss,customer_id)sale_qty on sale_qty.custo
             </list-property>
             <xml-property name="queryText"><![CDATA[select * From (
 (select rp.name as customer_name,rp.id as customer_id,
-CASE so.pricelist_id WHEN 5 THEN sum(avl.amount) ELSE 0 END AS wholesale_paidamount, CASE so.pricelist_id WHEN 1 THEN sum(avl.amount)
+CASE WHEN so.pricelist_id in (5,12) THEN sum(avl.amount) ELSE 0 END AS wholesale_paidamount, CASE WHEN so.pricelist_id in (1,11) THEN sum(avl.amount)
 ELSE 0 END AS retail_paidamount
 FROM sale_order so, res_partner rp, account_invoice ai,account_move_line aml ,account_voucher_line avl,account_voucher  av
 where ai.move_id=aml.move_id 
@@ -1983,7 +2351,7 @@ where ai.move_id=aml.move_id
 	and ai.origin=so.name
 	and ai.partner_id=so.partner_id
 	and av.id = avl.voucher_id
-	and so.pricelist_id in (1,5)	
+	and so.pricelist_id in (1,11,12,5)	
 	and so.section_id = ?
 	and so.user_id  = ?
 	and av.date::date = ?
@@ -1997,24 +2365,25 @@ When ? = FALSE and ? = TRUE then so.pre_order in (FALSE) end
 (SELECT  customerss,customer_id,sum(SesamePC) as sesamepc,sum(PeanutPC) as peanutpc,sum(PremierPeanutPC) as premierpc
 FROM
 (SELECT customerss,customer_id,
-CASE cat
-WHEN 'Sesame Oil' THEN (saleViss + (saleliter * 0.575))
+CASE pccode
+WHEN 'PC8' THEN (saleliter + (saleViss/0.575))
 ELSE 0 END AS SesamePC,
-CASE cat
-WHEN 'Peanut Oil' THEN (saleViss + (saleliter * 0.575))
+CASE pccode
+WHEN 'PC7' THEN (saleliter + (saleViss/0.575))
 ELSE 0 END AS PeanutPC,
-CASE cat
-WHEN 'Premier Peanut Oil' THEN (saleViss + (saleliter * 0.575))
+CASE pccode
+WHEN 'PC9' THEN (saleliter + (saleViss/0.575))
 ELSE 0 END AS PremierPeanutPC 
 FROM
 (with
-sale as (select sum(sol.product_uom_qty) as qty,rp.name as customer_name,sol.product_id,pc.name as categoryname,rp.id as cus_id
+sale as (select sum(sol.product_uom_qty) as qty,rp.name as customer_name,sol.product_id,
+pc.name as categoryname,pc.code as pccode,rp.id as cus_id
 FROM sale_order so,sale_order_line sol,account_voucher av,res_partner rp,product_product pp ,product_template pt,product_category pc
 WHERE  so.id = sol.order_id and so.partner_id=rp.id and so.partner_id=av.partner_id  and pp.product_tmpl_id=pt.id and  pc.id=pt.categ_id and sol.product_id=pp.id
 AND so.state!='cancel' 
 --AND ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ?
 and so.section_id = ? and so.user_id  =? --and so.warehouse_id = ?
-and so.pricelist_id in (1,5)
+and so.pricelist_id in (1,11,12,5)	
 and av.type='receipt' 
 and av.state='posted' 
 and av.date::date=?
@@ -2024,7 +2393,12 @@ when ? = TRUE and ? = TRUE then so.pre_order in (TRUE,FALSE)
 When ? = FALSE and ? = FALSE then so.pre_order in (TRUE,FALSE) 
 When ? = TRUE and ? = FALSE then so.pre_order in (TRUE) 
 When ? = FALSE and ? = TRUE then so.pre_order in (FALSE) end 
-GROUP BY product_id,so.partner_id,so.payment_type,rp.name,sol.product_id,pc.name,rp.id)
+and case 
+when ? = TRUE and ? = TRUE then pc.is_oldproduct in (TRUE,FALSE,null) 
+When ? = FALSE and ? = FALSE then pc.is_oldproduct in (TRUE,FALSE,null) 
+When ? = TRUE and ? = FALSE then pc.is_oldproduct in (FALSE) 
+When ? = FALSE and ? = TRUE then pc.is_oldproduct in (TRUE) end 
+GROUP BY product_id,so.partner_id,so.payment_type,rp.name,sol.product_id,pc.name,pc.code,rp.id)
 
 SELECT sale.*,pc.name,sale.customer_name as customerss,sale.categoryname as cat,sale.cus_id as customer_id,
 CASE pt.packing_unit WHEN 'Viss'
@@ -2396,6 +2770,126 @@ ORDER BY pp.id)a )b group by b.customerss,customer_id)sale_qty on sale_qty.custo
           <design:identifier>
             <design:name></design:name>
             <design:position>24</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>25</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>26</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>27</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>28</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>29</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>30</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>31</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>32</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
@@ -2812,6 +3306,86 @@ ORDER BY pp.id)a )b group by b.customerss,customer_id)sale_qty on sale_qty.custo
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
+                <structure>
+                    <property name="name">param_25</property>
+                    <property name="paramName">newproduct</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">25</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_26</property>
+                    <property name="paramName">oldproduct</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">26</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_27</property>
+                    <property name="paramName">newproduct</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">27</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_28</property>
+                    <property name="paramName">oldproduct</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">28</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_29</property>
+                    <property name="paramName">newproduct</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">29</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_30</property>
+                    <property name="paramName">oldproduct</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">30</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_31</property>
+                    <property name="paramName">newproduct</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">31</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_32</property>
+                    <property name="paramName">oldproduct</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">32</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
             </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
@@ -2930,7 +3504,7 @@ ORDER BY pp.id)a )b group by b.customerss,customer_id)sale_qty on sale_qty.custo
             </list-property>
             <xml-property name="queryText"><![CDATA[select * From (
 (select rp.name as customer_name_paid,rp.id as customer_id,
-CASE so.pricelist_id WHEN 5 THEN sum(avl.amount) ELSE 0 END AS wholesale_paidamount, CASE so.pricelist_id WHEN 1 THEN sum(avl.amount)
+CASE WHEN so.pricelist_id in (5,12) THEN sum(avl.amount) ELSE 0 END AS wholesale_paidamount, CASE WHEN so.pricelist_id in (1,11) THEN sum(avl.amount)
 ELSE 0 END AS retail_paidamount
 FROM sale_order so, res_partner rp, account_invoice ai,account_move_line aml ,account_voucher_line avl,account_voucher  av
 where ai.move_id=aml.move_id 
@@ -2939,7 +3513,7 @@ where ai.move_id=aml.move_id
 	and ai.origin=so.name
 	and ai.partner_id=so.partner_id
 	and av.id = avl.voucher_id
-	and so.pricelist_id in (1,5)	
+	and so.pricelist_id in (1,11,12,5)	
 	and so.section_id = ?
 	and so.user_id  = ?
 	and ai.payment_type='credit'
@@ -2955,24 +3529,25 @@ When ? = FALSE and ? = TRUE then so.pre_order in (FALSE) end
 (SELECT  customerss,customer_id,sum(SesamePC) as sesamepc,sum(PeanutPC) as peanutpc,sum(PremierPeanutPC) as premierpc
 FROM
 (SELECT customerss,customer_id,
-CASE cat
-WHEN 'Sesame Oil' THEN (saleViss + (saleliter * 0.575))
+CASE pccode
+WHEN 'PC8' THEN (saleliter + (saleViss/0.575))
 ELSE 0 END AS SesamePC,
-CASE cat
-WHEN 'Peanut Oil' THEN (saleViss + (saleliter * 0.575))
+CASE pccode
+WHEN 'PC7' THEN (saleliter + (saleViss/0.575))
 ELSE 0 END AS PeanutPC,
-CASE cat
-WHEN 'Premier Peanut Oil' THEN (saleViss + (saleliter * 0.575))
+CASE pccode
+WHEN 'PC9' THEN (saleliter + (saleViss/0.575))
 ELSE 0 END AS PremierPeanutPC 
 FROM
 (with
-sale as (select sum(sol.product_uom_qty) as qty,rp.name as customer_name,sol.product_id,pc.name as categoryname,rp.id as cus_id
+sale as (select sum(sol.product_uom_qty) as qty,rp.name as customer_name,sol.product_id,
+pc.name as categoryname,pc.code as pccode,rp.id as cus_id
 FROM sale_order so,sale_order_line sol,account_voucher av,res_partner rp,product_product pp ,product_template pt,product_category pc
 WHERE  so.id = sol.order_id and so.partner_id=rp.id and so.partner_id=av.partner_id  and pp.product_tmpl_id=pt.id and  pc.id=pt.categ_id and sol.product_id=pp.id
 AND so.state!='cancel' 
 --AND ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ?
 and so.section_id = ? and so.user_id  =? --and so.warehouse_id = ?
-and so.pricelist_id in (1,5)
+and so.pricelist_id in (1,11,12,5)	
 and so.payment_type='credit'
 and av.type='receipt' 
 and av.state='posted' 
@@ -2983,8 +3558,13 @@ when ? = TRUE and ? = TRUE then so.pre_order in (TRUE,FALSE)
 When ? = FALSE and ? = FALSE then so.pre_order in (TRUE,FALSE) 
 When ? = TRUE and ? = FALSE then so.pre_order in (TRUE) 
 When ? = FALSE and ? = TRUE then so.pre_order in (FALSE) end 
+and case 
+when ? = TRUE and ? = TRUE then pc.is_oldproduct in (TRUE,FALSE) 
+When ? = FALSE and ? = FALSE then pc.is_oldproduct in (TRUE,FALSE) 
+When ? = TRUE and ? = FALSE then pc.is_oldproduct in (FALSE) 
+When ? = FALSE and ? = TRUE then pc.is_oldproduct in (TRUE) end 
 
-GROUP BY product_id,so.partner_id,so.payment_type,rp.name,sol.product_id,pc.name,rp.id)
+GROUP BY product_id,so.partner_id,so.payment_type,rp.name,sol.product_id,pc.code,pc.name,rp.id)
 
 SELECT sale.*,pc.name,sale.customer_name as customerss,sale.categoryname as cat,sale.cus_id as customer_id,
 CASE pt.packing_unit WHEN 'Viss'
@@ -3356,6 +3936,126 @@ ORDER BY pp.id)a )b group by b.customerss,customer_id)sale_qty on sale_qty.custo
           <design:identifier>
             <design:name></design:name>
             <design:position>24</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>25</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>26</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>27</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>28</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>29</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>30</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>31</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>32</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
@@ -4117,7 +4817,7 @@ from res_branch where active='t']]></xml-property>
                         <label id="2297">
                             <property name="fontSize">8pt</property>
                             <property name="textAlign">center</property>
-                            <text-property name="text">Viss Total</text-property>
+                            <text-property name="text">Liter Total</text-property>
                         </label>
                     </cell>
                     <cell id="2263">

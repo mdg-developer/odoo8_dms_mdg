@@ -29,7 +29,8 @@ class sale_report(osv.osv):
     _rec_name = 'date'
     _columns = {       
         'weight_viss':fields.float('Weight Viss'),
-        'weight_liter':fields.float('Weight Liter')        
+        'weight_liter':fields.float('Weight Liter') ,
+        'carton_box':fields.float('Carton Box')        
     }
     _order = 'date desc'
 
@@ -62,7 +63,8 @@ class sale_report(osv.osv):
                     s.project_id as analytic_account_id,
                     s.section_id as section_id,
                     sum(l.product_uom_qty * t.weight_net) as weight_viss, 
-                    sum(l.product_uom_qty * t.weight_liter) as weight_liter
+                    sum(l.product_uom_qty * t.weight_liter) as weight_liter,
+                    sum(l.product_uom_qty * t.weight_liter)/12 as carton_box
         """
         return select_str
 

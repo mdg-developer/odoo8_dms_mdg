@@ -30,7 +30,11 @@ class product_category(osv.osv):
                     type='many2one',
                     relation='account.account',
                     string="Whole Sale Income Account",
-                    help="This account will be used for invoices instead of the default one to value sales for the current product."), }
+                    help="This   will be used for invoices instead of the default one to value sales for the current product."), }
+    _defaults = {
+        'is_oldproduct': False,
+    }
+					
     def create(self, cr, uid, vals, context=None):
         category_code = None
         if vals:

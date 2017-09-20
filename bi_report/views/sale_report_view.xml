@@ -9,6 +9,7 @@
 				<field name="price_total" position="after">
 					<field name="weight_viss" type="measure" />
 					<field name="weight_liter" type="measure" />
+					<field name="carton_box" type="measure" />
 				</field>
 			</field>
 		</record>
