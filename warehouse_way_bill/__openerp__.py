@@ -31,7 +31,7 @@ Way Bill' Module
 
     """,
     'website': 'https://www.odoo.com/page/warehouse',
-    'depends': ['base', 'sale', 'stock','warehouse_transfer_request'],
+    'depends': ['base', 'sale', 'stock','warehouse_transfer_request','stock_split_picking'],
     'category': 'stock',
     'sequence': 16,
     'data': [
