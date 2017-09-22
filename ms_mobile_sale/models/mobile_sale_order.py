@@ -447,7 +447,7 @@ class mobile_sale_order(osv.osv):
                                             'tb_ref_no':ms_ids.name,
                                             'sale_plan_name':ms_ids.sale_plan_name,
                                             'payment_type':ms_ids.type,
-                                            'direct_credit':ms_ids.direct_credit,
+#                                            'direct_credit':ms_ids.direct_credit,
                                             'delivery_id':delivery_team_id,
                                             'section_id':sale_team_id,
                                             'due_date':ms_ids.due_date,
@@ -2028,19 +2028,24 @@ class mobile_sale_order(osv.osv):
 # #                     
 #                     partner_id = partner_obj.create(cursor, user, partner_result, context=context)
                         
-                    cursor.execute("""INSERT INTO res_partner (sales_channel, notify_email, image, street, partner_latitude, unit, branch_id, display_name, mobile_customer, frequency_id,
-                                country_id, company_id, employee, pricelist_id, email, is_company, customer_code, city, street2, phone, partner_longitude, township, customer, name, mobile,
-                                class_id, outlet_type, temp_customer, chiller, state_id, section_id, active, supplier)
-                                VALUES (%s, 'always', %s, %s, %s, %s, %s, %s, True, %s, %s, %s, False, %s, %s, True, %s, %s, %s, %s, %s, %s, True, %s, %s, %s, %s,
-                                %s, %s, %s, %s, True, False)""",
-                                (partner['sales_channel'], partner['image'], partner['street'], partner['partner_latitude'], partner['unit'], partner['branch_id'],
-                                 partner['name'], partner['frequency_id'], partner['country_id'], partner['company_id'], partner['pricelist_id'], partner['email'],
-                                 partner['customer_code'],partner['city'], partner['street2'], partner['phone'], partner['partner_longitude'],partner['township'],
-                                 partner['name'], partner['mobile'], partner['class_id'], partner['outlet_type'], partner['temp_customer'], chiller, partner['state_id'],
-                                 partner['section_id'],))
-             
-                    cursor.execute('''select id from res_partner where customer_code = %s''', (partner['customer_code'],))
-                    id = cursor.fetchall()
+                    partner_ids=partner_obj.search(cursor, user, [('customer_code', '=', partner['customer_code']), ('name', '=', partner['name'])], context=context)
+                    if not partner_ids:
+                        
+                        cursor.execute("""INSERT INTO res_partner (sales_channel, notify_email, image, street, partner_latitude, unit, branch_id, display_name, mobile_customer, frequency_id,
+                                    country_id, company_id, employee, pricelist_id, email, is_company, customer_code, city, street2, phone, partner_longitude, township, customer, name, mobile,
+                                    class_id, outlet_type, temp_customer, chiller, state_id, section_id, active, supplier)
+                                    VALUES (%s, 'always', %s, %s, %s, %s, %s, %s, True, %s, %s, %s, False, %s, %s, True, %s, %s, %s, %s, %s, %s, True, %s, %s, %s, %s,
+                                    %s, %s, %s, %s, True, False)""",
+                                    (partner['sales_channel'], partner['image'], partner['street'], partner['partner_latitude'], partner['unit'], partner['branch_id'],
+                                     partner['name'], partner['frequency_id'], partner['country_id'], partner['company_id'], partner['pricelist_id'], partner['email'],
+                                     partner['customer_code'],partner['city'], partner['street2'], partner['phone'], partner['partner_longitude'],partner['township'],
+                                     partner['name'], partner['mobile'], partner['class_id'], partner['outlet_type'], partner['temp_customer'], chiller, partner['state_id'],
+                                     partner['section_id'],))
+                 
+                        cursor.execute('''select id from res_partner where customer_code = %s''', (partner['customer_code'],))
+                        id = cursor.fetchall()
+                        if id:
+                            cursor.execute('''update res_partner set commercial_partner_id =%s where customer_code = %s''', (id[0][0],partner['customer_code'],))
             return id
         except Exception, e:
             print 'False'
