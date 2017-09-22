@@ -40,11 +40,11 @@ class stock_picking(models.Model):
             'default_picking_id': len(self.ids) and self.ids[0] or False,
         }
         self.env.cr.execute("select waybill_no from stock_picking where id= %s", (self.ids[0],))
-        waybill_no =self.env.cr.fetchone()[0]
+        waybill_no = self.env.cr.fetchone()[0]
         if waybill_no is None:
                 id_code = self.pool.get('ir.sequence').get(self.env.cr, self.env.user.id,
                                                 'way.bill.code') or '/'
-                self.env.cr.execute("update stock_picking set waybill_no=%s where id =%s and  waybill_no is null", (id_code,self.ids[0],))
+                self.env.cr.execute("update stock_picking set waybill_no=%s where id =%s and  waybill_no is null", (id_code, self.ids[0],))
         view = self.env.ref('stock.view_stock_enter_transfer_details')
         return {
             'name': _('Enter quantities to split'),
@@ -57,4 +57,34 @@ class stock_picking(models.Model):
             'target': 'new',
             'context': ctx,
         }
+        
+        
+class StockMove(models.Model):
 
+    _inherit = 'stock.move'
+
+    @api.model
+    def split(self, move, qty,
+              restrict_lot_id=False, restrict_partner_id=False):
+        new_move_id = super(StockMove, self).split(
+            move, qty,
+            restrict_lot_id=restrict_lot_id,
+            restrict_partner_id=restrict_partner_id,
+        )
+        new_move = self.browse(new_move_id)
+        move_assigned = move.state == 'assigned'
+        moves = move + new_move
+        if move.reserved_availability > move.product_qty:
+            moves.do_unreserve()
+        if move_assigned:
+            moves.action_assign()
+        else:
+            moves.action_confirm()
+        if move.procurement_id:
+            defaults = {'product_qty': qty,
+                        'state': 'running'}
+            new_procurement = move.procurement_id.copy(default=defaults)
+            new_move.procurement_id = new_procurement
+            move.procurement_id.product_qty = move.product_qty
+            self.env.cr.execute("update stock_picking set is_waybill=True where id =%s and waybill_no is not null and  is_transfer_request =True", (move.picking_id.id,))            
+        return new_move.id

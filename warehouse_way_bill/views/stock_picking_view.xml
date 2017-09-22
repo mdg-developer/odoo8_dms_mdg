@@ -12,7 +12,10 @@
 				</field>
 
 				<field name="partner_id" position="after">
+					<field name="is_waybill" invisible="1" />
+
 					<field name="loading_date"
+
 						attrs="{'invisible':[('is_transfer_request','!=',True)]}" />
 					<field name="loading_by"
 						attrs="{'invisible':[('is_transfer_request','!=',True)]}" />
@@ -46,9 +49,11 @@
 			<field name="inherit_id" ref="stock_split_picking.view_picking_form" />
 			<field name="arch" type="xml">
 				<button name="split_process" position="replace">
-					<button name="split_process" states="draft,confirmed,assigned,partially_available"
-						string="Create Way Bill" groups="stock.group_stock_user" type="object" />
+					<button name="split_process" string="Create Way Bill"
+						groups="stock.group_stock_user" type="object"
+						attrs="{'invisible':[('is_waybill','=',True)]}" />
 				</button>
+				<!-- states="draft,confirmed,assigned,partially_available" -->
 			</field>
 		</record>
 		<record id="action_picking_way_bill" model="ir.actions.act_window">
