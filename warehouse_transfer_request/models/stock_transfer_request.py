@@ -42,8 +42,8 @@ class stock_transfer_request(osv.osv):
     
     _columns = {
         'name': fields.char('TR Ref', readonly=True),
-        'warehouse_id':fields.many2one('stock.warehouse', ' Warehouse',required=True),
-        'location_id':fields.many2one('stock.location', 'Location',required=True),
+        'warehouse_id':fields.many2one('stock.warehouse', ' Warehouse', required=True),
+        'location_id':fields.many2one('stock.location', 'Location', required=True),
         'request_by':fields.many2one('res.users', "Requested By" , readonly=True),
         'approve_by':fields.many2one('res.users', "Approved By", readonly=True),
         'request_date' : fields.date('Date Requested'),
@@ -75,13 +75,13 @@ class stock_transfer_request(osv.osv):
         return super(stock_transfer_request, self).create(cursor, user, vals, context=context)
    
     def approve(self, cr, uid, ids, context=None):
-        transfer_data=self.browse(cr, uid, ids[0], context=context)
+        transfer_data = self.browse(cr, uid, ids[0], context=context)
         transfer_line_obj = self.pool.get("stock.transfer.request.line")
         proc_obj = self.pool.get("procurement.order")
         new_group = self.pool.get("procurement.group").create(cr, uid, {'name': transfer_data.name}, context=context)
 
         for  line_data in transfer_data.p_line:
-                line=transfer_line_obj.browse(cr, uid,line_data.id, context=context)
+                line = transfer_line_obj.browse(cr, uid, line_data.id, context=context)
 
                 vals = {
                     'name': line.description,
@@ -99,7 +99,7 @@ class stock_transfer_request(osv.osv):
                     }
                 proc = proc_obj.create(cr, uid, vals, context=context)
               #  proc_obj.run(cr, uid, [proc], context=context)
-        cr.execute("update stock_picking set is_transfer_request =True where group_id =%s",(new_group,))
+        cr.execute("update stock_picking set is_transfer_request =True,dispatched_to=%s where group_id =%s", (transfer_data.warehouse_id.id, new_group,))
         return self.write(cr, uid, ids, {'state':'approve' , 'approve_by':uid})    
     
     def cancel(self, cr, uid, ids, context=None):
@@ -112,7 +112,7 @@ class stock_transfer_request_line(osv.osv):
     
     def on_change_product_id(self, cr, uid, ids, product_id, context=None):
         values = {}
-        res = {'value': {'description': False, 'uom_ratio': False, 'uom_id' :  False,'sequence':False}}
+        res = {'value': {'description': False, 'uom_ratio': False, 'uom_id' :  False, 'sequence':False}}
         if product_id:
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             cr.execute("""SELECT uom.id FROM product_product pp 

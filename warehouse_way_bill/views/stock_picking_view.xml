@@ -10,12 +10,11 @@
 				<field name="name" position="after">
 					<field name="waybill_no" readonly="1" />
 				</field>
-
 				<field name="partner_id" position="after">
 					<field name="is_waybill" invisible="1" />
-
+					<field name="dispatched_from" invisible="1" />
+					<field name="dispatched_to" invisible="1" />
 					<field name="loading_date"
-
 						attrs="{'invisible':[('is_transfer_request','!=',True)]}" />
 					<field name="loading_by"
 						attrs="{'invisible':[('is_transfer_request','!=',True)]}" />
@@ -56,6 +55,8 @@
 				<!-- states="draft,confirmed,assigned,partially_available" -->
 			</field>
 		</record>
+
+
 		<record id="action_picking_way_bill" model="ir.actions.act_window">
 			<field name="name">Waiting Availability Transfers</field>
 			<field name="res_model">stock.picking</field>
@@ -104,6 +105,26 @@
 			</field>
 		</record>
 
+
+		<record id="action_picking_way_bill_no" model="ir.actions.act_window">
+			<field name="name">Way Bill Data</field>
+			<field name="res_model">stock.picking</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form,calendar</field>
+			<field name="domain">[('is_transfer_request','=',True),('is_waybill','=',True)]
+			</field>
+			<field name="context">{
+				'search_default_is_transfer_request': True,
+				'search_default_is_waybill': True,
+				}
+			</field>
+			<field name="search_view_id" ref="stock.view_picking_internal_search" />
+		</record>
+
+		<menuitem action='action_picking_way_bill_no' id="menu_way_bill_no"
+			parent="menu_action_way_bill_parent" groups="stock.group_stock_manager"
+			sequence="2" />
 	</data>
 </openerp>
 		

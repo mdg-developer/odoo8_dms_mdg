@@ -13,6 +13,8 @@ class transport_type(osv.osv):
 class stock_picking(osv.osv):
     _inherit = "stock.picking"    
     _columns = {
+        'dispatched_from':fields.many2one('stock.warehouse', 'Dispatched from'),
+        'dispatched_to':fields.many2one('stock.warehouse', 'Dispatched To'),
         'waybill_no': fields.char('Way Bill', select=True, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, copy=False),
         'is_waybill':fields.boolean('Is Way Bill', copy=False),
         'loading_date' : fields.datetime('Loading Date & Time' , states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, copy=False),

@@ -19,31 +19,5 @@
 #
 ##############################################################################
 
-{
-    'name': 'Way Bill',
-    'version': '1.1',
-    'author': '7th Computing',
-    'summary': 'Way Bill',
-    'description': """
 
-Way Bill' Module
-===============================
-
-    """,
-    'website': 'https://www.odoo.com/page/warehouse',
-    'depends': ['base', 'sale', 'stock', 'warehouse_transfer_request', 'stock_split_picking'],
-    'category': 'stock',
-    'sequence': 16,
-    'data': [
-        'views/sequence.xml',
-        'views/way_bill_view.xml',
-        'views/stock_picking_view.xml',
-        'reports/mdg_custom_layouts.xml',
-        'reports/qweb_view.xml',
-        'reports/report_way_bill.xml',
-    ],
-    'test': [
-
-    ],
-    'installable': True,
-}
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
