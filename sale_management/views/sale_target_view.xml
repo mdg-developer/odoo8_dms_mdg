@@ -32,7 +32,7 @@
 												<field name="product_id" on_change="on_change_product_id(product_id)" />
 												<field name="product_uom" />
 												<field name="product_uom_qty"
-													on_change="on_change_product_uom_qty(product_id,product_uom_qty)" />
+													on_change="on_change_product_uom_qty(price_unit,product_uom_qty)" />
 												<field name="price_unit" />
 												<field name="price_subtotal" />
 												<field name="distribution_price" />
@@ -43,7 +43,7 @@
 										<field name="product_id" on_change="on_change_product_id(product_id)" />
 										<field name="product_uom" />
 										<field name="product_uom_qty"
-											on_change="on_change_product_uom_qty(product_id,product_uom_qty)" />
+											on_change="on_change_product_uom_qty(price_unit,product_uom_qty)" />
 										<field name="price_unit" />
 										<field name="price_subtotal" />
 										<field name="distribution_price" />
@@ -154,7 +154,7 @@
 				</graph>
 			</field>
 		</record>
-		
+
 
 		<record id="view_sale_target_search" model="ir.ui.view">
 			<field name="name">sale.team.search</field>

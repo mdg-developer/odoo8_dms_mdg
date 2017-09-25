@@ -111,12 +111,12 @@ class sale_target_line(osv.osv):
             }
         return {'value': values}
     
-    def on_change_product_uom_qty(self, cr, uid, ids, product_id, product_uom_qty, context=None):
+    def on_change_product_uom_qty(self, cr, uid, ids, price_unit, product_uom_qty, context=None):
         values = {}
         if product_uom_qty:
-            product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+            #product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             values = {
-                'price_subtotal':product_uom_qty * product.product_tmpl_id.list_price,
+                'price_subtotal':product_uom_qty * price_unit,
             }
         return {'value': values}   
     
