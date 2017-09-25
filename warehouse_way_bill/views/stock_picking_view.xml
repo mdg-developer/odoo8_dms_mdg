@@ -107,7 +107,7 @@
 
 
 		<record id="action_picking_way_bill_no" model="ir.actions.act_window">
-			<field name="name">Way Bill Data</field>
+			<field name="name">Way Bill</field>
 			<field name="res_model">stock.picking</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="view_type">form</field>

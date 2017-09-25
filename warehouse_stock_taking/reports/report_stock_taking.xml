@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<template id="report_stock_taking_document">
+			<div class="page">
+				<t t-foreach="docs" t-as="o">
+					<div class="row">
+						<div class="col-xs-3">
+							<img t-if="o.create_uid.company_id.logo"
+								t-att-src="'data:image/png;base64,%s' % o.create_uid.company_id.logo"
+								style="max-height: 45px;" />
+						</div>
+						<div class="col-xs-9 text-right" style="margin-top:20px;"
+							t-field="o.create_uid.company_id.rml_header1" />
+					</div>
+					<div class="row zero_min_height">
+						<div class="col-xs-12">
+							<div style="border-bottom: 1px solid black;" />
+						</div>
+					</div>
+					<div>
+						<span t-field="o.create_uid.company_id.partner_id" />
+					</div>
+					<div>
+						<span t-field="o.create_uid.company_id.street" />
+						,
+						<span t-field="o.create_uid.company_id.state_id.name" />
+						,
+						<span t-field="o.create_uid.company_id.city.name" />
+						,
+						<span t-field="o.create_uid.company_id.country_id.name" />
+						.
+					</div>
+
+					<h4>
+						<strong>
+							Stock Taking &amp; Loading Instruction(STLI)
+						</strong>
+					</h4>
+
+					<table class="table table-condensed">
+						<tr>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>STLI Ref;No:</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<strong t-field="o.name"></strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Issue To:</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<strong t-field="o.issue_to.name" />
+							</td>
+						</tr>
+						<tr>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Request From:</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<strong t-field="o.from_warehouse_id" />
+							</td>
+
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Issue From:</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<strong t-field="o.to_warehouse_id" />
+							</td>
+						</tr>
+						<tr>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Date Of Issue:</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<strong t-field="o.issue_date" />
+							</td>
+
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Date Of Operation:</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<strong t-field="o.operation_date" />
+							</td>
+						</tr>
+						<tr>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>TR Ref.No.</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.transfer_id.name" />
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<strong>GIN Ref:</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.gin_no" />
+							</td>
+						</tr>
+						<tr>
+							<td style="border:0pt;font-size:10pt;">
+								<strong></strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+							</td>
+
+							<td style="border:0pt;font-size:10pt;">
+								<strong>Last Update On:</strong>
+							</td>
+							<td style="border:0pt;font-size:10pt;">
+								<span t-field="o.write_date" />
+							</td>
+						</tr>
+					</table>
+
+					<table class="table table-condensed">
+						<thead>
+							<tr>
+								<th>No</th>
+								<th>RFI-Ref;</th>
+								<th>Item Specification</th>
+								<th>Batch No</th>
+								<th>Expiry</th>
+								<th>Storage Location</th>
+								<th>UoM</th>
+								<th>Qty</th>
+								<th>Packing Unit</th>
+								<th>Vehicle No</th>
+								<th>Remark</th>
+							</tr>
+						</thead>
+						<tbody class="invoice_tbody">
+							<t t-set="i" t-value="1" />
+							<tr t-foreach="o.p_line" t-as="l">
+								<td align="center">
+									<span t-esc="i" />
+									<t t-set="i" t-value="i+1" />
+								</td>
+								<td>
+									<span t-field="l.rfi_no" />
+								</td>
+								<td>
+									<span t-field="l.product_id" />
+								</td>
+								<td>
+									<span t-field="l.batch_no" />
+								</td>
+								<td>
+									<span t-field="l.expiry_date" />
+								</td>
+								<td>
+									<span t-field="l.storage_location" />
+								</td>
+								<td align="right">
+									<span t-esc="'%.0f'%(l.quantity)" />
+								</td>
+								<td>
+									<span t-field="l.uom_id" />
+								</td>
+								<td>
+									<span t-field="l.vehicle_no" />
+								</td>
+								<td>
+									<span t-field="l.remark" />
+								</td>
+							</tr>
+
+						</tbody>
+					</table>
+					<tr>
+						<table class="table table-condensed">
+							<thead>
+								<tr>
+									<th>
+									</th>
+									<th>Issued By </th>
+									<th>Stock Taken By</th>
+									<th>Loaded By</th>
+								</tr>
+							</thead>
+							<tbody class="invoice_tbody">
+								<tr t-foreach="o" t-as="l">
+									<td>Name</td>
+									<td>
+										<p t-field="l.issue_to" />
+									</td>
+									<td>
+										<p t-field="l.taken_by" />
+									</td>
+									<td>
+										<p t-field="l.loading_by" />
+									</td>
+
+								</tr>
+								<tr>
+									<td>Position</td>
+									<td></td>
+									<td></td>
+									<td></td>
+
+								</tr>
+								<tr>
+									<td>Signature</td>
+									<td></td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>Date</td>
+									<td></td>
+									<td></td>
+									<td></td>
+								</tr>
+							</tbody>
+						</table>
+					</tr>
+				</t>
+			</div>
+		</template>
+
+	</data>
+</openerp>

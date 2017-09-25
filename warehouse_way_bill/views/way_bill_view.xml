@@ -138,9 +138,9 @@
 		<menuitem id="menu_action_way_bill_parent" name="Way Bill"
 			parent="stock.menu_stock_root" sequence="2" />
 
-		<menuitem action='action_way_bill' id="menu_way_bill"
-			parent="menu_action_way_bill_parent" groups="stock.group_stock_manager"
-			sequence="1" />
+		<!-- <menuitem action='action_way_bill' id="menu_way_bill" -->
+		<!-- parent="menu_action_way_bill_parent" groups="stock.group_stock_manager" -->
+		<!-- sequence="1" /> -->
 
 	</data>
 </openerp>
