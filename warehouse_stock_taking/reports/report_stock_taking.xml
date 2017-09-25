@@ -117,13 +117,13 @@
 						<thead>
 							<tr>
 								<th>No</th>
-								<th>RFI-Ref;</th>
+								<th>WB-Ref;</th>
 								<th>Item Specification</th>
 								<th>Batch No</th>
 								<th>Expiry</th>
 								<th>Storage Location</th>
-								<th>UoM</th>
 								<th>Qty</th>
+								<th>UoM</th>
 								<th>Packing Unit</th>
 								<th>Vehicle No</th>
 								<th>Remark</th>
@@ -137,7 +137,7 @@
 									<t t-set="i" t-value="i+1" />
 								</td>
 								<td>
-									<span t-field="l.rfi_no" />
+									<span t-field="l.waybill_no" />
 								</td>
 								<td>
 									<span t-field="l.product_id" />
@@ -156,6 +156,9 @@
 								</td>
 								<td>
 									<span t-field="l.uom_id" />
+								</td>
+								<td>
+									<span t-field="l.uom_ratio" />
 								</td>
 								<td>
 									<span t-field="l.vehicle_no" />

@@ -94,32 +94,39 @@ class stock_taking(osv.osv):
             tr_no = transfer_data.name
             warehouse_data = warehouse_obj.browse(cr, uid, from_warehouse_id, context=context)
             group_id = group_obj.search(cr, uid, [('name', '=', tr_no)], context=context) 
-            picking_ids = picking_obj.search(cr, uid, [('group_id', '=', group_id), ('state', 'not in', ('done', 'cancel'))], context=context) 
-            move_ids = move_obj.search(cr, uid, [('picking_id', 'in', picking_ids)], context=context)
-            quant_ids = quant_obj.search(cr, uid, [('reservation_id', 'in', move_ids)], context=context)
-            
-            for line in quant_ids:          
-                order_data = quant_obj.browse(cr, uid, line, context=context)
-                product_id = order_data.product_id.id
-                description = order_data.product_id.product_tmpl_id.description_sale
-                quantity = order_data.qty
-                uom_id = order_data.product_id.uom_id.id
-                sequence = order_data.product_id.product_tmpl_id.sequence
-                uom_ratio = order_data.product_id.uom_ratio
-                storage_location = order_data.location_id.id
-                batch_no = order_data.lot_id.id
-                life_date = order_data.lot_id.life_date
-                data_line.append({
-                                      'sequence':sequence,
-                                        'product_id':product_id,
-                                         'description': description,
-                                        'quantity':quantity,
-                                        'uom_id':uom_id,
-                                        'uom_ratio':uom_ratio,
-                                        'storage_location':storage_location,
-                                        'batch_no':batch_no,
-                                        'expiry_date':life_date,
-                                          })                
+            picking_ids = picking_obj.search(cr, uid, [('group_id', '=', group_id),('waybill_no', '!=', None), ('state', 'not in', ('done', 'cancel'))], context=context)             
+            for picking_id in picking_ids:     
+                picking_data=picking_obj.browse(cr, uid, picking_id, context=context)
+                vehicle_no=picking_data.vehicle_no
+                waybill_no=picking_data.waybill_no
+                move_ids = move_obj.search(cr, uid, [('picking_id', '=', picking_id)], context=context)
+                for move_id in move_ids:
+                    move_obj.browse(cr, uid, move_id, context=context)
+                    quant_ids = quant_obj.search(cr, uid, [('reservation_id', '=', move_id)], context=context)       
+                    for line in quant_ids:         
+                        order_data = quant_obj.browse(cr, uid, line, context=context)
+                        product_id = order_data.product_id.id
+                        description = order_data.product_id.product_tmpl_id.description_sale
+                        quantity = order_data.qty
+                        uom_id = order_data.product_id.uom_id.id
+                        sequence = order_data.product_id.product_tmpl_id.sequence
+                        uom_ratio = order_data.product_id.uom_ratio
+                        storage_location = order_data.location_id.id
+                        batch_no = order_data.lot_id.id
+                        life_date = order_data.lot_id.life_date
+                        data_line.append({
+                                              'sequence':sequence,
+                                                'product_id':product_id,
+                                                 'description': description,
+                                                'quantity':quantity,
+                                                'uom_id':uom_id,
+                                                'uom_ratio':uom_ratio,
+                                                'storage_location':storage_location,
+                                                'batch_no':batch_no,
+                                                'expiry_date':life_date,
+                                                'vehicle_no':vehicle_no,
+                                                'waybill_no':waybill_no,
+                                                  })                
             values = {
                 'p_line': data_line,
             }
@@ -165,7 +172,7 @@ class stock_taking_line(osv.osv):
 
     _columns = {                
         'line_id':fields.many2one('stock.taking', 'Line', ondelete='cascade', select=True),
-        'rfi_no':fields.char('RFI-Ref;'),
+        'waybill_no':fields.char('WB-Ref;'),
         'product_id': fields.many2one('product.product', 'Item Description', required=True),
         'description':fields.char('Item Specification'),
         'quantity' : fields.float(string='Qty', digits=(16, 0), required=True),

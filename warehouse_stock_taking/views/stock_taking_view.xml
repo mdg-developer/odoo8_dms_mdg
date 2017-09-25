@@ -50,7 +50,7 @@
 										<tree string="Stock Taking Line" editable="bottom"
 											default_order="sequence asc">
 											<field name="sequence" invisible="1" />
-											<field name="rfi_no" />
+											<field name="waybill_no" />
 											<field name="product_id" on_change="on_change_product_id(product_id)" />
 											<field name="batch_no" domain="[('product_id', '=',product_id)]" />
 											<field name="expiry_date" />
