@@ -63,6 +63,12 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <text-property name="heading">name</text-property>
                 </structure>
                 <structure>
+                    <property name="columnName">outlettype</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">outlettype</text-property>
+                    <text-property name="heading">outlettype</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">name_template</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">name_template</text-property>
@@ -106,11 +112,16 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     </structure>
                     <structure>
                         <property name="position">2</property>
-                        <property name="name">name_template</property>
+                        <property name="name">outlettype</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">3</property>
+                        <property name="name">name_template</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
                         <property name="name">quantity</property>
                         <property name="dataType">integer</property>
                     </structure>
@@ -129,28 +140,36 @@ this.queryText =this.queryText.replace("--$branch_id$", "and ai.branch_id in ("+
                 </structure>
                 <structure>
                     <property name="position">2</property>
+                    <property name="name">outlettype</property>
+                    <property name="nativeName">outlettype</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
                     <property name="name">name_template</property>
                     <property name="nativeName">name_template</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">3</property>
+                    <property name="position">4</property>
                     <property name="name">quantity</property>
                     <property name="nativeName">quantity</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select rp.name,pp.name_template,case when COALESCE(sum(quantity),0)>=1 then 1 else 0 end as quantity
-from account_invoice ai,res_partner rp,account_invoice_line ail,product_product pp
+            <xml-property name="queryText"><![CDATA[select rp.name,oo.name as outlettype,pp.name_template,case when COALESCE(sum(quantity),0)>=1 then 1 else 0 end as quantity
+from account_invoice ai,res_partner rp,account_invoice_line ail,product_product pp , outlettype_outlettype oo
 where rp.id=ai.partner_id
 and ail.invoice_id=ai.id
 and pp.id=ail.product_id
+and oo.id=rp.outlet_type
 and date_invoice between ? and ?
 --$sales_team$
 --$branch_id$
-group by rp.id,pp.id
+group by rp.id,pp.id,oo.name
 order by rp.name,pp.name_template
 ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
@@ -420,6 +439,19 @@ and date_invoice between ? and ?
                         </tabular-hierarchy>
                     </property>
                 </tabular-dimension>
+                <tabular-dimension name="Group2" id="678">
+                    <property name="defaultHierarchy">NewTabularHierarchy2</property>
+                    <property name="hierarchies">
+                        <tabular-hierarchy name="NewTabularHierarchy2" id="679">
+                            <property name="levels">
+                                <tabular-level name="outlettype" id="680">
+                                    <property name="dataType">string</property>
+                                    <property name="columnName">outlettype</property>
+                                </tabular-level>
+                            </property>
+                        </tabular-hierarchy>
+                    </property>
+                </tabular-dimension>
             </property>
             <property name="measureGroups">
                 <tabular-measure-group name="Summary Field" id="149">
@@ -628,28 +660,18 @@ and date_invoice between ? and ?
                     <property name="measure">quantity</property>
                     <property name="detail">
                         <extended-item extensionName="AggregationCell" id="165">
-                            <property name="aggregationOnRow">Group/name</property>
+                            <property name="aggregationOnRow">Group2/outlettype</property>
                             <property name="aggregationOnColumn">Group1/name_template</property>
                             <property name="content">
                                 <data id="166">
                                     <property name="paddingRight">3pt</property>
                                     <property name="textAlign">right</property>
-                                    <property name="resultSetColumn">quantity_Group/name_Group1/name_template</property>
+                                    <property name="resultSetColumn">quantity_Group2/outlettype_Group1/name_template</property>
                                 </data>
                             </property>
                         </extended-item>
                     </property>
                     <property name="aggregations">
-                        <extended-item extensionName="AggregationCell" id="172">
-                            <property name="aggregationOnRow">Group/name</property>
-                            <property name="content">
-                                <data id="173">
-                                    <property name="paddingRight">3pt</property>
-                                    <property name="textAlign">right</property>
-                                    <property name="resultSetColumn">quantity_Group/name</property>
-                                </data>
-                            </property>
-                        </extended-item>
                         <extended-item extensionName="AggregationCell" id="178">
                             <property name="content">
                                 <data id="179">
@@ -668,6 +690,14 @@ and date_invoice between ? and ?
                                     <property name="paddingRight">3pt</property>
                                     <property name="textAlign">right</property>
                                     <property name="resultSetColumn">quantity_Group1/name_template</property>
+                                </data>
+                            </property>
+                        </extended-item>
+                        <extended-item extensionName="AggregationCell" id="684">
+                            <property name="aggregationOnRow">Group2/outlettype</property>
+                            <property name="content">
+                                <data id="685">
+                                    <property name="resultSetColumn">quantity_Group2/outlettype</property>
                                 </data>
                             </property>
                         </extended-item>
@@ -723,6 +753,24 @@ and date_invoice between ? and ?
                                 </extended-item>
                             </property>
                         </extended-item>
+                        <extended-item extensionName="DimensionView" id="681">
+                            <property name="dimension">Group2</property>
+                            <property name="levels">
+                                <extended-item extensionName="LevelView" name="NewLevel View2" id="682">
+                                    <property name="level">Group2/outlettype</property>
+                                    <property name="member">
+                                        <extended-item extensionName="CrosstabCell" id="683">
+                                            <property name="content">
+                                                <data name="outlettype" id="687">
+                                                    <property name="fontWeight">normal</property>
+                                                    <property name="resultSetColumn">outlettype</property>
+                                                </data>
+                                            </property>
+                                        </extended-item>
+                                    </property>
+                                </extended-item>
+                            </property>
+                        </extended-item>
                     </property>
                 </extended-item>
             </property>
@@ -765,6 +813,13 @@ and date_invoice between ? and ?
                     <property name="content">
                         <label id="158">
                             <text-property name="text">Outlet Name</text-property>
+                        </label>
+                    </property>
+                </extended-item>
+                <extended-item extensionName="CrosstabCell" id="686">
+                    <property name="content">
+                        <label id="688">
+                            <text-property name="text">Outlet Type</text-property>
                         </label>
                     </property>
                 </extended-item>
@@ -814,6 +869,30 @@ and date_invoice between ? and ?
                         <value>Group1/name_template</value>
                     </simple-property-list>
                     <property name="aggregateFunction">sum</property>
+                </structure>
+                <structure>
+                    <property name="name">outlettype</property>
+                    <expression name="expression">dimension["Group2"]["outlettype"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">quantity_Group2/outlettype</property>
+                    <expression name="expression">measure["quantity"]</expression>
+                    <property name="dataType">integer</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Group2/outlettype</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">sum</property>
+                </structure>
+                <structure>
+                    <property name="name">quantity_Group2/outlettype_Group1/name_template</property>
+                    <expression name="expression">measure["quantity"]</expression>
+                    <property name="dataType">integer</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Group2/outlettype</value>
+                        <value>Group1/name_template</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
                 </structure>
             </list-property>
         </extended-item>
