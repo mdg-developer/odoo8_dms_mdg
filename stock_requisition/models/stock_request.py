@@ -297,7 +297,7 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
         else:
             qty_on_hand = 0
         data['qty_on_hand']=qty_on_hand
-        data['product_uom']= product_data.product_tmpl_id.uom_id.id
+#        data['product_uom']= product_data.product_tmpl_id.uom_id.id
         data['uom_ratio']=product_data.product_tmpl_id.uom_ratio
         return super(stock_requisition_line, self).create(cr, uid, data, context=context)
     
