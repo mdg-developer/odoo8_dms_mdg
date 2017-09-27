@@ -1,7 +1,7 @@
 <openerp>
 	<data>
-		
-		
+
+
 		<record model="ir.ui.view" id="invoice_form_inherit_uom_qty">
 			<field name="name">account.invoice.form</field>
 			<field name="inherit_id" ref="account.invoice_form" />
@@ -9,18 +9,22 @@
 			<field name="arch" type="xml">
 				<data>
 					<!-- expr="//page/field[@name='invoice_line_ids']/tree/field[@name='name']" -->
-					<xpath expr="//page/field[@name='invoice_line']/tree/field[@name='quantity']" position="before">
-						
+					<xpath
+						expr="//page/field[@name='invoice_line']/tree/field[@name='quantity']"
+						position="replace">
+
 						<field name="bigger_qty" />
 						<field name="big_uom_id" string="Bigger UOM" />
 						<field name="smaller_qty" />
 						<field name="smaller_uom_id" string="Smaller UOM" />
-						
+						<field name="quantity"
+							groups="account.group_account_user,account.group_account_invoice" />
+
 					</xpath>
-					
+
 				</data>
 			</field>
 		</record>
-		
+
 	</data>
 </openerp>
