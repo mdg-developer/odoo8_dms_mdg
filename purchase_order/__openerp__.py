@@ -32,9 +32,12 @@ Purchase Order
 """,
     'author': 'Seventh Computing',
     'website': 'http://www.7thcomputing.com',
-    'depends': ['base','purchase'
+    'depends': ['base', 'purchase'
     ],
     'data': [        
+             'views/purchase_custom_layouts.xml',
+             'views/report_purchaseorder.xml',
+             
     ],
     'installable': True,
     'auto_install': False,
