@@ -21,6 +21,7 @@
 import time
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from django.template.defaultfilters import default
 
 class insert_sale_team(osv.osv_memory):
     _name = 'partner.sale.team'
@@ -41,6 +42,9 @@ class insert_sale_team(osv.osv_memory):
         'property_product_pricelist': fields.many2one('product.pricelist', string="Sale Pricelist", domain=[('type', '=', 'sale')]),
         'chiller_false':fields.boolean('Chiller False',),
         'hamper_false':fields.boolean("Hamper False"),
+        'cheque_true':fields.boolean("Cheque True"),
+        'cheque_false':fields.boolean("Cheque False",default=False),
+        
 #                 'demarcation_id': fields.many2one('sale.demarcation', 'Demarcation'),
                 
     }
@@ -65,6 +69,8 @@ class insert_sale_team(osv.osv_memory):
         chiller=data['chiller']
         hamper = data['hamper']
         chiller_false=data['chiller_false']
+        cheque_true=data['cheque_true']
+        cheque_false=data['cheque_false']
         hamper_false = data['hamper_false']        
         state_id=data['state_id']        
         city=data['city']
@@ -112,5 +118,8 @@ class insert_sale_team(osv.osv_memory):
                 partner_obj.write(cr, uid, partner, {'property_product_pricelist':price_list_id[0]}, context=None)
             if category_ids:
                 cr.execute('INSERT INTO res_partner_res_partner_category_rel (category_id,partner_id) VALUES (%s,%s)', (category_ids[0],partner))
-                                               
+            if cheque_true is True:
+                cr.execute('update res_partner set is_cheque=%s where id=%s',(True,partner,))
+            if cheque_false is True:
+                cr.execute('update res_partner set is_cheque=%s where id=%s',(False,partner,))                                                          
         return True              
