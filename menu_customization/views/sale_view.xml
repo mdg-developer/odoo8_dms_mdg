@@ -686,5 +686,23 @@
 			parent="stock.menu_stock_warehouse_mgmt" name='Waiting Availability Transfers'
 			sequence="2" />
 
+		<!-- Waiting Availability Cancel -->
+
+
+		<record id="action_picking_tree_waiting_2" model="ir.actions.act_window">
+			<field name="name">Waiting Availability Cancel</field>
+			<field name="res_model">stock.picking</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form,calendar</field>
+			<field name="domain">[('state','=','cancel')]</field>
+			<field name="context">{'state':'cancel'}</field>
+			<field name="search_view_id" ref="stock.view_picking_internal_search" />
+		</record>
+
+		<menuitem action="action_picking_tree_waiting_2" id="menu_action_picking_waiting_form_cancel"
+			parent="stock.menu_stock_warehouse_mgmt" name='Waiting Availability Cancel'
+			sequence="3" />
+
 	</data>
 </openerp>

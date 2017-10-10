@@ -106,7 +106,10 @@
 
 				<field name="pricelist_id" position="after">
 					<field name="tb_ref_no" attrs="{'readonly':[('state','!=','draft')]}"></field>
-					<field name="delivery_remark" />
+					<field name="delivery_remark"  attrs="{'readonly':[('state','=','done')]}"/>
+					<field name="no_promotion"  attrs="{'readonly':[('state','!=','draft')]}"/>
+					<field name="rebate_later"  attrs="{'readonly':[('state','!=','draft')]}"/>
+
 				</field>
 				<field name="date_order" position="after">
 					<field name="payment_type" on_change="on_change_payment_type(partner_id,payment_type)"

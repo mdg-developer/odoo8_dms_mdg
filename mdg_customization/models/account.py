@@ -98,6 +98,34 @@ class account_invoice(osv.osv):
                 paid_amount=invoice_data.amount_total - invoice_data.residual    
             res[invoice.id]= paid_amount            
         return res   
+
+    def _get_no_promo(self, cr, uid, ids, field_name, arg, context=None):
+        result = {}
+        order_id = None
+        for rec in self.browse(cr, uid, ids, context=context):
+            if rec.origin:
+                cr.execute("""select no_promotion from sale_order where name=%s""", (rec.origin,))
+                data = cr.fetchall()
+                if data:
+                    order_id = data[0]
+                result[rec.id] = order_id
+            else:
+                result[rec.id] = None
+        return result      
+
+    def _get_rebate_later(self, cr, uid, ids, field_name, arg, context=None):
+        result = {}
+        order_id = None
+        for rec in self.browse(cr, uid, ids, context=context):
+            if rec.origin:
+                cr.execute("""select rebate_later from sale_order where name=%s""", (rec.origin,))
+                data = cr.fetchall()
+                if data:
+                    order_id = data[0]
+                result[rec.id] = order_id
+            else:
+                result[rec.id] = None
+        return result      
     
     _columns = {
                 'pre_order': fields.boolean('Pre Order' , readonly=True),
@@ -122,7 +150,9 @@ class account_invoice(osv.osv):
              "of accounting entries. If you keep the payment term and the due date empty, it means direct payment. "
              "The payment term may compute several due dates, for example 50% now, 50% in one month."),
         'paid_amount': fields.function(_get_paid_amount, type='char', string='Paid Amount',digits_compute= dp.get_precision('Product Price')),     
-}
+         'no_promotion':fields.function(_get_no_promo, type='boolean',string='No Promotion',store=True),
+         'rebate_later':fields.function(_get_rebate_later, type='boolean',string='Rebate Later',store=True),
+         }
         
     def on_change_payment_type(self, cr, uid, ids, partner_id, payment_type, context=None):
         values = {}

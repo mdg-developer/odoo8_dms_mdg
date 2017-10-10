@@ -3144,6 +3144,8 @@ class sale_order(osv.osv):
             'user_id': order.user_id and order.user_id.id or False,
             'section_id' : order.section_id.id,
             'payment_type': payment_type,
+            'collection_team_id':order.section_id.id,
+            'collection_user_id':order.user_id and order.user_id.id or False,           
         }
         
         # Care for deprecated _inv_get() hook - FIXME: to be removed after 6.1

@@ -152,6 +152,8 @@ class sale_order(osv.osv):
         'township': fields.many2one('res.township', 'Township', ondelete='restrict' , readonly=True),
          'payment_term': fields.many2one('account.payment.term', 'Payment Term', readonly=True),
          'issue_warehouse_id':fields.many2one('stock.warehouse', 'Warehouse'),
+         'no_promotion':fields.boolean('No Promotion', default=False),
+         'rebate_later':fields.boolean('Rebate Later',default=False)
                }
     
     def on_change_payment_type(self, cr, uid, ids, partner_id, payment_type, context=None):

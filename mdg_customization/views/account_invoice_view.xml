@@ -46,8 +46,10 @@
 				<xpath expr="//field[@name='journal_id']" position="after">
 					<field name="pricelist_id" attrs="{'readonly':[('state','!=','draft')]}" />
 					<field name="delivery_remark" attrs="{'readonly':[('state','!=','draft')]}" />
+					<field name="no_promotion" attrs="{'readonly':[('state','!=','draft')]}" />
+					<field name="rebate_later" attrs="{'readonly':[('state','!=','draft')]}" />
 					<field name="collection_team_id" />
-					<field name="collection_user_id"  domain="[('default_section_id', '=',section_id)]" />
+					<field name="collection_user_id" domain="[('default_section_id', '=',section_id)]" />
 				</xpath>
 				<xpath expr="//field[@name='partner_id']" position="replace">
 					<field string="Customer" name="partner_id"
