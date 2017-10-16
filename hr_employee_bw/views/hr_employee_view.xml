@@ -1,0 +1,45 @@
+<openerp>
+  <data>
+	 <!-- Action Management Employee -->
+	<record id="open_view_employee_list_management" model="ir.actions.act_window">
+		<field name="name">Management Employees</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">hr.employee</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">kanban,tree,form</field>
+		<field name="search_view_id" ref="hr.view_employee_filter" />
+		<field name="context">{}</field>
+		<field name="domain">[('is_management','=','True')]</field>
+	</record>
+		
+	<menuitem string="Management Employees" action="open_view_employee_list_management" id="menu_open_view_employee_list_management"
+			sequence="2" parent="hr.menu_hr_main"/> 
+      
+     <record model="ir.ui.view" id="view_hr_employee_form_inherit">
+        <field name="name">hr.training.employee.form</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">  
+        	<xpath expr="//label[@for='category_ids']" position='before'>
+					<label for="myanmar_name" groups="base.group_hr_user" /> 
+					<field name="myanmar_name" />
+			</xpath>
+			<xpath expr="//group[@string='Birth']" position="after" sequence="4">
+			     <group string="Physical Info">
+			        <field name="weight"/>
+					<field name="height"/>
+			     </group>
+			</xpath>
+			<xpath expr="//field[@name='address_home_id']" position="after">
+			        <field name="facebook" placeholder="Enter Your Facebook Account"/>
+			</xpath>
+			<xpath expr="//field[@name='passport_id']" position="before" >
+			   		<field name="ethnic"/>
+			</xpath>
+			<field name="manager" position="after">
+					<field name="is_management"/>
+			</field>
+        </field>
+    </record>  
+  </data>
+</openerp>

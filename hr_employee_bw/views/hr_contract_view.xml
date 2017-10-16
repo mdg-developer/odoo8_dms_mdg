@@ -1,0 +1,24 @@
+<openerp>
+  <data>
+     <record model="ir.ui.view" id="hr_contract_view_form_inherit">
+        <field name="name">hr.contract.end.form</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="arch" type="xml">   
+            <field name="wage" position="after">
+                <field name="is_management"/>
+            </field>
+        </field>
+    </record> 
+     <record id="action_hr_contract_management" model="ir.actions.act_window">
+            <field name="name">Management Contracts</field>
+            <field name="res_model">hr.contract</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('is_management','=','True')]</field>
+            <field name="context">{'search_default_current':1}</field>
+            <field name="search_view_id" ref="hr_contract.hr_contract_view_search"/>
+     </record>
+     <menuitem action="action_hr_contract_management" id="hr_menu_contract_management" parent="hr_contract_state.submenu_hr_contracts" name="Management Contracts" sequence="1" groups="base.group_hr_manager"/>
+  </data>
+</openerp>
