@@ -1,0 +1,17 @@
+<openerp>
+  <data>   
+    
+    <record id="view_vendor_receipt_dialog_form_inherit1" model="ir.ui.view">
+			<field name="name">account.voucher.form.inherit</field>
+			<field name="model">account.voucher</field>
+			<field name="inherit_id" ref="account_voucher.view_vendor_receipt_dialog_form" />
+			<field name="arch" type="xml">				
+				<field name="journal_id" position="after">
+				    <field name="is_deposit"/>
+				    
+				</field>
+			</field>
+	</record>               
+	
+  </data>
+</openerp>
