@@ -38,7 +38,8 @@ Warehouse Customization
     ],
     'data': [        
             
-       'views/stock_quant_view.xml',      
+       'views/stock_quant_view.xml',
+       'views/sale_stock_inventory_view.xml',      
        'wizard/stock_history_view.xml',      
        
     ],
