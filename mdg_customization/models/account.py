@@ -2,6 +2,9 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 from openerp.exceptions import except_orm, Warning, RedirectWarning
+import openerp
+
+
 class account_bank_statement_line(osv.osv):
     _inherit = 'account.bank.statement.line'
     
@@ -71,7 +74,7 @@ class account_voucher(osv.osv):
             'journal_id': line.voucher_id.journal_id.id,
             'period_id': line.voucher_id.period_id.id,
             'name': _('change') + ': ' + (line.name or '/'),
-            'account_id': account_id.id,
+            'account_id': account_id,
             'move_id': move_id,
             'amount_currency': 0.0,
             'partner_id': line.voucher_id.partner_id.id,
