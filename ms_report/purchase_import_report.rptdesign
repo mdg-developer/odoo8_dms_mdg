@@ -1382,6 +1382,21 @@ from
             <property name="textAlign">center</property>
             <text-property name="text">Purchase Import Report </text-property>
         </label>
+        <data id="103">
+            <property name="fontFamily">sans-serif</property>
+            <property name="fontSize">12pt</property>
+            <property name="fontWeight">bold</property>
+            <property name="textAlign">right</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">from_date</property>
+                    <expression name="expression" type="javascript">"From Date - "+Formatter.format(params["from_date"],'MM/dd/yyyy')+"			To Date - "+Formatter.format(params["to_date"],'MM/dd/yyyy')</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+            </list-property>
+            <property name="resultSetColumn">from_date</property>
+        </data>
         <label id="2553"/>
         <table id="2554">
             <property name="width">72.71875in</property>
