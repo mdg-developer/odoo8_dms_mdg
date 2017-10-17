@@ -1,2 +1,2 @@
 import product
-#import purchase_requisition
+import purchase_requisitions

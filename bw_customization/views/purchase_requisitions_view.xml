@@ -1,0 +1,108 @@
+<openerp>
+  <data>   
+    <!--tree -->
+    <record model="ir.ui.view" id="view_purhcase_requisition_tree">
+        <field name="name">Purchase Requisitions</field>
+        <field name="model">purchase.requisitions</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Purchase Requisitions">
+                <field name="name" />
+                <field name="date_requisition"/>
+                <field name="date_expected"/>
+				<field name="partner_id"/>
+				<field name="warehouse_id"/>              
+            </tree>
+        </field>
+    </record>
+    
+    <record id="view_purhcase_requisition_filter" model="ir.ui.view">
+            <field name="name">Purchase Requisitions</field>
+            <field name="model">purchase.requisitions</field>
+            <field name="arch" type="xml">
+                <search string="Purchase Requisitions">
+                    <field name="name" />
+                    <field name="date_requisition" />
+                    <field name="partner_id" />
+                    <field name="state" />                   
+                    <group expand="0" string="Group By">
+                        <filter string="Date Requisition" icon="terp-personal" domain="[]" context="{'group_by':'date_requisition'}"/>
+                        <filter string="Requested By" icon="terp-personal+" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Status" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'state'}"/>
+                    </group>
+                </search>
+             </field>
+         </record>
+         
+	    <record model="ir.ui.view" id="view_purhcase_requisition_form">
+	        <field name="name">Purchase Requisitions</field>
+	        <field name="model">purchase.requisitions</field>
+	        <field name="type">form</field>
+	        <field name="arch" type="xml">
+	            <form string="Purchase Requisition">
+	                	<header>
+							<button name="action_confirmed" string="Confirm" type="object"
+								class="oe_highlight" attrs="{'invisible':[('state','in',('confirmed'))]}" />
+							<button name="action_cancel" string="Cancel" type="object"
+								class="oe_highlight" attrs="{'invisible':[('state','in',('confirmed','cancel'))]}" />
+							<button name="action_draft" string="Set to draft" type="object"
+								class="oe_highlight" attrs="{'invisible':[('state','in',('draft'))]}" />
+							<button name="generate_po" string="Convert to PO" type="object"
+								class="oe_highlight" attrs="{'invisible':[('state','in',('done','cancel','draft'))]}" />
+							<button name="open_product_line" attrs="{'invisible':[('state','in',('cancel','draft'))]}" string="Choose product lines" type="object" 
+								class="oe_highlight" />
+							<field name="state" widget="statusbar" statusbar_visible="draft,confirmed,cancel,done" />
+						</header>
+						<sheet>
+		                <group>
+								<group>
+									<field name="name" />									
+									<field name="date_requisition" />
+									<field name="date_expected" />
+								</group>
+								<group>
+									<field name="partner_id" />
+									<field name="warehouse_id" />
+								</group>
+						</group>	
+	                <notebook>
+	                    <page string="Products">
+	                        <field name="line_ids" attrs="{'readonly': [('state','not in',('draft'))]}">
+	                            <tree string="Products" editable="bottom">
+	                                <field name="product_id" on_change="onchange_product_id(product_id,product_uom_id)"/>
+	                                <field name="product_qty"/>
+	                                <field name="product_uom_id" groups="product.group_uom"/>
+	                            </tree>
+	                            <form string="Products">
+	                                <group>
+	                                    <field name="product_id" />
+	                                    <field name="product_qty"/>
+	                                    <field name="product_uom_id" />
+	                                </group>
+	                            </form>
+	                        </field>
+	                        <separator string="Terms and Conditions"/>
+	                        <field name="description" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+	                    </page>
+	                </notebook>               
+		               </sheet> 
+				    <div class="oe_chatter">
+		              <field name="message_follower_ids" widget="mail_followers"/>
+		              <field name="message_ids" widget="mail_thread"/>
+		            </div>                
+	            </form>
+	        </field>
+	    </record>
+	    <record model="ir.actions.act_window" id="open_view_purchase_requisition_form">
+	        <field name="name">Purchase Requisitions</field>
+	        <field name="res_model">purchase.requisitions</field>
+	        <field name="view_type">form</field>
+	        <field name="view_mode">tree,form</field>
+	        <field name="search_view_id" ref="view_purhcase_requisition_filter"/>
+	    </record>
+    
+    <menuitem  id="menu_purchase_requisitions"  sequence="1"
+        parent="purchase.menu_procurement_management" action="open_view_purchase_requisition_form"/>   
+
+  </data>
+</openerp>

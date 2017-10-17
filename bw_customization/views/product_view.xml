@@ -20,6 +20,9 @@
 				<xpath expr="//form/group/field[@name='company_id']" position="after">
 					<field name="isDefault" />
 				</xpath>
+				<xpath expr="//form/group/field[@name='product_code']" position="replace">
+					<field name="product_code" invisible="1"/>
+				</xpath>
             </field>
         </record>    	
 	</data>
