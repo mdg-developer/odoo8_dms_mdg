@@ -13,7 +13,7 @@ Beauty World HR Module
     'author': '7th Computing',
     'website': 'http://www.7thcomputing.com',
     'images': [],
-    'depends': ['base','hr'],
+    'depends': ['base','hr','hr_payroll'],
     #'css':'static/src/style1.css',
     'data': [
         'views/hr_employee_view.xml',
