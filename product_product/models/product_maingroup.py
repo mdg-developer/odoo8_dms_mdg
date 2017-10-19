@@ -5,5 +5,6 @@ class product_maingroup(osv.osv):
     _name = "product.maingroup"
     _columns = {
                 'name': fields.char('Description'),
+                'code': fields.char('Code'),
                 }
 product_maingroup()
