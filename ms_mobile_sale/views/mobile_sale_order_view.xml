@@ -47,6 +47,8 @@
 									readonly="1"  />
 								<field name="mso_longitude" digits="(14,15)"
 									readonly="1"  />
+								<field name="po_no" readonly="1"/>
+								<field name="invoice_no" readonly="1"/>
 
 							</group>
 							<group>

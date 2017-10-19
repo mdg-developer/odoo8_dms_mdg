@@ -79,6 +79,8 @@ class mobile_sale_order(osv.osv):
        'pricelist_id': fields.many2one('product.pricelist', 'Price List', select=True, ondelete='cascade'),
        'payment_line_ids':fields.one2many('customer.payment', 'payment_id', 'Payment Lines'),
       'branch_id': fields.many2one('res.branch', 'Branch', required=True),
+      'po_no':fields.char('PO No'),
+      'invoice_no':fields.char('Invoice No'),
 
    #     'journal_id'  : fields.many2one('account.journal', 'Journal' ,domain=[('type','in',('cash','bank'))]),
     }
@@ -89,6 +91,39 @@ class mobile_sale_order(osv.osv):
 
     }
 
+    def create(self, cursor, user, vals, context=None):
+        last_invoice_id=False
+        for line in vals.get('order_line'):
+            product_id=line[2].get('product_id')
+        if product_id:
+            cursor.execute("""select m.code from product_product p, product_template t,product_maingroup m where p.product_tmpl_id=t.id and t.main_group=m.id and p.id=%s """,(product_id,))
+            mgcode = cursor.fetchall()
+            if mgcode:
+                last_invoices = self.pool.get("mobile.sale.order").search(cursor, user, [('invoice_no', 'like', _(mgcode[0][0]))], context=context)
+                last_invoice_id = last_invoices and max(last_invoices)
+            if last_invoice_id:
+                cursor.execute("""select invoice_no from mobile_sale_order where id=%s """,(last_invoice_id,))
+                last_invoice = cursor.fetchall()  
+            if not last_invoice_id:
+                if mgcode:
+                    new_invoice_no= mgcode[0][0] + '00001'
+                else:
+                    new_invoice_no= ''
+            else:
+                invoice_int = int(last_invoice[0][0].split(mgcode[0][0])[-1])
+                width =5
+                new_invoice_int = invoice_int + 1
+                formatted = (width - len(str(new_invoice_int))) * "0" + str(new_invoice_int)
+                new_invoice_no = mgcode[0][0] + str(formatted)
+        else:
+            new_invoice_no= '/'
+        
+        if new_invoice_no:
+            vals.update({
+                'invoice_no': new_invoice_no,
+            }) 
+        return super(mobile_sale_order, self).create(cursor, user, vals, context=context)
+    
     def create_massive(self, cursor, user, vals, context=None):
         print 'vals', vals
         sale_order_name_list = []
