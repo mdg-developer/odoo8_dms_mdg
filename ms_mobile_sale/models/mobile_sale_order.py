@@ -110,13 +110,16 @@ class mobile_sale_order(osv.osv):
                 else:
                     new_invoice_no= ''
             else:
-                invoice_int = int(last_invoice[0][0].split(mgcode[0][0])[-1])
-                width =5
-                new_invoice_int = invoice_int + 1
-                formatted = (width - len(str(new_invoice_int))) * "0" + str(new_invoice_int)
-                new_invoice_no = mgcode[0][0] + str(formatted)
+                if mgcode[0][0]:
+                    invoice_int = int(last_invoice[0][0].split(mgcode[0][0])[-1])
+                    width =5
+                    new_invoice_int = invoice_int + 1
+                    formatted = (width - len(str(new_invoice_int))) * "0" + str(new_invoice_int)
+                    new_invoice_no = mgcode[0][0] + str(formatted)
+                else:
+                    new_invoice_no= ''
         else:
-            new_invoice_no= '/'
+            new_invoice_no= ''
         
         if new_invoice_no:
             vals.update({
