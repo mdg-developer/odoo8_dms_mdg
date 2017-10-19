@@ -327,6 +327,7 @@
 					</field>
 					<field name="property_supplier_payment_term" position="after">
 						<field name="isexclusive" />
+						<field name="ctax_registration_no" />
 					</field>
 				</data>
 			</field>
