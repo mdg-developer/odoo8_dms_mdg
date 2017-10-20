@@ -1,16 +1,25 @@
 <openerp>
-	<data>	
-        <record id="view_warehouse_bw_issued_location" model="ir.ui.view">
-            <field name="name">stock.warehouse</field>
-            <field name="model">stock.warehouse</field>
-            
-            <field name="inherit_id" ref="stock.view_warehouse"/>
+    <data>
+        <record id="view_stock_config_settings_inherit_issued_location" model="ir.ui.view">
+            <field name="name">stock.config.settings.inherit</field>
+            <field name="model">stock.config.settings</field>
+            <field name="inherit_id" ref="stock.view_stock_config_settings"/>
             <field name="arch" type="xml">
-           		<xpath expr="//field[@name='wh_output_stock_loc_id']" position="after">
-                    <field name="issued_location"/>
- 				</xpath>
+                <separator string="Location &amp; Warehouse"/>
+                <xpath expr="//separator[@string='Location &amp; Warehouse']" position="after">
+                    
+                    <group>
+                        <label for="id" string="Issued Location"/>
+                        <div>
+                            <div>
+                                <field name="issued_location" class="oe_inline"/>
+                                
+                            </div>
+                            
+                         </div>
+                    </group>
+                </xpath>
             </field>
         </record>
-          	
-	</data>
+    </data>
 </openerp>

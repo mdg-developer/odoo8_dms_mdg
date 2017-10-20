@@ -1,3 +1,3 @@
 import product
 import purchase_requisitions
-import warehouse
+import stock_config_settings
