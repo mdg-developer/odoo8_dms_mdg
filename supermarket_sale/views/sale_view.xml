@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+		<record id="inherit_super_view_order_form" model="ir.ui.view">
+			<field name="name">sale.order.form</field>
+			<field name="model">sale.order</field>
+			<field name="inherit_id" ref="sale.view_order_form" />
+			<field name="arch" type="xml">
+
+				<field name="invoiced" position="before">
+					<field name="supermarket_sale" />
+				</field>
+
+
+			</field>
+		</record>
+
+		<!-- Supermarket Sale -->
+		<menuitem id="menu_super_sale_order_menu" parent="base.menu_base_partner"
+			name="SuperMarket Sales" sequence="1" />
+		<!-- Sale Order -->
+
+		<record id="action_orders_super" model="ir.actions.act_window">
+			<field name="name">SuperMarket Sale Order</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">sale.order</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form,calendar,graph</field>
+			<field name="search_view_id" ref="sale.view_sales_order_filter" />
+			<field name="context">{
+                       'default_supermarket_sale':True
+				}
+			</field>
+			<field name="domain">[('state', 'in', ('draft', 'sent',
+				'cancel')),('supermarket_sale','=',True)]
+			</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create a quotation that can be converted into a
+					sales
+					order.
+				</p>
+				<p>
+					Odoo will help you efficiently handle the complete sales flow:
+					quotation, sales order, delivery, invoicing and payment.
+				</p>
+			</field>
+		</record>
+
+		<menuitem action="action_orders_super" id="menu_super_sale_order_1"
+			parent="menu_super_sale_order_menu" sequence="1"
+			groups="base.group_sale_salesman,base.group_sale_manager" />
+
+	</data>
+</openerp>
