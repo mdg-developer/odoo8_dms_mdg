@@ -31,12 +31,14 @@ class crm_case_section(osv.osv):
                                ('accepted', 'Accepted'),
                                ('unaccepted', 'Unaccepted'),                           
                             ], ''),
-        'is_distributor': fields.boolean('Is Distributor'), 
+        'is_distributor': fields.boolean('Distributor'), 
         'distributor_target_amount':fields.float('Distributor Target Amount'),        
         'position': fields.char('Position'),
         'service_offered': fields.char('Products or Services Offered',),
         'major_customers': fields.char('Major Customers'), 
         'approved_evalution': fields.boolean('Approved'), 
+        'deli': fields.boolean('Deli'), 
+        'bw': fields.boolean('BW'), 
         }
     
     
