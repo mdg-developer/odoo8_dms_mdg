@@ -42,15 +42,13 @@
 	            <form string="Purchase Requisition">
 	                	<header>
 							<button name="action_confirmed" string="Confirm" type="object"
-								class="oe_highlight" attrs="{'invisible':[('state','in',('confirmed'))]}" />
+								class="oe_highlight" attrs="{'invisible':[('state','in',('done','confirmed'))]}" />
 							<button name="action_cancel" string="Cancel" type="object"
 								class="oe_highlight" attrs="{'invisible':[('state','in',('confirmed','cancel'))]}" />
 							<button name="action_draft" string="Set to draft" type="object"
 								class="oe_highlight" attrs="{'invisible':[('state','in',('draft'))]}" />
-							<button name="generate_po" string="Convert to PO" type="object"
+							<button name="generate_po" string="Convert PO" type="object"
 								class="oe_highlight" attrs="{'invisible':[('state','in',('done','cancel','draft'))]}" />
-							<button name="open_product_line" attrs="{'invisible':[('state','in',('cancel','draft'))]}" string="Choose product lines" type="object" 
-								class="oe_highlight" />
 							<field name="state" widget="statusbar" statusbar_visible="draft,confirmed,cancel,done" />
 						</header>
 						<sheet>
@@ -71,12 +69,14 @@
 	                            <tree string="Products" editable="bottom">
 	                                <field name="product_id" on_change="onchange_product_id(product_id,product_uom_id)"/>
 	                                <field name="product_qty"/>
+	                                <field name="price_unit"/>
 	                                <field name="product_uom_id" groups="product.group_uom"/>
 	                            </tree>
 	                            <form string="Products">
 	                                <group>
 	                                    <field name="product_id" />
 	                                    <field name="product_qty"/>
+	                                    <field name="price_unit"/>
 	                                    <field name="product_uom_id" />
 	                                </group>
 	                            </form>
@@ -101,7 +101,7 @@
 	        <field name="search_view_id" ref="view_purhcase_requisition_filter"/>
 	    </record>
     
-    <menuitem  id="menu_purchase_requisitions"  sequence="1"
+    <menuitem  id="menu_purchase_requisitions"  sequence="0"
         parent="purchase.menu_procurement_management" action="open_view_purchase_requisition_form"/>   
 
   </data>

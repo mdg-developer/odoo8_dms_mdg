@@ -49,7 +49,7 @@ class purchase_requisitions(osv.osv):
                                   'Status', track_visibility='onchange', required=True,
                                   copy=False),
         'warehouse_id': fields.many2one('stock.warehouse', 'Requested Warehouse'),
-        'purchase_ids': fields.one2many('purchase.order', 'requisition_id', 'Purchase Orders', states={'done': [('readonly', True)]}),
+        #'purchase_ids': fields.one2many('purchase.order', 'requisition_id', 'Purchase Orders', states={'done': [('readonly', True)]}),
         'po_line_ids': fields.function(_get_po_line, method=True, type='one2many', relation='purchase.order.line', string='Products by supplier'),
         'line_ids': fields.one2many('purchase.requisitions.line', 'requisition_id', 'Products to Purchase', states={'done': [('readonly', True)]}, copy=True),
         'description': fields.text('Description')
@@ -76,50 +76,66 @@ class purchase_requisitions(osv.osv):
         for tender in pr.browse(cr, uid, ids, context=context):
             if tender.state == 'done':
                 raise osv.except_osv(_('Warning!'), _('You have already generate the purchase order(s).'))
-
-            confirm = False
-            #check that we have at least confirm one line
-            for po_line in tender.line_ids:
-                if tender.state == 'confirmed':
-                    confirm = True
-                    break
-            if not confirm:
-                raise osv.except_osv(_('Warning!'), _('You have no line selected for buying.'))
-
-            #check for complete RFQ
-            for quotation in tender.purchase_ids:
-                if (self.check_valid_quotation(cr, uid, quotation, context=context)):
-                    #use workflow to set PO state to confirm
-                    po.write(cr, uid, [quotation.id], 'purchase_confirm', context=context)
-
-            #get other confirmed lines per supplier
             for po_line in tender.line_ids:
                 #only take into account confirmed line that does not belong to already confirmed purchase order
-                if po_line.state == 'confirmed' and po_line.order_id.state in ['draft', 'sent', 'bid']:
-                    if id_per_supplier.get(po_line.partner_id.id):
-                        id_per_supplier[po_line.partner_id.id].append(po_line)
+                if tender.state == 'confirmed':
+                    if id_per_supplier.get(po_line.product_id.supplier_code):
+                        id_per_supplier[po_line.product_id.supplier_code].append(po_line)
                     else:
-                        id_per_supplier[po_line.partner_id.id] = [po_line]
+                        id_per_supplier[po_line.product_id.supplier_code] = [po_line]
 
             #generate po based on supplier and cancel all previous RFQ
             ctx = dict(context or {}, force_requisition_id=True)
             for supplier, product_line in id_per_supplier.items():
-                #copy a quotation for this supplier and change order_line then validate it
-                quotation_id = po.search(cr, uid, [('requisition_id', '=', tender.id), ('partner_id', '=', supplier)], limit=1)[0]
-                vals = self._prepare_po_from_tender(cr, uid, tender, context=context)
-                new_po = po.copy(cr, uid, quotation_id, default=vals, context=context)
-                #duplicate po_line and change product_qty if needed and associate them to newly created PO
+                if tender:
+                        cr.execute("select company_id from res_users where id=%s", (uid,))
+                        company_id = cr.fetchone()[0]
+                        cr.execute("select id from res_currency where active='t' and base='t'",)
+                        currency_id = cr.fetchone()[0]
+                        cr.execute("select id from stock_picking_type where warehouse_id=%s", (tender.warehouse_id.id,))
+                        pickingtype_id = cr.fetchone()[0]
+                        cr.execute("select lot_stock_id from stock_warehouse where id=%s", (tender.warehouse_id.id,))
+                        location_id = cr.fetchone()[0]
+                        poResult = {'partner_id':tender.partner_id.id or False,
+                                    'pr_no':tender.name or '/',
+                                    'date_order':tender.date_requisition ,
+                                    'company_id':company_id or False,
+                                    'currency_id':currency_id or False,
+                                    'pricelist_id':tender.partner_id.pricelist_id.id or False,
+                                    'location_id':location_id or False,
+                                    'picking_type_id':pickingtype_id or False,
+                                    'state': 'draft',                                
+                                    'warehouse_id':tender.warehouse_id.id or False,
+                                    'due_date':tender.date_expected ,
+                                    'note':tender.description,
+                                            }
+                        poId = po.create(cr, uid, poResult, context=context)
                 for line in product_line:
-                    vals = self._prepare_po_line_from_tender(cr, uid, tender, line, new_po, context=context)
-                    poline.copy(cr, uid, line.id, default=vals, context=context)
-                #use workflow to set new PO state to confirm
-                po.write(cr, uid, [new_po], 'purchase_confirm', context=context)
-
-            #cancel other orders
-            self.cancel_unconfirmed_quotations(cr, uid, tender, context=context)
+                        if poId and line:
+                            polResult = {
+                                        'order_id':poId,
+                                        'product_id':line.product_id.id,
+                                        'name':line.product_id.name_template,
+                                        'product_uom':line.product_uom_id.id,
+                                        'product_qty':line.product_qty,
+                                        'price_unit':line.price_unit,
+                                        'date_planned':tender.date_expected ,
+                                        'state':'draft',
+                                        }                                
+                            pol_id =poline.create(cr, uid, polResult, context=context)
+#                 #copy a quotation for this supplier and change order_line then validate it
+#                 quotation_id = po.search(cr, uid, [('requisition_id', '=', tender.id), ('partner_id', '=', supplier)], limit=1)[0]
+#                 vals = self._prepare_po_from_tender(cr, uid, tender, context=context)
+#                 new_po = po.copy(cr, uid, quotation_id, default=vals, context=context)
+#                 #duplicate po_line and change product_qty if needed and associate them to newly created PO
+#                 for line in product_line:
+#                     vals = self._prepare_po_line_from_tender(cr, uid, tender, line, new_po, context=context)
+#                     poline.copy(cr, uid, line.id, default=vals, context=context)
+#                 #use workflow to set new PO state to confirm
+#                 po.write(cr, uid, [new_po], 'purchase_confirm', context=context)
 
             #set tender to state done
-            self.write(cr, uid, [tender.id], 'done', context=context)
+            self.write(cr, uid, ids,  {'state':'done'}, context=context)
         return True
     
     def cancel_unconfirmed_quotations(self, cr, uid, tender, context=None):
@@ -173,6 +189,7 @@ class purchase_requisitions_line(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', domain=[('purchase_ok', '=', True)]),
         'product_uom_id': fields.many2one('product.uom', 'Product Unit of Measure'),
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure')),
+        'price_unit': fields.float('Price Unit'),
         'requisition_id': fields.many2one('purchase.requisitions', 'Purchase Requisitions', ondelete='cascade'),
     }
 
@@ -182,10 +199,10 @@ class purchase_requisitions_line(osv.osv):
         @param product_id: Changed product_id
         @return:  Dictionary of changed values
         """
-        value = {'product_uom_id': ''}
+        value = {'product_uom_id': '', 'price_unit': 0.0}
         if product_id:
             prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-            value = {'product_uom_id': prod.uom_id.id, 'product_qty': 1.0}
+            value = {'product_uom_id': prod.uom_id.id, 'price_unit': prod.list_price, 'product_qty': 1.0}
         return {'value': value}
     
 purchase_requisitions_line()
