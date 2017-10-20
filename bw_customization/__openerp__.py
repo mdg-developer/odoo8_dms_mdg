@@ -16,6 +16,7 @@ BW Customization
        'views/product_view.xml',
        'views/purchase_requisitions_view.xml',
        'views/purchase_requisitions_sequence.xml',
+       'views/stock_warehouse.xml',
     ],
     'installable': True,
     'auto_install': False,
