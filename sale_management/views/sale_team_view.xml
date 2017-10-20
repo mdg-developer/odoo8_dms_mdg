@@ -129,6 +129,15 @@
 							</kanban>
 						</field>
 					</page>
+					
+					<page string="Target Setting">
+						<group>
+							<field name="weekly_target_amount"/>
+							<field name="monthly_target_amount"/>
+							<field name="yearly_target_amount"/>
+						</group>
+					</page>
+					
 					<!-- Add Product Main Group -->
 					<!-- <page string="Product Main Group"> -->
 					<!-- <separator string="Main Group" /> -->
