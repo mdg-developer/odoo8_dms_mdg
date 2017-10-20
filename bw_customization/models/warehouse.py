@@ -5,5 +5,5 @@ from openerp.osv.fields import _column
 class product_product(osv.osv):
     _inherit = 'stock.warehouse'
     
-    _columns = {'issued_location': fields.many2one('stock.location', 'Issued Location'),
+    _columns = {'issued_location': fields.many2one('stock.location', 'Issued Location',required=True),
             }
