@@ -16,7 +16,7 @@ class hr_holidays(osv.osv):
     _columns = {
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscalyear'),        
         'effective_date': fields.date('Effective Date'),
-        'expiry_date': fields.date('Expiry Date', required=True),
+        'expiry_date': fields.date('Expiry Date'),
         'section_id':fields.related('employee_id', 'section_id', string='Section', type='many2one', relation='hr.section', readonly=True, store=True),
         'badge_id':fields.related('employee_id', 'employee_id', string='Badge ID', type='char', relation='hr.employee', readonly=True, store=True),       
     }
@@ -54,9 +54,19 @@ class hr_holidays(osv.osv):
             values.update({
                 'fiscalyear_id': fid,
             }) 
+        today_date=datetime.now().strftime ("%Y-%m-%d")
+        td_for_exdate=datetime.strptime(today_date, "%Y-%m-%d") + timedelta(days=1) 
         expiry_date = values.get('expiry_date', False)
-        if expiry_date < datetime.now().strftime ("%Y-%m-%d"):
-            raise osv.except_osv(_('Warning!'), _('Expiry Date must be greater than today.'))
+        l_type = values.get('type', False)
+        leave_type_id = values.get('holiday_status_id', False)
+        if leave_type_id:
+                    cr.execute("""select name from hr_holidays_status  where id=%s """,(leave_type_id,))
+                    leave_name = cr.fetchone()[0]
+        if leave_name and l_type:
+            if leave_name <> 'Unpaid' and l_type=='remove' and expiry_date == False:
+                if expiry_date==False:
+                    values.update({'expiry_date': td_for_exdate, }) 
+                    
         employee_id = values.get('employee_id', False)
         context = dict(context, mail_create_nolog=True, mail_create_nosubscribe=True)
         if values.get('state') and values['state'] not in ['draft', 'confirm', 'cancel'] and not self.pool['res.users'].has_group(cr, uid, 'base.group_hr_user'):
@@ -81,10 +91,6 @@ class hr_holidays(osv.osv):
                 diff_day = self._get_number_of_days(date_from,date_to)
                 result['value']['number_of_days_temp'] = round(math.floor(diff_day))+1
                 day_count = data + result['value']['number_of_days_temp']
-                leave_type_id = values.get('holiday_status_id', False)
-                if leave_type_id:
-                    cr.execute("""select name from hr_holidays_status  where id=%s """,(leave_type_id,))
-                    leave_name = cr.fetchone()[0]
                 if day_count:
                     if day_count > 3.00 and leave_name=='Casual Leave':
                         raise osv.except_osv(_('Warning!'),

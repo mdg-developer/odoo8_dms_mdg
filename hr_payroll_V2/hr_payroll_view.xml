@@ -14,6 +14,18 @@
 				</xpath>
 
 			</field>
-		</record>                   
+		</record>  
+		
+		<record id="inherit_view_hr_payslip_filter" model="ir.ui.view">
+            <field name="name">hr.payslip.select</field>
+            <field name="model">hr.payslip</field>
+            <field name="inherit_id" ref="hr_payroll.view_hr_payslip_filter" />
+            <field name="arch" type="xml">               
+                <xpath expr="//filter[@string='States']" position="after">
+                     <filter string="Date" icon="terp-personal" name="date_to" context="{'group_by':'date_to'}"/>
+                </xpath>                              
+            </field>
+        </record>    
+                     
     </data>
 </openerp>

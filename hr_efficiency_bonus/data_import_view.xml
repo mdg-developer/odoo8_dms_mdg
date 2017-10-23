@@ -8,7 +8,7 @@
 			<field name="arch" type="xml">
 				<form string="Employee" version="7.0">
 					<header>
-						<button name="import_data" string="Import Efficiency Values Data" type="object"
+						<button name="import_data" string="Import Other Allowance Data" type="object"
 							class="oe_highlight"  state= 'draft' />
 						<field name="state" widget="statusbar" statusbar_visible="draft,completed,error" />
 					</header>
@@ -43,7 +43,7 @@
 
 		<!-- Action -->
 		<record id="action_employee_efficiency_value_import" model="ir.actions.act_window">
-			<field name="name">Efficiency Values Import </field>
+			<field name="name">Other Allowance Import </field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">data_import.efficiency_value</field>
 			<field name="view_type">form</field>

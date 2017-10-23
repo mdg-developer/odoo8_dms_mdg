@@ -119,6 +119,27 @@
               parent="hr.menu_hr_configuration" 
               id="menu_open_view_section_form"
               action="open_view_section_form" sequence="5" />   
-              
+     
+    <record id="view_hr_department_transfer_search" model="ir.ui.view">
+		<field name="name">hr.department.transfer.search</field>
+		<field name="model">hr.department.transfer</field>
+		<field name="arch" type="xml">
+		    <search string="Departmental Transfers">
+		        <group expand="0" string="Group By">		            
+					<filter string="Badge ID" domain="[]" context="{'group_by':'badge_id'}"/>
+					<filter string="Employee" domain="[]" context="{'group_by':'employee_id'}"/>		            
+		        </group>
+		    </search>
+		</field>
+    </record>
+    
+    <record id="hr_transfer.open_hr_department_transfer" model="ir.actions.act_window">
+		<field name="name">Departmental Transfers</field>
+		<field name="res_model">hr.department.transfer</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="search_view_id" ref="view_hr_department_transfer_search"/>
+    </record>    
+          
   </data>
 </openerp>

@@ -30,6 +30,9 @@
 						<group>
 							<field name="city" options='{"no_open": True}'/>
 						</group>
+						<group>
+							<field name="zip_code"/>
+						</group>
 					</group>
 				</form>
 			</field>

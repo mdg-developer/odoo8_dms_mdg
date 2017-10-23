@@ -9,7 +9,7 @@ import base64
 import logging
 _logger = logging.getLogger(__name__)
 
-header_fields = ['fingerprint_id', 'badge_id', 'date', 'amount', 'reason']
+header_fields = ['fingerprint_id', 'badge_id', 'date', 'amount', 'reason','code']
 
 class employee_efficiency_value_info(osv.osv):
     _name = 'data_import.efficiency_value'
@@ -97,7 +97,7 @@ class employee_efficiency_value_info(osv.osv):
                     header_line = True
 
                     
-                    fingerprint_id_i = badge_id_i = date_i = amount_i= reason_i = None
+                    fingerprint_id_i = badge_id_i = date_i = amount_i= reason_i = code_i= None
                     column_cnt = len(ln)
                     
                     for i in range(column_cnt):
@@ -116,7 +116,8 @@ class employee_efficiency_value_info(osv.osv):
                             amount_i = i                                                       
                         elif header_field == 'reason':
                             reason_i = i                              
-                        
+                        elif header_field == 'code':
+                            code_i = i                                               
                 # process data lines   
             else:
                 # add the without value for without header fields columns
@@ -130,6 +131,7 @@ class employee_efficiency_value_info(osv.osv):
                     import_vals['date'] = ln[date_i]
                     import_vals['amount'] = ln[amount_i]
                     import_vals['reason'] = ln[reason_i]
+                    import_vals['code'] = ln[code_i]
                     amls.append(import_vals)
                     
         if err_log:
@@ -139,7 +141,7 @@ class employee_efficiency_value_info(osv.osv):
         # if amls :    
             for aml in amls:
                 
-                fingerprint_id = badge_id = date = out_time = reason = None
+                fingerprint_id = badge_id = date = out_time = reason = code = None
                 value = {}
                 
                 print 'aml', aml
@@ -194,14 +196,20 @@ class employee_efficiency_value_info(osv.osv):
                 if aml['reason']:
                     reason = aml['reason']
                 else:
-                    reason = 0                                                         
+                    reason = 0            
+                      
+                if aml['code']:
+                    code = aml['code']
+                else:
+                    code = None
+                                                                                      
                 if emp_ids:
                     employee = hr_employee_obj.browse(cr, uid, emp_ids[0], context=context)
                     department_id = employee.department_id.id
                     job_id = employee.job_id.id
                     section_id = employee.section_id.id
                     badge_id = employee.employee_id          
-                    cr.execute("delete from hr_efficiency_value where date =%s  and employee_id =%s",(date,emp_ids[0],))          
+                    cr.execute("delete from hr_efficiency_value where date =%s  and employee_id =%s and code=%s",(date,emp_ids[0],code,))          
                     hr_efficiency_obj.create(cr, uid, {
                                                   'employee_id': emp_ids[0],
                                                   'badge_id': badge_id,
@@ -211,6 +219,7 @@ class employee_efficiency_value_info(osv.osv):
                                                   'date':date,
                                                   'amount':amount,
                                                   'note':reason,
+                                                  'code':code,
                                                   }, context=context)
 
                                                

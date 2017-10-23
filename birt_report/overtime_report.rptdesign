@@ -12,55 +12,99 @@
         </structure>
     </list-property>
     <parameters>
-        <scalar-parameter name="section_id" id="1870" extends="report_library.section_id"/>
+        <cascading-parameter-group name="NewCascadingParameterGroup" id="1874">
+            <property name="dataSet">department</property>
+            <property name="dataSetMode">multiple</property>
+            <parameters>
+                <scalar-parameter name="department_id" id="1875">
+                    <text-property name="promptText">Department</text-property>
+                    <property name="valueType">dynamic</property>
+                    <property name="isRequired">true</property>
+                    <property name="dataSetName">department</property>
+                    <expression name="valueExpr">row["id"]</expression>
+                    <expression name="labelExpr">row["name"]</expression>
+                    <expression name="sortByColumn">dataSetRow["name"]</expression>
+                    <property name="sortDirection">asc</property>
+                    <property name="dataType">integer</property>
+                    <property name="paramType">simple</property>
+                    <property name="concealValue">false</property>
+                    <property name="controlType">list-box</property>
+                    <property name="mustMatch">true</property>
+                    <property name="fixedOrder">false</property>
+                    <structure name="format"/>
+                </scalar-parameter>
+                <scalar-parameter name="section_id" id="1876">
+                    <text-property name="promptText">Section</text-property>
+                    <property name="valueType">dynamic</property>
+                    <property name="isRequired">true</property>
+                    <property name="dataSetName">section</property>
+                    <expression name="valueExpr">row["id"]</expression>
+                    <expression name="labelExpr">row["name"]</expression>
+                    <expression name="sortByColumn">dataSetRow["name"]</expression>
+                    <property name="sortDirection">asc</property>
+                    <property name="dataType">integer</property>
+                    <property name="controlType">list-box</property>
+                    <property name="fixedOrder">false</property>
+                    <structure name="format"/>
+                </scalar-parameter>
+            </parameters>
+        </cascading-parameter-group>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="1867"
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="1878"
  extends="report_library.Data Source"/>
     </data-sources>
     <data-sets>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="employee_data" id="1613">
+            <property name="nullsOrdering">nulls lowest</property>
             <list-property name="columnHints">
                 <structure>
                     <property name="columnName">fingerprint_id</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">fingerprint_id</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">fingerprint_id</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">employee_id</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">employee_id</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">employee_id</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">name_related</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">name_related</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">name_related</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">section_id</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">section_id</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">section_id</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">job_name</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">job_name</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">job_name</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">section_name</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">section_name</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">section_name</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">bus_top</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">bus_top</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">bus_top</text-property>
                 </structure>
             </list-property>
@@ -104,12 +148,20 @@
                     </structure>
                 </list-property>
             </structure>
-            <method name="beforeOpen"><![CDATA[if (params["section_id"].value == null ){     
-   this.queryText =this.queryText.replace("--$section_id$", "")
+            <method name="beforeOpen"><![CDATA[if (params["department_id"].value == null ){     
+   this.queryText =this.queryText.replace("--$department_id$",  " ")
 }
 else
 {     
-   this.queryText =this.queryText.replace("--$section_id$", "and he.section_id="+params["section_id"])
+   this.queryText =this.queryText.replace("--$department_id$", "and he.department_id ="+ params["department_id"].value)
+}
+
+if (params["section_id"].value == null ){     
+   this.queryText =this.queryText.replace("--$section_id$",  " ")
+}
+else
+{     
+   this.queryText =this.queryText.replace("--$section_id$", "and he.section_id ="+ params["section_id"].value)
 }]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
@@ -164,13 +216,16 @@ else
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select he.fingerprint_id,he.employee_id,name_related,he.section_id,hj.name as job_name,hs.name as section_name,hbs.name as bus_top
-from hr_employee he,hr_section hs,hr_job hj,hr_bus_stop hbs
+from hr_employee he,hr_section hs,hr_job hj,hr_bus_stop hbs,hr_department hd
 where he.section_id=hs.id
+and he.department_id=hd.id
 and he.status<> 'inactive'
 and he.job_id=hj.id
 and he.bus_stop_id=hbs.id
+and he.active=True
 --$section_id$
-order by fingerprint_id]]></xml-property>
+--$department_id$
+order by he.fingerprint_id]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -311,8 +366,242 @@ order by fingerprint_id]]></xml-property>
         </oda-data-set>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="company" id="1868"
  extends="report_library.company"/>
-        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="section" id="1869"
- extends="report_library.section"/>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="department" id="207">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">id</text-property>
+                    <text-property name="heading">id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">name</text-property>
+                    <text-property name="heading">name</text-property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">id</property>
+                    <property name="nativeName">id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">name</property>
+                    <property name="nativeName">name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select id,name
+from hr_department
+order by name asc]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>id</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>id</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>id</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>name</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>2147483647</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>name</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>name</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="section" id="209">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">id</text-property>
+                    <text-property name="heading">id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">name</text-property>
+                    <text-property name="heading">name</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">department_id</property>
+                    <property name="paramName">department_id</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">id</property>
+                    <property name="nativeName">id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">name</property>
+                    <property name="nativeName">name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select id,name
+from hr_section
+where department_id= ?
+order by name asc]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>id</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>id</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>id</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>name</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>2147483647</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>name</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>name</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
     </data-sets>
     <styles>
         <style name="report" id="4">
@@ -365,13 +654,6 @@ order by fingerprint_id]]></xml-property>
         </simple-master-page>
     </page-setup>
     <body>
-        <label id="1609">
-            <property name="fontFamily">"Zawgyi-One"</property>
-            <property name="fontWeight">bold</property>
-            <property name="textAlign">center</property>
-            <text-property name="text">Daily OT Application Form &#13;
-အခ်ိန္ပိုေလွ်ာက္တင္ပံုစံ</text-property>
-        </label>
         <data id="1871">
             <property name="fontFamily">"Zawgyi-One"</property>
             <property name="fontWeight">bold</property>
@@ -387,6 +669,13 @@ order by fingerprint_id]]></xml-property>
             </list-property>
             <property name="resultSetColumn">name</property>
         </data>
+        <label id="1609">
+            <property name="fontFamily">"Zawgyi-One"</property>
+            <property name="fontWeight">bold</property>
+            <property name="textAlign">center</property>
+            <text-property name="text">Daily OT Application Form &#13;
+အခ်ိန္ပိုေလွ်ာက္တင္ပံုစံ</text-property>
+        </label>
         <grid id="1810">
             <property name="width">8.177083333333334in</property>
             <column id="1811">
@@ -400,6 +689,7 @@ order by fingerprint_id]]></xml-property>
                     <label id="1816">
                         <property name="fontFamily">"Zawgyi-One"</property>
                         <property name="fontWeight">bold</property>
+                        <property name="marginLeft">5pt</property>
                         <text-property name="text">Date : &#13;
 ေန႕စြဲ</text-property>
                     </label>
@@ -427,9 +717,14 @@ order by fingerprint_id]]></xml-property>
         </grid>
         <label id="1618">
             <property name="fontFamily">"Zawgyi-One"</property>
+            <property name="fontSize">10pt</property>
             <property name="fontWeight">bold</property>
-            <text-property name="text">The OT application is agreed and Signed to work overtime as Volunteer by employee. &#13;
-အခ်ိန္ပိုေလွ်ာက္လႊာတြင္အလုပ္သမားမ်ားအခ်ိန္ပိုဆင္းရန္သေဘာျပီးမွလက္မွတ္ေရးထိုးျခင္းျဖစ္ပါသည္။</text-property>
+            <property name="marginLeft">5pt</property>
+            <property name="marginRight">0pt</property>
+            <property name="paddingLeft">0pt</property>
+            <property name="paddingRight">0pt</property>
+            <text-property name="text">“I, the undersigned, voluntarily agreed to work overtime as per this application and I understood that I always have the full discretion in working overtime”&#13;
+“အခ်ိန္ပိုေလွ်ာက္လႊာအရ အခ်ိန္ပို အလုပ္လုပ္ရန္မိမိကိုယ္တိုင္သေဘာတူ၍ေအာက္တြင္လက္မွတ္ေရးထိုး ပါသည္။ အခ်ိန္ပိုအလုပ္လုပ္ျခင္းတြင္ မိမိကိုယ္တိုင္ဆံုးျဖတ္ခ်က္အျပည့္အ၀အၿမဲရွိသည္ဟုနားလည္သေဘာေပါက္ပါသည္။” </text-property>
         </label>
         <table id="1742">
             <property name="width">8.177083333333334in</property>
