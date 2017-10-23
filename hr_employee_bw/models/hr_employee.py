@@ -14,6 +14,8 @@ class hr_employee(osv.osv):
         'facebook': fields.char('Facebook'),
         'ethnic': fields.char('Ethnic'),
         'is_management':fields.boolean('Management'),
+        'payroll_cash':fields.boolean('By Cash'),    
+        'payroll_bank':fields.boolean('By Card'),
     }   
 hr_employee() 
     
