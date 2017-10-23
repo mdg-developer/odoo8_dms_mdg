@@ -10,8 +10,16 @@
            		<xpath expr="//field[@name='default_code']" position="after">
                     <field name="supplier_code"/>
  				</xpath>
+ 				<xpath expr="//notebook" position="inside">	
+					<page name="uoms" string="Report UOM">
+						<field name="report_uom_lines">
+						</field>
+					</page>
+				</xpath>
+				
             </field>
         </record>
+        
         <record id="product_supplierinfo_form_view_inherit" model="ir.ui.view">
             <field name="name">product.supplierinfo.form.view</field>
             <field name="model">product.supplierinfo</field>
@@ -23,6 +31,10 @@
 				<xpath expr="//form/group/field[@name='product_code']" position="replace">
 					<field name="product_code" invisible="1"/>
 				</xpath>
+				<field name="big_uom_id" position="replace">
+				</field> 
+				<field name="big_list_price" position="replace">
+				</field>   
             </field>
         </record>    	
 	</data>
