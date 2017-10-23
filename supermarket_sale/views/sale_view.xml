@@ -29,11 +29,10 @@
 			<field name="view_mode">tree,form,calendar,graph</field>
 			<field name="search_view_id" ref="sale.view_sales_order_filter" />
 			<field name="context">{
-                       'default_supermarket_sale':True
+				'default_supermarket_sale':True
 				}
 			</field>
-			<field name="domain">[('state', 'in', ('draft', 'sent',
-				'cancel')),('supermarket_sale','=',True)]
+			<field name="domain">[('supermarket_sale','=',True)]
 			</field>
 			<field name="help" type="html">
 				<p class="oe_view_nocontent_create">
@@ -51,6 +50,59 @@
 		<menuitem action="action_orders_super" id="menu_super_sale_order_1"
 			parent="menu_super_sale_order_menu" sequence="1"
 			groups="base.group_sale_salesman,base.group_sale_manager" />
+		
+
+		
+		<record id="action_supermarket_invoice_tree" model="ir.actions.act_window">
+			<field name="name">SuperMarket Invoices</field>
+			<field name="res_model">account.invoice</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form,calendar,graph</field>
+			<field eval="False" name="view_id" />
+			<field name="domain">[('type','=','out_invoice'),('supermarket_sale','=',True)]
+			</field>
+			<field name="context">{'default_type':'out_invoice',
+				'search_default_today_date': 1,
+				'type':'out_invoice',
+				'journal_type':
+				'sale'}
+			</field>
+			<field name="search_view_id" ref="menu_customization.view_account_invoice_filter" />
+			<field name="view_id" ref="account.invoice_form" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create"> Click
+					to create a customer invoice.
+				</p>
+				<p> Odoo's electronic invoicing allows
+					to ease and fasten the
+					collection of customer payments. Your customer
+					receives
+					the invoice
+					by email and he can pay online and/or import it in his own
+					system.
+				</p>
+				<p> The discussions with your customer are automatically displayed
+					at
+					the bottom of each invoice.
+				</p>
+			</field>
+		</record>
+		
+		<record id="action_invoice_tree_super_view1" model="ir.actions.act_window.view">
+			<field eval="1" name="sequence" />
+			<field name="view_mode">tree</field>
+			<field name="act_window_id" ref="action_supermarket_invoice_tree" />
+		</record>
+		
+		<record id="action_invoice_tree_super_view2" model="ir.actions.act_window.view">
+			<field eval="2" name="sequence" />
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="account.invoice_form" />
+			<field name="act_window_id" ref="action_supermarket_invoice_tree" />
+		</record>
+				
+		<menuitem action="action_supermarket_invoice_tree" id="menu_supermarket_action_invoice_tree" sequence="2"
+			parent="menu_super_sale_order_menu" />
 
 	</data>
 </openerp>
