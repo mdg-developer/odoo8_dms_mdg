@@ -302,6 +302,18 @@ from res_company
                     <text-property name="heading">name</text-property>
                 </structure>
                 <structure>
+                    <property name="columnName">from_wh</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">from_wh</text-property>
+                    <text-property name="heading">from_wh</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">to_wh</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">to_wh</text-property>
+                    <text-property name="heading">to_wh</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">_from</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">_from</text-property>
@@ -504,91 +516,101 @@ from res_company
                     </structure>
                     <structure>
                         <property name="position">7</property>
-                        <property name="name">_from</property>
+                        <property name="name">from_wh</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">8</property>
-                        <property name="name">_to</property>
+                        <property name="name">to_wh</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">9</property>
-                        <property name="name">inv</property>
+                        <property name="name">_from</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">10</property>
+                        <property name="name">_to</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">inv</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
                         <property name="name">date_due</property>
                         <property name="dataType">date</property>
                     </structure>
                     <structure>
-                        <property name="position">11</property>
+                        <property name="position">13</property>
                         <property name="name">discount_date</property>
                         <property name="dataType">date</property>
                     </structure>
                     <structure>
-                        <property name="position">12</property>
+                        <property name="position">14</property>
                         <property name="name">opt_location</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">13</property>
+                        <property name="position">15</property>
                         <property name="name">x_product</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">14</property>
+                        <property name="position">16</property>
                         <property name="name">x_product_code</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">15</property>
+                        <property name="position">17</property>
                         <property name="name">description</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">16</property>
+                        <property name="position">18</property>
                         <property name="name">gl_account</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">17</property>
+                        <property name="position">19</property>
                         <property name="name">transaction_no</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">18</property>
+                        <property name="position">20</property>
                         <property name="name">x_product_category</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">19</property>
+                        <property name="position">21</property>
                         <property name="name">x_product_maingroup</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">20</property>
+                        <property name="position">22</property>
                         <property name="name">x_product_group</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">21</property>
+                        <property name="position">23</property>
                         <property name="name">account_payable</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">22</property>
+                        <property name="position">24</property>
                         <property name="name">product_qty</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">23</property>
+                        <property name="position">25</property>
                         <property name="name">uom</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">24</property>
+                        <property name="position">26</property>
                         <property name="name">no_of_distributions</property>
                         <property name="dataType">decimal</property>
                     </structure>
@@ -654,125 +676,139 @@ else
                 </structure>
                 <structure>
                     <property name="position">7</property>
+                    <property name="name">from_wh</property>
+                    <property name="nativeName">from_wh</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">to_wh</property>
+                    <property name="nativeName">to_wh</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
                     <property name="name">_from</property>
                     <property name="nativeName">_from</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">8</property>
+                    <property name="position">10</property>
                     <property name="name">_to</property>
                     <property name="nativeName">_to</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">9</property>
+                    <property name="position">11</property>
                     <property name="name">inv</property>
                     <property name="nativeName">inv</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">10</property>
+                    <property name="position">12</property>
                     <property name="name">date_due</property>
                     <property name="nativeName">date_due</property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                 </structure>
                 <structure>
-                    <property name="position">11</property>
+                    <property name="position">13</property>
                     <property name="name">discount_date</property>
                     <property name="nativeName">discount_date</property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                 </structure>
                 <structure>
-                    <property name="position">12</property>
+                    <property name="position">14</property>
                     <property name="name">opt_location</property>
                     <property name="nativeName">opt_location</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">13</property>
+                    <property name="position">15</property>
                     <property name="name">x_product</property>
                     <property name="nativeName">x_product</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">14</property>
+                    <property name="position">16</property>
                     <property name="name">x_product_code</property>
                     <property name="nativeName">x_product_code</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">15</property>
+                    <property name="position">17</property>
                     <property name="name">description</property>
                     <property name="nativeName">description</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">16</property>
+                    <property name="position">18</property>
                     <property name="name">gl_account</property>
                     <property name="nativeName">gl_account</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">17</property>
+                    <property name="position">19</property>
                     <property name="name">transaction_no</property>
                     <property name="nativeName">transaction_no</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">18</property>
+                    <property name="position">20</property>
                     <property name="name">x_product_category</property>
                     <property name="nativeName">x_product_category</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">19</property>
+                    <property name="position">21</property>
                     <property name="name">x_product_maingroup</property>
                     <property name="nativeName">x_product_maingroup</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">20</property>
+                    <property name="position">22</property>
                     <property name="name">x_product_group</property>
                     <property name="nativeName">x_product_group</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">21</property>
+                    <property name="position">23</property>
                     <property name="name">account_payable</property>
                     <property name="nativeName">account_payable</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">22</property>
+                    <property name="position">24</property>
                     <property name="name">product_qty</property>
                     <property name="nativeName">product_qty</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">23</property>
+                    <property name="position">25</property>
                     <property name="name">uom</property>
                     <property name="nativeName">uom</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">24</property>
+                    <property name="position">26</property>
                     <property name="name">no_of_distributions</property>
                     <property name="nativeName">no_of_distributions</property>
                     <property name="dataType">decimal</property>
@@ -788,16 +824,18 @@ from
 	tmp.section_id,
 	tmp.branch_id,
 	row_number() OVER (PARTITION BY tmp.origin ORDER BY tmp.product_id,tmp.product_qty) AS inv_cm_distribution, --Invoice/CM Distribution***
-	tmp.name, 
+	tmp.name,
+	tmp.from_wh,
+	tmp.to_wh, 
 	tmp._from, -- ***
 	tmp._to, -- ***
-	concat(tmp._from,'-',tmp._to,'-',substring(pp.pgroup,1,3),'-',ref) inv,
+	concat(tmp.from_wh,'-',tmp.to_wh,'-',substring(pp.pgroup,1,3),'-',ref) inv,
 	(date_trunc('month', ?::date) + interval '1 month' - interval '1 day')::date as date_due,
 	to_date(?, 'YYYY-MM-01') as discount_date,
 	tmp.opt_location,
-	pp.name as x_product,
+	concat(tmp.from_wh,'-',pp.name) as x_product,
 	pp.default_code as x_product_code,
-	concat(pp.default_code,',',pp.name) as description,
+	concat(pp.default_code,',',description_sale) as description,
 	pp.gl_account,
 	tmp.ref as transaction_no,
 	pp.categ as x_product_category,
@@ -809,7 +847,8 @@ from
 
 	from
 	(
-		select s.origin,sp.section_id,sp.branch_id,s.name,fl.name as _from,tl.name as _to,fl.name as opt_location,
+		select s.origin,sp.section_id,sp.branch_id,s.name,(select code from stock_location loc,stock_warehouse wh where loc.id=wh.lot_stock_id and loc.id=fl.id) from_wh,
+		(select code from stock_location loc,stock_warehouse wh where loc.id=wh.lot_stock_id and loc.id=tl.id) to_wh,fl.name as _from,tl.name as _to,fl.name as opt_location,
 		s.product_id,s.date,-s.product_qty as product_qty, s.product_uom,sp.name as ref
 		from stock_move s,
 		stock_location fl,
@@ -824,7 +863,8 @@ from
 		--$branch_id$
 			
 		union
-		select s.origin,sp.section_id,sp.branch_id,s.name,fl.name as _from,tl.name as _to,tl.name as opt_location, 
+		select s.origin,sp.section_id,sp.branch_id,s.name,(select code from stock_location loc,stock_warehouse wh where loc.id=wh.lot_stock_id and loc.id=fl.id) from_wh,
+		(select code from stock_location loc,stock_warehouse wh where loc.id=wh.lot_stock_id and loc.id=tl.id) to_wh,fl.name as _from,tl.name as _to,tl.name as opt_location, 
 		s.product_id, s.date, s.product_qty, s.product_uom,sp.name as ref
 		from stock_move s,
 		stock_location fl,
@@ -840,7 +880,7 @@ from
 	)tmp
 	left join
 	(
-		select t.name,p.default_code,p.id,pc.name as categ,pm.name as maingroup, pg.name as pgroup,aa.name as account_payable,
+		select t.name,p.default_code,p.id,pc.name as categ,pm.name as maingroup, pg.name as pgroup,aa.name as account_payable,description_sale,
 		(select name
 		from account_account
 		where id in (
@@ -2805,7 +2845,7 @@ and ((s.date at time zone 'utc' )at time zone 'asia/rangoon')::date between ? an
                         <label id="2658">
                             <property name="fontFamily">sans-serif</property>
                             <property name="fontWeight">normal</property>
-                            <text-property name="text">001-WS GROUP</text-property>
+                            <text-property name="text">001-RS GROUP</text-property>
                         </label>
                     </cell>
                     <cell id="2578">
