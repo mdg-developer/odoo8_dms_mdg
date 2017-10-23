@@ -8,11 +8,19 @@
                 <separator string="Location &amp; Warehouse"/>
                 <xpath expr="//separator[@string='Location &amp; Warehouse']" position="after">
                     
+                    <div attrs="{'invisible': True}">
+                    <!-- <div> -->
+                                <label for="company_id" string="Select Company"/>
+                                <field name="company_id"
+                                    widget="selection"
+                                    on_change="onchange_company_id(company_id)"
+                                    class="oe_inline"/>
+                    </div>
                     <group>
                         <label for="id" string="Issued Location"/>
                         <div>
                             <div>
-                                <field name="issued_location" class="oe_inline"/>
+                                <field name="issued_location_id" class="oe_inline"/>
                                 
                             </div>
                             
