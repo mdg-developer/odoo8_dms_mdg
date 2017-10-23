@@ -32,9 +32,10 @@ SuperMarket Sale
 """,
     'author': 'Seventh Computing',
     'website': 'http://www.7thcomputing.com',
-    'depends': ['base' ,'sale'],
+    'depends': ['base' , 'sale', 'sale_management'],
     'data': [        
         'views/sale_view.xml',
+        'views/account_invoice_view.xml',
     ],
     'installable': True,
     'auto_install': False,
