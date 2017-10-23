@@ -26,7 +26,7 @@
     'author': 'seventh computing',
     'website': 'http://www.7thcomputing.com',
     'category' : 'Reporting',
-    'depends' : ["base","sale","account","hr","purchase","sale_management","ms_exchange","stock_requisition"],
+    'depends' : ["base","sale","account","hr","purchase","sale_management","ms_exchange","stock_requisition","account_asset"],
     'description': """
 Branch Customization    
 = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =

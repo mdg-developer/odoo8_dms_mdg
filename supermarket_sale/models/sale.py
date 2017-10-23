@@ -22,8 +22,10 @@ class sale_order(osv.osv):
         data = self.browse(cr, uid, ids,context=context)
         if data:
             if data.supermarket_sale is True:
-                location_id =761
-                #        discount_account_id=inv.company_id.discount_account_id.id
+                #location_id =761
+                location_id=data.company_id.issued_location_id.id
+                if location_id is None:
+                        raise osv.except_osv(_("Warning !!!") , _(" Please Choose Issue Location In Warehouse Configuration !"))                                       
                 cr.execute("select id from stock_location where location_id = %s or id =%s ",(location_id,location_id))
                 all_location =cr.fetchall()
                 for location_data in all_location:
