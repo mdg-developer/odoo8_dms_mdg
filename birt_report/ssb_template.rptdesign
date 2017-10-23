@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.4.2.v201410272105 Build &lt;4.4.2.v20150217-1805></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="bidiLayoutOrientation">ltr</property>
@@ -14,20 +14,15 @@
     <parameters>
         <scalar-parameter name="employee_id" id="648">
             <text-property name="promptText">Employee ID</text-property>
-            <property name="valueType">dynamic</property>
+            <property name="valueType">static</property>
             <property name="isRequired">true</property>
-            <property name="dataSetName">employee</property>
-            <expression name="valueExpr" type="javascript">dataSetRow["employee_id"]</expression>
-            <expression name="labelExpr" type="javascript">dataSetRow["employee_id"]</expression>
             <expression name="sortByColumn">dataSetRow["employee_id"]</expression>
             <property name="sortDirection">asc</property>
             <property name="dataType">string</property>
             <property name="distinct">true</property>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
-            <property name="controlType">list-box</property>
-            <property name="mustMatch">true</property>
-            <property name="fixedOrder">false</property>
+            <property name="controlType">text-box</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
             </structure>
@@ -189,6 +184,12 @@
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">child_dob3</text-property>
                     <text-property name="heading">child_dob3</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">fam_beneficiary</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">fam_beneficiary</text-property>
+                    <text-property name="heading">fam_beneficiary</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">relationship</property>
@@ -384,16 +385,21 @@
                     </structure>
                     <structure>
                         <property name="position">26</property>
-                        <property name="name">relationship</property>
+                        <property name="name">fam_beneficiary</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">27</property>
-                        <property name="name">phone</property>
+                        <property name="name">relationship</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">28</property>
+                        <property name="name">phone</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">29</property>
                         <property name="name">email</property>
                         <property name="dataType">string</property>
                     </structure>
@@ -578,28 +584,34 @@
                 </structure>
                 <structure>
                     <property name="position">26</property>
+                    <property name="name">fam_beneficiary</property>
+                    <property name="nativeName">fam_beneficiary</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">27</property>
                     <property name="name">relationship</property>
                     <property name="nativeName">relationship</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">27</property>
+                    <property name="position">28</property>
                     <property name="name">phone</property>
                     <property name="nativeName">phone</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">28</property>
+                    <property name="position">29</property>
                     <property name="name">email</property>
                     <property name="nativeName">email</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[
-				select 
+            <xml-property name="queryText"><![CDATA[select 
 				'၁။* အမည္ (ျမန္မာ)…  ဦး/ေဒၚ ' || COALESCE(NULLIF( e.emp_name,''),'') as name,
 				'၄။* ႏိုင္ငံသားစီစစ္ေရးအမွတ္…'|| COALESCE(NULLIF( e.identification_id,''),'')  as identification_id,
 				CASE  WHEN  e.birthday IS NULL   THEN '၃။* ေမြးသကၠရာဇ္…  (_____)ရက္၊ (_____) လ၊ (_____)ႏွစ္'
@@ -607,22 +619,22 @@
 				END as birthday,
 				'၅။* ဖခင္…                ဦး '||COALESCE(NULLIF(e.fam_father,''),'')as fam_father,
 				'၆။  ေနရပ္လိပ္စာ…'||COALESCE(NULLIF(e.street,''),'')as street,
-				'၈။   လူမွု႕ဖူလံုေရးအာမခံအမွတ္…'|| COALESCE(NULLIF(e.ssb,''),'')as ssb,
-				CASE  WHEN   e.date IS NULL   THEN '၉။   လူမွု႕ဖူလံုေရးတြင္ စတင္အက်ံဴး၀င္သည္႔ေန႔…   (____)ရက္၊ (____) လ၊ (_____) ႏွစ္'
-				ELSE '၉။   လူမွု႕ဖူလံုေရးတြင္ စတင္အက်ံဴး၀င္သည္႔ေန႔…(' || date_part('day', e.date::timestamp) || ')ရက္၊ (' 
+				'၈။   လူမွုဖူလံုေရးအာမခံအမွတ္…'|| COALESCE(NULLIF(e.ssb,''),'___________________________________________________')as ssb,
+				CASE  WHEN   e.date IS NULL   THEN '၉။   လူမွုဖူလံုေရးတြင္ စတင္အက ်ံဴး၀င္သည္႔ေန႔…   (____)ရက္၊ (____) လ၊ (_____) ႏွစ္'
+				ELSE '၉။   လူမွုဖူလံုေရးတြင္ စတင္အက ်ံဴး၀င္သည္႔ေန႔…(' || date_part('day', e.date::timestamp) || ')ရက္၊ (' 
 				||  date_part('month', e.date::timestamp) || ')လ၊ (' 
 				||  date_part('year', e.date::timestamp)  || ') ႏွစ္' END as date,
 				'၁၄။  အလုပ္အကုိင္/ရာထူး…' || COALESCE(NULLIF(e.job_position,''),'') as job_position,
 				'၁၅။  အလုပ္ဌာနအမည္… ' || COALESCE(NULLIF(e.department,''),'') as department,
-				CASE   WHEN e.join_date IS NULL   THEN '၁၇။  အလုပ္၀င္ေရာက္သည့္႕ေန႕…  ရက္၊ (_____) လ၊ (_____) ႏွစ(_____)္'
+				CASE WHEN e.join_date IS NULL     THEN '၁၇။ အလုပ္၀င္ေရာက္သည့္ေန ့...   ရက္၊ (_____) လ၊ (_____) ႏွစ္(_____)'
 				ELSE '၁၇။  အလုပ္၀င္ေရာက္သည့္႕ေန႕……(' || date_part('day', e.join_date::timestamp) || ')ရက္၊ (' || date_part('month', e.join_date::timestamp) || ')လ၊ ('
 				 || date_part('year', e.join_date::timestamp) || ') ႏွစ္'  END as join_date,
 				--'၁၈။* တစ္လ၀င္ေငြ / လစာ…' || COALESCE(NULLIF(E.wage,0),0) as wage,
-				'၁၈။* တစ္လ၀င္ေငြ / လစာ…' as wage,
-				'၆။  ေနရပ္လိပ္စာ…      အမွတ္ (' || COALESCE(NULLIF(e.street,''),'')  || ')၊' ||  COALESCE(NULLIF(e.street2,''),'') || 'လမ္း၊' as  street2,
-				COALESCE(NULLIF(e.city,''),'') || 'ရပ္ကြက္/ေက်းရြာ၊ [' || COALESCE(NULLIF(e.name,''),'') || ']ၿမိဳ႕နယ္၊'  as city_stat,
-				'၇။   Phone/Fax…' || COALESCE(NULLIF(e.work_phone,''),'') as work_phone ,
-				'Email:'||  COALESCE(NULLIF(e.work_email,''),'')  as   work_email,
+				'၁၈။* တစ္လ၀င္ေငြ / လစာ… ________________'    as wage,
+				'၆။  ေနရပ္လိပ္စာ…      အမွတ္ (' || COALESCE(NULLIF(e.street,''),' ___________ ')  || ')၊' ||  COALESCE(NULLIF(e.street2,''),' __________________ ') || 'လမ္း၊' as  street2,				
+				COALESCE(NULLIF(e.township,''),' _________________ ') || 'ရပ္ကြက္/ေက ်းရြာ၊ [' || COALESCE(NULLIF(e.city,''),' _________________ ') || ']ၿမိဳ႕နယ္၊' as city_stat,
+				'၇။   Phone/Fax…' || COALESCE(NULLIF(e.work_phone,''),'_________________') as work_phone ,
+				'Email:'||  COALESCE(NULLIF(e.work_email,''),'_________________')  as   work_email,
 				CASE  WHEN   e.fam_spouse IS NULL AND e.fam_dob IS NULL THEN   
 				'၁၁။  ဇနီး/ခင္ပြန္း…  ဦး/ေဒၚ _________________   ေမြးသကၠရာဇ္ (_____) ရက္၊ (_____) လ၊ (_____) ႏွစ္'
 			        WHEN   e.fam_spouse IS NULL AND e.fam_dob IS NOT NULL THEN   
@@ -637,38 +649,40 @@
 				||  date_part('day', e.fam_dob::timestamp)|| ') ရက္၊ (' 
 				|| date_part('month', e.fam_dob::timestamp) || ') လ၊ ('
 				|| date_part('year', e.fam_dob::timestamp) ||') ႏွစ္' END as spouse_info,
-				COALESCE(NULLIF(e.name,''),'') || 'တိုင္းေဒသၾကီး / ၿပည္နယ္။' as state2,
-				'(၁၂ . ၁)' ||   COALESCE(NULLIF(e.child_name,''),'') as child_name,
-				'(၁၂ . ၂)' ||   COALESCE(NULLIF(f.child1_name,''),'') as  child1_name,
-				'(၁၂ . ၃)' ||   COALESCE(NULLIF(g.child2_name,''),'')as child2_name,
-				'(၁၂ . ၄)' ||   COALESCE(NULLIF(h.child3_name,''),'') as child3_name,	
-				CASE WHEN e.child_dob  IS NULL THEN  '[1]□ က်ား       [2]□မ    ေမြးသကၠရာဇ္ (_____) ရက္၊ (_____) လ၊ (_____) ႏွစ္' 
+				COALESCE(NULLIF(e.name,''),'__________________________________ ') || 'တိုင္းေဒသၾကီး / ၿပည္နယ္။' as state2,
+				'(၁၂ . ၁)' ||   COALESCE(NULLIF(e.child_name,''),'_________________________') as child_name,
+				'(၁၂ . ၂)' ||   COALESCE(NULLIF(f.child1_name,''),'_________________________') as  child1_name,
+				'(၁၂ . ၃)' ||   COALESCE(NULLIF(g.child2_name,''),'_________________________')as child2_name,
+				'(၁၂ . ၄)' ||   COALESCE(NULLIF(h.child3_name,''),'_________________________') as child3_name,
+				--CASE WHEN e.child_dob  IS NULL THEN  '[1]▭ က ်ား       [2]□မ   ေမြးသကၠရာဇ္ (_____) ရက္၊ (_____) လ၊ (_____) ႏွစ္' 	
+				--CASE WHEN e.child_dob  IS NULL THEN  '[1]▭ က ်ား       [2]▭မ  ေမြးသကၠရာဇ္ (_____) ရက္၊ (_____) လ၊ (_____) ႏွစ္' 
+				CASE WHEN f.child_dob  IS NULL THEN  '[1]▭ က ်ား       [2]▭မ    ေမြးသကၠရာဇ္ (_____) ရက္၊ (_____) လ၊ (_____) ႏွစ္' 
 				ELSE	
-				'[1]□ က်ား       [2]□မ    ေမြးသကၠရာဇ္ (' 
+				'[1]▭ က ်ား       [2]▭မ    ေမြးသကၠရာဇ္ (' 
 				||  date_part('day', e.child_dob::timestamp) || ' ) ရက္၊ ('
 				||  date_part('month',e.child_dob::timestamp) ||') လ၊ (  '
 				||  date_part('year', e.child_dob::timestamp) ||') ႏွစ္'  END as  child_dob,
-				CASE WHEN f.child_dob1  IS NULL THEN  '[1]□ က်ား       [2]□မ    ေမြးသကၠရာဇ္ (_____) ရက္၊ (_____) လ၊ (_____) ႏွစ္' 
+				CASE WHEN f.child_dob1  IS NULL THEN  '[1]▭ က ်ား       [2]▭မ    ေမြးသကၠရာဇ္ (_____) ရက္၊ (_____) လ၊ (_____) ႏွစ္' 
 				ELSE	
-				'[1]□ က်ား       [2]□မ    ေမြးသကၠရာဇ္ (' 
+				'[1]▭ က ်ား        [2]▭မ    ေမြးသကၠရာဇ္ (' 
 				||  date_part('day', f.child_dob1::timestamp) || ' ) ရက္၊ ('
 				||  date_part('month',f.child_dob1::timestamp) ||') လ၊ (  '
 				||  date_part('year', f.child_dob1::timestamp) ||') ႏွစ္'  END as  child_dob1,
-				CASE WHEN g.child_dob2  IS NULL THEN  '[1]□ က်ား       [2]□မ    ေမြးသကၠရာဇ္ (_____) ရက္၊ (_____) လ၊ (_____) ႏွစ္' 
+				CASE WHEN g.child_dob2  IS NULL THEN  '[1]▭ က ်ား       [2]▭မ    ေမြးသကၠရာဇ္ (_____) ရက္၊ (_____) လ၊ (_____) ႏွစ္' 
 				ELSE	
-				'[1]□ က်ား       [2]□မ    ေမြးသကၠရာဇ္ (' 
+				'[1]▭ က ်ား       [2]▭မ    ေမြးသကၠရာဇ္ (' 
 				||  date_part('day', g.child_dob2::timestamp) || ' ) ရက္၊ ('
 				||  date_part('month',g.child_dob2::timestamp) ||') လ၊ (  '
 				||  date_part('year', g.child_dob2::timestamp) ||') ႏွစ္' END as  child_dob2,
-				CASE WHEN  h.child_dob3  IS NULL THEN  '[1]□ က်ား       [2]□မ    ေမြးသကၠရာဇ္ (_____) ရက္၊ (_____) လ၊ (_____) ႏွစ္' 
+				CASE WHEN  h.child_dob3  IS NULL THEN  '[1]▭ က ်ား       [2]▭မ    ေမြးသကၠရာဇ္ (_____) ရက္၊ (_____) လ၊ (_____) ႏွစ္' 
 				ELSE	
-				 '[1]□ က်ား       [2]□မ    ေမြးသကၠရာဇ္ (' 
+				 '[1]▭ က ်ား       [2]▭မ    ေမြးသကၠရာဇ္ (' 
 				||  date_part('day', h.child_dob3::timestamp) || ' ) ရက္၊ ('
 				||  date_part('month',h.child_dob3::timestamp) ||') လ၊ (  '
 				||  date_part('year', h.child_dob3::timestamp) ||') ႏွစ္' END as  child_dob3,
-				
-				'၁၃။* အက်ိဴးခံစားခြင့္အတြက္ အမည္စာရင္းတင္သြင္းသူ  ဦး/ေဒၚ' ||    COALESCE(NULLIF(e.fam_beneficiary,''),'') 
-				||' ေတာ္စပ္ပံု' || COALESCE(NULLIF(e.fam_relationship,''),'') as relationship,
+				CASE WHEN e.fam_beneficiary is null then '၁၃။* အက ်ိဳးခံစားခြင့္အတြက္ အမည္စာ၇င္းတင္သြင္းသူ ဦး/ေဒၚ __________________' else '၁၃။* အက ်ိဳးခံစားခြင့္အတြက္ အမည္စာ၇င္းတင္သြင္းသူ ဦး/ေဒၚ ' ||    COALESCE(NULLIF(e.fam_beneficiary,''),'') end as fam_beneficiary,
+				--CASE WHEN e.fam_beneficiary is null then '၁၃။* အက်ိဴးခံစားခြင့္အတြက္ အမည္စာရင္းတင္သြင္းသူ  ဦး/ေဒၚ _________________ ' else '၁၃။* အက်ိဴးခံစားခြင့္အတြက္ အမည္စာရင္းတင္သြင္းသူ  ဦး/ေဒၚ ' ||    COALESCE(NULLIF(e.fam_beneficiary,''),'') end as fam_beneficiary,
+				CASE WHEN e.fam_relationship is null then ' ေတာ္စပ္ပံု _________________' else ' ေတာ္စပ္ပံု ' || COALESCE(NULLIF(e.fam_relationship,''),'') end as relationship,
 				'၇။   Phone/Fax…'||COALESCE(NULLIF(e.phone,''),'')  as phone,
 				'Email:'||COALESCE(NULLIF(e.email,''),'') as email
 				 from				
@@ -685,11 +699,12 @@
 				a.phone ,
 				a.email,
 				a.job_position,
-				a.department,				
+				(select name as department from res_company where id=1),				
 				a.join_date,
 				a.wage,
 				a.street2,
 				a.city,
+				a.township,
 				a.name,				
 				a.work_phone ,
 				a.work_email,
@@ -722,7 +737,8 @@
 				c.date_start as join_date,
 				c.wage  as wage,
 				p.street2  as street2,
-				p.city,
+				city.name as city,
+				town.name as township,
 				rs.name,				
 				h.work_phone ,
 				h.work_email,
@@ -747,6 +763,8 @@
 				LEFT JOIN res_country_state rs on p.state_id = rs.id
 				LEFT JOIN  hr_employee_children chd on h.id = chd.employee_id
 				LEFT JOIN  hr_department dep on h.department_id = dep.id
+				LEFT JOIN  res_city city on p.city = city.id
+				LEFT JOIN  res_township town on p.township = town.id
 				where h.employee_id=?)a
 				where a.SrNo=1)e
 				
@@ -769,6 +787,7 @@
 				b.wage,
 				b.street2,
 				b.city,
+				b.township,
 				b.name,				
 				b.work_phone ,
 				b.work_email,
@@ -802,7 +821,7 @@
 				c.date_start as join_date,
 				c.wage  as wage,
 				p.street2  as street2,
-				p.city,rs.name,				
+				city.name as city,town.name as township,rs.name,				
 				h.work_phone ,
 				h.work_email,
 				h.fam_spouse,
@@ -826,6 +845,8 @@
 				LEFT JOIN res_country_state rs on p.state_id = rs.id
 				LEFT JOIN  hr_employee_children chd on h.id = chd.employee_id
 				LEFT JOIN  hr_department dep on h.department_id = dep.id
+				LEFT JOIN  res_city city on p.city = city.id
+				LEFT JOIN  res_township town on p.township = town.id
 				where h.employee_id=?)b
 				where   b.SrNo=2)f
 				
@@ -848,7 +869,7 @@
 				c.join_date,
 				c.wage,
 				c.street2,
-				c.city,c.name,				
+				c.city,c.township,c.name,				
 				c.work_phone ,
 				c.work_email,
 				c.fam_spouse,
@@ -880,7 +901,7 @@
 				c.date_start as join_date,
 				c.wage  as wage,
 				p.street2  as street2,
-				p.city,rs.name,				
+				city.name as city,town.name as township,rs.name,				
 				h.work_phone ,
 				h.work_email,
 				h.fam_spouse,
@@ -904,6 +925,8 @@
 				LEFT JOIN res_country_state rs on p.state_id = rs.id
 				LEFT JOIN  hr_employee_children chd on h.id = chd.employee_id
 				LEFT JOIN  hr_department dep on h.department_id = dep.id
+				LEFT JOIN  res_city city on p.city = city.id
+				LEFT JOIN  res_township town on p.township = p.township
 				where h.employee_id=?)c
 				where  c.SrNo=3)g
 				
@@ -927,7 +950,7 @@
 				d.join_date,
 				d.wage,
 				d.street2,
-				d.city,d.name,				
+				d.city,d.township,d.name,				
 				d.work_phone ,
 				d.work_email,
 				d.fam_spouse,
@@ -959,7 +982,7 @@
 				c.date_start as join_date,
 				c.wage  as wage,
 				p.street2  as street2,
-				p.city,rs.name,				
+				city.name as city,town.name as township,rs.name,				
 				h.work_phone ,
 				h.work_email,
 				h.fam_spouse,
@@ -983,6 +1006,8 @@
 				LEFT JOIN res_country_state rs on p.state_id = rs.id
 				LEFT JOIN  hr_employee_children chd on h.id = chd.employee_id
 				LEFT JOIN  hr_department dep on h.department_id = dep.id
+				LEFT JOIN  res_city city on p.city = city.id
+				LEFT JOIN  res_township town on p.township = p.township
 				where h.employee_id=?)d
 				where  d.SrNo=4)h
 				ON g.emp_id = h.emp_id]]></xml-property>
@@ -1258,6 +1283,7 @@
                     <text-property name="heading">employee_id</text-property>
                 </structure>
             </list-property>
+            <list-property name="parameters"/>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
                     <structure>
@@ -1277,7 +1303,9 @@
                     <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select employee_id from hr_employee;]]></xml-property>
+            <xml-property name="queryText"><![CDATA[select employee_id 
+from hr_employee
+where active='true';]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -1349,44 +1377,227 @@
     <page-setup>
         <simple-master-page name="Simple MasterPage" id="2">
             <property name="type">a4</property>
-            <property name="footerHeight">0in</property>
+            <property name="showHeaderOnFirst">false</property>
+            <property name="showFooterOnLast">true</property>
+            <property name="headerHeight">0in</property>
+            <property name="footerHeight">3.4in</property>
+            <page-footer>
+                <grid id="742">
+                    <property name="height">2.8854166666666665in</property>
+                    <property name="width">7.614583333333333in</property>
+                    <column id="743">
+                        <property name="width">2.5520833333333335in</property>
+                    </column>
+                    <column id="744">
+                        <property name="width">2.53125in</property>
+                    </column>
+                    <column id="745">
+                        <property name="width">2.53125in</property>
+                    </column>
+                    <row id="746">
+                        <property name="height">0.6041666666666666in</property>
+                        <cell id="747">
+                            <property name="colSpan">3</property>
+                            <property name="rowSpan">1</property>
+                            <label id="614">
+                                <property name="fontFamily">"Zawgyi-One"</property>
+                                <property name="fontSize">10pt</property>
+                                <property name="fontWeight">bold</property>
+                                <property name="textUnderline">underline</property>
+                                <property name="textAlign">left</property>
+                                <text-property name="text">အထက္ပါျဖည့္စြက္ထားေသာ အခ ်က္မ်ားအားလံုး မွန္ကန္ေၾကာင္းတာ၀န္ယူပါသည္။ ေျပာင္းလဲမွုရွိပါက လူမွုဖူလံုေရးရံုးသို့အေၾကာင္းၾကားပါမည္။</text-property>
+                            </label>
+                        </cell>
+                    </row>
+                    <row id="750">
+                        <property name="height">0.3125in</property>
+                        <cell id="751">
+                            <label id="615">
+                                <property name="fontFamily">"Zawgyi-One"</property>
+                                <property name="fontSize">10pt</property>
+                                <property name="fontWeight">bold</property>
+                                <property name="textUnderline">underline</property>
+                                <property name="textAlign">left</property>
+                                <text-property name="text">အလုပ္ဌာနတာ၀န္ခံ/မန္ေနဂ်ာ</text-property>
+                            </label>
+                        </cell>
+                        <cell id="752">
+                            <property name="colSpan">2</property>
+                            <property name="rowSpan">1</property>
+                            <property name="textAlign">center</property>
+                            <label id="781">
+                                <property name="fontFamily">"Zawgyi-One"</property>
+                                <property name="fontSize">10pt</property>
+                                <property name="fontWeight">bold</property>
+                                <property name="textUnderline">underline</property>
+                                <text-property name="text">အာမခံအလုပ္သမား</text-property>
+                            </label>
+                        </cell>
+                    </row>
+                    <row id="754">
+                        <property name="height">0.2916666666666667in</property>
+                        <cell id="755"/>
+                        <cell id="756"/>
+                        <cell id="757"/>
+                    </row>
+                    <row id="758">
+                        <property name="height">0.3125in</property>
+                        <cell id="759">
+                            <label id="782">
+                                <property name="fontFamily">"Zawgyi-One"</property>
+                                <property name="fontSize">10pt</property>
+                                <property name="fontWeight">bold</property>
+                                <property name="textAlign">left</property>
+                                <text-property name="text">လက္မွတ္ ____________________</text-property>
+                            </label>
+                        </cell>
+                        <cell id="760">
+                            <property name="colSpan">2</property>
+                            <property name="rowSpan">1</property>
+                            <property name="textAlign">center</property>
+                            <label id="783">
+                                <property name="fontFamily">"Zawgyi-One"</property>
+                                <property name="fontSize">10pt</property>
+                                <property name="fontWeight">bold</property>
+                                <text-property name="text"> လက္မွတ္ _________________________</text-property>
+                            </label>
+                        </cell>
+                    </row>
+                    <row id="762">
+                        <property name="height">0.3125in</property>
+                        <cell id="763">
+                            <label id="784">
+                                <property name="fontFamily">"Zawgyi-One"</property>
+                                <property name="fontSize">10pt</property>
+                                <property name="fontWeight">bold</property>
+                                <property name="textAlign">left</property>
+                                <text-property name="text">အမည္ _________________________</text-property>
+                            </label>
+                        </cell>
+                        <cell id="764"/>
+                        <cell id="765"/>
+                    </row>
+                    <row id="766">
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <property name="height">0.3541666666666667in</property>
+                        <cell id="767">
+                            <label id="785">
+                                <property name="fontFamily">"Zawgyi-One"</property>
+                                <property name="fontSize">10pt</property>
+                                <property name="fontWeight">bold</property>
+                                <property name="textUnderline">underline</property>
+                                <property name="textAlign">left</property>
+                                <text-property name="text">ရံုးခြဲမွေရးသြင္းရန္</text-property>
+                            </label>
+                        </cell>
+                        <cell id="768"/>
+                        <cell id="769"/>
+                    </row>
+                    <row id="770">
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="height">0.3645833333333333in</property>
+                        <cell id="771">
+                            <property name="colSpan">3</property>
+                            <property name="rowSpan">1</property>
+                            <label id="786">
+                                <property name="fontSize">10pt</property>
+                                <property name="fontWeight">bold</property>
+                                <text-property name="text">SSB Office Code        [ __________ ] Township Code  [ ________ ]  State / Region Code  [ __________ ] </text-property>
+                            </label>
+                        </cell>
+                    </row>
+                    <row id="774">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="height">0.3333333333333333in</property>
+                        <cell id="775">
+                            <property name="colSpan">3</property>
+                            <property name="rowSpan">1</property>
+                            <label id="787">
+                                <property name="fontSize">10pt</property>
+                                <property name="fontWeight">bold</property>
+                                <property name="textAlign">left</property>
+                                <text-property name="text">             Year [ ___________ ]</text-property>
+                            </label>
+                        </cell>
+                    </row>
+                </grid>
+            </page-footer>
         </simple-master-page>
     </page-setup>
     <body>
-        <table id="8">
-            <property name="dataSet">ssb</property>
-            <column id="19"/>
-            <header>
-                <row id="9">
-                    <cell id="10">
-                        <label id="24">
-                            <property name="fontFamily">"Zawgyi-One"</property>
-                            <property name="fontWeight">bold</property>
-                            <text-property name="text">နည္းဥပေဒ ၄၂(ဂ)၊ ပံုစံ (၂)</text-property>
-                        </label>
-                    </cell>
-                </row>
-                <row id="20">
-                    <cell id="21">
-                        <label id="25">
-                            <property name="fontFamily">"Zawgyi-One"</property>
-                            <property name="fontWeight">bold</property>
-                            <text-property name="text">အာမခံအလုပ္သမားမွတ္ပံုတင္ပံုစံ</text-property>
-                        </label>
-                    </cell>
-                </row>
-                <row id="22">
-                    <cell id="23">
-                        <label id="26">
-                            <property name="fontFamily">"Zawgyi-One"</property>
-                            <property name="fontWeight">bold</property>
-                            <text-property name="text">SSBMS-EAS စနစ္ (အာမခံအလုပ္သမား ကိုယ္ေရးအခ်က္အလက္ျဖည့္စြက္ရန္)  Form No [                           ]</text-property>
-                        </label>
-                    </cell>
-                </row>
-            </header>
-        </table>
-        <label id="649"/>
+        <grid id="808">
+            <property name="width">7.739583333333333in</property>
+            <column id="809">
+                <property name="width">2.5833333333333335in</property>
+            </column>
+            <column id="810">
+                <property name="width">2.8854166666666665in</property>
+            </column>
+            <column id="811">
+                <property name="width">2.2708333333333335in</property>
+            </column>
+            <row id="812">
+                <cell id="813">
+                    <property name="colSpan">3</property>
+                    <property name="rowSpan">1</property>
+                    <label id="796">
+                        <property name="fontFamily">"Zawgyi-One"</property>
+                        <property name="fontSize">10pt</property>
+                        <property name="fontWeight">bold</property>
+                        <property name="textAlign">right</property>
+                        <text-property name="text">နည္းဥပေဒ ၄၂(ဂ)၊ ပံုစံ (၂)</text-property>
+                    </label>
+                </cell>
+            </row>
+            <row id="816">
+                <cell id="817">
+                    <property name="colSpan">3</property>
+                    <property name="rowSpan">1</property>
+                    <label id="797">
+                        <property name="fontFamily">"Zawgyi-One"</property>
+                        <property name="fontSize">10pt</property>
+                        <property name="fontWeight">bold</property>
+                        <property name="textUnderline">underline</property>
+                        <property name="textAlign">left</property>
+                        <text-property name="text">အာမခံအလုပ္သမားမွတ္ပံုတင္ပံုစံ</text-property>
+                    </label>
+                </cell>
+            </row>
+            <row id="820">
+                <cell id="821">
+                    <property name="colSpan">2</property>
+                    <property name="rowSpan">1</property>
+                    <label id="26">
+                        <property name="fontFamily">"Zawgyi-One"</property>
+                        <property name="fontSize">10pt</property>
+                        <property name="fontWeight">bold</property>
+                        <property name="textUnderline">underline</property>
+                        <property name="textAlign">left</property>
+                        <text-property name="text">SSBMS-EAS စနစ္ (အာမခံအလုပ္သမား ကိုယ္ေရးအခ်က္အလက္ျဖည့္စြက္ရန္)</text-property>
+                    </label>
+                </cell>
+                <cell id="823">
+                    <label id="824">
+                        <property name="fontSize">10pt</property>
+                        <property name="fontWeight">bold</property>
+                        <text-property name="text">Form No [                           ]</text-property>
+                    </label>
+                </cell>
+            </row>
+        </grid>
         <table id="443">
             <property name="width">7.75in</property>
             <property name="dataSet">ssb</property>
@@ -1559,17 +1770,29 @@
                     <expression name="expression" type="javascript">dataSetRow["relationship"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">fam_beneficiary</property>
+                    <text-property name="displayName">fam_beneficiary</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["fam_beneficiary"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
             </list-property>
             <column id="456">
-                <property name="width">2.65625in</property>
+                <property name="width">3.1979166666666665in</property>
             </column>
             <column id="457">
-                <property name="width">2.09375in</property>
+                <property name="width">2.2395833333333335in</property>
             </column>
             <column id="458">
-                <property name="width">3in</property>
+                <property name="width">2.3125in</property>
             </column>
             <header>
+                <row id="825">
+                    <property name="height">0.09375in</property>
+                    <cell id="826"/>
+                    <cell id="827"/>
+                    <cell id="828"/>
+                </row>
                 <row id="444">
                     <property name="borderLeftStyle">solid</property>
                     <property name="borderLeftWidth">thin</property>
@@ -1577,12 +1800,14 @@
                     <property name="borderRightWidth">thin</property>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
+                    <property name="height">0.3020833333333333in</property>
                     <cell id="445">
                         <property name="colSpan">3</property>
                         <property name="rowSpan">1</property>
                         <data id="463">
                             <property name="fontFamily">"Zawgyi-One"</property>
-                            <property name="fontWeight">normal</property>
+                            <property name="fontSize">11pt</property>
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">left</property>
                             <property name="resultSetColumn">name</property>
                         </data>
@@ -1596,9 +1821,10 @@
                     <cell id="460">
                         <label id="485">
                             <property name="fontFamily">"Zawgyi-One"</property>
-                            <property name="fontWeight">normal</property>
+                            <property name="fontSize">10pt</property>
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">left</property>
-                            <text-property name="text">၂။  က်ား/မ…             [1]   </text-property>
+                            <text-property name="text">၂။  က ်ား/မ…                </text-property>
                         </label>
                     </cell>
                     <cell id="461">
@@ -1606,8 +1832,10 @@
                         <property name="rowSpan">1</property>
                         <label id="486">
                             <property name="fontFamily">"Zawgyi-One"</property>
+                            <property name="fontSize">10pt</property>
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">left</property>
-                            <text-property name="text">□  က်ား    [2]        □ မ (ေရြးလိုရာကို □  ဤသို႕ျခယ္ပါ။ )</text-property>
+                            <text-property name="text">[1] ▭  က ်ား    [2] ▭ မ (ေရြးလိုရာကို ■  ဤသို႕ျခယ္ပါ။ )</text-property>
                         </label>
                     </cell>
                 </row>
@@ -1619,8 +1847,11 @@
                     <cell id="488">
                         <property name="colSpan">2</property>
                         <property name="rowSpan">1</property>
+                        <property name="fontSize">8pt</property>
                         <data id="491">
                             <property name="fontFamily">"Zawgyi-One"</property>
+                            <property name="fontSize">10pt</property>
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">left</property>
                             <property name="resultSetColumn">birthday</property>
                         </data>
@@ -1637,6 +1868,8 @@
                         <property name="rowSpan">1</property>
                         <data id="473">
                             <property name="fontFamily">"Zawgyi-One"</property>
+                            <property name="fontSize">10pt</property>
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">left</property>
                             <property name="resultSetColumn">identification_id</property>
                         </data>
@@ -1652,6 +1885,8 @@
                         <property name="rowSpan">1</property>
                         <data id="474">
                             <property name="fontFamily">"Zawgyi-One"</property>
+                            <property name="fontSize">10pt</property>
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">left</property>
                             <property name="resultSetColumn">fam_father</property>
                         </data>
@@ -1667,6 +1902,8 @@
                         <property name="rowSpan">1</property>
                         <data id="654">
                             <property name="fontFamily">"Zawgyi-One"</property>
+                            <property name="fontSize">10pt</property>
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">left</property>
                             <property name="resultSetColumn">street2</property>
                         </data>
@@ -1683,6 +1920,9 @@
                         <property name="rowSpan">1</property>
                         <data id="655">
                             <property name="fontFamily">"Zawgyi-One"</property>
+                            <property name="fontSize">10pt</property>
+                            <property name="fontWeight">bold</property>
+                            <property name="fontStyle">normal</property>
                             <property name="textAlign">left</property>
                             <property name="resultSetColumn">city_stat</property>
                         </data>
@@ -1699,6 +1939,8 @@
                         <property name="rowSpan">1</property>
                         <data id="656">
                             <property name="fontFamily">"Zawgyi-One"</property>
+                            <property name="fontSize">10pt</property>
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">left</property>
                             <property name="resultSetColumn">state2</property>
                         </data>
@@ -1717,18 +1959,23 @@
                         <property name="fontFamily">"Zawgyi-One"</property>
                         <property name="textAlign">left</property>
                         <data id="657">
+                            <property name="fontSize">10pt</property>
+                            <property name="fontWeight">bold</property>
                             <property name="resultSetColumn">work_phone</property>
                         </data>
                     </cell>
                     <cell id="482">
                         <data id="658">
                             <property name="fontFamily">"Zawgyi-One"</property>
+                            <property name="fontSize">10pt</property>
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">left</property>
                             <property name="resultSetColumn">work_email</property>
                         </data>
                     </cell>
                 </row>
                 <row id="506">
+                    <property name="height">0.10416666666666667in</property>
                     <cell id="507"/>
                     <cell id="508"/>
                     <cell id="509"/>
@@ -1740,11 +1987,14 @@
                     <property name="borderRightWidth">thin</property>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
+                    <property name="height">0.375in</property>
                     <cell id="511">
                         <property name="colSpan">3</property>
                         <property name="rowSpan">1</property>
                         <data id="659">
                             <property name="fontFamily">"Zawgyi-One"</property>
+                            <property name="fontSize">10pt</property>
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">left</property>
                             <property name="resultSetColumn">ssb</property>
                         </data>
@@ -1762,12 +2012,15 @@
                         <property name="rowSpan">1</property>
                         <data id="643">
                             <property name="fontFamily">"Zawgyi-One"</property>
+                            <property name="fontSize">10pt</property>
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">left</property>
                             <property name="resultSetColumn">date</property>
                         </data>
                     </cell>
                 </row>
                 <row id="519">
+                    <property name="height">0.11458333333333333in</property>
                     <cell id="520"/>
                     <cell id="521"/>
                     <cell id="522"/>
@@ -1782,27 +2035,68 @@
                     <cell id="524">
                         <property name="colSpan">3</property>
                         <property name="rowSpan">1</property>
-                        <label id="527">
-                            <property name="fontFamily">"Zawgyi-One"</property>
-                            <property name="textAlign">left</property>
-                            <text-property name="text">၁၀။  အိမ္ေထာင္ေရးအေျခအေန…  [1]              □ အပ်ိဳ/လူပ်ိဳဳ           □ အိမ္ေထာင္သည္</text-property>
-                        </label>
-                    </cell>
-                </row>
-                <row id="528">
-                    <property name="borderLeftStyle">solid</property>
-                    <property name="borderLeftWidth">thin</property>
-                    <property name="borderRightStyle">solid</property>
-                    <property name="borderRightWidth">thin</property>
-                    <cell id="529"/>
-                    <cell id="530">
-                        <property name="colSpan">2</property>
-                        <property name="rowSpan">1</property>
-                        <label id="532">
-                            <property name="fontFamily">"Zawgyi-One"</property>
-                            <property name="textAlign">left</property>
-                            <text-property name="text"> [3] □  အိမ္ေထာင္ကြဲ        [4] □  မုဆိုးဖို/မုဆိုးမ (ေရြးလိုရာတစ္ခုကိုသာ  □    ဤသို႕ျခယ္ပါ။</text-property>
-                        </label>
+                        <grid id="700">
+                            <property name="width">7.677083333333333in</property>
+                            <column id="701">
+                                <property name="width">2.4895833333333335in</property>
+                            </column>
+                            <column id="702">
+                                <property name="width">1.5208333333333333in</property>
+                            </column>
+                            <column id="703">
+                                <property name="width">3.6666666666666665in</property>
+                            </column>
+                            <row id="704">
+                                <cell id="705">
+                                    <label id="712">
+                                        <property name="fontFamily">"Zawgyi-One"</property>
+                                        <property name="fontSize">10pt</property>
+                                        <property name="fontWeight">bold</property>
+                                        <property name="textAlign">left</property>
+                                        <text-property name="text">၁၀။  အိမ္ေထာင္ေရးအေျခအေန…</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="706">
+                                    <label id="713">
+                                        <property name="fontFamily">"Zawgyi-One"</property>
+                                        <property name="fontSize">10pt</property>
+                                        <property name="fontWeight">bold</property>
+                                        <property name="textAlign">left</property>
+                                        <text-property name="text">[1] ▭ အပ ်ိဳ/လူပ ်ိဳ</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="707">
+                                    <label id="714">
+                                        <property name="fontFamily">"Zawgyi-One"</property>
+                                        <property name="fontSize">10pt</property>
+                                        <property name="fontWeight">bold</property>
+                                        <property name="textAlign">left</property>
+                                        <text-property name="text">[2] ▭ အိမ္ေထာင္သည္</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                            <row id="708">
+                                <cell id="709"/>
+                                <cell id="710">
+                                    <label id="715">
+                                        <property name="fontFamily">"Zawgyi-One"</property>
+                                        <property name="fontSize">10pt</property>
+                                        <property name="fontWeight">bold</property>
+                                        <property name="textAlign">left</property>
+                                        <text-property name="text">[3] ▭ အိမ္ေထာင္ကြဲ</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="711">
+                                    <label id="716">
+                                        <property name="fontFamily">"Zawgyi-One"</property>
+                                        <property name="fontSize">10pt</property>
+                                        <property name="fontWeight">bold</property>
+                                        <property name="textAlign">left</property>
+                                        <text-property name="text">[4] ▭ မုဆိုးဖို/မုဆိုးမ (ေရြးလိုရာတစ္ခုကိုသာ  ■    ဤသို႕ျခယ္ပါ။)</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                        </grid>
                     </cell>
                 </row>
                 <row id="533">
@@ -1815,24 +2109,84 @@
                         <property name="rowSpan">1</property>
                         <data id="660">
                             <property name="fontFamily">"Zawgyi-One"</property>
+                            <property name="fontSize">10pt</property>
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">left</property>
                             <property name="resultSetColumn">spouse_info</property>
                         </data>
                     </cell>
                 </row>
-                <row id="538">
+                <row id="717">
                     <property name="borderLeftStyle">solid</property>
                     <property name="borderLeftWidth">thin</property>
                     <property name="borderRightStyle">solid</property>
                     <property name="borderRightWidth">thin</property>
-                    <cell id="539">
+                    <property name="height">0.3958333333333333in</property>
+                    <cell id="718">
                         <property name="colSpan">3</property>
                         <property name="rowSpan">1</property>
-                        <label id="542">
-                            <property name="fontFamily">"Zawgyi-One"</property>
-                            <property name="textAlign">left</property>
-                            <text-property name="text">၁၂။  သားသမီးမ်ား၏အမည္                                က်ား/မ                                         ေမြးသကၠရာဇ္ </text-property>
-                        </label>
+                        <grid id="721">
+                            <property name="width">7.677083333333333in</property>
+                            <column id="722">
+                                <property name="width">0.96875in</property>
+                            </column>
+                            <column id="723">
+                                <property name="width">1.125in</property>
+                            </column>
+                            <column id="724">
+                                <property name="width">0.7916666666666666in</property>
+                            </column>
+                            <column id="725">
+                                <property name="width">0.9583333333333334in</property>
+                            </column>
+                            <column id="726">
+                                <property name="width">0.9583333333333334in</property>
+                            </column>
+                            <column id="727">
+                                <property name="width">1.1979166666666667in</property>
+                            </column>
+                            <column id="728">
+                                <property name="width">0.71875in</property>
+                            </column>
+                            <column id="729">
+                                <property name="width">0.9583333333333334in</property>
+                            </column>
+                            <row id="730">
+                                <cell id="731">
+                                    <property name="colSpan">2</property>
+                                    <property name="rowSpan">1</property>
+                                    <label id="739">
+                                        <property name="fontFamily">"Zawgyi-One"</property>
+                                        <property name="fontSize">10pt</property>
+                                        <property name="fontWeight">bold</property>
+                                        <property name="textUnderline">underline</property>
+                                        <text-property name="text">၁၂။  သားသမီးမ်ား၏အမည္ </text-property>
+                                    </label>
+                                </cell>
+                                <cell id="733"/>
+                                <cell id="734">
+                                    <label id="740">
+                                        <property name="fontFamily">"Zawgyi-One"</property>
+                                        <property name="fontSize">10pt</property>
+                                        <property name="fontWeight">bold</property>
+                                        <property name="textUnderline">underline</property>
+                                        <text-property name="text">က်ား/မ  </text-property>
+                                    </label>
+                                </cell>
+                                <cell id="735"/>
+                                <cell id="736">
+                                    <label id="741">
+                                        <property name="fontFamily">"Zawgyi-One"</property>
+                                        <property name="fontSize">10pt</property>
+                                        <property name="fontWeight">bold</property>
+                                        <property name="textUnderline">underline</property>
+                                        <text-property name="text"> ေမြးသကၠရာဇ္ </text-property>
+                                    </label>
+                                </cell>
+                                <cell id="737"/>
+                                <cell id="738"/>
+                            </row>
+                        </grid>
                     </cell>
                 </row>
                 <row id="543">
@@ -1843,6 +2197,8 @@
                     <cell id="544">
                         <data id="661">
                             <property name="fontFamily">"Zawgyi-One"</property>
+                            <property name="fontSize">10pt</property>
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">left</property>
                             <property name="resultSetColumn">child_name</property>
                         </data>
@@ -1850,8 +2206,11 @@
                     <cell id="545">
                         <property name="colSpan">2</property>
                         <property name="rowSpan">1</property>
+                        <property name="fontSize">8pt</property>
                         <data id="662">
                             <property name="fontFamily">"Zawgyi-One"</property>
+                            <property name="fontSize">10pt</property>
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">left</property>
                             <property name="resultSetColumn">child_dob</property>
                         </data>
@@ -1865,6 +2224,8 @@
                     <cell id="552">
                         <data id="663">
                             <property name="fontFamily">"Zawgyi-One"</property>
+                            <property name="fontSize">10pt</property>
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">left</property>
                             <property name="resultSetColumn">child1_name</property>
                         </data>
@@ -1874,6 +2235,8 @@
                         <property name="rowSpan">1</property>
                         <data id="664">
                             <property name="fontFamily">"Zawgyi-One"</property>
+                            <property name="fontSize">10pt</property>
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">left</property>
                             <property name="resultSetColumn">child_dob1</property>
                         </data>
@@ -1887,6 +2250,8 @@
                     <cell id="548">
                         <data id="666">
                             <property name="fontFamily">"Zawgyi-One"</property>
+                            <property name="fontSize">10pt</property>
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">left</property>
                             <property name="resultSetColumn">child2_name</property>
                         </data>
@@ -1896,6 +2261,8 @@
                         <property name="rowSpan">1</property>
                         <data id="665">
                             <property name="fontFamily">"Zawgyi-One"</property>
+                            <property name="fontSize">10pt</property>
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">left</property>
                             <property name="resultSetColumn">child_dob2</property>
                         </data>
@@ -1909,6 +2276,8 @@
                     <cell id="557">
                         <data id="668">
                             <property name="fontFamily">"Zawgyi-One"</property>
+                            <property name="fontSize">10pt</property>
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">left</property>
                             <property name="resultSetColumn">child3_name</property>
                         </data>
@@ -1918,6 +2287,8 @@
                         <property name="rowSpan">1</property>
                         <data id="669">
                             <property name="fontFamily">"Zawgyi-One"</property>
+                            <property name="fontSize">10pt</property>
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">left</property>
                             <property name="resultSetColumn">child_dob3</property>
                         </data>
@@ -1931,16 +2302,28 @@
                     <property name="borderRightStyle">solid</property>
                     <property name="borderRightWidth">thin</property>
                     <cell id="568">
-                        <property name="colSpan">3</property>
+                        <property name="colSpan">2</property>
                         <property name="rowSpan">1</property>
-                        <data id="670">
+                        <data id="674">
                             <property name="fontFamily">"Zawgyi-One"</property>
+                            <property name="fontSize">10pt</property>
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">left</property>
+                            <property name="resultSetColumn">fam_beneficiary</property>
+                        </data>
+                    </cell>
+                    <cell id="672">
+                        <data id="673">
+                            <property name="fontFamily">"Zawgyi-One"</property>
+                            <property name="fontSize">10pt</property>
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">left</property>
                             <property name="resultSetColumn">relationship</property>
                         </data>
                     </cell>
                 </row>
                 <row id="572">
+                    <property name="height">0.07291666666666667in</property>
                     <cell id="573"/>
                     <cell id="574"/>
                     <cell id="575"/>
@@ -1957,6 +2340,8 @@
                         <property name="rowSpan">1</property>
                         <data id="644">
                             <property name="fontFamily">"Zawgyi-One"</property>
+                            <property name="fontSize">10pt</property>
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">left</property>
                             <property name="resultSetColumn">job_position</property>
                         </data>
@@ -1972,6 +2357,8 @@
                         <property name="rowSpan">1</property>
                         <data id="645">
                             <property name="fontFamily">"Zawgyi-One"</property>
+                            <property name="fontSize">10pt</property>
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">left</property>
                             <property name="resultSetColumn">department</property>
                         </data>
@@ -1987,8 +2374,10 @@
                         <property name="rowSpan">1</property>
                         <label id="589">
                             <property name="fontFamily">"Zawgyi-One"</property>
+                            <property name="fontSize">10pt</property>
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">left</property>
-                            <text-property name="text">၁၆။  အလုပ္ဌာနအမွတ္…  _______________________________________________________________</text-property>
+                            <text-property name="text">၁၆။  အလုပ္ဌာနအမွတ္…  7001.39.5.2.18</text-property>
                         </label>
                     </cell>
                 </row>
@@ -2002,6 +2391,8 @@
                         <property name="rowSpan">1</property>
                         <data id="646">
                             <property name="fontFamily">"Zawgyi-One"</property>
+                            <property name="fontSize">10pt</property>
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">left</property>
                             <property name="resultSetColumn">join_date</property>
                         </data>
@@ -2015,110 +2406,32 @@
                     <property name="borderRightStyle">solid</property>
                     <property name="borderRightWidth">thin</property>
                     <cell id="607">
-                        <property name="colSpan">3</property>
+                        <property name="colSpan">1</property>
                         <property name="rowSpan">1</property>
                         <data id="647">
                             <property name="fontFamily">"Zawgyi-One"</property>
+                            <property name="fontSize">10pt</property>
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">left</property>
                             <property name="resultSetColumn">wage</property>
                         </data>
                     </cell>
+                    <cell id="675">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <label id="677">
+                            <property name="fontFamily">"Zawgyi-One"</property>
+                            <property name="fontSize">10pt</property>
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text"> [1] ▭ က ်ပ္ 	[2] ▭ FEC/USD  </text-property>
+                        </label>
+                    </cell>
                 </row>
                 <row id="602">
+                    <property name="height">0.010416666666666666in</property>
                     <cell id="603"/>
                     <cell id="604"/>
                     <cell id="605"/>
-                </row>
-                <row id="598">
-                    <cell id="599">
-                        <property name="colSpan">3</property>
-                        <property name="rowSpan">1</property>
-                        <label id="614">
-                            <property name="fontFamily">"Zawgyi-One"</property>
-                            <property name="textAlign">left</property>
-                            <text-property name="text">အထက္ပါျဖည့္စြက္ထားေသာ အခ်က္မ်ားအားလံုး မွန္ကန္ေၾကာင္းတာ၀န္ယူပါသည္။ ေျပာင္းလဲမွု႕ရွိပါက လူမွု႔ဖူလံုေရးရံုးသို့အေၾကာင္းၾကားပါမည္။</text-property>
-                        </label>
-                    </cell>
-                </row>
-                <row id="594">
-                    <cell id="595">
-                        <label id="615">
-                            <property name="fontFamily">"Zawgyi-One"</property>
-                            <property name="textAlign">left</property>
-                            <text-property name="text">အလုပ္ဌာနတာ၀န္ခံ/မန္ေနဂ်ာ</text-property>
-                        </label>
-                    </cell>
-                    <cell id="596">
-                        <property name="colSpan">2</property>
-                        <property name="rowSpan">1</property>
-                        <label id="616">
-                            <property name="fontFamily">"Zawgyi-One"</property>
-                            <text-property name="text">အာမခံအလုပ္သမား</text-property>
-                        </label>
-                    </cell>
-                </row>
-                <row id="590">
-                    <cell id="591"/>
-                    <cell id="592"/>
-                    <cell id="593"/>
-                </row>
-                <row id="621">
-                    <cell id="622">
-                        <label id="625">
-                            <property name="fontFamily">"Zawgyi-One"</property>
-                            <property name="textAlign">left</property>
-                            <text-property name="text">လက္မွတ္ ____________________</text-property>
-                        </label>
-                    </cell>
-                    <cell id="623">
-                        <property name="colSpan">2</property>
-                        <property name="rowSpan">1</property>
-                        <label id="626">
-                            <property name="fontFamily">"Zawgyi-One"</property>
-                            <text-property name="text"> အမည္ _________________________</text-property>
-                        </label>
-                    </cell>
-                </row>
-                <row id="617">
-                    <cell id="618">
-                        <label id="627">
-                            <property name="fontFamily">"Zawgyi-One"</property>
-                            <property name="textAlign">left</property>
-                            <text-property name="text"> အမည္ _________________________</text-property>
-                        </label>
-                    </cell>
-                    <cell id="619"/>
-                    <cell id="620"/>
-                </row>
-                <row id="632">
-                    <cell id="633">
-                        <label id="636">
-                            <property name="fontFamily">"Zawgyi-One"</property>
-                            <property name="textAlign">left</property>
-                            <text-property name="text">ရံုးခြဲမွေရးသြင္းရန္</text-property>
-                        </label>
-                    </cell>
-                    <cell id="634"/>
-                    <cell id="635"/>
-                </row>
-                <row id="628">
-                    <cell id="629">
-                        <property name="colSpan">3</property>
-                        <property name="rowSpan">1</property>
-                        <label id="637">
-                            <text-property name="text">SSB Office Code        [                    ] Township Code  [                  ]  State / Region Code  [                  ] </text-property>
-                        </label>
-                    </cell>
-                </row>
-                <row id="638">
-                    <cell id="639">
-                        <label id="642">
-                            <property name="textAlign">left</property>
-                            <text-property name="text">Year [                    ]</text-property>
-                        </label>
-                    </cell>
-                    <cell id="640"/>
-                    <cell id="641"/>
                 </row>
             </header>
         </table>

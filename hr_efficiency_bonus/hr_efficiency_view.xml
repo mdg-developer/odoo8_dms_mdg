@@ -11,6 +11,7 @@
 					<field name="employee_id" />
 					<field name="department_id" />
 					<field name="section_id" />
+					<field name="code" />
 					<field name="date" />
 					<field name="amount" />
 					<field name="note" />
@@ -33,6 +34,7 @@
 								<field name="job_id" />
 							</group>
 							<group>
+								<field name="code" />
 								<field name="date" />
 								<field name="amount" />
 								<field name="note" />
@@ -64,18 +66,18 @@
 				</search>
 			</field>
 		</record>
-		
+
 		<record id="open_hr_efficiency" model="ir.actions.act_window">
-			<field name="name">Efficiency Values</field>
+			<field name="name">Other Allowance</field>
 			<field name="res_model">hr.efficiency.value</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 		</record>
 
 		<menuitem id="menu_hr_efficiency_parent" parent='hr.menu_hr_root'
-			name="Efficiency Values" sequence="18" />
+			name="Other Allowance" sequence="18" />
 
-		<menuitem id="menu_hr_efficiency"  parent="menu_hr_efficiency_parent"
+		<menuitem id="menu_hr_efficiency" parent="menu_hr_efficiency_parent"
 			action="open_hr_efficiency" sequence="1" />
 
 	</data>

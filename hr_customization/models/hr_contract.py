@@ -10,7 +10,8 @@ class hr_contract(models.Model):
 
     working_hours = fields.Many2one('resource.calendar', string='Schedule',
         required=True,states={'draft': [('readonly', False)]})
-
+    effective_date = fields.Date(string='Effective Date')
+    
     @api.model
     def default_get(self, fields):
         res = super(hr_contract, self).default_get(fields)

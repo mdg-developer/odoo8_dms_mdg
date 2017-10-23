@@ -62,10 +62,10 @@ class hr_employee(osv.osv):
                                  }),
     }
 
-    _sql_constraints = [
-        ('unique_identification_id', 'unique(nrc_number)',
-         _('Official Identifications must be unique!')),
-    ]
+#     _sql_constraints = [
+#         ('unique_identification_id', 'unique(nrc_number)',
+#          _('Official Identifications must be unique!')),
+#     ]
 
     def _default_country(self, cr, uid, context=None):
 

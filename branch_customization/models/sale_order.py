@@ -17,16 +17,16 @@ class sale_order(osv.osv):
         'branch_id': _get_default_branch,
         }
     
-    def action_button_confirm(self, cr, uid, ids, context=None):
-        if not context:
-            context = {}
-        assert len(ids) == 1, 'This option should only be used for a single id at a time.'
-        self.signal_workflow(cr, uid, ids, 'order_confirm')        
-        if context.get('send_email'):
-            self.force_quotation_send(cr, uid, ids, context=context)
-        
-        data = self.browse(cr, uid, ids,context=context)
-        if data:
-            cr.execute("update stock_picking set branch_id=%s where origin=%s",(data.branch_id.id,data.name,))
-            cr.execute("update stock_move set branch_id=%s where picking_id in(select id from stock_picking where origin=%s)",(data.branch_id.id,data.name,))    
-        return True
+#     def action_button_confirm(self, cr, uid, ids, context=None):
+#         if not context:
+#             context = {}
+#         assert len(ids) == 1, 'This option should only be used for a single id at a time.'
+#         self.signal_workflow(cr, uid, ids, 'order_confirm')        
+#         if context.get('send_email'):
+#             self.force_quotation_send(cr, uid, ids, context=context)
+#         
+#         data = self.browse(cr, uid, ids,context=context)
+#         if data:
+#             cr.execute("update stock_picking set branch_id=%s where origin=%s",(data.branch_id.id,data.name,))
+#             cr.execute("update stock_move set branch_id=%s where picking_id in(select id from stock_picking where origin=%s)",(data.branch_id.id,data.name,))    
+#         return True

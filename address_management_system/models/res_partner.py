@@ -9,9 +9,8 @@ class res_partner(osv.osv):
     _inherit = 'res.partner'
     _columns = {               
              
-            'city':fields.many2one('res.city','City',required=True),
-            'township':fields.many2one('res.township','Township',required=True),
-        'street': fields.char('Street',required=True),
+            'city':fields.many2one('res.city','City'),
+            'township':fields.many2one('res.township','Township'),
                                   
     } 
     
@@ -29,8 +28,8 @@ class res_partner(osv.osv):
  
         # get the information that will be injected into the display format
         # get the address format
-        address_format ="%(street)s\n%(street2)s\n%(city)s, %(state_name)s\n%(zip)s\n%(country_name)s"        
-
+        address_format = address.country_id.address_format or \
+              "%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s"
         args = {
             'city': address.city.name or '',
             'state_code': address.state_id.code or '',

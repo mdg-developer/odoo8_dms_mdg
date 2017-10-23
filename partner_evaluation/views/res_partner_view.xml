@@ -9,11 +9,13 @@
             <field name="arch" type="xml">
             <xpath expr="//field[@name='website']" position="after">            
 				<field name="is_distributor" attrs="{'invisible':[('customer','=',False)]}"   sequence="1"/>
+				<field name="deli" attrs="{'invisible':[('customer','=',False)]}"   sequence="1"/>
+				<field name="bw" attrs="{'invisible':[('customer','=',False)]}"   sequence="1"/>
 				<field name="distributor_target_amount" attrs="{'invisible':[('customer','=',False)]}"  sequence="2"/>	
 				<field name="position" attrs="{'invisible':[('supplier','==',False)]}"/>	
 				<field name="service_offered" attrs="{'invisible':[('supplier','==',False)]}"/>
 				<field name="major_customers" attrs="{'invisible':[('supplier','==',False)]}"/>
-				<field name="approved_evalution" attrs="{'invisible':[('supplier','==',False)]}"/>			
+				<field name="approved_evalution" attrs="{'invisible':[('supplier','==',False)]}"/>
 			</xpath>
 			<!-- <field name="fax" position="replace">
 				<field name="fax"  sequence="1"/>

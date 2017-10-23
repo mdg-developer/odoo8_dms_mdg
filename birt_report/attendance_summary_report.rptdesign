@@ -321,6 +321,30 @@ order by name_related asc]]></xml-property>
                     <text-property name="heading">status4</text-property>
                 </structure>
                 <structure>
+                    <property name="columnName">t_clockin</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">t_clockin</text-property>
+                    <text-property name="heading">t_clockin</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">status5</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">status5</text-property>
+                    <text-property name="heading">status5</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">t_clockout</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">t_clockout</text-property>
+                    <text-property name="heading">t_clockout</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">status6</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">status6</text-property>
+                    <text-property name="heading">status6</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">wh_perday</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">wh_perday</text-property>
@@ -372,24 +396,42 @@ order by name_related asc]]></xml-property>
             </list-property>
             <list-property name="parameters">
                 <structure>
-                    <property name="name">from_date</property>
+                    <property name="name">param_1</property>
                     <property name="paramName">from_date</property>
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">1</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
-                    <property name="name">to_date</property>
+                    <property name="name">param_2</property>
                     <property name="paramName">to_date</property>
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">2</property>
-                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_3</property>
+                    <property name="paramName">from_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">3</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_4</property>
+                    <property name="paramName">to_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">4</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -473,36 +515,56 @@ order by name_related asc]]></xml-property>
                     </structure>
                     <structure>
                         <property name="position">16</property>
+                        <property name="name">t_clockin</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">17</property>
+                        <property name="name">status5</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">18</property>
+                        <property name="name">t_clockout</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">19</property>
+                        <property name="name">status6</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">20</property>
                         <property name="name">wh_perday</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">17</property>
+                        <property name="position">21</property>
                         <property name="name">ot</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">18</property>
+                        <property name="position">22</property>
                         <property name="name">wk_ot</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">19</property>
+                        <property name="position">23</property>
                         <property name="name">early</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">20</property>
+                        <property name="position">24</property>
                         <property name="name">late</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">21</property>
+                        <property name="position">25</property>
                         <property name="name">sunday_ot</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">22</property>
+                        <property name="position">26</property>
                         <property name="name">earlylate</property>
                         <property name="dataType">integer</property>
                     </structure>
@@ -641,48 +703,76 @@ else
                 </structure>
                 <structure>
                     <property name="position">16</property>
+                    <property name="name">t_clockin</property>
+                    <property name="nativeName">t_clockin</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">17</property>
+                    <property name="name">status5</property>
+                    <property name="nativeName">status5</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">18</property>
+                    <property name="name">t_clockout</property>
+                    <property name="nativeName">t_clockout</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">19</property>
+                    <property name="name">status6</property>
+                    <property name="nativeName">status6</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">20</property>
                     <property name="name">wh_perday</property>
                     <property name="nativeName">wh_perday</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">17</property>
+                    <property name="position">21</property>
                     <property name="name">ot</property>
                     <property name="nativeName">ot</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">18</property>
+                    <property name="position">22</property>
                     <property name="name">wk_ot</property>
                     <property name="nativeName">wk_ot</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">19</property>
+                    <property name="position">23</property>
                     <property name="name">early</property>
                     <property name="nativeName">early</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">20</property>
+                    <property name="position">24</property>
                     <property name="name">late</property>
                     <property name="nativeName">late</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">21</property>
+                    <property name="position">25</property>
                     <property name="name">sunday_ot</property>
                     <property name="nativeName">sunday_ot</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">22</property>
+                    <property name="position">26</property>
                     <property name="name">earlylate</property>
                     <property name="nativeName">earlylate</property>
                     <property name="dataType">integer</property>
@@ -690,64 +780,102 @@ else
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select * ,case when wk_ot is null then 0 else wk_ot end as sunday_ot ,early+late as earlylate from (
-select e.id,e.employee_id card_id,e.name_related,sec.name section,j.name, extract(dow from  f.date)  as  dayofweek,f.date,
-	case
-		when lower(f.timetable) = 'morning'
-		then f.clockin
-	end as f_clockin,
-	case
-		when f.late = 0 and f.absent!= True
-		then 'Normal'
-		when f.late > 0 
-		then 'Late'
-		when f.absent = True
-		then 'Absent'
-	end as Status1,
-	case
-		when lower(f.timetable) = 'morning'
-		then f.clockout
-	end as f_clockout,
-	case
-		when f.early = 0 and f.absent!= True
-		then 'Normal'
-		when f.early > 0
-		then 'Early'
-		when f.absent = True
-		then 'Absent'		
-	end as Status2,	
-	case
-		when lower(s.timetable) = 'afternoon'
-		then s.clockin
-	end as s_clockin,
-	case
-		when s.late = 0 and s.absent!= True
-		then 'Normal'
-		when s.late > 0
-		then 'Late'
-		when s.absent = True
-		then 'Absent'
-	end as Status3,
-	case
-		when lower(s.timetable) = 'afternoon'
-		then s.clockout
-	end as s_clockout,
-	case
-		when s.early = 0 and s.absent!= True
-		then 'Normal'
-		when s.early > 0
-		then 'Early'
-		when s.absent = True
-		then 'Absent'
-	end as Status4,
-	8 as WH_PerDay,
-	round(s.ot_time/60,0) OT,
-	round(f.weekend_ot+s.weekend_ot) WK_OT,
-	f.early + s.early as early,
-	f.late + s.late as Late
-
+select e.id,e.employee_id card_id,e.name_related,sec.name section,j.name, extract(dow from f.date)  as  dayofweek,f.date,
+    case
+        when lower(f.timetable) = 'morning'
+        then f.clockin
+    end as f_clockin,
+    case
+        when f.late = 0 and f.absent!= True
+        then 'Normal'
+        when f.late > 0
+        then 'Late'
+        when f.absent = True and hh.h_type='full day'
+        then 'Leave'
+        when f.absent = True and hh.h_type='morning'
+        then 'Half Leave'
+         when f.absent = True
+         then 'Absent'
+    end as Status1,
+    case
+        when lower(f.timetable) = 'morning'
+        then f.clockout
+    end as f_clockout,
+    case
+        when f.early = 0 and f.absent!= True
+        then 'Normal'
+        when f.early > 0
+        then 'Early'
+        when f.absent = True and hh.h_type='full day'
+        then 'Leave'
+        when f.absent = True and hh.h_type='morning'
+        then 'Half Leave'
+         when f.absent = True
+         then 'Absent'        
+   end as Status2,    
+   case
+        when lower(s.timetable) = 'afternoon'
+        then s.clockin
+    end as s_clockin,
+    case
+        when s.late = 0 and s.absent!= True
+        then 'Normal'
+        when s.late > 0
+        then 'Late'
+        when s.absent = True and hh.h_type='full day'
+        then 'Leave'
+        when s.absent = True and hh.h_type='evening'
+        then 'Half Leave'
+         when s.absent = True
+         then 'Absent'
+    end as Status3,
+    case
+        when lower(s.timetable) = 'afternoon'
+        then s.clockout
+    end as s_clockout,
+    case
+        when s.early = 0 and s.absent!= True
+        then 'Normal'
+        when s.early > 0
+        then 'Early'
+        when s.absent = True and hh.h_type='full day'
+        then 'Leave'
+        when s.absent = True and hh.h_type='evening'
+        then 'Half Leave'
+         when s.absent = True
+         then 'Absent'
+    end as Status4,
+    case
+        when lower(t.timetable) = 'ot'
+        then t.clockin
+    end as t_clockin,
+    case
+        when t.late = 0 and t.absent!= True
+        then 'Normal'
+        when t.late > 0
+        then 'Late'
+        else 'No Punch'
+    end as Status5,
+    case
+        when lower(t.timetable) = 'ot'
+        then t.clockout
+    end as t_clockout,
+    case
+        when t.early = 0 and t.absent!= True
+        then 'Normal'
+        when t.early > 0
+        then 'Early'
+        else 'No OT'        
+   end as Status6,
+    8 as WH_PerDay,
+    round(t.ot_time/60,0) OT,
+    round(f.weekend_ot+s.weekend_ot+t.weekend_ot) WK_OT,
+    f.early + s.early as early,
+    f.late + s.late as Late
 from 
 hr_employee e,
 hr_section sec,
+hr_job j,
 (
 select employee_id,date,timetable,clockin,clockout,late,early,ot_time,work_time,weekend_ot,absent
 from attendance_data_import
@@ -757,20 +885,47 @@ where lower(timetable) = 'morning'
 select employee_id,date,timetable,clockin,clockout,late,early,ot_time,work_time,weekend_ot,absent
 from attendance_data_import
 where lower(timetable) = 'afternoon'
-)s,
-hr_job j
+)s
+left join
+(
+select employee_id,date,timetable,clockin,clockout,late,early,ot_time,work_time,weekend_ot,absent
+from attendance_data_import
+where lower(timetable) = 'ot'
+)t on t.employee_id = s.employee_id  and s.date=t.date
+left join 
+(
+select h.employee_id,h.date_from::date + d.date as h_date, h.date_from, h.date_to, h.name, h.number_of_days,
+case when h.date_from::date + d.date= h.date_from::date and h.date_from::date + d.date= h.date_to::date and -(h.number_of_days) < 1 and EXTRACT(HOUR FROM h.date_to) <= 5
+then 'morning'
+when h.date_from::date + d.date= h.date_from::date and h.date_from::date + d.date= h.date_to::date and -(h.number_of_days) < 1 and EXTRACT(HOUR FROM h.date_from) >= 5
+then 'evening'
+when h.date_from::date + d.date>= h.date_from::date and h.date_from::date + d.date <= h.date_to::date and - (h.number_of_days) >= 1  and h.date_from::date + d.date < h.date_to::date
+then 'full day'
+---for morning leave
+when h.date_from::date + d.date>= h.date_from::date and h.date_from::date + d.date = h.date_to::date and - (h.number_of_days) > 1 and -((-h.number_of_days)+floor(h.number_of_days))=0.5  and EXTRACT(HOUR FROM h.date_to) <= 5 and h.date_from::date + d.date = h.date_to::date
+then 'point morning'
+end as h_type
+ from hr_holidays h,generate_series(0, 99) as d(date)
+ where h.type='remove'
+ and h.date_from::date + d.date BETWEEN  ? and ?
+ and h.date_from::date + d.date BETWEEN h.date_from::date and h.date_to::date
+ order by h.employee_id,h.date_from
+
+) 		hh on hh.employee_id = s.employee_id 
+		and hh.h_date=s.date
 where f.employee_id=s.employee_id
 and f.date=s.date
 and e.section_id=sec.id
 and e.id=f.employee_id
 and e.id=s.employee_id
 and e.job_id = j.id
-and f.date between ? and ?
+and f.date between ?  and ?
 --$department_id$
 --$section_id$
 --$badge_id$
 order by e.id,f.date
-)A]]></xml-property>
+)A
+]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -797,6 +952,36 @@ order by e.id,f.date
           <design:identifier>
             <design:name></design:name>
             <design:position>2</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>3</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>4</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
@@ -1340,6 +1525,30 @@ and section_id =?]]></xml-property>
                     <property name="name">name</property>
                     <text-property name="displayName">name</text-property>
                     <expression name="expression" type="javascript">dataSetRow["name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">t_clockin</property>
+                    <text-property name="displayName">t_clockin</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["t_clockin"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">t_clockout</property>
+                    <text-property name="displayName">t_clockout</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["t_clockout"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">status5</property>
+                    <text-property name="displayName">status5</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["status5"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">status6</property>
+                    <text-property name="displayName">status6</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["status6"]</expression>
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
@@ -2086,6 +2295,12 @@ and section_id =?]]></xml-property>
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <data id="295">
+                            <property name="fontSize">8pt</property>
+                            <property name="fontWeight">normal</property>
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">t_clockin</property>
+                        </data>
                     </cell>
                     <cell id="61">
                         <property name="fontFamily">"Times New Roman"</property>
@@ -2097,6 +2312,11 @@ and section_id =?]]></xml-property>
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <data id="297">
+                            <property name="fontSize">8pt</property>
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">status5</property>
+                        </data>
                     </cell>
                     <cell id="62">
                         <property name="fontFamily">"Times New Roman"</property>
@@ -2108,6 +2328,11 @@ and section_id =?]]></xml-property>
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <data id="296">
+                            <property name="fontSize">8pt</property>
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">t_clockout</property>
+                        </data>
                     </cell>
                     <cell id="63">
                         <property name="fontFamily">"Times New Roman"</property>
@@ -2119,6 +2344,11 @@ and section_id =?]]></xml-property>
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <data id="298">
+                            <property name="fontSize">8pt</property>
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">status6</property>
+                        </data>
                     </cell>
                     <cell id="64">
                         <property name="fontFamily">"Times New Roman"</property>

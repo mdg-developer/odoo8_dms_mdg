@@ -255,6 +255,9 @@ class crm_case_section(osv.osv):
                'branch_id':fields.many2one('res.branch', 'Branch'),
                'allow_foc':fields.boolean('Allow FOC'),
                'allow_tax':fields.boolean('Allow Tax'),
+               'weekly_target_amount':fields.float(string='Weekly Target Amount'),     
+               'monthly_target_amount':fields.float(string='Monthly Target Amount'),     
+               'yearly_target_amount':fields.float(string='Yearly Target Amount'),    
                            
         }
     _sql_constraints = [
