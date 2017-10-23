@@ -281,3 +281,4 @@ stock_requisition/models/stock_taking_loading_instruction.pyc
 stock_requisition/models/way_bill.pyc
 cron_run_manually/ir_cron.pyc
 ms_mobile_sale/wizard/direct_sale.pyc
+*.pyc
