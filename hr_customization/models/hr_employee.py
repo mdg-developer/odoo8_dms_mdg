@@ -1,11 +1,85 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from datetime import date,datetime
+#from datetime import date,datetime
 from dateutil import parser
+from datetime import datetime, date, timedelta
+from dateutil.relativedelta import relativedelta
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as OE_DATEFORMAT
 
 class hr_employee(osv.osv):
     _inherit = "hr.employee"
+    
+    def _get_employed_months(self, cr, uid, ids, field_name, arg, context=None):
 
+        res = dict.fromkeys(ids, 0.0)        
+        _res = self.get_months_service_to_date(cr, uid, ids, context=context)
+        for k, v in _res.iteritems():
+            res[k] = v[0]
+        return res
+    
+    def get_months_service_to_date(self, cr, uid, ids, dToday=None, context=None):    
+        '''Returns a dictionary of floats. The key is the employee id, and the value is
+        number of months of employment.'''
+        
+        res = dict.fromkeys(ids, 0)
+        if dToday == None:
+            dToday = date.today()
+
+        for ee in self.pool.get('hr.employee').browse(cr, uid, ids, context=context):
+
+            delta = relativedelta(dToday, dToday)
+            contracts = self._get_contracts_list(ee)
+            if len(contracts) == 0:
+                res[ee.id] = (0.0, False)
+                continue
+
+            dInitial = datetime.strptime(
+                contracts[0].date_start, OE_DATEFORMAT).date()
+
+            if ee.initial_employment_date:
+                #dFirstContract = dInitial
+                dFirstContract =datetime.strptime(
+                    ee.initial_employment_date, '%Y-%m-%d').date()
+                dInitial = datetime.strptime(
+                    ee.initial_employment_date, '%Y-%m-%d').date()
+                
+                if dFirstContract != dInitial:
+                    raise osv.except_osv(_('Employment Date mismatch!'),
+                                         _('Initial Employment Date must be the same with Trial Start Date and Duration Start Date.\nEmployee: %s')% ee.name)
+
+                delta = relativedelta(dFirstContract, dInitial)
+
+            for c in contracts:
+                if c.state != 'contract_ending' and c.state != 'pending_done' and c.state != 'done':
+                #if c.state != 'draft':
+                    #dStart = datetime.strptime(c.date_start, '%Y-%m-%d').date()
+                    dStart = datetime.strptime(
+                    ee.initial_employment_date, '%Y-%m-%d').date()
+                    if dStart >= dToday:
+                        continue
+    
+                    # If the contract doesn't have an end date, use today's date
+                    # If the contract has finished consider the entire duration of
+                    # the contract, otherwise consider only the months in the
+                    # contract until today.
+                    #
+                    if c.date_end:
+                        dEnd = datetime.strptime(c.date_end, '%Y-%m-%d').date()
+                    else:
+                        dEnd = dToday
+                    if dEnd > dToday:
+                        dEnd = dToday
+    
+                    delta += relativedelta(dEnd, dStart)
+
+            # Set the number of months the employee has worked
+            date_part = float(delta.days) / float(
+                self._get_days_in_month(dInitial))
+            res[ee.id] = (
+                float((delta.years * 12) + delta.months) + date_part, dInitial)
+
+        return res   
+        
     def _trial_end_date_availabe(self, cr, uid, ids, fields, arg, context):
 
         res={}
@@ -61,16 +135,29 @@ class hr_employee(osv.osv):
     
     def _effective_date_available(self, cr, uid, ids, fields, arg, context):
         res={}
-        termination_obj =self.pool.get('hr.employee.termination')
-        for record in self.browse(cr, uid, ids):
+        contract_obj = self.pool.get('hr.contract')
+        for data in self.browse(cr, uid, ids):
             effective_date = None
-            termination_ids=termination_obj.search(cr,uid,[('employee_id','=',record.id)], context=context)
-            if termination_ids:
-                for termination_id in termination_ids:
-                    termination= termination_obj.browse(cr, uid, termination_id, context=context)
-                    if termination:
-                        effective_date = termination.name
-                        res[record.id] = effective_date
+            contract_ids = contract_obj.search(cr,uid,[('employee_id', '=',data.id )], context=context)
+            if contract_ids:
+                for contract_id in contract_ids:
+                    contract = contract_obj.browse(cr,uid,contract_id,context=context)
+                    if contract:
+                        effective_date = contract.effective_date
+                res[data.id] = effective_date 
+            else:
+                res[data.id] = effective_date      
+#         res={}
+#         termination_obj =self.pool.get('hr.employee.termination')
+#         for record in self.browse(cr, uid, ids):
+#             effective_date = None
+#             termination_ids=termination_obj.search(cr,uid,[('employee_id','=',record.id)], context=context)
+#             if termination_ids:
+#                 for termination_id in termination_ids:
+#                     termination= termination_obj.browse(cr, uid, termination_id, context=context)
+#                     if termination:
+#                         effective_date = termination.name
+#                         res[record.id] = effective_date
         return res
     
     def _contract_structure_availabe(self, cr, uid, ids, fields, arg, context):
@@ -87,12 +174,14 @@ class hr_employee(osv.osv):
                 res[data.id] = contract_structure          
         return res
     
+    
+    
     _columns = {
         'trial_end_date' : fields.function(_trial_end_date_availabe, method=True, string="Trial End Date", type='date', store=True),
         'date_end' : fields.function(_contract_end_availabe, method=True, string="Contract End Date", type='date', store=True),        
         'wage' : fields.function(_contract_wage_availabe, method=True, string="Wage", store=True),
         'struct_id' : fields.function(_contract_structure_availabe, method=True, string="Salary Structure",type='char', store=True),
-        'effective_date' : fields.function(_effective_date_available, method=True, string="Effective Date", type='date', store=True),
+        'effective_date' : fields.function(_effective_date_available, type='date', method=True, groups=False,string="Effective Date"),
         'nrc_prefix_id': fields.many2one('hr.nrc.prefix', 'NRC Prefix'),
         'nrc_number': fields.char('NRC Number'),
         'labour_card': fields.char('Labour Card'),
@@ -106,7 +195,89 @@ class hr_employee(osv.osv):
         'labour_card_release_date': fields.date('Labour Card Release Date'),
         'gender': fields.selection([('male', 'Male'), ('female', 'Female')], 'Gender',required=True),
         'marital': fields.selection([('single', 'Single'), ('married', 'Married'), ('widower', 'Widower'), ('divorced', 'Divorced')], 'Marital Status',required=True),
+        'length_of_service': fields.function(_get_employed_months, type='float', method=True, 
+                                             groups=False,
+                                             string='Length of Service'),
+                
     }
+    
+
+    def work_service(self, cr, uid, ids, dToday=None, context=None):
+        '''Returns a dictionary of floats. The key is the employee id, and the value is
+        number of months of employment.'''
+        
+        res = dict.fromkeys(ids, 0)
+        work_service=""
+        if dToday == None:
+            dToday = date.today()
+
+        for ee in self.pool.get('hr.employee').browse(cr, uid, ids, context=context):
+
+            delta = relativedelta(dToday, dToday)
+            contracts = self._get_contracts_list(ee)
+            if len(contracts) == 0:
+                res[ee.id] = (0.0, False)
+                continue
+
+            dInitial = datetime.strptime(
+                contracts[0].date_start, OE_DATEFORMAT).date()
+
+            if ee.initial_employment_date:
+                dFirstContract = dInitial
+                dInitial = datetime.strptime(
+                    ee.initial_employment_date, '%Y-%m-%d').date()
+                print 'dFirstContract',dFirstContract
+                print 'dInitial',dInitial
+                if dFirstContract != dInitial:
+#                     raise osv.except_osv(_('Employment Date mismatch!'),
+#                                          _('Initial Employment Date must be the same with Trial Start Date and Duration Start Date.\nEmployee: %s')% ee.name)
+
+                    delta = relativedelta(dFirstContract, dInitial)
+
+            for c in contracts:
+                if c.state != 'contract_ending' and c.state != 'pending_done' and c.state != 'done':
+                #if c.state != 'draft' :
+                    #dStart = datetime.strptime(c.date_start, '%Y-%m-%d').date()
+                    dStart = datetime.strptime(
+                    ee.initial_employment_date, '%Y-%m-%d').date()
+                    if dStart >= dToday:
+                        continue
+    
+                    # If the contract doesn't have an end date, use today's date
+                    # If the contract has finished consider the entire duration of
+                    # the contract, otherwise consider only the months in the
+                    # contract until today.
+                    #
+                    if c.date_end:
+                        dEnd = datetime.strptime(c.date_end, '%Y-%m-%d').date()
+                    else:
+                        dEnd = dToday
+                    if dEnd > dToday:
+                        dEnd = dToday
+    
+                    delta += relativedelta(dEnd, dStart)
+                   
+                    print 'delta',delta
+                    if delta.years>0:
+                        if delta.years==1:
+                            work_service=work_service+str(delta.years)+' year  '
+                        else:
+                            work_service=work_service+str(delta.years)+' years  '
+                    if delta.months>0:
+                        if delta.months==1:
+                            work_service=work_service+str(delta.months)+' month  '
+                        else:
+                            work_service=work_service+str(delta.months)+' months  '
+                    if delta.days>0:
+                        if delta.days==1:
+                            work_service=work_service+str(delta.days)+' day'   
+                        else:
+                            work_service=work_service+str(delta.days)+' days'                   
+                   
+                
+            # Set the number of months the employee has worked           
+            res[ee.id] = work_service     
+        return res
     
     def write(self, cr, uid, ids, vals, context=None):
         print 'vals>>>>',vals   
@@ -141,6 +312,19 @@ class hr_employee(osv.osv):
         new_id = super(hr_employee, self).write(cr, uid, ids, vals, context=context)                
         return new_id
     
+    def check_nrc(self, cr, uid, ids, context=None):
+        identification_id = None
+        if ids:
+            emp = self.browse(cr, uid, ids, context=context)
+            identification_id = emp.nrc_prefix_id.name + str(emp.nrc_number)
+            emp_id = self.search(cr, uid, ['&',('identification_id', '=', identification_id),('id', '!=', ids[0])], order='id', limit=1, context=context)
+            if len(emp_id) > 0:
+               emp_obj = self.browse(cr, uid,emp_id,context=context ) 
+               self.unlink(cr, uid, ids, context=context)
+               cr.execute("delete from hr_employee where id=%s",(ids[0],))  
+               raise osv.except_osv(_('Warning!'), _('This NRC number already exist with %s!') %emp_obj.name_related)
+                
+        return True        
     def create(self, cr, uid, vals, context=None):
         current_date = datetime.now()
         current_year = current_date.year
@@ -156,7 +340,46 @@ class hr_employee(osv.osv):
                 raise osv.except_osv(_('Invalid Action!'), _('This date of birth is too Old!'))
             elif age == 60 and birth_date.month < current_month:
                 raise osv.except_osv(_('Invalid Action!'), _('This date of birth is too Old!'))
-            
+        
+#         new_id = False
+#         identification_id = None
+#         if vals.get('nrc_prefix_id'):
+#             #identification_id = vals.get('nrc_prefix_id')
+#             nrc = self.pool.get('hr.nrc.prefix').browse(cr,uid,vals.get('nrc_prefix_id'),context=context)
+#             identification_id = nrc.name
+#         if vals.get('nrc_number'):
+#             identification_id += str(vals.get('nrc_number'))    
+#             emp_id = self.search(cr, uid, [('identification_id', '=', identification_id)], context=context)
+#             if len(emp_id) > 0:
+#                 new_id = super(hr_employee, self).create(cr, uid, vals, context=context)
+#                 mod_obj = self.pool.get('ir.model.data')
+#                 wiz_view = mod_obj.get_object_reference(cr, uid, 'hr_customization', 'employee_warning_form')
+#                 view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'hr_customization', 'employee_warning_form')
+#                 ctx = {
+#                  'identification_id': identification_id,
+#                  'emp_id': new_id,
+#                  }
+#                 act_import = {
+#                         'name': _('employee.yes.no.form'),
+#                         'view_type': 'form',
+#                         'view_mode': 'form',
+#                         'res_model': 'employee.yes.no',
+#                         'view_id': [wiz_view[1]],
+#                         'nodestroy': False,
+#                         'target': 'new',
+#                         #'views': [(wiz_view[1], 'form')],
+#                         'type': 'ir.actions.act_window',
+#                         'context': ctx,#vals,
+#                 }
+#                 
+#                 return act_import
+# 
+#                  
+#                  
+#             else:    
+#                 new_id = super(hr_employee, self).create(cr, uid, vals, context=context)
+#              
+#         return new_id    
         new_id = super(hr_employee, self).create(cr, uid, vals, context=context)
         return new_id
 hr_employee()     

@@ -339,16 +339,17 @@ class data_import_attendance(osv.osv):
 #                                         date=datetime.today().date()
 #                                     except Exception, e:
 #                                         raise orm.except_orm(_('Error :'), _("Error while processing Excel Columns. \n\nPlease check your Date!"))
-                              
+                section_id = None              
                 if ac_no:
                     attendance_id=attendance_data_import_obj.search(cr,uid,[('fingerprint_id','=',ac_no),('date','=',date),('timetable','=',timetable),('state','=','draft')])
-                    emp_id = hr_employee_obj.search(cr,uid,[('fingerprint_id','=',ac_no)])
+                    emp_id = hr_employee_obj.search(cr,uid,['&',('fingerprint_id','=',ac_no),('status', '!=', 'inactive')])
                     if emp_id:
                         emp_data = hr_employee_obj.browse(cr,uid,emp_id,context=None)
                         if emp_data:
                             department = emp_data.department_id.id
-                    
+                            section_id = emp_data.section_id.id
                         value={'employee_id':emp_id[0] ,
+                               'section_id' :section_id,
                                'fingerprint_id':ac_no,
                               'auto_assign':auto_assign,
                              'date':date,

@@ -1,7 +1,28 @@
 <openerp>
   <data>
   
-  
+     
+	
+	<record id="view_employee_nrc_form_inherit_check" model="ir.ui.view">
+			<field name="name">hr.employee</field>
+			<field name="model">hr.employee</field>
+			<field name="type">form</field>
+			<field name="inherit_id" ref="nrc_information.view_employee_nrc_form_inherit" />
+			<field name="arch" type="xml">			
+				<xpath expr="//field[@name='address_home_id']" position="after">
+			         <group>
+						<group>
+							<button name="check_nrc" string="Check NRC" type="object"
+								widget="statinfo" class="oe_highlight"
+								 />
+						</group>
+						<group>
+							
+						</group>
+					</group> 	
+				</xpath>	
+			</field>
+	</record>
       <!-- Add trial_end_date,wage in Employee Tree -->
     <record id="view_employee_trial_end_tree_view" model="ir.ui.view">
 			<field name="name">hr.employee.tree.inheritance</field>
@@ -63,6 +84,9 @@
 					<field name="labour_card_release_date"/>
                  </group>
            </xpath>
+           <field name="category_ids" position="replace">
+           		<field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time" groups="base.group_hr_user" required="1" />
+           </field>
         </field>
     </record>  
      
@@ -73,6 +97,7 @@
             <field name="inherit_id" ref="hr.view_employee_filter"/>
             <field name="arch" type="xml">
                 <field name="department_id" position="after">
+                	<field name="section_id" />
                     <filter string="Today Trial End Date" domain="[('trial_end_date', '&gt;=', datetime.datetime.now().strftime('%Y-%m-%d 00:00:00')),('trial_end_date', '&lt;=', datetime.datetime.now().strftime('%Y-%m-%d 23:23:59'))]"/>
                     <filter string="Today Contract End Date" domain="[('date_end', '&gt;=', datetime.datetime.now().strftime('%Y-%m-%d 00:00:00')),('date_end', '&lt;=', datetime.datetime.now().strftime('%Y-%m-%d 23:23:59'))]"/>
                    	<filter string="This Month Contract End Date" 
