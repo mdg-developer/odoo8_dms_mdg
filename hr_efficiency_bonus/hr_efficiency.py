@@ -41,6 +41,7 @@ class hr_efficiency(osv.Model):
         'date': fields.date('Date', required=True),
         'amount': fields.float('Amount', required=True),
         'note': fields.text('Reason'),
+        'code':fields.char('Code'),
 
 
     }

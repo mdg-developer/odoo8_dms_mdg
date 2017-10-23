@@ -11,6 +11,7 @@ class sale_order(osv.osv):
         product_uom_obj = self.pool.get('product.uom')
         product_obj = self.pool.get('product.product')        
         stock_obj = self.pool.get('stock.location')        
+        location_ids=[]
         
         if not context:
             context = {}
@@ -20,23 +21,30 @@ class sale_order(osv.osv):
             self.force_quotation_send(cr, uid, ids, context=context)
         data = self.browse(cr, uid, ids,context=context)
         if data:
-            location_id =761
-            location_ids = stock_obj.search(cr, uid, ['|',('location_id', '=', location_id),('id','=',location_id)], context=context)            
-            print 'location_ids',location_ids
-            for line  in data.order_line:
-                uom =line.product_uom.id
-                cr.execute("select COALESCE(sum(qty),0) from stock_quant where location_id  = %s and product_id =%s",(location_ids,line.product_id.id,))      
-                qty =cr.fetchone()[0]   
-                if uom:
-                    uom_record = product_uom_obj.browse(cr, uid, uom, context=context)
-                    product_obj = product_obj.browse(cr, uid, line.product_id.id, context=context)
-                    if product_obj.uom_id.category_id.id != uom_record.category_id.id:
-                        uom_record = False
-                if not uom_record:
-                    uom_record = product_obj.uom_id
-                compare_qty = float_compare(qty, line.product_uom_qty, precision_rounding=uom_record.rounding)                                       
-                if compare_qty == -1:
-                    raise osv.except_osv(_("Not enough stock ! : ") , _(" Your Product Name '%s' is not enough stock !") % (line.product_id.name_template,))
+            if data.supermarket_sale is True:
+                #location_id =761
+                location_id=data.company_id.issued_location_id.id
+                if location_id is None:
+                        raise osv.except_osv(_("Warning !!!") , _(" Please Choose Issue Location In Warehouse Configuration !"))                                       
+                cr.execute("select id from stock_location where location_id = %s or id =%s ",(location_id,location_id))
+                all_location =cr.fetchall()
+                for location_data in all_location:
+                    location_ids.append(location_data[0])                          
+                print 'location_ids',location_ids
+                for line  in data.order_line:
+                    uom =line.product_uom.id
+                    cr.execute("select COALESCE(sum(qty),0) from stock_quant where location_id  in  %s and product_id =%s and reservation_id is null",(tuple(location_ids),line.product_id.id,))      
+                    qty =cr.fetchone()[0]   
+                    if uom:
+                        uom_record = product_uom_obj.browse(cr, uid, uom, context=context)
+                        product_obj = product_obj.browse(cr, uid, line.product_id.id, context=context)
+                        if product_obj.uom_id.category_id.id != uom_record.category_id.id:
+                            uom_record = False
+                    if not uom_record:
+                        uom_record = product_obj.uom_id
+                    compare_qty = float_compare(qty, line.product_uom_qty, precision_rounding=uom_record.rounding)                                       
+                    if compare_qty == -1:
+                        raise osv.except_osv(_("Not enough stock ! : ") , _(" Your Product Name '%s' is not enough stock !") % (line.product_id.name_template,))
             cr.execute("update stock_picking set branch_id=%s where origin=%s",(data.branch_id.id,data.name,))
             cr.execute("update stock_move set branch_id=%s where picking_id in(select id from stock_picking where origin=%s)",(data.branch_id.id,data.name,))    
         return True

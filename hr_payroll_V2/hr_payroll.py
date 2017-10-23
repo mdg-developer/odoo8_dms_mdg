@@ -112,10 +112,9 @@ class hr_payslip_customize(osv.osv):
         cr.execute("select COALESCE( sum(normal),0) as normal  from attendance_data_import where \
         date between %s and  %s and date not in (SELECT the_day ::date FROM  generate_series(%s::date, %s  ::date, '1 day') d(the_day) \
         WHERE  extract('ISODOW' FROM the_day)= 7)\
-        and date not in (select date from attendance_data_import where lower(timetable)= 'afternoon' and absent =true  and extract('ISODOW' FROM date)= 6  and employee_id=%s and date between  %s  and  %s )\
         and date not in (select date from hr_holidays_public_line where date between %s and  %s )\
-        and date not in (select generate_series(date_from::date, date_to::date, '1 day')::date as date from hr_holidays where employee_id =%s and date_to between  %s and %s )\
-        and absent =true and employee_id=%s",(date_from, date_to,date_from, date_to,employee_id,date_from, date_to,date_from, date_to,employee_id,date_from, date_to,employee_id,))
+        and date not in (select generate_series(hh.date_from::date, hh.date_to::date, '1 day')::date as date from hr_holidays hh,hr_holidays_status ss  where hh.holiday_status_id = ss.id  and hh.employee_id =%s and ss.name !='Unpaid' and hh.date_to between  %s and %s )\
+        and absent =true and employee_id=%s",(date_from, date_to,date_from, date_to,date_from, date_to,employee_id,date_from, date_to,employee_id,))
         absent_data =cr.fetchone()
         if absent_data:
             absent_count=absent_data[0]
@@ -126,10 +125,14 @@ class hr_payslip_customize(osv.osv):
         and date not in (select generate_series(date_from::date, date_to::date, '1 day')::date as date from hr_holidays where  employee_id =%s and date_to between  %s and %s )\
         and absent != true and employee_id=%s",(date_from, date_to,date_from, date_to,date_from, date_to,employee_id,date_from, date_to,employee_id,))
         present_data =cr.fetchone()
+        cr.execute("select  COALESCE( sum(number_of_days_temp - floor(number_of_days_temp)))  as leave_count from hr_holidays  where  employee_id =%s and date_to between %s and %s ",(employee_id,date_from, date_to,))
+        leave_half_count =cr.fetchone()[0]
+        if leave_half_count is None:
+            leave_half_count=0
         cr.execute("select COALESCE( sum(normal),0) from attendance_data_import where lower(timetable)= 'afternoon' and absent =true  and extract('ISODOW' FROM date)= 6  and employee_id=%s and date between  %s  and  %s ",(employee_id,date_from, date_to,))        
         sat_data =cr.fetchone()[0]
         if present_data:
-            present_count=present_data[0]+ sat_data    
+            present_count=present_data[0]+ sat_data+leave_half_count
         else:
             present_count=0
         con_date  = date_from
@@ -148,8 +151,13 @@ class hr_payslip_customize(osv.osv):
             holiday_count=0        
         cr.execute(" select COALESCE( sum(duration),0) from hr_temporary_out where employee_id= %s and date between %s and %s",(employee_id,date_from, date_to,))      
         temporary_min =cr.fetchone()[0]
-        cr.execute(" select COALESCE(sum(amount),0) from hr_efficiency_value where employee_id= %s and date between %s and %s",(employee_id,date_from, date_to,))      
+        cr.execute(" select COALESCE(sum(amount),0) from hr_efficiency_value where employee_id= %s and code ='EBS' and date between %s and %s",(employee_id,date_from, date_to,))      
         efficiency_value =cr.fetchone()[0]        
+        cr.execute(" select COALESCE(sum(amount),0) from hr_efficiency_value where employee_id= %s and code ='QLB' and date between %s and %s",(employee_id,date_from, date_to,))      
+        quality_value =cr.fetchone()[0]       
+        cr.execute(" select COALESCE(sum(amount),0) from hr_efficiency_value where employee_id= %s and code ='PFB' and date between %s and %s",(employee_id,date_from, date_to,))      
+        performance_bonus =cr.fetchone()[0]               
+                 
         for contract in contract_obj.browse(cr, uid, contract_ids, context=context):
             for rule in rule_obj.browse(cr, uid, sorted_rule_ids, context=context):
                 if rule.input_ids:
@@ -259,7 +267,21 @@ class hr_payslip_customize(osv.osv):
                                'code': input.code,
                                'amount':efficiency_value,
                                'contract_id': contract.id,
-                              }                                                                                                                                                                                                                                                                                 
+                              }                
+                        if input.code == 'QLB':
+                            inputs = {
+                               'name': input.name,
+                               'code': input.code,
+                               'amount':quality_value,
+                               'contract_id': contract.id,
+                              }                                        
+                        if input.code == 'PFB':
+                            inputs = {
+                               'name': input.name,
+                               'code': input.code,
+                               'amount':performance_bonus,
+                               'contract_id': contract.id,
+                              }                                                                                                                                                                                                                                                                                             
                         res += [inputs]
         return res
     
@@ -401,7 +423,11 @@ class hr_payslip_customize(osv.osv):
                 sat_count=sat_count[0]/2
             else:
                 sat_count=0    
-            
+            cr.execute("select  COALESCE( sum(number_of_days_temp - floor(number_of_days_temp)))  as leave_count from hr_holidays  where  employee_id =%s and date_to between %s and %s ",(contract.employee_id.id,date_from, date_to,))
+            leave_half_count =cr.fetchone()[0]
+            if leave_half_count is None:
+                leave_half_count=0            
             attendances['number_of_days'] -= (public_count + (before_day -sun_count))
+            attendances['number_of_days'] += leave_half_count
             res += [attendances] + leaves 
         return res

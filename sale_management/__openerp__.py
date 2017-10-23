@@ -61,6 +61,7 @@ Sale Management
         'reports/report_pre_sale_order.xml',
         'reports/report_stock_picking.xml',
         'wizard/location_assign_view.xml',
+        'views/stock_picking_view.xml',
     ],
     'installable': True,
     'auto_install': False,

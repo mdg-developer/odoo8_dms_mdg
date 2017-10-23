@@ -13,7 +13,7 @@ Auto Reject in HR Recruitment
     'author': '7th Computing',
     'website': 'http://www.7thcomputing.com',
     'images': [],
-    'depends': ['base','hr','hr_employee_seniority','hr_recruitment','nrc_information','hr_employee_state'],
+    'depends': ['base','hr','hr_employee_seniority','hr_recruitment','nrc_information','hr_employee_state','hr_section'],
     #'css':'static/src/style1.css',
     'data': [
         'views/hr_recruitment_view.xml',
@@ -25,7 +25,7 @@ Auto Reject in HR Recruitment
         'reports/employee_paper_format.xml',
         'reports/qweb_view.xml',
         'reports/report_employee_card.xml',
-        'reports/report_employee_contract.xml',
+        'reports/report_employee_contract_new.xml',
        
     ],
     'demo': [

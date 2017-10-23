@@ -6,12 +6,14 @@ from datetime import datetime
 
 class attendance_data_import(osv.osv):
 
-    _name = "attendance.data.import"    
+    _name = "attendance.data.import" 
+    
+      
     _columns = {
         'employee_id': fields.many2one('hr.employee', 'Name'),
         'fingerprint_id': fields.char('Emp No'),
         'auto_assign': fields.char('Auto Assign'),
-        'date': fields.date('Date'),
+        'date': fields.date('Date'),        
         'timetable': fields.char('Timetable'),
         'onduty': fields.char('On duty'),
         'offduty': fields.char('Off duty'),
@@ -41,6 +43,9 @@ class attendance_data_import(osv.osv):
                 ('decline', 'Decline'),
                 ], 'Status',default='draft'),
         'remark': fields.text('Remark'),
+        'section_id': fields.many2one('hr.section', 'Section'),
+        
+        #'section_id' : fields.function(_get_section_id, method=True, string="Section", type='char', store=True),
     }
 #     def calculate_on_change(self,cr,uid, ids,on_duty,off_duty,clock_in, clock_out, context=None):
 #         result = {}
@@ -61,6 +66,17 @@ class attendance_data_import(osv.osv):
 #                  } 
 #                        
 #         return {'value':result}
+    def employee_id_on_change(self,cr,uid, ids,employee_id, context=None):
+        result = {}
+        if employee_id:
+            emp_obj = self.pool.get('hr.employee')
+            emp_id = emp_obj.browse(cr,uid,employee_id,context=context)
+            if emp_id:
+                result = {'section_id': emp_id.section_id.id,                    
+                                         
+                     } 
+                           
+            return {'value':result}
     def calculate_on_change(self,cr,uid, ids,on_duty,off_duty,clock_in, clock_out, context=None):
         result = {}
         start_time = end_time =  None

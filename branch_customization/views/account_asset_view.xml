@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<!-- add branch in Account Asset form -->
+		<record id="view_account_asset_asset_form_inherit" model="ir.ui.view">
+			<field name="name">account.asset.asset.form</field>
+			<field name="model">account.asset.asset</field>
+			<field name="inherit_id" ref="account_asset.view_account_asset_asset_form" />
+			<field name="arch" type="xml">
+				<field name="company_id" position="after">
+					<field name="branch_id" />
+				</field>
+			</field>
+		</record>
+		<!-- add branch in Account Asset tree -->
+		<record id="view_account_asset_asset_tree_inherit" model="ir.ui.view">
+			<field name="name">account.asset.asset.form</field>
+			<field name="model">account.asset.asset</field>
+			<field name="inherit_id" ref="account_asset.view_account_asset_asset_tree" />
+			<field name="arch" type="xml">
+				<field name="company_id" position="after">
+					<field name="branch_id" />
+				</field>
+			</field>
+		</record>
+	</data>
+</openerp>

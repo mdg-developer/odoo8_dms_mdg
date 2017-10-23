@@ -21,21 +21,21 @@
 ##############################################################################
 
 {
-    'name': 'SuperMarket Sale',
+    'name': 'Saturday Count Allocation',
     'version': '1.0',
-    'category': '',
-    'sequence': 30,
-    'summary': 'SuperMarket Sale',
+    'category': 'HR',
+    'sequence': 25,
+    'summary': 'Saturday Count Allocation',
     'description': """
-SuperMarket Sale
+Saturday Count Allocation
 
 """,
     'author': 'Seventh Computing',
     'website': 'http://www.7thcomputing.com',
-    'depends': ['base' , 'sale', 'sale_management'],
-    'data': [        
-        'views/sale_view.xml',
-        'views/account_invoice_view.xml',
+    'depends': ['hr','hr_payroll'],
+    
+    'data': [
+              'hr_payroll_view.xml',
     ],
     'installable': True,
     'auto_install': False,
