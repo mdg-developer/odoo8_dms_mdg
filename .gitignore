@@ -418,3 +418,4 @@ web_searchbar_full_width/__init__.pyc
 wh_customization/__init__.pyc
 sale_management/models/stock_picking.pyc
 supermarket_sale/models/account.pyc
+*.pyc
