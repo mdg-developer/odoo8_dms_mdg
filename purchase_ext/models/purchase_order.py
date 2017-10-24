@@ -19,6 +19,7 @@ class purchase_order(osv.osv):
         'bl_date': fields.date('B/L Date'),
         'agent_date': fields.date('Agent Date'),
         'target_date': fields.date('Target Date'),
+        'finished_date': fields.date('Finished Date'),
     }
     
 purchase_order()
