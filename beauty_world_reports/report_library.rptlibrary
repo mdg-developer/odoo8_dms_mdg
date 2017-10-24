@@ -24,7 +24,7 @@
             </structure>
         </scalar-parameter>
         <scalar-parameter name="from_date" id="60">
-            <text-property name="promptText">from_date</text-property>
+            <text-property name="promptText">From Date</text-property>
             <property name="valueType">static</property>
             <property name="dataType">date</property>
             <property name="distinct">true</property>
@@ -36,7 +36,7 @@
             </structure>
         </scalar-parameter>
         <scalar-parameter name="to_date" id="61">
-            <text-property name="promptText">to_date</text-property>
+            <text-property name="promptText">To Date</text-property>
             <property name="valueType">static</property>
             <property name="dataType">date</property>
             <property name="distinct">true</property>
@@ -107,7 +107,7 @@
                 </ex-property>
             </list-property>
             <property name="odaDriverClass">org.postgresql.Driver</property>
-            <property name="odaURL">jdbc:postgresql://10.91.27.33:5432/BW</property>
+            <property name="odaURL">jdbc:postgresql://192.168.99.6:5432/BW</property>
             <property name="odaUser">openerp</property>
             <encrypted-property name="odaPassword" encryptionID="base64">b3BlbnBncHdk</encrypted-property>
             <property name="odaJndiName">java:comp/env/jdbc/ReportDB</property>

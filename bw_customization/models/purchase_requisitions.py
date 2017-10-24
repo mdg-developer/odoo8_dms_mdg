@@ -62,6 +62,16 @@ class purchase_requisitions(osv.osv):
     def action_draft(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'draft'}, context=context)
         
+    def action_cancel(self, cr, uid, ids, context=None):
+        po = self.pool.get('purchase.order')
+        pol = self.pool.get('purchase.order.line')
+        self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
+        for tender in self.browse(cr, uid, ids, context=context):
+            pid = self.pool['purchase.order'].search(cr, uid, [('pr_ref', '=', tender.name)])
+            po.write(cr, uid, pid,{'state': 'cancel'}, context=context) 
+            pol_ids = self.pool['purchase.order.line'].search(cr, uid, [('order_id', '=', pid)])
+            pol.write(cr, uid, pol_ids,{'state': 'cancel'}, context=context)
+        
     def action_confirmed(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'confirmed'}, context=context)
 

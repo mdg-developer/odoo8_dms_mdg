@@ -101,8 +101,8 @@ class account_invoice(osv.osv):
     
     _columns = {
                 'pre_order': fields.boolean('Pre Order' , readonly=True),
-                'collection_team_id':fields.many2one('crm.case.section', 'Collection Team', readonly=True, states={'draft': [('readonly', False)]},required=True),
-                'collection_user_id':fields.many2one('res.users', 'Collection Salesperson', readonly=True, states={'draft': [('readonly', False)]},required=True),
+                'collection_team_id':fields.many2one('crm.case.section', 'Collection Team', readonly=True, states={'draft': [('readonly', False)]},required=False),
+                'collection_user_id':fields.many2one('res.users', 'Collection Salesperson', readonly=True, states={'draft': [('readonly', False)]},required=False),
                'branch_id':fields.many2one('res.branch', 'Branch'),
                'delivery_remark':fields.selection([
                     ('partial', 'Partial'),
