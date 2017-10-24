@@ -39,6 +39,12 @@
 			<field name="manager" position="after">
 					<field name="is_management"/>
 			</field>
+			<xpath expr="//group[@name='active_group']" position="after" sequence="10">
+			     <group string="Salary Type" groups="base.group_hr_user">
+			        <field name="payroll_cash"/>
+                   	<field name="payroll_bank"/>
+			     </group>
+			</xpath>
         </field>
     </record>  
   </data>

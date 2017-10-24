@@ -21,7 +21,8 @@
 			                	<field name="received_date"/>
 			                	<field name="lc_date"/>
 			                	<field name="remit_date"/>
-			                	<field name="target_date"/>    
+			                	<field name="target_date"/>  
+			                	<field name="finished_date"/>  
 			                </group>
 			                
 			                <group>

@@ -69,7 +69,7 @@
 												<field name="product_uos_qty"  readonly="1"/>
 												<field name="price_unit"  readonly="1"/>
 												<field name="discount"  readonly="1"/>
-												<field name="discount_amt"  readonly="1"/>
+												<field name="discount_amt" />
 												<field name="foc"  readonly="1"/>
 												<field name="sub_total"  readonly="1"/>
 											</group>
@@ -86,7 +86,7 @@
 										<field name="product_uos_qty" readonly="1" />
 										<field name="price_unit" readonly="1" />
 										<field name="discount" readonly="1" />
-										<field name="discount_amt" readonly="1" />
+										<field name="discount_amt" />
 										<field name="foc" readonly="1" />
 										<field name="sub_total" readonly="1" />
 									</tree>

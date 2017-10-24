@@ -38,15 +38,13 @@
                             </group>
                         </page>
                     </xpath>
-                    <xpath expr="//page[@string='HR Settings']" position='inside'>
-                    	<group string="Payroll" position="after">
-                    		<group string="Tax History" groups="base.group_hr_user">
-                            	<field name="financial_year"/>
-                            	<field name="total_income"/>
-                            	<field name="tax_paid"/>
-                        </group>
-                    	</group>
-                    </xpath>
+                    <xpath expr="//group[@name='active_group']" position="after">
+					     <group string="Tax History" groups="base.group_hr_user">
+					        <field name="financial_year"/>
+                           	<field name="total_income"/>
+                           	<field name="tax_paid"/>
+					     </group>
+					</xpath>
                     <xpath expr="//page[@string='Deactivation']" position="after">
                         <page string="Previous Job History" groups="base.group_hr_user">
                             <group>

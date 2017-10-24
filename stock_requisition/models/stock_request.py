@@ -101,8 +101,8 @@ class stock_requisition(osv.osv):
     _columns = {
         'sale_team_id':fields.many2one('crm.case.section', 'Delivery Team', required=True),
         'name': fields.char('RFI Ref', readonly=True),
-        'from_location_id':fields.many2one('stock.location', 'Requesting  Location', readonly=True),
-        'to_location_id':fields.many2one('stock.location', 'Request Warehouse' ,readonly=True),
+        'from_location_id':fields.many2one('stock.location', 'Requesting  Location'),
+        'to_location_id':fields.many2one('stock.location', 'Request Warehouse'),
         'so_no' : fields.char('Sales Order/Inv Ref;No.'),
         'issue_to':fields.char("Receiver"),
         'request_by':fields.many2one('res.users', "Requested By" , readonly=True),
@@ -234,80 +234,207 @@ class stock_requisition(osv.osv):
                 else:
                     qty_on_hand = 0
                 cr.execute("update stock_requisition_line set qty_on_hand=%s where product_id=%s and id=%s", (qty_on_hand, product_id,line_id,))
-    
+                
     def approve(self, cr, uid, ids, context=None):
+         
+        transfer_line_obj = self.pool.get("stock.transfer.request.line")
         product_line_obj = self.pool.get('stock.requisition.line')
         requisition_obj = self.pool.get('stock.requisition')
-        sale_order_obj = self.pool.get('sale.order')
-        good_obj = self.pool.get('good.issue.note')
-        good_line_obj = self.pool.get('good.issue.note.line')
-        req_value = {}
+        stock_warehouse_obj = self.pool.get('stock.warehouse')
+        proc_obj = self.pool.get("procurement.order")
+        
         if ids:
             req_value = requisition_obj.browse(cr, uid, ids[0], context=context)
-            request_id = req_value.id
-            request_date = req_value.request_date
-            request_by = req_value.request_by.id
-            to_location_id = req_value.to_location_id.id
-            from_location_id = req_value.from_location_id.id
-            #vehicle_no = req_value.vehicle_id.id
-            sale_team_id = req_value.sale_team_id.id
-            branch_id = req_value.branch_id.id
-            receiver = req_value.sale_team_id.receiver
-            for order in req_value.order_line:
-                so_name = order.name
-                order_id = sale_order_obj.search(cr, uid, [('name', '=', so_name)], context=context) 
-                sale_order_obj.write(cr, uid, order_id, {'is_generate':True})    
-            good_id = good_obj.create(cr, uid, {
-                                          'sale_team_id':sale_team_id,
-                                          'issue_date': request_date,
-                                          'request_id':request_id,
-                                          'request_by':request_by,
-                                          'to_location_id':to_location_id,
-                                          'from_location_id':from_location_id,
-                                          'receiver':receiver,
-                                          'branch_id':branch_id}, context=context)
+        new_group = self.pool.get("procurement.group").create(cr, uid, {'name': req_value.name}, context=context)
+        
             
-            req_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
-            if good_id and req_line_id:
-                cr.execute('select sum(req_quantity+big_req_quantity) from stock_requisition_line where line_id=%s ', (ids[0],))
-                condition_data = cr.fetchone()[0]         
-                if condition_data == 0.0:
-                    raise osv.except_osv(_('Warning'),
-                                     _('Please Press Update Qty Button'))                
-                for data in req_line_id:
-                    req_line_value = product_line_obj.browse(cr, uid, data, context=context)
-                    if (req_line_value.req_quantity + req_line_value.big_req_quantity) != 0:
-                        product_id = req_line_value.product_id.id
-                        product_uom = req_line_value.product_uom.id
-                        qty_on_hand = req_line_value.qty_on_hand
-                        big_uom_id = req_line_value.big_uom_id.id
-                        big_req_quantity = req_line_value.big_req_quantity
-                        uom_ratio = req_line_value.uom_ratio
-                        quantity = req_line_value.req_quantity
-                        sequence=req_line_value.sequence
-                        product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)                                                                          
-                        cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (product.product_tmpl_id.big_uom_id.id,))
-                        bigger_qty = cr.fetchone()[0]
-                        bigger_qty = int(bigger_qty)
-                        if  bigger_qty:
-                            small_qty = big_req_quantity * bigger_qty
-                            ori_small_qty = quantity
-                            total = small_qty + ori_small_qty
-                        if total > qty_on_hand:
-                            raise osv.except_osv(_('Warning'),
-                                     _('Please Check Qty On Hand For (%s)') % (product.name_template,))
-                        else:          
-                            good_line_obj.create(cr, uid, {'line_id': good_id,
-                                                  'product_id': product_id,
-                                                  'product_uom': product_uom,
-                                                  'uom_ratio':uom_ratio,
-                                                 'big_uom_id':big_uom_id,
-                                                  'issue_quantity':quantity,
-                                                  'big_issue_quantity':big_req_quantity,
-                                                  'qty_on_hand':qty_on_hand,
-                                                  'sequence':sequence,
-                                                  }, context=context)
-        return self.write(cr, uid, ids, {'state':'approve' , 'approve_by':uid,'good_issue_id':good_id})    
+        #for  line_data in transfer_data.p_line:
+        for line in req_value.p_line:
+             
+            warehouse_id = stock_warehouse_obj.search(cr,uid,[('lot_stock_id','=',line.line_id.to_location_id.id)])
+            vals = {
+                    'name': line.product_id.name_template,
+                    'warehouse_id':warehouse_id[0],
+                    'location_id':line.line_id.to_location_id.id,
+                    'origin':req_value.name,
+                    'company_id': line.line_id.company_id.id,
+                    'date_planned': line.line_id.request_date,
+                    'product_id': line.product_id.id,
+                    'product_qty': line.product_quantity,
+                    'product_uom': line.product_uos.id,
+                    'product_uos_qty':line.product_quantity,
+                    'product_uos': line.product_uos.id,
+                    'group_id':new_group,
+                    }
+            proc = proc_obj.create(cr, uid, vals, context=context)
+            
+        return self.write(cr, uid, ids, {'state':'approve' , 'approve_by':uid})    
+#         
+#         
+#         product_line_obj = self.pool.get('stock.requisition.line')
+#         requisition_obj = self.pool.get('stock.requisition')
+#         sale_order_obj = self.pool.get('sale.order')
+#         good_obj = self.pool.get('good.issue.note')
+#         good_line_obj = self.pool.get('good.issue.note.line')
+#         procurement_order_obj = self.pool.get('procurement.order')
+#         procurement_rule_obj = self.pool.get('procurement.rule')
+#         req_value = {}
+#         if ids:
+#             req_value = requisition_obj.browse(cr, uid, ids[0], context=context)
+#             request_id = req_value.id
+#             request_date = req_value.request_date
+#             request_by = req_value.request_by.id
+#             to_location_id = req_value.to_location_id.id
+#             from_location_id = req_value.from_location_id.id
+#             ref_no = req_value.name
+#             #vehicle_no = req_value.vehicle_id.id
+#             sale_team_id = req_value.sale_team_id.id
+#             branch_id = req_value.branch_id.id
+#             receiver = req_value.sale_team_id.receiver
+#             rule_id = procurement_rule_obj.search(cr,uid,[('location_id', '=', to_location_id)],context=context)
+#             if rule_id:
+#                 rule_data = procurement_rule_obj.browse(cr,uid,rule_id,context=context)
+#             for line in req_value.p_line:
+#                 value = {
+#                          'orgin':ref_no,
+#                          'product_id': line.product_id.id,
+#                          'product_qty': line.product_qty,
+#                          'product_uom' : line.product_uom.id,
+#                          'company_id' : line.line_id.company_id.id,
+#                          'rule_id': rule_id,
+#                          'date_planned': line.requested_date
+#                          }
+#                 procument_id = procurement_order_obj.create(cr,uid,value,context=context)
+
+
+#             for order in req_value.order_line:
+#                 so_name = order.name
+#                 order_id = sale_order_obj.search(cr, uid, [('name', '=', so_name)], context=context) 
+#                 sale_order_obj.write(cr, uid, order_id, {'is_generate':True})    
+#             good_id = good_obj.create(cr, uid, {
+#                                           'sale_team_id':sale_team_id,
+#                                           'issue_date': request_date,
+#                                           'request_id':request_id,
+#                                           'request_by':request_by,
+#                                           'to_location_id':to_location_id,
+#                                           'from_location_id':from_location_id,
+#                                           'receiver':receiver,
+#                                           'branch_id':branch_id}, context=context)
+#             
+#             req_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
+#             if good_id and req_line_id:
+#                 cr.execute('select sum(req_quantity+big_req_quantity) from stock_requisition_line where line_id=%s ', (ids[0],))
+#                 condition_data = cr.fetchone()[0]         
+#                 if condition_data == 0.0:
+#                     raise osv.except_osv(_('Warning'),
+#                                      _('Please Press Update Qty Button'))                
+#                 for data in req_line_id:
+#                     req_line_value = product_line_obj.browse(cr, uid, data, context=context)
+#                     if (req_line_value.req_quantity + req_line_value.big_req_quantity) != 0:
+#                         product_id = req_line_value.product_id.id
+#                         product_uom = req_line_value.product_uom.id
+#                         qty_on_hand = req_line_value.qty_on_hand
+#                         big_uom_id = req_line_value.big_uom_id.id
+#                         big_req_quantity = req_line_value.big_req_quantity
+#                         uom_ratio = req_line_value.uom_ratio
+#                         quantity = req_line_value.req_quantity
+#                         sequence=req_line_value.sequence
+#                         product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)                                                                          
+#                         cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (product.product_tmpl_id.big_uom_id.id,))
+#                         bigger_qty = cr.fetchone()[0]
+#                         bigger_qty = int(bigger_qty)
+#                         if  bigger_qty:
+#                             small_qty = big_req_quantity * bigger_qty
+#                             ori_small_qty = quantity
+#                             total = small_qty + ori_small_qty
+#                         if total > qty_on_hand:
+#                             raise osv.except_osv(_('Warning'),
+#                                      _('Please Check Qty On Hand For (%s)') % (product.name_template,))
+#                         else:          
+#                             good_line_obj.create(cr, uid, {'line_id': good_id,
+#                                                   'product_id': product_id,
+#                                                   'product_uom': product_uom,
+#                                                   'uom_ratio':uom_ratio,
+#                                                  'big_uom_id':big_uom_id,
+#                                                   'issue_quantity':quantity,
+#                                                   'big_issue_quantity':big_req_quantity,
+#                                                   'qty_on_hand':qty_on_hand,
+#                                                   'sequence':sequence,
+#                                                   }, context=context)
+#         return self.write(cr, uid, ids, {'state':'approve' , 'approve_by':uid,'good_issue_id':good_id})    
+#     def approve(self, cr, uid, ids, context=None):
+#         product_line_obj = self.pool.get('stock.requisition.line')
+#         requisition_obj = self.pool.get('stock.requisition')
+#         sale_order_obj = self.pool.get('sale.order')
+#         good_obj = self.pool.get('good.issue.note')
+#         good_line_obj = self.pool.get('good.issue.note.line')
+#         req_value = {}
+#         if ids:
+#             req_value = requisition_obj.browse(cr, uid, ids[0], context=context)
+#             request_id = req_value.id
+#             request_date = req_value.request_date
+#             request_by = req_value.request_by.id
+#             to_location_id = req_value.to_location_id.id
+#             from_location_id = req_value.from_location_id.id
+#             #vehicle_no = req_value.vehicle_id.id
+#             sale_team_id = req_value.sale_team_id.id
+#             branch_id = req_value.branch_id.id
+#             receiver = req_value.sale_team_id.receiver
+#             for order in req_value.order_line:
+#                 so_name = order.name
+#                 order_id = sale_order_obj.search(cr, uid, [('name', '=', so_name)], context=context) 
+#                 sale_order_obj.write(cr, uid, order_id, {'is_generate':True})    
+#             good_id = good_obj.create(cr, uid, {
+#                                           'sale_team_id':sale_team_id,
+#                                           'issue_date': request_date,
+#                                           'request_id':request_id,
+#                                           'request_by':request_by,
+#                                           'to_location_id':to_location_id,
+#                                           'from_location_id':from_location_id,
+#                                           'receiver':receiver,
+#                                           'branch_id':branch_id}, context=context)
+#             
+#             req_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
+#             if good_id and req_line_id:
+#                 cr.execute('select sum(req_quantity+big_req_quantity) from stock_requisition_line where line_id=%s ', (ids[0],))
+#                 condition_data = cr.fetchone()[0]         
+#                 if condition_data == 0.0:
+#                     raise osv.except_osv(_('Warning'),
+#                                      _('Please Press Update Qty Button'))                
+#                 for data in req_line_id:
+#                     req_line_value = product_line_obj.browse(cr, uid, data, context=context)
+#                     if (req_line_value.req_quantity + req_line_value.big_req_quantity) != 0:
+#                         product_id = req_line_value.product_id.id
+#                         product_uom = req_line_value.product_uom.id
+#                         qty_on_hand = req_line_value.qty_on_hand
+#                         big_uom_id = req_line_value.big_uom_id.id
+#                         big_req_quantity = req_line_value.big_req_quantity
+#                         uom_ratio = req_line_value.uom_ratio
+#                         quantity = req_line_value.req_quantity
+#                         sequence=req_line_value.sequence
+#                         product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)                                                                          
+#                         cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (product.product_tmpl_id.big_uom_id.id,))
+#                         bigger_qty = cr.fetchone()[0]
+#                         bigger_qty = int(bigger_qty)
+#                         if  bigger_qty:
+#                             small_qty = big_req_quantity * bigger_qty
+#                             ori_small_qty = quantity
+#                             total = small_qty + ori_small_qty
+#                         if total > qty_on_hand:
+#                             raise osv.except_osv(_('Warning'),
+#                                      _('Please Check Qty On Hand For (%s)') % (product.name_template,))
+#                         else:          
+#                             good_line_obj.create(cr, uid, {'line_id': good_id,
+#                                                   'product_id': product_id,
+#                                                   'product_uom': product_uom,
+#                                                   'uom_ratio':uom_ratio,
+#                                                  'big_uom_id':big_uom_id,
+#                                                   'issue_quantity':quantity,
+#                                                   'big_issue_quantity':big_req_quantity,
+#                                                   'qty_on_hand':qty_on_hand,
+#                                                   'sequence':sequence,
+#                                                   }, context=context)
+#         return self.write(cr, uid, ids, {'state':'approve' , 'approve_by':uid,'good_issue_id':good_id})    
     
     def cancel(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state':'cancel' })    
@@ -387,6 +514,9 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'req_quantity' : fields.float(string='Qty', digits=(16, 0)),
         'product_uom': fields.many2one('product.uom', 'Smaller UOM'),
+        'product_uos': fields.many2one('product.uom', 'UOM'),#add for new uom
+        #'product_uos_quantity' : fields.float(string='Qty', digits=(16, 0)),
+        'product_quantity' : fields.float(string='Qty', digits=(16, 0)), #add for new uom qty
         'uom_ratio':fields.char('Packing Unit'),
          'remark':fields.char('Remark'),
         'big_uom_id': fields.many2one('product.uom', 'Bigger UOM',  help="Default Unit of Measure used for all stock operation."),

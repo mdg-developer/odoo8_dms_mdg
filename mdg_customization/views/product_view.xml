@@ -12,9 +12,9 @@
 					<field name="uom_id" on_change="product.onchange_uom(uom_id,uom_po_id)"
 						groups="product.group_uom" string="Smaller UoM" />
 					<field name="list_price" />
-					<field name="big_uom_id" on_change="product.onchange_uom(uom_id,uom_po_id)"
-						groups="product.group_uom" string="Bigger UoM" />
-					<field name="big_list_price" />
+					<!-- <field name="big_uom_id" on_change="product.onchange_uom(uom_id,uom_po_id)"
+						groups="product.group_uom" string="Bigger UoM" /> -->
+					<!-- <field name="big_list_price" /> -->
 					<field name='is_foc' />
 					<field name='is_posm' />
 				</field>

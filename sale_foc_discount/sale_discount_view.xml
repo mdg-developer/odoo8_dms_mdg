@@ -37,7 +37,7 @@
 					expr="//form/sheet/notebook/page/field/tree/field[@name='price_unit']"
 					position="replace">
 					<field name="product_type" invisible="1"/>
-					<field name="price_unit"  attrs="{'readonly':[('product_type','!=','service')]}" />
+					<field name="price_unit"/>
 				</xpath>
 				<xpath
 					expr="//form/sheet/notebook/page/field/tree/field[@name='product_uom']"
@@ -57,8 +57,7 @@
 					position="after">
 
 					<field name="discount" groups="sale.group_discount_per_so_line"
-						on_change="onchange_discount_percent(discount,product_uom_qty, price_unit)"
-						readonly="1" />
+						on_change="onchange_discount_percent(discount,product_uom_qty, price_unit)"/>
 					<field name="discount_amt" groups="sale.group_discount_per_so_line" />
 					<field name="sale_foc" groups="sale.group_discount_per_so_line"
 						on_change="foc_change(product_id,product_uos_qty,context)" />

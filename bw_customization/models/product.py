@@ -5,6 +5,7 @@ from openerp.osv.fields import _column
 class product_product(osv.osv):
     _inherit = 'product.product'
     _columns = {'supplier_code': fields.char('Supplier Code'),
+                
             }
     
 product_product()
@@ -66,6 +67,9 @@ class product_template(osv.osv):
                  # copy from panasonic_producty.py of "panansonic_modulue"
                 
                 'uom_lines':fields.many2many('product.uom'),
+                #'uom_lines': fields.many2many('product.uom','product_template_product_uom_rel','product_id','uom_id','Report UOM'),
+                #'report_uom_lines':fields.many2many('product.uom'),
+                'report_uom_lines': fields.many2many('product.uom','report_product_uom_rel','product_id','uom_id','Report UOM'),
                 'barcode_no':fields.char('Barcode'),
                 'division':fields.many2one('product.division', 'Division'),
                 'main_group':fields.many2one('product.maingroup', 'Main Group'),

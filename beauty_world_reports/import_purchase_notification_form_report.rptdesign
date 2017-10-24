@@ -1,0 +1,893 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 4.4.2.v201410272105 Build &lt;4.4.2.v20150217-1805></property>
+    <property name="units">in</property>
+    <method name="initialize"><![CDATA[sr = 0;]]></method>
+    <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <property name="imageDPI">96</property>
+    <list-property name="libraries">
+        <structure>
+            <property name="fileName">birt_report/report_library.rptlibrary</property>
+            <property name="namespace">report_library</property>
+        </structure>
+    </list-property>
+    <parameters>
+        <scalar-parameter name="from_date" id="17">
+            <text-property name="promptText">From Date</text-property>
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">dateTime</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="to_date" id="18">
+            <text-property name="promptText">To Date</text-property>
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">dateTime</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="475"
+ extends="report_library.Data Source"/>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="import_purchase_notification_form" id="474">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">po_date</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">po_date</text-property>
+                    <text-property name="heading">po_date</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">po_ref_no</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">po_ref_no</text-property>
+                    <text-property name="heading">po_ref_no</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">invoice_no</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">invoice_no</text-property>
+                    <text-property name="heading">invoice_no</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">date_invoice</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">date_invoice</text-property>
+                    <text-property name="heading">date_invoice</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">description</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">description</text-property>
+                    <text-property name="heading">description</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">product_qty</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">product_qty</text-property>
+                    <text-property name="heading">product_qty</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">uom_name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">uom_name</text-property>
+                    <text-property name="heading">uom_name</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">from_date</property>
+                    <property name="paramName">from_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">dateTime</property>
+                    <property name="nativeDataType">93</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">to_date</property>
+                    <property name="paramName">to_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">dateTime</property>
+                    <property name="nativeDataType">93</property>
+                    <property name="position">2</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">po_date</property>
+                        <property name="dataType">date-time</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">po_ref_no</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">invoice_no</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">date_invoice</property>
+                        <property name="dataType">date</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">description</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">product_qty</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">uom_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">po_date</property>
+                    <property name="nativeName">po_date</property>
+                    <property name="dataType">date-time</property>
+                    <property name="nativeDataType">93</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">po_ref_no</property>
+                    <property name="nativeName">po_ref_no</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">invoice_no</property>
+                    <property name="nativeName">invoice_no</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">date_invoice</property>
+                    <property name="nativeName">date_invoice</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">description</property>
+                    <property name="nativeName">description</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">product_qty</property>
+                    <property name="nativeName">product_qty</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">uom_name</property>
+                    <property name="nativeName">uom_name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select po.date_order as po_date,po.name as  po_ref_no,inv.number as invoice_no,inv.date_invoice,
+pp.name_template as description,pol.product_qty,uom.name as uom_name from 
+purchase_order po 
+inner join purchase_order_line pol on po.id= pol.order_id
+inner join product_product pp on pp.id=pol.product_id
+inner join product_uom uom on  pol.product_uom = uom.id
+inner join account_invoice inv on inv.origin = po.name
+where po.date_order between ? and ?]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>93</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>2</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>93</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+    </data-sets>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <property name="type">a4</property>
+            <property name="orientation">landscape</property>
+            <property name="rightMargin">0in</property>
+            <page-footer>
+                <text id="3">
+                    <property name="contentType">html</property>
+                    <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
+                </text>
+            </page-footer>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <grid id="538">
+            <property name="width">11.28125in</property>
+            <column id="539">
+                <property name="width">11.28125in</property>
+            </column>
+            <row id="540">
+                <cell id="541">
+                    <label id="3625">
+                        <property name="fontSize">12pt</property>
+                        <property name="fontWeight">bold</property>
+                        <property name="textAlign">center</property>
+                        <text-property name="text">Import/Purchase Notification Form</text-property>
+                    </label>
+                </cell>
+            </row>
+            <row id="542">
+                <cell id="543">
+                    <grid id="3595">
+                        <property name="width">11.15625in</property>
+                        <column id="3596">
+                            <property name="width">1.03125in</property>
+                        </column>
+                        <column id="3617">
+                            <property name="width">1.8958333333333333in</property>
+                        </column>
+                        <column id="3615">
+                            <property name="width">1.0833333333333333in</property>
+                        </column>
+                        <column id="3613">
+                            <property name="width">1.4166666666666667in</property>
+                        </column>
+                        <column id="3611">
+                            <property name="width">1.125in</property>
+                        </column>
+                        <column id="3609">
+                            <property name="width">1.8333333333333333in</property>
+                        </column>
+                        <column id="3597">
+                            <property name="width">1.1458333333333333in</property>
+                        </column>
+                        <column id="3598">
+                            <property name="width">1.625in</property>
+                        </column>
+                        <row id="3600">
+                            <cell id="3601">
+                                <label id="3618">
+                                    <property name="fontWeight">bold</property>
+                                    <text-property name="text">Invoice No.:</text-property>
+                                </label>
+                            </cell>
+                            <cell id="3616">
+                                <data id="3605">
+                                    <property name="dataSet">import_purchase_notification_form</property>
+                                    <list-property name="boundDataColumns">
+                                        <structure>
+                                            <property name="name">invoice_no</property>
+                                            <text-property name="displayName">invoice_no</text-property>
+                                            <expression name="expression" type="javascript">dataSetRow["invoice_no"]</expression>
+                                            <property name="dataType">string</property>
+                                        </structure>
+                                    </list-property>
+                                    <property name="resultSetColumn">invoice_no</property>
+                                </data>
+                            </cell>
+                            <cell id="3614">
+                                <label id="3619">
+                                    <property name="fontWeight">bold</property>
+                                    <text-property name="text">Invoice Date:</text-property>
+                                </label>
+                            </cell>
+                            <cell id="3612">
+                                <data id="3620">
+                                    <property name="dataSet">import_purchase_notification_form</property>
+                                    <list-property name="boundDataColumns">
+                                        <structure>
+                                            <property name="name">date_invoice</property>
+                                            <text-property name="displayName">date_invoice</text-property>
+                                            <expression name="expression" type="javascript">dataSetRow["date_invoice"]</expression>
+                                            <property name="dataType">date</property>
+                                        </structure>
+                                    </list-property>
+                                    <property name="resultSetColumn">date_invoice</property>
+                                </data>
+                            </cell>
+                            <cell id="3610">
+                                <label id="3621">
+                                    <property name="fontWeight">bold</property>
+                                    <text-property name="text">PO Ref.No. :</text-property>
+                                </label>
+                            </cell>
+                            <cell id="3608">
+                                <data id="3622">
+                                    <property name="dataSet">import_purchase_notification_form</property>
+                                    <list-property name="boundDataColumns">
+                                        <structure>
+                                            <property name="name">po_ref_no</property>
+                                            <text-property name="displayName">po_ref_no</text-property>
+                                            <expression name="expression" type="javascript">dataSetRow["po_ref_no"]</expression>
+                                            <property name="dataType">string</property>
+                                        </structure>
+                                    </list-property>
+                                    <property name="resultSetColumn">po_ref_no</property>
+                                </data>
+                            </cell>
+                            <cell id="3602">
+                                <label id="3623">
+                                    <property name="fontWeight">bold</property>
+                                    <text-property name="text">Purchase Date:</text-property>
+                                </label>
+                            </cell>
+                            <cell id="3603">
+                                <data id="3624">
+                                    <property name="dataSet">import_purchase_notification_form</property>
+                                    <list-property name="boundDataColumns">
+                                        <structure>
+                                            <property name="name">po_date</property>
+                                            <text-property name="displayName">po_date</text-property>
+                                            <expression name="expression" type="javascript">dataSetRow["po_date"]</expression>
+                                            <property name="dataType">date-time</property>
+                                        </structure>
+                                    </list-property>
+                                    <property name="resultSetColumn">po_date</property>
+                                </data>
+                            </cell>
+                        </row>
+                    </grid>
+                </cell>
+            </row>
+            <row id="544">
+                <cell id="545">
+                    <table id="3668">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <property name="width">11.177083333333334in</property>
+                        <property name="dataSet">import_purchase_notification_form</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">description</property>
+                                <text-property name="displayName">description</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["description"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">product_qty</property>
+                                <text-property name="displayName">product_qty</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["product_qty"]</expression>
+                                <property name="dataType">decimal</property>
+                            </structure>
+                            <structure>
+                                <property name="name">uom_name</property>
+                                <text-property name="displayName">uom_name</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["uom_name"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">Aggregation</property>
+                                <property name="dataType">float</property>
+                                <property name="aggregateFunction">SUM</property>
+                                <list-property name="arguments">
+                                    <structure>
+                                        <property name="name">Expression</property>
+                                        <expression name="value" type="javascript">row["product_qty"]</expression>
+                                    </structure>
+                                </list-property>
+                                <property name="allowExport">true</property>
+                            </structure>
+                        </list-property>
+                        <column id="3705">
+                            <property name="width">0.5in</property>
+                        </column>
+                        <column id="3706">
+                            <property name="width">2.5520833333333335in</property>
+                        </column>
+                        <column id="3707">
+                            <property name="width">1.2291666666666667in</property>
+                        </column>
+                        <column id="3708">
+                            <property name="width">1.1875in</property>
+                        </column>
+                        <column id="3709">
+                            <property name="width">1.1041666666666667in</property>
+                        </column>
+                        <column id="3710">
+                            <property name="width">1.3229166666666667in</property>
+                        </column>
+                        <column id="3711">
+                            <property name="width">1.3020833333333333in</property>
+                        </column>
+                        <column id="3712">
+                            <property name="width">1.9791666666666667in</property>
+                        </column>
+                        <header>
+                            <row id="3669">
+                                <cell id="3670">
+                                    <label id="530">
+                                        <property name="fontFamily">"Myanmar3"</property>
+                                        <property name="fontWeight">bold</property>
+                                        <text-property name="text">Line</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="3671">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <label id="531">
+                                        <property name="fontFamily">"Myanmar3"</property>
+                                        <property name="fontWeight">bold</property>
+                                        <text-property name="text">Descriptions</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="3672">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <label id="532">
+                                        <property name="fontFamily">"Myanmar3"</property>
+                                        <property name="fontWeight">bold</property>
+                                        <text-property name="text">Unit</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="3673">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <label id="533">
+                                        <property name="fontFamily">"Myanmar3"</property>
+                                        <property name="fontWeight">bold</property>
+                                        <text-property name="text">Qty</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="3674">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <label id="534">
+                                        <property name="fontFamily">"Myanmar3"</property>
+                                        <property name="fontWeight">bold</property>
+                                        <text-property name="text">Received Qty</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="3675">
+                                    <label id="535">
+                                        <property name="fontFamily">"Myanmar3"</property>
+                                        <property name="fontWeight">bold</property>
+                                        <text-property name="text">Received Pk</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="3676">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <label id="536">
+                                        <property name="fontFamily">"Myanmar3"</property>
+                                        <property name="fontWeight">bold</property>
+                                        <text-property name="text">Quality</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="3677">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <label id="537">
+                                        <property name="fontFamily">"Myanmar3"</property>
+                                        <property name="fontWeight">bold</property>
+                                        <text-property name="text">Remark</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                        </header>
+                        <detail>
+                            <row id="3678">
+                                <cell id="3679">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <text-data id="3592">
+                                        <property name="fontFamily">"Myanmar3"</property>
+                                        <property name="textAlign">center</property>
+                                        <property name="height">2em</property>
+                                        <property name="width">4em</property>
+                                        <expression name="valueExpr">sr++;&#13;
+sr;</expression>
+                                        <property name="contentType">html</property>
+                                    </text-data>
+                                </cell>
+                                <cell id="3680">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="3593">
+                                        <property name="fontFamily">"Myanmar3"</property>
+                                        <property name="resultSetColumn">description</property>
+                                    </data>
+                                </cell>
+                                <cell id="3681">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="3594">
+                                        <property name="fontFamily">"Myanmar3"</property>
+                                        <property name="textAlign">center</property>
+                                        <property name="resultSetColumn">uom_name</property>
+                                    </data>
+                                </cell>
+                                <cell id="3682">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="3626">
+                                        <property name="fontFamily">"Myanmar3"</property>
+                                        <property name="textAlign">right</property>
+                                        <property name="resultSetColumn">product_qty</property>
+                                    </data>
+                                </cell>
+                                <cell id="3683">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                </cell>
+                                <cell id="3684">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                </cell>
+                                <cell id="3685">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                </cell>
+                                <cell id="3686">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                </cell>
+                            </row>
+                        </detail>
+                        <footer>
+                            <row id="3696">
+                                <cell id="3697">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                </cell>
+                                <cell id="3698">
+                                    <property name="colSpan">2</property>
+                                    <property name="rowSpan">1</property>
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <label id="3627">
+                                        <property name="fontFamily">"Myanmar3"</property>
+                                        <property name="fontWeight">bold</property>
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">Total Qty(PK)</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="3700">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="3732">
+                                        <property name="fontFamily">"Myanmar3"</property>
+                                        <property name="fontWeight">bold</property>
+                                        <property name="textAlign">right</property>
+                                        <property name="resultSetColumn">Aggregation</property>
+                                    </data>
+                                </cell>
+                                <cell id="3701">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                </cell>
+                                <cell id="3702">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                </cell>
+                                <cell id="3703">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                </cell>
+                                <cell id="3704">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#000000</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                </cell>
+                            </row>
+                        </footer>
+                    </table>
+                </cell>
+            </row>
+            <row id="3630">
+                <cell id="3631">
+                    <grid id="3632">
+                        <property name="width">11.208333333333334in</property>
+                        <column id="3633">
+                            <property name="width">5.010416666666667in</property>
+                        </column>
+                        <column id="3634">
+                            <property name="width">6.197916666666667in</property>
+                        </column>
+                        <row id="3635">
+                            <cell id="3636">
+                                <label id="3629">
+                                    <property name="fontFamily">"Myanmar3"</property>
+                                    <property name="fontWeight">bold</property>
+                                    <property name="textAlign">center</property>
+                                    <text-property name="text">Prepared By</text-property>
+                                </label>
+                            </cell>
+                            <cell id="3637">
+                                <label id="3638">
+                                    <property name="fontFamily">"Myanmar3"</property>
+                                    <property name="fontWeight">bold</property>
+                                    <property name="paddingRight">50pt</property>
+                                    <property name="textAlign">right</property>
+                                    <text-property name="text">Received By</text-property>
+                                </label>
+                            </cell>
+                        </row>
+                    </grid>
+                </cell>
+            </row>
+        </grid>
+    </body>
+</report>
