@@ -35,6 +35,7 @@ Request For Issue And Good Issue Note Module
     'category': 'stock',
     'sequence': 16,
     'data': [
+        'wizard/stock_requisition_add_multiple_view.xml',     
         'views/product_requisition_sequence.xml',
         'views/stock_request_view.xml',
         'views/good_issue_note_view.xml',
@@ -50,6 +51,7 @@ Request For Issue And Good Issue Note Module
 		'views/stock_taking_loading_instruction_view.xml',
 		'views/way_bill_view.xml',
 		'views/stock_return_note_view.xml',
+        
 		'reports/report_stock_taking_loading_instruction.xml',
         'reports/report_way_bill.xml',
 		'reports/report_stock_return_note.xml',
