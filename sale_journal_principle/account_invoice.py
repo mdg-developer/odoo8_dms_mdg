@@ -51,14 +51,14 @@ class account_invoice(models.Model):
             partial_lines += line
             if self.residual == 0.0:
                 self.confirm_paid()
-                #if self.origin:
+                # if self.origin:
                    # cr.execute("update sale_order set invoiced=True where name=%s", (self.origin,))        
-                    #cr.execute("update sale_order set state='done' where shipped=True and invoiced=True and name=%s", (self.origin,)) 
+                    # cr.execute("update sale_order set state='done' where shipped=True and invoiced=True and name=%s", (self.origin,)) 
             if self.residual != 0.0:
                 if self.origin:
                     cr.execute("update account_invoice set state='open' where id=%s", (self.id,))  
-        print 'lines',lines
-        print 'partial_lines',partial_lines      
+        print 'lines', lines
+        print 'partial_lines', partial_lines      
         self.payment_ids = (lines - partial_lines).sorted()
         
 
@@ -66,9 +66,9 @@ class account_invoice(models.Model):
     def line_get_convert(self, line, part, date):
         if line is not None:
 
-            debit = round( line['debit'], 1)
-            credit = round( line['credit'], 1)
-            price = debit+ (credit*-1),
+            debit = round(line['debit'], 1)
+            credit = round(line['credit'], 1)
+            price = debit + (credit * -1),
 #             price = debit+ credit,
             
             return {
@@ -81,7 +81,7 @@ class account_invoice(models.Model):
                 'account_id': line['account_id'],
                 # 'account_id': account_id,
                 'analytic_lines': line.get('analytic_lines', []),
-                'amount_currency': price[0] > 0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),                
+                'amount_currency': price[0] > 0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
                 'currency_id': line.get('currency_id', False),
                 'tax_code_id': line.get('tax_code_id', False),
                 'tax_amount': line.get('tax_amount', False),
@@ -210,8 +210,8 @@ class account_invoice(models.Model):
                     'partner_id': part,
                     'name': line['name'][:64],
                     'date': date,
-                    'debit': line['price'] > 0 and round(line['price'],2),
-                    'credit': line['price'] < 0 and -round(line['price'],2),
+                    'debit': line['price'] > 0 and round(line['price'], 2),
+                    'credit': line['price'] < 0 and -round(line['price'], 2),
                     'account_id': line['account_id'],
                     # 'account_id': account_id,
                     'analytic_lines': line.get('analytic_lines', []),
@@ -228,7 +228,7 @@ class account_invoice(models.Model):
                     'is_discount': line.get('is_discount', False),
 
                 }
-                print 'res',res
+                print 'res', res
                 return res    
             
     def line_get_convert_dr(self, line, part, date, tax_value, tax_amount_currency):
@@ -237,7 +237,7 @@ class account_invoice(models.Model):
         cr = self._cr
         type = 'out_invoice' 
         discount_amt = 0
-        total_tax_amt=0
+        total_tax_amt = 0
         origin = line.get('ref', False)
         if origin:
             cr.execute("select type from account_invoice where origin=%s", (origin,))
@@ -263,10 +263,10 @@ class account_invoice(models.Model):
                     invoice_line_id = cr.fetchone()
                     if invoice_line_id:
                         invoice_line_data = self.env['account.invoice.line'].browse(invoice_line_id)
-                        net_total=invoice_line_data.net_total
-                        discount_amt=invoice_line_data.discount_amt
-                        price_sub_total =invoice_line_data.price_subtotal
-                        total_tax_amt= (net_total  - discount_amt) - price_sub_total
+                        net_total = invoice_line_data.net_total
+                        discount_amt = invoice_line_data.discount_amt
+                        price_sub_total = invoice_line_data.price_subtotal
+                        total_tax_amt = (net_total - discount_amt) - price_sub_total
                     line['price'] = line['price'] + discount_amt - total_tax_amt           
                 if  line['is_discount'] == True:
                     account_id = product.product_tmpl_id.main_group.property_account_discount.id
@@ -314,11 +314,11 @@ class account_invoice(models.Model):
                     invoice_line_id = cr.fetchone()
                     if invoice_line_id:
                         invoice_line_data = self.env['account.invoice.line'].browse(invoice_line_id)
-                        net_total=invoice_line_data.net_total
-                        discount_amt=invoice_line_data.discount_amt
-                        price_sub_total =invoice_line_data.price_subtotal
-                        total_tax_amt= (net_total -discount_amt)-price_sub_total 
-                    line['price'] = line['price'] + discount_amt -  total_tax_amt                
+                        net_total = invoice_line_data.net_total
+                        discount_amt = invoice_line_data.discount_amt
+                        price_sub_total = invoice_line_data.price_subtotal
+                        total_tax_amt = (net_total - discount_amt) - price_sub_total 
+                    line['price'] = line['price'] + discount_amt - total_tax_amt                
                 if  line['is_discount'] == True:
                     account_id = product.product_tmpl_id.main_group.property_account_discount.id
                 else:
@@ -365,11 +365,11 @@ class account_invoice(models.Model):
                     invoice_line_id = cr.fetchone()
                     if invoice_line_id:
                         invoice_line_data = self.env['account.invoice.line'].browse(invoice_line_id)
-                        net_total=invoice_line_data.net_total
-                        discount_amt=invoice_line_data.discount_amt
-                        price_sub_total =invoice_line_data.price_subtotal
-                        total_tax_amt= (net_total -discount_amt)-price_sub_total 
-                    line['price'] = line['price'] - discount_amt +  total_tax_amt    
+                        net_total = invoice_line_data.net_total
+                        discount_amt = invoice_line_data.discount_amt
+                        price_sub_total = invoice_line_data.price_subtotal
+                        total_tax_amt = (net_total - discount_amt) - price_sub_total 
+                    line['price'] = line['price'] - discount_amt + total_tax_amt    
                 if  line['is_discount'] == True:
                     account_id = product.product_tmpl_id.main_group.property_account_discount.id
                     line['price'] = -1 * line['price']
@@ -402,7 +402,7 @@ class account_invoice(models.Model):
                 }
                 return res
         if type == 'in_invoice' and line.get('product_id', False) != False: 
-            tax_amt=0.0           
+            tax_amt = 0.0           
             product = self.env['product.product'].browse(line.get('product_id', False))
             product_code = product.default_code            
             if line['price'] > 0  or line['is_discount'] == True or product_code == 'discount1' or  product_code == 'discount2' or product_code == 'discount3' or  product_code == 'discount4' or  product_code == 'discount5'  :
@@ -418,20 +418,20 @@ class account_invoice(models.Model):
                     invoice_line_id = cr.fetchone()                    
                     if invoice_line_id:
                         invoice_line_data = self.env['account.invoice.line'].browse(invoice_line_id)
-                        net_total=invoice_line_data.net_total
-                        discount_amt=invoice_line_data.discount_amt
-                        price_sub_total =invoice_line_data.price_subtotal
-                        total_tax_amt= (net_total -discount_amt)-price_sub_total
+                        net_total = invoice_line_data.net_total
+                        discount_amt = invoice_line_data.discount_amt
+                        price_sub_total = invoice_line_data.price_subtotal
+                        total_tax_amt = (net_total - discount_amt) - price_sub_total
                         cr.execute("select quantity*price_unit total from account_invoice_line where id in \
                                     (select max(line.id) from account_invoice_line line,account_invoice ai \
                                     where line.invoice_id=ai.id and ai.origin=%s)", (origin,))
                         last_invoice_line = cr.fetchone()                        
-                        if line['quantity']*line['price_unit']==last_invoice_line[0]:
+                        if line['quantity'] * line['price_unit'] == last_invoice_line[0]:
                             if tax_value > 0:
                                 tax_amt = tax_value                    
-                    if line['ref'][:2]=='PO':
+                    if line['ref'][:2] == 'PO':
                         line['price'] = line['price'] - discount_amt + tax_amt
-                    if line['ref'][:2]=='SO':
+                    if line['ref'][:2] == 'SO':
                         line['price'] = line['price'] - discount_amt + total_tax_amt
                 if  line['is_discount'] == True:
                     account_id = product.product_tmpl_id.main_group.property_account_discount.id
@@ -441,16 +441,16 @@ class account_invoice(models.Model):
                 if line['price'] > 0:
                     line['price'] = -line['price']
                 if tax_amount_currency:
-                    if line['ref'][:2]=='PO':
-                        line['amount_currency']+=tax_amount_currency
+                    if line['ref'][:2] == 'PO':
+                        line['amount_currency'] += tax_amount_currency
                     
                 res = {
                     'date_maturity': line.get('date_maturity', False),
                     'partner_id': part,
                     'name': line['name'][:64],
                     'date': date,
-                    'debit': line['price'] > 0 and round(line['price'],2),
-                    'credit': line['price'] < 0 and -round(line['price'],2),
+                    'debit': line['price'] > 0 and round(line['price'], 2),
+                    'credit': line['price'] < 0 and -round(line['price'], 2),
                     'account_id': line['account_id'],
                     'analytic_lines': line.get('analytic_lines', []),
                     'amount_currency': line['price'] > 0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
@@ -465,7 +465,7 @@ class account_invoice(models.Model):
                     'main_group': account_id,
                      'is_discount': line.get('is_discount', False),
                 }
-                print 'res',res
+                print 'res', res
                 return res           
     def line_dr_convert_account_with_principle(self, line):
         list_one = line
@@ -477,6 +477,7 @@ class account_invoice(models.Model):
         # for AR principle
         for v in val:
             price = 0
+            sale_discount = 0
             date_maturity = partner_id = name = date = account_id = analytic_lines = amount_currency = currency_id = tax_code_id = tax_amount = ref = quantity = product_id = product_uom_id = analytic_account_id = None
             debit = credit = amount_currency = 0
             result = [a for a in list_one if a is not None and a['main_group'] == v]
@@ -495,14 +496,25 @@ class account_invoice(models.Model):
                         type = type[0]
                     else:
                         type = None   
+                    # for one principle (Assign By Phoo Phoo)       
+                    cr.execute("select av.id from account_invoice av where av.origin=%s ", (origin,))
+                    invoice_id = cr.fetchone()
+                    if invoice_id:
+                        inv = self.env['account.invoice'].browse(invoice_id)
+                        deduct_amt = inv.deduct_amt
+                        additional_discount = (inv.amount_untaxed * (inv.additional_discount / 100))
+                        sale_discount = deduct_amt + additional_discount
+                        
+                      
                 if type == 'out_invoice':
-                    debit += res['debit']
+                    debit += res['debit'] 
                 if type == 'in_invoice':             
-                    credit += res['credit']    
+                    credit += res['credit'] 
                 if type == 'out_refund':             
-                    credit += res['credit']       
+                    credit += res['credit']    
                 if type == 'in_refund':             
-                    debit += res['debit']                                             
+                    debit += res['debit']       
+                                 
                 date_maturity = res['date_maturity']
                 partner_id = res['partner_id']
                 name = res['name']
@@ -518,10 +530,18 @@ class account_invoice(models.Model):
                 product_id = res['product_id']
                 product_uom_id = res['product_uom_id']
                 analytic_account_id = res['analytic_account_id']
+            print 'sale_discounrrrrrrrr', sale_discount, credit , debit
             price = credit + debit
             tax = 0.05
-            div_amt =( 1 + tax) 
+            div_amt = (1 + tax) 
             if price != 0.0:
+                if credit > 0:
+                    credit = credit + sale_discount
+                    print 'creditcreditcredit', credit
+                    
+                if debit > 0:
+                    debit = debit - sale_discount
+                    print 'debitdebitdebitdebit', debit
                 rec = {
                             'date_maturity': date_maturity,
                             'partner_id': partner_id,
@@ -542,7 +562,7 @@ class account_invoice(models.Model):
                             'analytic_account_id': analytic_account_id,
                            
                         }
-                print 'rec',rec
+                print 'rec', rec
                 arr_list.append(rec)
         # for discount principle
         for v in dis_val:
@@ -565,8 +585,9 @@ class account_invoice(models.Model):
                         type = type[0]
                     else:
                         type = None   
+                
                 if type == 'out_invoice':
-                    debit = res['debit']
+                    debit = res['debit'] 
                 if type == 'in_invoice':             
                     credit = res['credit']    
                 if type == 'out_refund':             
@@ -575,7 +596,7 @@ class account_invoice(models.Model):
                     debit = res['debit']                                             
                 date_maturity = res['date_maturity']
                 partner_id = res['partner_id']
-                name = res['name']
+
                 date = res['date']
                 account_id = res['main_group']  # replace with product principle AR account
                 analytic_lines = res['analytic_lines']
@@ -645,10 +666,10 @@ class account_invoice(models.Model):
             iml = inv._get_analytic_lines()
             # check if taxes are all computed
             compute_taxes = account_invoice_tax.compute(inv.with_context(lang=inv.partner_id.lang))  
-            tax_value=tax_amount_currency=0.0  
-            for i,t in compute_taxes.items():                                              
-                tax_value+=t.get('tax_amount') 
-                tax_amount_currency+=t.get('amount')
+            tax_value = tax_amount_currency = 0.0  
+            for i, t in compute_taxes.items():                                              
+                tax_value += t.get('tax_amount') 
+                tax_amount_currency += t.get('amount')
                            
             inv.check_tax_lines(compute_taxes)
             
