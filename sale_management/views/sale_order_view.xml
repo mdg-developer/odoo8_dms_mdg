@@ -159,7 +159,7 @@
 					<field name="user_id" domain="[('default_section_id', '=',section_id)]"
 						required="1" attrs="{'readonly':[('state','!=','draft')]}"
 						context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'account.group_account_invoice', 'base.group_sale_salesman_all_leads']}" />
-					<field name="delivery_id" attrs="{'readonly':[('state','=','done')]}"></field>
+					<field name="delivery_id" attrs="{'readonly':[('state','!=','draft')]}"  on_change="on_change_delivery_id(delivery_id)"></field>
 
 				</field>
 				<field name="invoiced" position="before">

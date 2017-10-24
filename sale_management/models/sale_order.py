@@ -177,7 +177,7 @@ class sale_order(osv.osv):
         branch_id=False
         if section_id:
             team = self.pool.get('crm.case.section').browse(cr, uid, section_id, context=context)
-            issue_warehouse_id = team.issue_warehouse_id and  team.issue_warehouse_id.id or False
+            issue_warehouse_id = team.delivery_team_id.warehouse_id and  team.delivery_team_id.warehouse_id.id or False
             delivery_id = team.delivery_team_id and  team.delivery_team_id.id or False
             branch_id = team.branch_id and  team.branch_id.id or False
         values = {
@@ -187,6 +187,20 @@ class sale_order(osv.osv):
              'branch_id':branch_id,
               }
         return {'value': values}
+    
+    
+    def on_change_delivery_id(self, cr, uid, ids, delivery_id, context=None):
+        values = {}
+        print 'payment_type', delivery_id
+        issue_warehouse_id=False
+        if delivery_id:
+            team = self.pool.get('crm.case.section').browse(cr, uid, delivery_id, context=context)
+            issue_warehouse_id = team.warehouse_id and  team.warehouse_id.id or False
+        values = {
+             'issue_warehouse_id':issue_warehouse_id,
+             'warehouse_id':issue_warehouse_id,
+              }
+        return {'value': values}    
     
     def onchange_partner_id(self, cr, uid, ids, part, context=None):
         

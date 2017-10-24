@@ -166,7 +166,7 @@ class account_invoice_line(models.Model):
         discount_account_id=discount_cash_account_id=None
         
         dis_per=dis_amt=deduct_amt=total=additional_discount=0.0
-        discount_cash_account_id=inv.company_id.discount_cash_account_id.id
+        discount_cash_account_id=inv.invoice_line[0].product_id.product_tmpl_id.main_group.property_account_discount.id
         discount_account_id=inv.company_id.discount_account_id.id
         if discount_cash_account_id and discount_account_id==None:
             raise orm.except_orm(_('Error :'), _("Please select the Discount code and Cash Discount Code in Sale setting!"))
@@ -243,10 +243,10 @@ class account_invoice_line(models.Model):
                 res.append(val1)
         if deduct_amt+additional_discount>0:
                 val2={'type': 'src',
-                            'name': 'Cash Discount',
+                            'name': 'Sale Discount',
                             'price_unit': deduct_amt+additional_discount,
                             'quantity': 1,
-                            'price':-1*(deduct_amt+additional_discount),
+                            'price':1*(deduct_amt+additional_discount),
                             'account_id': discount_cash_account_id,
                             'product_id': False,
                             'ref':ref,
@@ -258,6 +258,7 @@ class account_invoice_line(models.Model):
                 res.append(val2)
 
         return res
+        print 'resssssssssssssssssss',res
 
 # class account_account_invoice(osv.osv):
 #     _inherit='account.invoice'
