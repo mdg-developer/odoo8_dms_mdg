@@ -10,8 +10,8 @@
 				</field>
 				<field name="uom_id" position="replace">
 					<field name="uom_id" on_change="product.onchange_uom(uom_id,uom_po_id)"
-						groups="product.group_uom" string="Smaller UoM" />
-					<field name="list_price" />
+						groups="product.group_uom" string="Unit of Measure" />
+					<field name="list_price" string="Default Price"/>
 					<!-- <field name="big_uom_id" on_change="product.onchange_uom(uom_id,uom_po_id)"
 						groups="product.group_uom" string="Bigger UoM" /> -->
 					<!-- <field name="big_list_price" /> -->
