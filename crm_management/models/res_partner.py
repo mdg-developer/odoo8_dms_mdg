@@ -233,6 +233,7 @@ class res_partner(osv.osv):
             
             res[data.id] = last_visit_date
         return res 
+    
     def _get_last_purchase_amount(self, cr, uid, ids, field_name, arg, context=None):
         res = dict(map(lambda x: (x,0), ids))
         last_order_amount=False
@@ -251,13 +252,12 @@ class res_partner(osv.osv):
         res = dict(map(lambda x: (x,0), ids))
         amount_total=0.0
         for data in self.browse(cr, uid, ids, context=context):
-            cr.execute("select sum(amount_total) from account_invoice where partner_id =%s", (data.id,))
+            cr.execute("select sum(amount_total) from account_invoice where partner_id =%s and state !='cancel'", (data.id,))
             amount_total = cr.fetchone()
             if amount_total:
                 amount_total = amount_total[0]
             else:
                 amount_total = 0.0
-            
             res[data.id] = amount_total
         return res 
 

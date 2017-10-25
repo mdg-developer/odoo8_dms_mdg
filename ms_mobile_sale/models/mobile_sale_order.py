@@ -363,7 +363,7 @@ class mobile_sale_order(osv.osv):
                         uom_record = product_obj.uom_id
                     compare_qty = float_compare(qty, product_uom_qty, precision_rounding=uom_record.rounding)                                       
                     if compare_qty == -1:
-                        raise osv.except_osv(_("Not enough stock ! : ") , _(" Your Product Name '%s' is not enough stock !") % (line.product_id.name_template,))
+                        raise osv.except_osv(_("Not enough stock ! : ") , _(" Your Product Name '%s' is not enough stock !") % (product_obj.name_template,))
             return True
         except Exception, e:
             print e            
