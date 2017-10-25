@@ -11,6 +11,7 @@ from openerp.addons.connector.queue.job import job, related_action
 from openerp.addons.connector.session import ConnectorSession
 from openerp.addons.connector.exception import FailedJobError
 from openerp.addons.connector.jobrunner.runner import ConnectorRunner
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP, float_compare, float_is_zero
 
     
 @job(default_channel='root.direct')
@@ -318,6 +319,55 @@ class mobile_sale_order(osv.osv):
         except Exception, e:
             print 'False'
             return False 
+    # CheckQty For Pre Sale 3G
+    def check_qty_issue_warehouse(self, cursor, user, vals, context=None):
+        product_uom_obj = self.pool.get('product.uom')
+        product_product_obj = self.pool.get('product.product')      
+        location_ids = []        
+        try:
+            str = "{" + vals + "}"    
+            str = str.replace("'',", "',")  # null
+            str = str.replace(":',", ":'',")  # due to order_id
+            str = str.replace("}{", "}|{")
+            str = str.replace(":'}{", ":''}")
+            new_arr = str.split('|')
+            result = []
+            for data in new_arr:            
+                x = ast.literal_eval(data)                
+                result.append(x)
+            order_line = []
+            for r in result:                
+                order_line.append(r)  
+            location_id = user.company_id.issued_location_id.id
+            if location_id is None:
+                    raise osv.except_osv(_("Warning !!!") , _(" Please Choose Issue Location In Warehouse Configuration !"))                                       
+            cursor.execute("select id from stock_location where location_id = %s or id =%s ", (location_id, location_id))
+            all_location = cursor.fetchall()
+            for location_data in all_location:
+                location_ids.append(location_data[0])                         
+            if order_line:
+                for line_id in order_line:                 
+                    #line = sale_order_line_obj.browse(cursor, user, line_id.id, context=context)
+                    uom = line_id['uom_id']
+                    product_id =line_id ['product_id']
+                    product_uom_qty=line_id['product_uom_qty']
+                    cursor.execute("select COALESCE(sum(qty),0) from stock_quant where location_id  in  %s and product_id =%s and reservation_id is null", (tuple(location_ids), product_id,))      
+                    qty = cursor.fetchone()[0]   
+                    if uom:
+                        uom_record = product_uom_obj.browse(cursor, user, uom, context=context)
+                        #print ' product_Id ', line.product_id.id
+                        product_obj = product_product_obj.browse(cursor, user, product_id, context=context)
+                        if product_obj.uom_id.category_id.id != uom_record.category_id.id:
+                            uom_record = False
+                    if not uom_record:
+                        uom_record = product_obj.uom_id
+                    compare_qty = float_compare(qty, product_uom_qty, precision_rounding=uom_record.rounding)                                       
+                    if compare_qty == -1:
+                        raise osv.except_osv(_("Not enough stock ! : ") , _(" Your Product Name '%s' is not enough stock !") % (line.product_id.name_template,))
+            return True
+        except Exception, e:
+            print e            
+            return False
     
     def create_visit(self, cursor, user, vals, context=None):
         
