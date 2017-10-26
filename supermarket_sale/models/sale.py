@@ -31,7 +31,6 @@ class sale_order(osv.osv):
                 all_location = cr.fetchall()
                 for location_data in all_location:
                     location_ids.append(location_data[0])                          
-                print 'location_ids', location_ids
                 for line_id  in data.order_line:
                     line = sale_order_line_obj.browse(cr, uid, line_id.id, context=context)
                     uom = line.product_uom.id

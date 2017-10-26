@@ -70,6 +70,7 @@ class account_invoice(models.Model):
             credit = round(line['credit'], 1)
             price = debit + (credit * -1),
 #             price = debit+ credit,
+            print ' lineeeeeeeeeeeee',line
             
             return {
                 'date_maturity': line.get('date_maturity', False),
@@ -596,7 +597,7 @@ class account_invoice(models.Model):
                     debit = res['debit']                                             
                 date_maturity = res['date_maturity']
                 partner_id = res['partner_id']
-
+                name = res['name']
                 date = res['date']
                 account_id = res['main_group']  # replace with product principle AR account
                 analytic_lines = res['analytic_lines']

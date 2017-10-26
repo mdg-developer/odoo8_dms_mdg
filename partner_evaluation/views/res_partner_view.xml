@@ -1,82 +1,122 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
 	<data>
-		  <record id="partner_evalution_view_partner_form_inherit" model="ir.ui.view">
-            <field name="name">res.partner.form</field>
-            <field name="model">res.partner</field>
-           <!--  <field eval="1" name="priority"/> -->
-            <field name="inherit_id" ref="base.view_partner_form"/>
-            <field name="arch" type="xml">
-            <xpath expr="//field[@name='website']" position="after">            
-				<field name="is_distributor" attrs="{'invisible':[('customer','=',False)]}"   sequence="1"/>
-				<field name="deli" attrs="{'invisible':[('customer','=',False)]}"   sequence="1"/>
-				<field name="bw" attrs="{'invisible':[('customer','=',False)]}"   sequence="1"/>
-				<field name="distributor_target_amount" attrs="{'invisible':[('customer','=',False)]}"  sequence="2"/>	
-				<field name="position" attrs="{'invisible':[('supplier','==',False)]}"/>	
-				<field name="service_offered" attrs="{'invisible':[('supplier','==',False)]}"/>
-				<field name="major_customers" attrs="{'invisible':[('supplier','==',False)]}"/>
-				<field name="approved_evalution" attrs="{'invisible':[('supplier','==',False)]}"/>
-			</xpath>
-			<!-- <field name="fax" position="replace">
-				<field name="fax"  sequence="1"/>
-			</field> -->
-            <xpath expr="//group/group[2]" position="after">            	
-            	<group>            	
-            	 <text attrs="{'invisible':[('supplier','==',False)]}">Has your company's quality system been independently certified?(eg/ISO-9001)<br/>
-            		If yes,please attach a copy of the certificate</text>           	
-					<div>					
-						<field name="iso" widget="radio" attrs="{'invisible':[('supplier','==',False)]}"></field>
-					</div>
-					<group>							
-						<field name="import_file_iso" filename="import_fname_iso"  attrs="{'invisible':[('iso','not in',('yes'))]}"/>
-						<field name="import_fname_iso" invisible="1" class="oe_inline oe_right"  attrs="{'invisible':[('supplier','==',False)]}"/>							
+		<record id="partner_evalution_view_partner_form_inherit" model="ir.ui.view">
+			<field name="name">res.partner.form</field>
+			<field name="model">res.partner</field>
+			<!-- <field eval="1" name="priority"/> -->
+			<field name="inherit_id" ref="base.view_partner_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='website']" position="after">
+					<field name="is_distributor" attrs="{'invisible':[('customer','=',False)]}"
+						sequence="1" />
+					<field name="dean_customer" attrs="{'invisible':[('customer','=',False)]}"
+						sequence="1" />
+					<field name="bw_customer" attrs="{'invisible':[('customer','=',False)]}"
+						sequence="1" />
+					<field name="res_total_amount" attrs="{'invisible':[('customer','=',False)]}"
+						sequence="1" />
+
+					<field name="distributor_target_amount" attrs="{'invisible':[('customer','=',False)]}"
+						sequence="2" />
+					<field name="position" attrs="{'invisible':[('supplier','==',False)]}" />
+					<field name="service_offered" attrs="{'invisible':[('supplier','==',False)]}" />
+					<field name="major_customers" attrs="{'invisible':[('supplier','==',False)]}" />
+					<field name="approved_evalution" attrs="{'invisible':[('supplier','==',False)]}" />
+				</xpath>
+				<!-- <field name="fax" position="replace"> <field name="fax" sequence="1"/> 
+					</field> -->
+				<xpath expr="//group/group[2]" position="after">
+					<group>
+						<text attrs="{'invisible':[('supplier','==',False)]}">
+							Has your company's quality system been independently
+							certified?(eg/ISO-9001)
+							<br />
+							If yes,please attach a copy of the certificate
+						</text>
+						<div>
+							<field name="iso" widget="radio"
+								attrs="{'invisible':[('supplier','==',False)]}"></field>
+						</div>
+						<group>
+							<field name="import_file_iso" filename="import_fname_iso"
+								attrs="{'invisible':[('iso','not in',('yes'))]}" />
+							<field name="import_fname_iso" invisible="1"
+								class="oe_inline oe_right" attrs="{'invisible':[('supplier','==',False)]}" />
+						</group>
 					</group>
-				</group>  
-				<group>            	
-            	 <text attrs="{'invisible':[('supplier','==',False)]}">Has your company's product being tested/certified by independent organization?(ie,any product certification)</text>           	
-					<div>					
-						<field name="certify_product" widget="radio" attrs="{'invisible':[('supplier','==',False)]}"></field>
-					</div>
-					<group>							
-						<field name="import_file_certify_product" filename="import_fname_certify_product"  attrs="{'invisible':[('certify_product','not in',('yes'))]}"/>
-						<field name="import_fname_certify_product" invisible="1" class="oe_inline oe_right" attrs="{'invisible':[('supplier','==',False)]}" />							
+					<group>
+						<text attrs="{'invisible':[('supplier','==',False)]}">Has your company's product being tested/certified
+							by independent organization?(ie,any product certification)</text>
+						<div>
+							<field name="certify_product" widget="radio"
+								attrs="{'invisible':[('supplier','==',False)]}"></field>
+						</div>
+						<group>
+							<field name="import_file_certify_product" filename="import_fname_certify_product"
+								attrs="{'invisible':[('certify_product','not in',('yes'))]}" />
+							<field name="import_fname_certify_product" invisible="1"
+								class="oe_inline oe_right" attrs="{'invisible':[('supplier','==',False)]}" />
+						</group>
 					</group>
-				</group> 
-				<group> 
-            	 	<field name="legal_status" attrs="{'invisible':[('supplier','==',False)]}"/>
-            	 	<field name="iso_certificate" attrs="{'invisible':[('supplier','==',False)]}"/>
-            	 	<field name="product_certificate" attrs="{'invisible':[('supplier','==',False)]}"/>
-            	 	<field name="product_sample" attrs="{'invisible':[('supplier','==',False)]}"/>
-            	
-				</group>
-			  </xpath>
-			  <page name="sales_purchases" position="after">
-                <page string="Evalution"  name="evalution" attrs="{'invisible':[('supplier','==',False)]}">
-                    <group>
-                       <field name="reliable" widget='monetary'  on_change="onchange_calculate_total_marks(reliable,price,delivery,flexibility,communication,after_services)"/>
-                       <field name="price" widget='monetary' options="{'currency_field': 'currency_id'}" on_change="onchange_calculate_total_marks(reliable,price,delivery,flexibility,communication,after_services)"/>
-                       <field name="delivery" widget='monetary' options="{'currency_field': 'currency_id'}" on_change="onchange_calculate_total_marks(reliable,price,delivery,flexibility,communication,after_services)"/>
-                       <field name="flexibility" widget='monetary' options="{'currency_field': 'currency_id'}"  on_change="onchange_calculate_total_marks(reliable,price,delivery,flexibility,communication,after_services)"/>
-                       <field name="communication" widget='monetary' options="{'currency_field': 'currency_id'}"  on_change="onchange_calculate_total_marks(reliable,price,delivery,flexibility,communication,after_services)"/>
-                       <field name="after_services" widget='monetary' options="{'currency_field': 'currency_id'}"   on_change="onchange_calculate_total_marks(reliable,price,delivery,flexibility,communication,after_services)"/>
-                       <field name="total_marks" widget='monetary' options="{'currency_field': 'currency_id'}" on_change="onchange_calculate_total_marks(reliable,price,delivery,flexibility,communication,after_services)"/>
-                        <field name="remark" class="oe_no_button" placeholder="Remark" style="width:15%" />
-                    </group> 
-                    <group>
-                     <div> 
-	                 <text>Rating;(3)Excellent;the supplier is available in required criteria<br/>
-	                 	   &#160; &#160;  &#160;&#160;&#160;&#160;&#160;(2)Good;the supplier is suitable in required criteria<br/>
-	                 	   &#160; &#160;  &#160;&#160;&#160;&#160;&#160;(1)Poor;the supplier need to meet in required criteria<br/>
-	                 	   Score;(12)Marks Accepted/under(12) Unaccepted
-	                 </text>
-	                 </div>
-	                 </group>
-	               	 <!-- <div style="float:right;"><text>Score;(12)Marks Accepted/under(12) Unaccepted</text></div> -->                        
-                </page>
-                </page>                
-            </field>
-          </record>  
-              
+					<group>
+						<field name="legal_status" attrs="{'invisible':[('supplier','==',False)]}" />
+						<field name="iso_certificate" attrs="{'invisible':[('supplier','==',False)]}" />
+						<field name="product_certificate" attrs="{'invisible':[('supplier','==',False)]}" />
+						<field name="product_sample" attrs="{'invisible':[('supplier','==',False)]}" />
+
+					</group>
+				</xpath>
+				<page name="sales_purchases" position="after">
+					<page string="Evalution" name="evalution"
+						attrs="{'invisible':[('supplier','==',False)]}">
+						<group>
+							<field name="reliable" widget='monetary'
+								on_change="onchange_calculate_total_marks(reliable,price,delivery,flexibility,communication,after_services)" />
+							<field name="price" widget='monetary'
+								options="{'currency_field': 'currency_id'}"
+								on_change="onchange_calculate_total_marks(reliable,price,delivery,flexibility,communication,after_services)" />
+							<field name="delivery" widget='monetary'
+								options="{'currency_field': 'currency_id'}"
+								on_change="onchange_calculate_total_marks(reliable,price,delivery,flexibility,communication,after_services)" />
+							<field name="flexibility" widget='monetary'
+								options="{'currency_field': 'currency_id'}"
+								on_change="onchange_calculate_total_marks(reliable,price,delivery,flexibility,communication,after_services)" />
+							<field name="communication" widget='monetary'
+								options="{'currency_field': 'currency_id'}"
+								on_change="onchange_calculate_total_marks(reliable,price,delivery,flexibility,communication,after_services)" />
+							<field name="after_services" widget='monetary'
+								options="{'currency_field': 'currency_id'}"
+								on_change="onchange_calculate_total_marks(reliable,price,delivery,flexibility,communication,after_services)" />
+							<field name="total_marks" widget='monetary'
+								options="{'currency_field': 'currency_id'}"
+								on_change="onchange_calculate_total_marks(reliable,price,delivery,flexibility,communication,after_services)" />
+							<field name="remark" class="oe_no_button" placeholder="Remark"
+								style="width:15%" />
+						</group>
+						<group>
+							<div>
+								<text>
+									Rating;(3)Excellent;the supplier is available in required
+									criteria
+									<br />
+									&#160; &#160; &#160;&#160;&#160;&#160;&#160;(2)Good;the
+									supplier is suitable in required criteria
+									<br />
+									&#160; &#160; &#160;&#160;&#160;&#160;&#160;(1)Poor;the
+									supplier need to meet in required criteria
+									<br />
+									Score;(12)Marks Accepted/under(12) Unaccepted
+								</text>
+							</div>
+						</group>
+						<!-- <div style="float:right;"><text>Score;(12)Marks Accepted/under(12) 
+							Unaccepted</text></div> -->
+					</page>
+				</page>
+			</field>
+		</record>
+
 	</data>
 </openerp>
 		

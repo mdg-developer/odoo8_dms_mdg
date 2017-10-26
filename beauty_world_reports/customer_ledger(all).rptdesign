@@ -501,7 +501,7 @@ and customer='true'
 if (params["sales_team_id"].value != null ){     &#13;
    sales_team=params["sales_team_id"].displayText+'-';&#13;
 }&#13;
-sales_team+'Customer Ledger('+Formatter.format(params["from_date"],'dd.MM.yy')+'-'+Formatter.format(params["from_date"],'dd.MM.yy')+')'</expression>
+sales_team+'Customer Ledger('+Formatter.format(params["from_date"],'dd.MM.yy')+'-'+Formatter.format(params["to_date"],'dd.MM.yy')+')'</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -679,12 +679,21 @@ dataSetRow["discount"]&#13;
                     </list-property>
                     <property name="allowExport">true</property>
                 </structure>
+                <structure>
+                    <property name="name">credit_limit</property>
+                    <text-property name="displayName">credit_limit</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["credit_limit"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
             </list-property>
             <column id="52">
                 <property name="width">0.5in</property>
             </column>
             <column id="53">
                 <property name="width">1.5in</property>
+            </column>
+            <column id="104">
+                <property name="width">1in</property>
             </column>
             <column id="54">
                 <property name="width">1.5in</property>
@@ -728,6 +737,21 @@ dataSetRow["discount"]&#13;
                             <property name="fontFamily">sans-serif</property>
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Customer Name</text-property>
+                        </label>
+                    </cell>
+                    <cell id="101">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="106">
+                            <property name="fontFamily">sans-serif</property>
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">Limit</text-property>
                         </label>
                     </cell>
                     <cell id="19">
@@ -899,6 +923,26 @@ dataSetRow["discount"]&#13;
                             <property name="resultSetColumn">name</property>
                         </data>
                     </cell>
+                    <cell id="102">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="107">
+                            <property name="fontFamily">sans-serif</property>
+                            <property name="paddingRight">3pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">credit_limit</property>
+                        </data>
+                    </cell>
                     <cell id="31">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1054,7 +1098,7 @@ dataSetRow["discount"]&#13;
             <footer>
                 <row id="40">
                     <cell id="41">
-                        <property name="colSpan">2</property>
+                        <property name="colSpan">3</property>
                         <property name="rowSpan">1</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
