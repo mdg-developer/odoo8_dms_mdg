@@ -60,7 +60,7 @@
 				</field>
 			</field>
 		</record>
-		<record id="product_pricelist_item_form_view" model="ir.ui.view">
+		<!-- <record id="product_pricelist_item_form_view" model="ir.ui.view">
 			<field name="name">product.pricelist.item.form</field>
 			<field name="model">product.pricelist.item</field>
 			<field name="inherit_id" ref="product.product_pricelist_item_form_view" />
@@ -101,9 +101,9 @@
 					<field name="list_price" />
 				</field>
 			</field>
-		</record>
+		</record> -->
 
-		<record id="mdg_product_pricelist_item_tree_view" model="ir.ui.view">
+		<!-- <record id="mdg_product_pricelist_item_tree_view" model="ir.ui.view">
 			<field name="name">product.pricelist.item.tree</field>
 			<field name="model">product.pricelist.item</field>
 			<field name="inherit_id" ref="product.product_pricelist_item_tree_view" />
@@ -134,7 +134,7 @@
 
 
 			</field>
-		</record>
+		</record> -->
 		<menuitem action="product.product_pricelist_action2" id="product.menu_product_pricelist_action2"
 			parent="product.menu_product_pricelist_main" name="Main Pricelists"
 			sequence="1" groups="product.group_sale_pricelist" />
@@ -148,10 +148,10 @@
 				<field name="company_id" position="after">
 					<field name="branch_id" widget="many2many_tags" />
 
-					<button name="retrieve_data" string="Retrieve" type="object"
-						class="oe_highlight" icon="terp-stock_effects-object-colorize" />
+					<!-- <button name="retrieve_data" string="Retrieve" type="object"
+						class="oe_highlight" icon="terp-stock_effects-object-colorize" /> -->
 				</field>
-				<xpath expr="//page/field[@name='items_id']" position="replace">
+				<!-- <xpath expr="//page/field[@name='items_id']" position="replace">
 					<field name="items_id">
 						<tree string="Item List" editable="bottom" default_order="name desc">
 							<field name="product_id" on_change="product_id_change(product_id)" />
@@ -169,7 +169,7 @@
 							<field name="new_price" />
 						</tree>
 					</field>
-				</xpath>
+				</xpath> -->
 			</field>
 		</record>
 		<record id="action_product_pricelist_item" model="ir.actions.act_window">
