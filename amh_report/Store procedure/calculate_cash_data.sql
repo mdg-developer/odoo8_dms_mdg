@@ -1,8 +1,8 @@
-﻿-- Function: calculate_cash_data(integer, integer, integer, date)
+﻿-- Function: calculate_cash_data(integer, integer, integer, date, integer, boolean)
 
--- DROP FUNCTION calculate_cash_data(integer, integer, integer, date);
+-- DROP FUNCTION calculate_cash_data(integer, integer, integer, date, integer, boolean);
 
-CREATE OR REPLACE FUNCTION calculate_cash_data(IN customer_id integer, IN section_ids integer, IN user_ids integer, IN from_date date)
+CREATE OR REPLACE FUNCTION calculate_cash_data(IN customer_id integer, IN section_ids integer, IN user_ids integer, IN from_date date, IN pricelist integer, IN presale boolean)
   RETURNS TABLE(open_amt numeric, deduct_amt double precision, paidamount numeric, amount_total numeric, sale_amt numeric) AS
 $BODY$
 DECLARE
@@ -23,9 +23,10 @@ BEGIN
 	and ai.origin=so.name
 	and ai.partner_id=so.partner_id
 	and av.id = avl.voucher_id
-	--and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = from_date
 	and so.section_id = section_ids
 	and so.user_id  = user_ids
+	and so.pricelist_id=pricelist
+	and so.pre_order=presale
 	and ai.payment_type='cash'
 	and av.date::date = from_date
 	and so.partner_id=customer_id
@@ -38,6 +39,8 @@ BEGIN
 	and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = from_date 
 	and so.section_id = section_ids
 	and so.user_id  = user_ids
+	and so.pricelist_id=pricelist
+	and so.pre_order=presale
 	and so.payment_type='cash'
 	and rp.id=customer_id
 	group by rp.name,rp.id),
@@ -49,6 +52,8 @@ BEGIN
 	and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = from_date
 	and so.section_id =section_ids
 	and so.user_id  = user_ids
+	and so.pricelist_id=pricelist
+	and so.pre_order=presale
 	and so.payment_type='cash'
 	and rp.id=customer_id		
 	group by rp.name,rp.id),
@@ -69,7 +74,9 @@ BEGIN
 	where  rp.id=so.partner_id	
 	and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = from_date
 	and so.section_id = section_ids
-	and so.user_id  = user_ids	
+	and so.user_id  = user_ids
+	and so.pricelist_id=pricelist	
+	and so.pre_order=presale
 	and so.payment_type='cash'
 	and so.partner_id=customer_id		
 	group by rp.name,rp.id)  netsale_tbl
@@ -83,5 +90,5 @@ $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100
   ROWS 1000;
-ALTER FUNCTION calculate_cash_data(integer, integer, integer, date)
+ALTER FUNCTION calculate_cash_data(integer, integer, integer, date, integer, boolean)
   OWNER TO odoo;

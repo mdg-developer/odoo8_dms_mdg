@@ -2098,12 +2098,6 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <text-property name="heading">uom_name</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">product_uom</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">product_uom</text-property>
-                    <text-property name="heading">product_uom</text-property>
-                </structure>
-                <structure>
                     <property name="columnName">uom_ratio</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">uom_ratio</text-property>
@@ -2574,6 +2568,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">37</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -2584,6 +2579,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">38</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -2594,6 +2590,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">39</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -2604,6 +2601,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">40</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -2614,6 +2612,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">41</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -2624,6 +2623,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">42</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -2634,6 +2634,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">43</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -2644,6 +2645,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">44</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -2654,6 +2656,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">45</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -2664,6 +2667,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">46</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -2674,6 +2678,7 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">47</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -2757,61 +2762,56 @@ where crm.active='t'  order by crm.name]]></xml-property>
                     </structure>
                     <structure>
                         <property name="position">16</property>
-                        <property name="name">product_uom</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">17</property>
                         <property name="name">uom_ratio</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">18</property>
+                        <property name="position">17</property>
                         <property name="name">customer_code</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">19</property>
+                        <property name="position">18</property>
                         <property name="name">customer_name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">20</property>
+                        <property name="position">19</property>
                         <property name="name">viss_amt</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">21</property>
+                        <property name="position">20</property>
                         <property name="name">liter_amt</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">22</property>
+                        <property name="position">21</property>
                         <property name="name">customer_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">23</property>
+                        <property name="position">22</property>
                         <property name="name">productid</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">24</property>
+                        <property name="position">23</property>
                         <property name="name">packingviss</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">25</property>
+                        <property name="position">24</property>
                         <property name="name">packingliter</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">26</property>
+                        <property name="position">25</property>
                         <property name="name">balance</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">27</property>
+                        <property name="position">26</property>
                         <property name="name">balancetot</property>
                         <property name="dataType">float</property>
                     </structure>
@@ -2934,83 +2934,76 @@ this.queryText =this.queryText.replace("--$pricelist$", "and so.pricelist_id="+p
                 </structure>
                 <structure>
                     <property name="position">16</property>
-                    <property name="name">product_uom</property>
-                    <property name="nativeName">product_uom</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">17</property>
                     <property name="name">uom_ratio</property>
                     <property name="nativeName">uom_ratio</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">18</property>
+                    <property name="position">17</property>
                     <property name="name">customer_code</property>
                     <property name="nativeName">customer_code</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">19</property>
+                    <property name="position">18</property>
                     <property name="name">customer_name</property>
                     <property name="nativeName">customer_name</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">20</property>
+                    <property name="position">19</property>
                     <property name="name">viss_amt</property>
                     <property name="nativeName">viss_amt</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">21</property>
+                    <property name="position">20</property>
                     <property name="name">liter_amt</property>
                     <property name="nativeName">liter_amt</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">22</property>
+                    <property name="position">21</property>
                     <property name="name">customer_id</property>
                     <property name="nativeName">customer_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">23</property>
+                    <property name="position">22</property>
                     <property name="name">productid</property>
                     <property name="nativeName">productid</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">24</property>
+                    <property name="position">23</property>
                     <property name="name">packingviss</property>
                     <property name="nativeName">packingviss</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">25</property>
+                    <property name="position">24</property>
                     <property name="name">packingliter</property>
                     <property name="nativeName">packingliter</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">26</property>
+                    <property name="position">25</property>
                     <property name="name">balance</property>
                     <property name="nativeName">balance</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">27</property>
+                    <property name="position">26</property>
                     <property name="name">balancetot</property>
                     <property name="nativeName">balancetot</property>
                     <property name="dataType">float</property>
@@ -3022,7 +3015,7 @@ this.queryText =this.queryText.replace("--$pricelist$", "and so.pricelist_id="+p
  from 
 (select A.description,A.sale_qty,A.unit_price,A.sale_amt,B.TOTAL sale_return_amt,(A.sale_amt -  (CASE WHEN B.TOTAL is null THEN 0 ELSE B.TOTAL END)) as net_sale_amt,A.deduct_amt,
  A.paidamount,A.paidamount_tot,A.deduct_amt_tot,A.amount_total,A.amount_total_tot,A.open_amt,A.open_amt_tot,
-A.uom_name,A.product_uom,A.uom_ratio,A.customer_code,A.customer_name,A.viss_amt,A.liter_amt,A.customer_id,A.productid,
+A.uom_name,A.uom_ratio,A.customer_code,A.customer_name,A.viss_amt,A.liter_amt,A.customer_id,A.productid,
 
 CASE A.packing_unit WHEN 'Viss' 
 THEN ( A.viss * (select CAST(A.sale_qty as Float))) 
@@ -3032,36 +3025,30 @@ THEN ( A.weight_liter * (select CAST(A.sale_qty as Float)))
 ELSE Null END as packingliter
 
 from 
-(select pp.id productid,pp.name_template as description,sum(distinct sol.product_uom_qty) as sale_qty,
-sol.price_unit unit_price, (sol.product_uom_qty * sol.price_unit) sale_amt,
-(select deduct_amt from calculate_cash_data(rp.id,?,?,?)),
-(select open_amt from calculate_cash_data(rp.id,?,?,?)),
-(select paidamount from calculate_cash_data(rp.id,?,?,?)),
-(select amount_total from calculate_cash_data(rp.id,?,?,?)),
-(select deduct_amt as deduct_amt_tot from calculate_cash_datasum(?,?,?)),
-(select open_amt as open_amt_tot from calculate_cash_datasum(?,?,?)),
-(select paidamount as paidamount_tot from calculate_cash_datasum(?,?,?)),
-(select amount_total as amount_total_tot from calculate_cash_datasum(?,?,?)),
+(select pp.id productid,pp.name_template as description,sum(sol.product_uom_qty) as sale_qty,
+sol.price_unit unit_price, sum(sol.product_uom_qty * sol.price_unit) sale_amt,
+(select deduct_amt from calculate_cash_data(rp.id,?,?,?,so.pricelist_id,so.pre_order)),
+(select open_amt from calculate_cash_data(rp.id,?,?,?,so.pricelist_id,so.pre_order)),
+(select paidamount from calculate_cash_data(rp.id,?,?,?,so.pricelist_id,so.pre_order)),
+(select amount_total from calculate_cash_data(rp.id,?,?,?,so.pricelist_id,so.pre_order)),
+(select deduct_amt as deduct_amt_tot from calculate_cash_datasum(?,?,?,so.pricelist_id,so.pre_order)),
+(select open_amt as open_amt_tot from calculate_cash_datasum(?,?,?,so.pricelist_id,so.pre_order)),
+(select paidamount as paidamount_tot from calculate_cash_datasum(?,?,?,so.pricelist_id,so.pre_order)),
+(select amount_total as amount_total_tot from calculate_cash_datasum(?,?,?,so.pricelist_id,so.pre_order)),
 uom.name as uom_name,sol.product_uom,uom.uom_ratio as uom_ratio,rp.name as customer_name,rp.customer_code as customer_code,rp.id as customer_id,
 sum(sol.product_uom_qty * pt.weight_net) viss_amt,sum(sol.product_uom_qty * pt.weight_liter) as liter_amt,
-pt.weight_net as viss,pt.weight_liter,pt.packing_unit
+pt.packing_unit,so.pricelist_id,so.pre_order,pt.weight_net as viss,pt.weight_liter
 
 from sale_order so, sale_order_line sol ,product_product pp,
-product_uom uom,product_template pt,res_partner rp, account_invoice ai,account_move_line aml ,
-account_voucher_line avl,account_voucher  av, product_category pc
+product_uom uom,product_template pt,res_partner rp, product_category pc
 
 where so.id=sol.order_id
 and sol.product_id = pp.id
 and pt.id=pp.product_tmpl_id
 and uom.id=pt.uom_id
-and pc.id=pt.categ_id
-and ai.move_id=aml.move_id 
-and aml.id=avl.move_line_id 	
+and pc.id=pt.categ_id	
 and rp.id=so.partner_id
-and ai.origin=so.name
-and ai.partner_id=so.partner_id
-and av.id = avl.voucher_id
-and av.date::date = ?
+and so.date_order::date = ?
 and so.section_id =?
 and so.user_id  = ?
 and so.payment_type='cash'
@@ -3078,8 +3065,9 @@ When ? = TRUE and ? = FALSE then pc.is_oldproduct in (FALSE)
 When ? = FALSE and ? = TRUE then pc.is_oldproduct in (TRUE) end 
 --and ai.residual=0.00
 --$pricelist$
-group by sol.product_uom_qty,sol.price_unit,so.deduct_amt,pp.name_template,sol.price_unit,pp.id,uom.name,sol.product_uom,uom.uom_ratio,rp.name,rp.customer_code,pt.weight_net,pt.weight_liter,rp.id,pt.packing_unit
-order by pp.sequence
+group by pt.weight_net ,pt.weight_liter,so.pricelist_id,so.pre_order,pp.name_template,sol.price_unit,pp.id,uom.name,
+sol.product_uom,uom.uom_ratio,rp.name,rp.customer_code,rp.id,pt.packing_unit
+order by pp.id
 )A left join 
 (
 select ptl.product_id pt_pro_id,ptl.total from 
@@ -3093,7 +3081,7 @@ and pt.team_id = ?
 and pt.branch_id=?
 )B on A.productid = B.pt_pro_id
 Group by 
-A.description,A.customer_id,a.sale_qty,a.unit_price,a.sale_amt,b.total,a.uom_name,A.product_uom,A.uom_ratio,a.customer_code,a.customer_name,
+A.description,A.customer_id,a.sale_qty,a.unit_price,a.sale_amt,b.total,a.uom_name,A.uom_ratio,a.customer_code,a.customer_name,
 A.viss_amt,A.liter_amt,A.packing_unit,a.viss,a.weight_liter,a.productid,A.amount_total,a.deduct_amt,a.paidamount,a.paidamount_tot,a.deduct_amt_tot,a.amount_total_tot,
 A.open_amt,A.open_amt_tot)C]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
@@ -5224,17 +5212,17 @@ from
 (
 select pp.id productid,pp.name_template as description,(sol.product_uom_qty) as sale_qty,
 sol.price_unit unit_price, (sol.product_uom_qty * sol.price_unit) sale_amt,
-(select deduct_amt as deduct_amt_tot from calculate_credit_datasum(?,?,?)),
-(select amount_total as amount_total_tot from calculate_credit_datasum(?,?,?)),
-(select open_amt as open_amt_tot from calculate_credit_datasum(?,?,?)),
-(select paidamount as paidamount_tot from calculate_credit_datasum(?,?,?)),
-(select deduction_amt from calculate_credit_data(rp.id,?,?,?)),
-(select open_amt from calculate_credit_data(rp.id,?,?,?)),
-(select paidamount from calculate_credit_data(rp.id,?,?,?)),
-(select amount_total from calculate_credit_data(rp.id,?,?,?)),
+(select deduct_amt as deduct_amt_tot from calculate_credit_datasum(?,?,?,so.pricelist_id,so.pre_order)),
+(select amount_total as amount_total_tot from calculate_credit_datasum(?,?,?,so.pricelist_id,so.pre_order)),
+(select open_amt as open_amt_tot from calculate_credit_datasum(?,?,?,so.pricelist_id,so.pre_order)),
+(select paidamount as paidamount_tot from calculate_credit_datasum(?,?,?,so.pricelist_id,so.pre_order)),
+(select deduction_amt from calculate_credit_data(rp.id,?,?,?,so.pricelist_id,so.pre_order)),
+(select open_amt from calculate_credit_data(rp.id,?,?,?,so.pricelist_id,so.pre_order)),
+(select paidamount from calculate_credit_data(rp.id,?,?,?,so.pricelist_id,so.pre_order)),
+(select amount_total from calculate_credit_data(rp.id,?,?,?,so.pricelist_id,so.pre_order)),
 uom.name as uom_name,sol.product_uom,uom.uom_ratio as uom_ratio,rp.name as customer_name,rp.customer_code as customer_code,rp.id as customer_id,
 sum(sol.product_uom_qty * pt.weight_net) viss_amt,sum(sol.product_uom_qty * pt.weight_liter) as liter_amt,
-pt.weight_net as viss,pt.weight_liter,pt.packing_unit
+pt.weight_net as viss,pt.weight_liter,pt.packing_unit,so.pricelist_id,so.pre_order
 from sale_order so, sale_order_line sol ,product_product pp,product_uom uom,
 product_template pt,res_partner rp, product_category pc
 
@@ -5260,7 +5248,7 @@ When ? = FALSE and ? = FALSE then pc.is_oldproduct in (TRUE,FALSE)
 When ? = TRUE and ? = FALSE then pc.is_oldproduct in (FALSE) 
 When ? = FALSE and ? = TRUE then pc.is_oldproduct in (TRUE) end 
 --$pricelist$
-group by sol.product_uom_qty,sol.price_unit,so.deduct_amt,pp.name_template,sol.price_unit,
+group by so.pricelist_id,so.pre_order,sol.product_uom_qty,sol.price_unit,so.deduct_amt,pp.name_template,sol.price_unit,
 pp.id,uom.name,sol.product_uom,uom.uom_ratio,rp.name,rp.customer_code,pt.weight_net,
 pt.weight_liter,rp.id,pt.packing_unit
 order by pp.sequence

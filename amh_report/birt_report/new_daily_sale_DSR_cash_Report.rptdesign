@@ -7157,7 +7157,7 @@ left join (select distinct product_id,sum(product_uom_qty) as sale_qty,
 on amh.product_id=pp.id
 ),
 
-deduct_amt as (select distinct 0,(select deduct_amt from calculate_cash_data(rp.id,so.section_id,so.user_id, ?)),
+deduct_amt as (select distinct 0,(select deduct_amt from calculate_cash_data(rp.id,so.section_id,so.user_id, ?,so.pricelist_id,so.pre_order)),
 	rp.name as customer_name,rp.id as customer_id,rp.customer_code,
 	'ေလွ်ာ့ေငြ'::character varying as group,''::character varying as maingroup,''::character varying as uom_ratio,90003::int as seq,''::text as status,
 	so.pre_order,so.user_id,so.branch_id,so.section_id,so.pricelist_id,pc.is_oldproduct,0 tot_qty
@@ -7179,7 +7179,7 @@ deduct_amt as (select distinct 0,(select deduct_amt from calculate_cash_data(rp.
 	and so.payment_type='cash' 
 	order by seq),
 
-sale_amt as (select distinct 0,(select sale_amt from calculate_cash_data(rp.id,so.section_id,so.user_id, ?)),
+sale_amt as (select distinct 0,(select sale_amt from calculate_cash_data(rp.id,so.section_id,so.user_id, ?,so.pricelist_id,so.pre_order)),
 	rp.name as customer_name,rp.id as customer_id,rp.customer_code,
 	'သင့္ေငြ'::character varying as group,''::character varying as maingroup,''::character varying as uom_ratio,90001::int as seq,''::text as status,
 	so.pre_order,so.user_id,so.branch_id,so.section_id,so.pricelist_id,pc.is_oldproduct,0 tot_qty
@@ -7201,7 +7201,7 @@ sale_amt as (select distinct 0,(select sale_amt from calculate_cash_data(rp.id,s
 	and so.payment_type='cash' 
 	order by seq),
 	
-open_amt as (select distinct 0,(select open_amt from calculate_cash_data(rp.id,so.section_id,so.user_id, ?)),
+open_amt as (select distinct 0,(select open_amt from calculate_cash_data(rp.id,so.section_id,so.user_id, ?,so.pricelist_id,so.pre_order)),
 	rp.name as customer_name,rp.id as customer_id,rp.customer_code,
 	'ယခင္ရရန္'::character varying as group,''::character varying as maingroup,''::character varying as uom_ratio,90002::int as seq,''::text as status,
 	so.pre_order,so.user_id,so.branch_id,so.section_id,so.pricelist_id,pc.is_oldproduct,0 tot_qty
@@ -7229,10 +7229,10 @@ Balance as (select distinct 0,
 	'လက္က်န္ေငြ'::character varying as group,''::character varying as maingroup,''::character varying as uom_ratio, 90005::int as seq,''::text as status,
 	one.pre_order,one.user_id,one.branch_id,one.section_id,one.pricelist_id,one.is_oldproduct,0 tot_qty
 	from  (select product_id,
-	(select deduct_amt from calculate_cash_data(rp.id,so.section_id,so.user_id, ?)),
-	(select sale_amt from calculate_cash_data(rp.id,so.section_id,so.user_id, ?)),
-	(select paidamount from calculate_cash_data(rp.id,so.section_id,so.user_id, ?)),
-	(select open_amt from calculate_cash_data(rp.id,so.section_id,so.user_id, ?)),
+	(select deduct_amt from calculate_cash_data(rp.id,so.section_id,so.user_id, ?,so.pricelist_id,so.pre_order)),
+	(select sale_amt from calculate_cash_data(rp.id,so.section_id,so.user_id, ?,so.pricelist_id,so.pre_order)),
+	(select paidamount from calculate_cash_data(rp.id,so.section_id,so.user_id, ?,so.pricelist_id,so.pre_order)),
+	(select open_amt from calculate_cash_data(rp.id,so.section_id,so.user_id, ?,so.pricelist_id,so.pre_order)),
 	so.pre_order,so.user_id,so.branch_id,so.section_id,so.pricelist_id,pc.is_oldproduct,
 	rp.name as customer_name,rp.id as customer_id,rp.customer_code,pg.name as group,pmg.name as maingroup,pt.uom_ratio,pp.sequence
 	from sale_order so,sale_order_line sol,res_partner rp, product_product pp, product_template pt, product_maingroup pmg,product_group pg,product_category pc
@@ -7252,7 +7252,7 @@ Balance as (select distinct 0,
 	and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ? and  rp.active='t' 
 	and so.payment_type='cash')one order by seq),
 
-paidamount as (select distinct 0,(select paidamount from calculate_cash_data(rp.id,so.section_id,so.user_id,?)),
+paidamount as (select distinct 0,(select paidamount from calculate_cash_data(rp.id,so.section_id,so.user_id,?,so.pricelist_id,so.pre_order)),
 	rp.name as customer_name,rp.id as customer_id,rp.customer_code,
 	'ေငြသားေပး'::character varying as group,''::character varying as maingroup,''::character varying as uom_ratio, 90004::int as seq,''::text as status,
 	so.pre_order,so.user_id,so.branch_id,so.section_id,so.pricelist_id,pc.is_oldproduct,0 tot_qty
@@ -10265,6 +10265,10 @@ order by seq
                                     <property name="fontWeight">normal</property>
                                     <property name="paddingLeft">1pt</property>
                                     <property name="paddingRight">2pt</property>
+                                    <structure name="numberFormat">
+                                        <property name="category">Currency</property>
+                                        <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
+                                    </structure>
                                     <property name="textAlign">right</property>
                                     <property name="resultSetColumn">sale_qty3_Group26/customer_name_Group30/status</property>
                                 </data>
@@ -10293,6 +10297,10 @@ order by seq
                                     <property name="fontSize">8pt</property>
                                     <property name="fontWeight">bold</property>
                                     <property name="paddingRight">2pt</property>
+                                    <structure name="numberFormat">
+                                        <property name="category">Currency</property>
+                                        <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
+                                    </structure>
                                     <property name="textAlign">right</property>
                                     <property name="resultSetColumn">sale_qty3_Group30/status</property>
                                 </data>

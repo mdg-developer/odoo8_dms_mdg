@@ -1,8 +1,8 @@
-﻿-- Function: calculate_credit_datasum(integer, integer, date)
+﻿-- Function: calculate_credit_datasum(integer, integer, date, integer, boolean)
 
--- DROP FUNCTION calculate_credit_datasum(integer, integer, date);
+-- DROP FUNCTION calculate_credit_datasum(integer, integer, date, integer, boolean);
 
-CREATE OR REPLACE FUNCTION calculate_credit_datasum(IN section_ids integer, IN user_ids integer, IN from_date date)
+CREATE OR REPLACE FUNCTION calculate_credit_datasum(IN section_ids integer, IN user_ids integer, IN from_date date, IN pricelist integer, IN presale boolean)
   RETURNS TABLE(open_amt numeric, deduct_amt double precision, paidamount numeric, amount_total numeric) AS
 $BODY$
 DECLARE
@@ -29,12 +29,13 @@ BEGIN
 	where ai.move_id=aml.move_id 
 	and aml.id=avl.move_line_id 	
 	and rp.id=so.partner_id
-	--and ai.origin=so.name
 	and ai.partner_id=so.partner_id
 	and av.id = avl.voucher_id
 	and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = from_date
 	and so.section_id = section_ids
 	and so.user_id  = user_ids
+	and so.pricelist_id=pricelist
+	and so.pre_order=presale
 	and ai.payment_type='credit'
 	and av.date::date = from_date
 	group by rp.name,rp.id,ai.payment_type) asdf),
@@ -45,6 +46,8 @@ BEGIN
 	and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = from_date
 	and so.section_id = section_ids
 	and so.user_id  = user_ids
+	and so.pricelist_id=pricelist
+	and so.pre_order=presale
 	and so.payment_type='credit'
 	group by so.deduct_amt,rp.name,rp.customer_code,rp.id)aaa)
 	
@@ -55,6 +58,8 @@ BEGIN
 	and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = from_date
 	and so.section_id = section_ids
 	and so.user_id  = user_ids
+	and so.pricelist_id=pricelist
+	and so.pre_order=presale
 	and so.payment_type='credit' 
 	group by rp.name,rp.id)sss) as amount_total_tbl
 	left join deduction_tbl on deduction_tbl.myid=amount_total_tbl.myid
@@ -66,5 +71,5 @@ $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100
   ROWS 1000;
-ALTER FUNCTION calculate_credit_datasum(integer, integer, date)
+ALTER FUNCTION calculate_credit_datasum(integer, integer, date, integer, boolean)
   OWNER TO odoo;

@@ -6186,6 +6186,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">1</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6196,6 +6197,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">2</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6206,6 +6208,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">3</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6216,6 +6219,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">4</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6226,6 +6230,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">5</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6236,6 +6241,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">6</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6246,6 +6252,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">7</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6256,6 +6263,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">8</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6266,6 +6274,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">9</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6276,6 +6285,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">10</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6286,6 +6296,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">11</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6296,6 +6307,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">12</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6306,6 +6318,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">13</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6316,6 +6329,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">14</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6326,6 +6340,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">15</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6336,6 +6351,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">16</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6346,6 +6362,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">17</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6356,6 +6373,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">18</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6366,6 +6384,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">19</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6376,6 +6395,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">20</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6386,6 +6406,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">21</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6396,6 +6417,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">22</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6406,6 +6428,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">23</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6416,6 +6439,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">24</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6426,6 +6450,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">25</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6436,6 +6461,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">26</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6446,6 +6472,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">27</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6456,6 +6483,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">28</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6466,6 +6494,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">29</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6476,6 +6505,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">30</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6486,6 +6516,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">31</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6496,6 +6527,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">32</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6506,6 +6538,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">33</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6516,6 +6549,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">34</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6526,6 +6560,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">35</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6536,6 +6571,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">36</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6546,6 +6582,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">37</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6556,6 +6593,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">38</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6566,6 +6604,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">39</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6576,6 +6615,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">40</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6586,6 +6626,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">41</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6596,6 +6637,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">42</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6606,6 +6648,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">43</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6616,6 +6659,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">44</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6626,6 +6670,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">45</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6636,6 +6681,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">46</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6646,6 +6692,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">47</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6656,6 +6703,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">48</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6666,6 +6714,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">49</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6676,6 +6725,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">50</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6686,6 +6736,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">51</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6696,6 +6747,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">52</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6706,6 +6758,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">53</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6716,6 +6769,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">54</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6726,6 +6780,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">55</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6736,6 +6791,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">boolean</property>
                     <property name="nativeDataType">-7</property>
                     <property name="position">56</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -6746,6 +6802,7 @@ where pc.is_oldproduct='f']]></xml-property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">57</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -7100,7 +7157,7 @@ left join (select distinct product_id,sum(product_uom_qty) as sale_qty,
 on amh.product_id=pp.id
 ),
 
-deduct_amt as (select distinct 0,(select deduction_amt from calculate_credit_data(rp.id,so.section_id,so.user_id,?)),
+deduct_amt as (select distinct 0,(select deduction_amt from calculate_credit_data(rp.id,so.section_id,so.user_id,?,so.pricelist_id,so.pre_order)),
 	rp.name as customer_name,rp.id as customer_id,rp.customer_code,
 	'ေလွ်ာ့ေငြ'::character varying as group,''::character varying as maingroup,''::character varying as uom_ratio,90003::int as seq,''::text as status,
 	so.pre_order,so.user_id,so.branch_id,so.section_id,so.pricelist_id,pc.is_oldproduct,0 tot_qty
@@ -7122,7 +7179,7 @@ deduct_amt as (select distinct 0,(select deduction_amt from calculate_credit_dat
 	and so.payment_type='credit' 
 	order by seq),
 
-sale_amt as (select distinct 0,(select sale_amt from calculate_credit_data(rp.id,so.section_id,so.user_id, ?)),
+sale_amt as (select distinct 0,(select sale_amt from calculate_credit_data(rp.id,so.section_id,so.user_id, ?,so.pricelist_id,so.pre_order)),
 	rp.name as customer_name,rp.id as customer_id,rp.customer_code,
 	'သင့္ေငြ'::character varying as group,''::character varying as maingroup,''::character varying as uom_ratio,90001::int as seq,''::text as status,
 	so.pre_order,so.user_id,so.branch_id,so.section_id,so.pricelist_id,pc.is_oldproduct,0 tot_qty
@@ -7144,7 +7201,7 @@ sale_amt as (select distinct 0,(select sale_amt from calculate_credit_data(rp.id
 	and so.payment_type='credit' 
 	order by seq),
 	
-open_amt as (select distinct 0,(select open_amt from calculate_credit_data(rp.id,so.section_id,so.user_id, ?)),
+open_amt as (select distinct 0,(select open_amt from calculate_credit_data(rp.id,so.section_id,so.user_id, ?,so.pricelist_id,so.pre_order)),
 	rp.name as customer_name,rp.id as customer_id,rp.customer_code,
 	'ယခင္ရရန္'::character varying as group,''::character varying as maingroup,''::character varying as uom_ratio,90002::int as seq,''::text as status,
 	so.pre_order,so.user_id,so.branch_id,so.section_id,so.pricelist_id,pc.is_oldproduct,0 tot_qty
@@ -7172,10 +7229,10 @@ Balance as (select distinct 0,
 	'လက္က်န္ေငြ'::character varying as group,''::character varying as maingroup,''::character varying as uom_ratio, 90005::int as seq,''::text as status,
 	one.pre_order,one.user_id,one.branch_id,one.section_id,one.pricelist_id,one.is_oldproduct,0 tot_qty
 	from  (select product_id,
-	(select deduction_amt from calculate_credit_data(rp.id,so.section_id,so.user_id,?)),
-	(select sale_amt from calculate_credit_data(rp.id,so.section_id,so.user_id,?)),
-	(select paidamount from calculate_credit_data(rp.id,so.section_id,so.user_id,?)),
-	(select open_amt from calculate_credit_data(rp.id,so.section_id,so.user_id,?)),
+	(select deduction_amt from calculate_credit_data(rp.id,so.section_id,so.user_id,?,so.pricelist_id,so.pre_order)),
+	(select sale_amt from calculate_credit_data(rp.id,so.section_id,so.user_id,?,so.pricelist_id,so.pre_order)),
+	(select paidamount from calculate_credit_data(rp.id,so.section_id,so.user_id,?,so.pricelist_id,so.pre_order)),
+	(select open_amt from calculate_credit_data(rp.id,so.section_id,so.user_id,?,so.pricelist_id,so.pre_order)),
 	so.pre_order,so.user_id,so.branch_id,so.section_id,so.pricelist_id,pc.is_oldproduct,
 	rp.name as customer_name,rp.id as customer_id,rp.customer_code,pg.name as group,pmg.name as maingroup,pt.uom_ratio,pp.sequence
 	from sale_order so,sale_order_line sol,res_partner rp, product_product pp, product_template pt, product_maingroup pmg,product_group pg,product_category pc
@@ -7195,7 +7252,7 @@ Balance as (select distinct 0,
 	and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = ? and  rp.active='t' 
 	and so.payment_type='credit')one order by seq),
 
-paidamount as (select distinct 0,(select paidamount from calculate_credit_data(rp.id,so.section_id,so.user_id,?)),
+paidamount as (select distinct 0,(select paidamount from calculate_credit_data(rp.id,so.section_id,so.user_id,?,so.pricelist_id,so.pre_order)),
 	rp.name as customer_name,rp.id as customer_id,rp.customer_code,
 	'ေငြသားေပး'::character varying as group,''::character varying as maingroup,''::character varying as uom_ratio, 90004::int as seq,''::text as status,
 	so.pre_order,so.user_id,so.branch_id,so.section_id,so.pricelist_id,pc.is_oldproduct,0 tot_qty

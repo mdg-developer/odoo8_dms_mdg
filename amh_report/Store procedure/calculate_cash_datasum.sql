@@ -1,8 +1,8 @@
-﻿-- Function: calculate_cash_datasum(integer, integer, date)
+﻿-- Function: calculate_cash_datasum(integer, integer, date, integer, boolean)
 
--- DROP FUNCTION calculate_cash_datasum(integer, integer, date);
+-- DROP FUNCTION calculate_cash_datasum(integer, integer, date, integer, boolean);
 
-CREATE OR REPLACE FUNCTION calculate_cash_datasum(IN section_ids integer, IN user_ids integer, IN from_date date)
+CREATE OR REPLACE FUNCTION calculate_cash_datasum(IN section_ids integer, IN user_ids integer, IN from_date date, IN pricelist integer, IN presale boolean)
   RETURNS TABLE(open_amt numeric, deduct_amt double precision, paidamount numeric, amount_total numeric) AS
 $BODY$
 DECLARE
@@ -24,6 +24,8 @@ BEGIN
 	and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = from_date
 	and so.section_id = section_ids
 	and so.user_id  = user_ids
+	and so.pricelist_id=pricelist
+	and so.pre_order=presale
 	and ai.payment_type='cash'
 	and av.date::date = from_date
 	group by rp.name,rp.id,ai.payment_type) asdf),
@@ -33,6 +35,8 @@ BEGIN
 	and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = from_date
 	and so.section_id = section_ids
 	and so.user_id  = user_ids
+	and so.pricelist_id=pricelist
+	and so.pre_order=presale
 	and so.payment_type='cash'
 	group by rp.name,rp.id) aaa),
 	open_tbl as (select sum(bbb.open_amt) as open_amt,123321 as myid from (SELECT sum(inv.residual) as open_amt,partner_id as inv_partid 
@@ -48,17 +52,20 @@ BEGIN
 	where  rp.id=so.partner_id	
 	and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date = from_date
 	and so.section_id = section_ids
-	and so.user_id  = user_ids	
+	and so.user_id  = user_ids
+	and so.pricelist_id=pricelist
+	and so.pre_order=presale	
 	and so.payment_type='cash'		
 	group by rp.name,rp.id) aaa) as ns_tbl
 	left join open_tbl on open_tbl.myid=ns_tbl.myid
 	left join deduct_tbl on deduct_tbl.myid=ns_tbl.myid
 	left join paidamt_tbl on paidamt_tbl.myid=ns_tbl.myid;
+	--select * from account_invoice
 			
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100
   ROWS 1000;
-ALTER FUNCTION calculate_cash_datasum(integer, integer, date)
+ALTER FUNCTION calculate_cash_datasum(integer, integer, date, integer, boolean)
   OWNER TO odoo;
