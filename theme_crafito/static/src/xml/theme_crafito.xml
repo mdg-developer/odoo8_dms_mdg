@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <!-- Blog slider modal -->
+    <t t-name="theme_crafito.crafito_blog_slider_block">
+        <div aria-hidden="true" aria-labelledby="myModalLabel" class="modal" contenteditable="False" role="dialog" style="z-index:2001" tabindex="1">
+            <div class="modal-dialog">
+                <div class="modal-content" id="s_media_block_modal">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Blog Slider Configuration</h4>
+                    </div>
+                    <div class="modal-body" contenteditable="false">
+                        <div class="row">
+                            <form class="form-horizontal container-fluid" role="form">
+                                <div class="col-sm-12 form-group">
+                                    <label class="col-sm-3 control-label" for="blog_slider_type">Type</label>
+                                    <div class="col-sm-7">
+                                        <select class="form-control" id="blog_slider_type" name="blog_slider_type"/>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" data-dismiss="modal" id="cancel">Cancel</button>
+                        <button class="btn btn-danger" data-dismiss="modal" id="blog_sub_data">Apply</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+    <!-- Multi Product slider modal -->
+    <t t-name="theme_crafito.multi_product_custom_slider_block">
+        <div aria-hidden="true" aria-labelledby="myModalLabel" class="modal" contenteditable="False" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content" id="s_media_block_modal">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Multi Product Slider Configuration</h4>
+                    </div>
+                    <div class="modal-body" contenteditable="false">
+                        <div class="row">
+                            <form class="form-horizontal container-fluid" role="form">
+                                <div class="col-sm-12 form-group">
+                                    <label class="col-sm-3 control-label" for="slider_type">Type</label>
+                                    <div class="col-sm-9">
+                                        <select class="form-control" id="slider_type" name="slider_type"/>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" data-dismiss="modal" id="cancel">Cancel</button>
+                        <button class="btn btn-danger" data-dismiss="modal" id="multi_tabs_submit">Apply</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+    <!-- Coming Soon -->
+    <t t-name="theme_crafito.model_dialog_commingsoon">
+        <div class="modal fade" id="userlist" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button class="close" data-dismiss="modal" type="button">x</button>
+                        <h4 class="modal-title">Coming Soon</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="form-group mb0">
+                                <label class="col-sm-3 control-label text-left">Year : </label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" data-min="0" id="year" name="year" required="required" type="text" value="0"/>
+                                </div>
+                                <label class="col-sm-3 control-label text-left">Month : </label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" data-min="0" id="month" name="month" required="required" type="text" value="0"/>
+                                </div>
+                                <label class="col-sm-3 control-label text-left">Day : </label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" data-min="0" id="day" name="day" required="required" type="text" value="0"/>
+                                </div>
+                                <label class="col-sm-3 control-label text-left">Hours : </label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" data-min="0" id="hours" name="hours" required="required" type="text" value="0"/>
+                                </div>
+                                <label class="col-sm-3 control-label text-left">Minutes : </label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" data-min="0" id="minutes" name="min" required="required" type="text" value="0"/>
+                                </div>
+                                <label class="col-sm-3 control-label text-left">Second : </label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" data-min="0" id="second" name="sec" required="required" type="text" value="0"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" data-dismiss="modal" id="biz_cancle" type="button">Cancel</button>
+                        <button class="btn btn-danger" id="biztech_coumtdown_btn" type="submit">Apply</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+    <!-- Category slider modal -->
+    <t t-name="theme_crafito.crafito_dynamic_category_slider">
+        <div aria-hidden="true" aria-labelledby="myModalLabel" class="modal" contenteditable="False" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content" id="s_media_block_modal">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Category Slider Configuration</h4>
+                    </div>
+                    <div class="modal-body" contenteditable="false">
+                        <div class="row">
+                            <form class="form-horizontal" role="form">
+                                <div class="col-sm-12 form-group">
+                                    <label class="col-sm-3 control-label" for="slider_type">Type</label>
+                                    <div class="col-sm-7">
+                                        <select class="form-control" id="slider_type" name="slider_type"/>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" data-dismiss="modal" id="cancel">Cancel</button>
+                        <button class="btn btn-danger" data-dismiss="modal" id="cat_sub_data">Apply</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+    <!-- Product slider modal -->
+    <t t-name="theme_crafito.crafito_dynamic_product_slider">
+        <div aria-hidden="true" aria-labelledby="myModalLabel" class="modal" contenteditable="False" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content" id="s_media_block_modal_prod">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Products Slider Configuration</h4>
+                    </div>
+                    <div class="modal-body" contenteditable="false">
+                        <div class="row">
+                            <form class="form-horizontal" role="form">
+                                <div class="col-sm-12 form-group">
+                                    <label class="col-sm-3 control-label" for="slider_type">Type</label>
+                                    <div class="col-sm-7">
+                                        <select class="form-control" id="slider_type" name="slider_type"/>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" data-dismiss="modal" id="cancel">Cancel</button>
+                        <button class="btn btn-danger" data-dismiss="modal" id="prod_sub_data">Apply</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+    <!-- Featured Product slider modal -->
+    <t t-name="theme_crafito.crafito_dynamic_featured_product_slider">
+        <div aria-hidden="true" aria-labelledby="myModalLabel" class="modal" contenteditable="False" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content" id="s_media_block_modal_feature">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Featured Products Slider Configuration</h4>
+                    </div>
+                    <div class="modal-body" contenteditable="false">
+                        <div class="row">
+                            <form class="form-horizontal" role="form">
+                                <div class="col-sm-12 form-group">
+                                    <label class="col-sm-3 control-label" for="slider_type">Type</label>
+                                    <div class="col-sm-7">
+                                        <select class="form-control" id="featured_slider_type" name="slider_type"/>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" data-dismiss="modal" id="cancel">Cancel</button>
+                        <button class="btn btn-danger" data-dismiss="modal" id="featured_prod_sub_data">Apply</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+    <!-- Fact sheet -->
+    <t t-name="theme_crafito.crafito_dynami_fact_sheet">
+        <div class="modal fade" id="fact_model" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button class="close" data-dismiss="modal" type="button">x</button>
+                        <h4 class="modal-title">Fact Sheet Data</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-7">
+                                <label>Choose how much Fact you want to show</label>
+                            </div>
+                            <div class="col-sm-2">
+                                <select class="form-control" id="fact_count_selection">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                </select>
+                            </div>
+                            <div class="form-group mb0" style="margin-top:60px;">
+                                <div class="col-sm-4">
+                                    <label>Icon</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label>Label</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label>Value</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input class="form-control" id="icon_hided_1" name="label_business_icone" required="required" type="text" value="fa fa-thumbs-o-up"/>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input class="form-control" id="name_hided_1" name="label_business" required="required" type="text" value="In Business"/>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input class="form-control" id="number_hided_1" min="0" name="business" required="required" type="number" value="0"/>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input class="form-control hidden" id="icon_hided_2" name="label_client_icone" required="required" type="text" value="fa fa-comments"/>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input class="form-control hidden" id="name_hided_2" name="label_client" required="required" type="text" value="Clients Served"/>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input class="form-control hidden" id="number_hided_2" min="0" name="client" required="required" type="number" value="0"/>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input class="form-control hidden" id="icon_hided_3" name="label_projects_icon" required="required" type="text" value="fa fa-smile-o"/>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input class="form-control hidden" id="name_hided_3" name="label_projects" required="required" type="text" value="Projects Delivered"/>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input class="form-control hidden" id="number_hided_3" min="0" name="projects" required="required" type="number" value="0"/>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input class="form-control hidden" id="icon_hided_4" name="label_award_icon" required="required" type="text" value="fa fa-trophy"/>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input class="form-control hidden" id="name_hided_4" name="label_award" required="required" type="text" value="Awards Won"/>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input class="form-control hidden" id="number_hided_4" min="0" name="award" required="required" type="number" value="0"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" id="biz_cancle" type="button">Cancel</button>
+                        <button class="btn btn-danger" id="bzitech_fact_btn" type="submit">Apply</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+    <!-- Skills -->
+    <t t-name="theme_crafito.crafito_dyanamic_skill">
+        <div class="modal fade" id="skill_model" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button class="close" data-dismiss="modal" type="button">x</button>
+                        <h4 class="modal-title">Skill Data</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-7">
+                                <label>Choose how much Skill you want to show</label>
+                            </div>
+                            <div class="col-sm-2">
+                                <select class="form-control" id="skill_count_selection">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                </select>
+                            </div>
+                            <div class="form-group mb0" style="margin-top:60px;">
+                                <div class="col-sm-6 text-center">
+                                    <label>Label</label>
+                                </div>
+                                <div class="col-sm-6 text-center">
+                                    <label>Value</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input class="form-control" id="name_hided_1" name="label_wordpress" required="required" type="text" value="WORDPRESS"/>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input class="form-control" id="number_hided_1" max="100" min="0" name="wordpress" required="required" type="number" value="0"/>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input class="form-control hidden" id="name_hided_2" name="label_html5" required="required" type="text" value="HTML5"/>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input class="form-control hidden" id="number_hided_2" max="100" min="0" name="html5" required="required" type="number" value="0"/>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input class="form-control hidden" id="name_hided_3" name="label_css3" required="required" type="text" value="CSS3"/>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input class="form-control hidden" id="number_hided_3" max="100" min="0" name="css3" required="required" type="number" value="0"/>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input class="form-control hidden" id="name_hided_4" name="label_photoshop" required="required" type="text" value="PHOTOSHOP"/>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input class="form-control hidden" id="number_hided_4" max="100" min="0" name="photoshop" required="required" type="number" value="0"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" id="biz__skill_cancle" type="button">Cancel</button>
+                        <button class="btn btn-danger" id="bzitech_skill_btn" type="submit">Apply</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

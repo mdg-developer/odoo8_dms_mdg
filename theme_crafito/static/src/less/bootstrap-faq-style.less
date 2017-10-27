@@ -1,0 +1,136 @@
+
+  ul.nav-pills {
+      top: 20px;
+      position: fixed;
+  }
+  div.col-sm-9 div {
+      height: 250px;
+      font-size: 28px;
+  }
+#basics , #mobile , #account , #payments , #privacy ,#delivery{color:lighten(@dark-color,50%);  margin:0px 0px 50px 0px; margin-left: 252px;}
+
+#basics{
+  margin-top:10px;
+}
+  .panel {
+    margin-bottom: 20px;
+    background-color:@light-color;
+    border:none;
+    border-radius: 0px;
+    -webkit-box-shadow:none;
+    box-shadow:none;
+    padding: 7px;
+}
+  .panel-default {
+    
+    border-bottom: 2px solid lighten(@dark-color,60);
+     > .panel-heading {
+    color:@theme;
+    background-color:@light-color;
+    border-color:@light-color;
+    border: none;
+    box-shadow: none;
+      position: relative;
+   
+}
+  
+  }
+  .panel-heading {
+  
+    padding: 10px 15px;
+    border-bottom: 1px solid transparent;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+
+    &.collapsed{
+      &:after{
+        content:" "; width:15px; height:3px; background:lighten(@dark-color,60); position: absolute; top:0; right:15px; bottom:0; margin: auto;
+
+      }
+      &:before{content:" "; width:3px; height:15px; background:lighten(@dark-color,60); position: absolute; top:0; right:21px; bottom:0; margin: auto;}
+    }
+    &:after{
+      content:" "; width:15px; height:3px; background:lighten(@dark-color,60); position: absolute; top:0; right:15px; bottom:0; margin: auto;
+    }
+  }
+  .panel-body{color:@dark-color;}
+
+
+.nav-pills {
+  > li{
+    &.active{
+      border-bottom: 1px solid  lighten(@dark-color,70);
+      a{ color:@light-color;
+    background-color:@dark-color;
+    text-align: center;
+    text-transform: capitalize;
+    font-weight: bold;
+    font-size: 13px;
+    border-left: 4px solid @theme;
+    &:focus ,&:hover{
+      color:@light-color;
+    background-color: darken(@dark-color,90%);
+    text-align: center;
+    text-transform: capitalize;
+    font-weight: bold;
+    font-size: 13px;
+    border-left: 4px solid @theme;}
+
+    }
+    }
+  }
+}
+.nav-stacked{
+   > li{border-bottom: 1px solid lighten(@dark-color,70);}
+}
+
+.nav-stacked {
+  > li + li {
+    margin-top: 0px;
+    margin-left: 0;
+    border-bottom: 1px solid lighten(@dark-color,70);
+}
+}
+.nav-pills {
+  > li {
+    > a {
+    border-radius: 0px;
+    color:@light-color;
+    background-color:@dark-color;
+    text-align: center;
+    text-transform: capitalize;
+    font-weight: bold;
+    font-size: 13px;
+    border-left: 4px solid transparent;
+}
+  }
+}
+
+
+.nav > li > a {
+    position: relative;
+    display: block;
+    padding: 15px 30px;
+    border-left: 4px solid transparent;
+}
+
+.nav > li > a:focus, .nav > li > a:hover {
+    text-decoration: none;
+    background-color:@theme;
+}
+.faq-title{margin-bottom:30px;}
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
