@@ -66,13 +66,26 @@ class sale_make_location(osv.osv_memory):
             sale_data=order_obj.browse(cr,uid,order,context=context)
             so_no=sale_data.name
             cr.execute("update sale_order set delivery_id =%s ,user_id=%s,warehouse_id =%s where name =%s and state!='done'",(section_id,user_id,warehouse_id,so_no,))
-            picking_ids = self.pool.get('stock.picking').search(cr, uid, [('origin', '=',so_no),('state','!=','done')], context=context)
-            cr.execute("update stock_move set location_id =%s where picking_id in %s ",(lcoation_id,tuple(picking_ids),))
-            cr.execute('''select id from stock_picking_type where lower(name) like 'delivery orders' and default_location_src_id= %s''',(lcoation_id,))
-            picking_type_id=cr.fetchone()[0]
-            if picking_type_id:
-                cr.execute("update stock_picking set picking_type_id =%s where id in %s ",(picking_type_id,tuple(picking_ids),))
-            cr.execute("update account_invoice set user_id =%s ,section_id=%s,collection_user_id =%s ,collection_team_id=%s where origin =%s and state ='draft' ",(user_id,section_id,user_id,section_id,so_no,))
+            #picking_ids = self.pool.get('stock.picking').search(cr, uid, [('origin', '=',so_no),('state','!=','done')], context=context)
+            picking_ids = self.pool.get('stock.picking').search(cr, uid, [('group_id', '=',so_no),('state','!=','done')], context=context)
+            if picking_ids:
+                for picking_id in picking_ids: 
+                    self.pool.get('stock.picking').unlink(cr,uid,picking_id,context=context)
+            procurement_order_obj = self.pool.get('procurement.order')        
+            procurement_ids = self.pool.get('procurement.order').search(cr,uid,[('group_id', '=',so_no)], context=context)
+            if procurement_ids:
+                for procurement_id in procurement_ids:
+                    osv.osv.unlink(procurement_order_obj, cr, uid, procurement_id, context=context)
+                    cr.execute("delete from procurement_order where id=%s",(procurement_id,))
+                    #self.pool.get('procurement.order').unlink(cr,uid,procurement_id,context=context)
+#             cr.execute("update stock_move set location_id =%s where picking_id in %s ",(lcoation_id,tuple(picking_ids),))
+#             cr.execute('''select id from stock_picking_type where lower(name) like 'delivery orders' and default_location_src_id= %s''',(lcoation_id,))
+#             picking_type_id=cr.fetchone()[0]
+#             if picking_type_id:
+#                 cr.execute("update stock_picking set picking_type_id =%s where id in %s ",(picking_type_id,tuple(picking_ids),))
+#             cr.execute("update account_invoice set user_id =%s ,section_id=%s,collection_user_id =%s ,collection_team_id=%s where origin =%s and state ='draft' ",(user_id,section_id,user_id,section_id,so_no,))
+        #self.signal_workflow(cr,uid,ids,'ship_recreate')
+        self.pool.get('sale.order').action_ship_create(cr,uid,order,context=context)
         return True
 
 

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="crafito_view_res_partner_form_inherit" model="ir.ui.view">
+            <field name="name">crafito.view.res.partner.form.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="arch" type="xml">
+                <field name="website" position="after">
+                    <field name="add_to_slider" />
+                </field>
+            </field>
+        </record>
+        <record id="theme_crafito_inherited_employee_view" model="ir.ui.view">
+            <field name="name">hr employee</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/notebook" position="inside">
+                    <page name="sliderinformation" string="Slider Configuraton">
+                        <group>
+                            <field name="include_inourteam"></field>
+                        </group>
+                        <group attrs="{'invisible': [('include_inourteam', '=', False)]}">
+                            <field name="emp_social_twitter"></field>
+                            <field name="emp_social_facebook"></field>
+                            <field name="emp_social_linkdin"></field>
+                            <field name="emp_description"></field>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+        <!-- Product category -->
+        <record id="theme_crafito_product_public_category" model="ir.ui.view">
+            <field name="name">product.public.category</field>
+            <field name="model">product.public.category</field>
+            <field name="inherit_id" ref="website_sale.product_public_category_form_view" />
+            <field name="arch" type="xml">
+                <field name="sequence" position="after">
+                    <field name="linked_product_count" invisible="1" />
+                </field>
+                <xpath expr="//field[@name='sequence']" position="after">
+                    <field name="include_in_megamenu" />
+                </xpath>
+                <xpath expr="//div[@class='oe_left']" position="attributes">
+                    <attribute name="style">width:500px;</attribute>
+                </xpath>
+                <xpath expr="//div[@class='oe_left']/group" position="after">
+                    <group attrs="{'invisible': [('include_in_megamenu', '=', False)]}">
+                        <field name="menu_id" domain="[('is_megamenu', '=', True), ('megamenu_view_type', '=', 'cat_megamenu')]" attrs="{'required': [('include_in_megamenu', '=', True)]}" />
+                    </group>
+                    <field name="description" />
+                </xpath>
+            </field>
+        </record>
+        <!-- Product template for related products -->
+        <record id="theme_crafito_product_template_inherited" model="ir.ui.view">
+            <field name="name">crafito.product.template</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="website_sale.product_template_form_view" />
+            <field name="arch" type="xml">
+                <field name="alternative_product_ids" position="after">
+                    <field name="related_product_ids" widget="many2many_tags" />
+                </field>
+                <field name="description_sale" position="after">
+                    <separator string="Description for Quickview" colspan="4" />
+                    <field name="quickview_description" nolabel="1" colspan="4" />
+                </field>
+            </field>
+        </record>
+        <!-- Product Form View Inherited for multi images -->
+        <record id="crafito_view_product_template_form_multiple_image" model="ir.ui.view">
+            <field name="name">crafito.product.template.form.view.inherited</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view" />
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='options']" position="inside">
+                    <field name="multi_image" nolabel="1" />
+                    <label for="multi_image" />
+                </xpath>
+                <xpath expr="//notebook" position="inside">
+                    <page attrs="{'invisible':[('multi_image','!=',True)]}" name="product multi image" string="Product Multiple Images">
+                        <field name="biz_images">
+                            <form string="Multiple Image">
+                                <group>
+                                    <field name="name" />
+                                    <field name="alt" />
+                                    <field name="attach_type" widget="radio" />
+                                    <field name="image" widget="image" height="64" attrs="{'invisible': [('attach_type', '=', 'video')]}" />
+                                    <field name="video_type" attrs="{'invisible': [('attach_type', '=', 'image')]}" />
+                                </group>
+                                <group col="4">
+                                    <field name="cover_image" widget="image" height="64" attrs="{'invisible': ['|', ('attach_type', '=', 'image'), ('video_type', '=', 'youtube')]}" />
+                                    <label string="It is required" attrs="{'invisible': ['|', ('attach_type', '=', 'image'), ('video_type', '=', 'youtube')]}" />
+                                </group>
+                                <group>
+                                    <field name="video_id" attrs="{'invisible': ['|', ('attach_type', '=', 'image'), ('video_type', '=', 'html5video')]}" />
+                                    <field name="video_ogv" attrs="{'invisible': ['|', ('attach_type', '=', 'image'), ('video_type', 'in', ('youtube', 'vimeo'))]}" />
+                                    <field name="video_webm" attrs="{'invisible': ['|', ('attach_type', '=', 'image'), ('video_type', 'in', ('youtube', 'vimeo'))]}" />
+                                    <field name="video_mp4" attrs="{'invisible': ['|', ('attach_type', '=', 'image'), ('video_type', 'in', ('youtube', 'vimeo'))]}" />
+                                    <field name="sequence" />
+                                    <field name="more_view_exclude" />
+                                </group>
+                            </form>
+                            <tree>
+                                <field name="name" />
+                                <field name="alt" />
+                                <field name="attach_type" />
+                                <field name="image" height="64" attrs="{'invisible': [('attach_type', '=', 'video')]}" />
+                                <field name="video_type" attrs="{'invisible': [('attach_type', '=', 'image')]}" />
+                                <field name="video_id" attrs="{'invisible': [('attach_type', '=', 'image')]}" />
+                                <field name="sequence" />
+                                <field name="more_view_exclude" />
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+        <!-- Product Sorting -->
+        <!-- Product sorting form view -->
+        <record id="biztech_form_view_for_product_sorting" model="ir.ui.view">
+            <field name="name">Biztech Product Sorting Form View</field>
+            <field name="model">biztech.product.sortby</field>
+            <field name="arch" type="xml">
+                <form name="Product Sorting">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" />
+                                <field name="sort_on" />
+                            </group>
+                            <group>
+                                <field name="sort_type" string="Order By" />
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!-- Product sorting list View -->
+        <record id="biztech_list_view_for_product_sorting" model="ir.ui.view">
+            <field name="name">Biztech Product Sorting List View</field>
+            <field name="model">biztech.product.sortby</field>
+            <field name="arch" type="xml">
+                <tree name="Product Sorting">
+                    <field name="name" />
+                    <field name="sort_on" />
+                    <field name="sort_type" />
+                </tree>
+            </field>
+        </record>
+        <!-- Event -->
+        <record id="theme_crafito_inherited_event_view" model="ir.ui.view">
+            <field name="name">event</field>
+            <field name="model">event.event</field>
+            <field name="inherit_id" ref="event.view_event_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/notebook" position="inside">
+                    <page name="Eventextrainformation" string="Extra Information">
+                        <group>
+                            <field name="event_cover_poster" widget="image"></field>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+        <!-- Action for product sorting -->
+        <record id="action_for_product_sorting" model="ir.actions.act_window">
+            <field name="name">Product Sorting</field>
+            <field name="res_model">biztech.product.sortby</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">list,form</field>
+        </record>
+        <!-- Menu for product sorting -->
+        <menuitem name="Product Sorting" id="sub_menu_sort_by" parent="base.menu_base_config" sequence="80" action="action_for_product_sorting" />
+    </data>
+</openerp>

@@ -1,0 +1,168 @@
+/*---------------------Testimonial Slider
+-------------------------------------------------------*/
+.testimonial{
+  display: inline-block;
+  width: 100%;
+  background-size: cover;
+  height:auto;
+}
+.testimonial-slider-home{
+  padding: 124px 0 110px 0px;
+  
+  .testimonial{
+    margin: 0 auto;
+    float: none;
+    width: 600px;
+    max-width: 100%;
+    position: relative;
+    text-align: center;
+    padding-bottom: 20px;
+    padding-top: 80px;
+
+    .team-img{
+      border: 1px solid darken(@light-color, 6.5%);
+      padding: 6px;
+      border-radius: 50%;
+      width: 100px;
+      height: 100px;
+      overflow: hidden;
+      display: inline-block;
+      vertical-align: top;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      margin: auto;
+    }
+    .box{
+    
+      padding: 30px 30px;
+    
+     
+      p{
+        font-size:@font-size-base + 1;
+        font-weight:300;
+        position: relative;
+        padding-left:20px;
+        color: @light-color;
+        .fa{
+          margin: 0 8px;
+        }
+        .fa-quote-left{
+         left: 8px;
+    font-size: 50px;
+    color:@theme;
+    opacity: 0.2;
+    top: -16px;
+    position: absolute;
+
+        }
+        .fa-quote-right{
+         display: none;
+        }
+      }
+      .author{
+        font-size: @font-size-base + 1 ;
+        font-weight: 300;
+        text-align: center;
+        color:@light-color;
+        .company-name{
+          color:fade(@light-color,30);
+        }
+      }
+    }
+  }
+  .carousel{
+    padding-bottom: 50px;
+    .carousel-inner > .item{
+      text-align: center; width: 100%;
+    }
+    .box{
+      color:fade(@light-color,70);
+    }
+  }
+  .carousel-indicators{
+    bottom: 0;
+    position: absolute;
+      left: 0;
+      z-index: 15;
+      width: 100%; 
+      padding-left: 0;
+      margin-left: 0;
+      text-align: center;
+      list-style: none;
+      width: 100%;
+    li{
+      border: 1px solid fade(@light-color,70);
+    }
+    .active{
+      background-color:@theme;
+       border: 1px solid @theme;
+    }
+  }
+}
+.our-clients{ padding:46px 0px; cursor: pointer;
+  .owl-controls{
+    .owl-nav{
+      display: none;
+    }
+  }
+}
+
+.testimonial-slider-hardware-home{
+ padding: 124px 0px;
+ position: relative;
+ .team-img{
+  border: 1px solid #eeeeee;
+    padding: 6px;
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: top;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    background-color: @light-color;
+    z-index: 9999;
+ }
+ .box{
+  text-align: center;
+  background-color: @theme;
+  display: inline-block;
+  padding:70px 50px;
+  color: @light-color;
+  border-radius:10px;
+  margin-top:50px;
+  margin-bottom:50px;
+  position:relative;
+  p{
+    width:70%;
+    text-align: center; margin: 0 auto;
+  }
+&:after{
+
+    bottom: -50px;
+    left: 20%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+    border-top-color: @theme;
+    border-width: 50px;
+    margin-left: -30px;
+    border-width: 50px 50px 0 0px;
+   
+}
+ } 
+ .carousel-indicators{
+  bottom:0;
+ }
+}
+div.carousel .carousel-indicators li{border:1px solid @light-color !important;}
+div.carousel .carousel-indicators li.active{ background-color: @theme;}
