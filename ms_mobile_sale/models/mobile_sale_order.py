@@ -323,6 +323,7 @@ class mobile_sale_order(osv.osv):
     def check_qty_issue_warehouse(self, cursor, user, vals, context=None):
         product_uom_obj = self.pool.get('product.uom')
         product_product_obj = self.pool.get('product.product')      
+        product_template_obj = self.pool.get('product.template')      
         res_user_obj = self.pool.get('res.users')      
         location_ids = []        
         try:
@@ -348,6 +349,8 @@ class mobile_sale_order(osv.osv):
 #                 data = data.replace("]", "")  # null
 #                 data = data.replace("[", "")  # null
             order_line = []
+            detail_result = []
+
             for r in new_arr:                
                 r = r.replace("]", "")  # null
                 r = r.replace("[", "")  # null                
@@ -366,18 +369,18 @@ class mobile_sale_order(osv.osv):
                     line_id = line_id.replace("}", "")                       
                     svalue = line_id.split(",")
                     print 'svaluesvalue', svalue
-                    product_name = (svalue[0])
-                    product_qty = (svalue[1])
-                    pnamevalue = product_name.split(":")
-                    p_name =(pnamevalue[1])
+                    product_code = (svalue[2])
+                    product_uom = (svalue[1])
+                    product_qty = (svalue[0])
+                    pcodevalue = product_code.split(":")
+                    p_code =(pcodevalue[1])
                     pqtyvalue = product_qty.split(":")
-                    p_qty =(pqtyvalue[1])
-                    
-                    #line = sale_order_line_obj.browse(cursor, user, line_id.id, context=context)
-                    uom = line_id['uom_id']
-                    product_id =line_id ['product_id']
-                    product_uom_qty=line_id['product_uom_qty']
-                    cursor.execute("select COALESCE(sum(qty),0) from stock_quant where location_id  in  %s and product_id =%s and reservation_id is null", (tuple(location_ids), product_id,))      
+                    p_qty =float((pqtyvalue[1]))
+                    puomvalue=product_uom.split(":")
+                    uom =int(puomvalue[1])
+                    product_id = product_product_obj.search(cursor, user, [('default_code', '=', p_code)])
+                    product_uom_qty=p_qty
+                    cursor.execute("select COALESCE(sum(qty),0) from stock_quant where location_id  in  %s and product_id =%s and reservation_id is null", (tuple(location_ids),tuple(product_id),))      
                     qty = cursor.fetchone()[0]   
                     if uom:
                         uom_record = product_uom_obj.browse(cursor, user, uom, context=context)
@@ -389,8 +392,15 @@ class mobile_sale_order(osv.osv):
                         uom_record = product_obj.uom_id
                     compare_qty = float_compare(qty, product_uom_qty, precision_rounding=uom_record.rounding)                                       
                     if compare_qty == -1:
-                        raise osv.except_osv(_("Not enough stock ! : ") , _(" Your Product Name '%s' is not enough stock !") % (product_obj.name_template,))
-            return True
+                        result = {
+                                  'product_code':p_code,
+                                  'product_name':product_obj.name_template ,
+                                        'real_qty':qty,
+                                        'uom_id':uom,
+                                         }   
+                        detail_result.append(result)
+                        #raise osv.except_osv(_("Not enough stock ! : ") , _(" Your Product Name '%s' is not enough stock !") % (product_obj.name_template,))
+            return detail_result
         except Exception, e:
             print e            
             return False
