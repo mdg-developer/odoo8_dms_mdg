@@ -323,22 +323,37 @@ class mobile_sale_order(osv.osv):
     def check_qty_issue_warehouse(self, cursor, user, vals, context=None):
         product_uom_obj = self.pool.get('product.uom')
         product_product_obj = self.pool.get('product.product')      
+        res_user_obj = self.pool.get('res.users')      
         location_ids = []        
         try:
-            str = "{" + vals + "}"    
-            str = str.replace("'',", "',")  # null
-            str = str.replace(":',", ":'',")  # due to order_id
-            str = str.replace("}{", "}|{")
-            str = str.replace(":'}{", ":''}")
-            new_arr = str.split('|')
-            result = []
-            for data in new_arr:            
-                x = ast.literal_eval(data)                
-                result.append(x)
+            str =vals 
+#             str = "[" + str + "]"
+#             str = str.replace("]", "")  # null
+#             str = str.replace("[", "")  # null
+            str = str.replace("}, {", "}|{")
+            str = str.replace("=", ":")  # null
+#             str = str.replace("}", "}''")
+#             str =str.replace ("{", " ''{")
+            new_arr = str.split('|')            
+#             str = str.replace(":',", ":'',")  # due to order_id
+#             str = str.replace("}{", "}|{")
+      #     str = str.replace(":'}{", ":''}")
+#            new_arr = dict(str)
+#             for key,value in new_arr.iteritems():
+#                 print 'keyyyyyyyyyyyyy',key
+#                 print 'valueeeeeeeeee',value
+                
+#             result = []
+#             for data in new_arr:      
+#                 data = data.replace("]", "")  # null
+#                 data = data.replace("[", "")  # null
             order_line = []
-            for r in result:                
+            for r in new_arr:                
+                r = r.replace("]", "")  # null
+                r = r.replace("[", "")  # null                
                 order_line.append(r)  
-            location_id = user.company_id.issued_location_id.id
+            user_data=res_user_obj.browse(cursor, user, user, context=context)
+            location_id = user_data.company_id.issued_location_id.id
             if location_id is None:
                     raise osv.except_osv(_("Warning !!!") , _(" Please Choose Issue Location In Warehouse Configuration !"))                                       
             cursor.execute("select id from stock_location where location_id = %s or id =%s ", (location_id, location_id))
@@ -346,7 +361,18 @@ class mobile_sale_order(osv.osv):
             for location_data in all_location:
                 location_ids.append(location_data[0])                         
             if order_line:
-                for line_id in order_line:                 
+                for line_id in order_line:              
+                    line_id = line_id.replace("{", "")  # null
+                    line_id = line_id.replace("}", "")                       
+                    svalue = line_id.split(",")
+                    print 'svaluesvalue', svalue
+                    product_name = (svalue[0])
+                    product_qty = (svalue[1])
+                    pnamevalue = product_name.split(":")
+                    p_name =(pnamevalue[1])
+                    pqtyvalue = product_qty.split(":")
+                    p_qty =(pqtyvalue[1])
+                    
                     #line = sale_order_line_obj.browse(cursor, user, line_id.id, context=context)
                     uom = line_id['uom_id']
                     product_id =line_id ['product_id']
@@ -2539,7 +2565,7 @@ class mobile_sale_order(osv.osv):
                      A.zip,A.state_name,A.partner_latitude,A.partner_longitude,null,A.image_medium,A.credit_limit,
                      A.credit_allow,A.sales_channel,A.branch_id,A.pricelist_id,A.payment_term_id,A.outlet_type ,
                      A.city_id,A.township_id,A.country_id,A.state_id,A.unit,A.class_id,A.chiller,A.frequency_id,A.temp_customer,
-                     A.is_consignment,A.hamper,A.is_bank,A.is_cheque,A.res_total_amount
+                     A.is_consignment,A.hamper,A.is_bank,A.is_cheque,A.res_total_amount,A.distributor_target_amount,A.is_distributor
                      from (
 
                      select RP.id,RP.name,'' as image,RP.is_company,null,
@@ -2549,7 +2575,7 @@ class mobile_sale_order(osv.osv):
                      substring(replace(cast(RP.image_medium as text),'/',''),1,5) as image_medium,RP.credit_limit,RP.credit_allow,
                      RP.sales_channel,RP.branch_id,RP.pricelist_id,RP.payment_term_id,RP.outlet_type,RP.city as city_id,RP.township as township_id,
                      RP.country_id,RP.state_id,RP.unit,RP.class_id,RP.chiller,RP.frequency_id,RP.temp_customer,RP.is_consignment,
-                     RP.hamper,RP.is_bank,RP.is_cheque,RP.res_total_amount
+                     RP.hamper,RP.is_bank,RP.is_cheque,RP.res_total_amount,RP.distributor_target_amount,RP.is_distributor
 
                      from  res_partner RP ,res_country_state RS, res_city RC,res_township RT,
                              outlettype_outlettype OT
@@ -2839,7 +2865,7 @@ class mobile_sale_order(osv.osv):
                      A.zip,A.state_name,A.partner_latitude,A.partner_longitude,null,A.image_medium,A.credit_limit,
                      A.credit_allow,A.sales_channel,A.branch_id,A.pricelist_id,A.payment_term_id,A.outlet_type ,
                      A.city_id,A.township_id,A.country_id,A.state_id,A.unit,A.class_id,A.chiller,A.frequency_id,A.temp_customer,
-                     A.is_consignment,A.hamper,A.is_bank,A.is_cheque,A.res_total_amount
+                     A.is_consignment,A.hamper,A.is_bank,A.is_cheque,A.res_total_amount,A.distributor_target_amount,A.is_distributor
                      
                      from (
                      select RP.id,RP.name,'' as image,RP.is_company,null,
@@ -2849,7 +2875,7 @@ class mobile_sale_order(osv.osv):
                      substring(replace(cast(RP.image_medium as text),'/',''),1,5) as image_medium,RP.credit_limit,RP.credit_allow,
                      RP.sales_channel,RP.branch_id,RP.pricelist_id,RP.payment_term_id,RP.outlet_type,RP.city as city_id,RP.township as township_id,
                      RP.country_id,RP.state_id,RP.unit,RP.class_id,RP.chiller,RP.frequency_id,RP.temp_customer,RP.is_consignment,RP.hamper,
-                     RP.is_bank,RP.is_cheque,RP.res_total_amount
+                     RP.is_bank,RP.is_cheque,RP.res_total_amount,RP.distributor_target_amount,RP.is_distributor
                      from sale_team_customer_rel ST ,outlettype_outlettype OT,
                                              res_partner RP ,res_country_state RS, res_city RC,res_township RT
                                             where ST.partner_id = RP.id 
@@ -2878,7 +2904,7 @@ class mobile_sale_order(osv.osv):
                      A.zip,A.state_name,A.partner_latitude,A.partner_longitude,A.sale_plan_day_id,A.image_medium,A.credit_limit,
                      A.credit_allow,A.sales_channel,A.branch_id,A.pricelist_id,A.payment_term_id,A.outlet_type ,
                      A.city_id,A.township_id,A.country_id,A.state_id,A.unit,A.class_id,A.chiller,A.frequency_id,A.temp_customer,
-                     A.is_consignment,A.hamper,A.is_bank,A.is_cheque,A.res_total_amount
+                     A.is_consignment,A.hamper,A.is_bank,A.is_cheque,A.res_total_amount,A.distributor_target_amount,A.is_distributor
                      from (
                      select RP.id,RP.name,'' as image,RP.is_company,RPS.sale_plan_day_id,
                      '' as image_small,RP.street,RP.street2,RC.name as city,RP.website,
@@ -2887,7 +2913,7 @@ class mobile_sale_order(osv.osv):
                      substring(replace(cast(RP.image_medium as text),'/',''),1,5) as image_medium,RP.credit_limit,RP.credit_allow,
                      RP.sales_channel,RP.branch_id,RP.pricelist_id,RP.payment_term_id,RP.outlet_type,RP.city as city_id,RP.township as township_id,
                      RP.country_id,RP.state_id,RP.unit,RP.class_id,RP.chiller,RP.frequency_id,RP.temp_customer,RP.is_consignment,RP.hamper,
-                     RP.is_bank,RP.is_cheque,RP.res_total_amount
+                     RP.is_bank,RP.is_cheque,RP.res_total_amount,RP.distributor_target_amount,RP.is_distributor
                      from sale_plan_day SPD ,outlettype_outlettype OT,
                                             res_partner_sale_plan_day_rel RPS , res_partner RP ,res_country_state RS, res_city RC,res_township RT
                                             where SPD.id = RPS.sale_plan_day_id 
@@ -2904,6 +2930,8 @@ class mobile_sale_order(osv.osv):
             ''', (section_id, day_id,))
         datas = cr.fetchall()
         return datas
+    
+    
 # kzo Edit add Sale Plan Trip and Day ID
     def res_partners_return_trip(self, cr, uid, section_id, day_id , pull_date, context=None, **kwargs):
         
@@ -2918,7 +2946,7 @@ class mobile_sale_order(osv.osv):
                      A.zip,A.state_name,A.partner_latitude,A.partner_longitude,A.sale_plan_trip_id,A.image_medium,
                      A.credit_limit,A.credit_allow,A.sales_channel,A.branch_id,A.pricelist_id,A.payment_term_id ,A.outlet_type,
                     A.city_id,A.township_id,A.country_id,A.state_id,A.unit,A.class_id,A.chiller,A.frequency_id,A.temp_customer,
-                    A.is_consignment,A.hamper,A.is_bank,A.is_cheque,A.res_total_amount
+                    A.is_consignment,A.hamper,A.is_bank,A.is_cheque,A.res_total_amount,A.distributor_target_amount,A.is_distributor
                       from (
                      select RP.id,RP.name,'' as image,RP.is_company,
                      '' as image_small,RP.street,RP.street2,RC.name as city,RP.website,
@@ -2928,7 +2956,7 @@ class mobile_sale_order(osv.osv):
                       ,substring(replace(cast(RP.image_medium as text),'/',''),1,5) as image_medium ,RP.credit_limit,RP.credit_allow,
                      RP.sales_channel,RP.branch_id,RP.pricelist_id,RP.payment_term_id,RP.outlet_type,RP.city as city_id,RP.township as township_id,
                      RP.country_id,RP.state_id,RP.unit,RP.class_id,RP.chiller,RP.frequency_id,RP.temp_customer ,RP.is_consignment,RP.hamper,
-                     RP.is_bank,RP.is_cheque,RP.res_total_amount
+                     RP.is_bank,RP.is_cheque,RP.res_total_amount,RP.distributor_target_amount,RP.is_distributor
                      from sale_plan_trip SPT , res_partner_sale_plan_trip_rel RPT , res_partner RP ,res_country_state RS ,
                      res_city RC, res_township RT,outlettype_outlettype OT 
                      where SPT.id = RPT.sale_plan_trip_id 

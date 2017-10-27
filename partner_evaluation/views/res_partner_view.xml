@@ -14,6 +14,9 @@
 						sequence="1" />
 					<field name="bw_customer" attrs="{'invisible':[('customer','=',False)]}"
 						sequence="1" />
+
+					<field name="function_res_total_amount" attrs="{'invisible':[('customer','=',False)]}"
+						sequence="1" invisible="1" />
 					<field name="res_total_amount" attrs="{'invisible':[('customer','=',False)]}"
 						sequence="1" />
 
@@ -47,7 +50,8 @@
 					</group>
 					<group>
 						<text attrs="{'invisible':[('supplier','==',False)]}">Has your company's product being tested/certified
-							by independent organization?(ie,any product certification)</text>
+							by independent organization?(ie,any product certification)
+						</text>
 						<div>
 							<field name="certify_product" widget="radio"
 								attrs="{'invisible':[('supplier','==',False)]}"></field>
