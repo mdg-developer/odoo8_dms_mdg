@@ -1,0 +1,808 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data noupdate="1">
+		<!-- Home Page -->
+		<template id="theme_crafito_homepage_body" inherit_id="website.homepage">
+			<xpath expr="//div" position="inside">
+				<div class="oe_structure">
+					<!--Home slider-->
+					<div class="banner carousel slide s_theme_crafito_homes_slider_snippet" data-interval="10000" data-ride="carousel" id="myCarousel">
+						<!-- Indicators -->
+						<ol class="carousel-indicators">
+							<li class="active" data-slide-to="0" data-target="#myCarousel"/>
+							<li data-slide-to="1" data-target="#myCarousel"/>
+							<li data-slide-to="2" data-target="#myCarousel"/>
+							<li data-slide-to="3" data-target="#myCarousel"/>
+						</ol>
+						<!-- Wrapper for slides -->
+						<div class="carousel-inner" role="listbox">
+							<div class="item active" style="background: url(/website/static/src/img/banner/black.jpg) no-repeat; background-size:cover;">
+								<div class="banner-img">
+									<img alt="Pc" class="img-responsive" src="/theme_crafito/static/src/img/pc.png" title="pc"/>
+								</div>
+								<div class="banner-text">
+									<h2>MULTI - PURPOSE ODOO TEMPLATE</h2>
+									<p>Responsive Design  |  Bootstrap Based  |  Full of Blocks  |  Easy to Customize</p>
+								</div>
+								<div class="button-box">
+									<a class="btn btn-primary btn-lg  mt8 o_default_snippet_text" href="#">
+										<span>BUY NOW </span>
+									</a>
+								</div>
+							</div>
+							<div class="item" style="background: url(/website/static/src/img/banner/black.jpg) no-repeat; background-size:cover;">
+								<div class="banner-img">
+									<img alt="Pc" class="img-responsive" src="/theme_crafito/static/src/img/pc.png" title="pc"/>
+								</div>
+								<div class="banner-text">
+									<h2>MULTI - PURPOSE ODOO TEMPLATE</h2>
+									<p>Responsive Design  |  Bootstrap Based  |  Full of Blocks  |  Easy to Customize</p>
+								</div>
+								<div class="button-box">
+									<a class="btn btn-primary btn-lg  mt8 o_default_snippet_text" href="#">
+										<span>BUY NOW </span>
+									</a>
+								</div>
+							</div>
+							<div class="item" style="background: url(/website/static/src/img/banner/black.jpg) no-repeat; background-size:cover;">
+								<div class="banner-img">
+									<img alt="Pc" class="img-responsive" src="/theme_crafito/static/src/img/pc.png" title="pc"/>
+								</div>
+								<div class="banner-text">
+									<h2>MULTI - PURPOSE ODOO TEMPLATE</h2>
+									<p>Responsive Design  |  Bootstrap Based  |  Full of Blocks  |  Easy to Customize</p>
+								</div>
+								<div class="button-box">
+									<a class="btn btn-primary btn-lg  mt8 o_default_snippet_text" href="#">
+										<span>BUY NOW </span>
+									</a>
+								</div>
+							</div>
+							<div class="item" style="background-image: url(/website/static/src/img/banner/black.jpg);">
+								<div class="banner-img">
+									<img alt="Pc" class="img-responsive" src="/theme_crafito/static/src/img/pc.png" title="pc"/>
+								</div>
+								<div class="banner-text">
+									<h2>MULTI - PURPOSE ODOO TEMPLATE</h2>
+									<p>Responsive Design  |  Bootstrap Based  |  Full of Blocks  |  Easy to Customize</p>
+								</div>
+								<div class="button-box">
+									<a class="btn btn-primary btn-lg  mt8 o_default_snippet_text" href="#">
+										<span>BUY NOW </span>
+									</a>
+								</div>
+							</div>
+						</div>
+						<!-- Left and right controls -->
+						<a class="left carousel-control" data-slide="prev" data-target="#myCarousel" role="button">
+							<span aria-hidden="true" class="fa fa-chevron-left"/>
+							<span class="sr-only">Previous</span>
+						</a>
+						<a class="right carousel-control" data-slide="next" data-target="#myCarousel" role="button">
+							<span aria-hidden="true" class="fa fa-chevron-right"/>
+							<span class="sr-only">Next</span>
+						</a>
+					</div>
+					<!--special features-->
+					<section class="features s_theme_crafito_feature1">
+						<div class="container">
+							<div class="row">
+								<div class="block-title">
+									<h3 class="fancy">Features</h3>
+								</div>
+							</div>
+							<div class="row">
+								<div class="feature-content col-md-4 col-sm-4 beautiful-design">
+									<div class="f-block">
+										<span>
+											<i aria-hidden="true" class="fa fa-paint-brush"/>
+										</span>
+										<h4>Beautiful Design</h4>
+										<p>Ut enim ad minim cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. </p>
+									</div>
+								</div>
+								<div class="feature-content col-md-4 col-sm-4 mobile-responsive">
+									<div class="f-block">
+										<span>
+											<i aria-hidden="true" class="fa fa-mobile"/>
+										</span>
+										<h4>100% Responsive</h4>
+										<p>Ut enim ad minim cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. </p>
+									</div>
+								</div>
+								<div class="feature-content col-md-4 col-sm-4 support">
+									<div class="f-block">
+										<span>
+											<i aria-hidden="true" class="fa fa-life-ring"/>
+										</span>
+										<h4>Great Support</h4>
+										<p>Ut enim ad minim cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. </p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</section>
+					<!-- About company -->
+					<section class="cf-tabs-img cst s_carfito_custom_tabbing_snippet">
+						<div class="container">
+							<div class="row">
+								<div class="col-md-7">
+									<div class="cfti-tab" role="tabpanel">
+										<div class="desc">
+											<h3>About Us</h3>
+											<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur anim id est laborum Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore </p>
+										</div>
+										<ul class="nav nav-tabs" role="tablist">
+											<li class="active" role="presentation">
+												<a aria-controls="tab1" data-toggle="tab" href="#tab1" role="tab">Text Block</a>
+											</li>
+											<li role="presentation">
+												<a aria-controls="tab2" data-toggle="tab" href="#tab2" role="tab">Text-Image</a>
+											</li>
+											<li role="presentation">
+												<a aria-controls="tab3" data-toggle="tab" href="#tab3" role="tab">Image-Text</a>
+											</li>
+										</ul>
+										<!-- Tab panes -->
+										<div class="tab-content">
+											<div class="oe_structure oe_empty tab-pane active" id="tab1" role="tabpanel">
+												<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur anim id est laborum Lorem ipsum dolor sit ameta.</p>
+											</div>
+											<div class="oe_structure oe_empty tab-pane" id="tab2" role="tabpanel">
+												<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur anim id est laborum Lorem ipsum dolor sit ameta.</p>
+											</div>
+											<div class="oe_structure oe_empty tab-pane" id="tab3" role="tabpanel">
+												<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur anim id est laborum Lorem ipsum dolor sit ameta.</p>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-5">
+									<div class="cfti-img">
+										<img alt="iphone" class="img-responsive" src="/theme_crafito/static/src/img/iphone.png" title="iphone"/>
+									</div>
+								</div>
+							</div>
+						</div>
+					</section>
+					<!--At your service-->
+					<section class="service s_theme_crafito_at_service" style="background: url(/website/static/src/img/banner/black.jpg) no-repeat; background-size:cover;">
+						<div class="container">
+							<div class="service-content">
+								<div class="row">
+									<div class="col-md-5">
+										<h3>AT YOUR SERVICE 24/7 </h3>
+										<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur anim id est laborum Lorem ipsum dolor sit ameta.</p>
+										<ul>
+											<li>
+												<span class="round">
+													<i aria-hidden="true" class="fa fa-check"/>
+												</span>We bring in business like web technologies for you</li>
+											<li>
+												<span class="round">
+													<i aria-hidden="true" class="fa fa-check"/>
+												</span>We bring in business like web technologies for you</li>
+											<li>
+												<span class="round">
+													<i aria-hidden="true" class="fa fa-check"/>
+												</span>We bring in business like web technologies for you</li>
+										</ul>
+										<div class="button-box">
+											<a class="btn btn-primary btn-lg  mt8 o_default_snippet_text" href="#">
+												<span>BUY NOW</span>
+											</a>
+										</div>
+									</div>
+									<div class="col-md-7">
+										<img class="img-responsive" src="/theme_crafito/static/src/img/service-img.png"/>
+									</div>
+								</div>
+							</div>
+						</div>
+					</section>
+					<!--choose us -->
+					<section class="choose-us s_theme_crafito_choose_us">
+						<section class="col-md-6" style="background:#f7f7f7">
+							<div class="left-block">
+								<h3>Why Choose Us ?</h3>
+								<p>Ipsum dolor sit amet, consectetur adipisicing elit. Facere hic qui non placeat ad explicabo dignissimos amet iusto veniam! Tempore modi minima at adipisci saepe excepturi alias consequuntur sunt asperiores enim ut assumenda hic vitae, odio deleniti illo, veniam quas!</p>
+								<img class="img-responsive" src="/theme_crafito/static/src/img/tab.png"/>
+							</div>
+						</section>
+						<section class="col-md-6">
+							<div class="right-block">
+								<div class="panel-group" role="tablist">
+									<div class="panel panel-default">
+										<div class="panel-heading" data-toggle="collapse" role="tab">
+											<h4 class="panel-title">
+												<i aria-hidden="true" class="fa fa-paint-brush"/>Beautiful Design</h4>
+										</div>
+										<div class="panel-collapse collapse in" role="tabpanel">
+											<div class="panel-body">
+												<div class="panel-img">
+													<img class="img-responsive" src="/theme_crafito/static/src/img/mob.png"/>
+												</div>
+												<p>Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch.
+                                        </p>
+												<div class="panel-text">
+													<div class="row">
+														<ul class="col-md-6">
+															<li>
+																<span class="icon">
+																	<i aria-hidden="true" class="fa fa-check"/>
+																</span>
+																<span class="data">We bring in business like web technologies for you</span>
+															</li>
+															<li>
+																<span class="icon">
+																	<i aria-hidden="true" class="fa fa-check"/>
+																</span>
+																<span class="data">We bring in business like web technologies for you</span>
+															</li>
+															<li>
+																<span class="icon">
+																	<i aria-hidden="true" class="fa fa-check"/>
+																</span>
+																<span class="data">We bring in business like web technologies for you</span>
+															</li>
+														</ul>
+														<ul class="col-md-6">
+															<li>
+																<span class="icon">
+																	<i aria-hidden="true" class="fa fa-check"/>
+																</span>
+																<span class="data">We bring in business like web technologies for you</span>
+															</li>
+															<li>
+																<span class="icon">
+																	<i aria-hidden="true" class="fa fa-check"/>
+																</span>
+																<span class="data">We bring in business like web technologies for you</span>
+															</li>
+															<li>
+																<span class="icon">
+																	<i aria-hidden="true" class="fa fa-check"/>
+																</span>
+																<span class="data">We bring in business like web technologies for you</span>
+															</li>
+														</ul>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="panel panel-default">
+										<div class="panel-heading" data-toggle="collapse" role="tab">
+											<h4 class="panel-title">
+												<i aria-hidden="true" class="fa fa-mobile"/>100% Responsive</h4>
+										</div>
+										<div class="panel-collapse collapse" role="tabpanel">
+											<div class="panel-body">
+												<div class="panel-img">
+													<img class="img-responsive" src="/theme_crafito/static/src/img/mob.png"/>
+												</div>
+												<p class="info">Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. </p>
+												<div class="panel-text">
+													<div class="row">
+														<ul class="col-md-6">
+															<li>
+																<span class="icon">
+																	<i aria-hidden="true" class="fa fa-check"/>
+																</span>
+																<span class="data">We bring in business like web technologies for you</span>
+															</li>
+															<li>
+																<span class="icon">
+																	<i aria-hidden="true" class="fa fa-check"/>
+																</span>
+																<span class="data">We bring in business like web technologies for you</span>
+															</li>
+															<li>
+																<span class="icon">
+																	<i aria-hidden="true" class="fa fa-check"/>
+																</span>
+																<span class="data">We bring in business like web technologies for you</span>
+															</li>
+														</ul>
+														<ul class="col-md-6">
+															<li>
+																<span class="icon">
+																	<i aria-hidden="true" class="fa fa-check"/>
+																</span>
+																<span class="data">We bring in business like web technologies for you</span>
+															</li>
+															<li>
+																<span class="icon">
+																	<i aria-hidden="true" class="fa fa-check"/>
+																</span>
+																<span class="data">We bring in business like web technologies for you</span>
+															</li>
+															<li>
+																<span class="icon">
+																	<i aria-hidden="true" class="fa fa-check"/>
+																</span>
+																<span class="data">We bring in business like web technologies for you</span>
+															</li>
+														</ul>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="panel panel-default">
+										<div class="panel-heading" data-toggle="collapse" role="tab">
+											<h4 class="panel-title">
+												<i aria-hidden="true" class="fa fa-shopping-cart"/>E - Commerce</h4>
+										</div>
+										<div class="panel-collapse collapse" role="tabpanel">
+											<div class="panel-body">
+												<div class="panel-img">
+													<img class="img-responsive" src="/theme_crafito/static/src/img/mob.png"/>
+												</div>
+												<p class="info">Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. </p>
+												<div class="panel-text">
+													<div class="row">
+														<ul class="col-md-6">
+															<li>
+																<span class="icon">
+																	<i aria-hidden="true" class="fa fa-check"/>
+																</span>
+																<span class="data">We bring in business like web technologies for you</span>
+															</li>
+															<li>
+																<span class="icon">
+																	<i aria-hidden="true" class="fa fa-check"/>
+																</span>
+																<span class="data">We bring in business like web technologies for you</span>
+															</li>
+															<li>
+																<span class="icon">
+																	<i aria-hidden="true" class="fa fa-check"/>
+																</span>
+																<span class="data">We bring in business like web technologies for you</span>
+															</li>
+														</ul>
+														<ul class="col-md-6">
+															<li>
+																<span class="icon">
+																	<i aria-hidden="true" class="fa fa-check"/>
+																</span>
+																<span class="data">We bring in business like web technologies for you</span>
+															</li>
+															<li>
+																<span class="icon">
+																	<i aria-hidden="true" class="fa fa-check"/>
+																</span>
+																<span class="data">We bring in business like web technologies for you</span>
+															</li>
+															<li>
+																<span class="icon">
+																	<i aria-hidden="true" class="fa fa-check"/>
+																</span>
+																<span class="data">We bring in business like web technologies for you</span>
+															</li>
+														</ul>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="panel panel-default">
+										<div class="panel-heading" data-toggle="collapse" role="tab">
+											<h4 class="panel-title">
+												<i aria-hidden="true" class="fa fa-life-ring"/>Free Support</h4>
+										</div>
+										<div class="panel-collapse collapse" role="tabpanel">
+											<div class="panel-body">
+												<div class="panel-img">
+													<img class="img-responsive" src="/theme_crafito/static/src/img/mob.png"/>
+												</div>
+												<p class="info">Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. </p>
+												<div class="panel-text">
+													<div class="row">
+														<ul class="col-md-6">
+															<li>
+																<span class="icon">
+																	<i aria-hidden="true" class="fa fa-check"/>
+																</span>
+																<span class="data">We bring in business like web technologies for you</span>
+															</li>
+															<li>
+																<span class="icon">
+																	<i aria-hidden="true" class="fa fa-check"/>
+																</span>
+																<span class="data">We bring in business like web technologies for you</span>
+															</li>
+															<li>
+																<span class="icon">
+																	<i aria-hidden="true" class="fa fa-check"/>
+																</span>
+																<span class="data">We bring in business like web technologies for you</span>
+															</li>
+														</ul>
+														<ul class="col-md-6">
+															<li>
+																<span class="icon">
+																	<i aria-hidden="true" class="fa fa-check"/>
+																</span>
+																<span class="data">We bring in business like web technologies for you</span>
+															</li>
+															<li>
+																<span class="icon">
+																	<i aria-hidden="true" class="fa fa-check"/>
+																</span>
+																<span class="data">We bring in business like web technologies for you</span>
+															</li>
+															<li>
+																<span class="icon">
+																	<i aria-hidden="true" class="fa fa-check"/>
+																</span>
+																<span class="data">We bring in business like web technologies for you</span>
+															</li>
+														</ul>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</section>
+					</section>
+					<!--Our Work-->
+					<section class="our-work">
+						<div class="container">
+							<div class="block-title">
+								<h3 class="fancy">Our WORK</h3>
+							</div>
+						</div>
+						<ul id="filterOptions">
+							<li class="active">
+								<span class="all" href="#">All</span>
+							</li>
+							<li>
+								<span class="prem">Web</span>
+							</li>
+							<li>
+								<span class="champ">Mobile</span>
+							</li>
+							<li>
+								<span class="league1">Graphic</span>
+							</li>
+							<li>
+								<span class="league2">E - Commerce</span>
+							</li>
+						</ul>
+						<ul class="ourHolder">
+							<li class="item col-md-4 col-sm-6" data-id="id-1" data-type="league2">
+								<img alt="Accrington Stanley" src="/theme_crafito/static/src/img/work-1.png"/>
+							</li>
+							<li class="item col-md-4 col-sm-6" data-id="id-2" data-type="prem">
+								<img alt="Arsenal" src="/theme_crafito/static/src/img/work-2.png"/>
+							</li>
+							<li class="item col-md-4 col-sm-6" data-id="id-7" data-type="league1">
+								<img alt="Morecambe" src="/theme_crafito/static/src/img/work-5.png"/>
+							</li>
+							<li class="item col-md-4 col-sm-6" data-id="id-3" data-type="league2">
+								<img alt="Burton Albion" src="/theme_crafito/static/src/img/work-4.png"/>
+							</li>
+							<li class="item col-md-4 col-sm-6" data-id="id-4" data-type="champ">
+								<img alt="Cardiff City" src="/theme_crafito/static/src/img/work-1.png"/>
+							</li>
+							<li class="item col-md-4 col-sm-6" data-id="id-5" data-type="champ">
+								<img alt="Derby County" src="/theme_crafito/static/src/img/work-2.png"/>
+							</li>
+							<li class="item col-md-4 col-sm-6" data-id="id-6" data-type="prem">
+								<img alt="Everton" src="/theme_crafito/static/src/img/work-1.png"/>
+							</li>
+							<li class="item col-md-4 col-sm-6" data-id="id-7" data-type="league1">
+								<img alt="Morecambe" src="/theme_crafito/static/src/img/work-2.png"/>
+							</li>
+							<li class="item col-md-4 col-sm-6" data-id="id-8" data-type="champ">
+								<img alt="Norwich City" src="/theme_crafito/static/src/img/work-6.png"/>
+							</li>
+						</ul>
+					</section>
+					<!-- Testimonial - 1 -->
+					<section class="testimonials testimonial-slider-home s_theme_crafito_testimonial_1" style="background: url(/website/static/src/img/banner/black.jpg) no-repeat; background-size:cover;">
+						<!-- Testimonial Slider -->
+						<div class="container">
+							<div class="carousel slide" data-ride="carousel" id="myCarousel">
+								<!-- Indicators -->
+								<ol class="carousel-indicators">
+									<li class="active" data-slide-to="0" data-target="#myCarousel"/>
+									<li data-slide-to="1" data-target="#myCarousel"/>
+									<li data-slide-to="2" data-target="#myCarousel"/>
+									<li data-slide-to="3" data-target="#myCarousel"/>
+								</ol>
+								<!-- Wrapper for slides -->
+								<div class="carousel-inner" role="listbox">
+									<div class="item active">
+										<div class="testimonial">
+											<div class="team-img">
+												<img alt="img" class="img-responsive img-circle  text-center" src="/theme_crafito/static/src/img/avatar1.jpg" title="img"/>
+											</div>
+											<div class="box">
+												<p>
+													<i class="fa fa-quote-left"/>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+        consequat.
+													<i class="fa fa-quote-right"/></p>
+												<span class="author ">Ronnie Director - 
+													<span class="company-name">HD Themes Ltd.</span></span>
+											</div>
+										</div>
+									</div>
+									<div class="item">
+										<div class="testimonial">
+											<div class="team-img">
+												<img alt="img" class="img-responsive img-circle  text-center" src="/theme_crafito/static/src/img/avatar1.jpg" title="img"/>
+											</div>
+											<div class="box">
+												<p>
+													<i class="fa fa-quote-left"/>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+        consequat.
+													<i class="fa fa-quote-right"/></p>
+												<span class="author">Ronnie Director - 
+													<span class="company-name">HD Themes Ltd.</span></span>
+											</div>
+										</div>
+									</div>
+									<div class="item">
+										<div class="testimonial">
+											<div class="team-img">
+												<img alt="img" class="img-responsive img-circle  text-center" src="/theme_crafito/static/src/img/avatar1.jpg" title="img"/>
+											</div>
+											<div class="box">
+												<p>
+													<i class="fa fa-quote-left"/>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+        consequat.
+													<i class="fa fa-quote-right"/></p>
+												<span class="author ">Ronnie Director - 
+													<span class="company-name">HD Themes Ltd.</span></span>
+											</div>
+										</div>
+									</div>
+									<div class="item">
+										<div class="testimonial">
+											<div class="team-img">
+												<img alt="img" class="img-responsive img-circle  text-center" src="/theme_crafito/static/src/img/avatar1.jpg" title="img"/>
+											</div>
+											<div class="box">
+												<p>
+													<i class="fa fa-quote-left"/>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+        quis nostrud exercitation ullamco laboris.Ut enim ad minim veniam,Ut enim ad minim veniam,
+													<i class="fa fa-quote-right"/></p>
+												<span class="author ">Ronnie Director - 
+													<span class="company-name">HD Themes Ltd.</span></span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</section>
+					<!-- Pricing Table 1 -->
+					<section class="s_comparisons s_theme_crafito_pricing_table_1">
+						<div class="price-pack">
+							<div class="container">
+								<div class="row">
+									<div class="col-md-4 col-sm-4">
+										<div class="package">
+											<span class=" type">Basic</span>
+											<p>
+												<i>$
+													<span>49</span>
+													/ month</i>
+											</p>
+											<div class="purchase ">
+												<span>purchase</span>
+												<i aria-hidden="true" class="fa fa-arrow-right pull-right"/>
+											</div>
+											<ul class="text-capitalize">
+												<li>
+													<span>01</span>design version</li>
+												<li>
+													<span>01</span>design version</li>
+												<li>
+													<span>01</span>design version</li>
+												<li>
+													<span>01</span>design version</li>
+												<li>
+													<span>01</span>design version</li>
+											</ul>
+										</div>
+									</div>
+									<div class="col-md-4 col-sm-4">
+										<div class="package starter">
+											<span class=" type ">STARTER</span>
+											<p>
+												<i>$
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+													<span>69</span>
+													/ month</i>
+											</p>
+											<div class="purchase ">
+												<span>purchase</span>
+												<i aria-hidden="true" class="fa fa-arrow-right pull-right"/>
+											</div>
+											<ul class="text-capitalize">
+												<li>
+													<span>01</span>design version</li>
+												<li>
+													<span>01</span>design version</li>
+												<li>
+													<span>01</span>design version</li>
+												<li>
+													<span>01</span>design version</li>
+												<li>
+													<span>01</span>design version</li>
+											</ul>
+										</div>
+									</div>
+									<div class="col-md-4 col-sm-4">
+										<div class="package">
+											<span class=" type">PROFESSIONAL</span>
+											<p>
+												<i>$
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+													<span>909</span>
+													/ month</i>
+											</p>
+											<div class="purchase ">
+												<span>purchase</span>
+												<i aria-hidden="true" class="fa fa-arrow-right pull-right"/>
+											</div>
+											<ul class="text-capitalize">
+												<li>
+													<span>01</span>design version</li>
+												<li>
+													<span>01</span>design version</li>
+												<li>
+													<span>01</span>design version</li>
+												<li>
+													<span>01</span>design version</li>
+												<li>
+													<span>01</span>design version</li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</section>
+					<section class="pricing-section  s_theme_crafito_pricing_table_3_4column">
+						<div class="pricing pricing--yonten">
+							<div class="container">
+								<div class="row">
+									<div class="col-md-3 col-sm-6 pricing__item">
+										<div>
+											<i aria-hidden="true" class="fa fa-bicycle"/>
+										</div>
+										<h3 class="pricing__title">Beginner</h3>
+										<h3 class="pricing__price" style="margin: 0">
+											<span class="pricing__currency o_default_snippet_text">$</span>
+											<b class="o_default_snippet_text" style="font-size:40px">19</b>
+											<small class="o_default_snippet_text">/ month</small>
+										</h3>
+										<ul class="pricing__feature-list">
+											<li class="pricing__feature">1 GB of space</li>
+											<li class="pricing__feature">Unlimited traffic</li>
+											<li class="pricing__feature">Forum access</li>
+											<li class="pricing__feature">Support at $25/hour</li>
+										</ul>
+										<button class="pricing__action">Choose plan</button>
+									</div>
+									<div class="col-md-3 col-sm-6 pricing__item">
+										<div>
+											<i aria-hidden="true" class="fa fa-bicycle"/>
+										</div>
+										<h3 class="pricing__title">Beginner</h3>
+										<h3 class="pricing__price" style="margin: 0">
+											<span class="pricing__currency o_default_snippet_text">$</span>
+											<b class="o_default_snippet_text" style="font-size:40px">19</b>
+											<small class="o_default_snippet_text">/ month</small>
+										</h3>
+										<ul class="pricing__feature-list">
+											<li class="pricing__feature">1 GB of space</li>
+											<li class="pricing__feature">Unlimited traffic</li>
+											<li class="pricing__feature">Forum access</li>
+											<li class="pricing__feature">Support at $25/hour</li>
+										</ul>
+										<button class="pricing__action">Choose plan</button>
+									</div>
+									<div class="col-md-3 col-sm-6  pricing__item">
+										<div>
+											<i aria-hidden="true" class="fa fa-bus"/>
+										</div>
+										<h3 class="pricing__title">Advanced</h3>
+										<h3 class="pricing__price" style="margin: 0">
+											<span class="pricing__currency o_default_snippet_text">$</span>
+											<b class="o_default_snippet_text" style="font-size:40px">65</b>
+											<small class="o_default_snippet_text">/ month</small>
+										</h3>
+										<ul class="pricing__feature-list">
+											<li class="pricing__feature">5 GB of space</li>
+											<li class="pricing__feature">Unlimited traffic</li>
+											<li class="pricing__feature">Forum access</li>
+											<li class="pricing__feature">Support at $5/hour</li>
+										</ul>
+										<button class="pricing__action">Choose plan</button>
+									</div>
+									<div class="col-md-3 col-sm-6 pricing__item">
+										<div>
+											<i aria-hidden="true" class="fa fa-subway"/>
+										</div>
+										<h3 class="pricing__title">Professional</h3>
+										<h3 class="pricing__price" style="margin: 0">
+											<span class="pricing__currency o_default_snippet_text">$</span>
+											<b class="o_default_snippet_text" style="font-size:40px">125</b>
+											<small class="o_default_snippet_text">/ month</small>
+										</h3>
+										<ul class="pricing__feature-list">
+											<li class="pricing__feature">20 GB of space</li>
+											<li class="pricing__feature">Unlimited traffic</li>
+											<li class="pricing__feature">Forum access</li>
+											<li class="pricing__feature">Free support</li>
+										</ul>
+										<button class="pricing__action">Choose plan</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</section>
+					<!--contact us -->
+					<section class="contact-us s_theme_crafito_contact_us" style="background:url(/theme_crafito/static/src/img/contact-us-bg.png) no-repeat; background-size:cover">
+						<div class="container">
+							<div class="col-md-4 col-sm-4">
+								<div class="mail">
+									<i aria-hidden="true" class="fa fa-paper-plane"/>
+									<p>Email us</p>
+									<div class="add">
+										<span t-field="res_company.email"/>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-4 col-sm-4">
+								<div class="location">
+									<i aria-hidden="true" class="fa fa-map-marker"/>
+									<p>Visit us</p>
+									<div class="add" t-field="res_company.partner_id" t-field-options="{&quot;widget&quot;: &quot;contact&quot;,                                                         &quot;fields&quot;: [&quot;address&quot;],                                                         &quot;no_marker&quot;: true,                                                         &quot;no_tag_br&quot;: true}"/>
+								</div>
+							</div>
+							<div class="col-md-4 col-sm-4">
+								<div class="phone">
+									<i aria-hidden="true" class="fa fa-phone"/>
+									<p>Call us</p>
+									<div class="add">
+										<span t-field="res_company.phone"/>
+									</div>
+								</div>
+							</div>
+						</div>
+					</section>
+				</div>
+			</xpath>
+		</template>
+	</data>
+</openerp>

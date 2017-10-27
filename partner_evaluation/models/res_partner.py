@@ -11,13 +11,17 @@ class crm_case_section(osv.osv):
     def _get_res_invoice_amount(self, cr, uid, ids, field_name, arg, context=None):
         res = dict(map(lambda x: (x,0), ids))
         amount_total=0.0
+        currentYear = datetime.now().year
+        print 'currentYearcurrentYear',currentYear
         for data in self.browse(cr, uid, ids, context=context):
-            cr.execute("select sum(amount_total) from account_invoice where partner_id =%s and state !='cancel'", (data.id,))
+            cr.execute("select sum(amount_total) from account_invoice where partner_id =%s and state !='cancel' and EXTRACT(YEAR FROM date_invoice)=%s", (data.id,currentYear,))
             amount_total = cr.fetchone()
             if amount_total:
                 amount_total = amount_total[0]
             else:
                 amount_total = 0.0
+            cr.execute("update res_partner set  res_total_amount =%s where id=%s ",(amount_total,data.id,))
+                
             res[data.id] = amount_total
         return res 
   
@@ -52,13 +56,19 @@ class crm_case_section(osv.osv):
         'approved_evalution': fields.boolean('Approved'),
         'dean_customer': fields.boolean('Dean'),
         'bw_customer': fields.boolean('BW'),
-        'res_total_amount': fields.function(_get_res_invoice_amount,
-        type='float', readonly=True,store=True,
+        'function_res_total_amount':fields.function(_get_res_invoice_amount,
+        type='float', readonly=True,
+        string='Total Invoice Amount'),   
+        'res_total_amount': fields.float(readonly=True,
         string='Total Invoice Amount'),       
         
         
         }
     
+    _defaults = {
+        'is_distributor': False,
+        }
+        
     
     
     def onchange_calculate_total_marks(self, cr, uid, ids, reliable, price, delivery, flexibility, communication, after_services, context=None):  

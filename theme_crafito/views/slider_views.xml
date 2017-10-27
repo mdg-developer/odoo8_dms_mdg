@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <menuitem id="crafito_menu_slider_config" parent="base.menu_base_partner" name="Slider Configuration" sequence="101" />
+        <!-- Blog Slider -->
+        <!-- Blog Slider Form View-->
+        <record id="crafito_dynamic_blog_slider_form_view" model="ir.ui.view">
+            <field name="name">dynamic.blog.slider.form.view</field>
+            <field name="model">blog.slider.config</field>
+            <field name="arch" type="xml">
+                <form string="Blog Post Slider">
+                    <sheet>
+                        <group>
+                            <field name="name" />
+                            <field name="active" />
+                            <field name="no_of_counts" />
+                            <field name="auto_rotate" />
+                            <field name="sliding_speed" attrs="{'invisible': [('auto_rotate', '=', False)]}" />
+                            <field name="collections_blog_post" widget="many2many_tags" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!-- Blog Slider List View-->
+        <record id="crafito_dynamic_blog_slider_list_view" model="ir.ui.view">
+            <field name="name">dynamic.blog.slider.list.view</field>
+            <field name="model">blog.slider.config</field>
+            <field name="arch" type="xml">
+                <tree string="Blog Post Slider">
+                    <field name="name" />
+                    <field name="no_of_counts" />
+                </tree>
+            </field>
+        </record>
+        <!-- Blog Slider Action -->
+        <record id="crafito_dynamic_blog_slider_action" model="ir.actions.act_window">
+            <field name="name">Blog Post Slider</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">blog.slider.config</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False" />
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                Click to define a new slider.
+            </p>
+            </field>
+        </record>
+        <!-- Blog slider main menu in config -->
+        <menuitem id="crafito_dynamic_blog_slider_menu" name="Blog Slider Configuraton" action="crafito_dynamic_blog_slider_action" parent="website_blog.menu_wiki" sequence="80" />
+        <!-- Multi Product Slider Form View-->
+        <record id="theme_crafito_multi_slider_form_view" model="ir.ui.view">
+            <field name="name">multi.slider.form.view</field>
+            <field name="model">multi.slider.config</field>
+            <field name="arch" type="xml">
+                <form string="Multi Slider">
+                    <sheet>
+                        <group>
+                            <field name="name" />
+                            <field name="active" />
+                        </group>
+                        <group string="Slider configuration">
+                            <field name="auto_rotate" />
+                            <field name="sliding_speed" attrs="{'invisible': [('auto_rotate', '=', False)]}" />
+                        </group>
+                        <group string="Collection configuration">
+                            <field name="no_of_collection" />
+                            <field name="label_collection_1" attrs="{'invisible': [('no_of_collection', '=', False)]}" />
+                            <field name="collection_1_ids" attrs="{'invisible': [('no_of_collection', '=', False)]}" widget="many2many_tags" />
+                            <field name="special_offer_1_product_tmpl_id" attrs="{'invisible': [('no_of_collection', '=', False)]}" />
+                            <field name="label_collection_2" attrs="{'invisible': [('no_of_collection', '=', False)]}" />
+                            <field name="collection_2_ids" attrs="{'invisible': [('no_of_collection', '=', False)]}" widget="many2many_tags" />
+                            <field name="special_offer_2_product_tmpl_id" attrs="{'invisible': [('no_of_collection', '=', False)]}" />
+                            <field name="label_collection_3" attrs="{'invisible': ['|', ('no_of_collection', '=', False),                                                           ('no_of_collection', 'not in', ('3', '4', '5'))],                                        'required': [('no_of_collection', 'in', ('3', '4', '5'))]}" />
+                            <field name="collection_3_ids" attrs="{'invisible': ['|', ('no_of_collection', '=', False),                                                        ('no_of_collection', 'not in', ('3', '4', '5'))],                                     'required': ['|', ('no_of_collection', 'in', ('3', '4', '5'))]}" widget="many2many_tags" />
+                            <field name="special_offer_3_product_tmpl_id" attrs="{'invisible': ['|', ('no_of_collection', '=', False),                                                        ('no_of_collection', 'not in', ('3', '4', '5'))],                                     'required': ['|', ('no_of_collection', 'in', ('3', '4', '5'))]}" />
+                            <field name="label_collection_4" attrs="{'invisible': ['|', ('no_of_collection', '=', False),                                                           ('no_of_collection', 'not in', ('4', '5'))],                                        'required': [('no_of_collection', 'in', ('4', '5'))]}" />
+                            <field name="collection_4_ids" attrs="{'invisible': ['|', ('no_of_collection', '=', False),                                                        ('no_of_collection', 'not in', ('4', '5'))],                                     'required': [('no_of_collection', 'in', ('4', '5'))]}" widget="many2many_tags" />
+                            <field name="special_offer_4_product_tmpl_id" attrs="{'invisible': ['|', ('no_of_collection', '=', False),                                                        ('no_of_collection', 'not in', ('4', '5'))],                                     'required': ['|', ('no_of_collection', 'in', ('4', '5'))]}" />
+                            <field name="label_collection_5" attrs="{'invisible': ['|', ('no_of_collection', '=', False),                                                           ('no_of_collection', '!=', '5')],                                        'required': [('no_of_collection', '=', '5')]}" />
+                            <field name="collection_5_ids" attrs="{'invisible': ['|', ('no_of_collection', '=', False),                                                        ('no_of_collection', '!=', '5')],                                     'required': [('no_of_collection', '=', '5')]}" widget="many2many_tags" />
+                            <field name="special_offer_5_product_tmpl_id" attrs="{'invisible': ['|', ('no_of_collection', '=', False),                                                        ('no_of_collection', '!=', '5')],                                     'required': ['|', ('no_of_collection', '=', '5')]}" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!-- Multi Product Slider List View-->
+        <record id="theme_crafito_multi_slider_list_view" model="ir.ui.view">
+            <field name="name">multi.slider.list.view</field>
+            <field name="model">multi.slider.config</field>
+            <field name="arch" type="xml">
+                <tree string="Dynamic Slider">
+                    <field name="name" />
+                    <field name="active" />
+                    <field name="no_of_collection" />
+                </tree>
+            </field>
+        </record>
+        <!-- Multi Product Slider Action -->
+        <record id="theme_crafito_multi_slider_action" model="ir.actions.act_window">
+            <field name="name">Multi Slider</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">multi.slider.config</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False" />
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                Click to define a new slider.
+            </p>
+            </field>
+        </record>
+        <!-- Main menu in config -->
+        <menuitem id="theme_crafito_multi_slider_menu" name="Multi Product Slider Configuraton" action="theme_crafito_multi_slider_action" parent="theme_crafito.crafito_menu_slider_config" sequence="70" />
+        <!-- Category Slider -->
+        <!-- Category Slider Form View-->
+        <record id="cat_slider_form_view" model="ir.ui.view">
+            <field name="name">category.slider.form.view</field>
+            <field name="model">category.slider.config</field>
+            <field name="arch" type="xml">
+                <form string="Category Slider">
+                    <sheet>
+                        <group>
+                            <field name="name" />
+                            <field name="active" />
+                            <field name="no_of_counts" />
+                            <field name="auto_rotate" />
+                            <field name="sliding_speed" attrs="{'invisible': [('auto_rotate', '=', False)]}" />
+                            <field name="collections_category" widget="many2many_tags" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!-- Category Slider List View-->
+        <record id="cat_slider_list_view" model="ir.ui.view">
+            <field name="name">category.slider.list.view</field>
+            <field name="model">category.slider.config</field>
+            <field name="arch" type="xml">
+                <tree string="Category Slider">
+                    <field name="name" />
+                    <field name="no_of_counts" />
+                </tree>
+            </field>
+        </record>
+        <!-- Category Slider Action -->
+        <record id="cat_slider_action" model="ir.actions.act_window">
+            <field name="name">Category Slider</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">category.slider.config</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False" />
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                Click to define a new slider.
+            </p>
+            </field>
+        </record>
+        <!-- Category menu in slider config -->
+        <menuitem id="cat_slider_menu" name="Category Slider Configuraton" action="cat_slider_action" parent="theme_crafito.crafito_menu_slider_config" sequence="60" />
+        <!-- Product Slider -->
+        <!-- Product Slider Form View-->
+        <record id="prod_slider_form_view" model="ir.ui.view">
+            <field name="name">product.slider.form.view</field>
+            <field name="model">product.slider.config</field>
+            <field name="arch" type="xml">
+                <form string="Products Slider">
+                    <sheet>
+                        <group>
+                            <field name="name" />
+                            <field name="active" />
+                            <field name="no_of_counts" />
+                            <field name="auto_rotate" />
+                            <field name="sliding_speed" attrs="{'invisible': [('auto_rotate', '=', False)]}" />
+                            <field name="collections_products" widget="many2many_tags" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!-- Product Slider List View-->
+        <record id="prod_slider_list_view" model="ir.ui.view">
+            <field name="name">product.slider.list.view</field>
+            <field name="model">product.slider.config</field>
+            <field name="arch" type="xml">
+                <tree string="Products Slider">
+                    <field name="name" />
+                    <field name="no_of_counts" />
+                </tree>
+            </field>
+        </record>
+        <!-- Product Slider Action -->
+        <record id="prod_slider_action" model="ir.actions.act_window">
+            <field name="name">Products Slider</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.slider.config</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False" />
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                Click to define a new slider.
+            </p>
+            </field>
+        </record>
+        <!-- Product menu in slider config -->
+        <menuitem id="prod_slider_menu" name="Product Slider Configuraton" action="prod_slider_action" parent="theme_crafito.crafito_menu_slider_config" sequence="60" />
+        <!-- Featured Product Slider -->
+        <!-- Featured Product Slider Form View-->
+        <record id="featued_prod_slider_form_view" model="ir.ui.view">
+            <field name="name">featured.product.slider.form.view</field>
+            <field name="model">feature.product.slider.config</field>
+            <field name="arch" type="xml">
+                <form string="Featured Products Slider">
+                    <sheet>
+                        <group>
+                            <field name="name" />
+                            <field name="active" />
+                            <field name="feature_name" />
+                            <field name="feature_products_collections" widget="many2many_tags" />
+                            <field name="on_sale_name" />
+                            <field name="on_sale_collections" widget="many2many_tags" />
+                            <field name="random_name" />
+                            <field name="random_products_collections" widget="many2many_tags" />
+                            <field name="low_price_name" />
+                            <field name="low_price_collections" widget="many2many_tags" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!-- Featured Product Slider List View-->
+        <record id="featured_prod_slider_list_view" model="ir.ui.view">
+            <field name="name">featured.product.slider.list.view</field>
+            <field name="model">feature.product.slider.config</field>
+            <field name="arch" type="xml">
+                <tree string="Products Slider">
+                    <field name="name" />
+                    <field name="active" />
+                </tree>
+            </field>
+        </record>
+        <!-- Featured Product Slider Action -->
+        <record id="featured_prod_slider_action" model="ir.actions.act_window">
+            <field name="name">Featured Products Slider</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">feature.product.slider.config</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False" />
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                Click to define a new slider.
+            </p>
+            </field>
+        </record>
+        <!-- Featured Product menu in slider config -->
+        <menuitem id="featured_prod_slider_menu" name="Featured Product Slider Configuraton" action="featured_prod_slider_action" parent="theme_crafito.crafito_menu_slider_config" sequence="60" />
+    </data>
+</openerp>
