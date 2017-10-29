@@ -35,7 +35,7 @@
         <scalar-parameter name="month" id="23">
             <text-property name="promptText">Month</text-property>
             <property name="valueType">static</property>
-            <property name="isRequired">true</property>
+            <property name="isRequired">false</property>
             <property name="dataType">string</property>
             <property name="distinct">true</property>
             <list-property name="selectionList">
@@ -236,31 +236,11 @@
                 </structure>
                 <structure>
                     <property name="name">param_2</property>
-                    <property name="paramName">month</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                    <property name="position">2</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_3</property>
                     <property name="paramName">year</property>
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
-                    <property name="position">3</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_4</property>
-                    <property name="paramName">month</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                    <property name="position">4</property>
+                    <property name="position">2</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -309,7 +289,14 @@
                     </structure>
                 </list-property>
             </structure>
-            <method name="beforeOpen"><![CDATA[if (params["company_id"].value == null ){     
+            <method name="beforeOpen"><![CDATA[if (params["month"].value == null ){     
+   this.queryText =this.queryText.replace("--$month$", "")
+}
+else
+{     
+   this.queryText =this.queryText.replace("--$month$", "and initcap(to_char(to_timestamp (date_part('month',(date_order at time zone 'utc' )at time zone 'asia/rangoon')::text, 'MM'), 'TMmonth'))='"+params["month"]+"'")
+}
+if (params["company_id"].value == null ){     
    this.queryText =this.queryText.replace("--$company_id$", "")
 }
 else
@@ -405,7 +392,7 @@ and so.state not in ('draft','cancel')
 --$branch_id$
 --$sales_team_id$
 and date_part('year',(date_order at time zone 'utc' )at time zone 'asia/rangoon')::int=?
-and initcap(to_char(to_timestamp (date_part('month',(date_order at time zone 'utc' )at time zone 'asia/rangoon')::text, 'MM'), 'TMmonth'))=?
+--$month$
 group by pp.default_code,pp.name_template,date_part('year',(date_order at time zone 'utc' )at time zone 'asia/rangoon'),
 initcap(to_char(to_timestamp (date_part('month',(date_order at time zone 'utc' )at time zone 'asia/rangoon')::text, 'MM'), 'TMmonth')),
 date_part('month',(date_order at time zone 'utc' )at time zone 'asia/rangoon')
@@ -423,7 +410,7 @@ and so.state not in ('draft','cancel')
 --$branch_id$
 --$sales_team_id$
 and date_part('year',(date_order at time zone 'utc' )at time zone 'asia/rangoon')::int=?
-and initcap(to_char(to_timestamp (date_part('month',(date_order at time zone 'utc' )at time zone 'asia/rangoon')::text, 'MM'), 'TMmonth'))=?
+--$month$
 group by pp.default_code,pp.name_template,date_part('year',(date_order at time zone 'utc' )at time zone 'asia/rangoon'),
 initcap(to_char(to_timestamp (date_part('month',(date_order at time zone 'utc' )at time zone 'asia/rangoon')::text, 'MM'), 'TMmonth')),
 date_part('month',(date_order at time zone 'utc' )at time zone 'asia/rangoon')
@@ -456,37 +443,7 @@ date_part('month',(date_order at time zone 'utc' )at time zone 'asia/rangoon')
             <design:name></design:name>
             <design:position>2</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>3</design:position>
-          </design:identifier>
           <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>4</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
