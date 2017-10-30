@@ -1877,7 +1877,8 @@ class mobile_sale_order(osv.osv):
         
         sale_order_obj = self.pool.get('sale.order')
         list_val = None
-        list_val = sale_order_obj.search(cr, uid, [('pre_order', '=', True), ('is_generate', '=', True), ('delivery_id', '=', saleTeamId), ('shipped', '=', False), ('invoiced', '=', False) , ('tb_ref_no', 'not in', soList)], context=context)
+        #, ('is_generate', '=', True)
+        list_val = sale_order_obj.search(cr, uid, [('pre_order', '=', True), ('delivery_id', '=', saleTeamId), ('shipped', '=', False), ('invoiced', '=', False) , ('tb_ref_no', 'not in', soList)], context=context)
         print 'list_val', list_val
         list = []
         try:
@@ -2032,10 +2033,20 @@ class mobile_sale_order(osv.osv):
                     So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
                                                    , ('name', '=', so_ref_no)], context=context)
                     if So_id:
+                        picking_ids = self.pool.get('stock.picking').search(cr, uid, [('group_id', '=',so_ref_no),('state','!=','done')], context=context)
+                        if picking_ids:
+                            for picking_id in picking_ids: 
+                                self.pool.get('stock.picking').unlink(cr,uid,picking_id,context=context)
+                        procurement_order_obj = self.pool.get('procurement.order')        
+                        procurement_ids = self.pool.get('procurement.order').search(cr,uid,[('group_id', '=',so_ref_no)], context=context)
+                        if procurement_ids:
+                            for procurement_id in procurement_ids:
+                                osv.osv.unlink(procurement_order_obj, cr, uid, procurement_id, context=context)
+                                cr.execute("delete from procurement_order where id=%s",(procurement_id,))                        
+#                         cr.execute('''update stock_picking set state ='cancel' where origin = %s ''', (so_ref_no,))
+#                         cr.execute('''update stock_move set state ='cancel' where origin = %s ''', (so_ref_no,))
                         cr.execute('''update sale_order set state ='cancel' where id = %s ''', (So_id[0],))
                         cr.execute('''update account_invoice set state ='cancel' where origin = %s ''', (so_ref_no,))
-                        cr.execute('''update stock_picking set state ='cancel' where origin = %s ''', (so_ref_no,))
-                        cr.execute('''update stock_move set state ='cancel' where origin = %s ''', (so_ref_no,))
                         cr.execute('select tb_ref_no from sale_order where id=%s',(So_id[0],))
                         ref_no=cr.fetchone()[0]
                         cr.execute("update pre_sale_order set void_flag = 'voided' where name=%s", ( ref_no,))          
