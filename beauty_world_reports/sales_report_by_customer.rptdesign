@@ -3,7 +3,6 @@
     <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
-    <property name="layoutPreference">auto layout</property>
     <property name="bidiLayoutOrientation">ltr</property>
     <property name="imageDPI">96</property>
     <list-property name="libraries">
@@ -13,7 +12,7 @@
         </structure>
     </list-property>
     <parameters>
-        <scalar-parameter name="company_id" id="19" extends="report_library.company_id"/>
+        <scalar-parameter name="company_id" id="5" extends="report_library.company_id"/>
         <scalar-parameter name="year" id="21">
             <text-property name="promptText">Year</text-property>
             <property name="valueType">dynamic</property>
@@ -96,14 +95,371 @@
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
-        <scalar-parameter name="branch_id" id="6" extends="report_library.branch_id"/>
-        <scalar-parameter name="sales_team_id" id="7" extends="report_library.sales_team_id"/>
+        <scalar-parameter name="branch_id" id="8" extends="report_library.branch_id"/>
+        <scalar-parameter name="sales_team_id" id="9" extends="report_library.sales_team_id"/>
+        <scalar-parameter name="customer_id" id="32">
+            <text-property name="promptText">Customer</text-property>
+            <property name="valueType">dynamic</property>
+            <property name="isRequired">false</property>
+            <property name="dataSetName">customer</property>
+            <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
+            <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
+            <expression name="sortByColumn">dataSetRow["name"]</expression>
+            <property name="sortDirection">asc</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">list-box</property>
+            <property name="mustMatch">true</property>
+            <property name="fixedOrder">false</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="25"
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="33"
  extends="report_library.Data Source"/>
     </data-sources>
     <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="Data Set" id="10">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">row_number</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">row_number</text-property>
+                    <text-property name="heading">row_number</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">customer_code</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">customer_code</text-property>
+                    <text-property name="heading">customer_code</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">customer</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">customer</text-property>
+                    <text-property name="heading">customer</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">amount_total</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">amount_total</text-property>
+                    <text-property name="heading">amount_total</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">date_order_year</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">date_order_year</text-property>
+                    <text-property name="heading">date_order_year</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">date_order_month</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">date_order_month</text-property>
+                    <text-property name="heading">date_order_month</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">month_number</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">month_number</text-property>
+                    <text-property name="heading">month_number</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">param_1</property>
+                    <property name="paramName">year</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">row_number</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">customer_code</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">customer</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">amount_total</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">date_order_year</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">date_order_month</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">month_number</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <method name="beforeOpen"><![CDATA[if (params["month"].value == null ){     
+   this.queryText =this.queryText.replace("--$month$", "")
+}
+else
+{     
+   this.queryText =this.queryText.replace("--$month$", "and initcap(to_char(to_timestamp (date_part('month',(date_order at time zone 'utc' )at time zone 'asia/rangoon')::text, 'MM'), 'TMmonth'))='"+params["month"]+"'")
+}
+if (params["company_id"].value == null ){     
+   this.queryText =this.queryText.replace("--$company_id$", "")
+}
+else
+{     
+   this.queryText =this.queryText.replace("--$company_id$", "and so.company_id="+params["company_id"])
+}
+if (params["branch_id"].value == null ){     
+   this.queryText =this.queryText.replace("--$branch_id$", "")
+}
+else
+{     
+   this.queryText =this.queryText.replace("--$branch_id$", "and so.branch_id="+params["branch_id"])
+}
+if (params["sales_team_id"].value == null ){     
+   this.queryText =this.queryText.replace("--$sales_team_id$", "")
+}
+else
+{     
+   this.queryText =this.queryText.replace("--$sales_team_id$", "and so.section_id="+params["sales_team_id"])
+}
+if (params["customer_id"].value == null ){     
+   this.queryText =this.queryText.replace("--$customer_id$", "")
+}
+else
+{     
+   this.queryText =this.queryText.replace("--$customer_id$", "and so.partner_id="+params["customer_id"])
+}
+]]></method>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">row_number</property>
+                    <property name="nativeName">row_number</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">-5</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">customer_code</property>
+                    <property name="nativeName">customer_code</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">customer</property>
+                    <property name="nativeName">customer</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">amount_total</property>
+                    <property name="nativeName">amount_total</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">date_order_year</property>
+                    <property name="nativeName">date_order_year</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">date_order_month</property>
+                    <property name="nativeName">date_order_month</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">month_number</property>
+                    <property name="nativeName">month_number</property>
+                    <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select row_number() over (order by month_number,customer_code),*
+from 
+(select rp.customer_code,rp.name customer,sum(amount_total) amount_total,
+date_part('year',(date_order at time zone 'utc' )at time zone 'asia/rangoon')::int date_order_year,
+initcap(to_char(to_timestamp (date_part('month',(date_order at time zone 'utc' )at time zone 'asia/rangoon')::text, 'MM'), 'TMmonth')) date_order_month,
+date_part('month',(date_order at time zone 'utc' )at time zone 'asia/rangoon') as month_number
+from sale_order so,res_partner rp
+where so.partner_id=rp.id
+and so.state not in ('draft','cancel')
+and date_part('year',(date_order at time zone 'utc' )at time zone 'asia/rangoon')::int=?
+--$month$
+--$company_id$
+--$branch_id$
+--$sales_team_id$
+--$customer_id$
+group by partner_id,rp.customer_code,rp.name,date_part('year',(date_order at time zone 'utc' )at time zone 'asia/rangoon')::int,
+initcap(to_char(to_timestamp (date_part('month',(date_order at time zone 'utc' )at time zone 'asia/rangoon')::text, 'MM'), 'TMmonth')),
+date_part('month',(date_order at time zone 'utc' )at time zone 'asia/rangoon')
+)A]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>customer_code</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>2147483647</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>customer_code</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>customer_code</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>customer</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>2147483647</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>customer</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>customer</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>amount_total</design:name>
+              <design:position>3</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2</design:nativeDataTypeCode>
+            <design:precision>0</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>amount_total</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>amount_total</design:label>
+            <design:formattingHints>
+              <design:displaySize>131089</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>date_order_year</design:name>
+              <design:position>4</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>date_order_year</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>date_order_year</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>date_order_month</design:name>
+              <design:position>5</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>2147483647</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>date_order_month</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>date_order_month</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="year" id="20">
             <list-property name="columnHints">
                 <structure>
@@ -167,416 +523,102 @@
   </design:ResultSets>
 </model:DesignValues>]]></xml-property>
         </oda-data-set>
-        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="Data Set" id="24">
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="customer" id="31">
             <list-property name="columnHints">
                 <structure>
-                    <property name="columnName">row_number</property>
+                    <property name="columnName">id</property>
                     <property name="analysis">measure</property>
-                    <text-property name="displayName">row_number</text-property>
-                    <text-property name="heading">row_number</text-property>
+                    <text-property name="displayName">id</text-property>
+                    <text-property name="heading">id</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">default_code</property>
-                    <property name="alias">default_code</property>
+                    <property name="columnName">name</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">default_code</text-property>
-                    <text-property name="heading">default_code</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">name_template</property>
-                    <property name="alias">name_template</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">name_template</text-property>
-                    <text-property name="heading">name_template</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">year</property>
-                    <property name="alias">year</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">year</text-property>
-                    <text-property name="heading">year</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">month</property>
-                    <property name="alias">month</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">month</text-property>
-                    <text-property name="heading">month</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">month_number</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">month_number</text-property>
-                    <text-property name="heading">month_number</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">value</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">value</text-property>
-                    <text-property name="heading">value</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">status</property>
-                    <property name="alias">status</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">status</text-property>
-                    <text-property name="heading">status</text-property>
-                </structure>
-            </list-property>
-            <list-property name="parameters">
-                <structure>
-                    <property name="name">param_1</property>
-                    <property name="paramName">year</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                    <property name="position">1</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_2</property>
-                    <property name="paramName">year</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                    <property name="position">2</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
+                    <text-property name="displayName">name</text-property>
+                    <text-property name="heading">name</text-property>
                 </structure>
             </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
                     <structure>
                         <property name="position">1</property>
-                        <property name="name">row_number</property>
-                        <property name="dataType">decimal</property>
+                        <property name="name">id</property>
+                        <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">2</property>
-                        <property name="name">default_code</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">3</property>
-                        <property name="name">name_template</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">4</property>
-                        <property name="name">year</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">5</property>
-                        <property name="name">month</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">6</property>
-                        <property name="name">month_number</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">7</property>
-                        <property name="name">value</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
-                        <property name="position">8</property>
-                        <property name="name">status</property>
+                        <property name="name">name</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
             </structure>
-            <method name="beforeOpen"><![CDATA[if (params["month"].value == null ){     
-   this.queryText =this.queryText.replace("--$month$", "")
-}
-else
-{     
-   this.queryText =this.queryText.replace("--$month$", "and initcap(to_char(to_timestamp (date_part('month',(date_order at time zone 'utc' )at time zone 'asia/rangoon')::text, 'MM'), 'TMmonth'))='"+params["month"]+"'")
-}
-if (params["company_id"].value == null ){     
-   this.queryText =this.queryText.replace("--$company_id$", "")
-}
-else
-{     
-   this.queryText =this.queryText.replace("--$company_id$", "and so.company_id="+params["company_id"])
-}
-if (params["branch_id"].value == null ){     
-   this.queryText =this.queryText.replace("--$branch_id$", "")
-}
-else
-{     
-   this.queryText =this.queryText.replace("--$branch_id$", "and branch_id="+params["branch_id"])
-}
-if (params["sales_team_id"].value == null ){     
-   this.queryText =this.queryText.replace("--$sales_team_id$", "")
-}
-else
-{     
-   this.queryText =this.queryText.replace("--$sales_team_id$", "and section_id="+params["sales_team_id"])
-}
-]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
-                    <property name="name">row_number</property>
-                    <property name="nativeName">row_number</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">-5</property>
+                    <property name="name">id</property>
+                    <property name="nativeName">id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
                     <property name="position">2</property>
-                    <property name="name">default_code</property>
-                    <property name="nativeName">default_code</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-                <structure>
-                    <property name="position">3</property>
-                    <property name="name">name_template</property>
-                    <property name="nativeName">name_template</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-                <structure>
-                    <property name="position">4</property>
-                    <property name="name">year</property>
-                    <property name="nativeName">year</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
-                </structure>
-                <structure>
-                    <property name="position">5</property>
-                    <property name="name">month</property>
-                    <property name="nativeName">month</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-                <structure>
-                    <property name="position">6</property>
-                    <property name="name">month_number</property>
-                    <property name="nativeName">month_number</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
-                </structure>
-                <structure>
-                    <property name="position">7</property>
-                    <property name="name">value</property>
-                    <property name="nativeName">value</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">2</property>
-                </structure>
-                <structure>
-                    <property name="position">8</property>
-                    <property name="name">status</property>
-                    <property name="nativeName">status</property>
+                    <property name="name">name</property>
+                    <property name="nativeName">name</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select row_number() over (order by month_number,status desc),*
-from (
-select default_code,name_template,
-date_part('year',(date_order at time zone 'utc' )at time zone 'asia/rangoon') as year,
-initcap(to_char(to_timestamp (date_part('month',(date_order at time zone 'utc' )at time zone 'asia/rangoon')::text, 'MM'), 'TMmonth')) as month,
-date_part('month',(date_order at time zone 'utc' )at time zone 'asia/rangoon') as month_number,
-sum(product_uom_qty) as value,'Qty' status
-from sale_order so,sale_order_line line,product_product pp
-where so.id=line.order_id
-and line.product_id=pp.id
-and so.state not in ('draft','cancel')
---$company_id$
---$branch_id$
---$sales_team_id$
-and date_part('year',(date_order at time zone 'utc' )at time zone 'asia/rangoon')::int=?
---$month$
-group by pp.default_code,pp.name_template,date_part('year',(date_order at time zone 'utc' )at time zone 'asia/rangoon'),
-initcap(to_char(to_timestamp (date_part('month',(date_order at time zone 'utc' )at time zone 'asia/rangoon')::text, 'MM'), 'TMmonth')),
-date_part('month',(date_order at time zone 'utc' )at time zone 'asia/rangoon')
-union
-select default_code,name_template,
-date_part('year',(date_order at time zone 'utc' )at time zone 'asia/rangoon') as year,
-initcap(to_char(to_timestamp (date_part('month',(date_order at time zone 'utc' )at time zone 'asia/rangoon')::text, 'MM'), 'TMmonth')) as month,
-date_part('month',(date_order at time zone 'utc' )at time zone 'asia/rangoon') as month_number,
-sum(product_uom_qty*price_unit) as value,'Amount' status
-from sale_order so,sale_order_line line,product_product pp
-where so.id=line.order_id
-and line.product_id=pp.id
-and so.state not in ('draft','cancel')
---$company_id$
---$branch_id$
---$sales_team_id$
-and date_part('year',(date_order at time zone 'utc' )at time zone 'asia/rangoon')::int=?
---$month$
-group by pp.default_code,pp.name_template,date_part('year',(date_order at time zone 'utc' )at time zone 'asia/rangoon'),
-initcap(to_char(to_timestamp (date_part('month',(date_order at time zone 'utc' )at time zone 'asia/rangoon')::text, 'MM'), 'TMmonth')),
-date_part('month',(date_order at time zone 'utc' )at time zone 'asia/rangoon')
-)A
-]]></xml-property>
+            <xml-property name="queryText"><![CDATA[select id,name
+from res_partner
+where customer='true'
+and active='true'
+order by name]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
-  <DataSetParameters>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>1</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>2</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-  </DataSetParameters>
   <design:ResultSets derivedMetaData="true">
     <design:resultSetDefinitions>
       <design:resultSetColumns>
         <design:resultColumnDefinitions>
           <design:attributes>
             <design:identifier>
-              <design:name>default_code</design:name>
+              <design:name>id</design:name>
               <design:position>1</design:position>
             </design:identifier>
-            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
-            <design:precision>2147483647</design:precision>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
             <design:scale>0</design:scale>
-            <design:nullability>Nullable</design:nullability>
+            <design:nullability>NotNullable</design:nullability>
             <design:uiHints>
-              <design:displayName>default_code</design:displayName>
+              <design:displayName>id</design:displayName>
             </design:uiHints>
           </design:attributes>
           <design:usageHints>
-            <design:label>default_code</design:label>
+            <design:label>id</design:label>
             <design:formattingHints>
-              <design:displaySize>2147483647</design:displaySize>
+              <design:displaySize>11</design:displaySize>
             </design:formattingHints>
           </design:usageHints>
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
             <design:identifier>
-              <design:name>name_template</design:name>
+              <design:name>name</design:name>
               <design:position>2</design:position>
             </design:identifier>
             <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
             <design:precision>2147483647</design:precision>
             <design:scale>0</design:scale>
-            <design:nullability>Nullable</design:nullability>
+            <design:nullability>NotNullable</design:nullability>
             <design:uiHints>
-              <design:displayName>name_template</design:displayName>
+              <design:displayName>name</design:displayName>
             </design:uiHints>
           </design:attributes>
           <design:usageHints>
-            <design:label>name_template</design:label>
+            <design:label>name</design:label>
             <design:formattingHints>
               <design:displaySize>2147483647</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>year</design:name>
-              <design:position>3</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>8</design:nativeDataTypeCode>
-            <design:precision>17</design:precision>
-            <design:scale>17</design:scale>
-            <design:nullability>Unknown</design:nullability>
-            <design:uiHints>
-              <design:displayName>year</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>year</design:label>
-            <design:formattingHints>
-              <design:displaySize>25</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>month</design:name>
-              <design:position>4</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
-            <design:precision>2147483647</design:precision>
-            <design:scale>0</design:scale>
-            <design:nullability>Unknown</design:nullability>
-            <design:uiHints>
-              <design:displayName>month</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>month</design:label>
-            <design:formattingHints>
-              <design:displaySize>2147483647</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>qty</design:name>
-              <design:position>5</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>2</design:nativeDataTypeCode>
-            <design:precision>0</design:precision>
-            <design:scale>0</design:scale>
-            <design:nullability>Unknown</design:nullability>
-            <design:uiHints>
-              <design:displayName>qty</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>qty</design:label>
-            <design:formattingHints>
-              <design:displaySize>131089</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>amount</design:name>
-              <design:position>6</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>2</design:nativeDataTypeCode>
-            <design:precision>0</design:precision>
-            <design:scale>0</design:scale>
-            <design:nullability>Unknown</design:nullability>
-            <design:uiHints>
-              <design:displayName>amount</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>amount</design:label>
-            <design:formattingHints>
-              <design:displaySize>131089</design:displaySize>
             </design:formattingHints>
           </design:usageHints>
         </design:resultColumnDefinitions>
@@ -588,40 +630,40 @@ date_part('month',(date_order at time zone 'utc' )at time zone 'asia/rangoon')
         </oda-data-set>
     </data-sets>
     <cubes>
-        <tabular-cube name="Data Cube" id="57">
+        <tabular-cube name="Data Cube" id="34">
             <property name="dimensions">
-                <tabular-dimension name="Group" id="58">
+                <tabular-dimension name="Group" id="35">
                     <property name="defaultHierarchy">NewTabularHierarchy</property>
                     <property name="hierarchies">
-                        <tabular-hierarchy name="NewTabularHierarchy" id="59">
+                        <tabular-hierarchy name="NewTabularHierarchy" id="36">
                             <property name="levels">
-                                <tabular-level name="default_code" id="60">
+                                <tabular-level name="customer_code" id="37">
                                     <property name="dataType">string</property>
-                                    <property name="columnName">default_code</property>
+                                    <property name="columnName">customer_code</property>
                                 </tabular-level>
                             </property>
                         </tabular-hierarchy>
                     </property>
                 </tabular-dimension>
-                <tabular-dimension name="Group1" id="61">
+                <tabular-dimension name="Group1" id="38">
                     <property name="defaultHierarchy">NewTabularHierarchy1</property>
                     <property name="hierarchies">
-                        <tabular-hierarchy name="NewTabularHierarchy1" id="62">
+                        <tabular-hierarchy name="NewTabularHierarchy1" id="39">
                             <property name="levels">
-                                <tabular-level name="name_template" id="63">
+                                <tabular-level name="customer" id="40">
                                     <property name="dataType">string</property>
-                                    <property name="columnName">name_template</property>
+                                    <property name="columnName">customer</property>
                                 </tabular-level>
                             </property>
                         </tabular-hierarchy>
                     </property>
                 </tabular-dimension>
-                <tabular-dimension name="Group2" id="64">
+                <tabular-dimension name="Group2" id="41">
                     <property name="defaultHierarchy">NewTabularHierarchy2</property>
                     <property name="hierarchies">
-                        <tabular-hierarchy name="NewTabularHierarchy2" id="65">
+                        <tabular-hierarchy name="NewTabularHierarchy2" id="42">
                             <property name="levels">
-                                <tabular-level name="month" id="66">
+                                <tabular-level name="date_order_month" id="43">
                                     <property name="dataType">string</property>
                                     <property name="levelType">dynamic</property>
                                     <list-property name="attributes">
@@ -630,24 +672,7 @@ date_part('month',(date_order at time zone 'utc' )at time zone 'asia/rangoon')
                                             <property name="dataType">decimal</property>
                                         </structure>
                                     </list-property>
-                                    <property name="columnName">month</property>
-                                </tabular-level>
-                                <tabular-level name="status" id="67">
-                                    <property name="dataType">string</property>
-                                    <property name="columnName">status</property>
-                                </tabular-level>
-                            </property>
-                        </tabular-hierarchy>
-                    </property>
-                </tabular-dimension>
-                <tabular-dimension name="Group3" id="101">
-                    <property name="defaultHierarchy">NewTabularHierarchy3</property>
-                    <property name="hierarchies">
-                        <tabular-hierarchy name="NewTabularHierarchy3" id="102">
-                            <property name="levels">
-                                <tabular-level name="row_number" id="103">
-                                    <property name="dataType">decimal</property>
-                                    <property name="columnName">row_number</property>
+                                    <property name="columnName">date_order_month</property>
                                 </tabular-level>
                             </property>
                         </tabular-hierarchy>
@@ -655,10 +680,10 @@ date_part('month',(date_order at time zone 'utc' )at time zone 'asia/rangoon')
                 </tabular-dimension>
             </property>
             <property name="measureGroups">
-                <tabular-measure-group name="Summary Field" id="68">
+                <tabular-measure-group name="Summary Field" id="44">
                     <property name="measures">
-                        <tabular-measure name="value" id="69">
-                            <expression name="measureExpression" type="javascript">dataSetRow["value"]</expression>
+                        <tabular-measure name="amount_total" id="45">
+                            <expression name="measureExpression" type="javascript">dataSetRow["amount_total"]</expression>
                             <property name="dataType">decimal</property>
                         </tabular-measure>
                     </property>
@@ -669,7 +694,6 @@ date_part('month',(date_order at time zone 'utc' )at time zone 'asia/rangoon')
     </cubes>
     <page-setup>
         <simple-master-page name="Simple MasterPage" id="2">
-            <property name="type">us-letter</property>
             <page-footer>
                 <text id="3">
                     <property name="contentType">html</property>
@@ -679,12 +703,12 @@ date_part('month',(date_order at time zone 'utc' )at time zone 'asia/rangoon')
         </simple-master-page>
     </page-setup>
     <body>
-        <label id="8">
+        <label id="25">
             <property name="fontFamily">sans-serif</property>
             <property name="fontSize">12pt</property>
             <property name="fontWeight">bold</property>
             <property name="textAlign">center</property>
-            <text-property name="text">Sales Report - By Products</text-property>
+            <text-property name="text">Sales Report - By Customer</text-property>
         </label>
         <data id="27">
             <property name="fontFamily">sans-serif</property>
@@ -722,16 +746,16 @@ params["year"].displayText&#13;
             </list-property>
             <property name="resultSetColumn">company_id</property>
         </data>
-        <label id="28"/>
-        <extended-item extensionName="Crosstab" extensionVersion="3.7.0" id="30">
+        <label id="30"/>
+        <extended-item extensionName="Crosstab" extensionVersion="3.7.0" id="60">
             <property name="cube">Data Cube</property>
             <property name="measures">
-                <extended-item extensionName="MeasureView" id="93">
-                    <property name="measure">value</property>
+                <extended-item extensionName="MeasureView" id="80">
+                    <property name="measure">amount_total</property>
                     <property name="detail">
-                        <extended-item extensionName="AggregationCell" id="94">
-                            <property name="aggregationOnRow">Group1/name_template</property>
-                            <property name="aggregationOnColumn">Group2/status</property>
+                        <extended-item extensionName="AggregationCell" id="81">
+                            <property name="aggregationOnRow">Group1/customer</property>
+                            <property name="aggregationOnColumn">Group2/date_order_month</property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
                             <property name="borderLeftStyle">solid</property>
@@ -740,23 +764,23 @@ params["year"].displayText&#13;
                             <property name="borderBottomWidth">thin</property>
                             <property name="borderRightStyle">solid</property>
                             <property name="borderRightWidth">thin</property>
-                            <property name="width">199px</property>
                             <property name="content">
-                                <data id="95">
+                                <data id="82">
                                     <property name="fontFamily">sans-serif</property>
+                                    <property name="paddingRight">3pt</property>
                                     <structure name="numberFormat">
                                         <property name="category">Currency</property>
-                                        <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
+                                        <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
                                     </structure>
-                                    <property name="textAlign">center</property>
-                                    <property name="resultSetColumn">value_Group1/name_template_Group2/status</property>
+                                    <property name="textAlign">right</property>
+                                    <property name="resultSetColumn">amount_total_Group1/customer_Group2/date_order_month</property>
                                 </data>
                             </property>
                         </extended-item>
                     </property>
                     <property name="aggregations">
-                        <extended-item extensionName="AggregationCell" id="174">
-                            <property name="aggregationOnRow">Group1/name_template</property>
+                        <extended-item extensionName="AggregationCell" id="86">
+                            <property name="aggregationOnRow">Group1/customer</property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
                             <property name="borderLeftStyle">solid</property>
@@ -765,20 +789,21 @@ params["year"].displayText&#13;
                             <property name="borderBottomWidth">thin</property>
                             <property name="borderRightStyle">solid</property>
                             <property name="borderRightWidth">thin</property>
-                            <property name="width">165px</property>
                             <property name="content">
-                                <data id="175">
+                                <data id="87">
                                     <property name="fontFamily">sans-serif</property>
+                                    <property name="fontWeight">normal</property>
+                                    <property name="paddingRight">3pt</property>
                                     <structure name="numberFormat">
                                         <property name="category">Currency</property>
-                                        <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
+                                        <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
                                     </structure>
-                                    <property name="textAlign">center</property>
-                                    <property name="resultSetColumn">value_Group1/name_template</property>
+                                    <property name="textAlign">right</property>
+                                    <property name="resultSetColumn">amount_total_Group1/customer</property>
                                 </data>
                             </property>
                         </extended-item>
-                        <extended-item extensionName="AggregationCell" id="180">
+                        <extended-item extensionName="AggregationCell" id="92">
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
                             <property name="borderLeftStyle">solid</property>
@@ -788,20 +813,21 @@ params["year"].displayText&#13;
                             <property name="borderRightStyle">solid</property>
                             <property name="borderRightWidth">thin</property>
                             <property name="content">
-                                <data id="181">
+                                <data id="93">
                                     <property name="fontFamily">sans-serif</property>
                                     <property name="fontWeight">bold</property>
+                                    <property name="paddingRight">3pt</property>
                                     <structure name="numberFormat">
                                         <property name="category">Currency</property>
-                                        <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
+                                        <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
                                     </structure>
-                                    <property name="textAlign">center</property>
-                                    <property name="resultSetColumn">value</property>
+                                    <property name="textAlign">right</property>
+                                    <property name="resultSetColumn">amount_total</property>
                                 </data>
                             </property>
                         </extended-item>
-                        <extended-item extensionName="AggregationCell" id="182">
-                            <property name="aggregationOnColumn">Group2/status</property>
+                        <extended-item extensionName="AggregationCell" id="94">
+                            <property name="aggregationOnColumn">Group2/date_order_month</property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
                             <property name="borderLeftStyle">solid</property>
@@ -811,31 +837,32 @@ params["year"].displayText&#13;
                             <property name="borderRightStyle">solid</property>
                             <property name="borderRightWidth">thin</property>
                             <property name="content">
-                                <data id="183">
+                                <data id="95">
                                     <property name="fontFamily">sans-serif</property>
                                     <property name="fontWeight">bold</property>
+                                    <property name="paddingRight">3pt</property>
                                     <structure name="numberFormat">
                                         <property name="category">Currency</property>
-                                        <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
+                                        <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
                                     </structure>
-                                    <property name="textAlign">center</property>
-                                    <property name="resultSetColumn">value_Group2/status</property>
+                                    <property name="textAlign">right</property>
+                                    <property name="resultSetColumn">amount_total_Group2/date_order_month</property>
                                 </data>
                             </property>
                         </extended-item>
                     </property>
                     <property name="header">
-                        <extended-item extensionName="CrosstabCell" id="96">
+                        <extended-item extensionName="CrosstabCell" id="83">
                             <property name="content">
-                                <label id="97">
-                                    <text-property name="text">value</text-property>
+                                <label id="84">
+                                    <text-property name="text">amount_total</text-property>
                                 </label>
                             </property>
                         </extended-item>
-                        <extended-item extensionName="CrosstabCell" id="176">
+                        <extended-item extensionName="CrosstabCell" id="88">
                             <property name="content">
-                                <label id="177">
-                                    <text-property name="text">value</text-property>
+                                <label id="89">
+                                    <text-property name="text">amount_total</text-property>
                                 </label>
                             </property>
                         </extended-item>
@@ -843,11 +870,11 @@ params["year"].displayText&#13;
                 </extended-item>
             </property>
             <property name="rows">
-                <extended-item extensionName="CrosstabView" id="70">
+                <extended-item extensionName="CrosstabView" id="63">
                     <property name="grandTotal">
-                        <extended-item extensionName="CrosstabCell" id="179">
+                        <extended-item extensionName="CrosstabCell" id="91">
                             <property name="content">
-                                <label id="184">
+                                <label id="96">
                                     <property name="fontFamily">sans-serif</property>
                                     <property name="fontWeight">bold</property>
                                     <property name="textAlign">center</property>
@@ -865,19 +892,18 @@ params["year"].displayText&#13;
                         </extended-item>
                     </property>
                     <property name="views">
-                        <extended-item extensionName="DimensionView" id="71">
+                        <extended-item extensionName="DimensionView" id="64">
                             <property name="dimension">Group</property>
                             <property name="levels">
-                                <extended-item extensionName="LevelView" name="NewLevel View" id="72">
-                                    <property name="level">Group/default_code</property>
+                                <extended-item extensionName="LevelView" name="NewLevel View" id="65">
+                                    <property name="level">Group/customer_code</property>
                                     <property name="member">
-                                        <extended-item extensionName="CrosstabCell" id="73">
+                                        <extended-item extensionName="CrosstabCell" id="66">
                                             <property name="content">
-                                                <data name="default_code" id="74">
+                                                <data name="customer_code" id="67">
                                                     <property name="fontFamily">sans-serif</property>
                                                     <property name="fontWeight">normal</property>
-                                                    <property name="textAlign">center</property>
-                                                    <property name="resultSetColumn">default_code</property>
+                                                    <property name="resultSetColumn">customer_code</property>
                                                 </data>
                                             </property>
                                             <property name="borderTopStyle">solid</property>
@@ -888,25 +914,24 @@ params["year"].displayText&#13;
                                             <property name="borderBottomWidth">thin</property>
                                             <property name="borderRightStyle">solid</property>
                                             <property name="borderRightWidth">thin</property>
-                                            <property name="width">208px</property>
                                         </extended-item>
                                     </property>
                                 </extended-item>
                             </property>
                         </extended-item>
-                        <extended-item extensionName="DimensionView" id="76">
+                        <extended-item extensionName="DimensionView" id="69">
                             <property name="dimension">Group1</property>
                             <property name="levels">
-                                <extended-item extensionName="LevelView" name="NewLevel View1" id="77">
-                                    <property name="level">Group1/name_template</property>
+                                <extended-item extensionName="LevelView" name="NewLevel View1" id="70">
+                                    <property name="level">Group1/customer</property>
                                     <property name="member">
-                                        <extended-item extensionName="CrosstabCell" id="78">
+                                        <extended-item extensionName="CrosstabCell" id="71">
                                             <property name="content">
-                                                <data name="name_template" id="80">
+                                                <data name="customer" id="73">
                                                     <property name="fontFamily">sans-serif</property>
                                                     <property name="fontWeight">normal</property>
                                                     <property name="textAlign">center</property>
-                                                    <property name="resultSetColumn">name_template</property>
+                                                    <property name="resultSetColumn">customer</property>
                                                 </data>
                                             </property>
                                             <property name="borderTopStyle">solid</property>
@@ -917,7 +942,6 @@ params["year"].displayText&#13;
                                             <property name="borderBottomWidth">thin</property>
                                             <property name="borderRightStyle">solid</property>
                                             <property name="borderRightWidth">thin</property>
-                                            <property name="width">192px</property>
                                         </extended-item>
                                     </property>
                                 </extended-item>
@@ -927,14 +951,13 @@ params["year"].displayText&#13;
                 </extended-item>
             </property>
             <property name="columns">
-                <extended-item extensionName="CrosstabView" id="82">
+                <extended-item extensionName="CrosstabView" id="75">
                     <property name="grandTotal">
-                        <extended-item extensionName="CrosstabCell" id="173">
+                        <extended-item extensionName="CrosstabCell" id="85">
                             <property name="content">
-                                <label id="178">
+                                <label id="90">
                                     <property name="fontFamily">sans-serif</property>
                                     <property name="fontWeight">bold</property>
-                                    <property name="paddingTop">10pt</property>
                                     <property name="textAlign">center</property>
                                     <text-property name="text">Grand Total</text-property>
                                 </label>
@@ -950,49 +973,26 @@ params["year"].displayText&#13;
                         </extended-item>
                     </property>
                     <property name="views">
-                        <extended-item extensionName="DimensionView" id="83">
+                        <extended-item extensionName="DimensionView" id="76">
                             <property name="dimension">Group2</property>
                             <property name="levels">
-                                <extended-item extensionName="LevelView" name="NewLevel View2" id="84">
-                                    <property name="level">Group2/month</property>
+                                <extended-item extensionName="LevelView" name="NewLevel View2" id="77">
+                                    <property name="level">Group2/date_order_month</property>
                                     <property name="sort">
                                         <sort-element>
-                                            <expression name="key" type="javascript">dimension["Group2"]["month"]["row_number"]</expression>
+                                            <expression name="key" type="javascript">dimension["Group2"]["date_order_month"]["row_number"]</expression>
                                             <property name="direction">asc</property>
                                             <property name="strength">-1</property>
                                         </sort-element>
                                     </property>
                                     <property name="member">
-                                        <extended-item extensionName="CrosstabCell" id="85">
+                                        <extended-item extensionName="CrosstabCell" id="78">
                                             <property name="content">
-                                                <data name="month" id="86">
+                                                <data name="date_order_month" id="79">
                                                     <property name="fontFamily">sans-serif</property>
                                                     <property name="fontWeight">bold</property>
                                                     <property name="textAlign">center</property>
-                                                    <property name="resultSetColumn">month</property>
-                                                </data>
-                                            </property>
-                                            <property name="borderTopStyle">solid</property>
-                                            <property name="borderTopWidth">thin</property>
-                                            <property name="borderLeftStyle">solid</property>
-                                            <property name="borderLeftWidth">thin</property>
-                                            <property name="borderBottomStyle">solid</property>
-                                            <property name="borderBottomWidth">thin</property>
-                                            <property name="borderRightStyle">solid</property>
-                                            <property name="borderRightWidth">thin</property>
-                                        </extended-item>
-                                    </property>
-                                </extended-item>
-                                <extended-item extensionName="LevelView" name="NewLevel View3" id="87">
-                                    <property name="level">Group2/status</property>
-                                    <property name="member">
-                                        <extended-item extensionName="CrosstabCell" id="88">
-                                            <property name="content">
-                                                <data name="status" id="91">
-                                                    <property name="fontFamily">sans-serif</property>
-                                                    <property name="fontWeight">bold</property>
-                                                    <property name="textAlign">center</property>
-                                                    <property name="resultSetColumn">status</property>
+                                                    <property name="resultSetColumn">date_order_month</property>
                                                 </data>
                                             </property>
                                             <property name="borderTopStyle">solid</property>
@@ -1012,15 +1012,13 @@ params["year"].displayText&#13;
                 </extended-item>
             </property>
             <property name="header">
-                <extended-item extensionName="CrosstabCell" id="89"/>
-                <extended-item extensionName="CrosstabCell" id="90"/>
-                <extended-item extensionName="CrosstabCell" id="31">
+                <extended-item extensionName="CrosstabCell" id="61">
                     <property name="content">
-                        <label id="75">
+                        <label id="68">
                             <property name="fontFamily">sans-serif</property>
                             <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
-                            <text-property name="text">Item No.</text-property>
+                            <text-property name="text">Cust.No.</text-property>
                         </label>
                     </property>
                     <property name="borderTopStyle">solid</property>
@@ -1032,13 +1030,13 @@ params["year"].displayText&#13;
                     <property name="borderRightStyle">solid</property>
                     <property name="borderRightWidth">thin</property>
                 </extended-item>
-                <extended-item extensionName="CrosstabCell" id="79">
+                <extended-item extensionName="CrosstabCell" id="72">
                     <property name="content">
-                        <label id="81">
+                        <label id="74">
                             <property name="fontFamily">sans-serif</property>
                             <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
-                            <text-property name="text">Description</text-property>
+                            <text-property name="text">Name</text-property>
                         </label>
                     </property>
                     <property name="borderTopStyle">solid</property>
@@ -1054,56 +1052,51 @@ params["year"].displayText&#13;
             <property name="hideMeasureHeader">true</property>
             <list-property name="boundDataColumns">
                 <structure>
-                    <property name="name">default_code</property>
-                    <expression name="expression">dimension["Group"]["default_code"]</expression>
+                    <property name="name">customer_code</property>
+                    <expression name="expression">dimension["Group"]["customer_code"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">name_template</property>
-                    <expression name="expression">dimension["Group1"]["name_template"]</expression>
+                    <property name="name">customer</property>
+                    <expression name="expression">dimension["Group1"]["customer"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">month</property>
-                    <expression name="expression">dimension["Group2"]["month"]</expression>
+                    <property name="name">date_order_month</property>
+                    <expression name="expression">dimension["Group2"]["date_order_month"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">status</property>
-                    <expression name="expression">dimension["Group2"]["status"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="name">value_Group1/name_template_Group2/status</property>
-                    <expression name="expression">measure["value"]</expression>
+                    <property name="name">amount_total_Group1/customer_Group2/date_order_month</property>
+                    <expression name="expression">measure["amount_total"]</expression>
                     <property name="dataType">decimal</property>
                     <simple-property-list name="aggregateOn">
-                        <value>Group1/name_template</value>
-                        <value>Group2/status</value>
+                        <value>Group1/customer</value>
+                        <value>Group2/date_order_month</value>
                     </simple-property-list>
                     <property name="aggregateFunction">SUM</property>
                 </structure>
                 <structure>
-                    <property name="name">value_Group1/name_template</property>
-                    <expression name="expression">measure["value"]</expression>
+                    <property name="name">amount_total_Group1/customer</property>
+                    <expression name="expression">measure["amount_total"]</expression>
                     <property name="dataType">float</property>
                     <simple-property-list name="aggregateOn">
-                        <value>Group1/name_template</value>
+                        <value>Group1/customer</value>
                     </simple-property-list>
                     <property name="aggregateFunction">sum</property>
                 </structure>
                 <structure>
-                    <property name="name">value</property>
-                    <expression name="expression">measure["value"]</expression>
+                    <property name="name">amount_total</property>
+                    <expression name="expression">measure["amount_total"]</expression>
                     <property name="dataType">float</property>
                     <property name="aggregateFunction">sum</property>
                 </structure>
                 <structure>
-                    <property name="name">value_Group2/status</property>
-                    <expression name="expression">measure["value"]</expression>
+                    <property name="name">amount_total_Group2/date_order_month</property>
+                    <expression name="expression">measure["amount_total"]</expression>
                     <property name="dataType">float</property>
                     <simple-property-list name="aggregateOn">
-                        <value>Group2/status</value>
+                        <value>Group2/date_order_month</value>
                     </simple-property-list>
                     <property name="aggregateFunction">sum</property>
                 </structure>
