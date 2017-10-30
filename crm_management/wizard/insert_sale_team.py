@@ -41,6 +41,8 @@ class insert_sale_team(osv.osv_memory):
         'property_product_pricelist': fields.many2one('product.pricelist', string="Sale Pricelist", domain=[('type', '=', 'sale')]),
         'chiller_false':fields.boolean('Chiller False',),
         'hamper_false':fields.boolean("Hamper False"),
+        'property_payment_term': fields.many2one('account.payment.term', string="Customer Payment Term"),
+        
 #                 'demarcation_id': fields.many2one('sale.demarcation', 'Demarcation'),
                 
     }
@@ -71,7 +73,7 @@ class insert_sale_team(osv.osv_memory):
         township=data['township']
         price_list_id=data['property_product_pricelist']
         category_ids=data['category_ids']
-        
+        property_payment_term = data['property_payment_term']
         print 'partner_id',partner_id
         for partner in partner_id: 
             partner_data=partner_obj.browse(cr,uid,partner,context=context)
@@ -112,5 +114,6 @@ class insert_sale_team(osv.osv_memory):
                 partner_obj.write(cr, uid, partner, {'property_product_pricelist':price_list_id[0]}, context=None)
             if category_ids:
                 cr.execute('INSERT INTO res_partner_res_partner_category_rel (category_id,partner_id) VALUES (%s,%s)', (category_ids[0],partner))
-                                               
+            if property_payment_term:
+                partner_obj.write(cr,uid,partner,{'property_payment_term':property_payment_term[0]}, context=None)                                   
         return True              
