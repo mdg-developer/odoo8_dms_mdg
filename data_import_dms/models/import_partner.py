@@ -386,9 +386,9 @@ class partner(osv.osv):
                     display = display.strip()
                 if ka_tha:
                     ka_tha = ka_tha.strip()
-                if branch_code:
-                    branch_code = branch_code.strip()
-                    branch_code = branch_code.replace('.0', '')
+#                 if branch_code:
+#                     branch_code = branch_code.strip()
+#                     branch_code = branch_code.replace('.0', '')
                 if contact:
                     contact = contact.strip()
                 if brand:
