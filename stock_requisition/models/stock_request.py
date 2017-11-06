@@ -101,7 +101,7 @@ class stock_requisition(osv.osv):
     _columns = {
         'sale_team_id':fields.many2one('crm.case.section', 'Delivery Team', required=True),
         'name': fields.char('RFI Ref', readonly=True),
-        'from_location_id':fields.many2one('stock.location', 'Requesting  Location'),
+        'from_location_id':fields.many2one('stock.location', 'Requesting  Location', required=True),
         'to_location_id':fields.many2one('stock.location', 'Request Warehouse'),
         'so_no' : fields.char('Sales Order/Inv Ref;No.'),
         'issue_to':fields.char("Receiver"),
@@ -251,11 +251,11 @@ class stock_requisition(osv.osv):
         #for  line_data in transfer_data.p_line:
         for line in req_value.p_line:
              
-            warehouse_id = stock_warehouse_obj.search(cr,uid,[('lot_stock_id','=',line.line_id.to_location_id.id)])
+            warehouse_id = stock_warehouse_obj.search(cr,uid,[('lot_stock_id','=',req_value.from_location_id.id)])
             vals = {
                     'name': line.product_id.name_template,
                     'warehouse_id':warehouse_id[0],
-                    'location_id':line.line_id.to_location_id.id,
+                    'location_id':req_value.from_location_id.id,
                     'origin':req_value.name,
                     'company_id': line.line_id.company_id.id,
                     'date_planned': line.line_id.request_date,

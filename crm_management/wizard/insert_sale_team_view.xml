@@ -28,6 +28,8 @@
 							default_order="name desc" groups="base.group_no_one" />
 						<field name="property_product_pricelist" class="oe_inline"
 							widget="selection" groups="base.group_no_one" />
+						<field name="property_payment_term" class="oe_inline"
+							widget="selection" groups="base.group_no_one" />
 						<!-- <field name="demarcation_id" widget="selection"/> -->
 						<field name="chiller" />
 						<field name="hamper" groups="base.group_sale_supervisor,base.group_no_one" />

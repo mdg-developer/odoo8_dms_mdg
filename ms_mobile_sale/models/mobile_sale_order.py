@@ -1179,7 +1179,7 @@ class mobile_sale_order(osv.osv):
         cr.execute
         return datas
     def sale_team_return(self, cr, uid, section_id , saleTeamId, context=None, **kwargs):
-        cr.execute('''select DISTINCT cr.id,cr.complete_name,cr.warehouse_id,cr.name,sm.member_id,cr.code,pr.product_product_id,cr.location_id,cr.allow_foc,cr.allow_tax
+        cr.execute('''select DISTINCT cr.id,cr.complete_name,cr.warehouse_id,cr.name,sm.member_id,cr.code,pr.product_product_id,cr.location_id,cr.allow_foc,cr.allow_tax,cr.branch_id
                     from crm_case_section cr, sale_member_rel sm,crm_case_section_product_product_rel pr where sm.section_id = cr.id and cr.id=pr.crm_case_section_id  
                     and sm.member_id =%s 
                     and cr.id = %s
@@ -1877,7 +1877,8 @@ class mobile_sale_order(osv.osv):
         
         sale_order_obj = self.pool.get('sale.order')
         list_val = None
-        list_val = sale_order_obj.search(cr, uid, [('pre_order', '=', True), ('is_generate', '=', True), ('delivery_id', '=', saleTeamId), ('shipped', '=', False), ('invoiced', '=', False) , ('tb_ref_no', 'not in', soList)], context=context)
+        #, ('is_generate', '=', True)
+        list_val = sale_order_obj.search(cr, uid, [('pre_order', '=', True), ('delivery_id', '=', saleTeamId), ('shipped', '=', False), ('invoiced', '=', False) , ('tb_ref_no', 'not in', soList)], context=context)
         print 'list_val', list_val
         list = []
         try:
@@ -2032,10 +2033,20 @@ class mobile_sale_order(osv.osv):
                     So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
                                                    , ('name', '=', so_ref_no)], context=context)
                     if So_id:
+                        picking_ids = self.pool.get('stock.picking').search(cr, uid, [('group_id', '=',so_ref_no),('state','!=','done')], context=context)
+                        if picking_ids:
+                            for picking_id in picking_ids: 
+                                self.pool.get('stock.picking').unlink(cr,uid,picking_id,context=context)
+                        procurement_order_obj = self.pool.get('procurement.order')        
+                        procurement_ids = self.pool.get('procurement.order').search(cr,uid,[('group_id', '=',so_ref_no)], context=context)
+                        if procurement_ids:
+                            for procurement_id in procurement_ids:
+                                osv.osv.unlink(procurement_order_obj, cr, uid, procurement_id, context=context)
+                                cr.execute("delete from procurement_order where id=%s",(procurement_id,))                        
+#                         cr.execute('''update stock_picking set state ='cancel' where origin = %s ''', (so_ref_no,))
+#                         cr.execute('''update stock_move set state ='cancel' where origin = %s ''', (so_ref_no,))
                         cr.execute('''update sale_order set state ='cancel' where id = %s ''', (So_id[0],))
                         cr.execute('''update account_invoice set state ='cancel' where origin = %s ''', (so_ref_no,))
-                        cr.execute('''update stock_picking set state ='cancel' where origin = %s ''', (so_ref_no,))
-                        cr.execute('''update stock_move set state ='cancel' where origin = %s ''', (so_ref_no,))
                         cr.execute('select tb_ref_no from sale_order where id=%s',(So_id[0],))
                         ref_no=cr.fetchone()[0]
                         cr.execute("update pre_sale_order set void_flag = 'voided' where name=%s", ( ref_no,))          
@@ -2179,30 +2190,30 @@ class mobile_sale_order(osv.osv):
                     
                     for srl in stock_line:
                         if (sr['rfi_no'] == srl['rfi_no']):
-                            cursor.execute('select a.uom_ratio,a.big_uom_id,a.uom_id,b.sequence from product_template a, product_product b where a.id = b.product_tmpl_id and b.id = %s ', (srl['product_id'],))
-                            data = cursor.fetchall()
-                            if data:
-                                packing_unit = data[0][0]
-                                big_uom_id = data[0][1]
-                                small_uom_id = data[0][2]
-                                sequence=data[0][3]
-                            else:
-                                packing_unit = None
-                                big_uom_id = None
-                                small_uom_id = None
-                                sequence=None
-
-                            ori_req_quantity = int(srl['req_quantity'])
-                            # print 'product_idddddddddddd',req_quantity
-                            cursor.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (big_uom_id,))
-                            bigger_qty = cursor.fetchone()[0]
-                            bigger_qty = int(bigger_qty)
-                            # print ' bigger_qty',sale_qty,bigger_qty,type(sale_qty),type(bigger_qty)                        
-                            big_uom_qty = divmod(ori_req_quantity, bigger_qty)
-                            # print 'big_uom_qty',big_uom_qty
-                            if  big_uom_qty:
-                                big_req_quantity = big_uom_qty[0]
-                                req_quantity = big_uom_qty[1]
+#                             cursor.execute('select a.uom_ratio,a.big_uom_id,a.uom_id,b.sequence from product_template a, product_product b where a.id = b.product_tmpl_id and b.id = %s ', (srl['product_id'],))
+#                             data = cursor.fetchall()
+#                             if data:
+#                                 packing_unit = data[0][0]
+#                                 big_uom_id = data[0][1]
+#                                 small_uom_id = data[0][2]
+#                                 sequence=data[0][3]
+#                             else:
+#                                 packing_unit = None
+#                                 big_uom_id = None
+#                                 small_uom_id = None
+#                                 sequence=None
+# 
+#                             ori_req_quantity = int(srl['req_quantity'])
+#                             # print 'product_idddddddddddd',req_quantity
+#                             cursor.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (big_uom_id,))
+#                             bigger_qty = cursor.fetchone()[0]
+#                             bigger_qty = int(bigger_qty)
+#                             # print ' bigger_qty',sale_qty,bigger_qty,type(sale_qty),type(bigger_qty)                        
+#                             big_uom_qty = divmod(ori_req_quantity, bigger_qty)
+#                             # print 'big_uom_qty',big_uom_qty
+#                             if  big_uom_qty:
+#                                 big_req_quantity = big_uom_qty[0]
+#                                 req_quantity = big_uom_qty[1]
                                 # print 'big_req',big_req_quantity,req_quantity
                             cursor.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (to_location_id, srl['product_id'],))
                             qty_on_hand = cursor.fetchone()
@@ -2210,32 +2221,46 @@ class mobile_sale_order(osv.osv):
                                 qty_on_hand = qty_on_hand[0]
                             else:
                                 qty_on_hand = 0               
-                            if int(srl['product_uom']) == int(big_uom_id):                                                                          
-                                mso_line_res = {                                                            
+#                             if int(srl['product_uom']) == int(big_uom_id):                                                                          
+#                                 mso_line_res = {                                                            
+#                                       'line_id':stock_id,
+#                                       'remark':srl['remark'],
+#                                       'req_quantity':0,
+#                                       'product_id':int(srl['product_id']),
+#                                       'product_uom':small_uom_id,
+#                                       'uom_ratio':packing_unit ,
+#                                       'big_uom_id':big_uom_id,
+#                                       'big_req_quantity':ori_req_quantity,
+#                                       'qty_on_hand':qty_on_hand,
+#                                       'sequence':sequence,
+#                                       }
+#                             else:
+#                                 mso_line_res = {                                                            
+#                                       'line_id':stock_id,
+#                                       'remark':srl['remark'],
+#                                       'req_quantity':req_quantity,
+#                                       'product_id':int(srl['product_id']),
+#                                       'product_uom':small_uom_id,
+#                                       'uom_ratio':packing_unit ,
+#                                       'big_uom_id':big_uom_id,
+#                                       'big_req_quantity':big_req_quantity,
+#                                       'qty_on_hand':qty_on_hand,
+#                                       'sequence':sequence,
+#                                       }
+                            mso_line_res = {                                                            
                                       'line_id':stock_id,
                                       'remark':srl['remark'],
-                                      'req_quantity':0,
+                                      #'req_quantity':req_quantity,
+                                      'product_quantity':int(srl['req_quantity']),
+                                      'product_uos':int(srl['product_uom']),
                                       'product_id':int(srl['product_id']),
-                                      'product_uom':small_uom_id,
-                                      'uom_ratio':packing_unit ,
-                                      'big_uom_id':big_uom_id,
-                                      'big_req_quantity':ori_req_quantity,
+                                      #'product_uom':small_uom_id,
+                                      'uom_ratio':None,
+                                      #'big_uom_id':big_uom_id,
+                                      'big_req_quantity':int(srl['req_quantity']),
                                       'qty_on_hand':qty_on_hand,
-                                      'sequence':sequence,
-                                      }
-                            else:
-                                mso_line_res = {                                                            
-                                      'line_id':stock_id,
-                                      'remark':srl['remark'],
-                                      'req_quantity':req_quantity,
-                                      'product_id':int(srl['product_id']),
-                                      'product_uom':small_uom_id,
-                                      'uom_ratio':packing_unit ,
-                                      'big_uom_id':big_uom_id,
-                                      'big_req_quantity':big_req_quantity,
-                                      'qty_on_hand':qty_on_hand,
-                                      'sequence':sequence,
-                                      }
+                                      'sequence':None,
+                                      }    
                             stock_request_line_obj.create(cursor, user, mso_line_res, context=context)
             print 'True'
             return True       

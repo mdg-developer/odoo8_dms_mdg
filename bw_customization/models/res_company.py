@@ -48,18 +48,26 @@ class stock_config_settings(osv.osv_memory):
         if vals['issued_location_id']:
             new_id = super(stock_config_settings, self).create(cr, uid, vals, context=context)
             issued_location = vals['issued_location_id']
-            data = self.browse(cr, uid, new_id, context=context)
-            if data:
-                company_obj = self.pool.get('res.company')
-                company_obj.write(cr,uid,data.company_id.id,{'issued_location_id':issued_location},context=context)
+#             data = self.browse(cr, uid, new_id, context=context)
+#             if data:
+#                 company_obj = self.pool.get('res.company')
+#                 company_obj.write(cr,uid,data.company_id.id,{'issued_location_id':issued_location},context=context)
         else:
             new_id = super(stock_config_settings, self).create(cr, uid, vals, context=context)
             issued_location = vals['issued_location_id']
-            data = self.browse(cr, uid, new_id, context=context)
-            if data:
-                company_obj = self.pool.get('res.company')
-                company_obj.write(cr,uid,data.company_id.id,{'issued_location_id':issued_location},context=context)
-                    
+#             data = self.browse(cr, uid, new_id, context=context)
+#             if data:
+#                 company_obj = self.pool.get('res.company')
+#                 company_obj.write(cr,uid,data.company_id.id,{'issued_location_id':issued_location},context=context)
+        
+        data = self.browse(cr, uid, new_id, context=context)
+        if data:
+            usr_id = self.pool.get('res.users').browse(cr,uid,uid,context=context)
+            print 'aa>>',usr_id.company_id.id
+            company_id = usr_id.company_id.id
+            company_obj = self.pool.get('res.company')
+            #company_obj.write(cr,uid,company_id,{'issued_location_id':issued_location},context=context)
+            cr.execute('update res_company set issued_location_id=%s where id=%s',(issued_location,company_id,))            
         #new_id = super(stock_config_settings, self).create(cr, uid, vals, context=context)
         return new_id        
     def write(self, cr, user, ids, vals, context=None):
@@ -69,6 +77,10 @@ class stock_config_settings(osv.osv_memory):
             data = self.browse(cr, user, new_id, context=context)
             if data:
                 company_obj = self.pool.get('res.company')
-                company_obj.write(cr,user,data.company_id.id,{'issued_location_id':issued_location},context=context)
+                #company_obj.write(cr,user,data.company_id.id,{'issued_location_id':issued_location},context=context)
+                usr_id = self.pool.get('res.users').browse(cr,user,user,context=context)
+                print 'aa>>',usr_id.company_id.id
+                company_id = usr_id.company_id.id
+                cr.execute('update res_company set issued_location_id=%s where id=%s',(issued_location,company_id,))
         return new_id             
 stock_config_settings()

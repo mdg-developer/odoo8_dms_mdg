@@ -28,8 +28,8 @@ ATTRIBUTES = [
     ('cat_total', 'Product Category Sale Total'),
     ('fix_prods_qty', 'Fix Quantity Total combination'),
     ('fix_categ_qty', 'Fix Category Quantity And Subtotal'),
-
-
+    ('is_distributor','Is Distributor'),
+    ('is_distributor_percent','Percent On Distributor Target Amount'),
 ]
 
 COMPARATORS = [
@@ -1051,7 +1051,19 @@ class PromotionsRulesConditionsExprs(osv.Model):
                     'value':{
                              'value':"'categ1';'categ2';'categ3':0.00|limit_amount"
                              }
-                    }                       
+                    }       
+        if attribute == 'is_distributor':
+            return {
+                    'value':{
+                             'value':"TRUE"
+                             }
+                    }          
+        if attribute == 'is_distributor_percent':
+            return {
+                    'value':{
+                             'value':"Target Percent"
+                             }
+                    }                                  
         return {}
     _columns = {
         'sequence':fields.integer('Sequence'),
