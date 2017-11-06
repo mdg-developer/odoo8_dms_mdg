@@ -194,7 +194,127 @@ class pre_sale_order(osv.osv):
             print 'False'
             print e
             return False 
-    
+        
+        
+    def create_presaleorder_auto_convert(self, cursor, user, vals, context=None):
+        print 'vals', vals
+
+        sale_order_name_list = []
+        try : 
+            saleManId = branch_id = None
+            mobile_sale_order_obj = self.pool.get('pre.sale.order')
+            mobile_sale_order_line_obj = self.pool.get('pre.sale.order.line')
+            pre_sale_order_obj=self.pool.get('pre.sale.state')
+            str = "{" + vals + "}"
+            str = str.replace(":''", ":'")  # change Order_id
+            str = str.replace("'',", "',")  # null
+            str = str.replace(":',", ":'',")  # due to order_id
+            str = str.replace("}{", "}|{")
+            new_arr = str.split('|')
+            result = []
+            so_ids=[]
+            for data in new_arr:
+                x = ast.literal_eval(data)
+                result.append(x)
+            sale_order = []
+            sale_order_line = []
+            for r in result:
+                print "length", len(r)
+                if len(r) >= 17:
+                    sale_order.append(r)
+                else:
+                    sale_order_line.append(r)
+            
+            if sale_order:
+                for so in sale_order:
+                    print 'Sale Man Id', so['user_id']
+                    cursor.execute('select id,branch_id From res_users where id  = %s ', (so['user_id'],))
+                    data = cursor.fetchall()
+                    
+                    if data:
+                        saleManId = data[0][0]
+                        branch_id = data[0][1]
+                    else:
+                        saleManId = None                         
+
+                    cursor.execute('select id From res_partner where customer_code  = %s ', (so['customer_code'],))
+                    data = cursor.fetchall()                
+                    if data:
+                        partner_id = data[0][0]
+                       
+                    else:
+                        partner_id = None
+
+                    mso_result = {
+                        'customer_code':so['customer_code'],
+                        'paid': True,
+                        'warehouse_id':so['warehouse_id'],
+                        'tablet_id':so['tablet_id'],
+                        'delivery_remark':so['delivery_remark'],
+                        'location_id':so['location_id'],
+                        'user_id':so['user_id'],
+                        'name':so['name'],
+                        'type':so['type'],
+                        'note':so['note'],
+                        'partner_id':partner_id,
+                        'sale_plan_name':so['sale_plan_day_name'],
+                        'amount_total':so['amount_total'],
+                        'sale_team':so['sale_team'],
+                        'date':so['date'],
+                        'due_date':so['due_date'],
+                        'void_flag':so['void_flag'],
+                        'sale_plan_day_id':so['sale_plan_day_id'],
+                        'mso_longitude':so['mso_longitude'],
+                        'mso_latitude':so['mso_latitude'],
+                        'pricelist_id':so['pricelist_id'],
+                        'branch_id':branch_id,
+                    }
+                    s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
+                    so_ids.append(s_order_id)
+                    print "Create Sale Order", so['name']
+                    for sol in sale_order_line:
+                        if sol['so_name'] == so['name']:
+                                cursor.execute('select id From product_product where id  = %s ', (sol['product_id'],))
+                                data = cursor.fetchall()
+                                if data:
+                                    productId = data[0][0]
+                                else:
+                                    productId = None
+                                if sol['price_unit'] == '0':
+                                    foc_val = True
+                                else:
+                                    foc_val = False                                
+                                mso_line_res = {                                                            
+                                  'order_id':s_order_id,
+                                  'product_id':productId,
+                                  'price_unit':sol['price_unit'],
+                                  'foc':foc_val,
+                                  'product_uos_qty':sol['product_uos_qty'],
+                                  'discount':sol['discount'],
+                                  'discount_amt':sol['discount_amt'],
+                                  'sub_total':sol['sub_total'],
+                                  'uom_id':sol['uom_id']
+                                }
+                                mobile_sale_order_line_obj.create(cursor, user, mso_line_res, context=context) 
+                                print 'Create Order line', sol['so_name']                     
+                    sale_order_name_list.append(so['name'])
+                    pre_sale_order_obj.print_report(cursor, user, so_ids, context=context) 
+                    
+                
+            print 'True'
+            
+#             session = ConnectorSession(cursor, user, context)
+#             jobid=automation_pre_order.delay(session,so_ids,priority=1, eta=10)
+#             print "Job",jobid
+#             runner = ConnectorRunner()
+#             runner.run_jobs()
+            return True 
+                  
+        except Exception, e:
+            print 'False'
+            print e
+            return False 
+        
     def action_convert_presaleorder(self, cr, uid, ids, context=None):
         presaleorderObj = self.pool.get('pre.sale.order')
         mobilesaleorderObj = self.pool.get('mobile.sale.order')
