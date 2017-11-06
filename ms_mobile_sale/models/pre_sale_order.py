@@ -194,6 +194,13 @@ class pre_sale_order(osv.osv):
             print 'False'
             print e
             return False 
+        
+    def get_sale_order(self, cr, uid,name , context=None):
+        cr.execute('''select name from pre_sale_order
+                where name= %s
+                ''',(name,))
+        datas = cr.fetchall()
+        return datas
     
     def action_convert_presaleorder(self, cr, uid, ids, context=None):
         presaleorderObj = self.pool.get('pre.sale.order')
