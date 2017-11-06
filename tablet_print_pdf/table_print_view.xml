@@ -17,7 +17,7 @@
 							<field name="user_id" domain="[('default_section_id', '=',section_id)]"
 								class="oe_inline" />
 							<field name="print_date" />
-							<field name="print_file"  filename="print_fname" />
+							<field name="print_file" filename="print_fname" />
 							<field name="print_fname" invisible="1" />
 							<field name="write_date" />
 						</group>
@@ -30,7 +30,7 @@
 			<field name="name">Tablet Pdf Print Tree</field>
 			<field name="model">tablet.pdf.print</field>
 			<field name="arch" type="xml">
-				<tree string="Print PDF">
+				<tree string="Print PDF"  default_order="print_date desc">
 					<field name="print_date" />
 					<field name="section_id" />
 					<field name="user_id" />
@@ -38,7 +38,20 @@
 				</tree>
 			</field>
 		</record>
-
+		
+		<record id="view_tablet_pdf_filter" model="ir.ui.view">
+			<field name="name">Tablet DSR PDF</field>
+			<field name="model">tablet.pdf.print</field>
+			<field name="arch" type="xml">
+				<search string="Search Tablet DSR PDF">
+					<group expand="0" string="Group By...">
+						<filter string="Sales Team" icon="terp-partner" domain="[]"
+							context="{'group_by':'section_id'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+		
 		<!-- Action -->
 		<record id="action_tablet_pdf_print" model="ir.actions.act_window">
 			<field name="name">Tablet Pdf Print</field>
@@ -47,6 +60,8 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" ref="view_tablet_pdf_print_tree" />
+			<field name="search_view_id" ref="view_tablet_pdf_filter" />
+
 		</record>
 
 		<!-- First level menu -->

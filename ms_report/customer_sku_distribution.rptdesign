@@ -18,10 +18,12 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
         <scalar-parameter name="from_date" id="8">
             <text-property name="promptText">From Date</text-property>
             <property name="valueType">static</property>
+            <property name="isRequired">true</property>
             <property name="dataType">date</property>
             <property name="distinct">true</property>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
             <property name="controlType">text-box</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
@@ -46,7 +48,7 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
         <scalar-parameter name="sales_team_id" id="191" extends="report_library.sales_team_id"/>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="61"
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="676"
  extends="report_library.Data Source"/>
     </data-sources>
     <data-sets>
@@ -59,6 +61,12 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">name</text-property>
                     <text-property name="heading">name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">outlettype</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">outlettype</text-property>
+                    <text-property name="heading">outlettype</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">name_template</property>
@@ -104,11 +112,16 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     </structure>
                     <structure>
                         <property name="position">2</property>
-                        <property name="name">name_template</property>
+                        <property name="name">outlettype</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">3</property>
+                        <property name="name">name_template</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
                         <property name="name">quantity</property>
                         <property name="dataType">integer</property>
                     </structure>
@@ -127,28 +140,36 @@ this.queryText =this.queryText.replace("--$branch_id$", "and ai.branch_id in ("+
                 </structure>
                 <structure>
                     <property name="position">2</property>
+                    <property name="name">outlettype</property>
+                    <property name="nativeName">outlettype</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
                     <property name="name">name_template</property>
                     <property name="nativeName">name_template</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">3</property>
+                    <property name="position">4</property>
                     <property name="name">quantity</property>
                     <property name="nativeName">quantity</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select rp.name,pp.name_template,case when COALESCE(sum(quantity),0)>=1 then 1 else 0 end as quantity
-from account_invoice ai,res_partner rp,account_invoice_line ail,product_product pp
+            <xml-property name="queryText"><![CDATA[select rp.name,oo.name as outlettype,pp.name_template,case when COALESCE(sum(quantity),0)>=1 then 1 else 0 end as quantity
+from account_invoice ai,res_partner rp,account_invoice_line ail,product_product pp , outlettype_outlettype oo
 where rp.id=ai.partner_id
 and ail.invoice_id=ai.id
 and pp.id=ail.product_id
+and oo.id=rp.outlet_type
 and date_invoice between ? and ?
 --$sales_team$
 --$branch_id$
-group by rp.id,pp.id
+group by rp.id,pp.id,oo.name
 order by rp.name,pp.name_template
 ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
@@ -264,6 +285,130 @@ order by rp.name,pp.name_template
  extends="report_library.Sale_Team"/>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="users" id="188"
  extends="report_library.users"/>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="param_sales_team" id="675">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">string_agg</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">string_agg</text-property>
+                    <text-property name="heading">string_agg</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">from_date</property>
+                    <property name="paramName">from_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">to_date</property>
+                    <property name="paramName">to_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">2</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">string_agg</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <method name="beforeOpen"><![CDATA[this.queryText =this.queryText.replace("--$sales_team$", "and ai.section_id in ("+ params["sales_team_id"].value.join(",")+")")
+this.queryText =this.queryText.replace("--$branch_id$", "and ai.branch_id in ("+ params["branch_id"].value.join(",")+")")]]></method>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">string_agg</property>
+                    <property name="nativeName">string_agg</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select string_agg(distinct(ccs.name), ',')
+from account_invoice ai,crm_case_section ccs
+where ai.section_id=ccs.id
+and date_invoice between ? and ?
+--$sales_team$
+--$branch_id$
+]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>2</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>string_agg</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>2147483647</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>string_agg</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>string_agg</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
     </data-sets>
     <cubes>
         <tabular-cube name="Data Cube" id="142">
@@ -289,6 +434,19 @@ order by rp.name,pp.name_template
                                 <tabular-level name="name_template" id="148">
                                     <property name="dataType">string</property>
                                     <property name="columnName">name_template</property>
+                                </tabular-level>
+                            </property>
+                        </tabular-hierarchy>
+                    </property>
+                </tabular-dimension>
+                <tabular-dimension name="Group2" id="678">
+                    <property name="defaultHierarchy">NewTabularHierarchy2</property>
+                    <property name="hierarchies">
+                        <tabular-hierarchy name="NewTabularHierarchy2" id="679">
+                            <property name="levels">
+                                <tabular-level name="outlettype" id="680">
+                                    <property name="dataType">string</property>
+                                    <property name="columnName">outlettype</property>
                                 </tabular-level>
                             </property>
                         </tabular-hierarchy>
@@ -455,80 +613,25 @@ order by rp.name,pp.name_template
                             </row>
                         </footer>
                     </table>
-                    <table id="658">
-                        <property name="textAlign">center</property>
-                        <property name="dataSet">Sale_Team</property>
-                        <list-property name="boundDataColumns">
-                            <structure>
-                                <property name="name">id</property>
-                                <text-property name="displayName">id</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["id"]</expression>
-                                <property name="dataType">integer</property>
-                            </structure>
-                            <structure>
-                                <property name="name">name</property>
-                                <text-property name="displayName">name</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["name"]</expression>
-                                <property name="dataType">string</property>
-                            </structure>
-                        </list-property>
-                        <column id="668">
-                            <property name="width">5.09375in</property>
-                        </column>
-                        <column id="669">
-                            <property name="width">5.3125in</property>
-                        </column>
-                        <header>
-                            <row id="659">
-                                <cell id="660">
-                                    <data id="670">
-                                        <property name="fontSize">12pt</property>
-                                        <property name="fontWeight">bold</property>
-                                        <list-property name="visibility">
-                                            <structure>
-                                                <property name="format">all</property>
-                                                <expression name="valueExpr" type="javascript">true</expression>
-                                            </structure>
-                                        </list-property>
-                                        <property name="resultSetColumn">id</property>
-                                    </data>
-                                </cell>
-                                <cell id="661">
-                                    <data id="671">
-                                        <property name="fontSize">12pt</property>
-                                        <property name="fontWeight">bold</property>
-                                        <list-property name="visibility">
-                                            <structure>
-                                                <property name="format">all</property>
-                                                <expression name="valueExpr" type="javascript">true</expression>
-                                            </structure>
-                                        </list-property>
-                                        <property name="resultSetColumn">name</property>
-                                    </data>
-                                </cell>
-                            </row>
-                        </header>
-                        <footer>
-                            <row id="665">
-                                <cell id="666">
-                                    <property name="colSpan">2</property>
-                                    <property name="rowSpan">1</property>
-                                    <text-data id="674">
-                                        <property name="fontSize">12pt</property>
-                                        <property name="fontWeight">bold</property>
-                                        <property name="paddingLeft">1pt</property>
-                                        <property name="textAlign">center</property>
-                                        <expression name="valueExpr">teamList;</expression>
-                                        <property name="contentType">html</property>
-                                    </text-data>
-                                </cell>
-                            </row>
-                        </footer>
-                    </table>
                 </cell>
             </row>
             <row id="133">
                 <cell id="135">
+                    <data id="677">
+                        <property name="fontSize">12pt</property>
+                        <property name="fontWeight">bold</property>
+                        <property name="textAlign">center</property>
+                        <property name="dataSet">param_sales_team</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">string_agg</property>
+                                <text-property name="displayName">string_agg</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["string_agg"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">string_agg</property>
+                    </data>
                     <data id="125">
                         <property name="fontSize">12pt</property>
                         <property name="fontWeight">bold</property>
@@ -557,28 +660,18 @@ order by rp.name,pp.name_template
                     <property name="measure">quantity</property>
                     <property name="detail">
                         <extended-item extensionName="AggregationCell" id="165">
-                            <property name="aggregationOnRow">Group/name</property>
+                            <property name="aggregationOnRow">Group2/outlettype</property>
                             <property name="aggregationOnColumn">Group1/name_template</property>
                             <property name="content">
                                 <data id="166">
                                     <property name="paddingRight">3pt</property>
                                     <property name="textAlign">right</property>
-                                    <property name="resultSetColumn">quantity_Group/name_Group1/name_template</property>
+                                    <property name="resultSetColumn">quantity_Group2/outlettype_Group1/name_template</property>
                                 </data>
                             </property>
                         </extended-item>
                     </property>
                     <property name="aggregations">
-                        <extended-item extensionName="AggregationCell" id="172">
-                            <property name="aggregationOnRow">Group/name</property>
-                            <property name="content">
-                                <data id="173">
-                                    <property name="paddingRight">3pt</property>
-                                    <property name="textAlign">right</property>
-                                    <property name="resultSetColumn">quantity_Group/name</property>
-                                </data>
-                            </property>
-                        </extended-item>
                         <extended-item extensionName="AggregationCell" id="178">
                             <property name="content">
                                 <data id="179">
@@ -597,6 +690,14 @@ order by rp.name,pp.name_template
                                     <property name="paddingRight">3pt</property>
                                     <property name="textAlign">right</property>
                                     <property name="resultSetColumn">quantity_Group1/name_template</property>
+                                </data>
+                            </property>
+                        </extended-item>
+                        <extended-item extensionName="AggregationCell" id="684">
+                            <property name="aggregationOnRow">Group2/outlettype</property>
+                            <property name="content">
+                                <data id="685">
+                                    <property name="resultSetColumn">quantity_Group2/outlettype</property>
                                 </data>
                             </property>
                         </extended-item>
@@ -652,6 +753,24 @@ order by rp.name,pp.name_template
                                 </extended-item>
                             </property>
                         </extended-item>
+                        <extended-item extensionName="DimensionView" id="681">
+                            <property name="dimension">Group2</property>
+                            <property name="levels">
+                                <extended-item extensionName="LevelView" name="NewLevel View2" id="682">
+                                    <property name="level">Group2/outlettype</property>
+                                    <property name="member">
+                                        <extended-item extensionName="CrosstabCell" id="683">
+                                            <property name="content">
+                                                <data name="outlettype" id="687">
+                                                    <property name="fontWeight">normal</property>
+                                                    <property name="resultSetColumn">outlettype</property>
+                                                </data>
+                                            </property>
+                                        </extended-item>
+                                    </property>
+                                </extended-item>
+                            </property>
+                        </extended-item>
                     </property>
                 </extended-item>
             </property>
@@ -694,6 +813,13 @@ order by rp.name,pp.name_template
                     <property name="content">
                         <label id="158">
                             <text-property name="text">Outlet Name</text-property>
+                        </label>
+                    </property>
+                </extended-item>
+                <extended-item extensionName="CrosstabCell" id="686">
+                    <property name="content">
+                        <label id="688">
+                            <text-property name="text">Outlet Type</text-property>
                         </label>
                     </property>
                 </extended-item>
@@ -743,6 +869,30 @@ order by rp.name,pp.name_template
                         <value>Group1/name_template</value>
                     </simple-property-list>
                     <property name="aggregateFunction">sum</property>
+                </structure>
+                <structure>
+                    <property name="name">outlettype</property>
+                    <expression name="expression">dimension["Group2"]["outlettype"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">quantity_Group2/outlettype</property>
+                    <expression name="expression">measure["quantity"]</expression>
+                    <property name="dataType">integer</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Group2/outlettype</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">sum</property>
+                </structure>
+                <structure>
+                    <property name="name">quantity_Group2/outlettype_Group1/name_template</property>
+                    <expression name="expression">measure["quantity"]</expression>
+                    <property name="dataType">integer</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Group2/outlettype</value>
+                        <value>Group1/name_template</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
                 </structure>
             </list-property>
         </extended-item>

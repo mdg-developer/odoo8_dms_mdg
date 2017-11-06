@@ -483,7 +483,7 @@ from res_company
                     <structure>
                         <property name="position">35</property>
                         <property name="name">amount</property>
-                        <property name="dataType">decimal</property>
+                        <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">36</property>
@@ -723,7 +723,7 @@ else
                     <property name="position">35</property>
                     <property name="name">amount</property>
                     <property name="nativeName">amount</property>
-                    <property name="dataType">decimal</property>
+                    <property name="dataType">float</property>
                 </structure>
                 <structure>
                     <property name="position">36</property>
@@ -732,7 +732,7 @@ else
                     <property name="dataType">integer</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select *,(select count(msl.id) from account_invoice_line msl where msl.invoice_id=ms_id) as no_of_distribution,(A.sub_total)*-1 as amount,
+            <xml-property name="queryText"><![CDATA[select *,(select count(msl.id) from account_invoice_line msl where msl.invoice_id=ms_id) as no_of_distribution,(A.sub_total+A.discount_amt)*-1 as amount,
 get_invl_seq(ms_id,msl_id) as so_propo_dis
 from (select ms.section_id as section_id,ms.payment_type ,ms.branch_id as branch_id, ms.id as ms_id,msl.id as msl_id,ms.name,so.customer_code,ms.date_invoice as date,ms.date_due as due_date,msl.discount,msl.discount_amt,
 get_smaller_qty(msl.uos_id,msl.quantity,msl.product_id) product_uos_qty,

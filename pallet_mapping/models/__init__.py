@@ -1,1 +1,0 @@
-import pallet_mapping
