@@ -437,6 +437,9 @@ class mobile_sale_order(osv.osv):
         voucherLineObj = self.pool.get('account.voucher.line')
         stockPickingObj = self.pool.get('stock.picking')
         stockDetailObj = self.pool.get('stock.transfer_details')
+        msoPromoLineObj = self.pool.get('sale.order.promotion.line')
+        mso_promotion_line_obj = self.pool.get('mso.promotion.line')
+        mso_inv_PromoLineObj = self.pool.get('account.invoice.promotion.line')        
         soResult = {}
         solResult = {}
         accountVResult = {}
@@ -515,6 +518,18 @@ class mobile_sale_order(osv.osv):
 
                                         }
                     soId = soObj.create(cr, uid, soResult, context=context)
+                    if soId:
+                        #Insert Mobile Sale Order Promotion Line
+                        for mso_p_line in ms_ids.promos_line_ids:
+                            mso_promo_data=mso_promotion_line_obj.browse(cr, uid, mso_p_line.id, context=context)
+                            mso_promo_line_result = {
+                                              'promo_line_id':soId,
+                                              'pro_id':mso_promo_data.pro_id.id,
+                                              'from_date':mso_promo_data.from_date,
+                                              'to_date':mso_promo_data.to_date,
+                                              'manual':mso_promo_data.manual,
+                                                          }
+                            msoPromoLineObj.create(cr, uid, mso_promo_line_result, context=context)                    
                     if soId and ms_ids.order_line:
                         for line_id in ms_ids.order_line:
                             if line_id:
@@ -565,6 +580,7 @@ class mobile_sale_order(osv.osv):
                             soObj.action_button_confirm(cr, uid, solist, context=context)
                             # Create Invoice
                             invoice_id = self.create_invoices(cr, uid, solist, context=context)
+                          
                             # id update partner form (temporay)
 #                             partner_data = invoiceObj.browse(cr, uid, invoice_id, context=context)
 #                             partner_id=partner_data.partner_id.id
@@ -901,7 +917,18 @@ class mobile_sale_order(osv.osv):
                             # clicking the delivery order view button
                             stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)
                             # cr.execute('update stock_move set location_id=%s where picking_id=%s',(ms_ids.location_id.id,stockViewResult['res_id'],))
-
+                        if invoice_id:
+                                #Insert account invoice promotion line
+                                for mso_inv_p_line in ms_ids.promos_line_ids:
+                                    mso_inv_promo_data=mso_promotion_line_obj.browse(cr, uid, mso_inv_p_line.id, context=context)
+                                    mso_inv_promo_line_result = {
+                                                      'promo_line_id':invoice_id,
+                                                      'pro_id':mso_inv_promo_data.pro_id.id,
+                                                      'from_date':mso_inv_promo_data.from_date,
+                                                      'to_date':mso_inv_promo_data.to_date,
+                                                      'manual':mso_inv_promo_data.manual,
+                                                                  }
+                                    mso_inv_PromoLineObj.create(cr, uid, mso_inv_promo_line_result, context=context)  
             self.write(cr, uid, ids[0], {'m_status':'done'}, context=context)
         return True   
     

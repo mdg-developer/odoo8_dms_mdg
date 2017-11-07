@@ -43,7 +43,8 @@ Sale Management
         'views/report_saleorder.xml',
          'views/report_invoice.xml',
      'wizard/sale_team_date_view.xml',
-      
+              'views/account_invoice_view.xml',
+
         'views/sale_team_view.xml',
         'views/sale_order_view.xml',
         'views/sale_return_view.xml',

@@ -153,6 +153,29 @@
 					<field name="pre_order" />
 					<field name="is_generate" />
 				</field>
+				<xpath expr="/form/sheet/notebook/page[@string='Order Lines']"
+					position="after">
+					<page name='promo_lines' string="Promotion Lines">
+						<field name="promos_line_ids" readonly="1">
+							<form string="Promotion Lines" version="7.0">
+								<group>
+									<group>
+										<field name="pro_id" on_change="onchange_promo_id(pro_id)" />
+										<field name="from_date" />
+										<field name="to_date" />
+										<field name="manual" />
+									</group>
+								</group>
+							</form>
+							<tree string="Promotion Lines" editable="bottom" readonly="1">
+								<field name="pro_id" on_change="onchange_promo_id(pro_id)" />
+								<field name="from_date" />
+								<field name="to_date" />
+								<field name="manual" />
+							</tree>
+						</field>
+					</page>
+				</xpath>
 			</field>
 		</record>
 
@@ -204,7 +227,7 @@
 		</record>
 
 
-		
+
 
 	</data>
 </openerp>

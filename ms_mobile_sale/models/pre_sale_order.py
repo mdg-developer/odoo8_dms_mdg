@@ -204,7 +204,9 @@ class pre_sale_order(osv.osv):
         presaleorderObj = self.pool.get('pre.sale.order')
         saleOrderObj = self.pool.get('sale.order')
         saleOrderLineObj = self.pool.get('sale.order.line')
-        
+        saleOrderPromoLineObj = self.pool.get('sale.order.promotion.line')
+        pre_promotion_line_obj = self.pool.get('pre.promotion.line')
+        invPromoLineObj = self.pool.get('account.invoice.promotion.line')                
         so_id = pricelist_id = sale_foc = productName = None
         priceUnit = 0.0
         saleOrderResult = {}
@@ -291,6 +293,18 @@ class pre_sale_order(osv.osv):
                                                         'company_id':company_id,  # company_id,
                                                         }   
                                 saleOrderLineObj.create(cr, uid, detailResult, context=context)
+                    if so_id:
+                        #Insert Sale Order Promotion Line
+                        for so_p_line in preObj_ids.promos_line_ids:
+                            pre_promo_data=pre_promotion_line_obj.browse(cr, uid, so_p_line.id, context=context)
+                            so_promo_line_result = {
+                                              'promo_line_id':so_id,
+                                              'pro_id':pre_promo_data.pro_id.id,
+                                              'from_date':pre_promo_data.from_date,
+                                              'to_date':pre_promo_data.to_date,
+                                              'manual':pre_promo_data.manual,
+                                                          }
+                            saleOrderPromoLineObj.create(cr, uid, so_promo_line_result, context=context)                                   
                     if so_id and  so_state != 'cancel':
                         saleOrderObj.button_dummy(cr, uid, [so_id], context=context)
                         # Do Open
