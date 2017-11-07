@@ -55,6 +55,8 @@ class stock_picking(osv.osv):
         return result      
     
     _columns = {
+
               'section_id':fields.function(_get_corresponding_team, type='many2one', relation='crm.case.section', string='Sales Team', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, copy=False,store=True),
               'user_id':fields.function(_get_corresponding_user, type='many2one', relation='res.users', string='Salesperson', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, copy=False,store=True),
+
               }
