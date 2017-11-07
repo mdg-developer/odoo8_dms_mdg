@@ -83,6 +83,8 @@
 												<field name="discount_amt" readonly="1" />
 												<field name="sub_total" readonly="1" />
 												<field name="foc" readonly="1" />
+												<field name="manual_foc" readonly="1" />
+
 											</group>
 
 										</group>
@@ -99,6 +101,7 @@
 										<field name="discount_amt" readonly="1" />
 										<field name="sub_total" readonly="1" />
 										<field name="foc" readonly="1" />
+										<field name="manual_foc" readonly="1" />
 
 									</tree>
 								</field>

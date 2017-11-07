@@ -205,6 +205,10 @@ class mobile_sale_order(osv.osv):
                                     foc_val = True
                                 else:
                                     foc_val = False
+                                if sol['manual_foc'] == 'T':
+                                    manual_foc = True
+                                else:
+                                    manual_foc = False                                    
                                 mso_line_res = {                                                            
                                   'order_id':s_order_id,
                                   'product_type':product_type,
@@ -215,7 +219,8 @@ class mobile_sale_order(osv.osv):
                                   'discount':sol['discount'],
                                   'discount_amt':sol['discount_amt'],
                                   'sub_total':sol['sub_total'],
-                                  'uom_id':sol['uom_id']
+                                  'uom_id':sol['uom_id'],
+                                  'manual_foc':manual_foc,
                                 }
                                 mobile_sale_order_line_obj.create(cursor, user, mso_line_res, context=context) 
                     # convertintablet(KM)
@@ -233,6 +238,38 @@ class mobile_sale_order(osv.osv):
             print 'False'
             print e
             return False 
+        
+    def create_tablet_sync_log_form(self, cursor, user, vals, context=None):
+             try :
+                sync_obj = self.pool.get('tablet.sync.log')
+                str = "{" + vals + "}"
+                str = str.replace("'',", "',")  # null
+                str = str.replace(":',", ":'',")  # due to order_id
+                str = str.replace("}{", "}|{")
+                new_arr = str.split('|')
+                result = []
+                for data in new_arr:
+                    x = ast.literal_eval(data)
+                    result.append(x)
+                log_line = []
+                for r in result:                
+                   log_line.append(r)  
+                if log_line:
+                    for sync_log in log_line:
+                        cursor.execute('select branch_id from crm_case_section where id=%s', (sync_log['section_id'],))
+                        branch_id = cursor.fetchone()[0]
+                        print_result = {
+                            'section_id':sync_log['section_id'],
+                            'user_id':user,
+                            'tablet_id':sync_log['tablet_id'],
+                            'sync_time':sync_log['sync_time'],
+                            'status':sync_log['status'],
+                            'branch_id':branch_id,
+                            }
+                        sync_obj.create(cursor, user, print_result, context=context)
+                return True
+             except Exception, e:
+                return False        
 # NZO
     def create_exchange_product(self, cursor, user, vals, context=None):
         print 'vals', vals
@@ -1123,7 +1160,7 @@ class mobile_sale_order(osv.osv):
         cr.execute
         return datas
     def sale_team_return(self, cr, uid, section_id , saleTeamId, context=None, **kwargs):
-        cr.execute('''select DISTINCT cr.id,cr.complete_name,cr.warehouse_id,cr.name,sm.member_id,cr.code,pr.product_product_id,cr.location_id,cr.allow_foc,cr.allow_tax
+        cr.execute('''select DISTINCT cr.id,cr.complete_name,cr.warehouse_id,cr.name,sm.member_id,cr.code,pr.product_product_id,cr.location_id,cr.allow_foc,cr.allow_tax,cr.branch_id
                     from crm_case_section cr, sale_member_rel sm,crm_case_section_product_product_rel pr where sm.section_id = cr.id and cr.id=pr.crm_case_section_id  
                     and sm.member_id =%s 
                     and cr.id = %s
@@ -1131,7 +1168,18 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()
         cr.execute
         return datas
+    
+    def get_good_issue_note(self, cr, uid, section_id, context=None, **kwargs):
+        cr.execute('''select count(*) from good_issue_note where issue_date::date=current_date and state ='issue' and sale_team_id=%s''', (section_id,))
+        datas = cr.fetchall()
+        return datas
 
+    def getResPatrnerCategoryRel(self, cr, uid, section_id, context=None, **kwargs):
+        
+        cr.execute('''select * from res_partner_res_partner_category_rel''')
+        datas = cr.fetchall()
+        return datas       
+       
     def sale_plan_day_return(self, cr, uid, section_id, pull_date , context=None, **kwargs):
         
         lastdate = datetime.strptime(pull_date, "%Y-%m-%d")
@@ -3031,6 +3079,7 @@ class mobile_sale_order_line(osv.osv):
         'order_id': fields.many2one('mobile.sale.order', 'Sale Order'),
         'sub_total':fields.float('Sub Total'),
         'foc':fields.boolean('FOC'),
+        'manual_foc':fields.boolean('Manual Foc'),
     }
     _defaults = {
        'product_uos_qty':1.0,

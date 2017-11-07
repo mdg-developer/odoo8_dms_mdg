@@ -166,7 +166,11 @@ class pre_sale_order(osv.osv):
                                 if sol['price_unit'] == '0':
                                     foc_val = True
                                 else:
-                                    foc_val = False								
+                                    foc_val = False					
+                                if sol['manual_foc'] == 'T':
+                                    manual_foc = True
+                                else:
+                                    manual_foc = False                                         			
                                 mso_line_res = {                                                            
                                   'order_id':s_order_id,
                                   'product_id':productId,
@@ -176,7 +180,8 @@ class pre_sale_order(osv.osv):
                                   'discount':sol['discount'],
                                   'discount_amt':sol['discount_amt'],
                                   'sub_total':sol['sub_total'],
-                                  'uom_id':sol['uom_id']
+                                  'uom_id':sol['uom_id'],
+                                'manual_foc':manual_foc,
                                 }
                                 mobile_sale_order_line_obj.create(cursor, user, mso_line_res, context=context) 
                                 print 'Create Order line', sol['so_name']                     
@@ -366,6 +371,7 @@ class pre_sale_order_line(osv.osv):
         'order_id': fields.many2one('pre.sale.order', 'Sale Order'),
         'sub_total':fields.float('Sub Total'),
         'foc':fields.boolean('FOC'),
+        'manual_foc':fields.boolean('Manual Foc'),
     }
     _defaults = {
        'product_uos_qty':1.0,
