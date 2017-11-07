@@ -11,7 +11,7 @@ from openerp.tools.translate import _
 import time
 from openerp import netsvc
 # from openerp.exceptions import UserError
-
+import ast
 import openerp.addons.decimal_precision as dp
 
 class sale_order(osv.osv):
@@ -153,7 +153,8 @@ class sale_order(osv.osv):
          'payment_term': fields.many2one('account.payment.term', 'Payment Term', readonly=True),
          'issue_warehouse_id':fields.many2one('stock.warehouse', 'Warehouse'),
          'no_promotion':fields.boolean('No Promotion', default=False),
-         'rebate_later':fields.boolean('Rebate Later',default=False)
+         'rebate_later':fields.boolean('Rebate Later',default=False),
+         'promos_line_ids':fields.one2many('sale.order.promotion.line', 'promo_line_id', 'Promotion Lines'),         
                }
     
     def on_change_payment_type(self, cr, uid, ids, partner_id, payment_type, context=None):
@@ -527,6 +528,52 @@ class sale_order(osv.osv):
         'warehouse_id': _get_default_warehouse,
 
     }
+    
+    def create_promotion_line(self, cursor, user, vals, context=None):
+        
+        try : 
+            so_promotion_line_obj = self.pool.get('sale.order.promotion.line')
+            str = "{" + vals + "}"
+                
+            str = str.replace("'',", "',")  # null
+            str = str.replace(":',", ":'',")  # due to order_id
+            str = str.replace("}{", "}|{")
+            new_arr = str.split('|')
+            result = []
+            for data in new_arr:
+                x = ast.literal_eval(data)
+                result.append(x)
+            promo_line = []
+            for r in result:                
+                promo_line.append(r)  
+            if promo_line:
+                for pro_line in promo_line:
+                
+                    cursor.execute('select id From sale_order where name  = %s ', (pro_line['promo_line_id'],))
+                    data = cursor.fetchall()
+                    if data:
+                        saleOrder_Id = data[0][0]
+                    else:
+                        saleOrder_Id = None
+                    cursor.execute("select manual from promos_rules where id=%s",(pro_line['pro_id'],))
+                    manual =cursor.fetchone()[0]
+                    if manual is not None:
+                        manual=manual
+                    else:
+                        manual=False                                    
+                    promo_line_result = {
+                        'promo_line_id':saleOrder_Id,
+                        'pro_id':pro_line['pro_id'],
+                        'from_date':pro_line['from_date'],
+                        'to_date':pro_line['to_date'] ,
+                         'manual':manual,
+
+                        }
+                    so_promotion_line_obj.create(cursor, user, promo_line_result, context=context)
+            return True
+        except Exception, e:
+            return False
+    
 sale_order()   
 
 class sale_order_line(osv.osv):
@@ -552,3 +599,29 @@ class sale_order_line(osv.osv):
     _columns = { 
                'sale_foc':fields.boolean('FOC')               
                }      
+    
+class sale_order_promotion_line(osv.osv):
+    _name = 'sale.order.promotion.line'
+    _columns = {
+              'promo_line_id':fields.many2one('sale.order', 'Promotion line'),
+              'pro_id': fields.many2one('promos.rules', 'Promotion Rule', change_default=True, readonly=False),
+              'from_date':fields.datetime('From Date'),
+              'to_date':fields.datetime('To Date'),
+              'manual':fields.boolean('Manual'),
+              }
+    _defaults = {
+        'manual':False,
+    }
+    
+    def onchange_promo_id(self, cr, uid, ids, pro_id, context=None):
+            result = {}
+            promo_pool = self.pool.get('promos.rules')
+            datas = promo_pool.read(cr, uid, pro_id, ['from_date', 'to_date','manual'], context=context)
+    
+            if datas:
+                result.update({'from_date':datas['from_date']})
+                result.update({'to_date':datas['to_date']})
+                result.update({'manual':datas['manual']})
+            return {'value':result}
+            
+sale_order_promotion_line()

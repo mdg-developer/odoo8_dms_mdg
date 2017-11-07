@@ -15,6 +15,7 @@ class employee(osv.osv):
               'print_date':fields.date('Date', readonly=True),
               'print_fname': fields.char('Filename', size=128),
               'print_file':fields.binary('File', required=True),
+              'branch_id':fields.many2one('res.branch', 'Branch'),
               }
     _defaults = {
             'print_date':datetime.today(),

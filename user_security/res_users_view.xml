@@ -16,6 +16,20 @@
 				</data>
 			</field>
 		</record>
-
+		<record model="ir.ui.view" id="res_view_users_search">
+			<field name="name">res.users.search</field>
+			<field name="model">res.users</field>
+			<field name="inherit_id" ref="base.view_users_search" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//search" position="inside">
+						<group expand="0" string="Group By...">
+							<filter string="Branch" icon="terp-partner" domain="[]"
+								context="{'group_by':'branch_id'}" />
+						</group>
+					</xpath>
+				</data>
+			</field>
+		</record>
 	</data>
 </openerp>

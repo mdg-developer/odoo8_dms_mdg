@@ -166,7 +166,11 @@ class pre_sale_order(osv.osv):
                                 if sol['price_unit'] == '0':
                                     foc_val = True
                                 else:
-                                    foc_val = False								
+                                    foc_val = False					
+                                if sol['manual_foc'] == 'T':
+                                    manual_foc = True
+                                else:
+                                    manual_foc = False                                                   			
                                 mso_line_res = {                                                            
                                   'order_id':s_order_id,
                                   'product_id':productId,
@@ -176,7 +180,8 @@ class pre_sale_order(osv.osv):
                                   'discount':sol['discount'],
                                   'discount_amt':sol['discount_amt'],
                                   'sub_total':sol['sub_total'],
-                                  'uom_id':sol['uom_id']
+                                  'uom_id':sol['uom_id'],
+                                'manual_foc':manual_foc,
                                 }
                                 mobile_sale_order_line_obj.create(cursor, user, mso_line_res, context=context) 
                                 print 'Create Order line', sol['so_name']                     
@@ -201,6 +206,9 @@ class pre_sale_order(osv.osv):
         saleOrderObj = self.pool.get('sale.order')
         saleOrderLineObj = self.pool.get('sale.order.line')
         invoiceObj = self.pool.get('account.invoice')
+        saleOrderPromoLineObj = self.pool.get('sale.order.promotion.line')
+        pre_promotion_line_obj = self.pool.get('pre.promotion.line')
+        invPromoLineObj = self.pool.get('account.invoice.promotion.line')        
         so_id = pricelist_id = sale_foc = productName = None
         priceUnit = 0.0
         solist = []        
@@ -295,7 +303,19 @@ class pre_sale_order(osv.osv):
                                 tax_id=cr.fetchone()
                                 if tax_id:
                                     tax_id=tax_id[0]
-                                    cr.execute("insert  into sale_order_tax (order_line_id,tax_id) values (%s,%s)",(sol_id,tax_id,))                                           
+                                    cr.execute("insert  into sale_order_tax (order_line_id,tax_id) values (%s,%s)",(sol_id,tax_id,))      
+                    if so_id:
+                        #Insert Sale Order Promotion Line
+                        for so_p_line in preObj_ids.promos_line_ids:
+                            pre_promo_data=pre_promotion_line_obj.browse(cr, uid, so_p_line.id, context=context)
+                            so_promo_line_result = {
+                                              'promo_line_id':so_id,
+                                              'pro_id':pre_promo_data.pro_id.id,
+                                              'from_date':pre_promo_data.from_date,
+                                              'to_date':pre_promo_data.to_date,
+                                              'manual':pre_promo_data.manual,
+                                                          }
+                            saleOrderPromoLineObj.create(cr, uid, so_promo_line_result, context=context)                                                                             
                     if so_id and  so_state != 'cancel':
                          
                         saleOrderObj.button_dummy(cr, uid, [so_id], context=context)
@@ -313,7 +333,18 @@ class pre_sale_order(osv.osv):
                         discount_total=invoice_data.discount_total
                         amount_total=invoice_data.amount_total
                         cr.execute("update sale_order set amount_untaxed =%s ,amount_tax=%s,total_dis=%s,amount_total=%s where id=%s",(amount_untaxed,amount_tax,discount_total,amount_total,so_id,))
-                        
+                        if invoice_data:
+                            #Insert account invoice promotion line
+                            for inv_p_line in preObj_ids.promos_line_ids:
+                                inv_pre_promo_data=pre_promotion_line_obj.browse(cr, uid, inv_p_line.id, context=context)
+                                inv_promo_line_result = {
+                                                  'promo_line_id':invoice_data.id,
+                                                  'pro_id':inv_pre_promo_data.pro_id.id,
+                                                  'from_date':inv_pre_promo_data.from_date,
+                                                  'to_date':inv_pre_promo_data.to_date,
+                                                  'manual':inv_pre_promo_data.manual,
+                                                              }
+                                invPromoLineObj.create(cr, uid, inv_promo_line_result, context=context)                           
                         
             except Exception, e:
                 raise orm.except_orm(_('Error :'), _("Error Occured while Convert Mobile Sale Order! \n [ %s ]") % (e))
@@ -390,6 +421,7 @@ class pre_sale_order_line(osv.osv):
         'order_id': fields.many2one('pre.sale.order', 'Sale Order'),
         'sub_total':fields.float('Sub Total'),
         'foc':fields.boolean('FOC'),
+        'manual_foc':fields.boolean('Manual Foc'),
     }
     _defaults = {
        'product_uos_qty':1.0,
