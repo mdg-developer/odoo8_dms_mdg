@@ -58,6 +58,8 @@ class pre_sale_order(osv.osv):
         'sale_team':fields.many2one('crm.case.section', 'Sale Team'),
         'location_id'  : fields.many2one('stock.location', 'Location'),
         'deduction_amount':fields.float('Deduction Amount'),
+                'additional_discount':fields.float('Discount'),
+
         'm_status':fields.selection([('draft', 'Draft'),
                                      
                                                       ('done', 'Complete')], string='Status'),
@@ -195,7 +197,7 @@ class pre_sale_order(osv.osv):
             print e
             return False 
         
-<<<<<<< HEAD
+
     def get_sale_order(self, cr, uid,name , context=None):
         cr.execute('''select name from pre_sale_order
                 where name= %s
@@ -203,7 +205,7 @@ class pre_sale_order(osv.osv):
         datas = cr.fetchall()
         return datas
     
-=======
+
         
     def create_presaleorder_auto_convert(self, cursor, user, vals, context=None):
         print 'vals', vals
@@ -223,6 +225,8 @@ class pre_sale_order(osv.osv):
             result = []
             so_ids=[]
             for data in new_arr:
+                if len(data) > 400:
+                    data = data.replace("}", "'}")
                 x = ast.literal_eval(data)
                 result.append(x)
             sale_order = []
@@ -236,7 +240,7 @@ class pre_sale_order(osv.osv):
             
             if sale_order:
                 for so in sale_order:
-                    print 'Sale Man Id', so['user_id']
+                    print 'Sale Man Id', so['user_id'][0],
                     cursor.execute('select id,branch_id From res_users where id  = %s ', (so['user_id'],))
                     data = cursor.fetchall()
                     
@@ -268,6 +272,8 @@ class pre_sale_order(osv.osv):
                         'partner_id':partner_id,
                         'sale_plan_name':so['sale_plan_day_name'],
                         'amount_total':so['amount_total'],
+                        'deduction_amount':so['deductionAmount'],
+                        'additional_discount':so['additionalDiscount'],
                         'sale_team':so['sale_team'],
                         'date':so['date'],
                         'due_date':so['due_date'],
@@ -307,7 +313,11 @@ class pre_sale_order(osv.osv):
                                 mobile_sale_order_line_obj.create(cursor, user, mso_line_res, context=context) 
                                 print 'Create Order line', sol['so_name']                     
                     sale_order_name_list.append(so['name'])
-                    pre_sale_order_obj.print_report(cursor, user, so_ids, context=context) 
+                    mobile_data=mobile_sale_order_obj.browse(cursor,user,so_ids,context=context)
+                    state=mobile_data.m_status
+                    void_flag=mobile_data.void_flag
+                    if state=='draft'  and void_flag =='none':
+                        mobile_sale_order_obj.action_convert_presaleorder(cursor, user, [so_ids], context=context)    
                     
                 
             print 'True'
@@ -324,7 +334,7 @@ class pre_sale_order(osv.osv):
             print e
             return False 
         
->>>>>>> 7500b19b0c08b789ffeed3268b64cd48ceb7971e
+
     def action_convert_presaleorder(self, cr, uid, ids, context=None):
         presaleorderObj = self.pool.get('pre.sale.order')
         mobilesaleorderObj = self.pool.get('mobile.sale.order')
@@ -382,7 +392,8 @@ class pre_sale_order(osv.osv):
                                                         'user_id':preObj_ids.user_id.id,
                                                         'section_id':preObj_ids.sale_team.id,
                                                         'deduct_amt':preObj_ids.deduction_amount,
-                                                        'additional_discount':0,
+                                                        'additional_discount':preObj_ids.additional_discount*100,
+
 #                                                         'client_order_ref':preObj_ids.tablet_id.name,
                                                          'state':so_state,
                                                          'payment_type':preObj_ids.type,

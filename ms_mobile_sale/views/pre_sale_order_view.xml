@@ -48,6 +48,7 @@
 								<field name="delivery_remark" readonly="1" />
 								<field name="amount_total" readonly="1" />
 								<field name="deduction_amount" readonly="1" />
+								<field name ="additional_discount" readonly="1" />
 								<field name="pricelist_id" readonly="1" />
 								<field name="void_flag" readonly="1" />
 								<field name="note" class="oe_inline" placeholder="Terms and conditions..."
