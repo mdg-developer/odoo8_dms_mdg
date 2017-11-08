@@ -319,6 +319,8 @@ class mobile_sale_order(osv.osv):
         except Exception, e:
             print 'False'
             return False 
+        
+        
     # CheckQty For Pre Sale 3G
     def check_qty_issue_warehouse(self, cursor, user, vals, context=None):
         product_uom_obj = self.pool.get('product.uom')
@@ -399,6 +401,7 @@ class mobile_sale_order(osv.osv):
                                         'uom_id':uom,
                                          }   
                         detail_result.append(result)
+                        detail_result.append({"|"})
                         #raise osv.except_osv(_("Not enough stock ! : ") , _(" Your Product Name '%s' is not enough stock !") % (product_obj.name_template,))
             return detail_result
         except Exception, e:
@@ -2006,7 +2009,6 @@ class mobile_sale_order(osv.osv):
                                 invoiceObj.write(cr, uid, invoice_id, {'pre_order':True,'user_id':uid,'section_id':section_id,'collection_team_id':section_id,'collection_user_id' :uid ,'date_invoice':datetime.now() }, context)                                                                                                                             
                                                                         
             return True 
-          
     def cancel_deliver_order(self, cr, uid, saleorderList, context=None):
          
             context = {'lang':'en_US', 'params':{'action':458}, 'tz': 'Asia/Rangoon', 'uid': 1}
@@ -2033,24 +2035,27 @@ class mobile_sale_order(osv.osv):
                     So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
                                                    , ('name', '=', so_ref_no)], context=context)
                     if So_id:
-                        picking_ids = self.pool.get('stock.picking').search(cr, uid, [('group_id', '=',so_ref_no),('state','!=','done')], context=context)
-                        if picking_ids:
-                            for picking_id in picking_ids: 
-                                self.pool.get('stock.picking').unlink(cr,uid,picking_id,context=context)
-                        procurement_order_obj = self.pool.get('procurement.order')        
-                        procurement_ids = self.pool.get('procurement.order').search(cr,uid,[('group_id', '=',so_ref_no)], context=context)
-                        if procurement_ids:
-                            for procurement_id in procurement_ids:
-                                osv.osv.unlink(procurement_order_obj, cr, uid, procurement_id, context=context)
-                                cr.execute("delete from procurement_order where id=%s",(procurement_id,))                        
-#                         cr.execute('''update stock_picking set state ='cancel' where origin = %s ''', (so_ref_no,))
-#                         cr.execute('''update stock_move set state ='cancel' where origin = %s ''', (so_ref_no,))
-                        cr.execute('''update sale_order set state ='cancel' where id = %s ''', (So_id[0],))
+
+                        soObj.action_cancel(cr, uid, So_id[0], context=context)
                         cr.execute('''update account_invoice set state ='cancel' where origin = %s ''', (so_ref_no,))
                         cr.execute('select tb_ref_no from sale_order where id=%s',(So_id[0],))
                         ref_no=cr.fetchone()[0]
                         cr.execute("update pre_sale_order set void_flag = 'voided' where name=%s", ( ref_no,))          
                                                                                                                                                                                                                                           
+            return True  
+          
+    def cancel_sale_order(self, cr, uid, saleOrderID, context=None):
+         
+            context = {'lang':'en_US', 'params':{'action':458}, 'tz': 'Asia/Rangoon', 'uid': 1}
+            soObj = self.pool.get('sale.order')               
+            so_ref_no = saleOrderID       
+            So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
+                                           , ('tb_ref_no', '=', so_ref_no)], context=context)
+            if So_id:
+                soObj.action_cancel(cr, uid, So_id[0], context=context)
+                so_data=soObj.browse(cr, uid, So_id[0], context=context)
+                cr.execute('''update account_invoice set state ='cancel' where origin = %s ''', (so_data.name,))
+                cr.execute("update pre_sale_order set void_flag = 'voided' where name=%s", ( so_ref_no,))                                                                                                                                                                                                                                                   
             return True  
                    
     def create_mobile_stock_return(self, cursor, user, vals, context=None):
