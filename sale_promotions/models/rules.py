@@ -242,8 +242,8 @@ class PromotionsRules(osv.Model):
         #  body = data.body
         #  tag = data.reason
         result = {}
-        msg_title = "Promotion has be chage"
-        message = "Ready to update"
+        msg_title = "Promotion has been changed"
+        message = "Need To Pull"
         msg_tag = ""
         
         if ids:
