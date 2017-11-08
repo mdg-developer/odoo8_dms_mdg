@@ -9,6 +9,12 @@
 				<field name="date" position="after">
 					<filter name="last_week"  string="Last Week"
 						domain="[('date','&gt;', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d') )]" />
+					<filter name="partner_id" string="All"  domain="[('partner_id.active','=',True)]" />
+					<filter name="partner_id" string="Normal"  domain="[('partner_id.is_distributor','=',False),('partner_id.dean_customer','=',False),('partner_id.bw_customer','=',False)]" />
+					<filter name="partner_id" string="Distributor"  domain="[('partner_id.is_distributor','=',True)]" />
+					<filter name="partner_id" string="Dean"  domain="[('partner_id.dean_customer','=',True)]" />
+					<filter name="partner_id" string="BW"  domain="[('partner_id.bw_customer','=',True)]" />
+					
 				</field>
 			</field>
 		</record>
