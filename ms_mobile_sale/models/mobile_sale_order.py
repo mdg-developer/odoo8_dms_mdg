@@ -1901,10 +1901,11 @@ class mobile_sale_order(osv.osv):
         if list_val:
             for val in list_val:
                 cr.execute('''select so.id,so.product_id,so.product_uom_qty,so.product_uom,so.price_unit,so.order_id,
-                            so.discount,so.discount_amt ,pp.sequence
-                            from sale_order_line so,product_product pp
-                            where so.id = %s 
-                            and so.product_id = pp.id''', (val,))
+                            so.discount,so.discount_amt ,pp.sequence,floor(round(1/pu.factor,2)) as smaller_qty
+                            from sale_order_line so,product_product pp,product_uom pu        
+                             where so.id = %s 
+                            and  so.product_id = pp.id
+                            and so.product_uom=pu.id''', (val,))
                 result = cr.fetchall()
                 list.append(result)
                 print' list', list
