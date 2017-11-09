@@ -31,9 +31,14 @@ class sale_report(osv.osv):
        'township_id': fields.many2one('res.township','Township', readonly=True),
        'branch_id': fields.many2one('res.branch','Branch', readonly=True),
        'product_id': fields.many2one('product.product','Product', readonly=True),
-       'city': fields.text('city','City', readonly=True),
        'demarcation_id': fields.many2one('sale.demarcation','Demarcation', readonly=True),
        'state_id': fields.many2one('res.country.state','Region', readonly=True),
+       'city': fields.many2one('res.city','City', readonly=True),
+       'partner_id': fields.many2one('res.partner', 'Customer', readonly=True),
+       'yearly_target_amount': fields.float('Yearly Target Amount', readonly=True),
+       'monthly_target_amount': fields.float('Monthly Target Amount', readonly=True),
+       'weekly_target_amount': fields.float('Weekly Target Amount', readonly=True),
+       'invoiced_target': fields.float('Invoiced Target', readonly=True),
     }
     
     
@@ -72,7 +77,11 @@ class sale_report(osv.osv):
                     rp.demarcation_id as demarcation_id,
                     t.group as group_id,
                     t.main_group as main_group_id,
-                    t.division as division_id
+                    t.division as division_id,
+                    ccs.yearly_target_amount,
+                    ccs.monthly_target_amount,
+                    ccs.weekly_target_amount,
+                    ccs.invoiced_target
         """
         return select_str
 
@@ -89,6 +98,7 @@ class sale_report(osv.osv):
                     join currency_rate cr on (cr.currency_id = pp.currency_id and
                         cr.date_start <= coalesce(s.date_order, now()) and
                         (cr.date_end is null or cr.date_end > coalesce(s.date_order, now())))
+                    join crm_case_section ccs on (ccs.id=s.section_id)
                     
         """
         return from_str
@@ -115,7 +125,11 @@ class sale_report(osv.osv):
                     s.township,
                     s.state_id,
                     rp.city,
-                    rp.demarcation_id
+                    rp.demarcation_id,
+                    ccs.yearly_target_amount,
+                    ccs.monthly_target_amount,
+                    ccs.weekly_target_amount,
+                    ccs.invoiced_target
         """
         return group_by_str
 
