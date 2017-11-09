@@ -38,6 +38,7 @@
 											<span t-if="o.state not in ['draft','sent']">Order No </span>
 											<span t-if="o.state in ['draft','sent']">Quotation No </span>
 											<span t-field="o.name" />
+											<span t-if="o.state  in ['cancel']">(Voided)</span>
 										</td>
 									</tr>
 								</table>
