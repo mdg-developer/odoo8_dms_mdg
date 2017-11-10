@@ -1,33 +1,45 @@
 <openerp>
-    <data>
-        <record id="view_stock_config_settings_inherit_issued_location" model="ir.ui.view">
-            <field name="name">stock.config.settings.inherit</field>
-            <field name="model">stock.config.settings</field>
-            <field name="inherit_id" ref="stock.view_stock_config_settings"/>
-            <field name="arch" type="xml">
-                <separator string="Location &amp; Warehouse"/>
-                <xpath expr="//separator[@string='Location &amp; Warehouse']" position="after">
-                    
-                    <div attrs="{'invisible': True}">
-                    <!-- <div> -->
-                                <label for="company_id" string="Select Company"/>
-                                <field name="company_id"
-                                    widget="selection"
-                                    on_change="onchange_company_id(company_id)"
-                                    class="oe_inline"/>
-                    </div>
-                    <group>
-                        <label for="id" string="Issued Location"/>
-                        <div>
-                            <div>
-                                <field name="issued_location_id" class="oe_inline"/>
-                                
-                            </div>
-                            
-                         </div>
-                    </group>
-                </xpath>
-            </field>
-        </record>
-    </data>
+	<data>
+		<record id="view_stock_config_settings_inherit_issued_location"
+			model="ir.ui.view">
+			<field name="name">stock.config.settings.inherit</field>
+			<field name="model">stock.config.settings</field>
+			<field name="inherit_id" ref="stock.view_stock_config_settings" />
+			<field name="arch" type="xml">
+				<separator string="Location &amp; Warehouse" />
+				<xpath expr="//separator[@string='Location &amp; Warehouse']"
+					position="after">
+
+					<div attrs="{'invisible': True}">
+						<!-- <div> -->
+						<label for="company_id" string="Select Company" />
+						<field name="company_id" widget="selection"
+							on_change="onchange_company_id(company_id)" class="oe_inline" />
+					</div>
+					<group>
+						<label for="id" string="Issued Location" />
+						<div>
+							<div>
+								<field name="issued_location_id" class="oe_inline" />
+
+							</div>
+
+						</div>
+					</group>
+				</xpath>
+			</field>
+		</record>
+
+		<record id="view_warehouse_inherited" model="ir.ui.view">
+			<field name="name">view_warehouse_inherited</field>
+			<field name="model">stock.warehouse</field>
+			<field name="inherit_id" ref="stock.view_warehouse" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='wh_output_stock_loc_id']"
+					position="after">
+					<field name="return_location_id" />
+				</xpath>
+			</field>
+		</record>
+	</data>
 </openerp>
