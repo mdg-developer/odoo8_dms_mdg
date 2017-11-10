@@ -12,10 +12,10 @@ from openerp.tools.float_utils import float_compare
 
 class purchase_order_line(osv.osv):
     _inherit = "purchase.order.line"
-    
+    product_uom_ids=False;
     _columns = {
         'supplier_code' : fields.char('Supplier Code'),  
-        'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', readonly=True, required=True),
+        'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True,domain=[('id', 'in', product_uom_ids)]),
                }
     
     def onchange_product_id(self, cr, uid, ids, pricelist_id, product_id, qty, uom_id,
@@ -24,6 +24,7 @@ class purchase_order_line(osv.osv):
         """
         onchange handler of product_id.
         """
+        global product_uom_ids
         if context is None:
             context = {}
         
@@ -68,7 +69,7 @@ class purchase_order_line(osv.osv):
         product_uom_po_id = product.uom_po_id.id
         if not uom_id:
             uom_id = product_uom_po_id
-
+        product_uom_ids=uom_id
         if product.uom_id.category_id.id != product_uom.browse(cr, uid, uom_id, context=context).category_id.id:
             if context.get('purchase_uom_check') and self._check_product_uom_group(cr, uid, context=context):
                 res['warning'] = {'title': _('Warning!'), 'message': _('Selected Unit of Measure does not belong to the same category as the product Unit of Measure.')}

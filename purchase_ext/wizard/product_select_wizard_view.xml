@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="product_select_wizard_view">
+            <field name="name">product.select.wizard.form</field>
+            <field name="model">product.select.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Add Multiple">
+                    <group>
+                        <field name="quantity"/>
+                        <field name="products_ids"/>
+                    </group>
+                <footer>
+                    <button name="select_product" type="object" class="oe_highlight" string="Add"/>
+                    or 
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_product_select_wizard_view">
+            <field name="name">Product Select Wizard</field>
+            <field name="res_model">product.select.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="product_select_wizard_view"/>
+            <field name="target">new</field>
+        </record>
+    </data>
+</openerp>

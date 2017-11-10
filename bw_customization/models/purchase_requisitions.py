@@ -29,6 +29,7 @@ import openerp.addons.decimal_precision as dp
 class purchase_requisitions(osv.osv):
     _name = "purchase.requisitions"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _order = 'date_requisition desc, id desc'
 
     def _get_po_line(self, cr, uid, ids, field_names, arg=None, context=None):
         result = dict((res_id, []) for res_id in ids)
@@ -80,8 +81,10 @@ class purchase_requisitions(osv.osv):
         Generate all purchase order based on selected lines, should only be called on one tender at a time
         """
         po = self.pool.get('purchase.order')
+        posup = self.pool.get('product.supplierinfo')
         pr = self.pool.get('purchase.requisitions')
         poline = self.pool.get('purchase.order.line')
+        res_partner = self.pool.get('res.partner')
         id_per_supplier = {}
         for tender in pr.browse(cr, uid, ids, context=context):
             if tender.state == 'done':
@@ -90,7 +93,15 @@ class purchase_requisitions(osv.osv):
                 #only take into account confirmed line that does not belong to already confirmed purchase order
                 if tender.state == 'confirmed':
                     cr.execute("select name from product_supplierinfo where product_tmpl_id=%s", (po_line.product_id.product_tmpl_id.id,))
-                    supplier_id = cr.fetchone()[0]
+                    supplier_id = cr.fetchone()
+                    if supplier_id:
+                        supplier_id = supplier_id[0]
+                    else:
+                        posup_ids = posup.search(cr, uid, [('isDefault', '=', True)])
+                        cr.execute("select name from product_supplierinfo where id = %s", (posup_ids[0],))
+                        posup_id = cr.fetchone()
+                        if posup_id:
+                            supplier_id = posup_id[0]
                     if id_per_supplier.get(supplier_id):
                         id_per_supplier[supplier_id].append(po_line)
                     else:
@@ -101,21 +112,30 @@ class purchase_requisitions(osv.osv):
             for supplier, product_line in id_per_supplier.items():
                 if tender:
                         cr.execute("select company_id from res_users where id=%s", (uid,))
-                        company_id = cr.fetchone()[0]
+                        company_id = cr.fetchone()
+                        if company_id:
+                            company_id = company_id[0]
                         cr.execute("select id from res_currency where active='t' and base='t'",)
-                        currency_id = cr.fetchone()[0]
+                        currency_id = cr.fetchone()
+                        if currency_id:
+                            currency_id = currency_id[0]
                         cr.execute("select id from stock_picking_type where name='Receipts' and warehouse_id=%s", (tender.warehouse_id.id,))
-                        pickingtype_id = cr.fetchone()[0]
+                        pickingtype_id = cr.fetchone()
+                        if pickingtype_id:
+                            pickingtype_id = pickingtype_id[0]
                         cr.execute("select lot_stock_id from stock_warehouse where id=%s", (tender.warehouse_id.id,))
-                        location_id = cr.fetchone()[0]
-                        cr.execute("select pricelist_id from res_partner where id=%s", (supplier,))
-                        pricelist_id = cr.fetchone()[0]
+                        location_id = cr.fetchone()
+                        if location_id:
+                            location_id = location_id[0]
+                        supplier_id = res_partner.browse(cr, uid, supplier, context=context)
+#                         cr.execute("select pricelist_id from res_partner where id=%s", (supplier,))
+#                         pricelist_id = cr.fetchone()[0]
                         poResult = {'partner_id':supplier or False,
                                     'pr_ref':tender.name or '/',
                                     'date_order':tender.date_requisition ,
                                     'company_id':company_id or False,
                                     'currency_id':currency_id or False,
-                                    'pricelist_id':pricelist_id or False,
+                                    'pricelist_id':supplier_id.property_product_pricelist_purchase and supplier_id.property_product_pricelist_purchase.id or False,
                                     'location_id':location_id or False,
                                     'picking_type_id':pickingtype_id or False,
                                     'state': 'draft',                                
@@ -134,6 +154,7 @@ class purchase_requisitions(osv.osv):
                                         'product_qty':line.product_qty,
                                         'price_unit':line.price_unit,
                                         'date_planned':tender.date_expected ,
+                                        'supplier_code':line.product_id.supplier_code ,
                                         'state':'draft',
                                         }                                
                             pol_id =poline.create(cr, uid, polResult, context=context)
@@ -145,10 +166,11 @@ purchase_requisitions()
 
 class purchase_requisitions_line(osv.osv):
     _name = "purchase.requisitions.line"
-
+    product_uom_ids=False;
+    
     _columns = {
         'product_id': fields.many2one('product.product', 'Product', domain=[('purchase_ok', '=', True)]),
-        'product_uom_id': fields.many2one('product.uom', 'Product Unit of Measure', readonly=False),
+        'product_uom_id': fields.many2one('product.uom', 'Product Unit of Measure', domain=[('id', 'in', product_uom_ids)]),
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure')),
         'price_unit': fields.float('Price Unit'),
         'requisition_id': fields.many2one('purchase.requisitions', 'Purchase Requisitions', ondelete='cascade'),
@@ -160,9 +182,11 @@ class purchase_requisitions_line(osv.osv):
         @param product_id: Changed product_id
         @return:  Dictionary of changed values
         """
+        global product_uom_ids
         value = {'product_uom_id': '', 'price_unit': 0.0}
         if product_id:
             prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+            product_uom_ids=prod.uom_id.id
             value = {'product_uom_id': prod.uom_id.id, 'price_unit': prod.list_price, 'product_qty': 1.0}
         return {'value': value}
     

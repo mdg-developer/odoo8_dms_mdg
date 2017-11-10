@@ -69,6 +69,9 @@
 			<field name="model">product.template</field>
 			<field name="inherit_id" ref="product.product_template_search_view" />
 			<field name="arch" type="xml">
+				<xpath expr="//field[@name='name']" position="after">
+					<field name="supplier_code" string="Supplier Code" filter_domain="[('supplier_code','ilike',self)]"/>
+				</xpath>
 				<xpath expr="//filter[@string='Type']" position="after">
 					<filter string='Division' icon="terp-mrp"
 						domain="[]" context="{'group_by' : 'division'}" />
