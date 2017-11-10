@@ -2169,7 +2169,8 @@ class mobile_sale_order(osv.osv):
                     stock.append(r)                                    
                 else:
                     stock_line.append(r)
-            
+#             print 'stock>>>',stock
+#             print 'stock_line>>>',stock_line
             if stock:
                 for sr in stock:                                    
                     cursor.execute('select vehicle_id,location_id,issue_location_id,delivery_team_id,receiver,branch_id from crm_case_section where id = %s ', (sr['sale_team_id'],))
@@ -2209,6 +2210,7 @@ class mobile_sale_order(osv.osv):
                         'from_location_id':from_location_id,
                         'to_location_id':to_location_id,
                         'sale_team_id':delivery_id,
+                        'rfi_ref' : sr['rfi_no'],
                     }
                     stock_id = stock_request_obj.create(cursor, user, mso_result, context=context)
                     

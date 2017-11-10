@@ -104,6 +104,7 @@ class stock_requisition(osv.osv):
         'from_location_id':fields.many2one('stock.location', 'Requesting  Location', required=True),
         'to_location_id':fields.many2one('stock.location', 'Request Warehouse'),
         'so_no' : fields.char('Sales Order/Inv Ref;No.'),
+        'rfi_ref' : fields.char('Tablet RFI Ref'),
         'issue_to':fields.char("Receiver"),
         'request_by':fields.many2one('res.users', "Requested By" , readonly=True),
         'approve_by':fields.many2one('res.users', "Approved By", readonly=True),
@@ -250,13 +251,17 @@ class stock_requisition(osv.osv):
             
         #for  line_data in transfer_data.p_line:
         for line in req_value.p_line:
-             
+            ref_no = None
+            if req_value.rfi_ref != False:                
+                ref_no = req_value.rfi_ref
+            else:
+                ref_no = req_value.name    
             warehouse_id = stock_warehouse_obj.search(cr,uid,[('lot_stock_id','=',req_value.from_location_id.id)])
             vals = {
                     'name': line.product_id.name_template,
                     'warehouse_id':warehouse_id[0],
                     'location_id':req_value.from_location_id.id,
-                    'origin':req_value.name,
+                    'origin':ref_no,#req_value.name,
                     'company_id': line.line_id.company_id.id,
                     'date_planned': line.line_id.request_date,
                     'product_id': line.product_id.id,
@@ -489,6 +494,7 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
     
     def on_change_product_id(self,cr,uid,ids,product_id,to_location_id, context=None):
         values = {}
+        domain = {}
         qty_on_hand=0
         if to_location_id and product_id:
             cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (to_location_id, product_id,))
@@ -499,14 +505,27 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
                 qty_on_hand = 0
         if product_id:
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+            cr.execute("""SELECT uom.id FROM product_product pp 
+                          LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
+                          LEFT JOIN product_template_product_uom_rel rel ON (rel.product_template_id=pt.id)
+                          LEFT JOIN product_uom uom ON (rel.product_uom_id=uom.id)
+                          WHERE pp.id = %s""", (product.id,))            
+            uom_list = cr.fetchall()
+            if uom_list:
+                domain = {'product_uos':
+                            [('id', 'in', uom_list)]}
+            else:
+                domain = {'product_uos':
+                            [('id', 'in', product.product_tmpl_id.uom_id)]}    
             values = {
+                'product_uos': product.product_tmpl_id.uom_id and product.product_tmpl_id.uom_id.id or False,      
                 'product_uom': product.product_tmpl_id.uom_id and product.product_tmpl_id.uom_id.id or False,
                 'uom_ratio': product.product_tmpl_id.uom_ratio,
                 'big_uom_id': product.product_tmpl_id.big_uom_id and product.product_tmpl_id.big_uom_id.id or False,
                 'qty_on_hand':qty_on_hand,
                 'sequence':product.sequence,
             }
-        return {'value': values}
+        return {'value': values,'domain': domain}
         
     _columns = {                
         'line_id':fields.many2one('stock.requisition', 'Line', ondelete='cascade', select=True),
