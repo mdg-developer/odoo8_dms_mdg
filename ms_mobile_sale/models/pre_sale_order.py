@@ -225,8 +225,8 @@ class pre_sale_order(osv.osv):
             result = []
             so_ids=[]
             for data in new_arr:
-                if len(data) > 400:
-                    data = data.replace("}", "'}")
+              #  if len(data) > 400:
+                    #data = data.replace("}", "'}")
                 x = ast.literal_eval(data)
                 result.append(x)
             sale_order = []
@@ -444,7 +444,12 @@ class pre_sale_order(osv.osv):
                         solist.append(so_id)
 
                         saleOrderObj.action_button_confirm(cr, uid, solist, context=context)
-                        invoice_id = mobilesaleorderObj.create_invoices(cr, uid, solist , context=context)
+                        #print 'solistsssssssssss',solist
+                        res = saleOrderObj.manual_invoice(cr, uid, [so_id], context)
+                        #print 'resssssssssss',[so_id],res['res_id']
+                        #invoice_id = mobilesaleorderObj.create_invoices(cr, uid, solist , context=context)
+                        invoice_id=res['res_id']
+                        #print 'invoice_id',invoice_id
                         cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s,date_invoice=%s ,section_id =%s ,collection_team_id =%s , collection_user_id =%s where id =%s', ('cash', preObj_ids.branch_id.id, preObj_ids.delivery_remark,de_date, delivery_id,delivery_id,uid,invoice_id,))                            
                         invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                         invoiceObj.write(cr, uid, invoice_id, {'pre_order':True}, context)      

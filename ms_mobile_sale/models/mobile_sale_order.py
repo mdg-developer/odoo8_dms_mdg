@@ -323,6 +323,7 @@ class mobile_sale_order(osv.osv):
         except Exception, e:
             print 'False'
             return False 
+        
     # CheckQty For Pre Sale 3G
     def check_qty_issue_warehouse(self, cursor, user, vals, context=None):
         product_uom_obj = self.pool.get('product.uom')
@@ -398,7 +399,10 @@ class mobile_sale_order(osv.osv):
                     puomvalue=product_uom
                     uom =int(line_id['uom'])
                     product_id = product_product_obj.search(cursor, user, [('default_code', '=', p_code)])
-                    product_uom_qty=p_qty
+                    cursor.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (uom,))
+                    bigger_qty = cursor.fetchone()[0]
+                    bigger_qty = int(bigger_qty)
+                    product_uom_qty = bigger_qty * p_qty                    
                     cursor.execute("select COALESCE(sum(qty),0) from stock_quant where location_id  in  %s and product_id =%s and reservation_id is null", (tuple(location_ids),tuple(product_id),))      
                     qty = cursor.fetchone()[0]   
                     if uom:
@@ -412,14 +416,15 @@ class mobile_sale_order(osv.osv):
                     compare_qty = float_compare(qty, product_uom_qty, precision_rounding=uom_record.rounding)                                       
                     if compare_qty == -1:
                         result = {
-                                  #'product_code':p_code,
-                                  'product_name':product_obj.name_template ,
+                                  'product_code':p_code,
+                                  #'product_name':product_obj.name_template ,
                                         #'real_qty':qty,
                                         #'uom_id':uom,
                                          }   
-                        detail_result.append(product_obj.name_template)
+                        detail_result.append(p_code)
                         #detail_result.append(";")
                         #raise osv.except_osv(_("Not enough stock ! : ") , _(" Your Product Name '%s' is not enough stock !") % (product_obj.name_template,))
+            print 'detail_result',detail_result
             return detail_result
         except Exception, e:
             print e            
@@ -943,6 +948,22 @@ class mobile_sale_order(osv.osv):
             self.write(cr, uid, ids[0], {'m_status':'done'}, context=context)
         return True   
     
+    def cancel_sale_order(self, cr, uid, saleOrderID, context=None):
+         
+            context = {'lang':'en_US', 'params':{'action':458}, 'tz': 'Asia/Rangoon', 'uid': 1}
+            soObj = self.pool.get('sale.order')               
+            so_ref_no = saleOrderID       
+            So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
+                                           , ('tb_ref_no', '=', so_ref_no)], context=context)
+            print ' So_id',So_id,so_ref_no
+            if So_id:
+                soObj.action_cancel(cr, uid, So_id[0], context=context)
+                so_data=soObj.browse(cr, uid, So_id[0], context=context)
+                cr.execute('''update account_invoice set state ='cancel' where origin = %s ''', (so_data.name,))
+                cr.execute("update pre_sale_order set void_flag = 'voided' where name=%s", ( so_ref_no,))    
+                print 'so_data',       so_data,so_data.name                                                                                                                                                                                                                                        
+            return True  
+    
     # MMK
     def create_invoices(self, cr, uid, ids, context=None):
         """ create invoices for the active sales orders """
@@ -954,7 +975,8 @@ class mobile_sale_order(osv.osv):
             print 'YOOOOOOOOOOOOO', sale_ids
             try:
                 print 'Create Invoice Context', context
-                res = sale_obj.manual_invoice(cr, uid, sale_ids, context=context)          
+                res = sale_obj.manual_invoice(cr, uid, sale_ids, context)
+                     
                 return res['res_id']
             except Exception, e:
                 return False
@@ -1910,8 +1932,10 @@ class mobile_sale_order(osv.osv):
                     so.warehouse_id,so.shipped,so.sale_plan_day_id,so.sale_plan_name,so.so_longitude,so.payment_type,
                     so.due_date,so.sale_plan_trip_id,so.so_latitude,so.customer_code,so.name as so_refNo,so.total_dis,so.deduct_amt,so.coupon_code,
                     so.invoiced,so.branch_id,so.delivery_remark ,team.name,so.payment_term,so.due_date
-                    from sale_order so, crm_case_section team                                    
+                    from sale_order so, crm_case_section team,stock_picking picking                                   
                     where so.id= %s and so.state!= 'cancel'
+                    and so.name=picking.origin
+                    and picking.state ='assigned'
                     and  team.id = so.section_id''', (So_id,))
                     result = cr.fetchall()
                     print 'Result Sale Order', result
@@ -2072,6 +2096,20 @@ class mobile_sale_order(osv.osv):
                         cr.execute("update pre_sale_order set void_flag = 'voided' where name=%s", ( ref_no,))          
                                                                                                                                                                                                                                           
             return True  
+        
+    def cancel_sale_order(self, cr, uid, saleOrderID, context=None):
+         
+            context = {'lang':'en_US', 'params':{'action':458}, 'tz': 'Asia/Rangoon', 'uid': 1}
+            soObj = self.pool.get('sale.order')               
+            so_ref_no = saleOrderID       
+            So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
+                                           , ('tb_ref_no', '=', so_ref_no)], context=context)
+            if So_id:
+                soObj.action_cancel(cr, uid, So_id[0], context=context)
+                so_data=soObj.browse(cr, uid, So_id[0], context=context)
+                cr.execute('''update account_invoice set state ='cancel' where origin = %s ''', (so_data.name,))
+                cr.execute("update pre_sale_order set void_flag = 'voided' where name=%s", ( so_ref_no,))                                                                                                                                                                                                                                                   
+            return True      
                    
     def create_mobile_stock_return(self, cursor, user, vals, context=None):
         try :
@@ -2165,11 +2203,13 @@ class mobile_sale_order(osv.osv):
                     stock.append(r)                                    
                 else:
                     stock_line.append(r)
-            
+#             print 'stock>>>',stock
+#             print 'stock_line>>>',stock_line
             if stock:
                 for sr in stock:                                    
-                    cursor.execute('select vehicle_id,location_id,issue_location_id,delivery_team_id,receiver,branch_id from crm_case_section where id = %s ', (sr['sale_team_id'],))
+                    cursor.execute('select vehicle_id,location_id,issue_location_id,id,receiver,branch_id from crm_case_section where id = %s ', (sr['sale_team_id'],))
                     data = cursor.fetchall()
+                    print 'daaaaaaaaaaaa',data
                     if data:
                         vehcle_no = data[0][0]
                         from_location_id = data[0][1]
@@ -2191,7 +2231,7 @@ class mobile_sale_order(osv.osv):
                         company_id=data[0]
                     else:
                         company_id=None
-                                   
+                    print 'daaaaaaaaaaaa',from_location_id,to_location_id
                     mso_result = {
                         'request_date':sr['request_date'],
                         'request_by':sr['request_by'],
@@ -2205,6 +2245,7 @@ class mobile_sale_order(osv.osv):
                         'from_location_id':from_location_id,
                         'to_location_id':to_location_id,
                         'sale_team_id':delivery_id,
+                        'rfi_ref' : sr['rfi_no'],
                     }
                     stock_id = stock_request_obj.create(cursor, user, mso_result, context=context)
                     
@@ -2984,6 +3025,7 @@ class mobile_sale_order(osv.osv):
                         where A.customer_code is not null
             ''', (section_id, day_id,))
         datas = cr.fetchall()
+        print 'dataaaaaaaaaaaaaaaaaasssalepala',datas
         return datas
     
     
