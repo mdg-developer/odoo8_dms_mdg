@@ -315,7 +315,7 @@ class mobile_sale_order(osv.osv):
                                   'batchno':ptl['batchno'],
                                 }
                                 product_trans_line_obj.create(cursor, user, mso_line_res, context=context)
-#                         product_trans_obj.action_convert_ep(cursor, user, [s_order_id], context=context)
+                    product_trans_obj.action_convert_ep(cursor, user, [s_order_id], context=context)
 
                                     
             print 'Truwwwwwwwwwwwwwwwwwwwwwe'
