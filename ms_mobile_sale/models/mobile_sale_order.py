@@ -394,7 +394,10 @@ class mobile_sale_order(osv.osv):
                     puomvalue=product_uom
                     uom =int(line_id['uom'])
                     product_id = product_product_obj.search(cursor, user, [('default_code', '=', p_code)])
-                    product_uom_qty=p_qty
+                    cursor.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (uom,))
+                    bigger_qty = cursor.fetchone()[0]
+                    bigger_qty = int(bigger_qty)
+                    product_uom_qty = bigger_qty * p_qty                    
                     cursor.execute("select COALESCE(sum(qty),0) from stock_quant where location_id  in  %s and product_id =%s and reservation_id is null", (tuple(location_ids),tuple(product_id),))      
                     qty = cursor.fetchone()[0]   
                     if uom:
@@ -416,6 +419,7 @@ class mobile_sale_order(osv.osv):
                         detail_result.append(product_obj.name_template)
                         #detail_result.append(";")
                         #raise osv.except_osv(_("Not enough stock ! : ") , _(" Your Product Name '%s' is not enough stock !") % (product_obj.name_template,))
+            print 'detail_result',detail_result
             return detail_result
         except Exception, e:
             print e            
