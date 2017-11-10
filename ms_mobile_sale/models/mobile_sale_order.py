@@ -319,6 +319,7 @@ class mobile_sale_order(osv.osv):
         except Exception, e:
             print 'False'
             return False 
+        
     # CheckQty For Pre Sale 3G
     def check_qty_issue_warehouse(self, cursor, user, vals, context=None):
         product_uom_obj = self.pool.get('product.uom')
@@ -408,12 +409,12 @@ class mobile_sale_order(osv.osv):
                     compare_qty = float_compare(qty, product_uom_qty, precision_rounding=uom_record.rounding)                                       
                     if compare_qty == -1:
                         result = {
-                                  #'product_code':p_code,
-                                  'product_name':product_obj.name_template ,
+                                  'product_code':p_code,
+                                  #'product_name':product_obj.name_template ,
                                         #'real_qty':qty,
                                         #'uom_id':uom,
                                          }   
-                        detail_result.append(product_obj.name_template)
+                        detail_result.append(p_code)
                         #detail_result.append(";")
                         #raise osv.except_osv(_("Not enough stock ! : ") , _(" Your Product Name '%s' is not enough stock !") % (product_obj.name_template,))
             return detail_result
@@ -2068,6 +2069,20 @@ class mobile_sale_order(osv.osv):
                         cr.execute("update pre_sale_order set void_flag = 'voided' where name=%s", ( ref_no,))          
                                                                                                                                                                                                                                           
             return True  
+        
+    def cancel_sale_order(self, cr, uid, saleOrderID, context=None):
+         
+            context = {'lang':'en_US', 'params':{'action':458}, 'tz': 'Asia/Rangoon', 'uid': 1}
+            soObj = self.pool.get('sale.order')               
+            so_ref_no = saleOrderID       
+            So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
+                                           , ('tb_ref_no', '=', so_ref_no)], context=context)
+            if So_id:
+                soObj.action_cancel(cr, uid, So_id[0], context=context)
+                so_data=soObj.browse(cr, uid, So_id[0], context=context)
+                cr.execute('''update account_invoice set state ='cancel' where origin = %s ''', (so_data.name,))
+                cr.execute("update pre_sale_order set void_flag = 'voided' where name=%s", ( so_ref_no,))                                                                                                                                                                                                                                                   
+            return True      
                    
     def create_mobile_stock_return(self, cursor, user, vals, context=None):
         try :
