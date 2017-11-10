@@ -89,10 +89,12 @@ class purchase_requisitions(osv.osv):
             for po_line in tender.line_ids:
                 #only take into account confirmed line that does not belong to already confirmed purchase order
                 if tender.state == 'confirmed':
-                    if id_per_supplier.get(po_line.product_id.supplier_code):
-                        id_per_supplier[po_line.product_id.supplier_code].append(po_line)
+                    cr.execute("select name from product_supplierinfo where product_tmpl_id=%s", (po_line.product_id.product_tmpl_id.id,))
+                    supplier_id = cr.fetchone()[0]
+                    if id_per_supplier.get(supplier_id):
+                        id_per_supplier[supplier_id].append(po_line)
                     else:
-                        id_per_supplier[po_line.product_id.supplier_code] = [po_line]
+                        id_per_supplier[supplier_id] = [po_line]
 
             #generate po based on supplier and cancel all previous RFQ
             ctx = dict(context or {}, force_requisition_id=True)
@@ -102,16 +104,18 @@ class purchase_requisitions(osv.osv):
                         company_id = cr.fetchone()[0]
                         cr.execute("select id from res_currency where active='t' and base='t'",)
                         currency_id = cr.fetchone()[0]
-                        cr.execute("select id from stock_picking_type where warehouse_id=%s", (tender.warehouse_id.id,))
+                        cr.execute("select id from stock_picking_type where name='Receipts' and warehouse_id=%s", (tender.warehouse_id.id,))
                         pickingtype_id = cr.fetchone()[0]
                         cr.execute("select lot_stock_id from stock_warehouse where id=%s", (tender.warehouse_id.id,))
                         location_id = cr.fetchone()[0]
-                        poResult = {'partner_id':tender.partner_id.id or False,
+                        cr.execute("select pricelist_id from res_partner where id=%s", (supplier,))
+                        pricelist_id = cr.fetchone()[0]
+                        poResult = {'partner_id':supplier or False,
                                     'pr_ref':tender.name or '/',
                                     'date_order':tender.date_requisition ,
                                     'company_id':company_id or False,
                                     'currency_id':currency_id or False,
-                                    'pricelist_id':tender.partner_id.pricelist_id.id or False,
+                                    'pricelist_id':pricelist_id or False,
                                     'location_id':location_id or False,
                                     'picking_type_id':pickingtype_id or False,
                                     'state': 'draft',                                
@@ -144,7 +148,7 @@ class purchase_requisitions_line(osv.osv):
 
     _columns = {
         'product_id': fields.many2one('product.product', 'Product', domain=[('purchase_ok', '=', True)]),
-        'product_uom_id': fields.many2one('product.uom', 'Product Unit of Measure'),
+        'product_uom_id': fields.many2one('product.uom', 'Product Unit of Measure', readonly=False),
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure')),
         'price_unit': fields.float('Price Unit'),
         'requisition_id': fields.many2one('purchase.requisitions', 'Purchase Requisitions', ondelete='cascade'),

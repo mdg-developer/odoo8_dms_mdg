@@ -385,7 +385,7 @@
 			<field name="groups_id" eval="[(4, ref('product.group_purchase_pricelist'))]" />
 			<field name="arch" type="xml">
 				<field name="property_product_pricelist_purchase" position="replace">
-					<field name="property_product_pricelist_purchase" attrs="{'readonly':[('customer','=',True)]}" />
+					<field name="property_product_pricelist_purchase" />
 				</field>
 			</field>
 		</record>
