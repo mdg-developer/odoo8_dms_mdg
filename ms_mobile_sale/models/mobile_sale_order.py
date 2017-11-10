@@ -333,6 +333,10 @@ class mobile_sale_order(osv.osv):
 #             str = str.replace("[", "")  # null
             str = str.replace("}, {", "}|{")
             str = str.replace("=", ":")  # null
+#             str = str.replace("product_qty", """'product_qty'""")
+#             str = str.replace("uom", """'uom'""")
+#             str = str.replace("product_code", """'product_code'""")
+#             str = str.replace("product_name", """'product_name'""")
 #             str = str.replace("}", "}''")
 #             str =str.replace ("{", " ''{")
             new_arr = str.split('|')            
@@ -354,7 +358,17 @@ class mobile_sale_order(osv.osv):
             for r in new_arr:                
                 r = r.replace("]", "")  # null
                 r = r.replace("[", "")  # null                
-                order_line.append(r)  
+                order_line.append(r) 
+            
+            result = []
+            for data in order_line:            
+                x = ast.literal_eval(data)                
+                result.append(x)
+            new_order_line = []
+            for r in result:                
+                new_order_line.append(r)
+              
+            
             user_data=res_user_obj.browse(cursor, user, user, context=context)
             location_id = user_data.company_id.issued_location_id.id
             if location_id is None:
@@ -363,21 +377,22 @@ class mobile_sale_order(osv.osv):
             all_location = cursor.fetchall()
             for location_data in all_location:
                 location_ids.append(location_data[0])                         
-            if order_line:
-                for line_id in order_line:              
-                    line_id = line_id.replace("{", "")  # null
-                    line_id = line_id.replace("}", "")                       
-                    svalue = line_id.split(",")
-                    print 'svaluesvalue', svalue
-                    product_code = (svalue[2])
-                    product_uom = (svalue[1])
-                    product_qty = (svalue[0])
-                    pcodevalue = product_code.split(":")
-                    p_code =(pcodevalue[1])
-                    pqtyvalue = product_qty.split(":")
-                    p_qty =float((pqtyvalue[1]))
-                    puomvalue=product_uom.split(":")
-                    uom =int(puomvalue[1])
+            if new_order_line:
+                for line_id in new_order_line:
+                    print 'product_qty>>>',line_id['product_qty']
+                    print 'uom>>>',line_id['uom']
+                    print 'product_code>>>',line_id['product_code']
+                    print 'product_name>>>',line_id['product_name']              
+                   
+                    product_code = line_id['product_code']
+                    product_uom = line_id['uom']
+                    product_qty = line_id['product_qty']
+                    pcodevalue = product_code
+                    p_code =line_id['product_code']
+                    pqtyvalue =line_id['product_qty']
+                    p_qty =float(pqtyvalue)
+                    puomvalue=product_uom
+                    uom =int(line_id['uom'])
                     product_id = product_product_obj.search(cursor, user, [('default_code', '=', p_code)])
                     product_uom_qty=p_qty
                     cursor.execute("select COALESCE(sum(qty),0) from stock_quant where location_id  in  %s and product_id =%s and reservation_id is null", (tuple(location_ids),tuple(product_id),))      
@@ -393,12 +408,13 @@ class mobile_sale_order(osv.osv):
                     compare_qty = float_compare(qty, product_uom_qty, precision_rounding=uom_record.rounding)                                       
                     if compare_qty == -1:
                         result = {
-                                  'product_code':p_code,
+                                  #'product_code':p_code,
                                   'product_name':product_obj.name_template ,
-                                        'real_qty':qty,
-                                        'uom_id':uom,
+                                        #'real_qty':qty,
+                                        #'uom_id':uom,
                                          }   
-                        detail_result.append(result)
+                        detail_result.append(product_obj.name_template)
+                        #detail_result.append(";")
                         #raise osv.except_osv(_("Not enough stock ! : ") , _(" Your Product Name '%s' is not enough stock !") % (product_obj.name_template,))
             return detail_result
         except Exception, e:
