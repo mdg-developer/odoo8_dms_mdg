@@ -234,6 +234,7 @@ class mobile_sale_order(osv.osv):
             print 'False'
             print e
             return False 
+        
 # NZO
     def create_exchange_product(self, cursor, user, vals, context=None):
         print 'vals', vals
@@ -265,12 +266,15 @@ class mobile_sale_order(osv.osv):
                 for pt in product_trans:
                     exchange_type = pt['exchange_type']
                     print 'exchange_type', exchange_type
-#                     cursor.execute('select id From res_users where partner_id  = %s ',(so['user_id'],))
-#                     data = cursor.fetchall()
-#                     if data:
-#                         saleManId = data[0][0]
-#                     else:
-#                         saleManId = None
+                    location_id =pt['location_id']
+
+                    if exchange_type =='Sale Return':
+                        cursor.execute('select return_location_id From crm_case_section where id  = %s ',(pt['team_id'],))
+                        location_ids = cursor.fetchall()
+                        if location_ids:
+                            location_id = location_ids[0][0]
+                        else:
+                            location_id = None                        
                     mso_result = {
                         'transaction_id':pt['transaction_id'],
                         'customer_id':pt['customer_id'],
@@ -279,7 +283,7 @@ class mobile_sale_order(osv.osv):
                         'date':pt['date'],
                         'exchange_type':pt['exchange_type'],
                         'void_flag':pt['void_flag'],
-                        'location_id':pt['location_id'],
+                        'location_id':location_id,
                     }
                     s_order_id = product_trans_obj.create(cursor, user, mso_result, context=context)
                     
