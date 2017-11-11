@@ -853,6 +853,7 @@ class mobile_sale_order(osv.osv):
                             # clicking the delivery order view button
                             stockViewResult = soObj.action_view_delivery(cr, uid, solist, context=context)
                             if stockViewResult:
+                                print 
                                 # cr.execute('update stock_move set location_id=%s where picking_id=%s',(ms_ids.location_id.id,stockViewResult['res_id'],))
 
                                 # stockViewResult is form result
@@ -2020,17 +2021,22 @@ class mobile_sale_order(osv.osv):
                                 delivery_team_id = None
                             
                             # For DO
-                            stockViewResult = soObj.action_view_delivery(cr, uid, So_id, context=context)    
+                            print 'So_idSo_idSo_idSo_id',So_id
+                            stockViewResult = soObj.action_view_delivery(cr, uid, So_id, context=context)
+                            print     'stockViewResult',stockViewResult['res_id']
                             if stockViewResult:
                                 # stockViewResult is form result
                                 # stocking id =>stockViewResult['res_id']
                                 # click force_assign
-                                stockPickingObj.force_assign(cr, uid, stockViewResult['res_id'], context=context)
+#                                 stockPickingObj.force_assign(cr, uid, stockViewResult['res_id'], context=context)
+#                                 stockViewResult
                                 # transfer
                                 # call the transfer wizard
                                 # change list
-                                pickList = []
-                                pickList.append(stockViewResult['res_id'])
+                                picking_ids = stockPickingObj.search(cr, uid, [('origin', '=', so_ref_no), ('state', '=', 'assigned')], context=context)                        
+                                for picking_id in picking_ids:
+                                    pickList = []
+                                    pickList.append(picking_id)
                                 wizResult = stockPickingObj.do_enter_transfer_details(cr, uid, pickList, context=context)
                                 # pop up wizard form => wizResult
                                 detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
@@ -2077,19 +2083,20 @@ class mobile_sale_order(osv.osv):
                     So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
                                                    , ('name', '=', so_ref_no)], context=context)
                     if So_id:
-                        picking_ids = self.pool.get('stock.picking').search(cr, uid, [('group_id', '=',so_ref_no),('state','!=','done')], context=context)
-                        if picking_ids:
-                            for picking_id in picking_ids: 
-                                self.pool.get('stock.picking').unlink(cr,uid,picking_id,context=context)
-                        procurement_order_obj = self.pool.get('procurement.order')        
-                        procurement_ids = self.pool.get('procurement.order').search(cr,uid,[('group_id', '=',so_ref_no)], context=context)
-                        if procurement_ids:
-                            for procurement_id in procurement_ids:
-                                osv.osv.unlink(procurement_order_obj, cr, uid, procurement_id, context=context)
-                                cr.execute("delete from procurement_order where id=%s",(procurement_id,))                        
-#                         cr.execute('''update stock_picking set state ='cancel' where origin = %s ''', (so_ref_no,))
-#                         cr.execute('''update stock_move set state ='cancel' where origin = %s ''', (so_ref_no,))
-                        cr.execute('''update sale_order set state ='cancel' where id = %s ''', (So_id[0],))
+                        soObj.action_cancel(cr, uid, So_id[0], context=context)                        
+#                         picking_ids = self.pool.get('stock.picking').search(cr, uid, [('group_id', '=',so_ref_no),('state','!=','done')], context=context)
+#                         if picking_ids:
+#                             for picking_id in picking_ids: 
+#                                 self.pool.get('stock.picking').unlink(cr,uid,picking_id,context=context)
+#                         procurement_order_obj = self.pool.get('procurement.order')        
+#                         procurement_ids = self.pool.get('procurement.order').search(cr,uid,[('group_id', '=',so_ref_no)], context=context)
+#                         if procurement_ids:
+#                             for procurement_id in procurement_ids:
+#                                 osv.osv.unlink(procurement_order_obj, cr, uid, procurement_id, context=context)
+#                                 cr.execute("delete from procurement_order where id=%s",(procurement_id,))                        
+# #                         cr.execute('''update stock_picking set state ='cancel' where origin = %s ''', (so_ref_no,))
+# #                         cr.execute('''update stock_move set state ='cancel' where origin = %s ''', (so_ref_no,))
+#                         cr.execute('''update sale_order set state ='cancel' where id = %s ''', (So_id[0],))
                         cr.execute('''update account_invoice set state ='cancel' where origin = %s ''', (so_ref_no,))
                         cr.execute('select tb_ref_no from sale_order where id=%s',(So_id[0],))
                         ref_no=cr.fetchone()[0]
@@ -2097,19 +2104,19 @@ class mobile_sale_order(osv.osv):
                                                                                                                                                                                                                                           
             return True  
         
-    def cancel_sale_order(self, cr, uid, saleOrderID, context=None):
-         
-            context = {'lang':'en_US', 'params':{'action':458}, 'tz': 'Asia/Rangoon', 'uid': 1}
-            soObj = self.pool.get('sale.order')               
-            so_ref_no = saleOrderID       
-            So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
-                                           , ('tb_ref_no', '=', so_ref_no)], context=context)
-            if So_id:
-                soObj.action_cancel(cr, uid, So_id[0], context=context)
-                so_data=soObj.browse(cr, uid, So_id[0], context=context)
-                cr.execute('''update account_invoice set state ='cancel' where origin = %s ''', (so_data.name,))
-                cr.execute("update pre_sale_order set void_flag = 'voided' where name=%s", ( so_ref_no,))                                                                                                                                                                                                                                                   
-            return True      
+#     def cancel_sale_order(self, cr, uid, saleOrderID, context=None):
+#          
+#             context = {'lang':'en_US', 'params':{'action':458}, 'tz': 'Asia/Rangoon', 'uid': 1}
+#             soObj = self.pool.get('sale.order')               
+#             so_ref_no = saleOrderID       
+#             So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
+#                                            , ('tb_ref_no', '=', so_ref_no)], context=context)
+#             if So_id:
+#                 soObj.action_cancel(cr, uid, So_id[0], context=context)
+#                 so_data=soObj.browse(cr, uid, So_id[0], context=context)
+#                 cr.execute('''update account_invoice set state ='cancel' where origin = %s ''', (so_data.name,))
+#                 cr.execute("update pre_sale_order set void_flag = 'voided' where name=%s", ( so_ref_no,))                                                                                                                                                                                                                                                   
+#             return True      
                    
     def create_mobile_stock_return(self, cursor, user, vals, context=None):
         try :
