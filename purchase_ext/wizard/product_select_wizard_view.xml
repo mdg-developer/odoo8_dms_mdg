@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
                 <form string="Add Multiple">
                     <group>
-                        <field name="quantity"/>
+                        <field name="quantity" invisible="1"/>
                         <field name="products_ids"/>
                     </group>
                 <footer>

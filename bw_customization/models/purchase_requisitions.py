@@ -92,16 +92,21 @@ class purchase_requisitions(osv.osv):
             for po_line in tender.line_ids:
                 #only take into account confirmed line that does not belong to already confirmed purchase order
                 if tender.state == 'confirmed':
-                    cr.execute("select name from product_supplierinfo where product_tmpl_id=%s", (po_line.product_id.product_tmpl_id.id,))
+                    posup_ids = posup.search(cr, uid, [('isDefault', '=', True),('product_tmpl_id', '=', po_line.product_id.product_tmpl_id.id)])
+                    if posup_ids:
+                        cr.execute("select name from product_supplierinfo where id=%s", (posup_ids[0],))
                     supplier_id = cr.fetchone()
                     if supplier_id:
                         supplier_id = supplier_id[0]
                     else:
-                        posup_ids = posup.search(cr, uid, [('isDefault', '=', True)])
-                        cr.execute("select name from product_supplierinfo where id = %s", (posup_ids[0],))
+#                         posup_ids = posup.search(cr, uid, [('isDefault', '=', True)])
+                        cr.execute("select name from product_supplierinfo where product_tmpl_id=%s", (po_line.product_id.product_tmpl_id.id,))
                         posup_id = cr.fetchone()
                         if posup_id:
                             supplier_id = posup_id[0]
+                        else:
+                            raise osv.except_osv(_('Product Supplier Error!'),
+                                     _('Product %s has no related Supplier.') % (po_line.product_id.name))
                     if id_per_supplier.get(supplier_id):
                         id_per_supplier[supplier_id].append(po_line)
                     else:
@@ -134,7 +139,7 @@ class purchase_requisitions(osv.osv):
                                     'pr_ref':tender.name or '/',
                                     'date_order':tender.date_requisition ,
                                     'company_id':company_id or False,
-                                    'currency_id':currency_id or False,
+                                    'currency_id':supplier_id.property_product_pricelist_purchase.currency_id and supplier_id.property_product_pricelist_purchase.currency_id.id or False,
                                     'pricelist_id':supplier_id.property_product_pricelist_purchase and supplier_id.property_product_pricelist_purchase.id or False,
                                     'location_id':location_id or False,
                                     'picking_type_id':pickingtype_id or False,
@@ -166,11 +171,11 @@ purchase_requisitions()
 
 class purchase_requisitions_line(osv.osv):
     _name = "purchase.requisitions.line"
-    product_uom_ids=False;
+    #prod_uom_ids=[]
     
     _columns = {
         'product_id': fields.many2one('product.product', 'Product', domain=[('purchase_ok', '=', True)]),
-        'product_uom_id': fields.many2one('product.uom', 'Product Unit of Measure', domain=[('id', 'in', product_uom_ids)]),
+        'product_uom_id': fields.many2one('product.uom', 'Product Unit of Measure',),
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure')),
         'price_unit': fields.float('Price Unit'),
         'requisition_id': fields.many2one('purchase.requisitions', 'Purchase Requisitions', ondelete='cascade'),
@@ -182,12 +187,15 @@ class purchase_requisitions_line(osv.osv):
         @param product_id: Changed product_id
         @return:  Dictionary of changed values
         """
-        global product_uom_ids
-        value = {'product_uom_id': '', 'price_unit': 0.0}
+        #global prod_uom_ids
+        prod_uom_ids=[]
+        value = {'product_uom_id': [], 'price_unit': 0.0}
         if product_id:
             prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-            product_uom_ids=prod.uom_id.id
-            value = {'product_uom_id': prod.uom_id.id, 'price_unit': prod.list_price, 'product_qty': 1.0}
-        return {'value': value}
+            cr.execute("select product_uom_id from product_template_product_uom_rel where product_template_id=%s", (prod.product_tmpl_id.id,))
+            prod_uom_ids = cr.fetchall()
+            value = {'product_uom_id': prod_uom_ids, 'price_unit': prod.list_price, 'product_qty': 1.0}
+            domain = {'product_uom_id': [('id', 'in', prod_uom_ids)]}
+        return {'value': value, 'domain': domain}
     
 purchase_requisitions_line()
