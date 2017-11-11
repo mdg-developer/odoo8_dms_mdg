@@ -450,9 +450,9 @@ class pre_sale_order(osv.osv):
                         #invoice_id = mobilesaleorderObj.create_invoices(cr, uid, solist , context=context)
                         invoice_id=res['res_id']
                         #print 'invoice_id',invoice_id
-                        cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s,date_invoice=%s ,section_id =%s ,collection_team_id =%s , collection_user_id =%s where id =%s', ('cash', preObj_ids.branch_id.id, preObj_ids.delivery_remark,de_date, delivery_id,delivery_id,uid,invoice_id,))                            
                         invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                         invoiceObj.write(cr, uid, invoice_id, {'pre_order':True}, context)      
+                        cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s,date_invoice=%s ,section_id =%s ,collection_team_id =%s , collection_user_id =%s where id =%s', (preObj_ids.type, preObj_ids.branch_id.id, preObj_ids.delivery_remark,de_date, delivery_id,delivery_id,uid,invoice_id,))                            
                         invoice_data=invoiceObj.browse(cr, uid, invoice_id, context=context)
                         amount_untaxed=invoice_data.amount_untaxed
                         amount_tax=invoice_data.amount_tax
