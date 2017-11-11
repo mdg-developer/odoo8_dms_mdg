@@ -37,10 +37,9 @@ Purchase Ext
  
     ],
     'data': [        
-            
+       'wizard/product_select_wizard_view.xml',      
        'views/account_voucher_view.xml',      
        'views/purchase_order_view.xml',  
-       'wizard/product_select_wizard_view.xml',      
        
     ],
     # 'demo': ['hr_recruitment_demo.xml'],
