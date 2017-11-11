@@ -686,5 +686,25 @@
 			parent="stock.menu_stock_warehouse_mgmt" name='Waiting Availability Transfers'
 			sequence="2" />
 
+
+		<record model="ir.ui.menu"
+			id="stock_requisition.menu_action_good_issue_note_tr">
+			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
+		</record>
+		<record model="ir.ui.menu" id="stock_requisition.menu_stock_return_note">
+			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
+		</record>
+		<record model="ir.ui.menu" id="stock_requisition.menu_issue_requisition">
+			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
+		</record>
+		<record model="ir.ui.menu" id="stock_requisition.menu_action_good_issue_note">
+			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
+		</record>
+		<record model="ir.ui.menu" id="stock_requisition.menu_stli">
+			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
+		</record>
+		<record model="ir.ui.menu" id="stock_requisition.menu_way_bill">
+			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
+		</record>
 	</data>
 </openerp>
