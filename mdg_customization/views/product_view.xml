@@ -218,6 +218,16 @@
 				</field>
 			</field>
 		</record>
+		<record id="product_uom_tree_view_inherit" model="ir.ui.view">
+            <field name="name">product.uom.tree</field>
+            <field name="model">product.uom</field>
+            <field name="inherit_id" ref="product.product_uom_tree_view" />
+            <field name="arch" type="xml">
+                <field name="category_id" position="after">
+					<field name="factor" string="Ratio" />
+				</field>
+            </field>
+        </record>
 		
 	</data>
 </openerp>
