@@ -225,8 +225,8 @@ class pre_sale_order(osv.osv):
             result = []
             so_ids=[]
             for data in new_arr:
-                if len(data) > 400:
-                    data = data.replace("}", "'}")
+              #  if len(data) > 400:
+                    #data = data.replace("}", "'}")
                 x = ast.literal_eval(data)
                 result.append(x)
             sale_order = []
@@ -341,6 +341,7 @@ class pre_sale_order(osv.osv):
         saleOrderObj = self.pool.get('sale.order')
         saleOrderLineObj = self.pool.get('sale.order.line')
         invoiceObj = self.pool.get('account.invoice')
+        procurement_obj = self.pool.get('procurement.order')
         so_id = pricelist_id = sale_foc = productName = None
         priceUnit = 0.0
         solist = []        
@@ -444,10 +445,15 @@ class pre_sale_order(osv.osv):
                         solist.append(so_id)
 
                         saleOrderObj.action_button_confirm(cr, uid, solist, context=context)
-                        invoice_id = mobilesaleorderObj.create_invoices(cr, uid, solist , context=context)
-                        cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s,date_invoice=%s ,section_id =%s ,collection_team_id =%s , collection_user_id =%s where id =%s', ('cash', preObj_ids.branch_id.id, preObj_ids.delivery_remark,de_date, delivery_id,delivery_id,uid,invoice_id,))                            
+                        #print 'solistsssssssssss',solist
+                        res = saleOrderObj.manual_invoice(cr, uid, [so_id], context)
+                        #print 'resssssssssss',[so_id],res['res_id']
+                        #invoice_id = mobilesaleorderObj.create_invoices(cr, uid, solist , context=context)
+                        invoice_id=res['res_id']
+                        #print 'invoice_id',invoice_id
                         invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
                         invoiceObj.write(cr, uid, invoice_id, {'pre_order':True}, context)      
+                        cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s,date_invoice=%s ,section_id =%s ,collection_team_id =%s , collection_user_id =%s where id =%s', (preObj_ids.type, preObj_ids.branch_id.id, preObj_ids.delivery_remark,de_date, delivery_id,delivery_id,uid,invoice_id,))                            
                         invoice_data=invoiceObj.browse(cr, uid, invoice_id, context=context)
                         amount_untaxed=invoice_data.amount_untaxed
                         amount_tax=invoice_data.amount_tax
@@ -458,6 +464,9 @@ class pre_sale_order(osv.osv):
                         
             except Exception, e:
                 raise orm.except_orm(_('Error :'), _("Error Occured while Convert Mobile Sale Order! \n [ %s ]") % (e))
+            
+            proc_ids = procurement_obj.search(cr, uid, [('state', 'not in', ['running','done'])])            
+            procurement_obj.run(cr, uid, proc_ids, context=context)            
             self.write(cr, uid, ids[0], {'m_status':'done'}, context=context)                        
         return True
     

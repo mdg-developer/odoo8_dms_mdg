@@ -12,7 +12,10 @@
 				</field>
 				<xpath expr="//notebook/page/field[@name='order_line']/tree/field[@name='name']" position="after">
 				    <field name="supplier_code"/>
-				</xpath>    
+				</xpath>   
+				<xpath expr="//notebook/page/field[@name='order_line']" position="before">
+						<button name="%(action_product_select_wizard_view)d" type="action" string="Add Products" attrs="{'invisible':[('state','in',['approved','cancel','confirmed'])]}"/>
+				</xpath>  
 			    <xpath expr="//page[@string='Deliveries &amp; Invoices']" position="after">
 			        <page string="Other Information">
 			            <group>

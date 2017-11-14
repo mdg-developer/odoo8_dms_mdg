@@ -44,9 +44,9 @@
 							<button name="action_confirmed" string="Confirm" type="object"
 								class="oe_highlight" attrs="{'invisible':[('state','in',('done','confirmed'))]}" />
 							<button name="action_cancel" string="Cancel" type="object"
-								class="oe_highlight" attrs="{'invisible':[('state','in',('confirmed','cancel'))]}" />
+								class="oe_highlight" attrs="{'invisible':[('state','in',('done','confirmed','cancel'))]}" />
 							<button name="action_draft" string="Set to draft" type="object"
-								class="oe_highlight" attrs="{'invisible':[('state','in',('draft'))]}" />
+								class="oe_highlight" attrs="{'invisible':[('state','in',('done','draft'))]}" />
 							<button name="generate_po" string="Convert PO" type="object"
 								class="oe_highlight" attrs="{'invisible':[('state','in',('done','cancel','draft'))]}" />
 							<field name="state" widget="statusbar" statusbar_visible="draft,confirmed,cancel,done" />
@@ -67,7 +67,8 @@
 	                    <page string="Products">
 	                        <field name="line_ids" attrs="{'readonly': [('state','not in',('draft'))]}">
 	                            <tree string="Products" editable="bottom">
-	                                <field name="product_id" on_change="onchange_product_id(product_id,product_uom_id)"/>
+	                                <field name="product_id" on_change="onchange_product_id(product_id,product_uom_id,context)"/>
+	                                
 	                                <field name="product_qty"/>
 	                                <field name="price_unit" invisible="1"/>
 	                                <field name="product_uom_id" groups="product.group_uom" />

@@ -22,6 +22,9 @@ class purchase_order(osv.osv):
         'finished_date': fields.date('Finished Date'),
     }
     
+    def product_tree_view(self, cr, uid, res_id, context=None):
+            return self.pool['product.template'].wizard_view(cr, uid, res_id, context)
+        
 purchase_order()
 
 

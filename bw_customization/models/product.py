@@ -13,7 +13,7 @@ product_product()
 class product_supplierinfo(osv.osv):
     _inherit = 'product.supplierinfo'
     _columns = {
-                'isDefault': fields.boolean('Is Default'),
+                'isDefault': fields.boolean('Is Default',type='boolean'),
             }
     
 product_supplierinfo()
