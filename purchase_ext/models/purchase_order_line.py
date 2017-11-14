@@ -29,6 +29,7 @@ class purchase_order_line(osv.osv):
             context = {}
         
         supplier_code = None    
+        res = {'domain': {'product_uom' : uom_id or False}}
         res = {'value': {'price_unit': price_unit or 0.0, 'name': name or '' , 'supplier_code': supplier_code or '', 'product_uom' : uom_id or False}}
         if not product_id:
             return res

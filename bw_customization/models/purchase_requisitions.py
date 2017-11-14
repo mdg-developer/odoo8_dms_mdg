@@ -189,7 +189,8 @@ class purchase_requisitions_line(osv.osv):
         """
         #global prod_uom_ids
         prod_uom_ids=[]
-        value = {'product_uom_id': [], 'price_unit': 0.0}
+        value = {'product_uom_id': [], 'price_unit': 0.0, 'product_qty': 1.0}
+        domain = {'product_uom_id': []}
         if product_id:
             prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             cr.execute("select product_uom_id from product_template_product_uom_rel where product_template_id=%s", (prod.product_tmpl_id.id,))
