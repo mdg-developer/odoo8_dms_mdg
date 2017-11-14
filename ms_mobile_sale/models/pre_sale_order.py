@@ -341,6 +341,7 @@ class pre_sale_order(osv.osv):
         saleOrderObj = self.pool.get('sale.order')
         saleOrderLineObj = self.pool.get('sale.order.line')
         invoiceObj = self.pool.get('account.invoice')
+        procurement_obj = self.pool.get('procurement.order')
         so_id = pricelist_id = sale_foc = productName = None
         priceUnit = 0.0
         solist = []        
@@ -463,6 +464,9 @@ class pre_sale_order(osv.osv):
                         
             except Exception, e:
                 raise orm.except_orm(_('Error :'), _("Error Occured while Convert Mobile Sale Order! \n [ %s ]") % (e))
+            
+            proc_ids = procurement_obj.search(cr, uid, [('state', 'not in', ['running','done'])])            
+            procurement_obj.run(cr, uid, proc_ids, context=context)            
             self.write(cr, uid, ids[0], {'m_status':'done'}, context=context)                        
         return True
     
