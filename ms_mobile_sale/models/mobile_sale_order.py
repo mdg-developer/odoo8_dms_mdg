@@ -300,7 +300,7 @@ class mobile_sale_order(osv.osv):
                                 else:
                                     exp_date = exp_date
                                 
-                                cursor.execute('select uom_id from product_product pp,product_template pt where pp.product_tmpl_id=pt.id and pp.id=%s', (ptl['product_id'],))
+                                cursor.execute('select id from product_uom where name=%s', (ptl['uom'],))
                                 uom_id = cursor.fetchone()[0]
                                 mso_line_res = {                                                            
                                   'transaction_id':s_order_id,
