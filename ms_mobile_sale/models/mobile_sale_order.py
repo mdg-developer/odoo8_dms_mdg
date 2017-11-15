@@ -2071,7 +2071,7 @@ class mobile_sale_order(osv.osv):
                                                    , ('name', '=', so_ref_no)], context=context)
                     if So_id:
                         print 'Sale Order Id', So_id[0]
-                        cr.execute('''update sale_order set state ='cancel' where id = %s ''', (So_id[0],))
+                        cr.execute('''update sale_order set state ='cancel',cancel_user_id=%s where id = %s ''', (uid,So_id[0],))
                         cr.execute('select tb_ref_no from sale_order where id=%s', (So_id[0],))
                         ref_no = cr.fetchone()[0]
                         cr.execute("update pre_sale_order set void_flag = 'voided' where name=%s", (ref_no,))                                                                                                                                                                                                                            

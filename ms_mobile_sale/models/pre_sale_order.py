@@ -70,7 +70,6 @@ class pre_sale_order(osv.osv):
                 ('none', 'Unvoid')
             ], 'Void'),
       'is_convert':fields.boolean('Is Convert',readonly=True),
-                
     }
     _order = 'id desc'
     _defaults = {
@@ -237,8 +236,10 @@ class pre_sale_order(osv.osv):
                         company_id = cr.fetchone()[0]
                         if preObj_ids.void_flag == 'voided':  # they work while payment type not 'cash' and 'credit'
                             so_state = 'cancel'
+                            cancel_user_id = preObj_ids.user_id.id
                         elif preObj_ids.void_flag == 'none':
                             so_state = 'manual'
+                            cancel_user_id = None
                         print 'so_ssssssssssssstae',so_state
                         saleOrderResult = {'partner_id':preObj_ids.partner_id.id,
                                                         'customer_code':preObj_ids.customer_code,
@@ -265,6 +266,7 @@ class pre_sale_order(osv.osv):
                                                         'branch_id':preObj_ids.branch_id.id,
                                                         'company_id':company_id,
                                                         'note':preObj_ids.note,
+                                                        'cancel_user_id':cancel_user_id,
                                                          }
                         so_id = saleOrderObj.create(cr, uid, saleOrderResult, context=context)
                     if so_id and preObj_ids.order_line:
