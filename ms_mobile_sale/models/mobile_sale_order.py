@@ -2168,6 +2168,8 @@ class mobile_sale_order(osv.osv):
         try :
             stock_return_obj = self.pool.get('stock.return.mobile')
             stock_return_line_obj = self.pool.get('stock.return.mobile.line')
+            user_obj=self.pool.get('res.users')
+            print ' create_mobile_stock_return',user
             str = "{" + vals + "}"
             str = str.replace(":''", ":'")  # change Order_id
             str = str.replace("'',", "',")  # null
@@ -2204,10 +2206,14 @@ class mobile_sale_order(osv.osv):
                     else:
                         vehicle_id = None
                     print 'vehicle_id', vehicle_id
+                    if user:
+                        user_data = user_obj.browse(cursor, user, user, context)
+                        company_id=user_data.company_id.id
+
                     mso_result = {
                         'sale_team_id':sr['sale_team_id'],
                         'return_date':sr['return_date'],
-                        'company_id':sr['company_id'],
+                        'company_id':company_id,
                         'branch_id':sr['branch_id'],
                         'user_id':user,
                         'vehicle_id':vehicle_id,
