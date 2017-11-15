@@ -25,9 +25,10 @@
 								<field name="name" />
 								<field name="sale_team_id" attrs="{'readonly':[('state','=','received')]}"
 									on_change="on_change_sale_team_id(sale_team_id)" />
-								<field name="from_location" />
-								<field name="from_return_location" />
-								<field name="warehouse_id" on_change="on_change_warehouse_id(warehouse_id)" />
+								<field name="from_location" attrs="{'readonly':[('state','=','received')]}" />
+								<field name="from_return_location" attrs="{'readonly':[('state','=','received')]}" />
+								<field name="warehouse_id" on_change="on_change_warehouse_id(warehouse_id)"
+									attrs="{'readonly':[('state','=','received')]}" />
 								<field name="to_location" readonly="1" />
 								<field name="to_return_location" readonly="1" />
 								<field name="return_date" attrs="{'readonly':[('state','=','received')]}" />
@@ -62,9 +63,10 @@
 											<field name="product_code" attrs="{'readonly':True}" />
 											<field name="product_uom" attrs="{'readonly':True}" />
 											<field name="status" attrs="{'readonly':True}" />
-											<field name="onhand_quantity"  attrs="{'readonly':True}" />
+											<field name="onhand_quantity" attrs="{'readonly':True}" />
 											<field name="actual_quantity" />
-											<field name="return_quantity" string="Return Qty"  on_change="on_change_return_quantity(actual_quantity,return_quantity)"/>
+											<field name="return_quantity" string="Return Qty"
+												on_change="on_change_return_quantity(actual_quantity,return_quantity)" />
 											<field name="closing_quantity" string="Closing Qty" />
 											<field name="different_qty" invisible="1" />
 											<field name="remark" string="Remark" />
