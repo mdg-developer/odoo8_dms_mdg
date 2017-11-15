@@ -2298,10 +2298,14 @@ class mobile_sale_order(osv.osv):
                         'from_location_id':from_location_id,
                         'to_location_id':to_location_id,
                         'sale_team_id':delivery_id,
-                        'rfi_ref' : sr['rfi_no'],
+                        #'rfi_ref' : sr['rfi_no'],
                     }
                     stock_id = stock_request_obj.create(cursor, user, mso_result, context=context)
-                    
+                    if stock_id:
+                       mobile_refno =  sr['rfi_no']
+                       mobile_refno = mobile_refno.replace("\\", "")
+                       print 'mobile_refno>>>',mobile_refno
+                       stock_request_obj.write(cursor,user,stock_id,{'name':mobile_refno}, context=context) 
                     for srl in stock_line:
                         if (sr['rfi_no'] == srl['rfi_no']):
 #                             cursor.execute('select a.uom_ratio,a.big_uom_id,a.uom_id,b.sequence from product_template a, product_product b where a.id = b.product_tmpl_id and b.id = %s ', (srl['product_id'],))

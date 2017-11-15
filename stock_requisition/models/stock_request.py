@@ -248,14 +248,15 @@ class stock_requisition(osv.osv):
             req_value = requisition_obj.browse(cr, uid, ids[0], context=context)
         new_group = self.pool.get("procurement.group").create(cr, uid, {'name': req_value.name}, context=context)
         
-            
+#         if req_value.rfi_ref != False:
+#             self.write(cr,uid,ids,{'name':req_value.rfi_ref},context=context)    
         #for  line_data in transfer_data.p_line:
         for line in req_value.p_line:
             ref_no = None
-            if req_value.rfi_ref != False:                
-                ref_no = req_value.rfi_ref
-            else:
-                ref_no = req_value.name    
+#             if req_value.rfi_ref != False:                
+#                 ref_no = req_value.rfi_ref
+#             else:
+#                 ref_no = req_value.name    
             warehouse_id = stock_warehouse_obj.search(cr,uid,[('lot_stock_id','=',req_value.from_location_id.id)])
             vals = {
                     'name': line.product_id.name_template,
