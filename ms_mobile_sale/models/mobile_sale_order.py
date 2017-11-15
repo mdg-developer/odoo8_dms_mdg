@@ -1978,7 +1978,7 @@ class mobile_sale_order(osv.osv):
                     from sale_order so, crm_case_section team,stock_picking picking                                   
                     where so.id= %s and so.state!= 'cancel'
                     and so.name=picking.origin
-            --        and picking.state ='assigned'
+                    and picking.state ='assigned'
                     and  team.id = so.section_id''', (So_id,))
                     result = cr.fetchall()
                     print 'Result Sale Order', result
