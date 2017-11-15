@@ -1914,7 +1914,49 @@ class mobile_sale_order(osv.osv):
                     where A.asset_type = B.id""")
         datas = cr.fetchall()
         return datas
+    
+   # Get Pending Delivery
+    def get_picking_datas(self, cr, uid, saleTeamId, context=None, **kwargs):
         
+        picking_obj = self.pool.get('stock.picking')
+        list_val = None
+        #, ('is_generate', '=', True)
+     #   list_val = picking_obj.search(cr, uid, [('state', '=', assign), ('delivery_id', '=', saleTeamId), ('shipped', '=', False), ('invoiced', '=', False) , ('tb_ref_no', 'not in', soList)], context=context)
+        print 'list_val', list_val
+        list = []
+        try:
+            
+            cr.execute(''' select sp.id,sp.date,sp.partner_id,sp.company_id,sp.id,sp.name,sp.branch_id
+                             from stock_picking sp 
+                             where  sp.state ='assigned'
+                            and  sp.picking_type_id  in  (select in_type_id  from stock_warehouse where id in (select warehouse_id from crm_case_section where  id  =%s))
+                            ''', (saleTeamId,))
+            result = cr.fetchall()
+            print 'Result Sale Order', result
+            list.append(result)
+            print' list', list
+            return list
+        except Exception, e:
+            return False
+        
+    def get_picking_line_datas(self, cr, uid, so_ids, context=None, **kwargs):
+        print 'So_ids', so_ids
+        order_ids = so_ids
+        so_move_obj = self.pool.get('stock.move')
+        list_val = None
+        list_val = so_move_obj.search(cr, uid, [('picking_id', 'in', order_ids)])
+        print 'list_val', list_val
+        list = []
+        if list_val:
+            for val in list_val:
+                cr.execute('''select sm.id,sm.product_id,sm.product_uom_qty,sm.product_uom,sm.picking_id
+                                from stock_move sm,product_product pp
+                                where sm.id=%s
+                                and sm.product_id = pp.id''', (val,))
+                result = cr.fetchall()
+                list.append(result)
+                print' list', list
+        return list        
     # Get Pending Delivery
     def get_delivery_datas(self, cr, uid, saleTeamId, soList, context=None, **kwargs):
         
@@ -1936,7 +1978,7 @@ class mobile_sale_order(osv.osv):
                     from sale_order so, crm_case_section team,stock_picking picking                                   
                     where so.id= %s and so.state!= 'cancel'
                     and so.name=picking.origin
-                    and picking.state ='assigned'
+            --        and picking.state ='assigned'
                     and  team.id = so.section_id''', (So_id,))
                     result = cr.fetchall()
                     print 'Result Sale Order', result
@@ -2104,19 +2146,23 @@ class mobile_sale_order(osv.osv):
                                                                                                                                                                                                                                           
             return True  
         
-#     def cancel_sale_order(self, cr, uid, saleOrderID, context=None):
-#          
-#             context = {'lang':'en_US', 'params':{'action':458}, 'tz': 'Asia/Rangoon', 'uid': 1}
-#             soObj = self.pool.get('sale.order')               
-#             so_ref_no = saleOrderID       
-#             So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
-#                                            , ('tb_ref_no', '=', so_ref_no)], context=context)
-#             if So_id:
-#                 soObj.action_cancel(cr, uid, So_id[0], context=context)
-#                 so_data=soObj.browse(cr, uid, So_id[0], context=context)
-#                 cr.execute('''update account_invoice set state ='cancel' where origin = %s ''', (so_data.name,))
-#                 cr.execute("update pre_sale_order set void_flag = 'voided' where name=%s", ( so_ref_no,))                                                                                                                                                                                                                                                   
-#             return True      
+    def recepit_picking(self, cr, uid, saleOrderID, context=None):
+          
+            context = {'lang':'en_US', 'params':{'action':458}, 'tz': 'Asia/Rangoon', 'uid': 1}
+            stockPickingObj = self.pool.get('stock.picking')               
+            stockDetailObj = self.pool.get('stock.transfer_details')
+            pickList = []
+            so_ref_no=saleOrderID.replace('\\','').replace('\\','')       
+            print ' so_ref_noso_ref_no',so_ref_no
+            picking_ids = stockPickingObj.search(cr, uid, [('name', '=', so_ref_no), ('state', '=', 'assigned')], context=context)                        
+            for picking_id in picking_ids:
+                pickList.append(picking_id)
+            wizResult = stockPickingObj.do_enter_transfer_details(cr, uid, pickList, context=context)
+            # pop up wizard form => wizResult
+            detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
+            if detailObj:
+                detailObj.do_detailed_transfer()                                                                                                                                                                                                                                                                  
+            return True      
                    
     def create_mobile_stock_return(self, cursor, user, vals, context=None):
         try :
