@@ -25,9 +25,8 @@
 							<group>
 								<!-- <field name="sale_team_id" attrs="{'readonly':[('state','=','approve')]}"
 									on_change="on_change_sale_team_id(sale_team_id, pre_order)" widget="selection"/> -->
-								<field name="sale_team_id" attrs="{'readonly':[('state','=','approve')]}"
-									 widget="selection"/>	
-								<field name="from_location_id"  widget="selection"/>
+								<field name="sale_team_id" on_change="on_change_sale_team_id(sale_team_id, pre_order)" attrs="{'readonly':[('state','=','approve')]}"/>	
+								<field name="from_location_id" />
 								<field name="request_date" attrs="{'readonly':[('state','=','approve')]}"  />
 								<field name="write_date" attrs="{'readonly':[('state','=','approve')]}"  />
 								<field name="so_no" attrs="{'readonly':[('state','=','approve')]}"
