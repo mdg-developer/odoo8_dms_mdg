@@ -33,6 +33,12 @@
 						<field name="hamper" groups="base.group_sale_supervisor,base.group_no_one" />
 						<field name="chiller_false" />
 						<field name="hamper_false" groups="base.group_sale_supervisor,base.group_no_one" />
+
+						<field name="cheque_true" groups="base.group_sale_supervisor,base.group_no_one" />
+						<field name="cheque_false" groups="base.group_sale_supervisor,base.group_no_one" />
+
+
+
 					</group>
 					<footer>
 						<button name="print_report" string="Assign" type="object"

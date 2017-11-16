@@ -52,8 +52,22 @@
 															<td style="border:0pt;font-size:10pt;">
 																<strong t-field="o.branch_id.name"></strong>
 															</td>
-														</tr>
 
+														</tr>
+														<tr>
+															<td style="border:0pt;font-size:10pt;">
+																<strong>Last Updated On :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong t-field="o.write_date" />
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong>Last Updated By :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong t-field="o.write_uid" />
+															</td>
+														</tr>
 														<table
 															t-if="o.denomination_product_line.sorted(key=lambda b: b.sequence)"
 															class="table table-condensed" style="border:1pt solid;">
@@ -387,7 +401,20 @@
 																<strong t-field="o.branch_id.name"></strong>
 															</td>
 														</tr>
-
+														<tr>
+															<td style="border:0pt;font-size:10pt;">
+																<strong>Last Updated On :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong t-field="o.write_date" />
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong>Last Updated By :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong t-field="o.write_uid" />
+															</td>
+														</tr>
 														<table
 															t-if="o.denomination_product_line.sorted(key=lambda b: b.sequence)"
 															class="table table-condensed" style="border:1pt solid;">
