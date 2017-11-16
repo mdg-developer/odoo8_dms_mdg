@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+    
+    <!--         Sale Receipts -->
+        <record model="ir.ui.view" id="view_sale_receipt_form_inherit">
+            <field name="name">account.voucher.sale.form.inheirt</field>
+            <field name="model">account.voucher</field>
+            <field name="inherit_id" ref="account_voucher.view_sale_receipt_form"/>
+            <field name="arch" type="xml">
+            	<xpath expr="//notebook/page[@string='Sales Information']/field/tree/field[@name='account_id']" position="replace">	
+					<field name="account_id"/>
+				</xpath>
+            </field>
+        </record>
+        
+<!--         Purchase Receipts -->
+        <record model="ir.ui.view" id="view_purchase_receipt_form_inheit">
+            <field name="name">account.voucher.purchase.formbw</field>
+            <field name="model">account.voucher</field>
+            <field name="inherit_id" ref="account_voucher.view_purchase_receipt_form"/>
+            <field name="arch" type="xml">
+            	<xpath expr="//notebook/page[@string='Bill Information']/field/tree/field[@name='account_id']" position="replace">	
+					<field name="account_id"/>
+				</xpath>
+            </field>
+        </record>
+    </data>
+</openerp>
