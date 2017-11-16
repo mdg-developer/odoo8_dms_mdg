@@ -184,8 +184,12 @@ class cashier_approval(osv.osv):
             multi='sums', help="The credit total amount.", store=True,),
         'state':fields.selection([('draft', 'Draft'), ('pending', 'Confirmed'), ('done', 'Done')], 'Status'),
         'branch_id':fields.many2one('res.branch', 'Branch'),
-                                                               
-    }
+        'confirm_by':fields.many2one('res.users', 'Confirm By'),
+        'approve_by':fields.many2one('res.users', 'Approve By'),
+        'confirm_date':fields.datetime('Confirm Date'),
+        'approve_date':fields.datetime('Approve Date'), }
+    
+    
     _order = 'id desc'
     _defaults = {
         'date': fields.datetime.now,
@@ -209,6 +213,7 @@ class cashier_approval(osv.osv):
         return super(cashier_approval, self).unlink(cr, uid, ids, context=context)
     
     def confirm_(self, cr, uid, ids, context=None):
+        import datetime
         invoiceObj = self.pool.get('account.invoice')
         datas = self.read(cr, uid, ids, ['date', 'to_date', 'user_id', 'sale_team_id'], context=None)
         if datas:       
@@ -236,7 +241,7 @@ class cashier_approval(osv.osv):
                 raise osv.except_osv(_('Warning'),
                                      _('Please Select At Lease One Record.'))      
         self.button_dummy(cr, uid, ids, context=context)                
-        self.write(cr, uid, ids, {'state':'pending'}, context=context)
+        self.write(cr, uid, ids, {'state':'pending', 'confirm_by':uid,'confirm_date':datetime.datetime.now()}, context=context)
         return True   
      
     def set_to_draft(self, cr, uid, ids, context=None):
@@ -248,6 +253,7 @@ class cashier_approval(osv.osv):
         webbrowser.open(url)        
         # webbrowser.open_new_tab(url,new=2)
     def cashier_approve(self, cr, uid, ids, context=None):
+        import datetime
         invoiceObj = self.pool.get('account.invoice')
         datas = self.read(cr, uid, ids, ['date', 'to_date', 'user_id', 'sale_team_id'], context=None)
         if datas:       
@@ -275,7 +281,7 @@ class cashier_approval(osv.osv):
                 raise osv.except_osv(_('Warning'),
                                      _('Please Select At Lease One Record.'))   
             self.create_journal_ms(cr, uid, ids, context)
-        self.write(cr, uid, ids, {'state':'done'}, context=context)
+        self.write(cr, uid, ids, {'state':'done', 'approve_by':uid,'approve_date':datetime.datetime.now()}, context=context)
         return True   
     
     def create_journal_ms(self, cr, uid, ids, context=None):

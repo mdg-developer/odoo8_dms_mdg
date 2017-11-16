@@ -24,15 +24,21 @@
 						<group col="1" string="Cashier Approval">
 							<group col="2">
 								<group>
-									<field name="name"  />
-									<field name="date" attrs="{'readonly':[('state','=','done')]}"/>
-									<field name="sale_team_id" on_change="onchange_sale_team_id(sale_team_id)"  attrs="{'readonly':[('state','=','done')]}"/>
-									<field name="user_id" domain="[('default_section_id', '=',sale_team_id)]" attrs="{'readonly':[('state','=','done')]}"/>
+									<field name="name" />
+									<field name="date" attrs="{'readonly':[('state','=','done')]}" />
+									<field name="sale_team_id" on_change="onchange_sale_team_id(sale_team_id)"
+										attrs="{'readonly':[('state','=','done')]}" />
+									<field name="user_id" domain="[('default_section_id', '=',sale_team_id)]"
+										attrs="{'readonly':[('state','=','done')]}" />
 								</group>
 								<group>
 									<field name="write_date" readonly="1" />
-									<field name="to_date"  attrs="{'readonly':[('state','=','done')]}"/>
-									<field name="branch_id"  attrs="{'readonly':[('state','=','done')]}"/>
+									<field name="to_date" attrs="{'readonly':[('state','=','done')]}" />
+									<field name="branch_id" attrs="{'readonly':[('state','=','done')]}" />
+									<field name="confirm_by" readonly="1" />
+									<field name="confirm_date" readonly="1" />
+									<field name="approve_by" readonly="1" />
+									<field name="approve_date" readonly="1" />
 								</group>
 							</group>
 							<group>
@@ -111,7 +117,7 @@
 									<group>
 										<label string="SubTotal" class="oe_inline" />
 										<field name="ar_sub_total" nolabel="1" class="oe_inline" />
-										
+
 									</group>
 								</group>
 								<group>
