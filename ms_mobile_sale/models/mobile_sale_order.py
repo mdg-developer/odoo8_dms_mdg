@@ -1970,14 +1970,28 @@ class mobile_sale_order(osv.osv):
             if list_val:
                 for So_id in list_val:
                     print 'Sale Order Id', So_id
+#                     cr.execute('''select so.id,so.date_order,so.partner_id,so.amount_tax,so.amount_untaxed,
+#                     so.payment_term,so.company_id,so.pricelist_id,so.user_id,so.amount_total,so.name as invoice_no,
+#                     so.warehouse_id,so.shipped,so.sale_plan_day_id,so.sale_plan_name,so.so_longitude,so.payment_type,
+#                     so.due_date,so.sale_plan_trip_id,so.so_latitude,so.customer_code,so.name as so_refNo,so.total_dis,so.deduct_amt,so.coupon_code,
+#                     so.invoiced,so.branch_id,so.delivery_remark ,team.name,so.payment_term,so.due_date
+#                     from sale_order so, crm_case_section team,stock_picking picking                                   
+#                     where so.id= %s and so.state!= 'cancel'
+#                     and so.name=picking.origin
+#                     and picking.state ='assigned'
+#                     and  team.id = so.section_id''', (So_id,))
+
                     cr.execute('''select so.id,so.date_order,so.partner_id,so.amount_tax,so.amount_untaxed,
                     so.payment_term,so.company_id,so.pricelist_id,so.user_id,so.amount_total,so.name as invoice_no,
                     so.warehouse_id,so.shipped,so.sale_plan_day_id,so.sale_plan_name,so.so_longitude,so.payment_type,
                     so.due_date,so.sale_plan_trip_id,so.so_latitude,so.customer_code,so.name as so_refNo,so.total_dis,so.deduct_amt,so.coupon_code,
                     so.invoiced,so.branch_id,so.delivery_remark ,team.name,so.payment_term,so.due_date
-                    from sale_order so, crm_case_section team,stock_picking picking                                   
+                    from sale_order so, crm_case_section team,stock_picking picking,stock_picking_type spt ,procurement_group pg                               
                     where so.id= %s and so.state!= 'cancel'
-                    and so.name=picking.origin
+                    and picking.picking_type_id=spt.id
+                    and picking.picking_type_id in (select out_type_id from stock_warehouse where id in ( select warehouse_id from crm_case_section where delivery_team_id =team.delivery_team_id))
+                    and picking.group_id= pg.id
+                    and pg.name = so.name
                     and picking.state ='assigned'
                     and  team.id = so.section_id''', (So_id,))
                     result = cr.fetchall()
@@ -2067,6 +2081,8 @@ class mobile_sale_order(osv.osv):
                             stockViewResult = soObj.action_view_delivery(cr, uid, So_id, context=context)
                             print     'stockViewResult',stockViewResult['res_id']
                             if stockViewResult:
+                                pickList = []
+                                
                                 # stockViewResult is form result
                                 # stocking id =>stockViewResult['res_id']
                                 # click force_assign
@@ -2075,9 +2091,19 @@ class mobile_sale_order(osv.osv):
                                 # transfer
                                 # call the transfer wizard
                                 # change list
-                                picking_ids = stockPickingObj.search(cr, uid, [('origin', '=', so_ref_no), ('state', '=', 'assigned')], context=context)                        
+                                cr.execute('''select picking.id 
+                                            from sale_order so, crm_case_section team,stock_picking picking,stock_picking_type spt ,procurement_group pg                              
+                                            where so.state!= 'cancel' 
+                                            and picking.picking_type_id=spt.id
+                                            and picking.picking_type_id in (select out_type_id from stock_warehouse where id in ( select warehouse_id from crm_case_section where delivery_team_id =%s))
+                                            and picking.group_id= pg.id
+                                            and pg.name = so.name
+                                            and picking.state ='assigned'
+                                            and  team.id = so.section_id
+                                            and so.name=%s ''', (section_id,so_ref_no,))
+                                picking_ids    =cr.fetchall()       
+                                #picking_ids = stockPickingObj.search(cr, uid, [('origin', '=', so_ref_no), ('state', '=', 'assigned')], context=context)                        
                                 for picking_id in picking_ids:
-                                    pickList = []
                                     pickList.append(picking_id)
                                 wizResult = stockPickingObj.do_enter_transfer_details(cr, uid, pickList, context=context)
                                 # pop up wizard form => wizResult
@@ -2152,7 +2178,9 @@ class mobile_sale_order(osv.osv):
             stockPickingObj = self.pool.get('stock.picking')               
             stockDetailObj = self.pool.get('stock.transfer_details')
             pickList = []
-            so_ref_no=saleOrderID.replace('\\','').replace('\\','')       
+            #so_ref_no=saleOrderID.replace('\\','').replace('\\','')       
+
+            so_ref_no=saleOrderID       
             print ' so_ref_noso_ref_no',so_ref_no
             picking_ids = stockPickingObj.search(cr, uid, [('name', '=', so_ref_no), ('state', '=', 'assigned')], context=context)                        
             for picking_id in picking_ids:
