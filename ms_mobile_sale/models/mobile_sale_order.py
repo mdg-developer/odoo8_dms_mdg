@@ -2153,7 +2153,7 @@ class mobile_sale_order(osv.osv):
             stockPickingObj = self.pool.get('stock.picking')               
             stockDetailObj = self.pool.get('stock.transfer_details')
             pickList = []
-            so_ref_no=saleOrderID.replace('\\','').replace('\\','')       
+            so_ref_no=saleOrderID     
             print ' so_ref_noso_ref_no',so_ref_no
             picking_ids = stockPickingObj.search(cr, uid, [('name', '=', so_ref_no), ('state', '=', 'assigned')], context=context)                        
             for picking_id in picking_ids:
