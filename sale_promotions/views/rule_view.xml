@@ -26,7 +26,6 @@
 							<field name="sequence" colspan="2" />
 							<field name="active" colspan="2" select="1" />
 							<field name="promotion_count" colspan="2" select="1" />
-							<field name="manual" colspan="2" select="1" />
 							<field name="monthly_promotion" colspan="2" select="1" />
 							<field name="join_promotion_ids" colspan="2" select="1"
 								widget="many2many_tags" />
@@ -43,6 +42,11 @@
 							<newline />
 							<field name="from_date" />
 							<field name="to_date" />
+							<field name="manual" colspan="2" select="1" />
+							<field name="create_date" readonly="1" />
+							<field name="create_uid" readonly="1" />
+							<field name="write_date" readonly="1" />
+							<field name="write_uid" readonly="1" />
 						</group>
 
 						<group invisible="1">
