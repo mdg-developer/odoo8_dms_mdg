@@ -33,8 +33,6 @@
 						<field name="hamper" groups="base.group_sale_supervisor,base.group_no_one" />
 						<field name="chiller_false" />
 						<field name="hamper_false" groups="base.group_sale_supervisor,base.group_no_one" />
-						<field name="cheque_true" groups="base.group_sale_supervisor,base.group_no_one"
-							invisible="1" />
 
 						<field name="cheque_true" groups="base.group_sale_supervisor,base.group_no_one" />
 						<field name="cheque_false" groups="base.group_sale_supervisor,base.group_no_one" />

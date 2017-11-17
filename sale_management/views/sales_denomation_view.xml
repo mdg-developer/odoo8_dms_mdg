@@ -59,6 +59,10 @@
 										<field name="discount_total" readonly="1" />
 										<field name="discount_amount" readonly="1" />
 										<field name="invoice_sub_total" />
+										<field name="create_uid" />
+										<field name="create_date" />
+										<field name="write_uid" />
+										<field name="write_date" />
 									</group>
 								</group>
 							</page>
@@ -161,10 +165,10 @@
 								<field name="cheque_amount" />
 								<field name="bank_amount" />
 								<field name="trans_amount" />
-								<field name="sign_diff_amount" />																
+								<field name="sign_diff_amount" />
 							</group>
 						</group>
-						
+
 					</sheet>
 
 				</form>

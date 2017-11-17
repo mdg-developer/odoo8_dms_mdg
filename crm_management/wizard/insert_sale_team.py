@@ -21,7 +21,6 @@
 import time
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from django.template.defaultfilters import default
 
 class insert_sale_team(osv.osv_memory):
     _name = 'partner.sale.team'
