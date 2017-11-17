@@ -16,6 +16,25 @@
 						<field name="uom_lines">
 						</field>
 					</page>
+					
+					<page name="uoms_price" string="UOM Info">
+						<field name="uom_price_lines">
+							   <form string="UOM Price Lines">
+                                    <group>
+                                         <field name="name" onchange="onchange_product_uom(product_uom,context)"/>
+                                         <field name="category_id"/>
+                                         <field name="factor"/>
+                                         <field name="price"/>
+                                    </group>
+                                </form>
+                                <tree string="UOM Price Lines" editable="bottom">
+                                    <field name="name" />
+                                    <field name="category_id"/>
+                                    <field name="factor"/>
+                                    <field name="price"/>   
+                                </tree>						
+						</field>
+					</page>
 				</xpath>
 
 				<!-- General Information Tab -->
