@@ -65,6 +65,7 @@
 								<field name="void_flag" readonly="1" />
 								<field name="balance" readonly="1" />
 								<field name="is_convert" />
+								<field name="print_count" />
 							</group>
 						</group>
 
