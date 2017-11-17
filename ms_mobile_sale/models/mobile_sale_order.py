@@ -97,12 +97,12 @@ class mobile_sale_order(osv.osv):
         try :
             mobile_sale_order_obj = self.pool.get('mobile.sale.order')
             mobile_sale_order_line_obj = self.pool.get('mobile.sale.order.line')
-            str = "{" + vals + "}"
-            str = str.replace(":''", ":'")  # change Order_id
-            str = str.replace("'',", "',")  # null
-            str = str.replace(":',", ":'',")  # due to order_id
-            str = str.replace("}{", "}|{")
-            new_arr = str.split('|')
+            strr = "{" + vals + "}"
+            strr = strr.replace(":''", ":'")  # change Order_id
+            strr = strr.replace("'',", "',")  # null
+            strr = strr.replace(":',", ":'',")  # due to order_id
+            strr = strr.replace("}{", "}|{")
+            new_arr = strr.split('|')
             result = []
             for data in new_arr:
                 x = ast.literal_eval(data)
