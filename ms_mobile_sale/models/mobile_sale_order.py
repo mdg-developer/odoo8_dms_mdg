@@ -1926,11 +1926,12 @@ class mobile_sale_order(osv.osv):
         list = []
         try:
             
-            cr.execute(''' select sp.id,sp.date,sp.partner_id,sp.company_id,sp.id,sp.name,sp.branch_id
-                             from stock_picking sp 
-                             where  sp.state ='assigned'
-                            and  sp.picking_type_id  in  (select in_type_id  from stock_warehouse where id in (select warehouse_id from crm_case_section where  id  =%s))
-                            ''', (saleTeamId,))
+            cr.execute('''select sp.id,sp.date,sp.partner_id,sp.company_id,sp.id,sp.name,sp.branch_id ,sp.state,sl.name as location
+                             from stock_picking sp , stock_picking_type spt ,stock_location sl
+                             where sp.state  not in ('cancel','done')           
+                             and sp.picking_type_id =spt.id         
+                             and spt.default_location_src_id =sl.id
+                            and  sp.picking_type_id  in  (select in_type_id  from stock_warehouse where id in (select warehouse_id from crm_case_section where  id  =%s))''', (saleTeamId,))
             result = cr.fetchall()
             print 'Result Sale Order', result
             list.append(result)
@@ -2152,7 +2153,7 @@ class mobile_sale_order(osv.osv):
             stockPickingObj = self.pool.get('stock.picking')               
             stockDetailObj = self.pool.get('stock.transfer_details')
             pickList = []
-            so_ref_no=saleOrderID.replace('\\','').replace('\\','')       
+            so_ref_no=saleOrderID     
             print ' so_ref_noso_ref_no',so_ref_no
             picking_ids = stockPickingObj.search(cr, uid, [('name', '=', so_ref_no), ('state', '=', 'assigned')], context=context)                        
             for picking_id in picking_ids:
