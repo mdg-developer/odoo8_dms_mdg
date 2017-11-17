@@ -19,7 +19,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
+from collections import defaultdict
 from datetime import datetime
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -41,7 +41,7 @@ class purchase_requisitions(osv.osv):
     _columns = {
         'name': fields.char('Purchase Requisition No', required=True, copy=False),
         'partner_id': fields.many2one('res.partner', 'Requested By'),
-        'date_requisition': fields.date('Requested Date'),
+        'date_requisition': fields.date('Requested Date',required=True),
         'date_expected': fields.date('Expected Date'),
         'state': fields.selection([('draft', 'Draft'), 
                                    ('confirmed', 'Confirmed'), 
@@ -85,85 +85,92 @@ class purchase_requisitions(osv.osv):
         pr = self.pool.get('purchase.requisitions')
         poline = self.pool.get('purchase.order.line')
         res_partner = self.pool.get('res.partner')
-        id_per_supplier = {}
+        obj_wh = self.pool.get('stock.warehouse')
+        product_ids=[]
+        product_tmp_ids=[]
+        wh_ids=[]
         for tender in pr.browse(cr, uid, ids, context=context):
             if tender.state == 'done':
                 raise osv.except_osv(_('Warning!'), _('You have already generate the purchase order(s).'))
             for po_line in tender.line_ids:
-                #only take into account confirmed line that does not belong to already confirmed purchase order
                 if tender.state == 'confirmed':
-                    posup_ids = posup.search(cr, uid, [('isDefault', '=', True),('product_tmpl_id', '=', po_line.product_id.product_tmpl_id.id)])
-                    if posup_ids:
-                        cr.execute("select name from product_supplierinfo where id=%s", (posup_ids[0],))
-                    supplier_id = cr.fetchone()
-                    if supplier_id:
-                        supplier_id = supplier_id[0]
-                    else:
-#                         posup_ids = posup.search(cr, uid, [('isDefault', '=', True)])
-                        cr.execute("select name from product_supplierinfo where product_tmpl_id=%s", (po_line.product_id.product_tmpl_id.id,))
-                        posup_id = cr.fetchone()
-                        if posup_id:
-                            supplier_id = posup_id[0]
-                        else:
-                            raise osv.except_osv(_('Product Supplier Error!'),
-                                     _('Product %s has no related Supplier.') % (po_line.product_id.name))
-                    if id_per_supplier.get(supplier_id):
-                        id_per_supplier[supplier_id].append(po_line)
-                    else:
-                        id_per_supplier[supplier_id] = [po_line]
-
-            #generate po based on supplier and cancel all previous RFQ
-            ctx = dict(context or {}, force_requisition_id=True)
-            for supplier, product_line in id_per_supplier.items():
+                    product_ids.append(po_line.product_id.id)
+                    product_tmp_ids.append(po_line.product_id.product_tmpl_id.id)
+                    wh_ids.append(po_line.product_id.product_tmpl_id.warehouse_id.id)
+            product_ids= list(set(product_ids))
+            product_tmp_ids = list(set(product_tmp_ids))
+            posup_ids = posup.search(cr, uid, [('is_default', '=', True),('product_tmpl_id', 'in', product_tmp_ids)])
+            if posup_ids:
+                cr.execute("select distinct name from product_supplierinfo where id in %s", (tuple(posup_ids),))
+                supplier_ids = cr.fetchall()
+                    
+            cr.execute("select distinct psi.name,pt.warehouse_id from product_product pp,product_template pt,product_supplierinfo psi where pp.product_tmpl_id=pt.id and psi.product_tmpl_id=pt.id and pp.id in %s and psi.name in %s and pt.warehouse_id in %s and psi.is_default=True order by psi.name,pt.warehouse_id", (tuple(product_ids),tuple(supplier_ids),tuple(wh_ids)))
+            sp_wh_pro = cr.fetchall() 
+            
+            for sw_ids in sp_wh_pro:
                 if tender:
-                        cr.execute("select company_id from res_users where id=%s", (uid,))
-                        company_id = cr.fetchone()
-                        if company_id:
-                            company_id = company_id[0]
-                        cr.execute("select id from res_currency where active='t' and base='t'",)
-                        currency_id = cr.fetchone()
-                        if currency_id:
-                            currency_id = currency_id[0]
-                        cr.execute("select id from stock_picking_type where name='Receipts' and warehouse_id=%s", (tender.warehouse_id.id,))
-                        pickingtype_id = cr.fetchone()
-                        if pickingtype_id:
-                            pickingtype_id = pickingtype_id[0]
-                        cr.execute("select lot_stock_id from stock_warehouse where id=%s", (tender.warehouse_id.id,))
-                        location_id = cr.fetchone()
-                        if location_id:
-                            location_id = location_id[0]
-                        supplier_id = res_partner.browse(cr, uid, supplier, context=context)
-#                         cr.execute("select pricelist_id from res_partner where id=%s", (supplier,))
-#                         pricelist_id = cr.fetchone()[0]
-                        poResult = {'partner_id':supplier or False,
-                                    'pr_ref':tender.name or '/',
-                                    'date_order':tender.date_requisition ,
-                                    'company_id':company_id or False,
-                                    'currency_id':supplier_id.property_product_pricelist_purchase.currency_id and supplier_id.property_product_pricelist_purchase.currency_id.id or False,
-                                    'pricelist_id':supplier_id.property_product_pricelist_purchase and supplier_id.property_product_pricelist_purchase.id or False,
-                                    'location_id':location_id or False,
-                                    'picking_type_id':pickingtype_id or False,
-                                    'state': 'draft',                                
-                                    'warehouse_id':tender.warehouse_id.id or False,
-                                    'due_date':tender.date_expected ,
-                                    'note':tender.description,
-                                            }
-                        poId = po.create(cr, uid, poResult, context=context)
-                for line in product_line:
-                        if poId and line:
-                            polResult = {
-                                        'order_id':poId,
-                                        'product_id':line.product_id.id,
-                                        'name':line.product_id.name_template,
-                                        'product_uom':line.product_uom_id.id,
-                                        'product_qty':line.product_qty,
-                                        'price_unit':line.price_unit,
-                                        'date_planned':tender.date_expected ,
-                                        'supplier_code':line.product_id.supplier_code ,
-                                        'state':'draft',
-                                        }                                
-                            pol_id =poline.create(cr, uid, polResult, context=context)
-            #set tender to state done
+                            cr.execute("select company_id from res_users where id=%s", (uid,))
+                            company_id = cr.fetchone()
+                            if company_id:
+                                company_id = company_id[0]
+                            cr.execute("select id from res_currency where active='t' and base='t'",)
+                            currency_id = cr.fetchone()
+                            if currency_id:
+                                currency_id = currency_id[0]
+                            cr.execute("select id from stock_picking_type where name='Receipts' and warehouse_id=%s", (sw_ids[1],))
+                            pickingtype_id = cr.fetchone()
+                            if pickingtype_id:
+                                pickingtype_id = pickingtype_id[0]
+                            cr.execute("select lot_stock_id from stock_warehouse where id=%s", (tender.warehouse_id.id,))
+                            location_id = cr.fetchone()
+                            if location_id:
+                                location_id = location_id[0]
+                            supplier_id = res_partner.browse(cr, uid, sw_ids[0], context=context)
+                            wh_id = obj_wh.browse(cr, uid, sw_ids[1], context=context)
+                            poResult = {'partner_id':sw_ids[0] or False,
+                                        'pr_ref':tender.name or '/',
+                                        'date_order':tender.date_requisition ,
+                                        'company_id':company_id or False,
+                                        'currency_id':supplier_id.property_product_pricelist_purchase.currency_id and supplier_id.property_product_pricelist_purchase.currency_id.id or False,
+                                        'pricelist_id':supplier_id.property_product_pricelist_purchase and supplier_id.property_product_pricelist_purchase.id or False,
+                                        'location_id':location_id or False,
+                                        'picking_type_id':pickingtype_id or False,
+                                        'state': 'draft',                                
+                                        'warehouse_id':tender.warehouse_id.id or False,
+                                        'due_date':tender.date_expected ,
+                                        'note':tender.description,
+                                                }
+                            poId = po.create(cr, uid, poResult, context=context)
+                for pids in product_ids:
+                    for po_line in tender.line_ids:
+                        if tender.state == 'confirmed':
+                            posup_ids = posup.search(cr, uid, [('is_default', '=', True),('product_tmpl_id', '=', po_line.product_id.product_tmpl_id.id)])
+                            if posup_ids:
+                                cr.execute("select name from product_supplierinfo where id=%s", (posup_ids[0],))
+                            supplier_id = cr.fetchone()
+                            if supplier_id:
+                                supplier_id = supplier_id[0]
+                            else:
+                                cr.execute("select name from product_supplierinfo where product_tmpl_id=%s", (po_line.product_id.product_tmpl_id.id,))
+                                posup_id = cr.fetchone()
+                                if posup_id:
+                                    supplier_id = posup_id[0]
+                                else:
+                                    raise osv.except_osv(_('Product Supplier Error!'),
+                                             _('Product %s has no related Supplier.') % (po_line.product_id.name))
+                            if (sw_ids[0] == supplier_id and sw_ids[1]==po_line.product_id.product_tmpl_id.warehouse_id.id and pids==po_line.product_id.id):
+                                polResult = {
+                                                'order_id':poId,
+                                                'product_id':po_line.product_id.id,
+                                                'name':po_line.product_id.name_template,
+                                                'product_uom':po_line.product_uom_id.id,
+                                                'product_qty':po_line.product_qty,
+                                                'price_unit':po_line.price_unit,
+                                                'date_planned':tender.date_expected ,
+                                                'supplier_code':po_line.product_id.supplier_code ,
+                                                'state':'draft',
+                                                }                                
+                                pol_id =poline.create(cr, uid, polResult, context=context)
             self.write(cr, uid, ids,  {'state':'done'}, context=context)
         return True
     
