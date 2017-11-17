@@ -66,8 +66,13 @@ class purchase_order_line(osv.osv):
         # - set a domain on product_uom
         cr.execute("select product_uom_id from product_template_product_uom_rel where product_template_id=%s", (product.product_tmpl_id.id,))
         prod_uom_ids = cr.fetchall()
+        
         res['domain'] = {'product_uom': [('id', 'in', prod_uom_ids)]}
-
+        res['value'].update({'product_uom':product.product_tmpl_id.uom_po_id.id})
+        domain = {}
+        domain = {'product_uom':
+                            [('id', 'in', prod_uom_ids)]}
+        
         # - check that uom and product uom belong to the same category
         product_uom_po_id = product.uom_po_id.id
         if not uom_id:
@@ -77,7 +82,7 @@ class purchase_order_line(osv.osv):
                 res['warning'] = {'title': _('Warning!'), 'message': _('Selected Unit of Measure does not belong to the same category as the product Unit of Measure.')}
             uom_id = product_uom_po_id
 
-        res['value'].update({'product_uom': prod_uom_ids})
+        #res['value'].update({'product_uom': prod_uom_ids})
 
         # - determine product_qty and date_planned based on seller info
         if not date_order:
@@ -116,7 +121,7 @@ class purchase_order_line(osv.osv):
         fpos = fiscal_position_id and account_fiscal_position.browse(cr, uid, fiscal_position_id, context=context) or False
         taxes_ids = account_fiscal_position.map_tax(cr, uid, fpos, taxes)
         res['value'].update({'price_unit': price, 'taxes_id': taxes_ids, 'price_subtotal':price * qty})
-
+        #return {'value': res,'domain': domain}
         return res
     
         

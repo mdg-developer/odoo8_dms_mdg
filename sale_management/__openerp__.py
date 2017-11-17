@@ -59,7 +59,9 @@ Sale Management
         'reports/custom_layout.xml',
         'reports/deliver_order_custom_layouts.xml',
         'reports/report_pre_sale_order.xml',
-        'reports/report_stock_picking.xml',
+      #  'reports/report_stock_picking.xml',
+              'views/report_stockpicking.xml',
+
         'wizard/location_assign_view.xml',
         'views/stock_picking_view.xml',
     ],
