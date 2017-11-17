@@ -5,7 +5,6 @@ from openerp.osv.fields import _column
 class product_product(osv.osv):
     _inherit = 'product.product'
     _columns = {'supplier_code': fields.char('Supplier Code'),
-                
             }
     
 product_product()
@@ -13,12 +12,12 @@ product_product()
 class product_supplierinfo(osv.osv):
     _inherit = 'product.supplierinfo'
     _columns = {
-                'isDefault': fields.boolean('Is Default',type='boolean'),
+                'is_default': fields.boolean('Is Default',type='boolean'),
             }
     
 product_supplierinfo()
 
-class product_template(osv.osv):
+class product_template(osv.osv_memory):
     _inherit = 'product.template'
 
     def _product_available(self, cr, uid, ids, name, arg, context=None):
@@ -92,6 +91,7 @@ class product_template(osv.osv):
         'categ_id': fields.many2one('product.category','Product Category', required=True, change_default=True, domain="[('type','=','normal')]" ,help="Select category for the current product"),
          'sequence': fields.related('product_variant_ids', 'sequence', type='integer', string='Sequence', required=True),
         'supplier_code': fields.related('product_variant_ids', 'supplier_code', type='char', string='Supplier Code',),
+        'warehouse_id':fields.many2one('stock.warehouse', 'Warehouse'),
                 }
      
     _defaults = {

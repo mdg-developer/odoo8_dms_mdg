@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="product.product_template_only_form_view"/>
             <field name="arch" type="xml">
            		<xpath expr="//field[@name='default_code']" position="after">
-                    <field name="supplier_code"/>
+                    <field name="supplier_code"/>                             
  				</xpath>
  				<xpath expr="//notebook" position="inside">	
 					<page name="uoms" string="Report UOM">
@@ -19,7 +19,18 @@
 				
             </field>
         </record>
-		
+        
+        <record id="product_template_form_view_bwbw" model="ir.ui.view">
+            <field name="name">product.product.form_bwbw</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+           		<xpath expr="//field[@name='uom_po_id']" position="after">
+                    <field name="warehouse_id"/>                             
+ 				</xpath>				
+            </field>
+        </record>
+        
 		<record id="product_product_tree_view_inherit" model="ir.ui.view">
             <field name="name">product.product.tree</field>
             <field name="model">product.product</field>
@@ -42,13 +53,25 @@
 				</field>
 			</field>
 		</record>
+		
+		<record id="product_template_search_view_inherit_bwbw" model="ir.ui.view">
+			<field name="name">product.template.search.inherit_bwbw</field>
+			<field name="model">product.template</field>
+			<field name="inherit_id" ref="product.product_template_search_view" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='name']" position="after">
+					<field name="supplier_code" string="Supplier Code" filter_domain="[('supplier_code','ilike',self)]"/>
+				</xpath>
+			</field>
+		</record>
+		
         <record id="product_supplierinfo_form_view_inherit" model="ir.ui.view">
             <field name="name">product.supplierinfo.form.view</field>
             <field name="model">product.supplierinfo</field>
             <field name="inherit_id" ref="product.product_supplierinfo_form_view"/>
             <field name="arch" type="xml">
 				<xpath expr="//form/group/field[@name='company_id']" position="after">
-					<field name="isDefault" />
+					<field name="is_default" />
 				</xpath>
 				<xpath expr="//form/group/field[@name='product_code']" position="replace">
 					<field name="product_code" invisible="1"/>
