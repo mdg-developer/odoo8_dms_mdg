@@ -1602,6 +1602,8 @@ class mobile_sale_order(osv.osv):
                 print_line.append(r)  
             if print_line:
                 for print_date in print_line:
+                    cursor.execute('select branch_id from crm_case_section where id=%s', (print_date['section_id'],))
+                    branch_id = cursor.fetchone()[0]                    
                     cursor.execute("delete from tablet_pdf_print where print_fname = %s ",(print_date['print_fname'],))
                     print_result = {
                         'section_id':print_date['section_id'],
@@ -1609,6 +1611,7 @@ class mobile_sale_order(osv.osv):
                         'print_date':datetime.now(),
                         'print_file':print_date['print_file'],
                         'print_fname':print_date['print_fname'],
+                        'branch_id':branch_id,
                         }
                     print_obj.create(cursor, user, print_result, context=context)
             return True
