@@ -2023,7 +2023,7 @@ class mobile_sale_order(osv.osv):
                     So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
                                                    , ('name', '=', so_ref_no)], context=context)
                     if So_id:
-                        cr.execute('''update sale_order set state ='cancel' where id = %s ''', (So_id[0],))
+                        cr.execute('''update sale_order set state ='cancel',cancel_user_id=%s where id = %s ''', (uid,So_id[0],))
                         cr.execute('''update account_invoice set state ='cancel' where origin = %s ''', (so_ref_no,))
                         cr.execute('''update stock_picking set state ='cancel' where origin = %s ''', (so_ref_no,))
                         cr.execute('''update stock_move set state ='cancel' where origin = %s ''', (so_ref_no,))
