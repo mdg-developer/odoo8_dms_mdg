@@ -2096,7 +2096,7 @@ class mobile_sale_order(osv.osv):
                                             from sale_order so, crm_case_section team,stock_picking picking,stock_picking_type spt ,procurement_group pg                              
                                             where so.state!= 'cancel' 
                                             and picking.picking_type_id=spt.id
-                                            and picking.picking_type_id in (select out_type_id from stock_warehouse where id in ( select warehouse_id from crm_case_section where delivery_team_id =%s))
+                                            and picking.picking_type_id in (select out_type_id from stock_warehouse where id in ( select warehouse_id from crm_case_section where id =%s))
                                             and picking.group_id= pg.id
                                             and pg.name = so.name
                                             and picking.state ='assigned'
