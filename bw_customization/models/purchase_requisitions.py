@@ -42,7 +42,7 @@ class purchase_requisitions(osv.osv):
         'name': fields.char('Purchase Requisition No', required=True, copy=False),
         'partner_id': fields.many2one('res.partner', 'Requested By'),
         'date_requisition': fields.date('Requested Date',required=True),
-        'date_expected': fields.date('Expected Date'),
+        'date_expected': fields.date('Expected Date',required=True),
         'state': fields.selection([('draft', 'Draft'), 
                                    ('confirmed', 'Confirmed'), 
                                    ('done', 'Done'),
@@ -89,23 +89,42 @@ class purchase_requisitions(osv.osv):
         product_ids=[]
         product_tmp_ids=[]
         wh_ids=[]
+        supplier_ids=[]
         for tender in pr.browse(cr, uid, ids, context=context):
             if tender.state == 'done':
                 raise osv.except_osv(_('Warning!'), _('You have already generate the purchase order(s).'))
             for po_line in tender.line_ids:
                 if tender.state == 'confirmed':
                     product_ids.append(po_line.product_id.id)
-                    product_tmp_ids.append(po_line.product_id.product_tmpl_id.id)
-                    wh_ids.append(po_line.product_id.product_tmpl_id.warehouse_id.id)
-            product_ids= list(set(product_ids))
-            product_tmp_ids = list(set(product_tmp_ids))
-            posup_ids = posup.search(cr, uid, [('is_default', '=', True),('product_tmpl_id', 'in', product_tmp_ids)])
-            if posup_ids:
-                cr.execute("select distinct name from product_supplierinfo where id in %s", (tuple(posup_ids),))
-                supplier_ids = cr.fetchall()
-                    
-            cr.execute("select distinct psi.name,pt.warehouse_id from product_product pp,product_template pt,product_supplierinfo psi where pp.product_tmpl_id=pt.id and psi.product_tmpl_id=pt.id and pp.id in %s and psi.name in %s and pt.warehouse_id in %s and psi.is_default=True order by psi.name,pt.warehouse_id", (tuple(product_ids),tuple(supplier_ids),tuple(wh_ids)))
-            sp_wh_pro = cr.fetchall() 
+                    product_tmp_ids.append(po_line.product_id.product_tmpl_id.id)                    
+                    ####### Warehouse #######
+                    if po_line.product_id.product_tmpl_id.warehouse_id.id:
+                        wh_ids.append(po_line.product_id.product_tmpl_id.warehouse_id.id)
+                    else:
+                        raise osv.except_osv(_('Product Warehouse Error!'),
+                                            _('Product %s has no related Warehouse.') % (po_line.product_id.name))
+                    ####### Warehouse #######
+                    ####### Supplier #######
+                    posup_ids = posup.search(cr, uid, [('is_default', '=', True),('product_tmpl_id', '=', po_line.product_id.product_tmpl_id.id)])
+                    if posup_ids:
+                        if len(posup_ids) == 1:
+                            cr.execute("select distinct name from product_supplierinfo where id in %s", (tuple(posup_ids),))
+                            supplier_id_by_product = cr.fetchall()
+                            for ssid in supplier_id_by_product:
+                                supplier_ids.append(ssid[0])
+                        else:
+                            raise osv.except_osv(_('Product Supplier Error!'),
+                                            _('Product %s has more than one Default Supplier.') % (po_line.product_id.name))
+                    else:
+                        raise osv.except_osv(_('Product Supplier Error!'),
+                                            _('Product %s has no related Default Supplier.') % (po_line.product_id.name))
+                    ####### Supplier ####### 
+            product_ids= list(set(product_ids)) #### Check distinct product_ids
+            product_tmp_ids = list(set(product_tmp_ids)) #### Check product_tmp_ids
+            supplier_ids = list(set(supplier_ids)) #### Check distinct supplier_ids
+            if supplier_ids and product_ids and wh_ids:       
+                cr.execute("select distinct psi.name,pt.warehouse_id from product_product pp,product_template pt,product_supplierinfo psi where pp.product_tmpl_id=pt.id and psi.product_tmpl_id=pt.id and pp.id in %s and psi.name in %s and pt.warehouse_id in %s and psi.is_default=True order by psi.name,pt.warehouse_id", (tuple(product_ids),tuple(supplier_ids),tuple(wh_ids)))
+                sp_wh_pro = cr.fetchall() 
             
             for sw_ids in sp_wh_pro:
                 if tender:
@@ -121,7 +140,7 @@ class purchase_requisitions(osv.osv):
                             pickingtype_id = cr.fetchone()
                             if pickingtype_id:
                                 pickingtype_id = pickingtype_id[0]
-                            cr.execute("select lot_stock_id from stock_warehouse where id=%s", (tender.warehouse_id.id,))
+                            cr.execute("select default_location_dest_id from stock_picking_type where name='Receipts' and warehouse_id=%s", (sw_ids[1],))
                             location_id = cr.fetchone()
                             if location_id:
                                 location_id = location_id[0]
