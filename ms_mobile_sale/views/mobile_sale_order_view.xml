@@ -65,6 +65,7 @@
 								<field name="void_flag" readonly="1" />
 								<field name="balance" readonly="1" />
 								<field name="is_convert" />
+								<field name="print_count" />
 							</group>
 						</group>
 
@@ -74,7 +75,7 @@
 									<form string="Mobile Sales Order Lines" version="7.0">
 										<group>
 											<group>
-												<field name="product_type"   invisible="1"/>
+												<field name="product_type" invisible="1" />
 												<field name="product_id" readonly="1" />
 												<field name="uom_id" readonly="1" />
 												<field name="product_uos_qty" readonly="1" />
@@ -84,14 +85,14 @@
 												<field name="sub_total" readonly="1" />
 												<field name="foc" readonly="1" />
 												<field name="manual_foc" readonly="1" />
-												
+
 											</group>
 
 										</group>
 
 									</form>
 									<tree string="Sales Order Lines" editable="bottom">
-										<field name="product_type"  invisible="1"/>
+										<field name="product_type" invisible="1" />
 										<field name="product_id"
 											attrs="{'readonly':[('product_type','!=','service')]}" />
 										<field name="uom_id" readonly="1" />
@@ -101,8 +102,8 @@
 										<field name="discount_amt" readonly="1" />
 										<field name="sub_total" readonly="1" />
 										<field name="foc" readonly="1" />
-												<field name="manual_foc" readonly="1" />
-										
+										<field name="manual_foc" readonly="1" />
+
 									</tree>
 								</field>
 							</page>
@@ -175,7 +176,7 @@
 								</field>
 							</page>
 							<page string="Google Map">
-								<widget type="gmap_marker" lat="mso_latitude"  lng="mso_longitude"
+								<widget type="gmap_marker" lat="mso_latitude" lng="mso_longitude"
 									description="field_descriptions" />
 							</page>
 						</notebook>

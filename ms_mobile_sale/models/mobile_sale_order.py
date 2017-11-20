@@ -97,6 +97,7 @@ class mobile_sale_order(osv.osv):
        'payment_line_ids':fields.one2many('customer.payment', 'payment_id', 'Payment Lines'),
       'branch_id': fields.many2one('res.branch', 'Branch', required=True),
       'is_convert':fields.boolean('Is Convert',readonly=True),
+      'print_count':fields.integer('RePrint Count'),
       
    #     'journal_id'  : fields.many2one('account.journal', 'Journal' ,domain=[('type','in',('cash','bank'))]),   
     }
@@ -185,6 +186,7 @@ class mobile_sale_order(osv.osv):
                         'pricelist_id':so['pricelist_id'],
                         'branch_id':branch_id,
                         'note':so['note'],
+                        'print_count':so['print_count'],
                     }
                     s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
                     so_ids.append(s_order_id);
