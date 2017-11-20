@@ -1926,12 +1926,12 @@ class mobile_sale_order(osv.osv):
         list = []
         try:
             
-            cr.execute('''select sp.id,sp.date,sp.partner_id,sp.company_id,sp.id,sp.name,sp.branch_id ,sp.state,sl.name as location ,pg.name as procurement
-                             from stock_picking sp , stock_picking_type spt ,stock_location sl  ,procurement_group pg
+            cr.execute('''select distinct sp.id,sp.date,sp.partner_id,sp.company_id,sp.id,sp.name,sp.branch_id ,sp.state,sl.name as location ,pg.name as procurement
+                             from stock_picking sp , stock_move sm ,stock_location sl  ,procurement_group pg
                              where sp.state  not in ('cancel','done')           
-                             and sp.picking_type_id =spt.id         
+                             and sm.picking_id =sp.id         
                              and pg.id= sp.group_id
-                             and spt.default_location_src_id =sl.id
+                             and sm.location_id =sl.id
                             and  sp.picking_type_id  in  (select in_type_id  from stock_warehouse where id in (select warehouse_id from crm_case_section where  id  =%s))''', (saleTeamId,))
             result = cr.fetchall()
             print 'Result Sale Order', result
