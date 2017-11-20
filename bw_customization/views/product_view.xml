@@ -81,6 +81,16 @@
 				<field name="big_list_price" position="replace">
 				</field>  -->  
             </field>
-        </record>    	
+        </record>  
+        <record id="product_supplierinfo_tree_view_inherit_bw" model="ir.ui.view">
+            <field name="name">product.supplierinfo.tree.view_bw</field>
+            <field name="model">product.supplierinfo</field>
+            <field name="inherit_id" ref="product.product_supplierinfo_tree_view"/>
+            <field name="arch" type="xml">
+                    <field name="company_id" position="after">
+                    	<field name="is_default"/>
+                    </field>
+            </field>
+        </record>  	
 	</data>
 </openerp>
