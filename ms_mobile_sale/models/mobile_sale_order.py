@@ -79,6 +79,8 @@ class mobile_sale_order(osv.osv):
        'pricelist_id': fields.many2one('product.pricelist', 'Price List', select=True, ondelete='cascade'),
        'payment_line_ids':fields.one2many('customer.payment', 'payment_id', 'Payment Lines'),
       'branch_id': fields.many2one('res.branch', 'Branch', required=True),
+      'po_no':fields.char('PO No'),
+      'invoice_no':fields.char('Invoice No'),
 
    #     'journal_id'  : fields.many2one('account.journal', 'Journal' ,domain=[('type','in',('cash','bank'))]),
     }
@@ -88,19 +90,19 @@ class mobile_sale_order(osv.osv):
         'm_status' : 'draft',
 
     }
-
+    
     def create_massive(self, cursor, user, vals, context=None):
         print 'vals', vals
         sale_order_name_list = []
         try :
             mobile_sale_order_obj = self.pool.get('mobile.sale.order')
             mobile_sale_order_line_obj = self.pool.get('mobile.sale.order.line')
-            str = "{" + vals + "}"
-            str = str.replace(":''", ":'")  # change Order_id
-            str = str.replace("'',", "',")  # null
-            str = str.replace(":',", ":'',")  # due to order_id
-            str = str.replace("}{", "}|{")
-            new_arr = str.split('|')
+            strr = "{" + vals + "}"
+            strr = strr.replace(":''", ":'")  # change Order_id
+            strr = strr.replace("'',", "',")  # null
+            strr = strr.replace(":',", ":'',")  # due to order_id
+            strr = strr.replace("}{", "}|{")
+            new_arr = strr.split('|')
             result = []
             for data in new_arr:
                 x = ast.literal_eval(data)
@@ -120,6 +122,37 @@ class mobile_sale_order(osv.osv):
                     branch_id = cursor.fetchone()[0]
                     cursor.execute('select id From res_partner where customer_code  = %s ', (so['customer_code'],))
                     data = cursor.fetchall()
+                    
+                    # to create maingroup as prefix for invoice_no
+                    last_invoice_id=False
+                    for sol in sale_order_line:
+                        product_id=sol['product_id']
+                    if product_id:
+                        cursor.execute("""select m.code from product_product p, product_template t,product_maingroup m where p.product_tmpl_id=t.id and t.main_group=m.id and p.id=%s """,(product_id,))
+                        mgcode = cursor.fetchall()
+                        if mgcode:
+                            last_invoices = self.pool.get("mobile.sale.order").search(cursor, user, [('invoice_no', 'like', _(mgcode[0][0]))], context=context)
+                            last_invoice_id = last_invoices and max(last_invoices)
+                        if last_invoice_id:
+                            cursor.execute("""select invoice_no from mobile_sale_order where id=%s """,(last_invoice_id,))
+                            last_invoice = cursor.fetchall()  
+                        if not last_invoice_id:
+                            if mgcode:
+                                new_invoice_no= mgcode[0][0] + '00001'
+                            else:
+                                new_invoice_no= ''
+                        else:
+                            if mgcode[0][0]:
+                                invoice_int = int(last_invoice[0][0].split(mgcode[0][0])[-1])
+                                width =5
+                                new_invoice_int = invoice_int + 1
+                                formatted = (width - len(str(new_invoice_int))) * "0" + str(new_invoice_int)
+                                new_invoice_no = mgcode[0][0] + str(formatted)
+                            else:
+                                new_invoice_no= ''
+                    else:
+                        new_invoice_no= ''
+                    #
 #                     if data:
 #                         partner_id = data[0][0]
 #                     else:
@@ -134,7 +167,7 @@ class mobile_sale_order(osv.osv):
                             direct_credit = True
                         else:
                             direct_credit = False
-
+                    print 'lll',so['PoNo']
                     mso_result = {
                         'customer_code':so['customer_code'],
                         'sale_plan_day_id':so['sale_plan_day_id'],
@@ -160,6 +193,8 @@ class mobile_sale_order(osv.osv):
                         'change_amount':so['change_amount'],
                         'net_amount':so['discounted_total_amount'],
                         'due_date':so['due_date'],
+                        'po_no':so['PoNo'],
+                        'invoice_no':new_invoice_no,
                         'payment_term':so['payment_term'],
                         'mso_longitude':so['mso_longitude'],
                         'mso_latitude':so['mso_latitude'],

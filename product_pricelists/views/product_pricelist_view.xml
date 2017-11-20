@@ -99,7 +99,7 @@
 							<field name="sequence" />
 							<field name="product_id" on_change="product_id_change(product_id)" />
 							<field name="name" invisible="1" />
-							<field name="base" invisible="1" />
+							
 							<field name="categ_id"/>
 							<field name="min_quantity"/>
 							<field name="product_tmpl_id" invisible="1" />
@@ -110,6 +110,7 @@
 							<field name="price_surcharge" string=" +/- "
 								on_change="price_subcharge_change(product_id,price_discount,new_price,price_surcharge)" />
 							<field name="new_price" invisiblle="0"/>
+							<field name="base" />
 						</tree>
 					</field>
 				</xpath>
