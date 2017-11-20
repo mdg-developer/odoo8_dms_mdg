@@ -42,7 +42,7 @@
 	            <form string="Purchase Requisition">
 	                	<header>
 							<button name="action_confirmed" string="Confirm" type="object"
-								class="oe_highlight" attrs="{'invisible':[('state','in',('done','confirmed'))]}" />
+								class="oe_highlight" attrs="{'invisible':[('state','in',('done','confirmed','cancel'))]}" />
 							<button name="action_cancel" string="Cancel" type="object"
 								class="oe_highlight" attrs="{'invisible':[('state','in',('done','confirmed','cancel'))]}" />
 							<button name="action_draft" string="Set to draft" type="object"
