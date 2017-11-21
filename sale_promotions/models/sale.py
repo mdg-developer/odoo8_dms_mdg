@@ -54,4 +54,11 @@ class SaleOrder(osv.osv):
         return True
             
 SaleOrder()
-
+class SaleOrderLine(osv.osv):
+    '''
+    Sale Order
+    '''
+    _inherit = 'sale.order.line'    
+    _columns = {
+        'promotion_line':fields.boolean('Promotion Line',default=False),
+    }

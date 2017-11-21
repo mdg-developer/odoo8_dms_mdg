@@ -316,7 +316,7 @@ class PromotionsRules(osv.Model):
 #                           ('coupon_code', '=', promotion_rule.coupon_code),
 #                           ('state', '<>', 'cancel')
 #                           ], context=context)
-        print '10 Mile Causine10 Mile Causine10 Mile Causine', promotion_rule.name
+        print 'Conditionnnnnnnnnnnnnnnn', promotion_rule.name
         is_branch = False
         is_outlet = False
         is_channel = False
@@ -505,8 +505,94 @@ class PromotionsRules(osv.Model):
                         return True
                 elif comparator == '<=':    
                     if tota_qty <= product_qty:
-                        return True                
+                        return True          
+                       
+            # Check attribute is product_product category subtotal  
+            elif attribute == 'cat_total':
+                tota_qty = 0.0
+                totalValue=0.0
+                svalue = value.split(":")
+                category_code = eval(svalue[0])
+                subtotal = eval(svalue[1])
+                
+                for order_line in order.order_line:  
+                        
+                        cat_name = order_line.product_id.categ_id.name
+                        category_name1 = str(cat_name)
+                        cat_value1 = str(category_code)
+                        category_name = category_name1.strip() 
+                        cat_value = cat_value1.strip() 
+                        
+                        if category_name == cat_value:
+                            totalValue += order_line.net_total
+                x=totalValue;
+                y=subtotal;
+                if comparator == '==':
+                    if x == y:
+                        return True
+                elif comparator == '!=':    
+                    if x != y:
+                        return True
+                elif comparator == '>':
+                    if x > y:
+                        return True
+                elif comparator == '<':    
+                    if x < y:
+                        return True
+                elif comparator == '>=':
+                    if x >= y:
+                        return True
+                elif comparator == '<=':    
+                    if x <= y:
+                        return True                                                   
+                       
+            #Check Distructor customer
+            elif attribute =='is_distributor' :      
+                is_condition = value   
+                if  is_condition =='TRUE':
+                    if order.partner_id.is_distributor ==True:
+                            return True
+                            
+            elif attribute == 'is_distributor_percent':
+                tota_qty = 0.0
+                totalSaleAmount=0
+                targetAmount=0
+                totalPercent=0
+                allTotalSaleAmount=0
+                totalValue=0
+                target_percent = float(value)
+                if (order.partner_id.is_distributor==True):
+                    totalSaleAmount =order.partner_id.res_total_amount
+                    targetAmount=order.partner_id.distributor_target_amount
+                    totalPercent = targetAmount * (target_percent * 0.01 );
+                
+                for order_line in order.order_line:                         
+                        totalValue += order_line.net_total
+                        
+                allTotalSaleAmount = totalSaleAmount + totalValue;
+                x= allTotalSaleAmount;
+                y=  totalPercent;     
+                if comparator == '==':
+                    if x == y:
+                        return True
+                elif comparator == '!=':    
+                    if x != y:
+                        return True
+                elif comparator == '>':
+                    if x > y:
+                        return True
+                elif comparator == '<':    
+                    if x < y:
+                        return True
+                elif comparator == '>=':
+                    if x >= y:
+                        return True
+                elif comparator == '<=':    
+                    if x <= y:
+                        return True                                         
                     
+                         
+                      
             # Check attribute is sub total amount                
             elif attribute == 'prod_sub_total':   
                 svalue = value.split(":")
@@ -861,7 +947,7 @@ class PromotionsRules(osv.Model):
 #         active_promos = self.search(cursor, user,
 #                                     [('active', '=', True),('from_date', '<=', date_order),('to_date', '>=', date_order)],
 #                                     context=context)
-        cursor.execute("select id from promos_rules where active=True and from_date <= %s and  to_date >=%s order by sequence asc", (date_order, date_order,))
+        cursor.execute("select id from promos_rules where active=True and state='approve' and from_date <= %s and  to_date >=%s order by sequence asc", (date_order, date_order,))
         active_data = cursor.fetchall()
         print 'active_promos',
         for data_pro in active_data:
@@ -1596,6 +1682,8 @@ class PromotionsRulesActions(osv.Model):
         @param order: Sale order
         @param context: Context(no direct use).
         """
+        order_obj = self.pool.get('sale.order')
+
         order_line_obj = self.pool.get('sale.order.line')
         # Delete all promotion lines
         order_line_ids = order_line_obj.search(cursor, user,
@@ -1604,6 +1692,7 @@ class PromotionsRulesActions(osv.Model):
                                              ('promotion_line', '=', True),
                                             ], context=context
                                             )
+
         if order_line_ids:
             order_line_obj.unlink(cursor, user, order_line_ids, context)
         # Clear discount column
@@ -1615,8 +1704,13 @@ class PromotionsRulesActions(osv.Model):
         if order_line_ids:
             order_line_obj.write(cursor, user,
                                  order_line_ids,
-                                 {'discount':0.00},
+                                 {'discount':0.00,'discount_amt':0.00},
                                  context=context)
+        if order.id:
+            order_obj.write(cursor, user,
+                                 order.id,
+                                 {'additional_discount':0.00,'deduct_amt':0.00},
+                                 context=context)            
         return True
  
     # MMK I'm just fix a little missing code
@@ -2532,7 +2626,7 @@ class PromotionsRulesActions(osv.Model):
         @param order: sale order
         @param context: Context(no direct use).
         """
-#         self.clear_existing_promotion_lines(cursor, user, order, context)
+        self.clear_existing_promotion_lines(cursor, user, order, context)
         action = self.browse(cursor, user, action_id, context)
         method_name = 'action_' + action.action_type
         return getattr(self, method_name).__call__(cursor, user, action,
