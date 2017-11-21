@@ -464,6 +464,7 @@ class mobile_sale_import(osv.osv):
                               }
                 cr.execute(""" select id from sale_order where lower(tb_ref_no) =%s""", (orderRef.lower(),))
                 data = cr.fetchall()
+                order_line_flg = False
                 if data:
                     order_ids = data[0]
 #                 order_ids = order_obj.search(cr, uid, [('tb_ref_no', '=', orderRef)], context=context)
@@ -488,8 +489,13 @@ class mobile_sale_import(osv.osv):
                 
                                 }
           
-                    
-                    order_line_id = order_line_obj.create(cr, uid, order_line_value, context)
+                    order_line_flg = order_line_obj.search(cr,uid,[('order_id', '=', order_id),('product_id','=',product_id),
+                                                                   ('product_uom', '=', uom_ids),('price_unit','=',unit_price),
+                                                                   ('product_uom_qty', '=', qty_pcs),('discount','=',discount),('discount_amt','=',discount_amount)])
+                    if len(order_line_flg) > 0:
+                        order_line_id = order_line_obj.write(cr, uid,order_line_flg, order_line_value, context)
+                    else:    
+                        order_line_id = order_line_obj.create(cr, uid, order_line_value, context)
                   
                     # Tax Filed is inserted into the sale_order_tax table
                     cr.execute('select id,name,description  from account_tax where parent_id is null')
