@@ -58,6 +58,8 @@ class pre_sale_order(osv.osv):
         'sale_team':fields.many2one('crm.case.section', 'Sale Team'),
         'location_id'  : fields.many2one('stock.location', 'Location'),
         'deduction_amount':fields.float('Deduction Amount'),
+        'cash_discount':fields.float('Cash Discount'),
+        
                 'additional_discount':fields.float('Discount'),
 
         'm_status':fields.selection([('draft', 'Draft'),
@@ -273,6 +275,7 @@ class pre_sale_order(osv.osv):
                         'sale_plan_name':so['sale_plan_day_name'],
                         'amount_total':so['amount_total'],
                         'deduction_amount':so['deductionAmount'],
+                        'cash_discount':so['cash_discount'],
                         'additional_discount':so['additionalDiscount'],
                         'sale_team':so['sale_team'],
                         'date':so['date'],

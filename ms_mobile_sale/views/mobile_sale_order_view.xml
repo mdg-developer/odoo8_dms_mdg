@@ -57,6 +57,7 @@
 								<field name="amount_total" readonly="1" />
 								<field name="additional_discount" readonly="1" />
 								<field name="deduction_amount" readonly="1" />
+								<field name="cash_discount" readonly="1" />
 								<field name="net_amount" readonly="1" />
 								<field name="paid_amount" readonly="1" />
 								<field name="change_amount" readonly="1" />

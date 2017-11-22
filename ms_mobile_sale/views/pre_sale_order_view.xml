@@ -43,11 +43,11 @@
 							<group>
 								<field name="date" readonly="1" />
 								<field name="type" readonly="1" />
-
 								<field name="tablet_id" readonly="1" />
 								<field name="delivery_remark" readonly="1" />
 								<field name="amount_total" readonly="1" />
 								<field name="deduction_amount" readonly="1" />
+								<field name="cash_discount" readonly="1" />
 								<field name ="additional_discount" readonly="1" />
 								<field name="pricelist_id" readonly="1" />
 								<field name="void_flag" readonly="1" />
