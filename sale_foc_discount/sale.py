@@ -248,8 +248,8 @@ class sale_order(osv.osv):
                 val1 += line.net_total
                 val += self._amount_line_tax(cr, uid, line, context=context)
             res[order.id]['amount_tax'] = cur_obj.round(cr, uid, cur, val)
-            res[order.id]['amount_untaxed'] = cur_obj.round(cr, uid, cur, val1)
-            res[order.id]['amount_total'] = res[order.id]['amount_untaxed'] + res[order.id]['amount_tax']
+            res[order.id]['amount_untaxed'] = cur_obj.round(cr, uid, cur, val1) - order.cash_discount
+            res[order.id]['amount_total'] = res[order.id]['amount_untaxed'] + res[order.id]['amount_tax'] 
             
         return res
 
@@ -290,7 +290,8 @@ class sale_order(osv.osv):
     _columns={
               'is_add_discount':fields.boolean('Allow Discount',default=False),
               'deduct_amt':fields.float('Discount Amount',store=True),
-              'additional_discount':fields.float('Additional Discount',store=True),
+              'additional_discount':fields.float('Additional Discount',store=True),              
+              'cash_discount':fields.float('Cash Discount'),               
               'total_dis':fields.function(_amount_all_wrapper, digits_compute=dp.get_precision('Account'), string='Total Discount',
             store={
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
@@ -305,7 +306,7 @@ class sale_order(osv.osv):
             multi='sums', help="The tax amount."),
         'amount_total': fields.function(_amount_all_wrapper, digits_compute=dp.get_precision('Account'), string='Total',
             store={
-                'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
+                'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line','cash_discount'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
             },
             multi='sums', help="The total amount."),
