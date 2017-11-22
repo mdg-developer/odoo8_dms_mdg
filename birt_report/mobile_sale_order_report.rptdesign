@@ -106,22 +106,16 @@
                     <text-property name="heading">discount_amt</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">unit_price</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">unit_price</text-property>
-                    <text-property name="heading">unit_price</text-property>
-                </structure>
-                <structure>
                     <property name="columnName">amount</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">amount</text-property>
                     <text-property name="heading">amount</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">exclusive_price</property>
+                    <property name="columnName">unit_price</property>
                     <property name="analysis">measure</property>
-                    <text-property name="displayName">exclusive_price</text-property>
-                    <text-property name="heading">exclusive_price</text-property>
+                    <text-property name="displayName">unit_price</text-property>
+                    <text-property name="heading">unit_price</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">isexclusive</property>
@@ -285,86 +279,81 @@
                     </structure>
                     <structure>
                         <property name="position">13</property>
-                        <property name="name">unit_price</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">14</property>
                         <property name="name">amount</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">15</property>
-                        <property name="name">exclusive_price</property>
+                        <property name="position">14</property>
+                        <property name="name">unit_price</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">16</property>
+                        <property name="position">15</property>
                         <property name="name">isexclusive</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">17</property>
+                        <property name="position">16</property>
                         <property name="name">deduction_amount</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">18</property>
+                        <property name="position">17</property>
                         <property name="name">additional_discount</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">19</property>
+                        <property name="position">18</property>
                         <property name="name">amount_total</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">20</property>
+                        <property name="position">19</property>
                         <property name="name">add_disc</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">21</property>
+                        <property name="position">20</property>
                         <property name="name">tax_type</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">22</property>
+                        <property name="position">21</property>
                         <property name="name">ctax_registration_no</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">23</property>
+                        <property name="position">22</property>
                         <property name="name">gold_code</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">24</property>
+                        <property name="position">23</property>
                         <property name="name">pn_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">25</property>
+                        <property name="position">24</property>
                         <property name="name">pt_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">26</property>
+                        <property name="position">25</property>
                         <property name="name">net_price</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">27</property>
+                        <property name="position">26</property>
                         <property name="name">net_amount</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">28</property>
+                        <property name="position">27</property>
                         <property name="name">net_tot</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">29</property>
+                        <property name="position">28</property>
                         <property name="name">net_dis_amt</property>
                         <property name="dataType">float</property>
                     </structure>
@@ -458,118 +447,111 @@
                 </structure>
                 <structure>
                     <property name="position">13</property>
-                    <property name="name">unit_price</property>
-                    <property name="nativeName">unit_price</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
-                </structure>
-                <structure>
-                    <property name="position">14</property>
                     <property name="name">amount</property>
                     <property name="nativeName">amount</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">15</property>
-                    <property name="name">exclusive_price</property>
-                    <property name="nativeName">exclusive_price</property>
+                    <property name="position">14</property>
+                    <property name="name">unit_price</property>
+                    <property name="nativeName">unit_price</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">16</property>
+                    <property name="position">15</property>
                     <property name="name">isexclusive</property>
                     <property name="nativeName">isexclusive</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">-7</property>
                 </structure>
                 <structure>
-                    <property name="position">17</property>
+                    <property name="position">16</property>
                     <property name="name">deduction_amount</property>
                     <property name="nativeName">deduction_amount</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">18</property>
+                    <property name="position">17</property>
                     <property name="name">additional_discount</property>
                     <property name="nativeName">additional_discount</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">19</property>
+                    <property name="position">18</property>
                     <property name="name">amount_total</property>
                     <property name="nativeName">amount_total</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">20</property>
+                    <property name="position">19</property>
                     <property name="name">add_disc</property>
                     <property name="nativeName">add_disc</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">21</property>
+                    <property name="position">20</property>
                     <property name="name">tax_type</property>
                     <property name="nativeName">tax_type</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">22</property>
+                    <property name="position">21</property>
                     <property name="name">ctax_registration_no</property>
                     <property name="nativeName">ctax_registration_no</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">23</property>
+                    <property name="position">22</property>
                     <property name="name">gold_code</property>
                     <property name="nativeName">gold_code</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">24</property>
+                    <property name="position">23</property>
                     <property name="name">pn_id</property>
                     <property name="nativeName">pn_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">25</property>
+                    <property name="position">24</property>
                     <property name="name">pt_id</property>
                     <property name="nativeName">pt_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">26</property>
+                    <property name="position">25</property>
                     <property name="name">net_price</property>
                     <property name="nativeName">net_price</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">27</property>
+                    <property name="position">26</property>
                     <property name="name">net_amount</property>
                     <property name="nativeName">net_amount</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">28</property>
+                    <property name="position">27</property>
                     <property name="name">net_tot</property>
                     <property name="nativeName">net_tot</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">29</property>
+                    <property name="position">28</property>
                     <property name="name">net_dis_amt</property>
                     <property name="nativeName">net_dis_amt</property>
                     <property name="dataType">float</property>
@@ -578,15 +560,17 @@
             </list-property>
             <xml-property name="queryText"><![CDATA[Select * ,(coalesce(rb_ex.net_price,0) * coalesce(rb_ex.qty,0)) as net_amount,
 ((coalesce(rb_ex.net_price,0) * coalesce(rb_ex.qty,0)) - coalesce(rb_ex.add_disc,0) - coalesce(rb_ex.deduction_amount,0)) as net_tot,
-(CASE WHEN rb_ex.isexclusive = true THEN ((coalesce(rb_ex.exclusive_price,0) - (coalesce(rb_ex.net_price,0))) * coalesce(rb_ex.qty,0)) 
-ELSE ((coalesce(rb_ex.unit_price,0) - (coalesce(rb_ex.net_price,0))) * coalesce(rb_ex.qty,0)) END) as net_dis_amt
-from (SELECT * ,(CASE WHEN sale.isexclusive = true THEN (sale.exclusive_price * (100 - sale.discount_amt) / 100) ELSE (sale.unit_price * (100 - sale.discount_amt) / 100) END) as net_price
+((coalesce(rb_ex.unit_price,0) - (coalesce(rb_ex.net_price,0))) * coalesce(rb_ex.qty,0)) as net_dis_amt
+from 
+
+
+(SELECT * ,(sale.unit_price * (100 - sale.discount_amt) / 100) as net_price
 FROM 
 (select distinct h.name,h.date::date,v.display_name partner,t.name payment_due_date,
 b.name branch,mg.name brand,h.partner_id as sale_parner_id,
 p.default_code ||' '|| p.name_template description,pt.id as product_tem_id,
-u.name uom,d.product_uos_qty qty,d.discount discount_amt,d.price_unit unit_price,d.sub_total amount , --psi.product_code gold_code,
-(CASE WHEN v.isexclusive = true THEN ( d.price_unit / 1.05) ELSE 0 END) as exclusive_price,
+u.name uom,d.product_uos_qty qty,d.discount discount_amt,d.sub_total amount , --psi.product_code gold_code,
+(CASE WHEN v.isexclusive = true THEN ( d.price_unit / 1.05) ELSE d.price_unit END) as unit_price,
 v.isexclusive,h.deduction_amount,h.additional_discount,h.amount_total,(h.amount_total*h.additional_discount) as add_disc,
 (CASE WHEN v.isexclusive = true THEN 'Exclusive' ELSE 'Inclusive' END) as tax_type,v.ctax_registration_no
 
@@ -601,7 +585,9 @@ INNER JOIN product_template pt on pt.id=p.product_tmpl_id
 INNER JOIN product_maingroup mg on mg.id=pt.main_group 
 and h.name = ? )sale
 LEFT JOIN (select product_code as gold_code,name as pn_id, product_tmpl_id as pt_id from product_supplierinfo)supplier
-ON sale.sale_parner_id=supplier.pn_id and sale.product_tem_id=supplier.pt_id)rb_ex]]></xml-property>
+ON sale.sale_parner_id=supplier.pn_id and sale.product_tem_id=supplier.pt_id)rb_ex
+
+--select * From mobile_sale_order]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -2179,12 +2165,6 @@ ON sale.sale_parner_id=supplier.pn_id and sale.product_tem_id=supplier.pt_id]]><
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">exclusive_price</property>
-                    <text-property name="displayName">exclusive_price</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["exclusive_price"]</expression>
-                    <property name="dataType">float</property>
-                </structure>
-                <structure>
                     <property name="name">Aggregation</property>
                     <text-property name="displayName">discount_tot</text-property>
                     <property name="dataType">float</property>
@@ -2260,14 +2240,7 @@ ON sale.sale_parner_id=supplier.pn_id and sale.product_tem_id=supplier.pt_id]]><
                     <list-property name="arguments">
                         <structure>
                             <property name="name">Expression</property>
-                            <expression name="value" type="javascript">if (dataSetRow["tax_type"]=='Exclusive')&#13;
-{&#13;
-(dataSetRow["net_amount"] * 0.05)&#13;
-}&#13;
-else&#13;
-{&#13;
-0&#13;
-}</expression>
+                            <expression name="value" type="javascript">(dataSetRow["net_amount"] * 0.05)</expression>
                         </structure>
                     </list-property>
                     <property name="allowExport">true</property>
@@ -2373,8 +2346,9 @@ row["Aggregation_2"] - dataSetRow["deduction_amount"] - dataSetRow["add_disc"]&#
                 <structure>
                     <property name="name">additional_discount</property>
                     <text-property name="displayName">additional_discount</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["additional_discount"]</expression>
-                    <property name="dataType">float</property>
+                    <expression name="expression" type="javascript">dataSetRow["additional_discount"]  + ' %'</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
                 </structure>
             </list-property>
             <column id="149">
@@ -2391,9 +2365,6 @@ row["Aggregation_2"] - dataSetRow["deduction_amount"] - dataSetRow["add_disc"]&#
             </column>
             <column id="153">
                 <property name="width">0.6166666666666667in</property>
-            </column>
-            <column id="351">
-                <property name="width">0.675in</property>
             </column>
             <column id="154">
                 <property name="width">0.6666666666666666in</property>
@@ -2491,22 +2462,6 @@ row["Aggregation_2"] - dataSetRow["deduction_amount"] - dataSetRow["add_disc"]&#
                             <text-property name="text">UOM</text-property>
                         </label>
                     </cell>
-                    <cell id="346">
-                        <property name="backgroundColor">#C0C0C0</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <label id="352">
-                            <property name="fontSize">8pt</property>
-                            <property name="fontWeight">bold</property>
-                            <text-property name="text">Exclusive</text-property>
-                        </label>
-                    </cell>
                     <cell id="125">
                         <property name="backgroundColor">#C0C0C0</property>
                         <property name="borderBottomStyle">solid</property>
@@ -2520,7 +2475,7 @@ row["Aggregation_2"] - dataSetRow["deduction_amount"] - dataSetRow["add_disc"]&#
                         <label id="166">
                             <property name="fontSize">8pt</property>
                             <property name="fontWeight">bold</property>
-                            <text-property name="text">Inclusive</text-property>
+                            <text-property name="text">Unit Price</text-property>
                         </label>
                     </cell>
                     <cell id="126">
@@ -2655,26 +2610,6 @@ row["Aggregation_2"] - dataSetRow["deduction_amount"] - dataSetRow["add_disc"]&#
                             <property name="resultSetColumn">uom</property>
                         </data>
                     </cell>
-                    <cell id="347">
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <data id="353">
-                            <property name="fontSize">8pt</property>
-                            <property name="paddingRight">2pt</property>
-                            <structure name="numberFormat">
-                                <property name="category">Currency</property>
-                                <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=HALF_UP}</property>
-                            </structure>
-                            <property name="textAlign">right</property>
-                            <property name="resultSetColumn">exclusive_price</property>
-                        </data>
-                    </cell>
                     <cell id="135">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2767,7 +2702,6 @@ row["Aggregation_2"] - dataSetRow["deduction_amount"] - dataSetRow["add_disc"]&#
                     <cell id="142"/>
                     <cell id="143"/>
                     <cell id="144"/>
-                    <cell id="348"/>
                     <cell id="145"/>
                     <cell id="146"/>
                     <cell id="259">
@@ -2815,7 +2749,6 @@ row["Aggregation_2"] - dataSetRow["deduction_amount"] - dataSetRow["add_disc"]&#
                     <cell id="286"/>
                     <cell id="287"/>
                     <cell id="288"/>
-                    <cell id="349"/>
                     <cell id="289"/>
                     <cell id="290"/>
                     <cell id="291">
@@ -2863,7 +2796,6 @@ row["Aggregation_2"] - dataSetRow["deduction_amount"] - dataSetRow["add_disc"]&#
                     <cell id="496"/>
                     <cell id="497"/>
                     <cell id="498"/>
-                    <cell id="499"/>
                     <cell id="500"/>
                     <cell id="501"/>
                     <cell id="502">
@@ -2907,7 +2839,6 @@ row["Aggregation_2"] - dataSetRow["deduction_amount"] - dataSetRow["add_disc"]&#
                     <cell id="507"/>
                     <cell id="508"/>
                     <cell id="509"/>
-                    <cell id="510"/>
                     <cell id="511"/>
                     <cell id="512"/>
                     <cell id="513">
@@ -2947,11 +2878,58 @@ row["Aggregation_2"] - dataSetRow["deduction_amount"] - dataSetRow["add_disc"]&#
                         </data>
                     </cell>
                 </row>
+                <row id="545">
+                    <property name="verticalAlign">middle</property>
+                    <property name="height">0.22916666666666666in</property>
+                    <cell id="546"/>
+                    <cell id="547"/>
+                    <cell id="548"/>
+                    <cell id="549"/>
+                    <cell id="550"/>
+                    <cell id="551"/>
+                    <cell id="552"/>
+                    <cell id="553">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="555">
+                            <property name="fontSize">8pt</property>
+                            <property name="fontWeight">bold</property>
+                            <property name="paddingLeft">2pt</property>
+                            <text-property name="text">Deduction Amt</text-property>
+                        </label>
+                    </cell>
+                    <cell id="554">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="556">
+                            <property name="fontSize">8pt</property>
+                            <property name="paddingRight">2pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">deduction_amount</property>
+                        </data>
+                    </cell>
+                </row>
                 <row id="293">
                     <property name="verticalAlign">middle</property>
                     <property name="height">0.2916666666666667in</property>
                     <cell id="294">
-                        <property name="colSpan">8</property>
+                        <property name="colSpan">7</property>
                         <property name="rowSpan">1</property>
                         <label id="322">
                             <property name="fontSize">8pt</property>
