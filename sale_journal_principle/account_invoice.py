@@ -502,7 +502,7 @@ class account_invoice(models.Model):
                     invoice_id = cr.fetchone()
                     if invoice_id:
                         inv = self.env['account.invoice'].browse(invoice_id)
-                        deduct_amt = inv.deduct_amt
+                        deduct_amt = inv.deduct_amt + inv.cash_discount
                         additional_discount = (inv.amount_untaxed * (inv.additional_discount / 100))
                         sale_discount = deduct_amt + additional_discount
                         

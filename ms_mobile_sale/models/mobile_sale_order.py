@@ -586,6 +586,7 @@ class mobile_sale_order(osv.osv):
                                             'so_longitude':ms_ids.mso_longitude,
                                              'additional_discount':ms_ids.additional_discount*100,
                                             'deduct_amt':ms_ids.deduction_amount,
+                                            'cash_discount':ms_ids.cash_discount,
                                             'delivery_remark':ms_ids.delivery_remark,
                                             'sale_plan_day_id':ms_ids.sale_plan_day_id.id,
                                             'sale_plan_trip_id':ms_ids.sale_plan_trip_id.id,
@@ -1526,10 +1527,11 @@ class mobile_sale_order(osv.osv):
                     mobile_data=mobile_sale_obj.browse(cursor, user, tuple(mobile_ids), context=context)           
                     for mobile in mobile_data:
                         deduct_amt= mobile.deduction_amount
+                        cash_discount=mobile.cash_discount
                         amount_total= mobile.amount_total
                         deduct_percent=mobile.additional_discount
                         discount_total +=  amount_total * deduct_percent
-                        discount_amount+=deduct_amt                             
+                        discount_amount+=deduct_amt +cash_discount                            
                     line_ids = mobile_sale_order_obj.search(cursor, user, [('order_id', 'in', mobile_ids)], context=context)                        
                     order_line_ids = mobile_sale_order_obj.browse(cursor, user, line_ids, context=context)                
                     cursor.execute('select product_id,sum(product_uos_qty) as qty ,sum(sub_total) as total ,uom_id from mobile_sale_order_line where id in %s group by product_id,uom_id', (tuple(order_line_ids.ids),))

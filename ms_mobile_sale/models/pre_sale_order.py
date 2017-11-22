@@ -59,9 +59,7 @@ class pre_sale_order(osv.osv):
         'location_id'  : fields.many2one('stock.location', 'Location'),
         'deduction_amount':fields.float('Deduction Amount'),
         'cash_discount':fields.float('Cash Discount'),
-        
-                'additional_discount':fields.float('Discount'),
-
+        'additional_discount':fields.float('Discount'),
         'm_status':fields.selection([('draft', 'Draft'),
                                      
                                                       ('done', 'Complete')], string='Status'),
@@ -396,6 +394,7 @@ class pre_sale_order(osv.osv):
                                                         'user_id':preObj_ids.user_id.id,
                                                         'section_id':preObj_ids.sale_team.id,
                                                         'deduct_amt':preObj_ids.deduction_amount,
+                                                        'cash_discount':preObj_ids.cash_discount,
                                                         'additional_discount':preObj_ids.additional_discount*100,
 
 #                                                         'client_order_ref':preObj_ids.tablet_id.name,
@@ -462,7 +461,7 @@ class pre_sale_order(osv.osv):
                         amount_tax=invoice_data.amount_tax
                         discount_total=invoice_data.discount_total
                         amount_total=invoice_data.amount_total
-                        cr.execute("update sale_order set amount_untaxed =%s ,amount_tax=%s,total_dis=%s,amount_total=%s where id=%s",(amount_untaxed,amount_tax,discount_total,amount_total,so_id,))
+                        #cr.execute("update sale_order set amount_untaxed =%s ,amount_tax=%s,total_dis=%s,amount_total=%s where id=%s",(amount_untaxed,amount_tax,discount_total,amount_total,so_id,))
                         
                         
             except Exception, e:

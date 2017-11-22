@@ -171,7 +171,7 @@ class account_invoice_line(models.Model):
         if discount_cash_account_id and discount_account_id==None:
             raise orm.except_orm(_('Error :'), _("Please select the Discount code and Cash Discount Code in Sale setting!"))
         res = []
-        deduct_amt=inv.deduct_amt
+        deduct_amt=inv.deduct_amt +inv.cash_discount
         additional_discount=(inv.amount_untaxed * (inv.additional_discount/100))
         discount_total=inv.discount_total
         ref=inv.origin
@@ -275,10 +275,11 @@ class account_invoice(models.Model):
         self.amount_tax = sum(line.amount for line in self.tax_line)
         total_discount_amt=sum(line.discount_amt for line in self.invoice_line)
         self.discount_total =total_discount_amt
-        self.amount_total = self.amount_untaxed + self.amount_tax - self.deduct_amt -(self.amount_untaxed *(self.additional_discount/100))
+        self.amount_total = self.amount_untaxed + self.amount_tax - self.deduct_amt -(self.amount_untaxed *(self.additional_discount/100))-self.cash_discount
          
     _columns={'deduct_amt':fields.float('Discount Amount'),
                      'additional_discount':fields.float('Additional Discount'),
+                     'cash_discount':fields.float('Cash Discount'),
                   'discount_total':fields.float('Discount Total' ,digits=dp.get_precision('Account'),store=True, readonly=True, compute='_compute_amount', track_visibility='always'),
                     
                   }

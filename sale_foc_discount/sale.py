@@ -248,7 +248,7 @@ class sale_order(osv.osv):
                 val1 += line.net_total
                 val += self._amount_line_tax(cr, uid, line, context=context)
             res[order.id]['amount_tax'] = cur_obj.round(cr, uid, cur, val)
-            res[order.id]['amount_untaxed'] = cur_obj.round(cr, uid, cur, val1) - order.cash_discount
+            res[order.id]['amount_untaxed'] = cur_obj.round(cr, uid, cur, val1) 
             res[order.id]['amount_total'] = res[order.id]['amount_untaxed'] + res[order.id]['amount_tax'] 
             
         return res
@@ -336,35 +336,37 @@ class sale_order(osv.osv):
             if (type(ids)==int):
                 cr.execute('select sum(discount_amt) from sale_order_line where order_id=%s',(ids,))
                 total_dis_amt=cr.fetchall()[0]
-                cr.execute('select deduct_amt,amount_untaxed,amount_tax,additional_discount from sale_order where id=%s',(ids,))
+                cr.execute('select deduct_amt,amount_untaxed,amount_tax,additional_discount,cash_discount from sale_order where id=%s',(ids,))
                 result=cr.fetchall()[0]
                 deduct=result[0]
                 untax=result[1]
                 amount_tax=result[2]
                 additional_discount=result[3]
-                print result,'result and deduction',deduct,total_dis_amt
+                cash_discount=result[4]
+                print result,'result and deduction',deduct,total_dis_amt,cash_discount
                 if deduct is None:
                     deduct=0.0
                 if amount_tax is None:
                     amount_tax=0.0           
-                total=untax+amount_tax-deduct-(untax*(additional_discount/100))
+                total=untax+amount_tax-deduct-(untax*(additional_discount/100)) -cash_discount
                 cr.execute('update sale_order so set amount_total=%s,total_dis=%s,deduct_amt=%s,additional_discount=%s where so.id=%s',(total,total_dis_amt,deduct,additional_discount,ids))
             else:
                 cr.execute('select sum(discount_amt) from sale_order_line where order_id=%s',(ids[0],))
                 total_dis_amt=cr.fetchall()[0]
-                cr.execute('select deduct_amt,amount_untaxed,amount_tax,additional_discount from sale_order where id=%s',(ids[0],))
+                cr.execute('select deduct_amt,amount_untaxed,amount_tax,additional_discount,cash_discount from sale_order where id=%s',(ids[0],))
                 result=cr.fetchall()[0]
                 deduct=result[0]
                 untax=result[1]
                 amount_tax=result[2]
                 additional_discount=result[3]
-                print result,'result and deduction',deduct,total_dis_amt,additional_discount
+                cash_discount =result[4]
+                print result,'result and deduction',deduct,total_dis_amt,additional_discount,cash_discount
                 if deduct is None:
                     deduct=0.0
                 if amount_tax is None:
                     amount_tax=0.0           
                 print    '(untax*additional_discount)',untax,additional_discount,(additional_discount/100),amount_tax
-                total=untax+amount_tax-deduct-(untax*(additional_discount/100))
+                total=untax+amount_tax-deduct-(untax*(additional_discount/100)) -cash_discount
                 print 'total',total
                 cr.execute('update sale_order so set amount_total=%s,total_dis=%s,deduct_amt=%s,additional_discount=%s where so.id=%s',(total,total_dis_amt,deduct,additional_discount,ids[0]))
         return True
@@ -409,6 +411,7 @@ class sale_order(osv.osv):
             'section_id' : order.section_id.id,
             'deduct_amt':order.deduct_amt,
             'additional_discount':order.additional_discount,
+            'cash_discount':order.cash_discount,
             'discount_total':order.total_dis,
         }
 
