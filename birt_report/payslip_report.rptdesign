@@ -1106,7 +1106,7 @@ else
 		    and HP.date_to   = ? 
 		)payslip,
 		(
-			select round(total) as total,slip_id, code,employee_id
+			select round(total,1) as total,slip_id, code,employee_id
 			from hr_payslip_line HP
 		)payslip_line,		
 		(
@@ -4058,7 +4058,7 @@ else {'Monthly Salary'}</expression>
                             <property name="paddingRight">5pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
-                                <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
+                                <property name="pattern">#,##0.0{RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">center</property>
                             <property name="resultSetColumn">emp_work_day</property>

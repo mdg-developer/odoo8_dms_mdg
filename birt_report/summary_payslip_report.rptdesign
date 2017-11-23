@@ -47,7 +47,7 @@
                 <scalar-parameter name="department_id" id="735">
                     <text-property name="promptText">Department</text-property>
                     <property name="valueType">dynamic</property>
-                    <property name="isRequired">true</property>
+                    <property name="isRequired">false</property>
                     <property name="dataSetName">department</property>
                     <expression name="valueExpr">row["id"]</expression>
                     <expression name="labelExpr">row["name"]</expression>
@@ -1129,7 +1129,7 @@ else
 		    and HP.date_to   = ? 
 		)payslip,
 		(
-			select round(total) as total,slip_id, code,employee_id
+			select round(total,1) as total,slip_id, code,employee_id
 			from hr_payslip_line HP
 		)payslip_line,		
 		(
@@ -4429,7 +4429,7 @@ month[dataSetRow["month"]-1];</expression>
                             <property name="paddingRight">5pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
-                                <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
+                                <property name="pattern">#,##0.0{RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">center</property>
                             <property name="resultSetColumn">emp_work_day</property>

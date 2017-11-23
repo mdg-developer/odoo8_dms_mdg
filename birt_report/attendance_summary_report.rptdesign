@@ -1,20 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
     <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
-    <list-property name="propertyBindings">
-        <structure>
-            <property name="name">queryText</property>
-            <property name="id">10</property>
-        </structure>
-        <structure>
-            <property name="name">queryTimeOut</property>
-            <property name="id">10</property>
-        </structure>
-        <structure>
-            <property name="name">rowFetchSize</property>
-            <property name="id">10</property>
-        </structure>
-    </list-property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="layoutPreference">fixed layout</property>
@@ -324,24 +310,28 @@ order by name_related asc]]></xml-property>
                     <property name="columnName">t_clockin</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">t_clockin</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">t_clockin</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">status5</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">status5</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">status5</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">t_clockout</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">t_clockout</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">t_clockout</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">status6</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">status6</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">status6</text-property>
                 </structure>
                 <structure>
@@ -393,6 +383,18 @@ order by name_related asc]]></xml-property>
                     <property name="onColumnLayout">false</property>
                     <text-property name="heading">earlylate</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">paid_leave</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">paid_leave</text-property>
+                    <text-property name="heading">paid_leave</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">absent_leave</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">absent_leave</text-property>
+                    <text-property name="heading">absent_leave</text-property>
+                </structure>
             </list-property>
             <list-property name="parameters">
                 <structure>
@@ -402,6 +404,7 @@ order by name_related asc]]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">1</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -412,6 +415,7 @@ order by name_related asc]]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">2</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -422,6 +426,7 @@ order by name_related asc]]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">3</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -432,6 +437,7 @@ order by name_related asc]]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">4</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -536,7 +542,7 @@ order by name_related asc]]></xml-property>
                     <structure>
                         <property name="position">20</property>
                         <property name="name">wh_perday</property>
-                        <property name="dataType">integer</property>
+                        <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">21</property>
@@ -567,6 +573,16 @@ order by name_related asc]]></xml-property>
                         <property name="position">26</property>
                         <property name="name">earlylate</property>
                         <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">27</property>
+                        <property name="name">paid_leave</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">28</property>
+                        <property name="name">absent_leave</property>
+                        <property name="dataType">decimal</property>
                     </structure>
                 </list-property>
             </structure>
@@ -733,8 +749,8 @@ else
                     <property name="position">20</property>
                     <property name="name">wh_perday</property>
                     <property name="nativeName">wh_perday</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
+                    <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">21</property>
@@ -778,8 +794,33 @@ else
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
+                <structure>
+                    <property name="position">27</property>
+                    <property name="name">paid_leave</property>
+                    <property name="nativeName">paid_leave</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
+                <structure>
+                    <property name="position">28</property>
+                    <property name="name">absent_leave</property>
+                    <property name="nativeName">absent_leave</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select * ,case when wk_ot is null then 0 else wk_ot end as sunday_ot ,early+late as earlylate from (
+            <xml-property name="queryText"><![CDATA[select * ,case when wk_ot is null then 0 else wk_ot end as sunday_ot ,early+late as earlylate,
+case when status1!='Absent' and status1!='Unpaid_Leave' and status1!='Normal' and status3!='Absent' and status3!='Unpaid_Leave' and status3!='Normal' then 1
+when status1!='Absent' and status1!='Unpaid_Leave' and status1!='Normal' and status3='Normal' then 0.5
+when status1='Normal' and status3!='Absent' and status3!='Unpaid_Leave' and status3!='Normal' then 0.5
+end as paid_leave,
+case when status1='Absent' and status3='Absent' then 1
+when status1='Absent' and status3!='Absent' then 0.5
+when status1!='Absent' and status3='Absent' then 0.5
+when status1='Unpaid_Leave' and status3='Unpaid_Leave' then 1
+when status1='Unpaid_Leave' and status3!='Unpaid_Leave' then 0.5
+when status1!='Unpaid_Leave' and status3='Unpaid_Leave' then 0.5
+end as absent_leave from (
 select e.id,e.employee_id card_id,e.name_related,sec.name section,j.name, extract(dow from f.date)  as  dayofweek,f.date,
     case
         when lower(f.timetable) = 'morning'
@@ -791,11 +832,15 @@ select e.id,e.employee_id card_id,e.name_related,sec.name section,j.name, extrac
         when f.late > 0
         then 'Late'
         when f.absent = True and hh.h_type='full day'
-        then 'Leave'
+        then hh.name -- 'Leave'
         when f.absent = True and hh.h_type='morning'
-        then 'Half Leave'
+        then hh.name -- 'Half Leave'
+        when f.absent = True and hh.h_type='point morning'
+        then hh.name -- 'Half Leave'
+         when f.absent = True and hh.name is null
+         then 'Absent' 
          when f.absent = True
-         then 'Absent'
+         then hh.name--'Absent'
     end as Status1,
     case
         when lower(f.timetable) = 'morning'
@@ -807,11 +852,15 @@ select e.id,e.employee_id card_id,e.name_related,sec.name section,j.name, extrac
         when f.early > 0
         then 'Early'
         when f.absent = True and hh.h_type='full day'
-        then 'Leave'
+        then hh.name -- 'Leave'
         when f.absent = True and hh.h_type='morning'
-        then 'Half Leave'
+        then hh.name -- 'Half Leave'
+        when f.absent = True and hh.h_type='point morning'
+        then hh.name -- 'Half Leave'
+         when f.absent = True and hh.name is null
+         then 'Absent' 
          when f.absent = True
-         then 'Absent'        
+         then hh.name--'Absent'        
    end as Status2,    
    case
         when lower(s.timetable) = 'afternoon'
@@ -823,11 +872,13 @@ select e.id,e.employee_id card_id,e.name_related,sec.name section,j.name, extrac
         when s.late > 0
         then 'Late'
         when s.absent = True and hh.h_type='full day'
-        then 'Leave'
+        then hh.name -- 'Leave'
         when s.absent = True and hh.h_type='evening'
-        then 'Half Leave'
-         when s.absent = True
-         then 'Absent'
+        then hh.name -- 'Half Leave'
+         when f.absent = True and hh.name is null
+         then 'Absent' 
+         when f.absent = True
+         then hh.name--'Absent'
     end as Status3,
     case
         when lower(s.timetable) = 'afternoon'
@@ -839,11 +890,13 @@ select e.id,e.employee_id card_id,e.name_related,sec.name section,j.name, extrac
         when s.early > 0
         then 'Early'
         when s.absent = True and hh.h_type='full day'
-        then 'Leave'
+        then hh.name -- 'Leave'
         when s.absent = True and hh.h_type='evening'
-        then 'Half Leave'
-         when s.absent = True
-         then 'Absent'
+        then hh.name -- 'Half Leave'
+         when f.absent = True and hh.name is null
+         then 'Absent' 
+         when f.absent = True
+         then hh.name--'Absent'
     end as Status4,
     case
         when lower(t.timetable) = 'ot'
@@ -854,7 +907,7 @@ select e.id,e.employee_id card_id,e.name_related,sec.name section,j.name, extrac
         then 'Normal'
         when t.late > 0
         then 'Late'
-        else 'No Punch'
+        else ''
     end as Status5,
     case
         when lower(t.timetable) = 'ot'
@@ -865,10 +918,11 @@ select e.id,e.employee_id card_id,e.name_related,sec.name section,j.name, extrac
         then 'Normal'
         when t.early > 0
         then 'Early'
-        else 'No OT'        
+        else ''        
    end as Status6,
-    8 as WH_PerDay,
-    round(t.ot_time/60,0) OT,
+   --8 as WH_Perday,
+    case when (f.realtime>0 or s.realtime>0) then (f.realtime + s.realtime) end as WH_PerDay,
+    case when s.ot_time>0 then round(s.ot_time/60.0,0) when t.ot_time>0 then round(t.ot_time/60.0,0) end as OT,
     round(f.weekend_ot+s.weekend_ot+t.weekend_ot) WK_OT,
     f.early + s.early as early,
     f.late + s.late as Late
@@ -877,12 +931,12 @@ hr_employee e,
 hr_section sec,
 hr_job j,
 (
-select employee_id,date,timetable,clockin,clockout,late,early,ot_time,work_time,weekend_ot,absent
+select employee_id,date,timetable,clockin,clockout,late,early,ot_time,work_time,weekend_ot,absent,realtime
 from attendance_data_import
 where lower(timetable) = 'morning'
 )f,
 (
-select employee_id,date,timetable,clockin,clockout,late,early,ot_time,work_time,weekend_ot,absent
+select employee_id,date,timetable,clockin,clockout,late,early,ot_time,work_time,weekend_ot,absent,realtime
 from attendance_data_import
 where lower(timetable) = 'afternoon'
 )s
@@ -894,7 +948,7 @@ where lower(timetable) = 'ot'
 )t on t.employee_id = s.employee_id  and s.date=t.date
 left join 
 (
-select h.employee_id,h.date_from::date + d.date as h_date, h.date_from, h.date_to, h.name, h.number_of_days,
+select h.employee_id,h.date_from::date + d.date as h_date, h.date_from, h.date_to, hs.name, h.number_of_days,
 case when h.date_from::date + d.date= h.date_from::date and h.date_from::date + d.date= h.date_to::date and -(h.number_of_days) < 1 and EXTRACT(HOUR FROM h.date_to) <= 5
 then 'morning'
 when h.date_from::date + d.date= h.date_from::date and h.date_from::date + d.date= h.date_to::date and -(h.number_of_days) < 1 and EXTRACT(HOUR FROM h.date_from) >= 5
@@ -905,8 +959,9 @@ then 'full day'
 when h.date_from::date + d.date>= h.date_from::date and h.date_from::date + d.date = h.date_to::date and - (h.number_of_days) > 1 and -((-h.number_of_days)+floor(h.number_of_days))=0.5  and EXTRACT(HOUR FROM h.date_to) <= 5 and h.date_from::date + d.date = h.date_to::date
 then 'point morning'
 end as h_type
- from hr_holidays h,generate_series(0, 99) as d(date)
+ from hr_holidays h, hr_holidays_status hs, generate_series(0, 99) as d(date)
  where h.type='remove'
+ and h.holiday_status_id=hs.id
  and h.date_from::date + d.date BETWEEN  ? and ?
  and h.date_from::date + d.date BETWEEN h.date_from::date and h.date_to::date
  order by h.employee_id,h.date_from
@@ -919,13 +974,12 @@ and e.section_id=sec.id
 and e.id=f.employee_id
 and e.id=s.employee_id
 and e.job_id = j.id
-and f.date between ?  and ?
+and f.date between ? and ?
 --$department_id$
 --$section_id$
 --$badge_id$
 order by e.id,f.date
-)A
-]]></xml-property>
+)A]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -1404,6 +1458,14 @@ and section_id =?]]></xml-property>
         </label>
         <label id="203"/>
         <table id="27">
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">thin</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">thin</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">thin</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">thin</property>
             <property name="width">13.666666666666666in</property>
             <property name="dataSet">attendance_summary</property>
             <list-property name="boundDataColumns">
@@ -1471,7 +1533,8 @@ and section_id =?]]></xml-property>
                     <property name="name">wh_perday</property>
                     <text-property name="displayName">wh_perday</text-property>
                     <expression name="expression" type="javascript">dataSetRow["wh_perday"]</expression>
-                    <property name="dataType">integer</property>
+                    <property name="dataType">float</property>
+                    <property name="allowExport">true</property>
                 </structure>
                 <structure>
                     <property name="name">ot</property>
@@ -1550,6 +1613,92 @@ and section_id =?]]></xml-property>
                     <text-property name="displayName">status6</text-property>
                     <expression name="expression" type="javascript">dataSetRow["status6"]</expression>
                     <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">normal_working_day</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["wh_perday"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">ot_hours</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["ot"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">earlylate_min</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["earlylate"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sunday</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["sunday_ot"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">paid_leave</property>
+                    <text-property name="displayName">paid_leave</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["paid_leave"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">absent_leave</property>
+                    <text-property name="displayName">absent_leave</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["absent_leave"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">paidleave</property>
+                    <text-property name="displayName">paidleave</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["paid_leave"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">absentleave</property>
+                    <text-property name="displayName">absentleave</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["absent_leave"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
                 </structure>
             </list-property>
             <column id="91">
@@ -1740,7 +1889,7 @@ and section_id =?]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="160">
-                            <text-property name="text">First time Working Time slot</text-property>
+                            <text-property name="text">First Time Working Time Slot</text-property>
                         </label>
                     </cell>
                     <cell id="146">
@@ -1756,7 +1905,7 @@ and section_id =?]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="161">
-                            <text-property name="text">Second time Working Time slot</text-property>
+                            <text-property name="text">Second Time Working Time Slot</text-property>
                         </label>
                     </cell>
                     <cell id="150">
@@ -1788,7 +1937,7 @@ and section_id =?]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="131">
-                            <text-property name="text">Normal working hours per day</text-property>
+                            <text-property name="text">Normal Working Day</text-property>
                         </label>
                     </cell>
                     <cell id="155">
@@ -1804,7 +1953,7 @@ and section_id =?]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="133">
-                            <text-property name="text">Overtime hours</text-property>
+                            <text-property name="text">Overtime Hours</text-property>
                         </label>
                     </cell>
                     <cell id="156">
@@ -1820,7 +1969,7 @@ and section_id =?]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="137">
-                            <text-property name="text">Late/Early minutes</text-property>
+                            <text-property name="text">Late/Early Minutes</text-property>
                         </label>
                     </cell>
                     <cell id="157">
@@ -1851,8 +2000,8 @@ and section_id =?]]></xml-property>
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <label id="164">
-                            <text-property name="text">Paid leave hours</text-property>
+                        <label id="335">
+                            <text-property name="text">Paid Leave Day</text-property>
                         </label>
                     </cell>
                     <cell id="159">
@@ -1868,7 +2017,7 @@ and section_id =?]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="165">
-                            <text-property name="text">Absent hours</text-property>
+                            <text-property name="text">Absent Day</text-property>
                         </label>
                     </cell>
                 </row>
@@ -1884,7 +2033,7 @@ and section_id =?]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="115">
-                            <text-property name="text">Time-in</text-property>
+                            <text-property name="text">Time-In</text-property>
                         </label>
                     </cell>
                     <cell id="32">
@@ -1940,7 +2089,7 @@ and section_id =?]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="170">
-                            <text-property name="text">Time-in</text-property>
+                            <text-property name="text">Time-In</text-property>
                         </label>
                     </cell>
                     <cell id="36">
@@ -1996,7 +2145,7 @@ and section_id =?]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="166">
-                            <text-property name="text">Time-in</text-property>
+                            <text-property name="text">Time-In</text-property>
                         </label>
                     </cell>
                     <cell id="40">
@@ -2362,6 +2511,10 @@ and section_id =?]]></xml-property>
                         <property name="borderTopWidth">thin</property>
                         <data id="132">
                             <property name="fontSize">8pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">###0.0{RoundingMode=HALF_UP}</property>
+                            </structure>
                             <property name="textAlign">center</property>
                             <property name="resultSetColumn">wh_perday</property>
                         </data>
@@ -2424,6 +2577,11 @@ and section_id =?]]></xml-property>
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <data id="330">
+                            <property name="fontSize">8pt</property>
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">paid_leave</property>
+                        </data>
                     </cell>
                     <cell id="69">
                         <property name="fontFamily">"Times New Roman"</property>
@@ -2435,9 +2593,125 @@ and section_id =?]]></xml-property>
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <data id="331">
+                            <property name="fontSize">8pt</property>
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">absent_leave</property>
+                        </data>
                     </cell>
                 </row>
             </detail>
+            <footer>
+                <row id="299">
+                    <cell id="300">
+                        <property name="colSpan">18</property>
+                        <property name="rowSpan">1</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="324">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">center</property>
+                            <text-property name="text">Total</text-property>
+                        </label>
+                    </cell>
+                    <cell id="318">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="325">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">normal_working_day</property>
+                        </data>
+                    </cell>
+                    <cell id="319">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="326">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">ot_hours</property>
+                        </data>
+                    </cell>
+                    <cell id="320">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="328">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">earlylate_min</property>
+                        </data>
+                    </cell>
+                    <cell id="321">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="329">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">sunday</property>
+                        </data>
+                    </cell>
+                    <cell id="322">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="332">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">paidleave</property>
+                        </data>
+                    </cell>
+                    <cell id="323">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="333">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">absentleave</property>
+                        </data>
+                    </cell>
+                </row>
+            </footer>
         </table>
     </body>
 </report>
