@@ -12,14 +12,25 @@ class sale_order_line(osv.osv):
     _inherit = 'sale.order.line'
     
     def _prepare_order_line_invoice_lines(self, cr, uid, line, account_id=False, context=None):
-
+        sale_obj = self.pool.get('sale.order')
         res = {}
         if not line.invoiced:
+            sale_data=sale_obj.browse(cr,uid,line.order_id.id,context)
+            payment_type =sale_data.payment_type
+
             if not account_id:
                 if line.product_id:
                     account_id = line.product_id.property_account_income.id
+                    if payment_type == 'cash':
+                        account_id = line.product_id.property_account_income.id
+                    if payment_type == 'credit':
+                        account_id = line.product_id.property_account_credit_income.id                        
                     if not account_id:
                         account_id = line.product_id.categ_id.property_account_income_categ.id
+                        if payment_type == 'cash':
+                            account_id = line.product_id.categ_id.property_account_income_categ.id
+                        if payment_type == 'credit':
+                            account_id = line.product_id.categ_id.property_sale_credit_account_id.id                           
                     if not account_id:
                         raise osv.except_osv(_('Error!'),
                                 _('Please define income account for this product: "%s" (id:%d).') % \
