@@ -51,81 +51,7 @@ class hr_payslip_customize(osv.osv):
     _columns = {  
         'total_month_day': fields.float('Total Month Days'),
         'working_month': fields.float('Working Month'),
-        'badge_id': fields.char('Badge ID')
         }
-    
-    def onchange_employee_id(self, cr, uid, ids, date_from, date_to, employee_id=False, contract_id=False, context=None):
-        empolyee_obj = self.pool.get('hr.employee')
-        contract_obj = self.pool.get('hr.contract')
-        worked_days_obj = self.pool.get('hr.payslip.worked_days')
-        input_obj = self.pool.get('hr.payslip.input')
-
-        if context is None:
-            context = {}
-        #delete old worked days lines
-        old_worked_days_ids = ids and worked_days_obj.search(cr, uid, [('payslip_id', '=', ids[0])], context=context) or False
-        if old_worked_days_ids:
-            worked_days_obj.unlink(cr, uid, old_worked_days_ids, context=context)
-
-        #delete old input lines
-        old_input_ids = ids and input_obj.search(cr, uid, [('payslip_id', '=', ids[0])], context=context) or False
-        if old_input_ids:
-            input_obj.unlink(cr, uid, old_input_ids, context=context)
-
-
-        #defaults
-        res = {'value':{
-                      'line_ids':[],
-                      'input_line_ids': [],
-                      'worked_days_line_ids': [],
-                      #'details_by_salary_head':[], TODO put me back
-                      'name':'',
-                      'contract_id': False,
-                      'struct_id': False,
-                      'badge_id': False,
-                      }
-            }
-        if (not employee_id) or (not date_from) or (not date_to):
-            return res
-        ttyme = datetime.fromtimestamp(time.mktime(time.strptime(date_to, "%Y-%m-%d")))
-        employee_id = empolyee_obj.browse(cr, uid, employee_id, context=context)
-        res['value'].update({
-                    'name': _('Salary Slip of %s for %s') % (employee_id.name, tools.ustr(ttyme.strftime('%B-%Y'))),
-                    'company_id': employee_id.company_id.id,
-                    'badge_id': employee_id.employee_id
-        })
-
-        if not context.get('contract', False):
-            #fill with the first contract of the employee
-            contract_ids = self.get_contract(cr, uid, employee_id, date_from, date_to, context=context)
-        else:
-            if contract_id:
-                #set the list of contract for which the input have to be filled
-                contract_ids = [contract_id]
-            else:
-                #if we don't give the contract, then the input to fill should be for all current contracts of the employee
-                contract_ids = self.get_contract(cr, uid, employee_id, date_from, date_to, context=context)
-
-        if not contract_ids:
-            return res
-        contract_record = contract_obj.browse(cr, uid, contract_ids[0], context=context)
-        res['value'].update({
-                    'contract_id': contract_record and contract_record.id or False
-        })
-        struct_record = contract_record and contract_record.struct_id or False
-        if not struct_record:
-            return res
-        res['value'].update({
-                    'struct_id': struct_record.id,
-        })
-        #computation of the salary input
-        worked_days_line_ids = self.get_worked_day_lines(cr, uid, contract_ids, date_from, date_to, context=context)
-        input_line_ids = self.get_inputs(cr, uid, contract_ids, date_from, date_to, context=context)
-        res['value'].update({
-                    'worked_days_line_ids': worked_days_line_ids,
-                    'input_line_ids': input_line_ids,
-        })
-        return res
     
     def get_inputs(self, cr, uid, contract_ids, date_from, date_to, context=None):
         res = []
@@ -137,13 +63,10 @@ class hr_payslip_customize(osv.osv):
         payroll_total_income = 0
         income_tax = 0
         # get Employee data
-        cr.execute("select employee_id,date_start,date_end,state,effective_date from hr_contract where id=%s", (contract_ids))
+        cr.execute("select employee_id,date_start from hr_contract where id=%s", (contract_ids))
         emp_data = cr.fetchone()
         employee_id = emp_data[0]
         initial_date =emp_data[1]
-        termination_date = emp_data[2]
-        con_state = emp_data[3]
-        effective_date = emp_data[4]
         
         cr.execute("select fiscalyear_id from account_period where date_start <=%s and date_stop >= %s", (date_from, date_to,))
         fiscalyear_id = cr.fetchone()
@@ -187,11 +110,11 @@ class hr_payslip_customize(osv.osv):
         else:
             ot_minus = 0
         cr.execute("select COALESCE( sum(normal),0) as normal  from attendance_data_import where \
-        date >= %s and date <= %s and date not in (SELECT the_day ::date FROM  generate_series(%s::date, %s  ::date, '1 day') d(the_day) \
+        date between %s and  %s and date not in (SELECT the_day ::date FROM  generate_series(%s::date, %s  ::date, '1 day') d(the_day) \
         WHERE  extract('ISODOW' FROM the_day)= 7)\
-        and date not in (select date from hr_holidays_public_line where date >= %s and date <= %s)\
-        and date not in (select generate_series(hh.date_from::date, hh.date_to::date, '1 day')::date as date from hr_holidays hh,hr_holidays_status ss  where hh.holiday_status_id = ss.id and hh.type='remove' and hh.employee_id =%s and ss.name !='Unpaid_Leave' and hh.date_to >= %s and hh.date_to <= hh.date_to)\
-        and absent =true and employee_id=%s",(date_from, date_to,date_from, date_to,date_from, date_to,employee_id,date_from,employee_id,))
+        and date not in (select date from hr_holidays_public_line where date between %s and  %s )\
+        and date not in (select generate_series(hh.date_from::date, hh.date_to::date, '1 day')::date as date from hr_holidays hh,hr_holidays_status ss  where hh.holiday_status_id = ss.id  and hh.employee_id =%s and ss.name !='Unpaid' and hh.date_to between  %s and %s )\
+        and absent =true and employee_id=%s",(date_from, date_to,date_from, date_to,date_from, date_to,employee_id,date_from, date_to,employee_id,))
         absent_data =cr.fetchone()
         if absent_data:
             absent_count=absent_data[0]
@@ -210,45 +133,20 @@ class hr_payslip_customize(osv.osv):
         sat_data =cr.fetchone()[0]
         if present_data:
             present_count=present_data[0]+ sat_data+leave_half_count
-#             cr.execute("select employee_id from attendance_data_import where date='2017-11-11' and timetable='Afternoon' and absent='true' and employee_id=%s",(employee_id,))   
-#             oct_fourteen_absent_count=cr.fetchall()   
-#             if oct_fourteen_absent_count:
-#                 present_count=present_count-1
         else:
             present_count=0
         con_date  = date_from
         before_day=0
-        after_day=0
         if initial_date > date_from:
             con_date =initial_date
             cr.execute("SELECT TRUNC(DATE_PART('day',  %s::timestamp - %s::timestamp))",(initial_date,date_from,))
             before_day=cr.fetchone()[0]
-        if con_state == 'pending_done' and effective_date > date_from and termination_date < date_to:
-            cr.execute( "select sum(count) as public_count from (SELECT count(the_day ::date) FROM  generate_series(%s::date, %s ::date, '1 day') d(the_day) WHERE  extract('ISODOW' FROM the_day)= 7 \
-                            union all  \
-                            select count(date) from hr_holidays_public_line where date between %s and %s  )A ",(effective_date, termination_date,effective_date,termination_date, ))   
-            holiday_data =cr.fetchone()
-            cr.execute("SELECT TRUNC(DATE_PART('day',  %s::timestamp - %s::timestamp))",(date_to,termination_date,))
-            after_day=cr.fetchone()[0] 
-        elif con_state == 'pending_done' and termination_date < date_to:
-            cr.execute( "select sum(count) as public_count from (SELECT count(the_day ::date) FROM  generate_series(%s::date, %s ::date, '1 day') d(the_day) WHERE  extract('ISODOW' FROM the_day)= 7 \
-                            union all  \
-                            select count(date) from hr_holidays_public_line where date between %s and %s  )A ",(date_from, termination_date,date_from,termination_date, ))   
-            holiday_data =cr.fetchone()
-            cr.execute("SELECT TRUNC(DATE_PART('day',  %s::timestamp - %s::timestamp))",(date_to,termination_date,))
-            after_day=cr.fetchone()[0]
-        elif con_state != 'pending_done' and effective_date > date_from:
-            cr.execute( "select sum(count) as public_count from (SELECT count(the_day ::date) FROM  generate_series(%s::date, %s ::date, '1 day') d(the_day) WHERE  extract('ISODOW' FROM the_day)= 7 \
-                            union all  \
-                            select count(date) from hr_holidays_public_line where date between %s and %s  )A ",(effective_date, date_to,effective_date,date_to, ))   
-            holiday_data =cr.fetchone()
-        else:
-            cr.execute( "select sum(count) as public_count from (SELECT count(the_day ::date) FROM  generate_series(%s::date, %s ::date, '1 day') d(the_day) WHERE  extract('ISODOW' FROM the_day)= 7 \
-                            union all  \
-                            select count(date) from hr_holidays_public_line where date between %s and %s  )A ",(con_date, date_to,con_date,date_to, ))   
-            holiday_data =cr.fetchone()
-        if holiday_data is not 0 or holiday_data is not False:
-            holiday_count=holiday_data[0]  
+        cr.execute( "select sum(count) as public_count from (SELECT count(the_day ::date) FROM  generate_series(%s::date, %s ::date, '1 day') d(the_day) WHERE  extract('ISODOW' FROM the_day)= 7 \
+                        union all  \
+                        select count(date) from hr_holidays_public_line where date between %s and %s  )A ",(con_date, date_to,con_date,date_to, ))   
+        holiday_data =cr.fetchone()
+        if holiday_data:
+            holiday_count=holiday_data[0]        
         else:
             holiday_count=0        
         cr.execute(" select COALESCE( sum(duration),0) from hr_temporary_out where employee_id= %s and date between %s and %s",(employee_id,date_from, date_to,))      
@@ -362,14 +260,7 @@ class hr_payslip_customize(osv.osv):
                                'code': input.code,
                                'amount':before_day,
                                'contract_id': contract.id,
-                              }
-                        if input.code == 'ADC':
-                            inputs = {
-                               'name': input.name,
-                               'code': input.code,
-                               'amount':after_day,
-                               'contract_id': contract.id,
-                              }    
+                              }  
                         if input.code == 'EBS':
                             inputs = {
                                'name': input.name,
@@ -448,7 +339,6 @@ class hr_payslip_customize(osv.osv):
             # add function return from store procedure                                  
             day_from = datetime.strptime(date_from, "%Y-%m-%d")
             day_to = datetime.strptime(date_to, "%Y-%m-%d")
-            period_end =day_to+ timedelta(days=1)
             nb_of_days = (day_to - day_from).days + 1
             
             attendances = {
@@ -523,9 +413,9 @@ class hr_payslip_customize(osv.osv):
             if initial_date > date_from:
                 cr.execute("SELECT TRUNC(DATE_PART('day',  %s::timestamp - %s::timestamp))",(initial_date,date_from,))
                 before_day=cr.fetchone()[0]
-            cr.execute("SELECT count(the_day ::date) as sat_count FROM generate_series(%s::date, %s ::date, '1 day') d(the_day)  WHERE  extract('ISODOW' FROM the_day) = 7  ",(date_from,date_to,))
-            sun_count =cr.fetchone()[0]
-            print 'sun_count',sun_count
+                cr.execute("SELECT count(the_day ::date) as sat_count FROM generate_series(%s::date, %s ::date, '1 day') d(the_day)  WHERE  extract('ISODOW' FROM the_day) = 7  ",(day_from,initial_date,))
+                sun_count =cr.fetchone()[0]
+                print 'sun_count',sun_count
                
             cr.execute("SELECT count(the_day ::date) as sat_count FROM generate_series(%s::date, %s ::date, '1 day') d(the_day)  WHERE  extract('ISODOW' FROM the_day) = 6  ",(day_from,day_to,))
             sat_count =cr.fetchone()
@@ -536,11 +426,8 @@ class hr_payslip_customize(osv.osv):
             cr.execute("select  COALESCE( sum(number_of_days_temp - floor(number_of_days_temp)))  as leave_count from hr_holidays  where  employee_id =%s and date_to between %s and %s ",(contract.employee_id.id,date_from, date_to,))
             leave_half_count =cr.fetchone()[0]
             if leave_half_count is None:
-                leave_half_count=0
-            cr.execute("select  COALESCE( sum(number_of_days_temp))  as leave_count from hr_holidays  where  employee_id =%s and date_to between %s and %s ",(contract.employee_id.id,date_from, period_end,))
-            leave_count =cr.fetchone()[0]
-            if leave_count is None:
-                leave_count=0             
-            attendances['number_of_days'] = (nb_of_days - (public_count + sun_count + leave_count))
+                leave_half_count=0            
+            attendances['number_of_days'] -= (public_count + (before_day -sun_count))
+            attendances['number_of_days'] += leave_half_count
             res += [attendances] + leaves 
         return res

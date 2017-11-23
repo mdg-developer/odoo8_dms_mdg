@@ -197,7 +197,7 @@ class hr_employee(osv.osv):
         'marital': fields.selection([('single', 'Single'), ('married', 'Married'), ('widower', 'Widower'), ('divorced', 'Divorced')], 'Marital Status',required=True),
         'length_of_service': fields.function(_get_employed_months, type='float', method=True, 
                                              groups=False,
-                                             string='Length of Service',store=True),
+                                             string='Length of Service'),
                 
     }
     

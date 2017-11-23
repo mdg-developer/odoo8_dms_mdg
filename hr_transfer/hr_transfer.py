@@ -96,21 +96,8 @@ class hr_transfer(osv.Model):
         employee_obj = self.pool.get('hr.employee') 
         contract_obj = self.pool.get('hr.contract')        
         for xfer in self.browse(cr, uid, ids, context=context):
-            number = None
             dst_id=xfer.dst_id
             dst_department_id=xfer.dst_department_id
-            badge = xfer.badge_id
-            section = xfer.to_section_id.name
-            parent_section = xfer.to_section_id.parent_section_id.name
-            if badge:
-                if parent_section:
-                    number = parent_section + '-' + xfer.employee_id.fingerprint_id
-                else:
-                    number = section + '-' + xfer.employee_id.fingerprint_id #badge[len(badge) - 6:len(badge)]
-                self.write(cr, uid, xfer.id, {'badge_id': number}, context=context)
-                employee_obj.write(
-                    cr, uid, xfer.employee_id.id, {
-                        'employee_id': number},context=context)
             print 'dst_id',dst_id 
             print 'dst_department_id',dst_department_id 
             print 'xfer.src_contract_id.id',xfer.src_contract_id

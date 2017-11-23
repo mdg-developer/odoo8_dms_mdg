@@ -29,7 +29,7 @@ import base64
 import logging
 
 _logger = logging.getLogger(__name__)
-header_fields = ['FR Name','Sequence','Type','Parent A/C','Sign','Financial Report Style','COA Name','Account Code','Display Type','Analytic Code']
+header_fields = ['company', 'fr name', 'sequence', 'type', 'parent a/c', 'sign', 'financial report style', 'coa name', 'account code', 'display type', 'analytic code']
 
 class account_report(osv.osv):
     _name = 'data_import.account'
@@ -43,7 +43,7 @@ class account_report(osv.osv):
               'state':fields.selection([
                 ('draft', 'Draft'),
                 ('completed', 'Completed'),
-                ('error', 'Error'), 
+                ('error', 'Error'),
             ], 'States'),
               
               }
@@ -59,604 +59,463 @@ class account_report(osv.osv):
             else: return False
         return True
     
-    _constraints = [(_check_file_ext,"Please import Excel file!",['import_fname'])]
+    _constraints = [(_check_file_ext, "Please import Excel file!", ['import_fname'])]
     
     def import_data(self, cr, uid, ids, context=None):
-        acc_financial_obj=self.pool.get('account.financial.report')
-        account_account_obj=self.pool.get('account.account')
-        account_type_obj=self.pool.get('account.account.type')
-        #for analytic account code
-        analytic_obj=self.pool.get('account.analytic.account')
-        cr.execute('delete from account_account_financial_report')
-        cr.execute('delete from account_account_financial_report_type')
-        data = self.browse(cr,uid,ids)[0]
+        acc_financial_obj = self.pool.get('account.financial.report')
+        account_account_obj = self.pool.get('account.account')
+        account_type_obj = self.pool.get('account.account.type')
+        # for analytic account code
+        analytic_obj = self.pool.get('account.analytic.account')
+        # for analytic id checking
+        cr.execute('select id ,name from account_analytic_account')
+        analytic_value = cr.fetchall()
+        data = self.browse(cr, uid, ids)[0]
         import_file = data.import_file
+
         err_log = ''
         header_line = False
+
         lines = base64.decodestring(import_file)
-        wb = open_workbook(file_contents = lines)
-        excel_rows=[]
+        wb = open_workbook(file_contents=lines)
+        excel_rows = []
         for s in wb.sheets():
-            #header
-            headers=[]
-            header_row=0
-            for hcol in range(0,s.ncols):
-                headers.append(s.cell(header_row,hcol).value)
-            #add header
+            # header
+            headers = []
+            header_row = 0
+            for hcol in range(0, s.ncols):
+                headers.append(s.cell(header_row, hcol).value)
+            # add header
             excel_rows.append(headers)
-            for row in range(header_row+1,s.nrows):
+            for row in range(header_row + 1, s.nrows):
                 values = []
-                for col in range(0,s.ncols):
-                    values.append(s.cell(row,col).value)
+                for col in range(0, s.ncols):
+                    values.append(s.cell(row, col).value)
                 excel_rows.append(values)
+        con_ls = []
         amls = []
-
+        count = val = head_count = 0
         for ln in excel_rows:
-
-            if not ln or ln and ln[0] and ln[0][0] in ['', '#']:
+            # ln = [str(x).strip() for x in ln]
+            if not ln or ln and ln in ['', '#']:
                 continue
             # process header line
+            
             if not header_line:
-                if ln[0].strip() not in header_fields:
-                    raise orm.except_orm(_('Error :'), _("Error while processing the header line %s. \n\nPlease check your Excel separator as well as the column header fields") %ln)
+                for x in ln:
+                    x = str(x).strip().lower()
+                    if x in header_fields:
+                        con_ls.append(x)
+                        head_count = head_count + 1
+                if head_count < 5:
+                    head_count = 0
+                    con_ls = []
                 else:
+                    if ln:
+                        b3 = set(header_fields).difference(con_ls)
+                        # check the columns without contained the header fields
+                        if b3:
+                            for l in b3:
+                                ln.append(str(l))
+                            val = len(b3)
                     header_line = True
-                    fr_name_i = sequence_i = type_i = parent_ac_i =sign_i = report_style_i = coa_name_i = account_code_i = display_code_i = analytic_code_i = None
+                    company_i = fr_name_i = sequence_i = type_i = parent_ac_i = display_type_i = sign_i = report_style_i = coa_name_i = account_code_i = display_code_i = analytic_code_i = None
                     column_cnt = 0
-                    i=0
+                    i = 0
                     for cnt in range(len(ln)):
                         if ln[cnt] == '':
                             column_cnt = cnt
                             break
-                        elif cnt == len(ln)-1:
+                        elif cnt == len(ln) - 1:
                             column_cnt = cnt + 1
                             break
                     for i in range(column_cnt):
                         # header fields
-                        header_field = ln[i].strip()
+                        header_field = ln[i].strip().lower()
                         if header_field not in header_fields:
-                            err_log += '\n' + _("Invalid Excel File, Header Field '%s' is not supported !") %ln[i]
+                            err_log += '\n' + _("Invalid Excel File, Header Field '%s' is not supported !") % ln[i]
                         # required header fields : account, debit, credit
-                        elif header_field == 'FR Name':
-                            fr_name_i = i
-                        elif header_field == 'Sequence':
-                            sequence_i = i
-                        elif header_field == 'Type':
-                            type_i = i
-                        elif header_field == 'Parent A/C':
-                            parent_ac_i = i
-                        elif header_field == 'Sign':
-                            sign_i = i
-                        elif header_field == 'Financial Report Style':
-                            report_style_i = i            
-                        elif header_field =='COA Name':
-                            coa_name_i = i
-                        elif header_field =='Account Code':
-                            account_code_i = i
-                        elif header_field =='Display Type':
-                            display_type_i = i
-                        elif header_field =='Analytic Code':
-                            analytic_code_i = i
-                                      
-                    for f in [(analytic_code_i,'Analytic Code'),(display_type_i,'Display Type'),(fr_name_i,'FR Name'),(sequence_i,'Sequence'),(type_i,'Type'),(sign_i,'Sign'),(parent_ac_i,'Parent A/C'),(report_style_i ,'Financial Report Style'),(coa_name_i,'COA Name'),(account_code_i,'Account Code')]:
-                        if not isinstance(f[0],int):
-                            err_log += '\n'+ _("Invalid Excel file, Header '%s' is missing !") % f[1]
                         
-                #process data lines   
+                        elif header_field == 'fr name':
+                            fr_name_i = i
+                        elif header_field == 'sequence':
+                            sequence_i = i
+                        elif header_field == 'type':
+                            type_i = i
+                        elif header_field == 'parent a/c':
+                            parent_ac_i = i
+                        elif header_field == 'sign':
+                            sign_i = i
+                        elif header_field == 'financial report style':
+                            report_style_i = i            
+                        elif header_field == 'coa name':
+                            coa_name_i = i
+                        elif header_field == 'account code':
+                            account_code_i = i
+                        elif header_field == 'display type':
+                            display_type_i = i
+                        elif header_field == 'analytic code':
+                            analytic_code_i = i
+                        elif header_field == 'company':
+                            company_i = i
+                                      
+                    for f in [(company_i, 'company'), (analytic_code_i, 'analytic code'), (display_type_i, 'display type'), (fr_name_i, 'fr name'), (sequence_i, 'sequence'), (type_i, 'type'), (sign_i, 'sign'), (parent_ac_i, 'parent a/c'), (report_style_i , 'financial report style'), (coa_name_i, 'coa name'), (account_code_i, 'account code')]:
+                        if not isinstance(f[0], int):
+                            err_log += '\n' + _("Invalid Excel file, Header '%s' is missing !") % f[1]
+                        
+                # process data lines   
             else:
-                if ln and ln[0] and ln[0][0] not in ['#','']:
-                    import_vals = {}
-                    import_vals['FR Name'] =  ln[fr_name_i]
-                    import_vals['Sequence'] =  ln[sequence_i] 
-                    import_vals['Type'] =  ln[type_i]
-                    import_vals['Parent A/C'] =  ln[parent_ac_i]
-                    import_vals['Sign'] = ln[sign_i]
-                    import_vals['Financial Report Style'] =  ln[report_style_i]   
-                    import_vals['COA Name'] = ln[coa_name_i]     
-                    import_vals['Account Code'] = ln[account_code_i]  
-                    import_vals['Display Type'] = ln[display_type_i]           
-                    import_vals['Analytic Code'] = ln[analytic_code_i]             
-                    amls.append(import_vals)
+                # add the without value for without header fields columns
+                for i in range(0, val):
+                    ln.append('')
+                if ln and ln[0] and ln[0][0] not in ['#', '']:
+                    try:
+                        import_vals = {}
+                        import_vals['fr name'] = ln[fr_name_i]
+                        import_vals['sequence'] = ln[sequence_i] 
+                        import_vals['type'] = ln[type_i]
+                        import_vals['parent a/c'] = ln[parent_ac_i]
+                        import_vals['sign'] = ln[sign_i]
+                        import_vals['financial report style'] = ln[report_style_i]   
+                        import_vals['coa name'] = ln[coa_name_i]     
+                        import_vals['account code'] = ln[account_code_i]  
+                        import_vals['display type'] = ln[display_type_i]           
+                        import_vals['analytic code'] = ln[analytic_code_i]      
+                        import_vals['company'] = ln[company_i]                
+                        amls.append(import_vals)
+                    except Exception , e:
+                        print e
                   
         if err_log:
             self.write(cr, uid, ids[0], {'note': err_log})
-            self.write(cr, uid, ids[0], {'state': 'failed'})
+            self.write(cr, uid, ids[0], {'state': 'error'})
         else:
             for aml in amls:
                 try:
-                    fr_name = sequence = type = coa_name =parent = sign = report_style = account_code = display_type = analytic_code = None
-                    count=acc_count =0
-                    #some font type is Unicode so I use UTF-8 encoding
-                    if aml['FR Name']:
-                        fr_name = str(aml['FR Name'].encode('utf-8'))
-                        fr_name = fr_name.strip()
-                    else:
-                        fr_name = None
-                        
-                    if aml['Account Code']:
-                        account_code = str(aml['Account Code'])
-                        account_code =account_code.strip()
-                    else:
-                        account_code = None
-                        
-                    #I wish to change parent code to .title() but there some report names are same but all cap letter and also small letter. 
-                    if aml['Parent A/C']:
-                        parent = str(aml['Parent A/C'].encode('utf-8'))
-                        parent = parent.strip()
-                    else:
-                        parent = None
-                        
-                    if aml['Type']:
-                        type = str(aml['Type'].encode('utf-8'))
-                        type = type.strip()
-                        if type=='View':
-                            type='sum'
-                        elif type=='Accounts':
-                            type='accounts'
-                        elif type=='Report Value':
-                            type='account_report'
-                        elif type=='Account Type':
-                            type='account_type'
-                    else:
-                        type = None
-                        
-                    if aml['Sequence']:
-                        sequence = int(aml['Sequence'])
-                    else:
-                        sequence=None
-                        
-                    if aml['Financial Report Style']:
-                        report_style =str(aml['Financial Report Style'])
-                        report_style = report_style.strip()
-                    else:
-                        report_style = None
-                    # no used COA Name in program    
-                    if aml['COA Name']:
-                        coa_name = str(aml['COA Name'].encode('utf-8'))
-                        coa_name = coa_name.strip()
-                    else:
-                        coa_name = None
+                    company = fr_name = sequence = type = coa_name = parent = sign = report_style = account_code = display_type = analytic_code = parent_id = None
+                    count = acc_count = 0
+                    parent_report_val = report_val = {}
+                    company_id = None
+                    # some font type is Unicode so I use UTF-8 encoding
                     
-                    if aml['Sign']:
-                        sign = str(aml['Sign']).lower()
-                        sign = sign.strip()
-                    else:
-                        sign = None
-                   
-                    #No Detail , Display with flat , Display with hierarchy
-                    if aml['Display Type'] :
-                        display_type = int(aml['Display Type'])
-                    else:
-                        dispaly_type = None     
+                    try:
+                        if aml['company']:
+                            company = str(aml['company']).strip()
+                            cr.execute(""" select id from res_company where lower(name) = %s """, (company.lower(),))
+                            data = cr.fetchall()
+                            if data:
+                                try:
+                                    company_id = data[0][0]
+                                except:
+                                    company_id = data[0]
+                    except:
+                        company_id = None
                         
-                    #Analytic Code
-                    if aml['Analytic Code']:
-                        analytic_code = str(aml['Analytic Code']).strip()    
-                    else:
-                        analytic_code = None
-                        
-                    #report with parent
-                    if parent:
-                        parent_id=acc_financial_obj.search(cr,uid,[('name','=',parent)])
-                        
-                        #parent is true but can't search in financial report
-                        if not parent_id:
-                            report_val={'name':fr_name,'sequence':sequence}
-                            
-                            #condition for style
-                            if report_style=='automatic':
-                                report_val['style_overwrite']=None
-                            elif report_style=='title1':
-                                report_val['style_overwrite']=1
-                            elif report_style=='title2':
-                                report_val['style_overwrite']=2
-                            elif report_style=='title3':
-                                report_val['style_overwrite']=3
-                            elif report_style=='normal':
-                                report_val['style_overwrite']=4
-                            elif report_style=='italic':
-                                report_val['style_overwrite']=5
-                            elif report_style=='smallest':
-                                report_val['style_overwrite']=6
-                            else:
-                                report_val['style_overwrite']=None
-                                
-                            #condition for sign
-                            #reverse condition
-                            if sign=='reverse':
-                                report_val['sign']=-1
-                            #preserve condition
-                            elif sign=='preserve':
-                                report_val['sign']=1
-                            #null condition
-                            else:
-                                report_val['sign']=1
-                               
-                            #Report with Display Type
-                            if display_type==1:
-                                report_val['display_detail']='no_detail'
-                            elif display_type==2:
-                                report_val['display_detail'] = 'detail_flat'
-                            elif display_type==3:
-                                report_val['display_detail'] = 'detail_with_hierarchy'
-                            else:
-                                report_val['display_detail'] = 'no_detail'
-                            
-                            #analytic code
-                            if analytic_code:
-                                analytic_id=analytic_obj.search(cr,uid,[('name','=',analytic_code)])
-                                if analytic_id:
-                                    report_val['account_analytic_id'] = analytic_id[0]
-                            #report with view type
-                            if type=='sum':
-                                report_val['type']=type
-                                report_ids = acc_financial_obj.create(cr,uid,report_val,context=context)
-                                
-                            #report with child account analytic code
-                            elif type=='account_type':
-                                report_val['type']=type
-                                report_ids = acc_financial_obj.create(cr,uid,report_val,context=context)
-                                if account_code:
-                                    for acc_type in account_code.split(','):
-                                        count+=1
-                                        acc_type_id=account_type_obj.search(cr,uid,[('code','=',str(acc_type))])
-                                        
-                                        
-                                        if acc_type_id and report_ids:
-                                            acc_t=account_type_obj.read(cr,uid,acc_type_id[0],{'name'})
-                                            t_name=acc_t['name']
-                                            cr.execute('select report_id from account_account_financial_report_type where account_type_id = %s and report_id=%s  group by report_id',(acc_type_id[0],report_ids,))
-                                            exist=cr.fetchall()
-                                            if len(exist)<=0:
-                                                cr.execute('insert into account_account_financial_report_type(account_type_id,report_id) values(%s,%s)',(acc_type_id[0],report_ids,))
-                                                #there one condition to create report with account type name and report style filter is title2
-                                                if acc_type_id[0] and report_style=='title2':
-                                                    type_val={'name':t_name,'sequence':count,'style_overwrite':4,'sign':1,'display_detail':'no_detail','parent_id':report_ids,'type':'account_type'}
-                                                    #condition for sign
-                                                    #reverse condition
-                                                    if sign=='reverse':
-                                                        type_val['sign']=-1
-                                                    #preserve condition
-                                                    elif sign=='preserve':
-                                                        type_val['sign']=1
-                                                    #null condition
-                                                    else:
-                                                        type_val['sign']=1
-                                                    
-                                                    report_id = acc_financial_obj.create(cr,uid,type_val,context=context)
-                                                    if report_id and acc_type_id[0]:
-                                                        cr.execute('select report_id from account_account_financial_report_type where account_type_id = %s and report_id=%s  group by report_id',(acc_type_id[0],report_id,))
-                                                        t_exist=cr.fetchall()
-                                                        if len(t_exist)<=0:
-                                                            cr.execute('insert into account_account_financial_report_type(account_type_id,report_id) values(%s,%s)',(acc_type_id[0],report_id,))
-                                                    
-                                    
-                            #report with report value
-                            elif type=='account_report':
-                                report_val['type']=type
-                                report_ids = acc_financial_obj.create(cr,uid,report_val,context=context)
-                                
-                            #report with account code
-                            elif type=='accounts':
-                                report_val['type']=type
-                                report_ids = acc_financial_obj.create(cr,uid,report_val,context=context)
-                                if account_code:
-                                    for acc_code in account_code.split(','):
-                                        acc_count+=1
-                                        account_id=account_account_obj.search(cr,uid,[('code','=',str(acc_code))])
-                                        
-                                        
-                                        if account_id and report_ids:
-                                            acc=account_account_obj.read(cr,uid,account_id[0],{'name'})
-                                            acc_name=acc['name']
-                                            
-                                        if account_id and report_ids:
-                                            cr.execute('select report_line_id from account_account_financial_report where account_id= %s and report_line_id=%s group by report_line_id',(account_id[0],report_ids,))
-                                            exist=cr.fetchall()
-                                            if len(exist)<=0:
-                                                cr.execute('insert into account_account_financial_report(account_id,report_line_id) values(%s,%s)',(account_id[0],report_ids,)) 
-                                                
-                                                #there one condition to create report with account name and report style filter is title2
-                                                if account_id[0] and report_style=='title2':
-                                                    acc_val={'name':acc_name,'sequence':acc_count,'style_overwrite':4,'sign':1,'display_detail':'no_detail','parent_id':report_ids,'type':'accounts'}
-                                                    #condition for sign
-                                                    #reverse condition
-                                                    if sign=='reverse':
-                                                        acc_val['sign']=-1
-                                                    #preserve condition
-                                                    elif sign=='preserve':
-                                                        acc_val['sign']=1
-                                                    #null condition
-                                                    else:
-                                                        acc_val['sign']=1
-                                                    report_id = acc_financial_obj.create(cr,uid,acc_val,context=context)
-                                                    if report_id and account_id[0]:
-                                                        cr.execute('select report_line_id from account_account_financial_report where account_id= %s and report_line_id=%s group by report_line_id',(account_id[0],report_id,))
-                                                        t_exist=cr.fetchall()
-                                                        if len(t_exist)<=0:
-                                                            cr.execute('insert into account_account_financial_report(account_id,report_line_id) values(%s,%s)',(account_id[0],report_id,))
-                                    
-                        #parent is true and can search in financial report
+                    try:
+                        if aml['fr name']:
+                            fr_name = str(aml['fr name'].encode('utf-8'))
+                            fr_name = fr_name.strip()
                         else:
-                            report_val = {'name':fr_name,'parent_id':parent_id[0],'sequence':sequence}
-                            #condition for style
-                            if report_style=='automatic':
-                                report_val['style_overwrite']=None
-                            elif report_style=='title1':
-                                report_val['style_overwrite']=1
-                            elif report_style=='title2':
-                                report_val['style_overwrite']=2
-                            elif report_style=='title3':
-                                report_val['style_overwrite']=3
-                            elif report_style=='normal':
-                                report_val['style_overwrite']=4
-                            elif report_style=='italic':
-                                report_val['style_overwrite']=5
-                            elif report_style=='smallest':
-                                report_val['style_overwrite']=6
+                            fr_name = None
+                            
+                        if aml['account code']:
+                            account_code = str(aml['account code'])
+                            account_code = account_code.strip()
+                        else:
+                            account_code = None
+                            
+                        # I wish to change parent code to .title() but there some report names are same but all cap letter and also small letter. 
+                        if aml['parent a/c']:
+                            parent = str(aml['parent a/c'].encode('utf-8'))
+                            parent = parent.strip()
+                        else:
+                            parent = None
+                            
+                        if aml['type']:
+                            type = str(aml['type'].encode('utf-8'))
+                            type = type.strip()
+                            if type == 'View':
+                                type = 'sum'
+                            elif type == 'Accounts':
+                                type = 'accounts'
+                            elif type == 'Report Value':
+                                type = 'account_report'
+                            elif type == 'Account type':
+                                type = 'account_type'
+                        else:
+                            type = None
+                               
+                        if aml['sequence']:
+                            try:
+                                sequence = int(aml['sequence'])
+                            except Exception, e:  
+                                sequence = aml['sequence']
+                        else:
+                            sequence = None
+                            
+                        if aml['financial report style']:
+                            report_style = str(aml['financial report style'])
+                            report_style = report_style.strip()
+                        else:
+                            report_style = None
+                        # no used coa name in program    
+                        if aml['coa name']:
+                            coa_name = str(aml['coa name'].encode('utf-8'))
+                            coa_name = coa_name.strip()
+                        else:
+                            coa_name = None
+                        
+                        if aml['sign']:
+                            sign = str(aml['sign']).lower()
+                            sign = sign.strip()
+                        else:
+                            sign = None
+                       
+                        # No Detail , Display with flat , Display with hierarchy
+                        if aml['display type'] :
+                            try:
+                                display_type = int(aml['display type'])
+                            except Exception, e:    
+                                dispaly_type = aml['display type']
+                        else:
+                            dispaly_type = None     
+                            
+                        # analytic code
+                        if aml['analytic code']:
+                            try:
+                                analytic_code = str(aml['analytic code']).strip() 
+                                analytic_code = analytic_code.lower()   
+                            except Exception , e:
+                                raise e
+                        else:
+                            analytic_code = None
+                    except Exception, e:    
+                        raise e
+                        
+                        
+                    # FIRST   
+                    # REPORT with parent
+                    
+                    if fr_name:
+                        report_id = acc_financial_obj.search(cr, uid, [('name', '=', fr_name), ('company_id', '=', company_id)])
+                        # #condition for parent report
+                        if parent:
+                            parent_ids = acc_financial_obj.search(cr, uid, [('name', '=', parent), ('company_id', '=', company_id)])
+                            if not parent_ids:
+                                parent_report_val = {
+                                            'name':parent,
+                                            'sequence':0 ,
+                                            'parent_id':None,
+                                            'style_overwrite':1,
+                                            'sign':1,
+                                            'display_detail':'no_detail',
+                                            'company_id':company_id
+                                }
+                                parent_id = acc_financial_obj.create(cr, uid, parent_report_val, context=context)
                             else:
-                                report_val['style_overwrite']=None
+                                parent_id = parent_ids[0]
                                 
-                            #condition for sign
-                            #reverse condition
-                            if sign=='reverse':
-                                report_val['sign']=-1
-                            #preserve condition
-                            elif sign=='preserve':
-                                report_val['sign']=1
-                            #null condition
+                        # if already exist update
+                        if report_id:
+                            report_id = report_id[0]
+                            report_val = {'name':fr_name, 'sequence':sequence , 'parent_id':parent_id, 'company_id':company_id}
+                            if report_style == 'automatic':
+                                report_val['style_overwrite'] = None
+                            elif report_style == 'title1':
+                                report_val['style_overwrite'] = 1
+                            elif report_style == 'title2':
+                                report_val['style_overwrite'] = 2
+                            elif report_style == 'title3':
+                                report_val['style_overwrite'] = 3
+                            elif report_style == 'normal':
+                                report_val['style_overwrite'] = 4
+                            elif report_style == 'italic':
+                                report_val['style_overwrite'] = 5
+                            elif report_style == 'smallest':
+                                report_val['style_overwrite'] = 6
                             else:
-                                report_val['sign']=1
-                            #Report with Display Type
-                            if display_type=='no detail':
-                                report_val['display_detail']='no_detail'
-                            elif display_type=='flat':
+                                report_val['style_overwrite'] = None
+                                 
+                            # condition for sign
+                            # reverse condition
+                            if sign == 'reverse':
+                                report_val['sign'] = -1
+                            # preserve condition
+                            elif sign == 'preserve':
+                                report_val['sign'] = 1
+                            # null condition
+                            else:
+                                report_val['sign'] = 1
+                                
+                            # Report with display type
+                            if display_type == 1:
+                                report_val['display_detail'] = 'no_detail'
+                            elif display_type == 2:
                                 report_val['display_detail'] = 'detail_flat'
-                            elif display_type=='hierarchy':
+                            elif display_type == 3:
                                 report_val['display_detail'] = 'detail_with_hierarchy'
                             else:
                                 report_val['display_detail'] = 'no_detail'
-                                
-                            #analytic code
-                            if analytic_code:
-                                analytic_id=analytic_obj.search(cr,uid,[('name','=',analytic_code)])
+                             
+                            # analytic code
+                            if analytic_code and analytic_value:
+                                # analytic_id=analytic_obj.search(cr,uid,[('name','=',analytic_code)])
+                                for aa_code in analytic_value:
+                                    if analytic_code == aa_code[1].lower():
+                                        analytic_id = aa_code[0]
                                 if analytic_id:
-                                    report_val['account_analytic_id'] = analytic_id[0]      
-                                                                                                        
-                            #report with view type
-                            if type=='sum':
-                                report_val['type']=type
-                                report_ids = acc_financial_obj.create(cr,uid,report_val,context=context)
-                                
-                            #report with child account analytic code
-                            elif type=='account_type':
-                                report_val['type']=type
-                                report_ids = acc_financial_obj.create(cr,uid,report_val,context=context)
+                                    
+                                    report_val['account_analytic_id'] = analytic_id
+                            # report with view type
+                            if type == 'sum':
+                                report_val['type'] = type
+                                acc_financial_obj.write(cr, uid, report_id, report_val, context=context)
+                                 
+                            # report with child account analytic code
+                            elif type == 'account_type':
+                                report_val['type'] = type
+                                acc_financial_obj.write(cr, uid, report_id, report_val, context=context)
+                                report_ids = report_id
                                 if account_code:
                                     for acc_type in account_code.split(','):
-
-                                        count+=1
-                                        acc_type_id=account_type_obj.search(cr,uid,[('code','=',str(acc_type))])
-                                        
-                                        
+                                        count += 1
+                                        if acc_type.find('.') != -1:
+                                            acc_type = acc_type.split('.')[0]
+                                        else:
+                                            acc_type = int(acc_type)
+                                        acc_type_id = account_type_obj.search(cr, uid, [('code', '=', str(acc_type)), ('compay_id', '=', company_id)])
+                                         
+                                         
                                         if acc_type_id and report_ids:
-                                            acc_t=account_type_obj.read(cr,uid,acc_type_id[0],{'name'})
-                                            t_name=acc_t['name']
-                                        if acc_type_id and report_ids:
-                                            cr.execute('select report_id from account_account_financial_report_type where account_type_id = %s and report_id=%s  group by report_id ',(acc_type_id[0],report_ids,))
-                                            exist=cr.fetchall()
-                                            if len(exist)<=0:
-                                                cr.execute('insert into account_account_financial_report_type(account_type_id,report_id) values(%s,%s)',(acc_type_id[0],report_ids,))
-                    
-                                                #there one condition to create report with account type name and report style filter is title2
-                                                if acc_type_id[0] and report_style=='title2':
-                                                    type_val={'name':t_name,'sequence':count,'style_overwrite':4,'sign':1,'display_detail':'no_detail','parent_id':report_ids,'type':'account_type'}
-                                                    #condition for sign
-                                                    #reverse condition
-                                                    if sign=='reverse':
-                                                        type_val['sign']=-1
-                                                    #preserve condition
-                                                    elif sign=='preserve':
-                                                        type_val['sign']=1
-                                                    #null condition
-                                                    else:
-                                                        type_val['sign']=1
-                                                    report_id = acc_financial_obj.create(cr,uid,type_val,context=context)
-                                                    if report_id and acc_type_id[0]:
-                                                        cr.execute('select report_id from account_account_financial_report_type where account_type_id = %s and report_id=%s  group by report_id',(acc_type_id[0],report_id,))
-                                                        t_exist=cr.fetchall()
-                                                        if len(t_exist)<=0:
-                                                            cr.execute('insert into account_account_financial_report_type(account_type_id,report_id) values(%s,%s)',(acc_type_id[0],report_id,))
-                                    
-                            #report with report value
-                            elif type=='account_report':
-                                report_val['type']=type
-                                report_ids = acc_financial_obj.create(cr,uid,report_val,context=context)
-                                
-                            #report with account code
-                            elif type=='accounts':
-                                report_val['type']=type
-                                report_ids = acc_financial_obj.create(cr,uid,report_val,context=context)
+                                            cr.execute('select report_id from account_account_financial_report_type where account_type_id = %s and report_id=%s  group by report_id', (acc_type_id[0], report_ids,))
+                                            exist = cr.fetchall()
+                                            if len(exist) <= 0:
+                                                cr.execute('insert into account_account_financial_report_type(account_type_id,report_id) values(%s,%s)', (acc_type_id[0], report_ids,))                                       
+                                     
+                            # report with report value
+                            elif type == 'account_report':
+                                report_val['type'] = type
+                                acc_financial_obj.write(cr, uid, report_id, report_val, context=context)
+                                 
+                            # report with account code
+                            elif type == 'accounts':
+                                report_val['type'] = type
+                                acc_financial_obj.write(cr, uid, report_id, report_val, context=context)
+                                report_ids = report_id
                                 if account_code:
                                     for acc_code in account_code.split(','):
-                                        acc_count+=1
-                                        account_id=account_account_obj.search(cr,uid,[('code','=',str(acc_code))])
+                                        acc_count += 1
+                                        # dot par lar yin
+                                        if acc_code.find('.') != -1:
+                                            acc_code = acc_code.split('.')[0]
+                                        else:
+                                            acc_code = int(acc_code)
+                                        account_id = account_account_obj.search(cr, uid, [('code', '=', str(acc_code)), ('company_id', '=', company_id)])
+
+                                        if account_id and report_ids:
+                                            cr.execute('select report_line_id from account_account_financial_report where account_id= %s and report_line_id=%s group by report_line_id', (account_id[0], report_ids,))
+                                            exist = cr.fetchall()
+                                            if len(exist) <= 0:
+                                                cr.execute('insert into account_account_financial_report(account_id,report_line_id) values(%s,%s)', (account_id[0], report_ids,))                
+                        # There no report id in account_financial_report                                
+                        elif not report_id:
+                            # condition for style
+                            report_val = {'name':fr_name, 'sequence':sequence , 'parent_id':parent_id, 'company_id':company_id}
+                            if report_style == 'automatic':
+                                report_val['style_overwrite'] = None
+                            elif report_style == 'title1':
+                                report_val['style_overwrite'] = 1
+                            elif report_style == 'title2':
+                                report_val['style_overwrite'] = 2
+                            elif report_style == 'title3':
+                                report_val['style_overwrite'] = 3
+                            elif report_style == 'normal':
+                                report_val['style_overwrite'] = 4
+                            elif report_style == 'italic':
+                                report_val['style_overwrite'] = 5
+                            elif report_style == 'smallest':
+                                report_val['style_overwrite'] = 6
+                            else:
+                                report_val['style_overwrite'] = None
+                                 
+                            # condition for sign
+                            # reverse condition
+                            if sign == 'reverse':
+                                report_val['sign'] = -1
+                            # preserve condition
+                            elif sign == 'preserve':
+                                report_val['sign'] = 1
+                            # null condition
+                            else:
+                                report_val['sign'] = 1
+                                
+                            # Report with display type
+                            if display_type == 1:
+                                report_val['display_detail'] = 'no_detail'
+                            elif display_type == 2:
+                                report_val['display_detail'] = 'detail_flat'
+                            elif display_type == 3:
+                                report_val['display_detail'] = 'detail_with_hierarchy'
+                            else:
+                                report_val['display_detail'] = 'no_detail'
+                             
+                            # analytic code
+                            if analytic_code and analytic_value:
+                                for aa_code in analytic_value:
+                                    if analytic_code == aa_code[1].lower():
+                                        analytic_id = aa_code[0]
+                                if analytic_id:
+                                    report_val['account_analytic_id'] = analytic_id
+                            # report with view type
+                            if type == 'sum':
+                                report_val['type'] = type
+                                report_ids = acc_financial_obj.create(cr, uid, report_val, context=context)
+                                 
+                            # report with child account analytic code
+                            elif type == 'account_type':
+                                report_val['type'] = type
+                                report_ids = acc_financial_obj.create(cr, uid, report_val, context=context)
+                                if account_code:
+                                    for acc_type in account_code.split(','):
+                                        count += 1
+                                        if acc_type.find('.') != -1:
+                                            acc_type = acc_type.split('.')[0]
+                                        else:
+                                            acc_type = int(acc_type)
+                                        acc_type_id = account_type_obj.search(cr, uid, [('code', '=', str(acc_type))])
+                                         
+                                         
+                                        if acc_type_id and report_ids:
+                                            cr.execute('select report_id from account_account_financial_report_type where account_type_id = %s and report_id=%s  group by report_id', (acc_type_id[0], report_ids,))
+                                            exist = cr.fetchall()
+                                            if len(exist) <= 0:
+                                                cr.execute('insert into account_account_financial_report_type(account_type_id,report_id) values(%s,%s)', (acc_type_id[0], report_ids,))                                            
+                                     
+                            # report with report value
+                            elif type == 'account_report':
+                                report_val['type'] = type
+                                report_ids = acc_financial_obj.create(cr, uid, report_val, context=context)
+                                 
+                            # report with account code
+                            elif type == 'accounts':
+                                report_val['type'] = type
+                                report_ids = acc_financial_obj.create(cr, uid, report_val, context=context)
+                                if account_code:
+                                    for acc_code in account_code.split(','):
+                                        acc_count += 1
+                                        # some account code contain dot operator and I can't search it,so I split it.
+                                        if acc_code.find('.') != -1:
+                                            acc_code = acc_code.split('.')[0]
+                                        else:
+                                            acc_code = int(acc_code)
+                                        account_id = account_account_obj.search(cr, uid, [('code', '=', str(acc_code)), ('company_id', '=', company_id)])
                                         
                                         if account_id and report_ids:
-                                            acc=account_account_obj.read(cr,uid,account_id[0],{'name'})
-                                            acc_name=acc['name']
-                                        if account_id and report_ids:
-                                            cr.execute('select report_line_id from account_account_financial_report where account_id= %s and report_line_id=%s group by report_line_id',(account_id[0],report_ids,))
-                                            exist=cr.fetchall()
-                                            if len(exist)<=0:
-                                                cr.execute('insert into account_account_financial_report(account_id,report_line_id) values(%s,%s)',(account_id[0],report_ids,)) 
-                                                
-                                                #there one condition to create report with account name and report style filter is title2
-                                                if account_id[0] and report_style=='title2':
-                                                    acc_val={'name':acc_name,'sequence':acc_count,'style_overwrite':4,'sign':1,'display_detail':'no_detail','parent_id':report_ids,'type':'accounts'}
-                                                    #condition for sign
-                                                    #reverse condition
-                                                    if sign=='reverse':
-                                                        acc_val['sign']=-1
-                                                    #preserve condition
-                                                    elif sign=='preserve':
-                                                        acc_val['sign']=1
-                                                    #null condition
-                                                    else:
-                                                        acc_val['sign']=1
-                                                    report_id = acc_financial_obj.create(cr,uid,acc_val,context=context)
-                                                    if report_id and account_id[0]:
-                                                        cr.execute('select report_line_id from account_account_financial_report where account_id= %s and report_line_id=%s group by report_line_id',(account_id[0],report_id,))
-                                                        t_exist=cr.fetchall()
-                                                        if len(t_exist)<=0:
-                                                            cr.execute('insert into account_account_financial_report(account_id,report_line_id) values(%s,%s)',(account_id[0],report_id,)) 
-                                                             
-                    #report with not parent    
-                    else:
-                        if fr_name:
-                            report_id=acc_financial_obj.search(cr,uid,[('name','=',fr_name)])
-                            if not report_id:
-                                report_vals={'name':fr_name,'sequence':sequence}
-
-                            #condition for style
-                                if report_style=='automatic':
-                                    report_vals['style_overwrite']=None
-                                elif report_style=='title1':
-                                    report_vals['style_overwrite']=1
-                                elif report_style=='title2':
-                                    report_vals['style_overwrite']=2
-                                elif report_style=='title3':
-                                    report_vals['style_overwrite']=3
-                                elif report_style=='normal':
-                                    report_vals['style_overwrite']=4
-                                elif report_style=='italic':
-                                    report_vals['style_overwrite']=5
-                                elif report_style=='smallest':
-                                    report_vals['style_overwrite']=6
-                                else:
-                                    report_vals['style_overwrite']=None
-                                    
-                                #condition for sign
-                                #reverse condition
-                                if sign=='reverse':
-                                    report_vals['sign']=-1
-                                #preserve condition
-                                elif sign=='preserve':
-                                    report_vals['sign']=1
-                                #null condition
-                                else:
-                                    report_vals['sign']=1
-                                #analytic code
-                                if analytic_code:
-                                    analytic_id=analytic_obj.search(cr,uid,[('name','=',analytic_code)])
-                                    if analytic_id:
-                                        report_vals['account_analytic_id'] = analytic_id[0]
-                                        
-                                #Report with Display Type
-                                if display_type=='no detail':
-                                    report_vals['display_detail']='no_detail'
-                                elif display_type=='flat':
-                                    report_vals['display_detail'] = 'detail_flat'
-                                elif display_type=='hierarchy':
-                                    report_vals['display_detail'] = 'detail_with_hierarchy'
-                                else:
-                                    report_vals['display_detail'] = 'no_detail'
-                                                                                                              
-                                #report with view type
-                                if type=='sum':
-                                    report_vals['type']=type
-                                    report_ids = acc_financial_obj.create(cr,uid,report_vals,context=context)
-                                    
-                                #report with child account analytic code
-                                elif type=='account_type':
-                                    report_vals['type']=type
-                                    report_ids = acc_financial_obj.create(cr,uid,report_vals,context=context)
-                                    if account_code:
-                                        for acc_type in account_code.split(','):
-
-                                            count+=1
-                                            acc_type_id=account_type_obj.search(cr,uid,[('code','=',str(acc_type))])
-                                            
-                                            
-                                            if acc_type_id and report_ids:
-                                                acc_t = account_type_obj.read(cr,uid,acc_type_id[0],{'name'})
-                                                t_name = acc_t['name']
-                                                
-                                            if acc_type_id and report_ids:
-                                                cr.execute('select report_id from account_account_financial_report_type where account_type_id = %s and report_id=%s  group by report_id',(acc_type_id[0],report_ids,))
-                                                exist=cr.fetchall()
-                                                
-                                                if len(exist)<=0:
-                                                    cr.execute('insert into account_account_financial_report_type(account_type_id,report_id) values(%s,%s)',(acc_type_id[0],report_ids,))
-                                        
-                                                    #there one condition to create report with account type name and report style filter is title2
-                                                    if acc_type_id[0] and report_style=='title2':
-                                                        type_val={'name':t_name,'sequence':count,'style_overwrite':4,'sign':1,'display_detail':'no_detail','parent_id':report_ids,'type':'account_type'}
-                                                        #condition for sign
-                                                        #reverse condition
-                                                        if sign=='reverse':
-                                                            type_val['sign']=-1
-                                                        #preserve condition
-                                                        elif sign=='preserve':
-                                                            type_val['sign']=1
-                                                        #null condition
-                                                        else:
-                                                            type_val['sign']=1
-                                                        report_id = acc_financial_obj.create(cr,uid,type_val,context=context)
-                                                        if report_id and acc_type_id[0]:
-                                                            cr.execute('select report_id from account_account_financial_report_type where account_type_id = %s and report_id=%s  group by report_id',(acc_type_id[0],report_id,))
-                                                            t_exist=cr.fetchall()
-                                                            if len(t_exist)<=0:
-                                                                cr.execute('insert into account_account_financial_report_type(account_type_id,report_id) values(%s,%s)',(acc_type_id[0],report_id,))
-                                #report with report value
-                                elif type=='account_report':
-                                    report_vals['type']=type
-                                    report_ids = acc_financial_obj.create(cr,uid,report_vals,context=context)
-                                    
-                                #report with account code
-                                elif type=='accounts':
-                                    report_vals['type']=type
-                                    report_ids = acc_financial_obj.create(cr,uid,report_vals,context=context)
-                                    if account_code:
-                                        for acc_code in account_code.split(','):
-                                            acc_count+=1
-                                            account_id=account_account_obj.search(cr,uid,[('code','=',str(acc_code))])
-                                            
-                                            
-                                            if account_id and report_ids:
-                                                acc=account_account_obj.read(cr,uid,account_id[0],{'name'})
-                                                acc_name=acc['name']
-                                                
-                                            if account_id and report_ids:
-                                                cr.execute('select report_line_id from account_account_financial_report where account_id= %s and report_line_id=%s group by report_line_id',(account_id[0],report_ids,))
-                                                exist=cr.fetchall()
-                                                
-                                                if len(exist)<=0:
-                                                    cr.execute('insert into account_account_financial_report(account_id,report_line_id) values(%s,%s)',(account_id[0],report_ids,)) 
-                                                    
-                                                    #there one condition to create report with account name and report style filter is title2
-                                                    if account_id[0] and report_style=='title2':
-                                                        acc_val={'name':acc_name,'sequence':acc_count,'style_overwrite':4,'sign':1,'display_detail':'no_detail','parent_id':report_ids,'type':'accounts'}
-                                                        #condition for sign
-                                                        #reverse condition
-                                                        if sign=='reverse':
-                                                            acc_val['sign']=-1
-                                                        #preserve condition
-                                                        elif sign=='preserve':
-                                                            acc_val['sign']=1
-                                                        #null condition
-                                                        else:
-                                                            acc_val['sign']=1
-                                                        report_id = acc_financial_obj.create(cr,uid,acc_val,context=context)
-                                                        if report_id and account_id[0]:
-                                                            cr.execute('select report_line_id from account_account_financial_report where account_id= %s and report_line_id=%s group by report_line_id',(account_id[0],report_id,))
-                                                            t_exist=cr.fetchall()
-                                                            if len(t_exist)<=0:
-                                                                cr.execute('insert into account_account_financial_report(account_id,report_line_id) values(%s,%s)',(account_id[0],report_id,)) 
-
+                                            cr.execute('select report_line_id from account_account_financial_report where account_id= %s and report_line_id=%s group by report_line_id', (account_id[0], report_ids,))
+                                            exist = cr.fetchall()
+                                            if len(exist) <= 0:
+                                                cr.execute('insert into account_account_financial_report(account_id,report_line_id) values(%s,%s)', (account_id[0], report_ids,)) 
+                                                 
                 except Exception, e:
-                    raise    
+                    raise  e
                 self.write(cr, uid, ids[0], {'state': 'completed'})              
-
-
-        

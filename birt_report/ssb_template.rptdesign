@@ -620,8 +620,8 @@
 				'၅။* ဖခင္…                ဦး '||COALESCE(NULLIF(e.fam_father,''),'')as fam_father,
 				'၆။  ေနရပ္လိပ္စာ…'||COALESCE(NULLIF(e.street,''),'')as street,
 				'၈။   လူမွုဖူလံုေရးအာမခံအမွတ္…'|| COALESCE(NULLIF(e.ssb,''),'___________________________________________________')as ssb,
-				CASE  WHEN   e.date IS NULL   THEN '၉။   လူမွုဖူလံုေရးတြင္ စတင္အက်ဳံး၀င္သည့္ေန ့...(____)ရက္၊ (____) လ၊ (_____) ႏွစ္'
-				ELSE '၉။   လူမွုဖူလံုေရးတြင္ စတင္အက်ဳံး၀င္သည့္ေန ့...('|| date_part('day', e.date::timestamp) || ')ရက္၊ (' 
+				CASE  WHEN   e.date IS NULL   THEN '၉။   လူမွုဖူလံုေရးတြင္ စတင္အက ်ံဴး၀င္သည္႔ေန႔…   (____)ရက္၊ (____) လ၊ (_____) ႏွစ္'
+				ELSE '၉။   လူမွုဖူလံုေရးတြင္ စတင္အက ်ံဴး၀င္သည္႔ေန႔…(' || date_part('day', e.date::timestamp) || ')ရက္၊ (' 
 				||  date_part('month', e.date::timestamp) || ')လ၊ (' 
 				||  date_part('year', e.date::timestamp)  || ') ႏွစ္' END as date,
 				'၁၄။  အလုပ္အကုိင္/ရာထူး…' || COALESCE(NULLIF(e.job_position,''),'') as job_position,
@@ -632,7 +632,7 @@
 				--'၁၈။* တစ္လ၀င္ေငြ / လစာ…' || COALESCE(NULLIF(E.wage,0),0) as wage,
 				'၁၈။* တစ္လ၀င္ေငြ / လစာ… ________________'    as wage,
 				'၆။  ေနရပ္လိပ္စာ…      အမွတ္ (' || COALESCE(NULLIF(e.street,''),' ___________ ')  || ')၊' ||  COALESCE(NULLIF(e.street2,''),' __________________ ') || 'လမ္း၊' as  street2,				
-				COALESCE(NULLIF(e.township,''),' _________________ ') || 'ရပ္ကြက္/ေက်းရြာ၊['|| COALESCE(NULLIF(e.city,''),' _________________ ') || ']ၿမိဳ႕နယ္၊' as city_stat,
+				COALESCE(NULLIF(e.township,''),' _________________ ') || 'ရပ္ကြက္/ေက ်းရြာ၊ [' || COALESCE(NULLIF(e.city,''),' _________________ ') || ']ၿမိဳ႕နယ္၊' as city_stat,
 				'၇။   Phone/Fax…' || COALESCE(NULLIF(e.work_phone,''),'_________________') as work_phone ,
 				'Email:'||  COALESCE(NULLIF(e.work_email,''),'_________________')  as   work_email,
 				CASE  WHEN   e.fam_spouse IS NULL AND e.fam_dob IS NULL THEN   
@@ -656,32 +656,32 @@
 				'(၁၂ . ၄)' ||   COALESCE(NULLIF(h.child3_name,''),'_________________________') as child3_name,
 				--CASE WHEN e.child_dob  IS NULL THEN  '[1]▭ က ်ား       [2]□မ   ေမြးသကၠရာဇ္ (_____) ရက္၊ (_____) လ၊ (_____) ႏွစ္' 	
 				--CASE WHEN e.child_dob  IS NULL THEN  '[1]▭ က ်ား       [2]▭မ  ေမြးသကၠရာဇ္ (_____) ရက္၊ (_____) လ၊ (_____) ႏွစ္' 
-				CASE WHEN f.child_dob  IS NULL THEN  '[1]▭ က်ား      [2]▭မ    ေမြးသကၠရာဇ္ (_____) ရက္၊ (_____) လ၊ (_____) ႏွစ္' 
+				CASE WHEN f.child_dob  IS NULL THEN  '[1]▭ က ်ား       [2]▭မ    ေမြးသကၠရာဇ္ (_____) ရက္၊ (_____) လ၊ (_____) ႏွစ္' 
 				ELSE	
-				'[1]▭ က်ား      [2]▭မ    ေမြးသကၠရာဇ္ (' 
+				'[1]▭ က ်ား       [2]▭မ    ေမြးသကၠရာဇ္ (' 
 				||  date_part('day', e.child_dob::timestamp) || ' ) ရက္၊ ('
 				||  date_part('month',e.child_dob::timestamp) ||') လ၊ (  '
 				||  date_part('year', e.child_dob::timestamp) ||') ႏွစ္'  END as  child_dob,
-				CASE WHEN f.child_dob1  IS NULL THEN  '[1]▭ က်ား      [2]▭မ    ေမြးသကၠရာဇ္ (_____) ရက္၊ (_____) လ၊ (_____) ႏွစ္' 
+				CASE WHEN f.child_dob1  IS NULL THEN  '[1]▭ က ်ား       [2]▭မ    ေမြးသကၠရာဇ္ (_____) ရက္၊ (_____) လ၊ (_____) ႏွစ္' 
 				ELSE	
-				'[1]▭ က်ား       [2]▭မ    ေမြးသကၠရာဇ္ (' 
+				'[1]▭ က ်ား        [2]▭မ    ေမြးသကၠရာဇ္ (' 
 				||  date_part('day', f.child_dob1::timestamp) || ' ) ရက္၊ ('
 				||  date_part('month',f.child_dob1::timestamp) ||') လ၊ (  '
 				||  date_part('year', f.child_dob1::timestamp) ||') ႏွစ္'  END as  child_dob1,
-				CASE WHEN g.child_dob2  IS NULL THEN  '[1]▭ က်ား      [2]▭မ    ေမြးသကၠရာဇ္ (_____) ရက္၊ (_____) လ၊ (_____) ႏွစ္' 
+				CASE WHEN g.child_dob2  IS NULL THEN  '[1]▭ က ်ား       [2]▭မ    ေမြးသကၠရာဇ္ (_____) ရက္၊ (_____) လ၊ (_____) ႏွစ္' 
 				ELSE	
-				'[1]▭ က်ား      [2]▭မ    ေမြးသကၠရာဇ္ (' 
+				'[1]▭ က ်ား       [2]▭မ    ေမြးသကၠရာဇ္ (' 
 				||  date_part('day', g.child_dob2::timestamp) || ' ) ရက္၊ ('
 				||  date_part('month',g.child_dob2::timestamp) ||') လ၊ (  '
 				||  date_part('year', g.child_dob2::timestamp) ||') ႏွစ္' END as  child_dob2,
-				CASE WHEN  h.child_dob3  IS NULL THEN  '[1]▭ က်ား      [2]▭မ    ေမြးသကၠရာဇ္ (_____) ရက္၊ (_____) လ၊ (_____) ႏွစ္' 
+				CASE WHEN  h.child_dob3  IS NULL THEN  '[1]▭ က ်ား       [2]▭မ    ေမြးသကၠရာဇ္ (_____) ရက္၊ (_____) လ၊ (_____) ႏွစ္' 
 				ELSE	
-				 '[1]▭ က်ား      [2]▭မ    ေမြးသကၠရာဇ္ (' 
+				 '[1]▭ က ်ား       [2]▭မ    ေမြးသကၠရာဇ္ (' 
 				||  date_part('day', h.child_dob3::timestamp) || ' ) ရက္၊ ('
 				||  date_part('month',h.child_dob3::timestamp) ||') လ၊ (  '
 				||  date_part('year', h.child_dob3::timestamp) ||') ႏွစ္' END as  child_dob3,
-				--CASE WHEN e.fam_beneficiary is null then '၁၃။* အက ်ိဳးခံစားခြင့္အတြက္ အမည္စာ၇င္းတင္သြင္းသူ ဦး/ေဒၚ __________________' else '၁၃။* အက ်ိဳးခံစားခြင့္အတြက္ အမည္စာ၇င္းတင္သြင္းသူ ဦး/ေဒၚ ' ||    COALESCE(NULLIF(e.fam_beneficiary,''),'') end as fam_beneficiary,
-				CASE WHEN e.fam_beneficiary is null then '၁၃။* အက်ိဴးခံစားခြင့္အတြက္ အမည္စာရင္းတင္သြင္းသူ  ဦး/ေဒၚ _________________ ' else '၁၃။* အက်ိဴးခံစားခြင့္အတြက္ အမည္စာရင္းတင္သြင္းသူ  ဦး/ေဒၚ ' ||    COALESCE(NULLIF(e.fam_beneficiary,''),'') end as fam_beneficiary,
+				CASE WHEN e.fam_beneficiary is null then '၁၃။* အက ်ိဳးခံစားခြင့္အတြက္ အမည္စာ၇င္းတင္သြင္းသူ ဦး/ေဒၚ __________________' else '၁၃။* အက ်ိဳးခံစားခြင့္အတြက္ အမည္စာ၇င္းတင္သြင္းသူ ဦး/ေဒၚ ' ||    COALESCE(NULLIF(e.fam_beneficiary,''),'') end as fam_beneficiary,
+				--CASE WHEN e.fam_beneficiary is null then '၁၃။* အက်ိဴးခံစားခြင့္အတြက္ အမည္စာရင္းတင္သြင္းသူ  ဦး/ေဒၚ _________________ ' else '၁၃။* အက်ိဴးခံစားခြင့္အတြက္ အမည္စာရင္းတင္သြင္းသူ  ဦး/ေဒၚ ' ||    COALESCE(NULLIF(e.fam_beneficiary,''),'') end as fam_beneficiary,
 				CASE WHEN e.fam_relationship is null then ' ေတာ္စပ္ပံု _________________' else ' ေတာ္စပ္ပံု ' || COALESCE(NULLIF(e.fam_relationship,''),'') end as relationship,
 				'၇။   Phone/Fax…'||COALESCE(NULLIF(e.phone,''),'')  as phone,
 				'Email:'||COALESCE(NULLIF(e.email,''),'') as email
@@ -1405,7 +1405,7 @@ where active='true';]]></xml-property>
                                 <property name="fontWeight">bold</property>
                                 <property name="textUnderline">underline</property>
                                 <property name="textAlign">left</property>
-                                <text-property name="text">အထက္ပါျဖည့္စြက္ထားေသာ အခ်က္မ်ားမ်ားအားလံုး မွန္ကန္ေၾကာင္းတာ၀န္ယူပါသည္။ ေျပာင္းလဲမွုရွိပါက လူမွုဖူလုံေရးရုံးသို ့  အေၾကာင္းၾကားပါမည္။</text-property>
+                                <text-property name="text">အထက္ပါျဖည့္စြက္ထားေသာ အခ ်က္မ်ားအားလံုး မွန္ကန္ေၾကာင္းတာ၀န္ယူပါသည္။ ေျပာင္းလဲမွုရွိပါက လူမွုဖူလံုေရးရံုးသို့အေၾကာင္းၾကားပါမည္။</text-property>
                             </label>
                         </cell>
                     </row>
@@ -1549,9 +1549,22 @@ where active='true';]]></xml-property>
             <column id="811">
                 <property name="width">2.2708333333333335in</property>
             </column>
-            <row id="829">
-                <cell id="830">
-                    <property name="colSpan">2</property>
+            <row id="812">
+                <cell id="813">
+                    <property name="colSpan">3</property>
+                    <property name="rowSpan">1</property>
+                    <label id="796">
+                        <property name="fontFamily">"Zawgyi-One"</property>
+                        <property name="fontSize">10pt</property>
+                        <property name="fontWeight">bold</property>
+                        <property name="textAlign">right</property>
+                        <text-property name="text">နည္းဥပေဒ ၄၂(ဂ)၊ ပံုစံ (၂)</text-property>
+                    </label>
+                </cell>
+            </row>
+            <row id="816">
+                <cell id="817">
+                    <property name="colSpan">3</property>
                     <property name="rowSpan">1</property>
                     <label id="797">
                         <property name="fontFamily">"Zawgyi-One"</property>
@@ -1560,14 +1573,6 @@ where active='true';]]></xml-property>
                         <property name="textUnderline">underline</property>
                         <property name="textAlign">left</property>
                         <text-property name="text">အာမခံအလုပ္သမားမွတ္ပံုတင္ပံုစံ</text-property>
-                    </label>
-                </cell>
-                <cell id="832">
-                    <label id="833">
-                        <property name="fontFamily">"Zawgyi-One"</property>
-                        <property name="fontWeight">bold</property>
-                        <property name="textAlign">right</property>
-                        <text-property name="text">နည္းဥပေဒ ၄၂(ဂ)၊ ပုံစံ (၂)</text-property>
                     </label>
                 </cell>
             </row>
@@ -1819,7 +1824,7 @@ where active='true';]]></xml-property>
                             <property name="fontSize">10pt</property>
                             <property name="fontWeight">bold</property>
                             <property name="textAlign">left</property>
-                            <text-property name="text">၂။  က်ား/မ…                </text-property>
+                            <text-property name="text">၂။  က ်ား/မ…                </text-property>
                         </label>
                     </cell>
                     <cell id="461">
@@ -1830,7 +1835,7 @@ where active='true';]]></xml-property>
                             <property name="fontSize">10pt</property>
                             <property name="fontWeight">bold</property>
                             <property name="textAlign">left</property>
-                            <text-property name="text">[1] ▭  က်ား    [2] ▭ မ (ေရြးလိုရာကို ■  ဤသို႕ျခယ္ပါ။ )</text-property>
+                            <text-property name="text">[1] ▭  က ်ား    [2] ▭ မ (ေရြးလိုရာကို ■  ဤသို႕ျခယ္ပါ။ )</text-property>
                         </label>
                     </cell>
                 </row>
@@ -2057,7 +2062,7 @@ where active='true';]]></xml-property>
                                         <property name="fontSize">10pt</property>
                                         <property name="fontWeight">bold</property>
                                         <property name="textAlign">left</property>
-                                        <text-property name="text">[1] ▭ အပ်ိဳ/လူပ်ိဳ</text-property>
+                                        <text-property name="text">[1] ▭ အပ ်ိဳ/လူပ ်ိဳ</text-property>
                                     </label>
                                 </cell>
                                 <cell id="707">
@@ -2418,7 +2423,7 @@ where active='true';]]></xml-property>
                             <property name="fontFamily">"Zawgyi-One"</property>
                             <property name="fontSize">10pt</property>
                             <property name="fontWeight">bold</property>
-                            <text-property name="text"> [1] ▭ က်ပ္ 	[2] ▭ FEC/USD  </text-property>
+                            <text-property name="text"> [1] ▭ က ်ပ္ 	[2] ▭ FEC/USD  </text-property>
                         </label>
                     </cell>
                 </row>

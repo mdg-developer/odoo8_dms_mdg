@@ -155,7 +155,7 @@ class hr_employee_termination(osv.osv):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     _columns = {
-        'name': fields.date('Resignation Date', required=True, readonly=True,
+        'name': fields.date('Effective Date', required=True, readonly=True,
                             states={'draft': [('readonly', False)]}),
         'reason_id': fields.many2one('hr.employee.termination.reason', 'Reason', required=True,
                                      readonly=True, states={
@@ -260,7 +260,7 @@ class hr_employee_termination(osv.osv):
         return True
 
     def state_done(self, cr, uid, ids, context=None):
-        emp_data_pool = self.pool.get("hr.employee")
+
         for term in self.browse(cr, uid, ids, context=context):
             if self.effective_date_in_future(cr, uid, [term.id], context=context):
                 raise osv.except_osv(_('Unable to deactivate employee!'),
@@ -275,7 +275,7 @@ class hr_employee_termination(osv.osv):
                         uid, 'hr.contract', contract.id, 'signal_done', cr)
             wkf.trg_validate(
                 uid, 'hr.employee', term.employee_id.id, 'signal_inactive', cr)
-            emp_data_pool.write(cr, uid, term.employee_id.id, {'status': 'inactive','active':0}, context=context)
+
             self.write(cr, uid, term.id, {'state': 'done'}, context=context)
 
         return True

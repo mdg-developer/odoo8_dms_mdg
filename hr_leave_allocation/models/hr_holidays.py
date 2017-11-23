@@ -123,7 +123,6 @@ class hr_holidays(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         employee_id = vals.get('employee_id', False)
         expiry_date = vals.get('expiry_date', False)
-        leave_name = None
 #         if expiry_date < datetime.now().strftime ("%Y-%m-%d"):
 #             raise osv.except_osv(_('Warning!'), _('Expiry Date must be greater than today.'))
         if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'cancel'] and not self.pool['res.users'].has_group(cr, uid, 'base.group_hr_user'):

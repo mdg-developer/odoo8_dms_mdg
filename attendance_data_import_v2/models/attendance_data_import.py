@@ -77,10 +77,10 @@ class attendance_data_import(osv.osv):
                      } 
                            
             return {'value':result}
-    def calculate_on_change(self,cr,uid, ids,timetable,on_duty,off_duty,clock_in, clock_out, context=None):
+    def calculate_on_change(self,cr,uid, ids,on_duty,off_duty,clock_in, clock_out, context=None):
         result = {}
         start_time = end_time =  None
-        late = early = late_t = early_t = realtime = work_time = ot_time =  0
+        late = early = late_t = early_t = realtime =  0
         FMT = '%H:%M'
         absent = False
         try:
@@ -107,32 +107,15 @@ class attendance_data_import(osv.osv):
                 #early_t = self.convert_hour_minute(int(early))
             
             if clock_in or clock_out:
-                absent = False
-                realtime = 0.5
-            if clock_in and clock_out:
-                absent = False
-                realtime = 0.5
-                date_time_in = datetime.strptime(clock_in, "%Y-%m-%d %H:%M:%S")
-                hour_in = date_time_in.strftime("%H")
-                min_in = date_time_in.strftime("%M")
-                clock_in_min = int(hour_in) * 60 + int(min_in)
-                date_time_out = datetime.strptime(clock_out, "%Y-%m-%d %H:%M:%S")
-                hour_out = date_time_out.strftime("%H")
-                min_out = date_time_out.strftime("%M")
-                clock_out_min = int(hour_out) * 60 + int(min_out)
-                work_time = clock_out_min - clock_in_min
-                if timetable.upper() == 'OT':
-                    realtime = 0.0
-                    ot_time = work_time
-            if clock_in is False and clock_out is False:
-                absent = True
-                realtime = 0.0    
+               absent = False
+               realtime = 0.5
+            else:
+               absent = True
+               realtime = 0.0    
             result = {'late': str(late_t),                       
                       'early': str(early_t),
                       'absent': absent,
-                      'realtime': realtime,
-                      'work_time' : work_time,
-                      'ot_time' : ot_time,                      
+                      'realtime': realtime,                      
                      } 
                            
             return {'value':result}

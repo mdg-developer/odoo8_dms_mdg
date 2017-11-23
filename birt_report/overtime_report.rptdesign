@@ -219,7 +219,7 @@ else
 from hr_employee he,hr_section hs,hr_job hj,hr_bus_stop hbs,hr_department hd
 where he.section_id=hs.id
 and he.department_id=hd.id
-and he.status not in ('inactive','pending_inactive')
+and he.status<> 'inactive'
 and he.job_id=hj.id
 and he.bus_stop_id=hbs.id
 and he.active=True

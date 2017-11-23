@@ -50,8 +50,7 @@
 			<field name="model">hr.efficiency.value</field>
 			<field name="arch" type="xml">
 				<search string="HR Efficiency">
-					<field name="employee_id"/>
-					<field name="badge_id" />
+
 					<group expand="0" string="Group By">
 						<filter string="Employee" icon="terp-personal" domain="[]"
 							context="{'group_by':'employee_id'}" />
@@ -63,8 +62,6 @@
 							context="{'group_by':'date'}" />
 						<filter string="Position" icon="terp-gtk-select-all"
 							domain="[]" context="{'group_by':'job_id'}" />
-						<filter string="Reason" icon="terp-gtk-select-all"
-							domain="[]" context="{'group_by':'note'}" />
 					</group>
 				</search>
 			</field>
