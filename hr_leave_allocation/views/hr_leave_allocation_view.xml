@@ -127,6 +127,10 @@
       		<field name="employee_id" position="before">
       		    <field name="badge_id"/>
       		</field>
+      		<field name="employee_id" position="after">
+      		    <field name="department_id"/>
+      		    <field name="section_id"/>
+      		</field>
         </field>
     </record>
     <record model="ir.ui.view" id="view_hr_holidays_filter_inherit">

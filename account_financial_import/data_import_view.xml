@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data>
-<!-- Account  -->		
-
-			<record id="view_account_import_form" model="ir.ui.view">
+		<record id="view_account_import_form" model="ir.ui.view">
 			<field name="name">Account Import Form</field>
 			<field name="model">data_import.account</field>
 			<field name="arch" type="xml">
@@ -44,16 +42,19 @@
 
 		<!-- Action -->
 		<record id="action_account_import" model="ir.actions.act_window">
-			<field name="name">Financial Report Import</field>
+			<field name="name">Account Report</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">data_import.account</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" ref="view_account_import_tree" />
 		</record>
+		
+		<menuitem id="menu_data_import_config" name="Data Import"
+			parent="base.menu_custom" sequence="31" />
+		<menuitem action="account_financial_import.action_account_import"
+			id="menu_data_import_account" parent="menu_data_import_config"
+			sequence="1" />
 
-			
-		<menuitem id="menu_data_import_config" name="Data Import" parent="base.menu_custom" sequence="31"/>
-       	<menuitem action="account_financial_import.action_account_import" id="menu_data_import_account" parent="menu_data_import_config" sequence="2"/>
 	</data>
 </openerp>
