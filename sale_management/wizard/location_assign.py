@@ -65,6 +65,7 @@ class sale_make_location(osv.osv_memory):
         for order in order_id: 
             sale_data=order_obj.browse(cr,uid,order,context=context)
             so_no=sale_data.name
+            pre_route_id = section_data.pre_route_id.id
             cr.execute("update sale_order set delivery_id =%s ,user_id=%s,warehouse_id =%s where name =%s and state!='done'",(section_id,user_id,warehouse_id,so_no,))
             #picking_ids = self.pool.get('stock.picking').search(cr, uid, [('origin', '=',so_no),('state','!=','done')], context=context)
             picking_ids = self.pool.get('stock.picking').search(cr, uid, [('group_id', '=',so_no),('state','!=','done')], context=context)
@@ -85,7 +86,10 @@ class sale_make_location(osv.osv_memory):
 #                 cr.execute("update stock_picking set picking_type_id =%s where id in %s ",(picking_type_id,tuple(picking_ids),))
 #             cr.execute("update account_invoice set user_id =%s ,section_id=%s,collection_user_id =%s ,collection_team_id=%s where origin =%s and state ='draft' ",(user_id,section_id,user_id,section_id,so_no,))
         #self.signal_workflow(cr,uid,ids,'ship_recreate')
-        self.pool.get('sale.order').action_ship_create(cr,uid,order,context=context)
+            self.pool.get('sale.order').action_ship_create(cr,uid,order,context=context)
+            cr.execute("update sale_order set route_id =%s where name =%s and state!='done'",(pre_route_id,so_no,))
+            cr.execute("update sale_order_line set route_id =%s where order_id=%s",(pre_route_id,order,))
+        
         return True
 
 
