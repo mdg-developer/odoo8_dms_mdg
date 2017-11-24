@@ -175,18 +175,27 @@ class sale_order(osv.osv):
         issue_warehouse_id=False
         delivery_id=False
         branch_id=False
+        direct_sale_route=False
+        pre_sale_route=False
         if section_id:
             team = self.pool.get('crm.case.section').browse(cr, uid, section_id, context=context)
             issue_warehouse_id = team.delivery_team_id.warehouse_id and  team.delivery_team_id.warehouse_id.id or False
             delivery_id = team.delivery_team_id and  team.delivery_team_id.id or False
             branch_id = team.branch_id and  team.branch_id.id or False
+            pre_sale_route=team.delivery_team_id.pre_route_id.id
+            direct_sale_route=team.delivery_team_id.direct_route_id.id  
+                      
         values = {
              'issue_warehouse_id':issue_warehouse_id,
              'delivery_id':delivery_id,
              'warehouse_id':issue_warehouse_id,
              'branch_id':branch_id,
               }
-        return {'value': values}
+
+        
+        domain = {'route_id': [('id', 'in', (pre_sale_route,direct_sale_route))]}
+
+        return {'value': values, 'domain': domain}
     
     
     def on_change_delivery_id(self, cr, uid, ids, delivery_id, context=None):

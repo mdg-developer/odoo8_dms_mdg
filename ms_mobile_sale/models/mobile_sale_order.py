@@ -564,6 +564,8 @@ class mobile_sale_order(osv.osv):
                     company_id = cr.fetchone()[0]
                     date = datetime.strptime(ms_ids.date, '%Y-%m-%d %H:%M:%S')
                     de_date = date.date()       
+                    cr.execute("select direct_route_id from crm_case_section where id =%s",(sale_team_id,))
+                    direct_route_id=cr.fetchone()[0]                    
                     soResult = {
                                           'delivery_id':delivery_id,
                                           'date_order':ms_ids.date,
@@ -574,6 +576,7 @@ class mobile_sale_order(osv.osv):
                                            'date_confirm':ms_ids.date,
                                            'amount_total':ms_ids.amount_total,
                                            'order_policy':'manual',
+                                           'route_id':direct_route_id,
                                            'company_id':company_id,
                                            'payment_term':ms_ids.payment_term.id,
                                             'state':so_state,
@@ -602,8 +605,6 @@ class mobile_sale_order(osv.osv):
                                         }
                     soId = soObj.create(cr, uid, soResult, context=context)
                     if soId and ms_ids.order_line:
-                        cr.execute("select direct_route_id from crm_case_section where id =%s",(sale_team_id,))
-                        direct_route_id=cr.fetchone()[0]
                         for line_id in ms_ids.order_line:
                             if line_id:
                                 if line_id.product_id:
