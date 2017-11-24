@@ -259,6 +259,9 @@ class crm_case_section(osv.osv):
                'weekly_target_amount':fields.float(string='Weekly Target Amount'),     
                'monthly_target_amount':fields.float(string='Monthly Target Amount'),     
                'yearly_target_amount':fields.float(string='Yearly Target Amount'),    
+                'direct_route_id': fields.many2one('stock.location.route', 'DS-Route', required=True),
+                'pre_route_id': fields.many2one('stock.location.route', 'PS-Route', required=True),
+               
                            
         }
     _sql_constraints = [

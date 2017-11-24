@@ -46,6 +46,8 @@
 					<field name="issue_location_id" />
 					<field name="temp_location_id" />
 					<field name="return_location_id" />
+					<field name="direct_route_id" />
+					<field name="pre_route_id" />
 					<field name="receiver" />
 					<field name="analytic_account_id" />
 					<field name="van_id" invisible="1" />
@@ -130,15 +132,15 @@
 							</kanban>
 						</field>
 					</page>
-					
+
 					<page string="Target Setting">
 						<group>
-							<field name="weekly_target_amount"/>
-							<field name="monthly_target_amount"/>
-							<field name="yearly_target_amount"/>
+							<field name="weekly_target_amount" />
+							<field name="monthly_target_amount" />
+							<field name="yearly_target_amount" />
 						</group>
 					</page>
-					
+
 					<!-- Add Product Main Group -->
 					<!-- <page string="Product Main Group"> -->
 					<!-- <separator string="Main Group" /> -->

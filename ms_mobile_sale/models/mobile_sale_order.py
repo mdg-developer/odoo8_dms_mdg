@@ -332,6 +332,8 @@ class mobile_sale_order(osv.osv):
         product_product_obj = self.pool.get('product.product')      
         product_template_obj = self.pool.get('product.template')      
         res_user_obj = self.pool.get('res.users')      
+        procurement_obj = self.pool.get('procurement.order')
+        
         location_ids = []        
         try:
             str =vals 
@@ -404,7 +406,11 @@ class mobile_sale_order(osv.osv):
                     cursor.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (uom,))
                     bigger_qty = cursor.fetchone()[0]
                     bigger_qty = int(bigger_qty)
-                    product_uom_qty = bigger_qty * p_qty                    
+                    product_uom_qty = bigger_qty * p_qty  
+                    user_data = self.pool.get('res.users').browse(cursor, user, user, context=context)
+                    comps = [x.id for x in user_data.company_ids]
+                    for comp in comps:            
+                        procurement_obj.run_scheduler(cursor, user, use_new_cursor=cursor.dbname, company_id = comp, context=context)                                      
                     cursor.execute("select COALESCE(sum(qty),0) from stock_quant where location_id  in  %s and product_id =%s and reservation_id is null", (tuple(location_ids),tuple(product_id),))      
                     qty = cursor.fetchone()[0]   
                     if uom:
@@ -596,6 +602,8 @@ class mobile_sale_order(osv.osv):
                                         }
                     soId = soObj.create(cr, uid, soResult, context=context)
                     if soId and ms_ids.order_line:
+                        cr.execute("select direct_route_id from crm_case_section where id =%s",(sale_team_id,))
+                        direct_route_id=cr.fetchone()[0]
                         for line_id in ms_ids.order_line:
                             if line_id:
                                 if line_id.product_id:
@@ -619,6 +627,7 @@ class mobile_sale_order(osv.osv):
                                 solResult = {
                                              'order_id':soId,
                                               'product_id':line_id.product_id.id,
+                                              'route_id':direct_route_id,
                                               'name':product_name,
                                               'price_unit':price_unit,
                                               'product_uom':line_id.uom_id.id,

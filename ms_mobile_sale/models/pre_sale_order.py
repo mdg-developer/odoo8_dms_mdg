@@ -135,7 +135,7 @@ class pre_sale_order(osv.osv):
                         'paid': True,
                         'warehouse_id':so['warehouse_id'],
                         'tablet_id':so['tablet_id'],
-                        'delivery_remark':so['delivery_remark'],
+                        'delivery_remark':None,
                         'location_id':so['location_id'],
                         'user_id':so['user_id'],
                         'name':so['name'],
@@ -263,7 +263,7 @@ class pre_sale_order(osv.osv):
                         'paid': True,
                         'warehouse_id':so['warehouse_id'],
                         'tablet_id':so['tablet_id'],
-                        'delivery_remark':so['delivery_remark'],
+                        'delivery_remark':None,
                         'location_id':so['location_id'],
                         'user_id':so['user_id'],
                         'name':so['name'],
@@ -364,12 +364,14 @@ class pre_sale_order(osv.osv):
                             delivery_id = data[0][0]
                         else:
                             delivery_id = None
-                        cr.execute('select warehouse_id from crm_case_section where id = %s ', (delivery_id,))
+                        cr.execute('select warehouse_id,pre_route_id from crm_case_section where id = %s ', (delivery_id,))
                         data = cr.fetchall()
                         if data:
                             warehouse_id=data[0][0]
+                            pre_route_id=data[0][1]
                         else:
-                            warehouse_id = None                            
+                            warehouse_id = None     
+                            pre_route_id= None                       
                         cr.execute('select company_id from res_users where id=%s', (preObj_ids.user_id.id,))
                         company_id = cr.fetchone()[0]
                         if preObj_ids.void_flag == 'voided':  # they work while payment type not 'cash' and 'credit'
@@ -422,6 +424,7 @@ class pre_sale_order(osv.osv):
                                     productName = line_id.product_id.name
                                 product_data = self.pool.get('product.product').browse(cr, uid,line_id.product_id.id, context=context)   
                                 detailResult = {'order_id':so_id,
+                                                        'route_id':pre_route_id,
                                                         'product_type':product_data.product_tmpl_id.type,
                                                         'product_id':line_id.product_id.id,
                                                         'name':productName,
@@ -468,7 +471,11 @@ class pre_sale_order(osv.osv):
                 raise orm.except_orm(_('Error :'), _("Error Occured while Convert Mobile Sale Order! \n [ %s ]") % (e))
             
             proc_ids = procurement_obj.search(cr, uid, [('state', 'not in', ['running','done'])])            
-            procurement_obj.run(cr, uid, proc_ids, context=context)            
+            #procurement_obj.run_scheduler(cr, uid, proc_ids, context=context)            
+#             user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+#             comps = [x.id for x in user.company_ids]
+#             for comp in comps:            
+#                 procurement_obj.run_scheduler(cr, uid, use_new_cursor=cr.dbname, company_id = comp, context=context)
             self.write(cr, uid, ids[0], {'m_status':'done'}, context=context)                        
         return True
     
