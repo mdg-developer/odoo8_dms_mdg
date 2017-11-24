@@ -129,7 +129,7 @@ class sale_order(osv.osv):
                     ('partial', 'Partial'),
                     ('delivered', 'Delivered'),
                     ('none', 'None')
-               ], 'Deliver Remark', readonly=True, default='none'),
+               ], 'Deliver Remark',  default='none'),
                'due_date':fields.date('Due Date', readonly=True),
                'so_latitude':fields.float('Geo Latitude'),
                'so_longitude':fields.float('Geo Longitude'),
@@ -150,7 +150,7 @@ class sale_order(osv.osv):
         'state_id': fields.many2one("res.country.state", 'State', ondelete='restrict' , readonly=True),
         'country_id': fields.many2one('res.country', 'Country', ondelete='restrict' , readonly=True),
         'township': fields.many2one('res.township', 'Township', ondelete='restrict' , readonly=True),
-         'payment_term': fields.many2one('account.payment.term', 'Payment Term', readonly=True),
+         'payment_term': fields.many2one('account.payment.term', 'Payment Term'),
          'issue_warehouse_id':fields.many2one('stock.warehouse', 'Warehouse'),
                }
     

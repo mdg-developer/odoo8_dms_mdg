@@ -6,13 +6,13 @@
 			<field name="model">hr.payslip</field>
 			<field name="inherit_id" ref="hr_payroll.view_hr_payslip_form" />
 			<field name="arch" type="xml">
-                
 				<xpath expr="//tree/field[@name='number_of_hours']" position="after">
 					<field name="total_month_day" invisible="1"/>
                     <field name="working_month" invisible="1"/>					
-                    			
 				</xpath>
-
+				<xpath expr="//label[@for='date_from']" position="before">
+					<field name="badge_id"/>
+				</xpath>
 			</field>
 		</record>  
 		

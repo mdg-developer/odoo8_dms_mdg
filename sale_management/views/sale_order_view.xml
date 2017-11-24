@@ -109,9 +109,8 @@
 					<field name="delivery_remark" />
 				</field>
 				<field name="date_order" position="after">
-					<field name="payment_type" on_change="on_change_payment_type(partner_id,payment_type)"
-						attrs="{'readonly': [('payment_type','=','cash')]}" />
-					<field name="payment_term" options="{'no_create': True}" />
+					<field name="payment_type" on_change="on_change_payment_type(partner_id,payment_type)" />
+					<field name="payment_term" />
 					<field name="due_date"></field>
 				</field>
 				<field name="client_order_ref" position="replace">
@@ -159,7 +158,8 @@
 					<field name="user_id" domain="[('default_section_id', '=',section_id)]"
 						required="1" attrs="{'readonly':[('state','!=','draft')]}"
 						context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'account.group_account_invoice', 'base.group_sale_salesman_all_leads']}" />
-					<field name="delivery_id" attrs="{'readonly':[('state','!=','draft')]}"  on_change="on_change_delivery_id(delivery_id)"></field>
+					<field name="delivery_id" attrs="{'readonly':[('state','!=','draft')]}"
+						on_change="on_change_delivery_id(delivery_id)"></field>
 
 				</field>
 				<field name="invoiced" position="before">

@@ -98,6 +98,7 @@
             <field name="arch" type="xml">
                 <field name="department_id" position="after">
                 	<field name="section_id" />
+                	<field name="length_of_service" />
                     <filter string="Today Trial End Date" domain="[('trial_end_date', '&gt;=', datetime.datetime.now().strftime('%Y-%m-%d 00:00:00')),('trial_end_date', '&lt;=', datetime.datetime.now().strftime('%Y-%m-%d 23:23:59'))]"/>
                     <filter string="Today Contract End Date" domain="[('date_end', '&gt;=', datetime.datetime.now().strftime('%Y-%m-%d 00:00:00')),('date_end', '&lt;=', datetime.datetime.now().strftime('%Y-%m-%d 23:23:59'))]"/>
                    	<filter string="This Month Contract End Date" 
