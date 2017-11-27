@@ -14,7 +14,7 @@ class crm_case_section(osv.osv):
         currentYear = datetime.now().year
         print 'currentYearcurrentYear',currentYear
         for data in self.browse(cr, uid, ids, context=context):
-            cr.execute("select sum(amount_total) from account_invoice where partner_id =%s and state !='cancel' and EXTRACT(YEAR FROM date_invoice)=%s", (data.id,currentYear,))
+            cr.execute("select COALESCE(sum(amount_total),0) from account_invoice where partner_id =%s and state !='cancel' and EXTRACT(YEAR FROM date_invoice)=%s", (data.id,currentYear,))
             amount_total = cr.fetchone()
             if amount_total:
                 amount_total = amount_total[0]
