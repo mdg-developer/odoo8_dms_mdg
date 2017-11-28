@@ -7,6 +7,9 @@
 			<!-- <field eval="1" name="priority"/> -->
 			<field name="inherit_id" ref="base.view_partner_form" />
 			<field name="arch" type="xml">
+				<xpath expr="//field[@name='category_id']" position="after">
+					<field name="inter_company" />
+				</xpath>
 				<xpath expr="//field[@name='website']" position="after">
 					<field name="is_distributor" attrs="{'invisible':[('customer','=',False)]}"
 						sequence="1" />
@@ -14,7 +17,6 @@
 						sequence="1" />
 					<field name="bw_customer" attrs="{'invisible':[('customer','=',False)]}"
 						sequence="1" />
-
 					<field name="function_res_total_amount" attrs="{'invisible':[('customer','=',False)]}"
 						sequence="1" invisible="1" />
 					<field name="res_total_amount" attrs="{'invisible':[('customer','=',False)]}"
@@ -118,6 +120,23 @@
 							Unaccepted</text></div> -->
 					</page>
 				</page>
+			</field>
+		</record>
+
+		<record id="inherit_account_view_partner_property_form" model="ir.ui.view">
+			<field name="name">res.partner.form</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="account.view_partner_property_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='property_account_receivable']"
+					position="replace">
+					<field name="property_account_receivable" attrs="{'invisible':[('inter_company','==',False)]}" />
+				</xpath>
+				<xpath expr="//field[@name='property_account_payable']"
+					position="replace">
+					<field name="property_account_payable" attrs="{'invisible':[('inter_company','==',False)]}" />
+				</xpath>
+
 			</field>
 		</record>
 
