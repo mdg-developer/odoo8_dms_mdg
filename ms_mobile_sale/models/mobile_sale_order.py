@@ -1179,7 +1179,6 @@ class mobile_sale_order(osv.osv):
                  and ppl.active = true
                  and cpr.team_id = %s''', (section_id,))
         datas = cr.fetchall()
-        print 'Price List Data', datas
         return datas
     
     def get_pricelist_version_datas(self, cr, uid, pricelist_id, context=None, **kwargs):
@@ -1193,12 +1192,12 @@ class mobile_sale_order(osv.osv):
     def get_pricelist_item_datas(self, cr, uid, version_id, context=None, **kwargs):
         cr.execute('''select pi.id,pi.price_discount,pi.sequence,pi.product_tmpl_id,pi.name,pp.id base_pricelist_id,
                     pi.product_id,pi.base,pi.price_version_id,pi.min_quantity,
-                    pi.categ_id,pi.new_price price_surcharge,pi.product_uom_id
+                    pi.categ_id,pi.price_surcharge price_surcharge,pi.product_uom_id
                     from product_pricelist_item pi, product_pricelist_version pv, product_pricelist pp
                     where pv.pricelist_id = pp.id                             
                     and pv.id = pi.price_version_id
                     and pi.price_version_id = %s''', (version_id,))
-        datas = cr.fetchall()        
+        datas = cr.fetchall()
         return datas
 
     def get_product_uoms(self, cr, uid , saleteam_id, context=None, **kwargs):
