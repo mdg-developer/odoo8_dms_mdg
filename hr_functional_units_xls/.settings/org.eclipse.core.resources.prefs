@@ -1,0 +1,7 @@
+eclipse.preferences.version=1
+encoding/__init__.py=utf-8
+encoding/__openerp__.py=utf-8
+encoding/account_anlaytic_general_ledger.py=utf-8
+encoding/analytic_location_general_ledger.py=utf-8
+encoding/generate_report_webkit.py=utf-8
+encoding/hr_functional_units.py=utf-8

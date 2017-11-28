@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="view_hr_mic_form" model="ir.ui.view">
+			<field name="name">HR MIC Form</field>
+			<field name="model">hr.mic</field>
+			<field name="arch" type="xml">
+				<form string="HR MIC Form" version="7.0">
+					<sheet>
+						<group>
+							<field name="name"/>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="view_hr_mic_tree" model="ir.ui.view">
+			<field name="name">HR MIC Tree</field>
+			<field name="model">hr.mic</field>
+			<field name="arch" type="xml">
+				<tree string="HR MIC Tree">
+					<field name="name" />					
+				</tree>
+			</field>
+		</record>
+		
+		<record id="action_hr_mic" model="ir.actions.act_window">
+			<field name="name">HR MIC</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">hr.mic</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_hr_mic_tree" />
+		</record>
+
+		<menuitem action="action_hr_mic" id="menu_hr_mic"
+			parent="hr.menu_hr_configuration" sequence="6" />
+			
+	</data>
+</openerp>

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record id="view_department_form_inherit" model="ir.ui.view">
+			<field name="name">hr.department.form.inherit</field>
+			<field name="model">hr.department</field>
+			<field name="inherit_id" ref="hr.view_department_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='company_id']" position="after">
+					<field name="hr_functional_units_id" />
+				</xpath>
+				<xpath expr="//field[@name='parent_id']" position="after">
+					<field name="analytic_id" />
+				</xpath>
+				<xpath expr="//form/sheet/group" position="after">
+					<notebook>
+						<page string="Basic">
+							<group>
+								<group string="Permanent Salary and Wages">
+									<field name="salary_wages_rule" />
+									<field name="salary_wages_debit" />
+									<field name="salary_wages_credit" />
+								</group>
+								<group string="Permanent OT">
+									<field name="ot_rule" />
+									<field name="ot_debit" />
+									<field name="ot_credit" />
+								</group>
+								<group string="Daily Workers Salary and Wages">
+									<field name="pdwe_salary_wages_rule" />
+									<field name="pdwe_salary_wages_debit" />
+									<field name="pdwe_salary_wages_credit" />
+								</group>
+								<group string="Daily Workers OT">
+									<field name="pdwe_ot_rule" />
+									<field name="pdwe_ot_debit" />
+									<field name="pdwe_ot_credit" />
+								</group>
+								<group string="Sales Incentives">
+									<field name="sale_incentive_rule" />
+									<field name="sale_incentive_debit" />
+									<field name="sale_incentive_credit" />
+								</group>
+								<group string="Bonus">
+									<field name="bonus_rule" />
+									<field name="bonus_debit" />
+									<field name="bonus_credit" />
+								</group>
+								<group string="Income Tax Employee Contribution">
+									<field name="income_tax_emp_rule" />
+									<field name="income_tax_emp_debit" />
+									<field name="income_tax_emp_credit" />
+								</group>
+								<group string="Income Tax Employer Contribution">
+									<field name="income_tax_employer_rule" />
+									<field name="income_tax_employer_debit" />
+									<field name="income_tax_employer_credit" />
+								</group>
+								<group string="SSB Employee Contribution">
+									<field name="ssb_emp_rule" />
+									<field name="ssb_emp_debit" />
+									<field name="ssb_emp_credit" />
+								</group>
+								<group string="SSB Employer Contribution">
+									<field name="ssb_employer_rule" />
+									<field name="ssb_employer_debit" />
+									<field name="ssb_employer_credit" />
+								</group>
+								<group string="Mobile Allowance Contribution">
+									<field name="mobile_allowance_rule" />
+									<field name="mobile_allowance_debit" />
+									<field name="mobile_allowance_credit" />
+								</group>
+								<group string="Fuel Allowance Contribution">
+									<field name="fuel_allowance_rule" />
+									<field name="fuel_allowance_debit" />
+									<field name="fuel_allowance_credit" />
+								</group>
+							</group>
+						</page>
+						<page string="Adjustment">
+							<group>
+								<group string="Salary and Wages(Addition)">
+									<field name="salary_wages_rule_allow" />
+									<field name="salary_wages_debit_allow" />
+									<field name="salary_wages_credit_allow" />
+								</group>
+								<group string="Salary and Wages(Subtraction)">
+									<field name="salary_wages_rule_deduct" />
+									<field name="salary_wages_debit_deduct" />
+									<field name="salary_wages_credit_deduct" />
+								</group>
+								<group string="OT(Addition)">
+									<field name="ot_rule_allow" />
+									<field name="ot_debit_allow" />
+									<field name="ot_credit_allow" />
+								</group>
+								<group string="OT(Subtraction)">
+									<field name="ot_rule_deduct" />
+									<field name="ot_debit_deduct" />
+									<field name="ot_credit_deduct" />
+								</group>
+								<group string="Bonus(Addition)">
+									<field name="bonus_rule_allow" />
+									<field name="bonus_debit_allow" />
+									<field name="bonus_credit_allow" />
+								</group>
+								<group string="Bonus(Subtraction)">
+									<field name="bonus_rule_deduct" />
+									<field name="bonus_debit_deduct" />
+									<field name="bonus_credit_deduct" />
+								</group>
+								<group string="Sales Incentives(Addition)">
+									<field name="sale_incentive_rule_allow" />
+									<field name="sale_incentive_debit_allow" />
+									<field name="sale_incentive_credit_allow" />
+								</group>
+								<group string="Sales Incentives(Subtraction)">
+									<field name="sale_incentive_rule_deduct" />
+									<field name="sale_incentive_debit_deduct" />
+									<field name="sale_incentive_credit_deduct" />
+								</group>
+							</group>
+						</page>
+					</notebook>
+				</xpath>
+			</field>
+		</record>
+
+		<record id="view_department_tree_inherit" model="ir.ui.view">
+			<field name="name">hr.department.tree.inherit</field>
+			<field name="model">hr.department</field>
+			<field name="inherit_id" ref="hr.view_department_tree" />
+			<field name="arch" type="xml">
+				<field name="manager_id" position="after">
+					<field name="parent_id" />
+					<field name="hr_functional_units_id" />
+				</field>
+			</field>
+		</record>
+
+	</data>
+</openerp>

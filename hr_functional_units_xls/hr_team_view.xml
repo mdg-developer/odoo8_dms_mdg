@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="view_hr_team_view_form" model="ir.ui.view">
+			<field name="name">HR Team Form</field>
+			<field name="model">hr.team</field>
+			<field name="arch" type="xml">
+				<form string="HR Team Form" version="7.0">
+					<sheet>						
+						<group>
+							<group>
+								<field name="name" />
+								<field name="company_id" widget="selection"
+									groups="base.group_multi_company" />
+								<field name="manager_id" />
+								<field name="analytic_id" />
+							</group>
+							<group>
+								<field name="parent_id" />
+								<field name="parent_dep_id" />
+							</group>
+						</group>							
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="view_hr_team_tree" model="ir.ui.view">
+			<field name="name">HR Team Tree</field>
+			<field name="model">hr.team</field>
+			<field name="arch" type="xml">
+				<tree string="Mobile Team Tree">
+					<field name="name" />
+					<field name="company_id" widget="selection" groups="base.group_multi_company" />
+					<field name="manager_id" />
+					<field name="parent_id" />
+					<field name="parent_dep_id" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Action -->
+		<record id="action_hr_team" model="ir.actions.act_window">
+			<field name="name">HR Team</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">hr.team</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_hr_team_tree" />
+		</record>
+
+		<menuitem action="action_hr_team" id="menu_hr_team"
+			parent="hr.menu_hr_configuration" sequence="10" />
+			
+	</data>
+</openerp>
