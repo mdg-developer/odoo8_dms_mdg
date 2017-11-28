@@ -98,14 +98,22 @@ class account_invoice(models.Model):
         cr = self._cr
         type = 'out_invoice' 
         origin = line.get('ref', False)
+        is_inter_customer=False
         is_discount = line.get('is_discount', False)
         if origin:
-            cr.execute("select type from account_invoice where origin=%s", (origin,))
-            type = cr.fetchone()
-            if type:
-                type = type[0]
+            cr.execute("select type,partner_id from account_invoice where origin=%s", (origin,))
+            type_data = cr.fetchone()
+            if type_data:
+                type = type_data[0]
+                partner_id =type_data[1]
             else:
                 type = None
+                partner_id =None
+            if partner_id is not None:
+                partner_data = self.env['res.partner'].browse(partner_id)
+                is_inter_customer=partner_data.inter_company
+                receivable_account_id =partner_data.property_account_receivable.id
+                payable_account_id =partner_data.property_account_payable.id
         if type == 'out_invoice' :
             if line['price'] < 0:
                 product = self.env['product.product'].browse(line.get('product_id', False))
@@ -113,8 +121,11 @@ class account_invoice(models.Model):
                 if  line['is_discount'] == True:
                     account_id = product.product_tmpl_id.main_group.property_account_discount.id
                     line['price'] = -1 * line['price']
+                elif is_inter_customer ==True:
+                    account_id=receivable_account_id
                 else:
                     account_id = product.product_tmpl_id.main_group.property_account_receivable.id
+                    
                 res = {
                     'date_maturity': line.get('date_maturity', False),
                     'partner_id': part,
@@ -141,7 +152,10 @@ class account_invoice(models.Model):
         if type == 'in_refund' :
             if line['price'] < 0:
                 product = self.env['product.product'].browse(line.get('product_id', False))
-                account_id = product.product_tmpl_id.main_group.property_account_payable.id
+                if is_inter_customer ==True:
+                    account_id=payable_account_id
+                else:                
+                    account_id = product.product_tmpl_id.main_group.property_account_payable.id
                 res = {
                     'date_maturity': line.get('date_maturity', False),
                     'partner_id': part,
@@ -172,6 +186,8 @@ class account_invoice(models.Model):
                 product = self.env['product.product'].browse(line.get('product_id', False))
                 if  line['is_discount'] == True:
                     account_id = product.product_tmpl_id.main_group.property_account_discount.id
+                elif is_inter_customer ==True:
+                    account_id=receivable_account_id
                 else:
                     account_id = product.product_tmpl_id.main_group.property_account_receivable.id
                 res = {
@@ -203,7 +219,9 @@ class account_invoice(models.Model):
                 product = self.env['product.product'].browse(line.get('product_id', False))
                 if  line['is_discount'] == True:
                     account_id = product.product_tmpl_id.main_group.property_account_discount.id
-                else:
+                elif is_inter_customer ==True:
+                    account_id=payable_account_id
+                else:                                
                     account_id = product.product_tmpl_id.main_group.property_account_payable.id                
 
                 res = {
@@ -237,16 +255,24 @@ class account_invoice(models.Model):
         account_id = None
         cr = self._cr
         type = 'out_invoice' 
+        is_inter_customer=False
         discount_amt = 0
         total_tax_amt = 0
         origin = line.get('ref', False)
         if origin:
-            cr.execute("select type from account_invoice where origin=%s", (origin,))
-            type = cr.fetchone()
-            if type:
-                type = type[0]
+            cr.execute("select type,partner_id from account_invoice where origin=%s", (origin,))
+            type_data = cr.fetchone()
+            if type_data:
+                type = type_data[0]
+                partner_id =type_data[1]
             else:
                 type = None
+                partner_id =None
+            if partner_id is not None:
+                partner_data = self.env['res.partner'].browse(partner_id)
+                is_inter_customer=partner_data.inter_company
+                receivable_account_id =partner_data.property_account_receivable.id
+                payable_account_id =partner_data.property_account_payable.id
 
         if type == 'out_invoice' and line.get('product_id', False) != False:            
             product = self.env['product.product'].browse(line.get('product_id', False))
@@ -271,7 +297,9 @@ class account_invoice(models.Model):
                     line['price'] = line['price'] + discount_amt - total_tax_amt           
                 if  line['is_discount'] == True:
                     account_id = product.product_tmpl_id.main_group.property_account_discount.id
-                else:
+                elif is_inter_customer ==True:
+                    account_id=receivable_account_id
+                else:              
                     account_id = product.product_tmpl_id.main_group.property_account_receivable.id
                 if line['price'] < 0 :
                     line['price'] = -line['price']
@@ -322,6 +350,8 @@ class account_invoice(models.Model):
                     line['price'] = line['price'] + discount_amt - total_tax_amt                
                 if  line['is_discount'] == True:
                     account_id = product.product_tmpl_id.main_group.property_account_discount.id
+                elif is_inter_customer ==True:
+                    account_id=payable_account_id      
                 else:
                     account_id = product.product_tmpl_id.main_group.property_account_payable.id                
                 if line['price'] < 0:
@@ -374,7 +404,9 @@ class account_invoice(models.Model):
                 if  line['is_discount'] == True:
                     account_id = product.product_tmpl_id.main_group.property_account_discount.id
                     line['price'] = -1 * line['price']
-                else:
+                elif is_inter_customer ==True:
+                    account_id=receivable_account_id
+                else:              
                     account_id = product.product_tmpl_id.main_group.property_account_receivable.id
                 if line['price'] > 0 :
                     line['price'] = -line['price']
@@ -437,7 +469,9 @@ class account_invoice(models.Model):
                 if  line['is_discount'] == True:
                     account_id = product.product_tmpl_id.main_group.property_account_discount.id
                     line['price'] = -1 * line['price']
-                else:
+                elif is_inter_customer ==True:
+                    account_id=payable_account_id      
+                else:                   
                     account_id = product.product_tmpl_id.main_group.property_account_payable.id                
                 if line['price'] > 0:
                     line['price'] = -line['price']
