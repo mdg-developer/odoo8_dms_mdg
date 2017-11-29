@@ -16,6 +16,11 @@
 					position="after">
 					<field name="supplier_code" />
 				</xpath>
+				<xpath
+					expr="//notebook/page/field[@name='order_line']/tree/field[@name='price_unit']"
+					position="replace">
+					<field name="price_unit" digits ="(16,2)"/>
+				</xpath>
 				<xpath expr="//notebook/page/field[@name='order_line']"
 					position="before">
 					<button name="%(action_product_select_wizard_view)d" type="action"

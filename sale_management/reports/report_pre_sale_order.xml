@@ -169,7 +169,8 @@
 										<span t-field="l.product_uom.name" groups="product.group_uom" />
 									</td>
 									<td class="text-right" style="border:1pt solid;border-color:black;">
-										<span t-field="l.price_unit" />
+										<!-- <span t-field="l.price_unit" /> -->
+										<span t-esc="'%.2f'%l.price_unit" />
 									</td>
 									<td class="text-right" style="border:1pt solid;border-color:black;">
 										<span t-esc="l.product_uom_qty*l.price_unit" />

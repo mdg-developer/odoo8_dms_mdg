@@ -37,8 +37,10 @@
 					expr="//form/sheet/notebook/page/field/tree/field[@name='price_unit']"
 					position="replace">
 					<field name="product_type" invisible="1"/>
-					<field name="price_unit"/>
+					<field name="price_unit" digits="(16, 2)"/>
+					
 				</xpath>
+					
 				<xpath
 					expr="//form/sheet/notebook/page/field/tree/field[@name='product_uom']"
 					position="replace">

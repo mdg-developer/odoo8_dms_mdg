@@ -84,7 +84,8 @@
                             <span groups="product.group_uom" t-field="l.product_uom"/>
                         </td>
                         <td class="text-right">
-                            <span t-field="l.price_unit"/>
+                            <span t-field="l.price_unit"/>                            
+                            <!-- <span t-esc="'%.2f'% l.price_unit"/> -->
                         </td>
                         <td class="text-right">
                             <span t-field="l.price_subtotal"
