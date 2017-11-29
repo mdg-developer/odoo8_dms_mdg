@@ -18,7 +18,7 @@
 				<xpath expr="//field[@name='user_id']" position="replace">
 				</xpath>
 				<xpath expr="//field[@name='partner_id']" position="after">
-					<field name="section_id"  />
+					<field name="section_id" />
 					<field name="delivery_id" />
 					<field name="warehouse_id" />
 				</xpath>
@@ -27,19 +27,20 @@
 				</xpath>
 			</field>
 		</record>
-		
-		<record id="inherit_view_stock_invoice_onshipping" model="ir.ui.view">
-			<field name="name">stock.invoice.onshipping</field>
-			<field name="model">stock.invoice.onshipping</field>
-			<field name="inherit_id" ref="stock_account.view_stock_invoice_onshipping" />
-			<field name="arch" type="xml">
-				<xpath expr="//field[@name='journal_id']" position="replace">
-					<field name="journal_id" domain="[('type','=',journal_type)]" readonly="1"/>
-				</xpath>
-				
-			</field>
-		</record>
-		
+
+		<!-- <record id="inherit_view_stock_invoice_onshipping" model="ir.ui.view"> -->
+		<!-- <field name="name">stock.invoice.onshipping</field> -->
+		<!-- <field name="model">stock.invoice.onshipping</field> -->
+		<!-- <field name="inherit_id" ref="stock_account.view_stock_invoice_onshipping" 
+			/> -->
+		<!-- <field name="arch" type="xml"> -->
+		<!-- <xpath expr="//field[@name='journal_id']" position="replace"> -->
+		<!-- <field name="journal_id" domain="[('type','=',journal_type)]" readonly="1"/> -->
+		<!-- </xpath> -->
+
+		<!-- </field> -->
+		<!-- </record> -->
+
 	</data>
 </openerp>
 		

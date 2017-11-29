@@ -1,2 +1,2 @@
-import stock_invoice_onshipping
+#import stock_invoice_onshipping
 import collection_team_assign
