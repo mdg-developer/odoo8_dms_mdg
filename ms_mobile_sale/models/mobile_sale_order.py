@@ -2933,7 +2933,7 @@ class mobile_sale_order(osv.osv):
 
     def product_qty_in_stock(self, cr, uid, warehouse_id , context=None, **kwargs):
             cr.execute("""
-                            select product_id,qty_on_hand*(floor(1/p.factor)) as qty_on_hand,main_group,name_template,price,sequence from
+                            select product_id,ceiling(qty_on_hand*(floor(1/p.factor))) as qty_on_hand,main_group,name_template,price,sequence from
               (    
                 select product.id as product_id,sum(qty) as qty_on_hand,product_temp.main_group as main_group,product_temp.uom_id as uom,
                          product.name_template as name_template,product_temp.list_price as price,product.sequence
