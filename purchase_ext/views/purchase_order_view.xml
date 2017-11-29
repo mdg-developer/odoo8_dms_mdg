@@ -1,46 +1,77 @@
 <openerp>
-  <data>   
-		<record id="purchase_order_form_inherit_other_information" model="ir.ui.view">
+	<data>
+		<record id="purchase_order_form_inherit_other_information"
+			model="ir.ui.view">
 			<field name="name">purchase.order.form</field>
 			<field name="model">purchase.order</field>
 			<field name="inherit_id" ref="purchase.purchase_order_form" />
 			<field name="arch" type="xml">
-			    
-			    <field name="picking_type_id" position="after">
-				    <field name="pr_ref"/>
-				    
+
+				<field name="picking_type_id" position="after">
+					<field name="pr_ref" />
+
 				</field>
-				<xpath expr="//notebook/page/field[@name='order_line']/tree/field[@name='name']" position="after">
-				    <field name="supplier_code"/>
-				</xpath>   
-				<xpath expr="//notebook/page/field[@name='order_line']" position="before">
-						<button name="%(action_product_select_wizard_view)d" type="action" string="Add Products" attrs="{'invisible':[('state','in',['approved','cancel','confirmed'])]}"/>
-				</xpath>  
-			    <xpath expr="//page[@string='Deliveries &amp; Invoices']" position="after">
-			        <page string="Other Information">
-			            <group>
-			                <group>
-			                	<field name="eta"/>
-			                	<field name="received_date"/>
-			                	<field name="lc_date"/>
-			                	<field name="remit_date"/>
-			                	<field name="target_date"/>  
-			                	<field name="finished_date"/>  
-			                </group>
-			                
-			                <group>
-			                    <field name="etd"/>
-			                    <field name="earning_date"/>
-			                    <field name="permit_date"/>
-			                    <field name="bl_date"/>
-			                    <field name="agent_date"/>
-			                    
-			                </group>
-			            </group>
-			        </page>    
+				<xpath
+					expr="//notebook/page/field[@name='order_line']/tree/field[@name='name']"
+					position="after">
+					<field name="supplier_code" />
 				</xpath>
-			    	
+				<xpath expr="//notebook/page/field[@name='order_line']"
+					position="before">
+					<button name="%(action_product_select_wizard_view)d" type="action"
+						string="Add Products"
+						attrs="{'invisible':[('state','in',['approved','cancel','confirmed'])]}" />
+				</xpath>
+				<xpath expr="//page[@string='Deliveries &amp; Invoices']"
+					position="after">
+					<page string="Other Information">
+						<group>
+							<group>
+								<field name="eta" />
+								<field name="received_date" />
+								<field name="lc_date" />
+								<field name="remit_date" />
+								<field name="target_date" />
+								<field name="finished_date" />
+							</group>
+
+							<group>
+								<field name="etd" />
+								<field name="earning_date" />
+								<field name="permit_date" />
+								<field name="bl_date" />
+								<field name="agent_date" />
+
+							</group>
+						</group>
+					</page>
+				</xpath>
+
 			</field>
-	</record> 
-  </data>
+		</record>
+
+		<!-- Purchase Tree View -->
+		<record id="view_purchase_form_inherit_tree" model="ir.ui.view">
+			<field name="name">purchase.order.tree</field>
+			<field name="model">purchase.order</field>
+			<field name="inherit_id" ref="purchase.purchase_order_tree" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='origin']" position="after">
+					<field name="pr_ref" string="PR Reference" />
+				</xpath>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="purchase_order_search_inherit">
+			<field name="name">purchase.order.list.select.inherit</field>
+			<field name="model">purchase.order</field>
+			<field name="inherit_id" ref="purchase.view_purchase_order_filter" />
+			<field name="arch" type="xml">
+				<xpath expr="//filter[@string='Supplier']" position="after">
+					<filter string="PR Reference" icon="terp-partner" domain="[]"
+						context="{'group_by':'pr_ref'}" />
+				</xpath>
+			</field>
+		</record>
+	</data>
 </openerp>
