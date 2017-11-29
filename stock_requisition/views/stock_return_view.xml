@@ -63,12 +63,12 @@
 											<field name="product_code" attrs="{'readonly':True}" />
 											<field name="product_uom" attrs="{'readonly':True}" />
 											<field name="status" attrs="{'readonly':True}" />
-											<field name="onhand_quantity" attrs="{'readonly':True}" />
-											<field name="actual_quantity" />
-											<field name="return_quantity" string="Return Qty"
+											<field name="onhand_quantity" digits="(16, 2)" attrs="{'readonly':True}" />
+											<field name="actual_quantity" digits="(16, 2)"/>
+											<field name="return_quantity" digits="(16, 2)" string="Return Qty"
 												on_change="on_change_return_quantity(actual_quantity,return_quantity)" />
-											<field name="closing_quantity" string="Closing Qty" />
-											<field name="different_qty" invisible="1" />
+											<field name="closing_quantity" digits="(16, 2)" string="Closing Qty" />
+											<field name="different_qty" digits="(16, 2)" invisible="1" />
 											<field name="remark" string="Remark" />
 										</tree>
 									</field>
