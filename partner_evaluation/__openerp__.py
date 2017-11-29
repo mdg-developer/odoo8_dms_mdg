@@ -32,7 +32,7 @@ Sale Management
 """,
     'author': 'Seventh Computing Developer Group',
     'website': 'http://www.7thcomputing.com',
-    'depends': ['base'],
+    'depends': ['base','account'],
     'data': [       
        'views/res_partner_view.xml',
     ],
