@@ -161,17 +161,17 @@
 									</tree>
 								</field>
 							</page>
-							<page string="Google Map" readonly="1">
+							<!-- <page string="Google Map" readonly="1">
 								<widget type="gmap_marker" lat="mso_latitude" lng="mso_longitude"
 									description="field_descriptions" />
-							</page>
+							</page> -->
 							<!--<page string="Geoengine Map"> <field name="geo_point" widget="geo_edit_map" 
 								groups="base_geoengine.group_geoengine_user,base_geoengine.group_geoengine_admin"/> 
 								</page> -->
 
 						</notebook>
-						<!-- <widget type="gmap_marker" lat="mso_latitude" lng="mso_longitude" -->
-						<!-- description="field_descriptions" /> -->
+						<widget type="gmap_marker" lat="mso_latitude" lng="mso_longitude"
+						description="field_descriptions" />
 					</sheet>
 				</form>
 			</field>

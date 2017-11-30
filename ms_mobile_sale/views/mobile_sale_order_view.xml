@@ -172,12 +172,13 @@
 									</tree>
 								</field>
 							</page>
-							<page string="Google Map">
+							<!-- <page string="Google Map">
 								<widget type="gmap_marker" lat="mso_latitude"  lng="mso_longitude"
 									description="field_descriptions" />
-							</page>
+							</page> -->
 						</notebook>
-
+						<widget type="gmap_marker" lat="mso_latitude"  lng="mso_longitude"
+									description="field_descriptions" />
 
 					</sheet>
 				</form>
