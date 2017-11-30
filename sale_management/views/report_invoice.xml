@@ -171,10 +171,10 @@
 											(FOC)
 										</t>
 									</td>
-									<td class="text-right" style="border:1pt solid;border-color:black;" >
+									<td class="text-right" style="border:1pt solid;border-color:black;">
 										<span t-field="l.quantity" />
 									</td>
-									<td class="text-right" style="border:1pt solid;border-color:black;" >
+									<td class="text-right" style="border:1pt solid;border-color:black;">
 										<span t-field="l.uos_id" groups="product.group_uom" />
 									</td>
 									<td class="text-right" style="border:1pt solid;border-color:black;">
@@ -238,33 +238,53 @@
 							</div>
 							<div class="col-xs-4 pull-right">
 								<table class="table">
-									<!-- <tr> -->
-									<!-- <td style="border-top-color:white;padding-bottom: 2mm;"> -->
-									<!-- Sub Total -->
-									<!-- </td> -->
-									<!-- <td class="text-right" style="border-top-color:white;padding-bottom: 
-										2mm;"> -->
-									<!-- <span t-field="o.amount_untaxed" /> -->
-									<!-- </td> -->
-									<!-- </tr> -->
-									<!-- <tr class="border-black"> -->
-									<!-- <td style="padding-top: 2mm;padding-bottom: 2mm;"> -->
-									<!-- Total Discount -->
-									<!-- </td> -->
-									<!-- <td class="text-right" style="padding-top: 2mm;padding-bottom: 
-										2mm;"> -->
-									<!-- <span t-field="o.discount_total" /> -->
-									<!-- </td> -->
-									<!-- </tr> -->
-									<!-- <tr class="border-black"> -->
-									<!-- <td style="padding-top: 2mm;padding-bottom: 2mm;"> -->
-									<!-- Deduction Amount -->
-									<!-- </td> -->
-									<!-- <td class="text-right" style="padding-top: 2mm;padding-bottom: 
-										2mm;"> -->
-									<!-- <span t-field="o.deduct_amt" /> -->
-									<!-- </td> -->
-									<!-- </tr> -->
+									<tr>
+										<td style="border-top-color:white;padding-bottom: 2mm;">
+											Sub Total
+										</td>
+										<td class="text-right"
+											style="border-top-color:white;padding-bottom: 
+										2mm;">
+											<span t-field="o.amount_untaxed" />
+										</td>
+									</tr>
+									<tr class="border-black">
+										<td style="padding-top: 2mm;padding-bottom: 2mm;">
+											Total Discount
+										</td>
+										<td class="text-right"
+											style="padding-top: 2mm;padding-bottom: 
+										2mm;">
+											<span t-field="o.discount_total" />
+										</td>
+									</tr>
+									<tr class="border-black">
+										<td style="padding-top: 2mm;padding-bottom: 2mm;">
+											Deduction Amount
+										</td>
+										<td class="text-right"
+											style="padding-top: 2mm;padding-bottom: 
+										2mm;">
+											<span t-field="o.deduct_amt" />
+										</td>
+									</tr>
+									<tr class="border-black">
+										<td style="padding-top: 2mm;padding-bottom: 2mm;">
+											Cash Discount
+										</td>
+										<td class="text-right"
+											style="padding-top: 2mm;padding-bottom: 
+										2mm;">
+											<span t-field="o.cash_discount" />
+										</td>
+									</tr>
+									<tr class="border-black">
+										<td>Taxes</td>
+										<td class="text-right">
+											<span t-field="o.amount_tax"
+												t-field-options='{"widget": "monetary", "display_currency": "o.pricelist_id.currency_id"}' />
+										</td>
+									</tr>
 									<tr>
 										<td style="padding-top: 2mm;padding-bottom: 2mm;">
 											<strong>Net Amount</strong>
