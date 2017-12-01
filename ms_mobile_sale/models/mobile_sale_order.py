@@ -126,32 +126,33 @@ class mobile_sale_order(osv.osv):
                     # to create maingroup as prefix for invoice_no
                     last_invoice_id=False
                     for sol in sale_order_line:
-                        product_id=sol['product_id']
-                    if product_id:
-                        cursor.execute("""select m.code from product_product p, product_template t,product_maingroup m where p.product_tmpl_id=t.id and t.main_group=m.id and p.id=%s """,(product_id,))
-                        mgcode = cursor.fetchall()
-                        if mgcode:
-                            last_invoices = self.pool.get("mobile.sale.order").search(cursor, user, [('invoice_no', 'like', _(mgcode[0][0]))], context=context)
-                            last_invoice_id = last_invoices and max(last_invoices)
-                        if last_invoice_id:
-                            cursor.execute("""select invoice_no from mobile_sale_order where id=%s """,(last_invoice_id,))
-                            last_invoice = cursor.fetchall()  
-                        if not last_invoice_id:
-                            if mgcode:
-                                new_invoice_no= mgcode[0][0] + '00001'
+                        if sol['so_name'] == so['name']:
+                            product_id=sol['product_id']
+                            if product_id:
+                                cursor.execute("""select m.code from product_product p, product_template t,product_maingroup m where p.product_tmpl_id=t.id and t.main_group=m.id and p.id=%s """,(product_id,))
+                                mgcode = cursor.fetchall()
+                                if mgcode:
+                                    last_invoices = self.pool.get("mobile.sale.order").search(cursor, user, [('invoice_no', 'like', _(mgcode[0][0]))], context=context)
+                                    last_invoice_id = last_invoices and max(last_invoices)
+                                if last_invoice_id:
+                                    cursor.execute("""select invoice_no from mobile_sale_order where id=%s """,(last_invoice_id,))
+                                    last_invoice = cursor.fetchall()  
+                                if not last_invoice_id:
+                                    if mgcode:
+                                        new_invoice_no= mgcode[0][0] + '00001'
+                                    else:
+                                        new_invoice_no= ''
+                                else:
+                                    if mgcode[0][0]:
+                                        invoice_int = int(last_invoice[0][0].split(mgcode[0][0])[-1])
+                                        width =5
+                                        new_invoice_int = invoice_int + 1
+                                        formatted = (width - len(str(new_invoice_int))) * "0" + str(new_invoice_int)
+                                        new_invoice_no = mgcode[0][0] + str(formatted)
+                                    else:
+                                        new_invoice_no= ''
                             else:
                                 new_invoice_no= ''
-                        else:
-                            if mgcode[0][0]:
-                                invoice_int = int(last_invoice[0][0].split(mgcode[0][0])[-1])
-                                width =5
-                                new_invoice_int = invoice_int + 1
-                                formatted = (width - len(str(new_invoice_int))) * "0" + str(new_invoice_int)
-                                new_invoice_no = mgcode[0][0] + str(formatted)
-                            else:
-                                new_invoice_no= ''
-                    else:
-                        new_invoice_no= ''
                     #
 #                     if data:
 #                         partner_id = data[0][0]
