@@ -4,9 +4,9 @@
 
   <template id="custom_layout">
 
-   <t t-call="sale_management.custom_layout_header" />
+   <t t-call="account_cashier_approval.custom_layout_header" />
    <t t-raw="0" />
-   <t t-call="sale_management.custom_layout_footer" />
+   <t t-call="account_cashier_approval.custom_layout_footer" />
   </template>
 
   <template id="custom_layout_header">
