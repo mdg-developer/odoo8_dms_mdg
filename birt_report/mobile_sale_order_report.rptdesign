@@ -28,7 +28,7 @@
         </scalar-parameter>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="521"
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="558"
  extends="rb_report_library.Data Source"/>
     </data-sources>
     <data-sets>
@@ -2261,7 +2261,14 @@ ON sale.sale_parner_id=supplier.pn_id and sale.product_tem_id=supplier.pt_id]]><
                     <list-property name="arguments">
                         <structure>
                             <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["net_amount"] * 0.05</expression>
+                            <expression name="value" type="javascript">if (dataSetRow["tax_type"]=='Exclusive')&#13;
+{&#13;
+dataSetRow["net_amount"] * 0.05&#13;
+}&#13;
+else&#13;
+{&#13;
+0&#13;
+}</expression>
                         </structure>
                     </list-property>
                     <property name="allowExport">true</property>
@@ -2367,8 +2374,9 @@ row["Aggregation_2"] - dataSetRow["deduction_amount"] - dataSetRow["add_disc"]&#
                 <structure>
                     <property name="name">additional_discount</property>
                     <text-property name="displayName">additional_discount</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["additional_discount"]</expression>
-                    <property name="dataType">float</property>
+                    <expression name="expression" type="javascript">(dataSetRow["additional_discount"] * 100) + ' %'</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
                 </structure>
             </list-property>
             <column id="149">
