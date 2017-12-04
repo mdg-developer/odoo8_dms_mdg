@@ -197,6 +197,12 @@
                     <text-property name="heading">net_amount</text-property>
                 </structure>
                 <structure>
+                    <property name="columnName">ntamt_nondisc</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">ntamt_nondisc</text-property>
+                    <text-property name="heading">ntamt_nondisc</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">net_tot</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">net_tot</text-property>
@@ -361,11 +367,16 @@
                     </structure>
                     <structure>
                         <property name="position">28</property>
-                        <property name="name">net_tot</property>
+                        <property name="name">ntamt_nondisc</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">29</property>
+                        <property name="name">net_tot</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">30</property>
                         <property name="name">net_dis_amt</property>
                         <property name="dataType">float</property>
                     </structure>
@@ -564,13 +575,20 @@
                 </structure>
                 <structure>
                     <property name="position">28</property>
+                    <property name="name">ntamt_nondisc</property>
+                    <property name="nativeName">ntamt_nondisc</property>
+                    <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
+                </structure>
+                <structure>
+                    <property name="position">29</property>
                     <property name="name">net_tot</property>
                     <property name="nativeName">net_tot</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">29</property>
+                    <property name="position">30</property>
                     <property name="name">net_dis_amt</property>
                     <property name="nativeName">net_dis_amt</property>
                     <property name="dataType">float</property>
@@ -578,6 +596,7 @@
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[Select * ,(coalesce(rb_ex.net_price,0) * coalesce(rb_ex.qty,0)) as net_amount,
+(CASE WHEN rb_ex.isexclusive = true THEN (rb_ex.exclusive_price * coalesce(rb_ex.qty,0)) ELSE (rb_ex.unit_price * coalesce(rb_ex.qty,0)) END) as ntamt_nondisc,
 ((coalesce(rb_ex.net_price,0) * coalesce(rb_ex.qty,0)) - coalesce(rb_ex.add_disc,0) - coalesce(rb_ex.deduction_amount,0)) as net_tot,
 (CASE WHEN rb_ex.isexclusive = true THEN ((coalesce(rb_ex.exclusive_price,0) - (coalesce(rb_ex.net_price,0))) * coalesce(rb_ex.qty,0)) 
 ELSE ((coalesce(rb_ex.unit_price,0) - (coalesce(rb_ex.net_price,0))) * coalesce(rb_ex.qty,0)) END) as net_dis_amt
@@ -2263,7 +2282,7 @@ ON sale.sale_parner_id=supplier.pn_id and sale.product_tem_id=supplier.pt_id]]><
                             <property name="name">Expression</property>
                             <expression name="value" type="javascript">if (dataSetRow["tax_type"]=='Exclusive')&#13;
 {&#13;
-dataSetRow["net_amount"] * 0.05&#13;
+dataSetRow["ntamt_nondisc"] * 0.05&#13;
 }&#13;
 else&#13;
 {&#13;
