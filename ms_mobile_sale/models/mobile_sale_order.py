@@ -1297,9 +1297,18 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()
         return datas
     
-    def get_company_datas(self, cr, uid , context=None):        
-        cr.execute('''select id,name from res_company''')
-        datas = cr.fetchall()        
+    def get_company_datas(self, cr, uid , context=None):    
+        
+        cr.execute("select branch_id from res_users where id=%s",(uid,))
+        branch_id =cr.fetchone()[0]
+        cr.execute("select branch_code from res_branch  where id = %s",(branch_id,))
+        branch_code=cr.fetchone()[0]
+        if branch_code =='DN':
+            cr.execute("select id,name from res_company where name like 'Dean%' ")
+            datas=cr.fetchone()[0]
+        else:
+            cr.execute('''select id,name from res_company where name like 'Beauty World T%' ''')
+            datas = cr.fetchone()        
         return datas
     
     def get_res_users(self, cr, uid, user_id , context=None, **kwargs):
