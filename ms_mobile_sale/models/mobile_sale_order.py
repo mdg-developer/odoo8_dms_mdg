@@ -1192,10 +1192,13 @@ class mobile_sale_order(osv.osv):
     def get_pricelist_item_datas(self, cr, uid, version_id, context=None, **kwargs):
         cr.execute('''select pi.id,pi.price_discount,pi.sequence,pi.product_tmpl_id,pi.name,pp.id base_pricelist_id,
                     pi.product_id,pi.base,pi.price_version_id,pi.min_quantity,
-                    pi.categ_id,pi.price_surcharge price_surcharge,pi.product_uom_id
-                    from product_pricelist_item pi, product_pricelist_version pv, product_pricelist pp
+                    pi.categ_id,(pi.price_surcharge*(floor(1/uom.factor))) price_surcharge,rel.product_uom_id
+                    from product_pricelist_item pi, product_pricelist_version pv, product_pricelist pp, product_template_product_uom_rel rel,
+                    product_uom uom
                     where pv.pricelist_id = pp.id                             
                     and pv.id = pi.price_version_id
+                    and rel.product_template_id=pi.product_tmpl_id
+                    and rel.product_uom_id=uom.id
                     and pi.price_version_id = %s''', (version_id,))
         datas = cr.fetchall()
         return datas
