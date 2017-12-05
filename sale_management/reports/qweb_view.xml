@@ -13,8 +13,8 @@
 		
 		<!-- Picking Report-->	
 		<report string="Picking" id="stock.action_report_picking" model="stock.picking" 
-            report_type="qweb-pdf"             name="sale_management.report_picking" 
-            file="stock.report_picking" />
+            report_type="qweb-pdf"             name="sale_management.inherit_report_picking" 
+            file="sale_management.inherit_report_picking" />
          <!--  name="sale_management.report_picking_inherit_document" 
             file="sale_management.report_picking_inherit_document" /> -->  
 	</data>
