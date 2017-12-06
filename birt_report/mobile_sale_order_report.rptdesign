@@ -2831,6 +2831,19 @@ row["Aggregation_2"] - dataSetRow["deduction_amount"] - dataSetRow["add_disc"]&#
                 <row id="283">
                     <property name="verticalAlign">middle</property>
                     <property name="height">0.22916666666666666in</property>
+                    <list-property name="visibility">
+                        <structure>
+                            <property name="format">all</property>
+                            <expression name="valueExpr" type="javascript">if (row["tax_type"]=='Inclusive')&#13;
+{&#13;
+true&#13;
+}&#13;
+else&#13;
+{&#13;
+false&#13;
+}</expression>
+                        </structure>
+                    </list-property>
                     <cell id="284"/>
                     <cell id="285"/>
                     <cell id="286"/>
