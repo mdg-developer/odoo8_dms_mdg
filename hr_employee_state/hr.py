@@ -155,7 +155,7 @@ class hr_employee_termination(osv.osv):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     _columns = {
-        'name': fields.date('Resignation Date', required=True, readonly=True,
+        'name': fields.date('Last Working Date', required=True, readonly=True,
                             states={'draft': [('readonly', False)]}),
         'reason_id': fields.many2one('hr.employee.termination.reason', 'Reason', required=True,
                                      readonly=True, states={

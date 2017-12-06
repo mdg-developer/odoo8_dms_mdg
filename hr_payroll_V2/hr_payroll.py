@@ -180,12 +180,21 @@ class hr_payslip_customize(osv.osv):
         else:
             early_minus = 0
             late_min = 0         
-        cr.execute("select sum(ot_time) as ot_minus  from attendance_data_import where date between %s and  %s and  employee_id=%s and state ='approve'", (date_from, date_to,employee_id,))
+        cr.execute("select sum(ot_time) as ot_minus,count(date)  from attendance_data_import where date between %s and  %s and  employee_id=%s and state ='approve'", (date_from, date_to,employee_id,))
         total_ot = cr.fetchone()   
         if total_ot:
             ot_minus = total_ot[0]
+            ot_day_count = total_ot[1]
         else:
             ot_minus = 0
+            ot_day_count = 0
+        cr.execute("""select count(*)*4 from attendance_data_import where timetable !='OT' and absent='false' 
+            and ot_time = 0 and date between %s and  %s and  employee_id=%s""", (date_from, date_to,employee_id,))
+        actual_working_data = cr.fetchone()
+        if actual_working_data:
+            actual_working_hour = actual_working_data[0]
+        else:
+            actual_working_hour = 0
         cr.execute("select COALESCE( sum(normal),0) as normal  from attendance_data_import where \
         date >= %s and date <= %s and date not in (SELECT the_day ::date FROM  generate_series(%s::date, %s  ::date, '1 day') d(the_day) \
         WHERE  extract('ISODOW' FROM the_day)= 7)\
@@ -224,28 +233,48 @@ class hr_payslip_customize(osv.osv):
             cr.execute("SELECT TRUNC(DATE_PART('day',  %s::timestamp - %s::timestamp))",(initial_date,date_from,))
             before_day=cr.fetchone()[0]
         if con_state == 'pending_done' and effective_date > date_from and termination_date < date_to:
-            cr.execute( "select sum(count) as public_count from (SELECT count(the_day ::date) FROM  generate_series(%s::date, %s ::date, '1 day') d(the_day) WHERE  extract('ISODOW' FROM the_day)= 7 \
-                            union all  \
-                            select count(date) from hr_holidays_public_line where date between %s and %s  )A ",(effective_date, termination_date,effective_date,termination_date, ))   
+            cr.execute( """select sum(count) as public_count from 
+                (SELECT count(the_day ::date) FROM  generate_series(%s::date, %s::date, '1 day') d(the_day) 
+                WHERE  extract('ISODOW' FROM the_day)= 7 and the_day ::date not in 
+                (select generate_series(date_from::date, date_to::date, '1 day')::date as date from hr_holidays 
+                where  employee_id =%s and date_from >=  date_from and date_to <= date_to) union all  
+                select count(date) from hr_holidays_public_line where date between %s and %s and
+                date not in (select generate_series(date_from::date, date_to::date, '1 day')::date as date from hr_holidays
+                where employee_id =%s and date_from >=  date_from and date_to <= date_to))A""",(effective_date, termination_date,employee_id,effective_date,termination_date,employee_id ))   
             holiday_data =cr.fetchone()
             cr.execute("SELECT TRUNC(DATE_PART('day',  %s::timestamp - %s::timestamp))",(date_to,termination_date,))
             after_day=cr.fetchone()[0] 
         elif con_state == 'pending_done' and termination_date < date_to:
-            cr.execute( "select sum(count) as public_count from (SELECT count(the_day ::date) FROM  generate_series(%s::date, %s ::date, '1 day') d(the_day) WHERE  extract('ISODOW' FROM the_day)= 7 \
-                            union all  \
-                            select count(date) from hr_holidays_public_line where date between %s and %s  )A ",(date_from, termination_date,date_from,termination_date, ))   
+            cr.execute("""select sum(count) as public_count from 
+                (SELECT count(the_day ::date) FROM  generate_series(%s::date, %s::date, '1 day') d(the_day) 
+                WHERE  extract('ISODOW' FROM the_day)= 7 and the_day ::date not in 
+                (select generate_series(date_from::date, date_to::date, '1 day')::date as date from hr_holidays 
+                where  employee_id =%s and date_from >=  date_from and date_to <= date_to) union all  
+                select count(date) from hr_holidays_public_line where date between %s and %s and
+                date not in (select generate_series(date_from::date, date_to::date, '1 day')::date as date from hr_holidays
+                where employee_id =%s and date_from >=  date_from and date_to <= date_to))A""",(date_from, termination_date,employee_id,date_from,termination_date,employee_id))   
             holiday_data =cr.fetchone()
             cr.execute("SELECT TRUNC(DATE_PART('day',  %s::timestamp - %s::timestamp))",(date_to,termination_date,))
             after_day=cr.fetchone()[0]
         elif con_state != 'pending_done' and effective_date > date_from:
-            cr.execute( "select sum(count) as public_count from (SELECT count(the_day ::date) FROM  generate_series(%s::date, %s ::date, '1 day') d(the_day) WHERE  extract('ISODOW' FROM the_day)= 7 \
-                            union all  \
-                            select count(date) from hr_holidays_public_line where date between %s and %s  )A ",(effective_date, date_to,effective_date,date_to, ))   
+            cr.execute( """select sum(count) as public_count from 
+                (SELECT count(the_day ::date) FROM  generate_series(%s::date, %s::date, '1 day') d(the_day) 
+                WHERE  extract('ISODOW' FROM the_day)= 7 and the_day ::date not in 
+                (select generate_series(date_from::date, date_to::date, '1 day')::date as date from hr_holidays 
+                where  employee_id =%s and date_from >=  date_from and date_to <= date_to) union all  
+                select count(date) from hr_holidays_public_line where date between %s and %s and
+                date not in (select generate_series(date_from::date, date_to::date, '1 day')::date as date from hr_holidays
+                where employee_id =%s and date_from >=  date_from and date_to <= date_to))A""",(effective_date, date_to,employee_id,effective_date,date_to,employee_id ))   
             holiday_data =cr.fetchone()
         else:
-            cr.execute( "select sum(count) as public_count from (SELECT count(the_day ::date) FROM  generate_series(%s::date, %s ::date, '1 day') d(the_day) WHERE  extract('ISODOW' FROM the_day)= 7 \
-                            union all  \
-                            select count(date) from hr_holidays_public_line where date between %s and %s  )A ",(con_date, date_to,con_date,date_to, ))   
+            cr.execute( """select sum(count) as public_count from 
+                (SELECT count(the_day ::date) FROM  generate_series(%s::date, %s::date, '1 day') d(the_day) 
+                WHERE  extract('ISODOW' FROM the_day)= 7 and the_day ::date not in 
+                (select generate_series(date_from::date, date_to::date, '1 day')::date as date from hr_holidays 
+                where  employee_id =%s and date_from >=  date_from and date_to <= date_to) union all  
+                select count(date) from hr_holidays_public_line where date between %s and %s and
+                date not in (select generate_series(date_from::date, date_to::date, '1 day')::date as date from hr_holidays
+                where employee_id =%s and date_from >=  date_from and date_to <= date_to))A""",(con_date, date_to,employee_id,con_date,date_to,employee_id ))   
             holiday_data =cr.fetchone()
         if holiday_data is not 0 or holiday_data is not False:
             holiday_count=holiday_data[0]  
@@ -313,7 +342,14 @@ class hr_payslip_customize(osv.osv):
                                'code': input.code,
                                'amount':ot_minus,
                                'contract_id': contract.id,
-                              }                
+                              } 
+                        if input.code == 'ODT':
+                            inputs = {
+                               'name': input.name,
+                               'code': input.code,
+                               'amount':ot_day_count,
+                               'contract_id': contract.id,
+                              }               
                         if input.code == 'EM':
                             inputs = {
                                'name': input.name,
@@ -341,7 +377,14 @@ class hr_payslip_customize(osv.osv):
                                'code': input.code,
                                'amount':present_count,
                                'contract_id': contract.id,
-                              }        
+                              }  
+                        if input.code == 'AWH':
+                            inputs = {
+                               'name': input.name,
+                               'code': input.code,
+                               'amount':actual_working_hour,
+                               'contract_id': contract.id,
+                              }              
                         if input.code == 'HC':
                             inputs = {
                                'name': input.name,
@@ -539,8 +582,15 @@ class hr_payslip_customize(osv.osv):
                 leave_half_count=0
             cr.execute("select  COALESCE( sum(number_of_days_temp))  as leave_count from hr_holidays  where  employee_id =%s and date_to between %s and %s ",(contract.employee_id.id,date_from, period_end,))
             leave_count =cr.fetchone()[0]
+            cr.execute("""SELECT count(the_day::date) as date FROM generate_series(%s::date, %s ::date, '1 day') d(the_day)  
+                WHERE  extract('ISODOW' FROM the_day) = 7 and the_day::date in
+                (select generate_series(date_from::date, date_to::date, '1 day')::date as date from hr_holidays
+                WHERE employee_id=%s and date_from >=  date_from and date_to <= date_to )""",(date_from,date_to, employee_id,))
+            sun_leave =cr.fetchone()[0]
             if leave_count is None:
                 leave_count=0             
             attendances['number_of_days'] = (nb_of_days - (public_count + sun_count + leave_count))
+            if leaves:
+                leaves[leave_type]['number_of_days'] += sun_leave
             res += [attendances] + leaves 
         return res

@@ -9,10 +9,10 @@
 			<field name="arch" type="xml">
 				<data>
 					<xpath expr="//field[@name='product_uom_qty']" position="after">
-						<field name="gross_weight" invisible="0" />
-						<field name="net_weight" invisible="0" />
-						<field name="smaller_qty" />
-						<field name="bigger_qty" />
+						<field name="gross_weight" invisible="1" />
+						<field name="net_weight" invisible="1" />
+						<field name="smaller_qty" invisible="1"/>
+						<field name="bigger_qty" readonly="1"/>
 					</xpath>
 
 				</data>
@@ -27,7 +27,7 @@
 			<field name="arch" type="xml">
 				<xpath expr="//field[@name='item_ids']/tree/field[@name='quantity']"
 					position="after">
-					<field name="bigger_qty" />
+					<field name="bigger_qty" readonly="1"/>
 				</xpath>
 
 			</field>

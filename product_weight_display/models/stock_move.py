@@ -1,4 +1,5 @@
 from openerp.osv import fields, osv
+from math import floor
 
 class stock_move(osv.osv):
     _inherit = 'stock.move'   
@@ -69,7 +70,7 @@ class stock_move(osv.osv):
                 )d group by d.pid''', (data.product_id.product_tmpl_id.id,))
                 bigger_uom_ratio = cr.fetchone()[0]
                 print ' bigger_uom_ratio', bigger_uom_ratio
-                total_pieces = total_qty / bigger_uom_ratio
+                total_pieces = floor(total_qty / bigger_uom_ratio)
             res[data.id] = total_pieces
         return res
          
@@ -77,7 +78,7 @@ class stock_move(osv.osv):
                 'gross_weight': fields.function(_get_gross_weight, type='float', string='Gross Weight'),
                 'net_weight': fields.function(_get_net_weight, type='float', string='Net Weight'),
                 'smaller_qty': fields.function(_get_smaller_qty, type='float', string='Smaller Pieces'),
-                'bigger_qty': fields.function(_get_bigger_qty, type='float', string='CTN'),
+                'bigger_qty': fields.function(_get_bigger_qty, type='integer', string='CTN'),
               }
 
 stock_move()
@@ -115,7 +116,7 @@ class stock_transfer_details(osv.osv):
                 order by rel.product_template_id
             )d group by d.pid''', (op.product_id.product_tmpl_id.id,))
             bigger_uom_ratio = cr.fetchone()[0]
-            total_pieces = total_qty / bigger_uom_ratio            
+            total_pieces = floor(total_qty / bigger_uom_ratio)            
                         
             item = {
                 'packop_id': op.id,
@@ -143,7 +144,7 @@ class stock_transfer_details_items(osv.osv):
     
     _inherit = 'stock.transfer_details_items'
     _columns = {
-        'bigger_qty': fields.float('CTN', default=0.0)
+        'bigger_qty': fields.integer('CTN', default=0)
     }
   
   
