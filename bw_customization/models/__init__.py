@@ -4,3 +4,4 @@ import res_company
 #import stock_config_settings
 import product_uom
 import stock_warehouse
+import account
