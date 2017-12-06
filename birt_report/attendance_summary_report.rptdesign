@@ -174,7 +174,7 @@
             </list-property>
             <xml-property name="queryText"><![CDATA[select id,name_related as name
 from hr_employee
-where  id = ?
+where  id = ? and status <> 'inactive'
 order by name_related asc]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
@@ -387,12 +387,14 @@ order by name_related asc]]></xml-property>
                     <property name="columnName">paid_leave</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">paid_leave</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">paid_leave</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">absent_leave</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">absent_leave</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">absent_leave</text-property>
                 </structure>
             </list-property>
@@ -810,9 +812,16 @@ else
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select * ,case when wk_ot is null then 0 else wk_ot end as sunday_ot ,early+late as earlylate,
-case when status1!='Absent' and status1!='Unpaid_Leave' and status1!='Normal' and status3!='Absent' and status3!='Unpaid_Leave' and status3!='Normal' then 1
-when status1!='Absent' and status1!='Unpaid_Leave' and status1!='Normal' and status3='Normal' then 0.5
-when status1='Normal' and status3!='Absent' and status3!='Unpaid_Leave' and status3!='Normal' then 0.5
+case when status1 not in ('Absent','Unpaid_Leave','Normal','Late','Early')
+and status2 not in ('Absent','Unpaid_Leave','Normal','Late','Early')
+and status3 not in ('Absent','Unpaid_Leave','Normal','Late','Early')
+and status4 not in ('Absent','Unpaid_Leave','Normal','Late','Early') then 1
+when status1 not in ('Absent','Unpaid_Leave','Normal','Late','Early')
+and status2 not in ('Absent','Unpaid_Leave','Normal','Late','Early')
+and status3 in ('Normal','Late','Early') then 0.5
+when status1 in ('Normal','Late','Early')
+and status3 not in ('Absent','Unpaid_Leave','Normal','Late','Early')
+and status4 not in ('Absent','Unpaid_Leave','Normal','Late','Early') then 0.5
 end as paid_leave,
 case when status1='Absent' and status3='Absent' then 1
 when status1='Absent' and status3!='Absent' then 0.5
@@ -924,8 +933,8 @@ select e.id,e.employee_id card_id,e.name_related,sec.name section,j.name, extrac
     case when (f.realtime>0 or s.realtime>0) then (f.realtime + s.realtime) end as WH_PerDay,
     case when s.ot_time>0 then round(s.ot_time/60.0,0) when t.ot_time>0 then round(t.ot_time/60.0,0) end as OT,
     round(f.weekend_ot+s.weekend_ot+t.weekend_ot) WK_OT,
-    f.early + s.early as early,
-    f.late + s.late as Late
+    f.early + s.early + t.early as early,
+    f.late + s.late + t.late as late
 from 
 hr_employee e,
 hr_section sec,
@@ -1354,7 +1363,8 @@ order by name asc]]></xml-property>
             <xml-property name="queryText"><![CDATA[select id,employee_id as name
 from hr_employee
 where department_id =?
-and section_id =?]]></xml-property>
+and section_id =?
+and active=True]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
