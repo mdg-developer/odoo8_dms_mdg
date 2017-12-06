@@ -9,8 +9,19 @@
 
 				<field name="picking_type_id" position="after">
 					<field name="pr_ref" />
-
 				</field>
+
+				<xpath
+					expr="//notebook/page[@string='Deliveries &amp; Invoices']/group/group/field[@name='minimum_planned_date']"
+					position="replace">
+					<label for="minimum_planned_date" />
+
+					<div>
+						<field name="minimum_planned_date" />
+						<button name="date_change" string="Change Date" type="object" />
+					</div>
+
+				</xpath>
 				<xpath
 					expr="//notebook/page/field[@name='order_line']/tree/field[@name='name']"
 					position="after">
@@ -19,7 +30,7 @@
 				<xpath
 					expr="//notebook/page/field[@name='order_line']/tree/field[@name='price_unit']"
 					position="replace">
-					<field name="price_unit" digits ="(16,2)"/>
+					<field name="price_unit" digits="(16,2)" />
 				</xpath>
 				<xpath expr="//notebook/page/field[@name='order_line']"
 					position="before">
@@ -78,5 +89,43 @@
 				</xpath>
 			</field>
 		</record>
+
+		<record id="inherit_view_move_search" model="ir.ui.view">
+			<field name="name">stock.move.search</field>
+			<field name="model">stock.move</field>
+			<field name="inherit_id" ref="stock.view_move_search" />
+			<field name="arch" type="xml">
+				<field name="origin" position="after">
+                    <filter string="Purchase Data" name="purchase" domain="[('origin', 'ilike', 'PO%')]" help="Stock moves that have been processed"/>
+				</field>
+			</field>
+		</record>
+		
+        <record id="action_receipt_picking_move" model="ir.actions.act_window">
+            <field name="name">Incoming  Products</field>
+            <field name="res_model">stock.move</field>
+			<field name="inherit_id" ref="stock.action_receipt_picking_move" />
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain" eval="[('picking_id.picking_type_id.code','=','incoming'), ('location_id.usage','!=','internal'), ('location_dest_id.usage', '=', 'internal')]"/>
+            <field name="view_id" ref="stock.view_move_tree_receipt_picking"/>
+            <field name="context">{'product_receive': True, 'search_default_future': True,'search_default_purchase':True}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to register a product receipt. 
+              </p><p>
+                Here you can receive individual products, no matter what
+                purchase order or picking order they come from. You will find
+                the list of all products you are waiting for. Once you receive
+                an order, you can filter based on the name of the supplier or
+                the purchase order reference. Then you can confirm all products
+                received using the buttons on the right of each line.
+              </p>
+            </field>
+        </record>
+        
+      <menuitem action="action_receipt_picking_move" id="purchase.menu_action_picking_tree_in_move"
+            parent="purchase.menu_procurement_management_inventory" sequence="11"/>        
 	</data>
 </openerp>
