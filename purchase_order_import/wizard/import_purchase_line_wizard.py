@@ -266,6 +266,9 @@ class pol_import(orm.TransientModel):
                 if ln and ln[0] and ln[0][0] not in ['#', '']:
 
                     aml_vals = {}
+                    product_ids=None
+                    product_name=None
+                    
                     result = {}
                     if ln[supplier_code_i]: 
                         products = str(ln[supplier_code_i]).strip()
