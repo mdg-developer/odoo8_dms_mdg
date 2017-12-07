@@ -46,6 +46,7 @@ Welcome to HR Management Module.
                 'hr_employee_state',
                 'hr_payroll',
                 'hr_holidays',
+                'attendance_data_import_v2'
                 ],
                 
     'data': [

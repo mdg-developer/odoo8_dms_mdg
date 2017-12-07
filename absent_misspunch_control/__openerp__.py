@@ -37,13 +37,8 @@ HR Section
  
     ],
     'data': [
-       'views/report_ot_form.xml',
-       'views/ot_approval_view.xml',
-       'views/ot_custom_layouts.xml',
-       'views/ot_report.xml',
-       'wizard/ot_make_approve_view.xml',
-       'wizard/ot_make_decline_view.xml',
-       'wizard/hr_holidays_approve_view.xml',
+       'wizard/absent_misspunch_view.xml',
+
     ],
 
     'installable': True,

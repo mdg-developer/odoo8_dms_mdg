@@ -159,6 +159,16 @@ class attendance_data_import(osv.osv):
     def decline(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'decline'}, context=context)
         return True
+    def is_not_absent(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state':'decline'}, context=context)
+        for attendance_data in self.browse(cr, uid, ids, context=context):
+            clock_in = attendance_data.clock_in
+            clock_out = attendance_data.clock_out
+            if clock_in is False:
+                self.write(cr, uid, attendance_data.id, {'miss_punch_in':False}, context=context)
+            if clock_out is False:
+                self.write(cr, uid, attendance_data.id, {'miss_punch_out':False}, context=context)
+        return True
     def approve(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'approve'}, context=context)
         return True
