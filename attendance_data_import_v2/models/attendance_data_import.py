@@ -44,7 +44,8 @@ class attendance_data_import(osv.osv):
                 ], 'Status',default='draft'),
         'remark': fields.text('Remark'),
         'section_id': fields.many2one('hr.section', 'Section'),
-        
+        'miss_punch_in': fields.boolean('Miss Punch In'),
+        'miss_punch_out': fields.boolean('Miss Punch Out'),
         #'section_id' : fields.function(_get_section_id, method=True, string="Section", type='char', store=True),
     }
 #     def calculate_on_change(self,cr,uid, ids,on_duty,off_duty,clock_in, clock_out, context=None):
@@ -152,22 +153,22 @@ class attendance_data_import(osv.osv):
         else:
             total = str(modulus)
         if remainder == 0:
-           total += "00"
+            total += "00"
         else:
-           total += str(remainder)
+            total += str(remainder)
         return total      
     def decline(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'decline'}, context=context)
         return True
     def is_not_absent(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state':'decline'}, context=context)
+        self.write(cr, uid, ids, {'absent':False}, context=context)
         for attendance_data in self.browse(cr, uid, ids, context=context):
-            clock_in = attendance_data.clock_in
-            clock_out = attendance_data.clock_out
+            clock_in = attendance_data.clockin
+            clock_out = attendance_data.clockout
             if clock_in is False:
-                self.write(cr, uid, attendance_data.id, {'miss_punch_in':False}, context=context)
+                self.write(cr, uid, attendance_data.id, {'miss_punch_in':True}, context=context)
             if clock_out is False:
-                self.write(cr, uid, attendance_data.id, {'miss_punch_out':False}, context=context)
+                self.write(cr, uid, attendance_data.id, {'miss_punch_out':True}, context=context)
         return True
     def approve(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'approve'}, context=context)
