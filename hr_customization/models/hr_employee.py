@@ -319,28 +319,30 @@ class hr_employee(osv.osv):
             identification_id = emp.nrc_prefix_id.name + str(emp.nrc_number)
             emp_id = self.search(cr, uid, ['&',('identification_id', '=', identification_id),('id', '!=', ids[0])], order='id', limit=1, context=context)
             if len(emp_id) > 0:
-               emp_obj = self.browse(cr, uid,emp_id,context=context ) 
-               self.unlink(cr, uid, ids, context=context)
-               cr.execute("delete from hr_employee where id=%s",(ids[0],))  
-               raise osv.except_osv(_('Warning!'), _('This NRC number already exist with %s!') %emp_obj.name_related)
+                emp_obj = self.browse(cr, uid,emp_id,context=context ) 
+                self.unlink(cr, uid, ids, context=context)
+                cr.execute("delete from hr_employee where id=%s",(ids[0],))  
+                raise osv.except_osv(_('Warning!'), _('This NRC number already exist with %s!') %emp_obj.name_related)
                 
-        return True        
-    def create(self, cr, uid, vals, context=None):
-        current_date = datetime.now()
-        current_year = current_date.year
-        current_month = current_date.month
-        if vals['birthday']:
-            birth_date = parser.parse(vals['birthday'])
-            age = current_year - birth_date.year
-            if age < 18:
-                raise osv.except_osv(_('Invalid Action!'), _('This date of birth is too Young!'))
-            elif age == 18 and birth_date.month > current_month:  
-                raise osv.except_osv(_('Invalid Action!'), _('This date of birth is too Young!'))
-            if age > 60:
-                raise osv.except_osv(_('Invalid Action!'), _('This date of birth is too Old!'))
-            elif age == 60 and birth_date.month < current_month:
-                raise osv.except_osv(_('Invalid Action!'), _('This date of birth is too Old!'))
-        
+        return True  
+#*****************CLOSE COMMENT BY PHYO HSU*******************************************          
+#     def create(self, cr, uid, vals, context=None):
+#         current_date = datetime.now()
+#         current_year = current_date.year
+#         current_month = current_date.month
+#         if vals['birthday']:
+#             birth_date = parser.parse(vals['birthday'])
+#             age = current_year - birth_date.year
+#             if age < 18:
+#                 raise osv.except_osv(_('Invalid Action!'), _('This date of birth is too Young!'))
+#             elif age == 18 and birth_date.month > current_month:  
+#                 raise osv.except_osv(_('Invalid Action!'), _('This date of birth is too Young!'))
+#             if age > 60:
+#                 raise osv.except_osv(_('Invalid Action!'), _('This date of birth is too Old!'))
+#             elif age == 60 and birth_date.month < current_month:
+#                 raise osv.except_osv(_('Invalid Action!'), _('This date of birth is too Old!'))
+#******************* END***********************************************************
+       
 #         new_id = False
 #         identification_id = None
 #         if vals.get('nrc_prefix_id'):
@@ -379,7 +381,10 @@ class hr_employee(osv.osv):
 #             else:    
 #                 new_id = super(hr_employee, self).create(cr, uid, vals, context=context)
 #              
-#         return new_id    
-        new_id = super(hr_employee, self).create(cr, uid, vals, context=context)
-        return new_id
+#         return new_id 
+ 
+#**************CLOSE COMMENT BY PHYO HSU****************************************  
+#         new_id = super(hr_employee, self).create(cr, uid, vals, context=context)
+#         return new_id
+#**************END**************************************************************
 hr_employee()     
