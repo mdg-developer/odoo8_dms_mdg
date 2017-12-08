@@ -35,6 +35,7 @@
 			</xpath>
 			<xpath expr="//field[@name='country_id']" position="after">
 			   		<field name="ethnic"/>
+			   		<field name="religion"/>
 			</xpath>
 			<field name="manager" position="after">
 					<field name="is_management"/>

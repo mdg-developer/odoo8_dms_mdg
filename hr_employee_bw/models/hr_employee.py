@@ -16,6 +16,7 @@ class hr_employee(osv.osv):
         'is_management':fields.boolean('Management'),
         'payroll_cash':fields.boolean('By Cash'),    
         'payroll_bank':fields.boolean('By Card'),
+        'religion':fields.char('Religion'), 
     }   
 hr_employee() 
     
