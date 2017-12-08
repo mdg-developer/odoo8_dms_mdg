@@ -14,7 +14,7 @@ class attendance_data_import(osv.osv):
         'fingerprint_id': fields.char('Emp No'),
         'auto_assign': fields.char('Auto Assign'),
         'date': fields.date('Date'),        
-        'timetable': fields.many2one('shif.timetable', 'Timetable'),
+        'timetable': fields.many2one('shift.timetable', 'Timetable'),
         'onduty': fields.char('On duty'),
         'offduty': fields.char('Off duty'),
         'clockin': fields.char('Clock In'),
@@ -81,7 +81,7 @@ class attendance_data_import(osv.osv):
     def timetable_on_change(self,cr,uid, ids,timetable, context=None):
         result = {}
         if timetable:
-            timetable_obj = self.pool.get('shif.timetable')
+            timetable_obj = self.pool.get('shift.timetable')
             timetable_data = timetable_obj.browse(cr,uid,timetable,context=context)
             if timetable_data:
                     result = {'onduty': timetable_data.onduty,
@@ -193,7 +193,7 @@ class attendance_data_import(osv.osv):
 attendance_data_import()   
 
 class time_table(osv.osv):
-    _name = 'shif.timetable'
+    _name = 'shift.timetable'
     _rec_name = 'shift_name'
     _columns = {
         'shift_name': fields.char('Shift Name'),

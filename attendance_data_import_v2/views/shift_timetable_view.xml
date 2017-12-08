@@ -4,7 +4,7 @@
     <!-- Section tree -->
     <record model="ir.ui.view" id="view_shift_timetable_tree">
         <field name="name">Shift Timetable</field>
-        <field name="model">shif.timetable</field>
+        <field name="model">shift.timetable</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Shift Timetable">
@@ -24,7 +24,7 @@
     
     <record id="view_shift_timetable_filter" model="ir.ui.view">
             <field name="name">Shift Timetable</field>
-            <field name="model">shif.timetable</field>
+            <field name="model">shift.timetable</field>
             <field name="arch" type="xml">
                 <search string="Shift Timetable">
                     <field name="shift_name" />
@@ -50,7 +50,7 @@
      <!-- Section form -->
     <record model="ir.ui.view" id="view_shift_timetable_form">
         <field name="name">Shift Timetable</field>
-        <field name="model">shif.timetable</field>
+        <field name="model">shift.timetable</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Shift Timetable">
@@ -79,7 +79,7 @@
      <!-- Menu -->
     <record model="ir.actions.act_window" id="open_view_shift_timetable_form">
         <field name="name">Shift Timetable</field>
-        <field name="res_model">shif.timetable</field>
+        <field name="res_model">shift.timetable</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="view_shift_timetable_filter"/>
