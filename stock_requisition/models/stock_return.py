@@ -31,12 +31,25 @@ class stock_return(osv.osv):
     def on_change_sale_team_id(self, cr, uid, ids, sale_team_id, context=None):
         values = {}
         team_obj = self.pool.get('crm.case.section')
+        warehouse_obj = self.pool.get('stock.warehouse')
         if sale_team_id:
             team = team_obj.browse(cr, uid, sale_team_id, context=context)
+            warehouse_id =  self.pool.get('stock.warehouse').browse(cr, uid, team.issue_warehouse_id.id, context=context)
             values = {
                 'vehicle_id': team.vehicle_id and team.vehicle_id.id or False,
                 'from_location':team.location_id,
+                'from_wh_normal_return_location_id':team.normal_return_location_id,
+                'from_wh_exp_location_id':team.exp_location_id,
+                'from_wh_near_exp_location_id':team.near_exp_location_id,
+                'from_wh_damage_location_id':team.damage_location_id,
+                'from_wh_fresh_stock_not_good_location_id':team.fresh_stock_not_good_location_id,
+                
                 'to_location':team.issue_location_id,
+                'to_wh_normal_return_location_id':warehouse_id.wh_normal_return_location_id,
+                'to_wh_exp_location_id':warehouse_id.wh_exp_location_id,
+                'to_wh_near_exp_location_id':warehouse_id.wh_near_exp_location_id,
+                'to_wh_damage_location_id':warehouse_id.wh_damage_location_id,
+                'to_wh_fresh_stock_not_good_location_id':warehouse_id.wh_fresh_stock_not_good_location_id,
                 'returner':team.receiver,
             }
         return {'value': values}
@@ -77,56 +90,66 @@ class stock_return(osv.osv):
 #             if note:
 #                 note_id=note[0]
 #            print 'rereturn_date',return_date,sale_team_id
-            note_ids = note_obj.search(cr, uid, [('sale_team_id', '=', sale_team_id), ('issue_date', '=', return_date),('state','=','issue')])
-            if  note_ids:        
-                cr.execute('select gin.from_location_id as location_id,product_id,big_uom_id,sum(big_issue_quantity) as big_issue_quantity,sum(issue_quantity) as issue_quantity,product_uom  as small_uom_id from good_issue_note gin ,good_issue_note_line  ginl where gin.id = ginl.line_id and gin.id in %s group by product_id,from_location_id,big_uom_id,product_uom', (tuple(note_ids),))
+            #note_ids = note_obj.search(cr, uid, [('sale_team_id', '=', sale_team_id), ('issue_date', '=', return_date),('state','=','issue')])
+            mobile_ids = mobile_obj.search(cr, uid, [('return_date', '=', return_date), ('sale_team_id', '=', sale_team_id)], context=context)
+            if  mobile_ids:        
+                #cr.execute('select gin.from_location_id as location_id,product_id,big_uom_id,sum(big_issue_quantity) as big_issue_quantity,sum(issue_quantity) as issue_quantity,product_uom  as small_uom_id from good_issue_note gin ,good_issue_note_line  ginl where gin.id = ginl.line_id and gin.id in %s group by product_id,from_location_id,big_uom_id,product_uom', (tuple(note_ids),))
+                cr.execute('select product_id,product_uom,sum(return_quantity) as return_quantity,sum(sale_quantity) as sale_quantity from stock_return_mobile srm, stock_return_mobile_line srml where srm.id=srml.line_id and srm.id in %s group by product_id,product_uom', (tuple(mobile_ids),))
                 p_line = cr.fetchall()            
             for note_line in p_line:
-                product_id = note_line[1]
+                product_id = note_line[0]
                 pro_data = product_obj.browse(cr, uid, product_id, context=context)
                 sequence=pro_data.sequence
-                big_uom_id = note_line[2]
-                big_issue_quantity = note_line[3]
-                small_issue_quantity = note_line[4]
-                small_uom_id = note_line[5]
-                location_id= note_line[0]
-                cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (big_uom_id,))
-                bigger_qty = cr.fetchone()[0]
-                receive_qty = (big_issue_quantity * bigger_qty) + small_issue_quantity
-                cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (location_id, product_id,))
-                qty_on_hand = cr.fetchone()
-                if qty_on_hand:
-                    qty_on_hand=qty_on_hand[0]
-                else:
-                    qty_on_hand=0.0
+                uom_id = note_line[1]
+                return_quantity = note_line[2]
+                sale_quantity = note_line[3]
+                #big_uom_id = note_line[2]
+                #big_issue_quantity = note_line[3]
+                #small_issue_quantity = note_line[4]
+                #small_uom_id = note_line[5]
+                #location_id= note_line[0]
+                #cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (big_uom_id,))
+                #cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (uom_id,))
+                #bigger_qty = cr.fetchone()[0]
+                #receive_qty = (big_issue_quantity * bigger_qty) + small_issue_quantity
+                #receive_qty = (issue_quantity * bigger_qty)
+                #cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (location_id, product_id,))
+                #qty_on_hand = cr.fetchone()
+                #if qty_on_hand:
+                    #qty_on_hand=qty_on_hand[0]
+               # else:
+                    #qty_on_hand=0.0
                 stock_return_obj.create(cr, uid, {'line_id': ids[0],
                                              'sequence':sequence,
                                           'product_id': product_id,
-                                          'product_uom': small_uom_id,
-                                          'receive_quantity':receive_qty,
+                                          #'product_uom': small_uom_id,
+                                          'product_uom': uom_id,
+                                          'receive_quantity':0,
                                           'return_quantity':0,
                                           'sale_quantity':0,
                                           'foc_quantity':0,
-                                          'rec_small_uom_id':small_uom_id,
-                                          'rec_big_uom_id':big_uom_id,
+                                          'rec_small_uom_id':0,
+                                          'rec_big_uom_id':0,
+                                          #'rec_small_uom_id':small_uom_id,
+                                          #'rec_big_uom_id':big_uom_id,
                                         }, context=context)
-            mobile_ids = mobile_obj.search(cr, uid, [('return_date', '=', return_date), ('sale_team_id', '=', sale_team_id)], context=context) 
+             
             return_mobile = mobile_obj.browse(cr, uid, mobile_ids, context=context)            
             for mobile_line in return_mobile.p_line:
                 product_id = mobile_line.product_id.id
                 return_quantity = mobile_line.return_quantity
-                if return_quantity<0:
-                    substract_qty=return_quantity
-                else:
-                    substract_qty=0
+                #if return_quantity<0:
+                    #substract_qty=return_quantity
+                #else:
+                    #substract_qty=0
                 sale_quantity = mobile_line.sale_quantity
-                foc_quantity = mobile_line.foc_quantity
+                #foc_quantity = mobile_line.foc_quantity
                 small_uom_id = mobile_line.product_uom.id             
-                last_qty         = foc_quantity + sale_quantity
+                #last_qty         = foc_quantity + sale_quantity
                 product_search = stock_return_obj.search(cr, uid, [('product_id', '=', product_id), ('line_id', '=', ids[0])], context=context) 
                 if product_search:
                     # cr.execute("update stock_return_line set receive_quantity=receive_quantity+%s + %s ,return_quantity=%s,sale_quantity=%s,foc_quantity=%s where line_id=%s and product_id=%s", (last_qty,substract_qty,return_quantity, sale_quantity, foc_quantity, ids[0], product_id,))
-                    cr.execute("update stock_return_line set receive_quantity=receive_quantity,return_quantity=%s,sale_quantity=%s,foc_quantity=%s where line_id=%s and product_id=%s", (return_quantity, sale_quantity, foc_quantity, ids[0], product_id,))
+                    cr.execute("update stock_return_line set receive_quantity=receive_quantity,return_quantity=%s,sale_quantity=%s where line_id=%s and product_id=%s", (return_quantity, sale_quantity, ids[0], product_id,))
                 else:
                     product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
                     sequence=product.sequence
@@ -138,58 +161,58 @@ class stock_return(osv.osv):
                                               'receive_quantity':0,
                                               'return_quantity':return_quantity,
                                               'sale_quantity':sale_quantity,
-                                              'foc_quantity':foc_quantity,
+                                              #'foc_quantity':foc_quantity,
                                               'rec_small_uom_id':small_uom_id,
                                               'rec_big_uom_id':big_uom,
                                               }, context=context)
-            trans_ids = product_trans_obj.search(cr, uid, [('date', '=', return_date), ('void_flag', '=', 'none'), ('team_id', '=', sale_team_id)], context=context) 
-            for t_id in trans_ids:
-                trans_data = product_trans_obj.browse(cr, uid, t_id, context=context)
-                exchange_type=trans_data.exchange_type          
-                for trans_line in trans_data.item_line:
-                    product_id = trans_line.product_id.id
-                    return_quantity = trans_line.product_qty
-                    sale_quantity = 0
-                    foc_quantity = 0
-                    small_uom_id = trans_line.uom_id.id     
-                    product_trans_line_data=product_trans_line_obj.browse(cr, uid, trans_line.id, context=context)
-                    if product_trans_line_data.trans_type == 'Out':
-                        return_quantity = -1*return_quantity
-                        cr.execute("update stock_return_line set return_quantity = return_quantity  + %s where product_id=%s and  ex_return_id is null",(return_quantity,product_id,))
-                    product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-                    sequence=product.sequence
-                    big_uom = product.product_tmpl_id.big_uom_id and product.product_tmpl_id.big_uom_id.id or False,
-                    stock_return_obj.create(cr, uid, {'line_id': ids[0],
-                                             'sequence':sequence,
-                                              'product_id': product_id,
-                                              'product_uom': small_uom_id,
-                                              'receive_quantity':0,
-                                              'return_quantity':return_quantity,
-                                              'sale_quantity':0,
-                                              'foc_quantity':0,
-                                              'rec_small_uom_id':small_uom_id,
-                                              'rec_big_uom_id':big_uom,
-                                              'remark':exchange_type,
-                                              'ex_return_id':t_id,
-                                              }, context=context)     
-            return_data = stock_return_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context) 
-            for data in return_data:
-                return_record = stock_return_obj.browse(cr, uid, data, context=context)
-                record_id= return_record.id
-                product_id = return_record.product_id.id
-                return_qty = return_record.return_quantity
-                product = product_obj.browse(cr, uid, product_id, context=context)
-                if return_qty >0: 
-                    cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (product.product_tmpl_id.big_uom_id.id,))
-                    bigger_qty = cr.fetchone()[0]
-                    bigger_qty = int(bigger_qty)
-                    big_uom_qty = divmod(return_qty, bigger_qty)
-                    if  big_uom_qty:
-                        big_quantity = big_uom_qty[0]
-                        small_quantity = big_uom_qty[1]
-                        cr.execute("update stock_return_line set return_quantity_big=%s,return_quantity=%s where product_id=%s and line_id=%s and id=%s", (big_quantity, small_quantity, product_id, ids[0],record_id,))
-                else:
-                        cr.execute("update stock_return_line set return_quantity_big=0,return_quantity=%s where product_id=%s and line_id=%s and id=%s", ( return_qty, product_id, ids[0],record_id,))
+#             trans_ids = product_trans_obj.search(cr, uid, [('date', '=', return_date), ('void_flag', '=', 'none'), ('team_id', '=', sale_team_id)], context=context) 
+#             for t_id in trans_ids:
+#                 trans_data = product_trans_obj.browse(cr, uid, t_id, context=context)
+#                 exchange_type=trans_data.exchange_type          
+#                 for trans_line in trans_data.item_line:
+#                     product_id = trans_line.product_id.id
+#                     return_quantity = trans_line.product_qty
+#                     sale_quantity = 0
+#                     foc_quantity = 0
+#                     small_uom_id = trans_line.uom_id.id     
+#                     product_trans_line_data=product_trans_line_obj.browse(cr, uid, trans_line.id, context=context)
+#                     if product_trans_line_data.trans_type == 'Out':
+#                         return_quantity = -1*return_quantity
+#                         cr.execute("update stock_return_line set return_quantity = return_quantity  + %s where product_id=%s and  ex_return_id is null",(return_quantity,product_id,))
+#                     product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+#                     sequence=product.sequence
+#                     big_uom = product.product_tmpl_id.big_uom_id and product.product_tmpl_id.big_uom_id.id or False,
+#                     stock_return_obj.create(cr, uid, {'line_id': ids[0],
+#                                              'sequence':sequence,
+#                                               'product_id': product_id,
+#                                               'product_uom': small_uom_id,
+#                                               'receive_quantity':0,
+#                                               'return_quantity':return_quantity,
+#                                               'sale_quantity':0,
+#                                               'foc_quantity':0,
+#                                               'rec_small_uom_id':small_uom_id,
+#                                               'rec_big_uom_id':big_uom,
+#                                               'remark':exchange_type,
+#                                               'ex_return_id':t_id,
+#                                               }, context=context)     
+#             return_data = stock_return_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context) 
+#             for data in return_data:
+#                 return_record = stock_return_obj.browse(cr, uid, data, context=context)
+#                 record_id= return_record.id
+#                 product_id = return_record.product_id.id
+#                 return_qty = return_record.return_quantity
+#                 product = product_obj.browse(cr, uid, product_id, context=context)
+#                 if return_qty >0: 
+#                     cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (product.product_tmpl_id.big_uom_id.id,))
+#                     bigger_qty = cr.fetchone()[0]
+#                     bigger_qty = int(bigger_qty)
+#                     big_uom_qty = divmod(return_qty, bigger_qty)
+#                     if  big_uom_qty:
+#                         big_quantity = big_uom_qty[0]
+#                         small_quantity = big_uom_qty[1]
+#                         cr.execute("update stock_return_line set return_quantity_big=%s,return_quantity=%s where product_id=%s and line_id=%s and id=%s", (big_quantity, small_quantity, product_id, ids[0],record_id,))
+#                 else:
+#                         cr.execute("update stock_return_line set return_quantity_big=0,return_quantity=%s where product_id=%s and line_id=%s and id=%s", ( return_qty, product_id, ids[0],record_id,))
 
         return True 
         
@@ -206,13 +229,13 @@ class stock_return(osv.osv):
         'from_location':fields.many2one('stock.location', 'From Location'),
         'to_location':fields.many2one('stock.location', 'To Warehouse'),
         'return_from':fields.char('Return From'),
-         'so_no' : fields.char('Sales Order/Inv Ref;No.'),
-         'returner' : fields.char('Returned By' ),
-         'wh_receiver' : fields.char('WH Receiver'),
-         'return_date':fields.date('Date of Return', required=True),
-         'vehicle_id':fields.many2one('fleet.vehicle', 'Vehicle No'),
+        'so_no' : fields.char('Sales Order/Inv Ref;No.'),
+        'returner' : fields.char('Returned By' ),
+        'wh_receiver' : fields.char('WH Receiver'),
+        'return_date':fields.date('Date of Return', required=True),
+        'vehicle_id':fields.many2one('fleet.vehicle', 'Vehicle No'),
 #         'branch_id':fields.many2one('res.branch', 'Branch'),
-         'state': fields.selection([
+        'state': fields.selection([
             ('draft', 'Pending'),
             ('received', 'Received'),
             ('cancel','Cancel')
@@ -224,6 +247,17 @@ class stock_return(osv.osv):
                               copy=True),
                 'company_id':fields.many2one('res.company', 'Company'),
 				'partner_id':fields.many2one('res.partner', 'Customer'),
+        'from_wh_normal_return_location_id': fields.many2one('stock.location', 'From Normal Return location'),
+        'from_wh_exp_location_id': fields.many2one('stock.location', 'From Expiry location'),
+        'from_wh_near_exp_location_id': fields.many2one('stock.location', 'From Near Expiry location'),
+        'from_wh_damage_location_id': fields.many2one('stock.location', 'From Damage location'),
+        'from_wh_fresh_stock_not_good_location_id': fields.many2one('stock.location', 'From Fresh Stock Not Good location'),
+        
+        'to_wh_normal_return_location_id': fields.many2one('stock.location', 'To Normal Return location'),
+        'to_wh_exp_location_id': fields.many2one('stock.location', 'To Expiry location'),
+        'to_wh_near_exp_location_id': fields.many2one('stock.location', 'To Near Expiry location'),
+        'to_wh_damage_location_id': fields.many2one('stock.location', 'To Damage location'),
+        'to_wh_fresh_stock_not_good_location_id': fields.many2one('stock.location', 'To Fresh Stock Not Good location'),
 }		
     
     _defaults = {
@@ -237,13 +271,37 @@ class stock_return(osv.osv):
         if vals['sale_team_id']:
             sale_team_id=vals['sale_team_id']
             sale_team = self.pool.get('crm.case.section').browse(cursor, user, sale_team_id, context=context)
-            to_location_id = sale_team.issue_location_id.id            
+            warehouse_id =  self.pool.get('stock.warehouse').browse(cursor, user, sale_team.issue_warehouse_id.id, context=context)
+            to_location_id = sale_team.issue_location_id.id
+            to_wh_normal_return_location_id = warehouse_id.wh_normal_return_location_id.id
+            to_wh_exp_location_id = warehouse_id.wh_exp_location_id.id
+            to_wh_near_exp_location_id = warehouse_id.wh_near_exp_location_id.id
+            to_wh_damage_location_id = warehouse_id.wh_damage_location_id.id
+            to_wh_fresh_stock_not_good_location_id = warehouse_id.wh_fresh_stock_not_good_location_id.id
+            
             from_location_id=sale_team.location_id.id
+            from_wh_normal_return_location_id = sale_team.normal_return_location_id.id
+            from_wh_exp_location_id = sale_team.exp_location_id.id
+            from_wh_near_exp_location_id = sale_team.near_exp_location_id.id
+            from_wh_damage_location_id = sale_team.damage_location_id.id
+            from_wh_fresh_stock_not_good_location_id = sale_team.fresh_stock_not_good_location_id.id
+            
         id_code = self.pool.get('ir.sequence').get(cursor, user,
                                                 'stock.return.code') or '/'
         vals['name'] = id_code
         vals['to_location'] = to_location_id
-        vals['from_location'] = from_location_id        
+        vals['to_wh_normal_return_location_id'] = to_wh_normal_return_location_id
+        vals['to_wh_exp_location_id'] = to_wh_exp_location_id
+        vals['to_wh_near_exp_location_id'] = to_wh_near_exp_location_id
+        vals['to_wh_damage_location_id'] = to_wh_damage_location_id
+        vals['to_wh_fresh_stock_not_good_location_id'] = to_wh_fresh_stock_not_good_location_id
+        
+        vals['from_location'] = from_location_id 
+        vals['from_wh_normal_return_location_id'] = from_wh_normal_return_location_id
+        vals['from_wh_exp_location_id'] = from_wh_near_exp_location_id
+        vals['from_wh_near_exp_location_id'] = from_wh_near_exp_location_id
+        vals['from_wh_damage_location_id'] = from_wh_damage_location_id
+        vals['from_wh_fresh_stock_not_good_location_id'] = from_wh_fresh_stock_not_good_location_id  
         return super(stock_return, self).create(cursor, user, vals, context=context)
     
     def confirm(self, cr, uid, ids, context=None):        
@@ -454,25 +512,31 @@ class stock_return_line(osv.osv):  # #prod_pricelist_update_line
     _columns = {                
         'line_id':fields.many2one('stock.return', 'Line', ondelete='cascade', select=True),
         'product_id': fields.many2one('product.product', 'Product', required=True),
-        'receive_quantity' : fields.float(string='Received Qty', digits=(16, 0)),
-        'return_quantity' : fields.float(string='Returned Qty', digits=(16, 0)),
-        'return_quantity_big' : fields.float(string='Returned Big Qty', digits=(16, 0)),
-        'sale_quantity' : fields.float(string='Sales Qty', digits=(16, 0)),
-        'sale_quantity_big' : fields.float(string='Sales Qty Big', digits=(16, 0)),
-        'foc_quantity' : fields.float(string='FOC Qty', digits=(16, 0)),
-     #   'exchange_quantity' : fields.float(string='Sale/Exchange Qty', digits=(16, 0)),
         'product_uom': fields.many2one('product.uom', 'UOM', required=True),
-        'uom_ratio':fields.char('Packing Unit'),
+        'status' : fields.char('Status' ),
+        'opening_stock_qty' : fields.float(string='Opening Stock Qty', digits=(16, 0)),
+        'sale_quantity' : fields.float(string='Sales Qty', digits=(16, 0)),
+        'return_quantity' : fields.float(string='Returned Qty', digits=(16, 0)),
+        'onground_quantity' : fields.float(string='On Ground Qty', digits=(16, 0)),
+        'actual_return_quantity' : fields.float(string='Actual Return Qty', digits=(16, 0)),
+        'closing_stock_qty' : fields.float(string='Closing Stock Qty', digits=(16, 0)),
+        #'receive_quantity' : fields.float(string='Received Qty', digits=(16, 0)),
+        #'return_quantity_big' : fields.float(string='Returned Big Qty', digits=(16, 0)),
+        
+        #'sale_quantity_big' : fields.float(string='Sales Qty Big', digits=(16, 0)),
+        #'foc_quantity' : fields.float(string='FOC Qty', digits=(16, 0)),
+     #   'exchange_quantity' : fields.float(string='Sale/Exchange Qty', digits=(16, 0)),
+        
+        #'uom_ratio':fields.char('Packing Unit'),
         'expiry_date':fields.date('Expiry'),
-         'remark':fields.char('Remark'),
-        'rec_big_uom_id': fields.many2one('product.uom', 'Rec Bigger UoM',help="Default Unit of Measure used for all stock operation."),
-        'rec_big_quantity' : fields.float(string='Rec Qty', digits=(16, 0)),        
-        'rec_small_quantity' : fields.float(string='Rec Small Qty', digits=(16, 0)),
-        'rec_small_uom_id': fields.many2one('product.uom', 'Rec Smaller UoM'),         
+        'remark':fields.char('Remark'),
+        #'rec_big_uom_id': fields.many2one('product.uom', 'Rec Bigger UoM',help="Default Unit of Measure used for all stock operation."),
+        #'rec_big_quantity' : fields.float(string='Rec Qty', digits=(16, 0)),        
+        #'rec_small_quantity' : fields.float(string='Rec Small Qty', digits=(16, 0)),
+        #'rec_small_uom_id': fields.many2one('product.uom', 'Rec Smaller UoM'),         
         'sequence':fields.integer('Sequence'),
-        'ex_return_id':fields.many2one('product.transactions','Exchange ID'),
+        #'ex_return_id':fields.many2one('product.transactions','Exchange ID'),
         'different_qty':fields.integer('Different Qty'),
-
     }
         
    
