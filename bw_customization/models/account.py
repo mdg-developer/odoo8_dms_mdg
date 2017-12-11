@@ -11,5 +11,5 @@ class account_fiscalyear(osv.osv):
     _inherit = "account.fiscalyear"
    
     _columns = {
-        'trading_no(ka_tha)': fields.char('Trading Numer(Ka Tha)'),
+        'trading_no': fields.char('Trading Numer(Ka Tha)'),
         }
