@@ -38,19 +38,6 @@
 		</template>
 
 		<template id="invoice_custom_layout_header">
-			<div class="header">
-				<div class="row">
-					<div class="col-xs-1">
-						<img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo"
-							style="max-height: 50pt;" />
-					</div>
-					<div class="col-xs-9 pull-left" style="text-align: center;">
-						<div style="font-size:11pt;text-align: center;" t-field="company.partner_id.name"/>
-						<span style="font-size:9pt;text-align: center;" t-field="company.partner_id.street"/> Tel: <span style="font-size:9pt;text-align: center;" t-field="company.phone" /> <br></br>
-						Fax: <span style="font-size:9pt;text-align: center;" t-field="company.partner_id.fax" />, <span style="font-size:9pt;text-align: center;" t-field="company.partner_id.email" />,       Commercial Tax Registration No: 
-					</div>
-				</div>
-			</div>
 		</template>
 
 		<template id="invoice_custom_layout_footer">
