@@ -43,7 +43,6 @@ class stock_return(osv.osv):
                 'from_wh_near_exp_location_id':team.near_exp_location_id,
                 'from_wh_damage_location_id':team.damage_location_id,
                 'from_wh_fresh_stock_not_good_location_id':team.fresh_stock_not_good_location_id,
-                
                 'to_location':team.issue_location_id,
                 'to_wh_normal_return_location_id':warehouse_id.wh_normal_return_location_id,
                 'to_wh_exp_location_id':warehouse_id.wh_exp_location_id,
@@ -92,47 +91,47 @@ class stock_return(osv.osv):
 #            print 'rereturn_date',return_date,sale_team_id
             #note_ids = note_obj.search(cr, uid, [('sale_team_id', '=', sale_team_id), ('issue_date', '=', return_date),('state','=','issue')])
             mobile_ids = mobile_obj.search(cr, uid, [('return_date', '=', return_date), ('sale_team_id', '=', sale_team_id)], context=context)
-            if  mobile_ids:        
-                #cr.execute('select gin.from_location_id as location_id,product_id,big_uom_id,sum(big_issue_quantity) as big_issue_quantity,sum(issue_quantity) as issue_quantity,product_uom  as small_uom_id from good_issue_note gin ,good_issue_note_line  ginl where gin.id = ginl.line_id and gin.id in %s group by product_id,from_location_id,big_uom_id,product_uom', (tuple(note_ids),))
-                cr.execute('select product_id,product_uom,sum(return_quantity) as return_quantity,sum(sale_quantity) as sale_quantity from stock_return_mobile srm, stock_return_mobile_line srml where srm.id=srml.line_id and srm.id in %s group by product_id,product_uom', (tuple(mobile_ids),))
-                p_line = cr.fetchall()            
-            for note_line in p_line:
-                product_id = note_line[0]
-                pro_data = product_obj.browse(cr, uid, product_id, context=context)
-                sequence=pro_data.sequence
-                uom_id = note_line[1]
-                return_quantity = note_line[2]
-                sale_quantity = note_line[3]
-                #big_uom_id = note_line[2]
-                #big_issue_quantity = note_line[3]
-                #small_issue_quantity = note_line[4]
-                #small_uom_id = note_line[5]
-                #location_id= note_line[0]
-                #cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (big_uom_id,))
-                #cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (uom_id,))
-                #bigger_qty = cr.fetchone()[0]
-                #receive_qty = (big_issue_quantity * bigger_qty) + small_issue_quantity
-                #receive_qty = (issue_quantity * bigger_qty)
-                #cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (location_id, product_id,))
-                #qty_on_hand = cr.fetchone()
-                #if qty_on_hand:
-                    #qty_on_hand=qty_on_hand[0]
-               # else:
-                    #qty_on_hand=0.0
-                stock_return_obj.create(cr, uid, {'line_id': ids[0],
-                                             'sequence':sequence,
-                                          'product_id': product_id,
-                                          #'product_uom': small_uom_id,
-                                          'product_uom': uom_id,
-                                          'receive_quantity':0,
-                                          'return_quantity':0,
-                                          'sale_quantity':0,
-                                          'foc_quantity':0,
-                                          'rec_small_uom_id':0,
-                                          'rec_big_uom_id':0,
-                                          #'rec_small_uom_id':small_uom_id,
-                                          #'rec_big_uom_id':big_uom_id,
-                                        }, context=context)
+#             if  mobile_ids:        
+#                 #cr.execute('select gin.from_location_id as location_id,product_id,big_uom_id,sum(big_issue_quantity) as big_issue_quantity,sum(issue_quantity) as issue_quantity,product_uom  as small_uom_id from good_issue_note gin ,good_issue_note_line  ginl where gin.id = ginl.line_id and gin.id in %s group by product_id,from_location_id,big_uom_id,product_uom', (tuple(note_ids),))
+#                 cr.execute('select product_id,product_uom,sum(return_quantity) as return_quantity,sum(sale_quantity) as sale_quantity from stock_return_mobile srm, stock_return_mobile_line srml where srm.id=srml.line_id and srm.id in %s group by product_id,product_uom', (tuple(mobile_ids),))
+#                 p_line = cr.fetchall()            
+#             for note_line in p_line:
+#                 product_id = note_line[0]
+#                 pro_data = product_obj.browse(cr, uid, product_id, context=context)
+#                 sequence=pro_data.sequence
+#                 uom_id = note_line[1]
+#                 return_quantity = note_line[2]
+#                 sale_quantity = note_line[3]
+#                 #big_uom_id = note_line[2]
+#                 #big_issue_quantity = note_line[3]
+#                 #small_issue_quantity = note_line[4]
+#                 #small_uom_id = note_line[5]
+#                 #location_id= note_line[0]
+#                 #cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (big_uom_id,))
+#                 #cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (uom_id,))
+#                 #bigger_qty = cr.fetchone()[0]
+#                 #receive_qty = (big_issue_quantity * bigger_qty) + small_issue_quantity
+#                 #receive_qty = (issue_quantity * bigger_qty)
+#                 #cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (location_id, product_id,))
+#                 #qty_on_hand = cr.fetchone()
+#                 #if qty_on_hand:
+#                     #qty_on_hand=qty_on_hand[0]
+#                # else:
+#                     #qty_on_hand=0.0
+#                 stock_return_obj.create(cr, uid, {'line_id': ids[0],
+#                                              'sequence':sequence,
+#                                           'product_id': product_id,
+#                                           #'product_uom': small_uom_id,
+#                                           'product_uom': uom_id,
+#                                           'receive_quantity':0,
+#                                           'return_quantity':0,
+#                                           'sale_quantity':0,
+#                                           'foc_quantity':0,
+#                                           'rec_small_uom_id':0,
+#                                           'rec_big_uom_id':0,
+#                                           #'rec_small_uom_id':small_uom_id,
+#                                           #'rec_big_uom_id':big_uom_id,
+#                                         }, context=context)
              
             return_mobile = mobile_obj.browse(cr, uid, mobile_ids, context=context)            
             for mobile_line in return_mobile.p_line:
@@ -161,41 +160,44 @@ class stock_return(osv.osv):
                                               'receive_quantity':0,
                                               'return_quantity':return_quantity,
                                               'sale_quantity':sale_quantity,
+                                              'status':'Stock Return',
                                               #'foc_quantity':foc_quantity,
                                               'rec_small_uom_id':small_uom_id,
                                               'rec_big_uom_id':big_uom,
                                               }, context=context)
-#             trans_ids = product_trans_obj.search(cr, uid, [('date', '=', return_date), ('void_flag', '=', 'none'), ('team_id', '=', sale_team_id)], context=context) 
-#             for t_id in trans_ids:
-#                 trans_data = product_trans_obj.browse(cr, uid, t_id, context=context)
-#                 exchange_type=trans_data.exchange_type          
-#                 for trans_line in trans_data.item_line:
-#                     product_id = trans_line.product_id.id
-#                     return_quantity = trans_line.product_qty
-#                     sale_quantity = 0
-#                     foc_quantity = 0
-#                     small_uom_id = trans_line.uom_id.id     
-#                     product_trans_line_data=product_trans_line_obj.browse(cr, uid, trans_line.id, context=context)
-#                     if product_trans_line_data.trans_type == 'Out':
-#                         return_quantity = -1*return_quantity
-#                         cr.execute("update stock_return_line set return_quantity = return_quantity  + %s where product_id=%s and  ex_return_id is null",(return_quantity,product_id,))
-#                     product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-#                     sequence=product.sequence
-#                     big_uom = product.product_tmpl_id.big_uom_id and product.product_tmpl_id.big_uom_id.id or False,
-#                     stock_return_obj.create(cr, uid, {'line_id': ids[0],
-#                                              'sequence':sequence,
-#                                               'product_id': product_id,
-#                                               'product_uom': small_uom_id,
-#                                               'receive_quantity':0,
-#                                               'return_quantity':return_quantity,
-#                                               'sale_quantity':0,
-#                                               'foc_quantity':0,
-#                                               'rec_small_uom_id':small_uom_id,
-#                                               'rec_big_uom_id':big_uom,
-#                                               'remark':exchange_type,
-#                                               'ex_return_id':t_id,
-#                                               }, context=context)     
-#             return_data = stock_return_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context) 
+            trans_ids = product_trans_obj.search(cr, uid, [('date', '=', return_date), ('void_flag', '=', 'none'), ('team_id', '=', sale_team_id)], context=context) 
+            for t_id in trans_ids:
+                trans_data = product_trans_obj.browse(cr, uid, t_id, context=context)
+                exchange_type=trans_data.exchange_type          
+                location_id =trans_data.location_id
+                location_type=trans_data.location_type
+                for trans_line in trans_data.item_line:
+                    product_id = trans_line.product_id.id
+                    return_quantity = trans_line.product_qty
+                    sale_quantity = 0
+                    foc_quantity = 0
+                    small_uom_id = trans_line.uom_id.id     
+                    product_trans_line_data=product_trans_line_obj.browse(cr, uid, trans_line.id, context=context)
+                    if product_trans_line_data.trans_type == 'Out':
+                        return_quantity = -1*return_quantity
+                        cr.execute("update stock_return_line set return_quantity = return_quantity  + %s where product_id=%s and  ex_return_id is null",(return_quantity,product_id,))
+                    product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+                    sequence=product.sequence
+                    stock_return_obj.create(cr, uid, {'line_id': ids[0],
+                                             'sequence':sequence,
+                                              'product_id': product_id,
+                                              'product_uom': small_uom_id,
+                                              'receive_quantity':0,
+                                              'return_quantity':return_quantity,
+                                              'sale_quantity':0,
+                                              'foc_quantity':0,
+                                              'status':location_type,
+                                              'rec_small_uom_id':small_uom_id,
+                                              'rec_big_uom_id':big_uom,
+                                              'remark':exchange_type,
+                                              'ex_return_id':t_id,
+                                              }, context=context)     
+#            return_data = stock_return_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context) 
 #             for data in return_data:
 #                 return_record = stock_return_obj.browse(cr, uid, data, context=context)
 #                 record_id= return_record.id
