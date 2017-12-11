@@ -4,7 +4,17 @@
 		<template id="report_invoice_inherit" >
 			<xpath expr="//t[@t-call='report.external_layout']" position="replace">
 			<t t-call="invoice_customization.invoice_custom_layout">
-					<div class="page" style="font-size:9pt;padding-top:70pt;">
+					<div class="page" style="font-size:9pt;padding-top:2pt;">
+						<div class="row">
+								<div class="col-xs-1">
+									<img t-if="o.company_id.logo" t-att-src="'data:image/png;base64,%s' % o.company_id.logo" 	style="max-height: 50pt;" />
+								</div>
+								<div class="col-xs-9 pull-left" style="text-align: center;">
+									<div style="font-size:14pt;text-align: center;" t-field="o.company_id.partner_id.name"/>
+									<span style="font-size:9pt;text-align: center;" t-field="o.company_id.partner_id.street"/> Tel: <span style="font-size:9pt;text-align: center;" t-field="o.company_id.phone" /> <br></br>
+									Fax: <span style="font-size:9pt;text-align: center;" t-field="o.company_id.partner_id.fax" />, <span style="font-size:9pt;text-align: center;" t-field="o.company_id.partner_id.email" />,  <![CDATA[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]]>Commercial Tax Registration No: <span style="font-size:9pt;text-align: center;" t-field="o.period_id.fiscalyear_id.trading_no"/> 
+								</div>
+						</div>
 						<div class="row">
 							<div align="center">
 								<span style="font-size:14pt;"><b>INVOICE</b></span>
