@@ -30,10 +30,10 @@
 				</field>
 
 				<field name="categ_id" position="after">
-					<field name="uom_id" string="S.UOM" />
-					<field name="list_price" string="S.Price" />
-					<field name="big_uom_id" string="B.UOM" />
-					<field name="big_list_price" string="B.Price" />
+					<field name="uom_id" />
+					<field name="list_price" string ="Default Price" />
+					<field name="big_uom_id" invisible="1" />
+					<field name="big_list_price" invisible="1"/>
 					<field name="uom_ratio" />
 					<field name="sequence" />
 					
