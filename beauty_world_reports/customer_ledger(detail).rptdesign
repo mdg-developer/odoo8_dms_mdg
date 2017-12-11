@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="bidiLayoutOrientation">ltr</property>
@@ -13,8 +13,14 @@
     </list-property>
     <parameters>
         <scalar-parameter name="company_id" id="7" extends="report_library.company_id"/>
-        <scalar-parameter name="from_date" id="115" extends="report_library.from_date"/>
-        <scalar-parameter name="to_date" id="116" extends="report_library.to_date"/>
+        <scalar-parameter name="from_date" id="115" extends="report_library.from_date">
+            <property name="isRequired">true</property>
+            <property name="dataType">date</property>
+        </scalar-parameter>
+        <scalar-parameter name="to_date" id="116" extends="report_library.to_date">
+            <property name="isRequired">true</property>
+            <property name="dataType">date</property>
+        </scalar-parameter>
         <scalar-parameter name="branch_id" id="8" extends="report_library.branch_id"/>
         <scalar-parameter name="sales_team_id" id="9" extends="report_library.sales_team_id"/>
     </parameters>
@@ -196,6 +202,26 @@
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
+                <structure>
+                    <property name="name">param_4</property>
+                    <property name="paramName">from_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">4</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_5</property>
+                    <property name="paramName">to_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">5</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
             </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
@@ -367,9 +393,19 @@ else
 	where aa.type='receivable'
 	and reconcile_id is null	
 	and am.date<?
-	group by rp.name,customer_id)
+	group by rp.name,customer_id),
+	sales_return as (
+	select COALESCE(sum(ai.amount_total),0)return_amt,ai.partner_id  from 
+	account_invoice ai,account_invoice_line ail,account_journal aj,res_partner rp
+	where ai.id=ail.invoice_id and ai.journal_id=aj.id and ai.partner_id=rp.id
+	and aj.name='Sale Return Journal' 
+	and ai.type='out_refund'
+	and date_invoice between ? and ?
+	group by ai.partner_id
+	)
 
-select null::character varying as type,trim(rp.name) customer_name,rp.id customer_id,'Opening Balance'::character varying ref_no,null::date date,null::numeric inv,null::numeric collection,null::numeric cn,null::numeric discount,
+select null::character varying as type,trim(rp.name) customer_name,rp.id customer_id,'Opening Balance'::character varying ref_no,null::date date,null::numeric inv,null::numeric collection,
+case when (select return_amt from sales_return where partner_id=rp.id) is null then 0 else (select return_amt from sales_return where partner_id=rp.id) end as cn,null::numeric discount,
 case when (select closing_balance from receivable_amount where customer_id=rp.id) is null then 0 else (select closing_balance from receivable_amount where customer_id=rp.id) end as closing_balance,1 as sequence
 from res_partner rp
 left join account_move_line aml on (rp.id=aml.partner_id)
@@ -377,6 +413,7 @@ join account_move am on (am.id=aml.move_id)
 join account_account aa on (aml.account_id=aa.id)
 join account_invoice inv on (rp.id=inv.partner_id)
 where rp.active='true'
+and rp.customer='true'
 and payment_type='credit'
 group by rp.name,rp.id
 
@@ -394,7 +431,13 @@ and aml.ref=ai.origin
 and ai.number=inv.number
 and av.state not in ('draft','cancel')
 and av.type='receipt'
-and payment_type='credit') collection,0 cn,
+and payment_type='credit') collection,
+(select COALESCE(sum(ai.amount_total),0)return_amt  from 
+account_invoice ai,account_invoice_line ail,account_journal aj
+where ai.id=ail.invoice_id and ai.journal_id=aj.id and ai.number=inv.number
+and aj.name='Sale Return Journal' 
+and ai.type='out_refund'
+) cn,
 (select COALESCE((sum(amount_untaxed)+sum(discount_total))-sum(amount_total)-sum(amount_tax),0)
 from account_invoice
 where number=inv.number
@@ -452,6 +495,36 @@ order by sequence]]></xml-property>
           <design:identifier>
             <design:name></design:name>
             <design:position>3</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>4</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>5</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>

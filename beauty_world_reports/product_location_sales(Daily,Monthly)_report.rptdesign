@@ -16,6 +16,7 @@
         <scalar-parameter name="from_date" id="214">
             <text-property name="promptText">From Date</text-property>
             <property name="valueType">static</property>
+            <property name="isRequired">true</property>
             <property name="dataType">date</property>
             <property name="distinct">true</property>
             <list-property name="selectionList"/>
@@ -28,6 +29,7 @@
         <scalar-parameter name="to_date" id="215">
             <text-property name="promptText">To Date</text-property>
             <property name="valueType">static</property>
+            <property name="isRequired">true</property>
             <property name="dataType">date</property>
             <property name="distinct">true</property>
             <list-property name="selectionList"/>
@@ -56,6 +58,7 @@
             </structure>
         </scalar-parameter>
         <scalar-parameter name="branch" id="276">
+            <text-property name="promptText">Branch</text-property>
             <property name="valueType">dynamic</property>
             <property name="dataSetName">branchDS</property>
             <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
@@ -75,14 +78,8 @@
         </scalar-parameter>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="118"
- extends="report_library.Data Source">
-            <property name="odaDriverClass">org.postgresql.Driver</property>
-            <property name="odaURL">jdbc:postgresql://localhost:5432/BW_oct30</property>
-            <property name="odaUser">openerp</property>
-            <encrypted-property name="odaPassword" encryptionID="base64">b3BlbnBncHdk</encrypted-property>
-            <property name="odaJndiName">java:comp/env/jdbc/ReportDB</property>
-        </oda-data-source>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="314"
+ extends="report_library.Data Source"/>
     </data-sources>
     <data-sets>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="param_from_to_date" id="13">
@@ -162,7 +159,7 @@
             <list-property name="computedColumns">
                 <structure>
                     <property name="name">net</property>
-                    <expression name="expression">row["credit_sales"]+row["cash_sales"]</expression>
+                    <expression name="expression">row["credit_sales"]+row["cash_sales"]-row["return"]</expression>
                     <property name="dataType">decimal</property>
                 </structure>
             </list-property>
@@ -292,6 +289,26 @@
                     <property name="nativeDataType">91</property>
                     <property name="position">6</property>
                     <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_7</property>
+                    <property name="paramName">from_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">7</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_8</property>
+                    <property name="paramName">to_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">8</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -450,12 +467,15 @@ else
                     <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[with qty_sold as (
+            <xml-property name="queryText"><![CDATA[Select a.pid,a.name_template,a.default_code, COALESCE(sum(a.qty_sold),0) qty_sold, COALESCE(sum(a.foc_qty_sold),0) foc_qty_sold,
+COALESCE(sum(a.credit_sales),0)credit_sales, COALESCE(sum(a.cash_sales),0)cash_sales, COALESCE(sum(a.return_qty),0)return,a.team_name,a.team_code 
+From 
+(with qty_sold as (
 	select COALESCE(sum(product_uom_qty),0) qty_sold,product_id,
 	payment_type,ccs.code team_code,ccs.name team_name,so.section_id team_id
 	from sale_order so,sale_order_line line , crm_case_section ccs
 	where so.id=line.order_id and ccs.id=so.section_id 	
-	and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ? 
+	and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between  ? and ? 
 	and ccs.active='true'
 	--$product$
 	--$company_id$
@@ -468,25 +488,31 @@ foc_qty_sold as (
 	from sale_order so,sale_order_line line, crm_case_section ccs
 	where so.id=line.order_id and ccs.id=so.section_id
 	and sale_foc='true' 	
-	and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+	and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between  ? and ? 
 	and ccs.active='true' 
 	--$product$
 	--$company_id$
 	--$branch$
 	group by product_id,payment_type,ccs.name,so.section_id,ccs.code
-	)
+	),
+return_qty as (select ail.product_id,ai.section_id,COALESCE(sum(ai.amount_total),0)return_qty  from 
+		account_invoice ai,account_invoice_line ail,account_journal aj
+		where ai.id=ail.invoice_id and ai.journal_id=aj.id
+		and aj.name='Sale Return Journal' 
+		and date_invoice::date between ? and ? 
+		group by ail.product_id,ai.section_id)
 
 select distinct pp.id pid,name_template,default_code,
 greatest(0,qty_sold.qty_sold) qty_sold, greatest(0,foc_qty_sold.foc_qty_sold) foc_qty_sold,
 case when sales_record.payment_type='credit' then greatest(0,sales_record.sales) end as credit_sales,
 case when sales_record.payment_type='cash' then greatest(0,sales_record.sales) end as cash_sales,
-0.0 return,
+greatest(0,return_qty.return_qty) return_qty,
 sales_record.team_name,sales_record.team_code
 from (select COALESCE(sum((product_uom_qty*price_unit)-discount_amt),0) sales,product_id,
 payment_type,ccs.code team_code,ccs.name team_name,so.section_id team_id
 from sale_order so,sale_order_line line, crm_case_section ccs
 where so.id=line.order_id and ccs.id=so.section_id
-and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date  between ? and ? 
 and ccs.active='true'
 --$product$
 --$company_id$
@@ -497,8 +523,9 @@ inner join product_product pp on pp.id=sales_record.product_id
 inner join product_template pt on pt.id=pp.product_tmpl_id  
 left join qty_sold on qty_sold.product_id=pp.id
 left join foc_qty_sold on foc_qty_sold.product_id=pp.id
+left join return_qty on return_qty.product_id=sales_record.product_id
 where pp.active='true'
-order by pp.id]]></xml-property>
+order by pp.id)a group by a.pid,a.name_template,a.default_code,a.team_name,a.team_code ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -585,6 +612,36 @@ order by pp.id]]></xml-property>
           <design:identifier>
             <design:name></design:name>
             <design:position>6</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>7</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>8</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
@@ -1499,7 +1556,7 @@ where active='t']]></xml-property>
                             <property name="fontFamily">sans-serif</property>
                             <property name="fontSize">9pt</property>
                             <property name="fontWeight">bold</property>
-                            <text-property name="text">Item No</text-property>
+                            <text-property name="text">Team</text-property>
                         </label>
                     </cell>
                     <cell id="125">

@@ -13,8 +13,14 @@
     </list-property>
     <parameters>
         <scalar-parameter name="company_id" id="5" extends="report_library.company_id"/>
-        <scalar-parameter name="from_date" id="111" extends="report_library.from_date"/>
-        <scalar-parameter name="to_date" id="112" extends="report_library.to_date"/>
+        <scalar-parameter name="from_date" id="111" extends="report_library.from_date">
+            <property name="isRequired">true</property>
+            <property name="dataType">date</property>
+        </scalar-parameter>
+        <scalar-parameter name="to_date" id="112" extends="report_library.to_date">
+            <property name="isRequired">true</property>
+            <property name="dataType">date</property>
+        </scalar-parameter>
     </parameters>
     <data-sources>
         <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="116"
@@ -155,6 +161,26 @@
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
+                <structure>
+                    <property name="name">param_3</property>
+                    <property name="paramName">from_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">3</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_4</property>
+                    <property name="paramName">to_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">4</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
             </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
@@ -235,24 +261,35 @@ else
                     <property name="nativeDataType">2</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select distinct aaa5555.desp,'' code,sum(aaa5555.return) return,sum(aaa5555.credit_sales) credit_sales,sum(aaa5555.cash_sales) cash_sales from ((select distinct pp.id product_id, concat(pmg.name,'(',pg.name,')')  desp
+            <xml-property name="queryText"><![CDATA[select distinct aaa5555.desp,'' code,sum(aaa5555.return)return,
+sum(aaa5555.credit_sales) credit_sales,
+sum(aaa5555.cash_sales) cash_sales from ((select distinct pp.id product_id, concat(pmg.name,'(',pg.name,')')  desp
 from  product_product pp 
 inner join product_template pt on pt.id=pp.product_tmpl_id
 inner join product_group pg on pg.id=pt.group
 inner join product_maingroup pmg on pmg.id=pt.main_group
-group by pmg.name,pg.name,pp.id) sale left join
-
-(select line.product_id,0.0 return,
+group by pmg.name,pg.name,pp.id) sale 
+left join
+(with 
+return_tbl as (select ail.product_id,COALESCE(sum(ai.amount_total),0)return_amt  from 
+		account_invoice ai,account_invoice_line ail,account_journal aj
+		where ai.id=ail.invoice_id and ai.journal_id=aj.id
+		and aj.name='Sale Return Journal'
+		and ai.type='out_refund' 
+		and date_invoice::date between ? and ?
+		group by ail.product_id)
+		
+select distinct line.product_id,COALESCE(sum(return_tbl.return_amt),0) return,
 case when so.payment_type='credit' then COALESCE(sum(so.amount_total),0) end as credit_sales,
 case when so.payment_type='cash' then COALESCE(sum(so.amount_total),0) end as cash_sales
-from sale_order so, sale_order_line line 
-where line.order_id=so.id 
-and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+from sale_order so 
+inner join sale_order_line line on line.order_id=so.id
+left join return_tbl on return_tbl.product_id=line.product_id
+where ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
 	--$company_id$
 group by line.product_id,so.payment_type)product on product.product_id=sale.product_id)aaa5555
 group by aaa5555.desp
-
-]]></xml-property>
+order by return]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -279,6 +316,36 @@ group by aaa5555.desp
           <design:identifier>
             <design:name></design:name>
             <design:position>2</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>3</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>4</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
@@ -707,6 +774,13 @@ order by name]]></xml-property>
                         </structure>
                     </list-property>
                     <property name="allowExport">true</property>
+                </structure>
+            </list-property>
+            <list-property name="sort">
+                <structure>
+                    <expression name="key" type="javascript">row["net"]</expression>
+                    <property name="direction">desc</property>
+                    <property name="strength">-1</property>
                 </structure>
             </list-property>
             <column id="139">

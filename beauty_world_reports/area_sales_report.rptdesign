@@ -119,7 +119,7 @@
             <list-property name="computedColumns">
                 <structure>
                     <property name="name">net</property>
-                    <expression name="expression">row["credit_sales"]+row["cash_sales"]</expression>
+                    <expression name="expression">row["credit_sales"]+row["cash_sales"] - row["return"]</expression>
                     <property name="dataType">decimal</property>
                 </structure>
             </list-property>
@@ -143,34 +143,28 @@
                     <text-property name="heading">city_name</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">sales</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">sales</text-property>
-                    <text-property name="heading">sales</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">payment_type</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">payment_type</text-property>
-                    <text-property name="heading">payment_type</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">return</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">return</text-property>
-                    <text-property name="heading">return</text-property>
-                </structure>
-                <structure>
                     <property name="columnName">credit_sales</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">credit_sales</text-property>
                     <text-property name="heading">credit_sales</text-property>
                 </structure>
                 <structure>
+                    <property name="columnName">sales</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">sales</text-property>
+                    <text-property name="heading">sales</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">cash_sales</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">cash_sales</text-property>
                     <text-property name="heading">cash_sales</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">return</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">return</text-property>
+                    <text-property name="heading">return</text-property>
                 </structure>
             </list-property>
             <list-property name="parameters">
@@ -214,31 +208,26 @@
                     </structure>
                     <structure>
                         <property name="position">4</property>
-                        <property name="name">sales</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
-                        <property name="position">5</property>
-                        <property name="name">payment_type</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">6</property>
-                        <property name="name">return</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
-                        <property name="position">7</property>
                         <property name="name">credit_sales</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">8</property>
+                        <property name="position">5</property>
+                        <property name="name">sales</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
                         <property name="name">cash_sales</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">9</property>
+                        <property name="position">7</property>
+                        <property name="name">return</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
                         <property name="name">net</property>
                         <property name="dataType">decimal</property>
                     </structure>
@@ -269,49 +258,56 @@
                 </structure>
                 <structure>
                     <property name="position">4</property>
-                    <property name="name">sales</property>
-                    <property name="nativeName">sales</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">2</property>
-                </structure>
-                <structure>
-                    <property name="position">5</property>
-                    <property name="name">payment_type</property>
-                    <property name="nativeName">payment_type</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-                <structure>
-                    <property name="position">6</property>
-                    <property name="name">return</property>
-                    <property name="nativeName">return</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">2</property>
-                </structure>
-                <structure>
-                    <property name="position">7</property>
                     <property name="name">credit_sales</property>
                     <property name="nativeName">credit_sales</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">8</property>
+                    <property name="position">5</property>
+                    <property name="name">sales</property>
+                    <property name="nativeName">sales</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
                     <property name="name">cash_sales</property>
                     <property name="nativeName">cash_sales</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">return</property>
+                    <property name="nativeName">return</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select distinct so.city city_id,rc.code city_code, rc.name city_name, COALESCE(sum(so.amount_total),0) sales,
-payment_type,0.0 return,
-case when so.payment_type='credit' then COALESCE(sum(so.amount_total),0) end as credit_sales,
-case when so.payment_type='cash' then COALESCE(sum(so.amount_total),0) end as cash_sales
+            <xml-property name="queryText"><![CDATA[--select distinct so.city city_id,rc.code city_code, rc.name city_name, COALESCE(sum(so.amount_total),0) sales,
+--payment_type,0.0 return,
+--case when so.payment_type='credit' then COALESCE(sum(so.amount_total),0) end as credit_sales,
+--case when so.payment_type='cash' then COALESCE(sum(so.amount_total),0) end as cash_sales
 
-from sale_order so, res_city rc
-where rc.id=so.city
+--from sale_order so, res_city rc
+--where rc.id=so.city
+--and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+--group by payment_type,rc.name,so.city,rc.code
+
+
+select a.city_id,a.city_code,a.city_name,COALESCE(sum(a.credit_sales),0)credit_sales,
+COALESCE(sum(a.sales),0)sales,
+COALESCE(sum(a.cash_sales),0)cash_sales,COALESCE(sum(a.return),0)return from (select distinct so.city city_id,rc.code city_code, rc.name city_name, COALESCE(sum(so.amount_total),0) sales,
+case when so.payment_type='credit' then COALESCE(sum(so.amount_total),0) end as credit_sales,
+case when so.payment_type='cash' then COALESCE(sum(so.amount_total),0) end as cash_sales,
+COALESCE(sum(ai.amount_total),0) as return
+
+from sale_order so, res_city rc,account_invoice ai,account_invoice_line ail,account_journal aj
+where rc.id=so.city and ai.city=so.city and ai.id=ail.invoice_id and ai.journal_id=aj.id and aj.name='Sale Return Journal'
 and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
-group by payment_type,rc.name,so.city,rc.code]]></xml-property>
+group by so.payment_type,rc.name,so.city,rc.code)a
+group by a.city_id,a.city_code,a.city_name]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
