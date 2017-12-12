@@ -77,6 +77,25 @@
         </structure>
     </list-property>
     <parameters>
+        <scalar-parameter name="company_id" id="1243">
+            <text-property name="promptText">Company</text-property>
+            <property name="valueType">dynamic</property>
+            <property name="dataSetName">company</property>
+            <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
+            <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
+            <expression name="sortByColumn">dataSetRow["id"]</expression>
+            <property name="sortDirection">asc</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">list-box</property>
+            <property name="mustMatch">true</property>
+            <property name="fixedOrder">false</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
         <scalar-parameter name="report_id" id="9">
             <property name="hidden">false</property>
             <text-property name="promptText">Report Name</text-property>
@@ -164,35 +183,6 @@
             <property name="controlType">list-box</property>
             <property name="mustMatch">true</property>
             <property name="fixedOrder">false</property>
-            <structure name="format">
-                <property name="category">Unformatted</property>
-            </structure>
-        </scalar-parameter>
-        <scalar-parameter name="currency" id="227">
-            <text-property name="promptText">Currency</text-property>
-            <property name="valueType">dynamic</property>
-            <property name="dataSetName">currency</property>
-            <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
-            <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
-            <property name="dataType">string</property>
-            <property name="distinct">true</property>
-            <list-property name="selectionList"/>
-            <property name="paramType">simple</property>
-            <property name="controlType">list-box</property>
-            <property name="mustMatch">true</property>
-            <property name="fixedOrder">true</property>
-            <structure name="format">
-                <property name="category">Unformatted</property>
-            </structure>
-        </scalar-parameter>
-        <scalar-parameter name="cur_rate" id="228">
-            <text-property name="promptText">Currency Rate</text-property>
-            <property name="valueType">static</property>
-            <property name="dataType">string</property>
-            <property name="distinct">true</property>
-            <list-property name="selectionList"/>
-            <property name="paramType">simple</property>
-            <property name="controlType">text-box</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
             </structure>
@@ -433,11 +423,6 @@
                     <expression name="expression">row["balance"]*row["sign"]</expression>
                     <property name="dataType">decimal</property>
                 </structure>
-                <structure>
-                    <property name="name">cur_bal</property>
-                    <expression name="expression">row["sign"] * row["balance_value"] * params["cur_rate"].value</expression>
-                    <property name="dataType">decimal</property>
-                </structure>
             </list-property>
             <list-property name="columnHints">
                 <structure>
@@ -611,11 +596,6 @@
                     <structure>
                         <property name="position">10</property>
                         <property name="name">balance_value</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
-                        <property name="position">11</property>
-                        <property name="name">cur_bal</property>
                         <property name="dataType">decimal</property>
                     </structure>
                 </list-property>
@@ -1460,10 +1440,6 @@ where frt.id =?
                             <expression name="measureExpression" type="javascript">dataSetRow["balance_value"]</expression>
                             <property name="dataType">decimal</property>
                         </tabular-measure>
-                        <tabular-measure name="cur_bal" id="1145">
-                            <expression name="measureExpression" type="javascript">dataSetRow["cur_bal"]</expression>
-                            <property name="dataType">decimal</property>
-                        </tabular-measure>
                     </property>
                 </tabular-measure-group>
             </property>
@@ -1691,7 +1667,7 @@ where frt.id =?
     </page-setup>
     <body>
         <grid id="993">
-            <property name="height">0.8472222222222222in</property>
+            <property name="height">0.875in</property>
             <property name="width">11.166666666666666in</property>
             <column id="994"/>
             <column id="995">
@@ -1704,31 +1680,31 @@ where frt.id =?
                 <property name="width">3.0277777777777777in</property>
             </column>
             <row id="997">
-                <property name="height">0.4861111111111111in</property>
+                <property name="height">0.575in</property>
                 <cell id="998">
-                    <property name="colSpan">2</property>
+                    <property name="colSpan">4</property>
                     <property name="rowSpan">1</property>
-                    <data id="1027">
-                        <property name="fontFamily">"Zawgyi-One"</property>
-                        <property name="fontSize">16pt</property>
+                    <data id="1244">
+                        <property name="fontFamily">"Arial"</property>
+                        <property name="fontSize">12pt</property>
                         <property name="fontWeight">bold</property>
-                        <property name="textAlign">right</property>
-                        <property name="dataSet">company</property>
+                        <property name="paddingRight">2pt</property>
+                        <property name="textAlign">center</property>
                         <list-property name="boundDataColumns">
                             <structure>
-                                <property name="name">name</property>
-                                <text-property name="displayName">name</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["name"]</expression>
+                                <property name="name">company_id</property>
+                                <expression name="expression" type="javascript">params["company_id"].displayText</expression>
                                 <property name="dataType">string</property>
+                                <property name="allowExport">true</property>
                             </structure>
                         </list-property>
-                        <property name="resultSetColumn">name</property>
+                        <property name="resultSetColumn">company_id</property>
                     </data>
                     <data id="1240">
                         <property name="fontFamily">"Arial"</property>
                         <property name="fontWeight">bold</property>
                         <property name="paddingRight">2pt</property>
-                        <property name="textAlign">right</property>
+                        <property name="textAlign">center</property>
                         <list-property name="boundDataColumns">
                             <structure>
                                 <property name="name">branch</property>
@@ -1740,46 +1716,18 @@ where frt.id =?
                         <property name="resultSetColumn">branch</property>
                     </data>
                 </cell>
-                <cell id="1013">
-                    <property name="paddingTop">6pt</property>
-                    <label id="1019">
-                        <property name="fontFamily">"Arial"</property>
-                        <property name="fontSize">12pt</property>
-                        <property name="fontWeight">bold</property>
-                        <property name="textAlign">right</property>
-                        <text-property name="text">Report Date.</text-property>
-                    </label>
-                </cell>
-                <cell id="1014">
-                    <property name="paddingTop">6pt</property>
-                    <data id="1020">
-                        <property name="fontFamily">"Arial"</property>
-                        <property name="fontSize">12pt</property>
-                        <property name="fontWeight">bold</property>
-                        <property name="dataSet">today_date</property>
-                        <list-property name="boundDataColumns">
-                            <structure>
-                                <property name="name">date</property>
-                                <text-property name="displayName">date</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["date"]</expression>
-                                <property name="dataType">date</property>
-                            </structure>
-                        </list-property>
-                        <property name="resultSetColumn">date</property>
-                    </data>
-                </cell>
             </row>
             <row id="1001">
-                <property name="height">0.3611111111111111in</property>
+                <property name="height">0.3in</property>
                 <cell id="1002">
-                    <property name="colSpan">2</property>
+                    <property name="colSpan">4</property>
                     <property name="rowSpan">1</property>
                     <data id="1010">
                         <property name="fontFamily">"Arial"</property>
-                        <property name="fontSize">14pt</property>
+                        <property name="fontSize">11pt</property>
                         <property name="fontWeight">bold</property>
                         <property name="textUnderline">none</property>
-                        <property name="textAlign">right</property>
+                        <property name="textAlign">center</property>
                         <property name="dataSet">balance_sheet_yearly</property>
                         <list-property name="boundDataColumns">
                             <structure>
@@ -1792,53 +1740,34 @@ where frt.id =?
                         <property name="resultSetColumn">report_name</property>
                     </data>
                 </cell>
-                <cell id="1018">
-                    <label id="594">
-                        <property name="fontSize">14pt</property>
-                        <property name="fontWeight">bold</property>
-                        <property name="textUnderline">none</property>
-                        <property name="textAlign">center</property>
-                        <text-property name="text">FOR THE YEAR OF</text-property>
-                    </label>
-                </cell>
-                <cell id="1015">
-                    <data id="1022">
-                        <property name="fontFamily">"Arial"</property>
-                        <property name="fontSize">14pt</property>
-                        <property name="fontWeight">bold</property>
-                        <property name="textUnderline">none</property>
-                        <property name="textAlign">left</property>
-                        <list-property name="boundDataColumns">
-                            <structure>
-                                <property name="name">end_fiscal_year</property>
-                                <expression name="expression" type="javascript">params["end_fiscal_year"].displayText</expression>
-                                <property name="dataType">integer</property>
-                                <property name="allowExport">true</property>
-                            </structure>
-                        </list-property>
-                        <property name="resultSetColumn">end_fiscal_year</property>
-                    </data>
-                </cell>
             </row>
         </grid>
         <grid id="115">
             <property name="height">0.625in</property>
             <property name="width">11.180555555555555in</property>
+            <column id="1247"/>
             <column id="116"/>
             <column id="117"/>
-            <column id="121">
-                <property name="width">3.7777777777777777in</property>
-            </column>
+            <column id="121"/>
             <row id="122">
                 <property name="verticalAlign">middle</property>
                 <property name="height">0.3229166666666667in</property>
+                <cell id="1245">
+                    <property name="verticalAlign">middle</property>
+                    <label id="1248">
+                        <property name="fontSize">11pt</property>
+                        <property name="fontWeight">bold</property>
+                        <property name="textAlign">center</property>
+                        <text-property name="text">Report Date</text-property>
+                    </label>
+                </cell>
                 <cell id="123">
                     <property name="verticalAlign">middle</property>
                     <label id="66">
                         <property name="fontSize">11pt</property>
                         <property name="fontWeight">bold</property>
                         <property name="textAlign">center</property>
-                        <text-property name="text">Fiscal Year:</text-property>
+                        <text-property name="text">Fiscal Year</text-property>
                     </label>
                 </cell>
                 <cell id="124">
@@ -1847,7 +1776,7 @@ where frt.id =?
                         <property name="fontSize">11pt</property>
                         <property name="fontWeight">bold</property>
                         <property name="textAlign">center</property>
-                        <text-property name="text">Fiscal Year:</text-property>
+                        <text-property name="text">Fiscal Year</text-property>
                     </label>
                 </cell>
                 <cell id="128">
@@ -1856,17 +1785,35 @@ where frt.id =?
                         <property name="fontSize">11pt</property>
                         <property name="fontWeight">bold</property>
                         <property name="textAlign">center</property>
-                        <text-property name="text">Target Move:</text-property>
+                        <text-property name="text">Target Move</text-property>
                     </label>
                 </cell>
             </row>
             <row id="129">
                 <property name="verticalAlign">middle</property>
                 <property name="height">0.3020833333333333in</property>
+                <cell id="1246">
+                    <data id="1020">
+                        <property name="fontFamily">"Arial"</property>
+                        <property name="fontSize">10pt</property>
+                        <property name="fontWeight">normal</property>
+                        <property name="textAlign">center</property>
+                        <property name="dataSet">today_date</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">date</property>
+                                <text-property name="displayName">date</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["date"]</expression>
+                                <property name="dataType">date</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">date</property>
+                    </data>
+                </cell>
                 <cell id="130">
                     <data id="919">
                         <property name="fontFamily">"Arial"</property>
-                        <property name="fontWeight">bold</property>
+                        <property name="fontWeight">normal</property>
                         <property name="textAlign">center</property>
                         <list-property name="boundDataColumns">
                             <structure>
@@ -1882,7 +1829,7 @@ where frt.id =?
                 <cell id="131">
                     <data id="918">
                         <property name="fontFamily">"Arial"</property>
-                        <property name="fontWeight">bold</property>
+                        <property name="fontWeight">normal</property>
                         <property name="textAlign">center</property>
                         <list-property name="boundDataColumns">
                             <structure>
@@ -1897,7 +1844,7 @@ where frt.id =?
                 </cell>
                 <cell id="135">
                     <data id="60">
-                        <property name="fontWeight">bold</property>
+                        <property name="fontWeight">normal</property>
                         <property name="textAlign">center</property>
                         <list-property name="boundDataColumns">
                             <structure>
@@ -1975,74 +1922,6 @@ where frt.id =?
                             <property name="borderRightWidth">thin</property>
                             <property name="borderRightColor">#000000</property>
                             <property name="height">32px</property>
-                        </extended-item>
-                    </property>
-                </extended-item>
-                <extended-item extensionName="MeasureView" id="1222">
-                    <property name="measure">cur_bal</property>
-                    <property name="detail">
-                        <extended-item extensionName="AggregationCell" id="1223">
-                            <property name="aggregationOnRow">Group_Name1/name</property>
-                            <property name="aggregationOnColumn">Group_Year1/yname</property>
-                            <property name="verticalAlign">middle</property>
-                            <property name="borderTopStyle">solid</property>
-                            <property name="borderTopWidth">thin</property>
-                            <property name="borderTopColor">#000000</property>
-                            <property name="borderLeftStyle">solid</property>
-                            <property name="borderLeftWidth">thin</property>
-                            <property name="borderLeftColor">#000000</property>
-                            <property name="borderBottomStyle">solid</property>
-                            <property name="borderBottomWidth">thin</property>
-                            <property name="borderBottomColor">#000000</property>
-                            <property name="borderRightStyle">solid</property>
-                            <property name="borderRightWidth">thin</property>
-                            <property name="borderRightColor">#000000</property>
-                            <property name="content">
-                                <data id="1224">
-                                    <property name="fontSize">9pt</property>
-                                    <property name="paddingRight">2pt</property>
-                                    <structure name="numberFormat">
-                                        <property name="category">Currency</property>
-                                        <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=HALF_UP}</property>
-                                    </structure>
-                                    <property name="textAlign">right</property>
-                                    <property name="resultSetColumn">cur_bal_Group_Name1/name_Group_Year1/yname</property>
-                                </data>
-                            </property>
-                        </extended-item>
-                    </property>
-                    <property name="header">
-                        <extended-item extensionName="CrosstabCell" id="1225">
-                            <property name="content">
-                                <data id="1236">
-                                    <property name="fontSize">9pt</property>
-                                    <property name="fontWeight">bold</property>
-                                    <property name="textAlign">center</property>
-                                    <list-property name="boundDataColumns">
-                                        <structure>
-                                            <property name="name">currency</property>
-                                            <expression name="expression" type="javascript">'Balance' + ' (' + params["currency"].displayText + ')'</expression>
-                                            <property name="dataType">string</property>
-                                            <property name="allowExport">true</property>
-                                        </structure>
-                                    </list-property>
-                                    <property name="resultSetColumn">currency</property>
-                                </data>
-                            </property>
-                            <property name="backgroundColor">#C0C0C0</property>
-                            <property name="verticalAlign">middle</property>
-                            <property name="borderTopStyle">solid</property>
-                            <property name="borderTopWidth">thin</property>
-                            <property name="borderTopColor">#000000</property>
-                            <property name="borderLeftStyle">solid</property>
-                            <property name="borderLeftWidth">thin</property>
-                            <property name="borderLeftColor">#000000</property>
-                            <property name="borderBottomStyle">solid</property>
-                            <property name="borderBottomWidth">thin</property>
-                            <property name="borderBottomColor">#000000</property>
-                            <property name="borderRightStyle">solid</property>
-                            <property name="borderRightWidth">thin</property>
-                            <property name="borderRightColor">#000000</property>
                         </extended-item>
                     </property>
                 </extended-item>
@@ -2253,15 +2132,6 @@ label;</expression>
                     <property name="aggregateFunction">SUM</property>
                 </structure>
                 <structure>
-                    <property name="name">cur_bal_Group_Year1/yname</property>
-                    <expression name="expression">measure["cur_bal"]</expression>
-                    <property name="dataType">decimal</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>Group_Year1/yname</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">SUM</property>
-                </structure>
-                <structure>
                     <property name="name">balance_value21_Group_Name1/name</property>
                     <expression name="expression">measure["balance_value21"]</expression>
                     <property name="dataType">decimal</property>
@@ -2271,27 +2141,8 @@ label;</expression>
                     <property name="aggregateFunction">SUM</property>
                 </structure>
                 <structure>
-                    <property name="name">cur_bal_Group_Name1/name</property>
-                    <expression name="expression">measure["cur_bal"]</expression>
-                    <property name="dataType">decimal</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>Group_Name1/name</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">SUM</property>
-                </structure>
-                <structure>
                     <property name="name">balance_value21_Group_Name1/name_Group_Year1/yname</property>
                     <expression name="expression">measure["balance_value21"]</expression>
-                    <property name="dataType">decimal</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>Group_Name1/name</value>
-                        <value>Group_Year1/yname</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">SUM</property>
-                </structure>
-                <structure>
-                    <property name="name">cur_bal_Group_Name1/name_Group_Year1/yname</property>
-                    <expression name="expression">measure["cur_bal"]</expression>
                     <property name="dataType">decimal</property>
                     <simple-property-list name="aggregateOn">
                         <value>Group_Name1/name</value>

@@ -39,6 +39,25 @@
         </structure>
     </list-property>
     <parameters>
+        <scalar-parameter name="company_id" id="1243">
+            <text-property name="promptText">Company</text-property>
+            <property name="valueType">dynamic</property>
+            <property name="dataSetName">company</property>
+            <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
+            <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
+            <expression name="sortByColumn">dataSetRow["id"]</expression>
+            <property name="sortDirection">asc</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">list-box</property>
+            <property name="mustMatch">true</property>
+            <property name="fixedOrder">false</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
         <scalar-parameter name="report_id" id="9">
             <property name="hidden">false</property>
             <text-property name="promptText">Report Name</text-property>
@@ -79,47 +98,31 @@
             </structure>
         </scalar-parameter>
         <cascading-parameter-group name="fiscal_year_period" id="711" extends="general_library.fiscal_year_period">
+            <text-property name="promptText">Fiscal Year Period</text-property>
+            <property name="dataSetMode">multiple</property>
             <overridden-values>
                 <ref-entry baseId="24" name="fiscal_year_id" id="24"/>
-                <ref-entry baseId="25" name="start_period_id" id="25"/>
-                <ref-entry baseId="26" name="end_period_id" id="26"/>
+                <ref-entry baseId="25" name="start_period_id" id="25">
+                    <structure name="format"/>
+                    <property name="fixedOrder">false</property>
+                    <property name="isRequired">true</property>
+                    <property name="sortDirection">asc</property>
+                    <expression name="sortByColumn">dataSetRow["id"]</expression>
+                    <property name="promptText">Start Period</property>
+                </ref-entry>
+                <ref-entry baseId="26" name="end_period_id" id="26">
+                    <structure name="format"/>
+                    <property name="fixedOrder">false</property>
+                    <property name="isRequired">true</property>
+                    <property name="sortDirection">asc</property>
+                    <expression name="sortByColumn">dataSetRow["id"]</expression>
+                    <property name="promptText">End Period</property>
+                </ref-entry>
             </overridden-values>
         </cascading-parameter-group>
         <scalar-parameter name="start_date" id="712" extends="general_library.start_date"/>
         <scalar-parameter name="end_date" id="713" extends="general_library.end_date"/>
         <scalar-parameter name="target_move" id="714" extends="general_library.target_move"/>
-        <scalar-parameter name="currency" id="1186">
-            <text-property name="promptText">Currency</text-property>
-            <property name="valueType">dynamic</property>
-            <property name="dataSetName">currency</property>
-            <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
-            <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
-            <expression name="sortByColumn">dataSetRow["id"]</expression>
-            <property name="sortDirection">asc</property>
-            <property name="dataType">string</property>
-            <property name="distinct">true</property>
-            <list-property name="selectionList"/>
-            <property name="paramType">simple</property>
-            <property name="controlType">list-box</property>
-            <property name="mustMatch">true</property>
-            <property name="fixedOrder">false</property>
-            <structure name="format">
-                <property name="category">Unformatted</property>
-            </structure>
-        </scalar-parameter>
-        <scalar-parameter name="currency_rate" id="1185">
-            <text-property name="promptText">Currency Rate</text-property>
-            <property name="valueType">static</property>
-            <property name="isRequired">true</property>
-            <property name="dataType">float</property>
-            <property name="distinct">true</property>
-            <list-property name="selectionList"/>
-            <property name="paramType">simple</property>
-            <property name="controlType">text-box</property>
-            <structure name="format">
-                <property name="category">Unformatted</property>
-            </structure>
-        </scalar-parameter>
         <scalar-parameter name="branch" id="1184">
             <text-property name="promptText">Branch</text-property>
             <property name="valueType">dynamic</property>
@@ -201,11 +204,6 @@
                 <structure>
                     <property name="name">balance_value</property>
                     <expression name="expression">row["balance"]*row["sign"]</expression>
-                    <property name="dataType">decimal</property>
-                </structure>
-                <structure>
-                    <property name="name">curr_balance</property>
-                    <expression name="expression">row["balance"]*row["sign"]*params["currency_rate"].value</expression>
                     <property name="dataType">decimal</property>
                 </structure>
             </list-property>
@@ -336,11 +334,6 @@
                         <property name="name">balance_value</property>
                         <property name="dataType">decimal</property>
                     </structure>
-                    <structure>
-                        <property name="position">10</property>
-                        <property name="name">curr_balance</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
                 </list-property>
             </structure>
             <method name="beforeOpen"><![CDATA[if (params["branch"].value == null )
@@ -412,7 +405,7 @@ else
                     <property name="dataType">integer</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select report.row_number,report.name,aa.code as analytic_name,style_overwrite,path,
+            <xml-property name="queryText"><![CDATA[select report.row_number,report.name,aa.name as analytic_name,style_overwrite,path,
 COALESCE(financial_report_balance_analytic(report.id,?,?,?,?,?,?,$ana$,$sp$),0) as balance,depth,sign 
 from financial_report_tree report,
 account_analytic_account aa 
@@ -1023,6 +1016,12 @@ order by path]]></xml-property>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="company" id="103">
             <list-property name="columnHints">
                 <structure>
+                    <property name="columnName">id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">id</text-property>
+                    <text-property name="heading">id</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">name</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">name</text-property>
@@ -1034,6 +1033,11 @@ order by path]]></xml-property>
                 <list-property name="resultSet">
                     <structure>
                         <property name="position">1</property>
+                        <property name="name">id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
                         <property name="name">name</property>
                         <property name="dataType">string</property>
                     </structure>
@@ -1043,13 +1047,20 @@ order by path]]></xml-property>
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
+                    <property name="name">id</property>
+                    <property name="nativeName">id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
                     <property name="name">name</property>
                     <property name="nativeName">name</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select name from res_company where id = 1]]></xml-property>
+            <xml-property name="queryText"><![CDATA[select id,name from res_company]]></xml-property>
         </oda-data-set>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="analytic" id="143">
             <list-property name="columnHints">
@@ -1370,14 +1381,6 @@ where parent_id is null]]></xml-property>
                         </tabular-measure>
                     </property>
                 </tabular-measure-group>
-                <tabular-measure-group name="curr_bal" id="739">
-                    <property name="measures">
-                        <tabular-measure name="curr_balance" id="740">
-                            <expression name="measureExpression" type="javascript">dataSetRow["curr_balance"]</expression>
-                            <property name="dataType">decimal</property>
-                        </tabular-measure>
-                    </property>
-                </tabular-measure-group>
             </property>
             <property name="dataSet">balance_sheet_report</property>
             <property name="autoKey">true</property>
@@ -1653,21 +1656,20 @@ where parent_id is null]]></xml-property>
                         <property name="borderTopStyle">none</property>
                         <property name="textAlign">right</property>
                         <property name="verticalAlign">middle</property>
-                        <data id="705">
-                            <property name="style">comp_name</property>
-                            <property name="fontFamily">sans-serif</property>
-                            <property name="marginRight">0pt</property>
+                        <data id="1244">
+                            <property name="fontFamily">"Arial"</property>
+                            <property name="fontSize">12pt</property>
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
-                            <property name="dataSet">company</property>
                             <list-property name="boundDataColumns">
                                 <structure>
-                                    <property name="name">name</property>
-                                    <text-property name="displayName">name</text-property>
-                                    <expression name="expression" type="javascript">dataSetRow["name"]</expression>
+                                    <property name="name">company_id</property>
+                                    <expression name="expression" type="javascript">params["company_id"].displayText</expression>
                                     <property name="dataType">string</property>
+                                    <property name="allowExport">true</property>
                                 </structure>
                             </list-property>
-                            <property name="resultSetColumn">name</property>
+                            <property name="resultSetColumn">company_id</property>
                         </data>
                         <data id="1187">
                             <property name="fontFamily">sans-serif</property>
@@ -1688,7 +1690,7 @@ where parent_id is null]]></xml-property>
                 <row id="46">
                     <property name="fontFamily">"Arial"</property>
                     <property name="verticalAlign">middle</property>
-                    <property name="height">0.46875in</property>
+                    <property name="height">0.3416666666666667in</property>
                     <cell id="47">
                         <property name="colSpan">4</property>
                         <property name="rowSpan">1</property>
@@ -1698,7 +1700,7 @@ where parent_id is null]]></xml-property>
                         <property name="borderTopStyle">none</property>
                         <data id="89">
                             <property name="style">comp_name</property>
-                            <property name="fontSize">15pt</property>
+                            <property name="fontSize">11pt</property>
                             <property name="fontWeight">bold</property>
                             <property name="paddingLeft">1pt</property>
                             <property name="textAlign">center</property>
@@ -1714,32 +1716,6 @@ where parent_id is null]]></xml-property>
                         </data>
                     </cell>
                 </row>
-                <row id="715">
-                    <property name="fontFamily">"Arial"</property>
-                    <property name="verticalAlign">middle</property>
-                    <property name="height">0.46875in</property>
-                    <cell id="716">
-                        <property name="colSpan">4</property>
-                        <property name="rowSpan">1</property>
-                        <property name="borderBottomStyle">none</property>
-                        <property name="borderLeftStyle">none</property>
-                        <property name="borderRightStyle">none</property>
-                        <property name="borderTopStyle">none</property>
-                        <data id="720">
-                            <property name="fontSize">15pt</property>
-                            <property name="fontWeight">bold</property>
-                            <list-property name="boundDataColumns">
-                                <structure>
-                                    <property name="name">analytic_id</property>
-                                    <expression name="expression" type="javascript">params["analytic_id"].displayText</expression>
-                                    <property name="dataType">string</property>
-                                    <property name="allowExport">true</property>
-                                </structure>
-                            </list-property>
-                            <property name="resultSetColumn">analytic_id</property>
-                        </data>
-                    </cell>
-                </row>
                 <row id="110">
                     <property name="fontFamily">"Arial"</property>
                     <property name="verticalAlign">middle</property>
@@ -1749,24 +1725,13 @@ where parent_id is null]]></xml-property>
                         <property name="rowSpan">1</property>
                         <grid id="115">
                             <property name="height">0.625in</property>
-                            <column id="116">
-                                <property name="width">1.6458333333333333in</property>
-                            </column>
-                            <column id="117">
-                                <property name="width">1.5729166666666667in</property>
-                            </column>
-                            <column id="118">
-                                <property name="width">1.625in</property>
-                            </column>
-                            <column id="119">
-                                <property name="width">1.7708333333333333in</property>
-                            </column>
-                            <column id="120">
-                                <property name="width">1.6041666666666667in</property>
-                            </column>
-                            <column id="121">
-                                <property name="width">2.7604166666666665in</property>
-                            </column>
+                            <column id="116"/>
+                            <column id="117"/>
+                            <column id="118"/>
+                            <column id="119"/>
+                            <column id="120"/>
+                            <column id="121"/>
+                            <column id="1247"/>
                             <row id="122">
                                 <property name="verticalAlign">middle</property>
                                 <property name="height">0.3229166666666667in</property>
@@ -1775,8 +1740,8 @@ where parent_id is null]]></xml-property>
                                     <label id="66">
                                         <property name="fontSize">11pt</property>
                                         <property name="fontWeight">bold</property>
-                                        <property name="textAlign">left</property>
-                                        <text-property name="text">Fiscal Year:</text-property>
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">Fiscal Year</text-property>
                                     </label>
                                 </cell>
                                 <cell id="124">
@@ -1784,8 +1749,8 @@ where parent_id is null]]></xml-property>
                                     <label id="67">
                                         <property name="fontSize">11pt</property>
                                         <property name="fontWeight">bold</property>
-                                        <property name="textAlign">left</property>
-                                        <text-property name="text">Period:</text-property>
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">Period</text-property>
                                     </label>
                                 </cell>
                                 <cell id="125">
@@ -1793,7 +1758,7 @@ where parent_id is null]]></xml-property>
                                     <label id="94">
                                         <property name="fontSize">11pt</property>
                                         <property name="fontWeight">bold</property>
-                                        <property name="textAlign">left</property>
+                                        <property name="textAlign">center</property>
                                         <text-property name="text">End Period</text-property>
                                     </label>
                                 </cell>
@@ -1802,8 +1767,8 @@ where parent_id is null]]></xml-property>
                                     <label id="136">
                                         <property name="fontSize">11pt</property>
                                         <property name="fontWeight">bold</property>
-                                        <property name="textAlign">left</property>
-                                        <text-property name="text">Start Date:</text-property>
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">Start Date</text-property>
                                     </label>
                                 </cell>
                                 <cell id="127">
@@ -1811,8 +1776,8 @@ where parent_id is null]]></xml-property>
                                     <label id="137">
                                         <property name="fontSize">11pt</property>
                                         <property name="fontWeight">bold</property>
-                                        <property name="textAlign">left</property>
-                                        <text-property name="text">End Date:</text-property>
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">End Date</text-property>
                                     </label>
                                 </cell>
                                 <cell id="128">
@@ -1820,8 +1785,17 @@ where parent_id is null]]></xml-property>
                                     <label id="69">
                                         <property name="fontSize">11pt</property>
                                         <property name="fontWeight">bold</property>
-                                        <property name="textAlign">left</property>
-                                        <text-property name="text">Target Move:</text-property>
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">Target Move</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="1245">
+                                    <property name="verticalAlign">middle</property>
+                                    <label id="1248">
+                                        <property name="fontSize">11pt</property>
+                                        <property name="fontWeight">bold</property>
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">Analytic</text-property>
                                     </label>
                                 </cell>
                             </row>
@@ -1830,7 +1804,9 @@ where parent_id is null]]></xml-property>
                                 <property name="height">0.3020833333333333in</property>
                                 <cell id="130">
                                     <data id="57">
-                                        <property name="textAlign">left</property>
+                                        <property name="fontSize">10pt</property>
+                                        <property name="fontWeight">normal</property>
+                                        <property name="textAlign">center</property>
                                         <list-property name="boundDataColumns">
                                             <structure>
                                                 <property name="name">fiscal_year_id</property>
@@ -1844,7 +1820,9 @@ where parent_id is null]]></xml-property>
                                 </cell>
                                 <cell id="131">
                                     <data id="58">
-                                        <property name="textAlign">left</property>
+                                        <property name="fontSize">10pt</property>
+                                        <property name="fontWeight">normal</property>
+                                        <property name="textAlign">center</property>
                                         <list-property name="boundDataColumns">
                                             <structure>
                                                 <property name="name">start_period_id</property>
@@ -1858,7 +1836,9 @@ where parent_id is null]]></xml-property>
                                 </cell>
                                 <cell id="132">
                                     <data id="95">
-                                        <property name="textAlign">left</property>
+                                        <property name="fontSize">10pt</property>
+                                        <property name="fontWeight">normal</property>
+                                        <property name="textAlign">center</property>
                                         <list-property name="boundDataColumns">
                                             <structure>
                                                 <property name="name">end_period_id</property>
@@ -1872,11 +1852,13 @@ where parent_id is null]]></xml-property>
                                 </cell>
                                 <cell id="133">
                                     <data id="138">
+                                        <property name="fontSize">10pt</property>
+                                        <property name="fontWeight">normal</property>
                                         <structure name="dateTimeFormat">
                                             <property name="category">Custom</property>
                                             <property name="pattern">dd-MM-yyyy</property>
                                         </structure>
-                                        <property name="textAlign">left</property>
+                                        <property name="textAlign">center</property>
                                         <list-property name="boundDataColumns">
                                             <structure>
                                                 <property name="name">start_date</property>
@@ -1889,11 +1871,13 @@ where parent_id is null]]></xml-property>
                                 </cell>
                                 <cell id="134">
                                     <data id="139">
+                                        <property name="fontSize">10pt</property>
+                                        <property name="fontWeight">normal</property>
                                         <structure name="dateTimeFormat">
                                             <property name="category">Custom</property>
                                             <property name="pattern">dd-MM-yyyy</property>
                                         </structure>
-                                        <property name="textAlign">left</property>
+                                        <property name="textAlign">center</property>
                                         <list-property name="boundDataColumns">
                                             <structure>
                                                 <property name="name">end_date</property>
@@ -1906,7 +1890,9 @@ where parent_id is null]]></xml-property>
                                 </cell>
                                 <cell id="135">
                                     <data id="60">
-                                        <property name="textAlign">left</property>
+                                        <property name="fontSize">10pt</property>
+                                        <property name="fontWeight">normal</property>
+                                        <property name="textAlign">center</property>
                                         <list-property name="boundDataColumns">
                                             <structure>
                                                 <property name="name">target_move</property>
@@ -1916,6 +1902,22 @@ where parent_id is null]]></xml-property>
                                             </structure>
                                         </list-property>
                                         <property name="resultSetColumn">target_move</property>
+                                    </data>
+                                </cell>
+                                <cell id="1246">
+                                    <data id="720">
+                                        <property name="fontSize">10pt</property>
+                                        <property name="fontWeight">normal</property>
+                                        <property name="textAlign">center</property>
+                                        <list-property name="boundDataColumns">
+                                            <structure>
+                                                <property name="name">analytic_id</property>
+                                                <expression name="expression" type="javascript">params["analytic_id"].displayText</expression>
+                                                <property name="dataType">string</property>
+                                                <property name="allowExport">true</property>
+                                            </structure>
+                                        </list-property>
+                                        <property name="resultSetColumn">analytic_id</property>
                                     </data>
                                 </cell>
                             </row>
@@ -1962,31 +1964,6 @@ where parent_id is null]]></xml-property>
                             <property name="content">
                                 <label id="550">
                                     <text-property name="text">balance_value</text-property>
-                                </label>
-                            </property>
-                        </extended-item>
-                    </property>
-                </extended-item>
-                <extended-item extensionName="MeasureView" id="741">
-                    <property name="measure">curr_balance</property>
-                    <property name="detail">
-                        <extended-item extensionName="AggregationCell" id="742">
-                            <property name="aggregationOnRow">Group1/name</property>
-                            <property name="aggregationOnColumn">Group2/analytic_name</property>
-                            <property name="width">245px</property>
-                            <property name="content">
-                                <data id="743">
-                                    <property name="textAlign">right</property>
-                                    <property name="resultSetColumn">curr_balance_Group1/name_Group2/analytic_name</property>
-                                </data>
-                            </property>
-                        </extended-item>
-                    </property>
-                    <property name="header">
-                        <extended-item extensionName="CrosstabCell" id="744">
-                            <property name="content">
-                                <label id="745">
-                                    <text-property name="text">curr_balance</text-property>
                                 </label>
                             </property>
                         </extended-item>
@@ -2098,42 +2075,15 @@ where parent_id is null]]></xml-property>
                                     <property name="member">
                                         <extended-item extensionName="CrosstabCell" id="620">
                                             <property name="content">
-                                                <grid id="750">
-                                                    <property name="width">3.875in</property>
-                                                    <column id="751">
-                                                        <property name="width">1.78125in</property>
-                                                    </column>
-                                                    <column id="752">
-                                                        <property name="width">2.28125in</property>
-                                                    </column>
-                                                    <row id="753">
-                                                        <cell id="754">
-                                                            <property name="borderBottomStyle">none</property>
-                                                            <property name="borderLeftStyle">none</property>
-                                                            <property name="borderRightColor">#000000</property>
-                                                            <property name="borderRightStyle">solid</property>
-                                                            <property name="borderRightWidth">thin</property>
-                                                            <property name="borderTopStyle">none</property>
-                                                            <data name="analytic_name" id="621">
-                                                                <property name="style">Heading_style</property>
-                                                                <property name="fontWeight">bold</property>
-                                                                <property name="borderBottomStyle">none</property>
-                                                                <property name="borderLeftStyle">none</property>
-                                                                <property name="borderRightStyle">none</property>
-                                                                <property name="borderTopStyle">none</property>
-                                                                <property name="resultSetColumn">analytic_name</property>
-                                                            </data>
-                                                        </cell>
-                                                        <cell id="755">
-                                                            <text-data id="746">
-                                                                <property name="fontWeight">bold</property>
-                                                                <property name="textAlign">center</property>
-                                                                <expression name="valueExpr">params["currency"].displayText</expression>
-                                                                <property name="contentType">html</property>
-                                                            </text-data>
-                                                        </cell>
-                                                    </row>
-                                                </grid>
+                                                <data name="analytic_name" id="621">
+                                                    <property name="style">Heading_style</property>
+                                                    <property name="fontWeight">bold</property>
+                                                    <property name="borderBottomStyle">none</property>
+                                                    <property name="borderLeftStyle">none</property>
+                                                    <property name="borderRightStyle">none</property>
+                                                    <property name="borderTopStyle">none</property>
+                                                    <property name="resultSetColumn">analytic_name</property>
+                                                </data>
                                             </property>
                                             <property name="fontWeight">normal</property>
                                             <property name="backgroundColor">silver</property>
@@ -2334,16 +2284,6 @@ label;</expression>
                 <structure>
                     <property name="name">balance_value_Group1/name_Group2/analytic_name</property>
                     <expression name="expression">measure["balance_value"]</expression>
-                    <property name="dataType">decimal</property>
-                    <simple-property-list name="aggregateOn">
-                        <value>Group1/name</value>
-                        <value>Group2/analytic_name</value>
-                    </simple-property-list>
-                    <property name="aggregateFunction">SUM</property>
-                </structure>
-                <structure>
-                    <property name="name">curr_balance_Group1/name_Group2/analytic_name</property>
-                    <expression name="expression">measure["curr_balance"]</expression>
                     <property name="dataType">decimal</property>
                     <simple-property-list name="aggregateOn">
                         <value>Group1/name</value>

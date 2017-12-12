@@ -26,6 +26,25 @@
         </structure>
     </list-property>
     <parameters>
+        <scalar-parameter name="company_id" id="1243">
+            <text-property name="promptText">Company</text-property>
+            <property name="valueType">dynamic</property>
+            <property name="dataSetName">company</property>
+            <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
+            <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
+            <expression name="sortByColumn">dataSetRow["id"]</expression>
+            <property name="sortDirection">asc</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">list-box</property>
+            <property name="mustMatch">true</property>
+            <property name="fixedOrder">false</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
         <scalar-parameter name="report_id" id="9">
             <property name="hidden">false</property>
             <text-property name="promptText">Report Name</text-property>
@@ -1296,19 +1315,18 @@ label;</expression>
                         <property name="borderLeftStyle">none</property>
                         <property name="borderRightStyle">none</property>
                         <property name="borderTopStyle">none</property>
-                        <data id="229">
-                            <property name="fontFamily">"Zawgyi-One"</property>
-                            <property name="fontSize">11pt</property>
-                            <property name="dataSet">company</property>
+                        <data id="1244">
+                            <property name="fontFamily">"Arial"</property>
+                            <property name="fontWeight">bold</property>
                             <list-property name="boundDataColumns">
                                 <structure>
-                                    <property name="name">name</property>
-                                    <text-property name="displayName">name</text-property>
-                                    <expression name="expression" type="javascript">dataSetRow["name"]</expression>
+                                    <property name="name">company_id</property>
+                                    <expression name="expression" type="javascript">params["company_id"].displayText</expression>
                                     <property name="dataType">string</property>
+                                    <property name="allowExport">true</property>
                                 </structure>
                             </list-property>
-                            <property name="resultSetColumn">name</property>
+                            <property name="resultSetColumn">company_id</property>
                         </data>
                     </cell>
                 </row>

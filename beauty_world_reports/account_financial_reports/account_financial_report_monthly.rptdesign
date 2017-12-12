@@ -39,6 +39,25 @@
         </structure>
     </list-property>
     <parameters>
+        <scalar-parameter name="company_id" id="1243">
+            <text-property name="promptText">Company</text-property>
+            <property name="valueType">dynamic</property>
+            <property name="dataSetName">company</property>
+            <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
+            <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
+            <expression name="sortByColumn">dataSetRow["id"]</expression>
+            <property name="sortDirection">asc</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">list-box</property>
+            <property name="mustMatch">true</property>
+            <property name="fixedOrder">false</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
         <scalar-parameter name="report_id" id="9">
             <property name="hidden">false</property>
             <text-property name="promptText">Report Name</text-property>
@@ -914,10 +933,30 @@ where frt.id=?]]></xml-property>
 </model:DesignValues>]]></xml-property>
         </oda-data-set>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="company" id="103">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">id</text-property>
+                    <text-property name="heading">id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">name</text-property>
+                    <text-property name="heading">name</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters"/>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
                     <structure>
                         <property name="position">1</property>
+                        <property name="name">id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
                         <property name="name">name</property>
                         <property name="dataType">string</property>
                     </structure>
@@ -927,12 +966,20 @@ where frt.id=?]]></xml-property>
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
+                    <property name="name">id</property>
+                    <property name="nativeName">id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
                     <property name="name">name</property>
                     <property name="nativeName">name</property>
                     <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select name
+            <xml-property name="queryText"><![CDATA[select id,name
 from res_company]]></xml-property>
         </oda-data-set>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="fiscal_year" id="615"
@@ -1248,12 +1295,6 @@ from res_company]]></xml-property>
             <property name="width">297mm</property>
             <property name="headerHeight">0.3in</property>
             <property name="footerHeight">0.3in</property>
-            <page-footer>
-                <text id="3">
-                    <property name="contentType">html</property>
-                    <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
-                </text>
-            </page-footer>
         </simple-master-page>
     </page-setup>
     <body>
@@ -1284,33 +1325,6 @@ from res_company]]></xml-property>
                 <property name="width">4.944444444444445in</property>
             </column>
             <header>
-                <row id="608">
-                    <property name="fontFamily">"Arial"</property>
-                    <property name="verticalAlign">middle</property>
-                    <property name="height">0.23958333333333334in</property>
-                    <cell id="609">
-                        <property name="colSpan">4</property>
-                        <property name="rowSpan">1</property>
-                        <property name="borderBottomStyle">none</property>
-                        <property name="borderLeftStyle">none</property>
-                        <property name="borderRightStyle">none</property>
-                        <property name="borderTopStyle">none</property>
-                        <data id="619">
-                            <property name="fontWeight">bold</property>
-                            <property name="fontStyle">normal</property>
-                            <property name="dataSet">company</property>
-                            <list-property name="boundDataColumns">
-                                <structure>
-                                    <property name="name">name</property>
-                                    <text-property name="displayName">name</text-property>
-                                    <expression name="expression" type="javascript">dataSetRow["name"]</expression>
-                                    <property name="dataType">string</property>
-                                </structure>
-                            </list-property>
-                            <property name="resultSetColumn">name</property>
-                        </data>
-                    </cell>
-                </row>
                 <row id="46">
                     <property name="fontFamily">"Arial"</property>
                     <property name="verticalAlign">middle</property>
@@ -1322,6 +1336,20 @@ from res_company]]></xml-property>
                         <property name="borderLeftStyle">none</property>
                         <property name="borderRightStyle">none</property>
                         <property name="borderTopStyle">none</property>
+                        <data id="1244">
+                            <property name="fontFamily">"Arial"</property>
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">center</property>
+                            <list-property name="boundDataColumns">
+                                <structure>
+                                    <property name="name">company_id</property>
+                                    <expression name="expression" type="javascript">params["company_id"].displayText</expression>
+                                    <property name="dataType">string</property>
+                                    <property name="allowExport">true</property>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">company_id</property>
+                        </data>
                         <data id="1240">
                             <property name="fontFamily">"Arial"</property>
                             <property name="fontWeight">bold</property>
