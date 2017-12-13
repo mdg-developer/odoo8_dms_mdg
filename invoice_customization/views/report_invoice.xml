@@ -136,7 +136,7 @@
 									<tr class="border-black">
 										<td style="border:1pt solid;border-color:black;">Taxes</td>
 										<td class="text-right" style="border:1pt solid;border-color:black;">
-											<span t-field="o.amount_tax"
+											<span t-esc="'%.2f'% o.amount_tax"
 												t-field-options='{"widget": "monetary", "display_currency": "o.pricelist_id.currency_id"}' />
 										</td>
 									</tr>
