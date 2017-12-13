@@ -55,7 +55,7 @@ class exchange_product(osv.osv):
                 from_location_id = product_value.team_id.damage_location_id.id            
             
             #from_location_id = product_value.team_id.return_location_id.id
-            car_location_id = product_value.location_id.id
+            car_location_id = product_value.team_id.location_id.id
             origin = product_value.transaction_id
             product_line_id = product_line_obj.search(cr, uid, [('transaction_id', '=', ids[0])], context=context)
             if product_line_id:

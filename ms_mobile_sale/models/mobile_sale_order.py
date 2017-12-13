@@ -355,7 +355,7 @@ class mobile_sale_order(osv.osv):
                                   'transaction_id':s_order_id,
                                   'product_id':ptl['product_id'],
                                   'product_qty':ptl['product_qty'],
-                                  'uom_id':int(uom_id),
+                                  'uom_id':ptl['uom_id'],
                                   'so_No':ptl['so_No'],
                                   'trans_type':ptl['trans_type'],
                                   'transaction_name':ptl['transaction_name'],
@@ -364,9 +364,8 @@ class mobile_sale_order(osv.osv):
                                   'batchno':ptl['batchno'],
                                 }
                                 product_trans_line_obj.create(cursor, user, mso_line_res, context=context)
-#                         product_trans_obj.action_convert_ep(cursor, user, [s_order_id], context=context)
+                    product_trans_obj.action_convert_ep(cursor, user, [s_order_id], context=context)
 
-                                    
             print 'Truwwwwwwwwwwwwwwwwwwwwwe'
             return True       
         except Exception, e:
