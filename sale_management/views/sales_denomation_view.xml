@@ -16,12 +16,13 @@
 								<field name="user_id" domain="[('default_section_id', '=',sale_team_id)]" />
 								<field name="date" />
 								<field name="company_id" invisible="1" />
+								<field name="receive_from" />
 							</group>
 							<group>
 								<field name="tablet_id" />
 								<field name="invoice_count" />
 								<field name="create_uid" />
-								<field name="create_date" />								
+								<field name="create_date" />
 								<field name="write_uid" />
 								<field name="write_date" />
 							</group>
@@ -165,10 +166,10 @@
 								<field name="cheque_amount" />
 								<field name="bank_amount" />
 								<field name="trans_amount" />
-								<field name="sign_diff_amount" />																
+								<field name="sign_diff_amount" />
 							</group>
 						</group>
-						
+
 					</sheet>
 
 				</form>
