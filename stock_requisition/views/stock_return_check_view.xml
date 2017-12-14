@@ -7,28 +7,41 @@
 			<field name="model">stock.return.check</field>
 			<field name="arch" type="xml">
 				<form string="Stock Return Check Form">
+					<header>
+						<button name="received" string="Received" class="oe_highlight"
+							type="object" states="draft"
+							groups="stock.group_stock_manager,stock.group_stock_user" />
+						<button name="cancel" string="Cancel" class="oe_highlight"
+							type="object" states="draft" groups="stock.group_stock_manager" />
+						<field name="state" widget="statusbar" />
+					</header>
 					<sheet>
 						<group>
 							<group>
-								<field name="srn_id" on_change="on_change_stock_return(srn_id)" widget="selection" />
-								<field name="sale_team_id" />
-								<field name="branch_id"  readonly="1"/>
+								<field name="name" on_change="on_change_stock_return(name)"
+									class="oe_inline" />
+								<field name="return_date" />
+								<field name="sale_team_id" class="oe_inline" />
+								<field name="branch_id" readonly="1" class="oe_inline" />
+								<field name="receive_by" class="oe_inline" />
+
+
 							</group>
 						</group>
 						<group>
 							<notebook>
 								<page string="Stock List">
-									<field name="s_line" >
+									<field name="s_line">
 										<tree string="Stock Return Check Line" editable="bottom"
 											default_order="sequence asc">
 											<field name="sequence" invisible="1" />
 											<field name="product_id" attrs="{'readonly':True}" />
 											<field name="current_location" />
-											<field name="current_product_uom" />
 											<field name="current_qty" />
+											<field name="current_product_uom" />
 											<field name="to_location" />
-											<field name="to_product_uom" />
 											<field name="to_qty" />
+											<field name="to_product_uom" />
 										</tree>
 									</field>
 								</page>
@@ -65,7 +78,7 @@
 				</search>
 			</field>
 		</record>
-		
+
 		<!-- ============================== Content Tree ============================== -->
 		<record id="stock_return_check_tree" model="ir.ui.view">
 			<field name="name">stock_return_check_tree</field>
@@ -73,17 +86,17 @@
 			<field name="arch" type="xml">
 				<tree string="Contents">
 					<field name="sale_team_id" />
-					<field name="srn_id" />
+					<field name="name" />
 					<field name="branch_id" />
 					<field name="return_date" />
 					<field name="state" />
 				</tree>
 			</field>
 		</record>
-		
+
 		<!-- Stock Requisition -->
 		<record id="action_stock_return_check" model="ir.actions.act_window">
-			<field name="name">Stock Return Check</field>
+			<field name="name">Stock Return Checking</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">stock.return.check</field>
 			<field name="context">{'search_default_state_filter': 1}</field>
@@ -99,8 +112,8 @@
 				</p>
 			</field>
 		</record>
-		
-		<menuitem id="menu_action_stock_return_check" action='action_stock_return_check' 
-		parent="stock.menu_stock_warehouse_mgmt" groups="stock.group_stock_manager" />
+
+		<menuitem id="menu_action_stock_return_check" action='action_stock_return_check'
+			sequence="10" parent="stock.menu_stock_warehouse_mgmt" groups="stock.group_stock_manager" />
 	</data>
 </openerp>

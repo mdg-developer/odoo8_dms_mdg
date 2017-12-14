@@ -22,12 +22,12 @@ class stock_return_check(osv.osv):
     _description = "Stock Return Check"
     _order = "id desc"    
      
-    def on_change_stock_return(self, cr, uid, ids, srn_id, context=None):
+    def on_change_stock_return(self, cr, uid, ids, name, context=None):
         values = {}
         data_line = []
         product_obj = self.pool.get('product.product')
-        if srn_id:
-            cr.execute('select srnl.product_id,srnl.product_uom,srnl.actual_return_quantity,srnl.to_location,srnl.status,srn.return_date from stock_return srn, stock_return_line srnl where srn.id=srnl.line_id and srnl.status != %s and srn.id = %s', ('Stock Return',srn_id,))
+        if name:
+            cr.execute('select srnl.product_id,srnl.product_uom,srnl.actual_return_quantity,srnl.to_location_id,srnl.status,srn.return_date,srn.sale_team_id from stock_return srn, stock_return_line srnl where srn.id=srnl.line_id and srnl.status != %s and srn.id = %s', ('Stock Return',name,))
             stock_return = cr.fetchall()
             if stock_return:
                 for srn_data_line in stock_return:
@@ -39,18 +39,21 @@ class stock_return_check(osv.osv):
                     current_location = srn_data_line[3]
                     status = srn_data_line[4]
                     return_date = srn_data_line[5]
+                    team_id = srn_data_line[6]
                 
                     if pro_data.product_tmpl_id.type=='product':
                         data_line.append({
                                           'sequence':sequence,
                                           'product_id':product_id,
-                                          'current_product_uom': pro_data.product_tmpl_id.uom_id and pro_data.product_tmpl_id.uom_id.id or False,
+                                         'to_product_uom':uom_id,
+                                          'current_product_uom': uom_id,
                                           'current_location':current_location,
                                           'current_qty':qty,
                                             })
                 
             values = {
                         's_line': data_line,
+                        'sale_team_id':team_id,
                     }
         return {'value': values}
     
@@ -59,11 +62,47 @@ class stock_return_check(osv.osv):
         if not branch_id:
             raise osv.except_osv(_('Error!'), _('There is no default branch for the current user!'))
         return branch_id
+    
+    def cancel(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state': 'cancel', })
+    
+    def received(self, cr, uid, ids, context=None):
+        move_obj = self.pool.get('stock.move')     
+        user_obj = self.pool.get('res.users')     
+        user_data=user_obj.browse(cr, uid, uid, context=context)    
+        return_obj = self.browse(cr, uid, ids, context=context)    
+        ids
+        origin = return_obj.name.name
+        for line in return_obj.s_line:
+            from_location_id =line.current_location.id
+            to_location_id = line.to_location.id
+            product_id = line.product_id.id
+            name = line.product_id.name_template          
+            to_quantity = line.to_qty
+            uom_id = line.to_product_uom.id
+            if to_quantity:
+                if to_quantity > 0:
+#                 From Location===> Change Location                    
+                    move_id = move_obj.create(cr, uid, {
+                                          'product_id': product_id,
+                                          'product_uom_qty':  to_quantity ,
+                                          'product_uos_qty':  to_quantity,
+                                          'product_uom':uom_id,
+                                          'location_id':from_location_id,
+                                          'location_dest_id':to_location_id,
+                                          'name':name,
+                                           'origin':origin,
+                                         'manual':True,
+                                          'state':'confirmed'}, context=context)     
+                    move_obj.action_done(cr, uid, move_id, context=context)        
+        return self.write(cr, uid, ids, {'state':'received','receive_by':user_data.name})        
         
     _columns = {
         'sale_team_id':fields.many2one('crm.case.section', 'Sales Team' , required=True),
-        'srn_id':fields.many2one('stock.return', 'SRN Ref' , required=True),
+        'name':fields.many2one('stock.return', 'SRN Ref' , required=True),
+        'return_date':fields.date('Date of Return', required=True),
         'branch_id':fields.many2one('res.branch', 'Branch',required=True),
+        'receive_by' : fields.char('Receive By'),
         'return_date':fields.date('Date of Return'),
         'state': fields.selection([
             ('draft', 'Pending'),
@@ -78,16 +117,18 @@ class stock_return_check(osv.osv):
     
     _defaults = {
         'state' : 'draft',
-        'branch_id': _get_default_branch
+        'branch_id': _get_default_branch,
+        'return_date' :fields.datetime.now,
+
         }
     def create(self, cursor, user, vals, context=None):
         data_line = []
-        if vals['srn_id']:
-            ref_id=vals['srn_id']
+        if vals['name']:
+            ref_id=vals['name']
             srn_data = self.pool.get('stock.return')
             product_obj = self.pool.get('product.product')
             if ref_id:
-                cursor.execute('select srnl.product_id,srnl.product_uom,srnl.actual_return_quantity,srnl.to_location,srnl.status,srn.return_date from stock_return srn, stock_return_line srnl where srn.id=srnl.line_id and srnl.status != %s and srn.id = %s', ('Stock Return',ref_id,))
+                cursor.execute('select srnl.product_id,srnl.product_uom,srnl.actual_return_quantity,srnl.to_location_id,srnl.status,srn.return_date from stock_return srn, stock_return_line srnl where srn.id=srnl.line_id and srnl.status != %s and srn.id = %s', ('Stock Return',ref_id,))
                 stock_return = cursor.fetchall()
                 if stock_return:
                     for srn_data_line in stock_return:
@@ -104,7 +145,8 @@ class stock_return_check(osv.osv):
                             data_line.append({
                                               'sequence':sequence,
                                               'product_id':product_id,
-                                              'current_product_uom': pro_data.product_tmpl_id.uom_id and pro_data.product_tmpl_id.uom_id.id or False,
+                                              'current_product_uom': uom_id,
+                                              'to_product_uom':uom_id,
                                               'current_location':current_location,
                                               'current_qty':qty,
                                               })
@@ -126,8 +168,8 @@ class stock_return_check_line(osv.osv):
         'current_product_uom': fields.many2one('product.uom', 'UOM', required=True),
         'current_qty':  fields.float(string='Current Qty', digits=(16, 0)),
         'to_location':fields.many2one('stock.location', 'To Location'),
-        'to_product_uom': fields.many2one('product.uom', 'UOM', required=True),
-        'to_qty':  fields.float(string='To Qty', digits=(16, 0)),
+        'to_product_uom': fields.many2one('product.uom', 'UOM', required=False),
+        'to_qty':  fields.float(string='Qty', digits=(16, 0)),
     }     
    
     

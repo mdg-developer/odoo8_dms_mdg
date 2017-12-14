@@ -36,19 +36,27 @@
 								<field name="wh_receiver" attrs="{'readonly':[('state','=','received')]}" />
 								<field name="company_id" attrs="{'readonly':[('state','=','received')]}"
 									invisible="1" />
-								<field name="from_wh_normal_return_location_id" readonly="1" />
-								<field name="from_wh_exp_location_id" readonly="1" />
-								<field name="from_wh_near_exp_location_id" readonly="1" />
-								<field name="from_wh_damage_location_id" readonly="1" />
+								<field name="from_wh_normal_return_location_id" readonly="1"
+									invisible="1" />
+								<field name="from_wh_exp_location_id" readonly="1"
+									invisible="1" />
+								<field name="from_wh_near_exp_location_id" readonly="1"
+									invisible="1" />
+								<field name="from_wh_damage_location_id" readonly="1"
+									invisible="1" />
 								<field name="from_wh_fresh_stock_not_good_location_id"
-									readonly="1" />
+									readonly="1" invisible="1" />
 
-								<field name="to_wh_normal_return_location_id" readonly="1" />
-								<field name="to_wh_exp_location_id" readonly="1" />
-								<field name="to_wh_near_exp_location_id" readonly="1" />
-								<field name="to_wh_damage_location_id" readonly="1" />
+								<field name="to_wh_normal_return_location_id" readonly="1"
+									invisible="1" />
+								<field name="to_wh_exp_location_id" readonly="1"
+									invisible="1" />
+								<field name="to_wh_near_exp_location_id" readonly="1"
+									invisible="1" />
+								<field name="to_wh_damage_location_id" readonly="1"
+									invisible="1" />
 								<field name="to_wh_fresh_stock_not_good_location_id"
-									readonly="1" />
+									invisible="1" readonly="1" />
 							</group>
 						</group>
 						<group>
@@ -90,7 +98,7 @@
 											<field name="product_uom" string="UOM" invisible="0" />
 											<field name="status" string="Status" />
 											<field name="opening_stock_qty" string="Opening Stock Qty" />
-											<field name="sale_quantity" string="Today Sales Qty" />
+											<field name="sale_quantity" string="Sales Qty" />
 											<field name="return_quantity" string="Return Qty" />
 											<field name="onground_quantity" string="On Ground Qty"
 												on_change="on_change_ground_quantity(onground_quantity,actual_return_quantity)" />
@@ -127,7 +135,7 @@
 						<filter string="Sales Team" icon="terp-partner" domain="[]"
 							context="{'group_by':'sale_team_id'}" />
 						<filter string="Return From" icon="terp-partner" domain="[]"
-							context="{'group_by':'return_from'}" />
+							context="{'group_by':'returner'}" />
 						<filter string="Date of Return" icon="terp-partner" domain="[]"
 							context="{'group_by':'return_date'}" />
 						<filter string="Pending" domain="[('state','=','draft')]"
@@ -145,11 +153,8 @@
 				<tree string="Contents">
 					<field name="sale_team_id" />
 					<field name="name" />
-					<field name="note_id" />
-					<field name="return_from" />
-					<field name="so_no" />
+					<field name="returner" />
 					<field name="return_date" />
-					<field name="vehicle_id" />
 					<field name="state" />
 				</tree>
 			</field>
