@@ -8,7 +8,9 @@ from openerp import models, fields, exceptions, api, _
 # NOTE: In v9, this should be `from openerp.tools.misc import formatLang`
 from .format_lang_wrapper import formatLang
 import openerp.addons.decimal_precision as dp
-
+from datetime import datetime
+import calendar
+#from openerp.exceptions import UserError, RedirectWarning, ValidationError
 
 class PurchaseCostDistribution(models.Model):
     _name = "purchase.cost.distribution"
@@ -121,7 +123,10 @@ class PurchaseCostDistribution(models.Model):
         comodel_name='purchase.cost.distribution.expense', ondelete="cascade",
         inverse_name='distribution', string='Expenses',
         default=_expense_lines_default)
-
+    journal_id = fields.Many2one('account.journal',string="Journal",required=True,)
+    cost_adj = fields.Boolean("Reverse",default=False,)
+    reverse_amount = fields.Float("Reverse Amount",state={'done': [('readonly', True)]},)
+    
     @api.multi
     def unlink(self):
         for c in self:
@@ -271,7 +276,103 @@ class PurchaseCostDistribution(models.Model):
                     line.move_id, line.standard_price_new,line.standard_price_old)
                 line.move_id.product_price_update_after_done()
         self.state = 'done'
+        self.create_cogs_account_move()
+    
+    def create_cogs_account_move(self):        
+        
+        
+        journal_id = move_id = None
+        journal_id = self.journal_id.id   
+        res = []        
+        if journal_id is not None:             
+             
+            account_move = {
+                            'journal_id': journal_id,
+                            'state': 'draft',
+                            'date': self.date,#datetime.today().strftime(DF),#datetime.today()
+                            'amount': self.total_expense,
+                            'ref': self.name,
+                            'company_id': self.company_id.id,
+                            
+                            }
+            move_id = self.env['account.move'].create(account_move)
+            move_id.write({'ref':self.name})
 
+            cr_account = dr_account = None                           
+            currency_id =  None
+            amount_currency_dr = amount_currency_cr = total = 0.0
+            company_currency = self.company_id.currency_id 
+            
+            currency_id = self.currency_id.id              
+            expense_account = product_account = None
+            
+            for expense in self.expense_lines:
+                expense_account = expense.account_id.id 
+                                  
+            for line in self.cost_lines:
+                product_account =line.product_id.categ_id.property_stock_valuation_account_id.id
+                if product_account == False:
+                    raise ValueError(_('''Please define the Inventory Account for category of 
+                    the product name: %s''') % line.product_id.name_template)
+                    
+            if self.cost_adj == True:
+                
+                cr_account = expense_account
+                dr_account = product_account
+                total = self.reverse_amount
+                    
+            else:
+                cr_account = product_account
+                dr_account = expense_account
+                total = self.total_expense     
+            #property_stock_valuation_account_id
+            
+           
+            
+            #add condition for multi currency
+            
+            if self.currency_id != company_currency:
+                amount_currency_cr = total * -1
+                amount_currency_dr = total
+            period_id = self.get_period()
+            if self.cost_adj == True:         
+                self.env.cr.execute("""insert into account_move_line (name,account_id,date_maturity,move_id,credit,debit,journal_id,date,company_id,currency_id,amount_currency,period_id) 
+                values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s),
+                      (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""", 
+                    ( self.name , cr_account, self.date, move_id.id, 0.0,total, journal_id, self.date, self.company_id.id,currency_id,amount_currency_dr,period_id,  
+                    self.name, dr_account, self.date, move_id.id, total,0.0, journal_id, self.date, self.company_id.id,currency_id,amount_currency_cr,period_id, ))
+            else:
+                self.env.cr.execute("""insert into account_move_line (name,account_id,date_maturity,move_id,credit,debit,journal_id,date,company_id,currency_id,amount_currency,period_id) 
+                values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s),
+                      (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""", 
+                    ( self.name , dr_account, self.date, move_id.id, total,0.0, journal_id, self.date, self.company_id.id,currency_id,amount_currency_dr,period_id,  
+                    self.name, cr_account, self.date, move_id.id, 0.0, total, journal_id, self.date, self.company_id.id,currency_id,amount_currency_cr,period_id, ))    
+        move_id.write({'amount':total})       
+        #self.env.cr.execute("""UPDATE account_move as m set amount =%s where m.id=%s                            
+        #                """,(move_id.id,move_id.id,))    
+             
+        return move_id
+    
+    def get_period(self):
+        values = {}
+        period_id = False
+        if self.date:
+            t_date = datetime.strptime(str(self.date), "%Y-%m-%d") 
+            end_day = calendar.monthrange(int(t_date.year), int(t_date.month))[1]
+            if t_date.month > 9:
+               t_month = t_date.month
+            else:
+               t_month = '0' + str(t_date.month)       
+            start_date = str(t_date.year) + '-' + str(t_month) + '-' + str('01')
+            end_date = str(t_date.year) + '-' + str(t_month) + '-' + str(end_day)
+            
+            self.env.cr.execute("""select id from account_period where date_start >=%s and date_stop <= %s""",(start_date,end_date))
+            data =  self.env.cr.fetchall()
+            if data:
+                period_id = data[0][0]
+            values = {'period_id':period_id}
+            
+        return period_id
     @api.multi
     def action_draft(self):
         self.write({'state': 'draft'})
@@ -521,7 +622,8 @@ class PurchaseCostDistributionExpense(models.Model):
         comodel_name="res.company", related="distribution.company_id",
         store=True,
     )
-
+    account_id = fields.Many2one('account.account',string="Account", required=True)
+    
     @api.one
     @api.depends('distribution', 'type', 'expense_amount', 'ref')
     def _compute_display_name(self):

@@ -126,6 +126,9 @@
 							<group>
                                 <field name="company_id" groups="base.group_multi_company"/>
 								<field name="currency_id" readonly="1" />
+								<field name="journal_id"  attrs="{'readonly':[('state','in',('done'))]}"/>
+								<field name="cost_adj" attrs="{'readonly':[('state','in',('done'))]}" />
+								<field name="reverse_amount" attrs="{'invisible':[('cost_adj', '=', False)]}" />
 							</group>
 							<group>
 								<field name="date" />
@@ -158,6 +161,7 @@
                                           editable="bottom">
 										<field name="type" />
 										<field name="calculation_method" />
+										<field name="account_id" />
                                         <field name="ref" />
 										<field name="expense_amount" />
                                         <field name="imported_lines" invisible="1"/>
