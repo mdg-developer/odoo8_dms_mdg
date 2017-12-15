@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="bidiLayoutOrientation">ltr</property>
@@ -17,6 +17,7 @@
             <property name="dataSetMode">single</property>
             <parameters>
                 <scalar-parameter name="fiscal" id="226">
+                    <text-property name="promptText">Fiscal Year</text-property>
                     <property name="valueType">dynamic</property>
                     <property name="isRequired">true</property>
                     <property name="dataSetName">periodDS</property>
@@ -31,6 +32,7 @@
                     <structure name="format"/>
                 </scalar-parameter>
                 <scalar-parameter name="periodname" id="227">
+                    <text-property name="promptText">Period</text-property>
                     <property name="valueType">dynamic</property>
                     <property name="isRequired">true</property>
                     <property name="dataSetName">periodDS</property>
@@ -45,6 +47,7 @@
                     <structure name="format"/>
                 </scalar-parameter>
                 <scalar-parameter name="From Date" id="236">
+                    <text-property name="promptText">From Date</text-property>
                     <property name="valueType">dynamic</property>
                     <property name="isRequired">true</property>
                     <property name="dataSetName">periodDS</property>
@@ -57,6 +60,7 @@
                     <structure name="format"/>
                 </scalar-parameter>
                 <scalar-parameter name="To Date" id="237">
+                    <text-property name="promptText">To Date</text-property>
                     <property name="valueType">dynamic</property>
                     <property name="isRequired">true</property>
                     <property name="dataSetName">periodDS</property>
@@ -967,11 +971,6 @@ and ((po.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date betwe
             <property name="contentType">html</property>
             <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
         </text>
-        <label id="9">
-            <property name="fontSize">8pt</property>
-            <property name="fontWeight">bold</property>
-            <text-property name="text">BEAUTY WORLD TRADING CO.,LTD. (TRADING)</text-property>
-        </label>
         <label id="83"/>
         <data id="253">
             <property name="fontSize">8pt</property>

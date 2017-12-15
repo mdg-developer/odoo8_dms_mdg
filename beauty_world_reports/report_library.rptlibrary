@@ -107,7 +107,7 @@
                 </ex-property>
             </list-property>
             <property name="odaDriverClass">org.postgresql.Driver</property>
-            <property name="odaURL">jdbc:postgresql://192.168.99.6:5432/BW</property>
+            <property name="odaURL">jdbc:postgresql://localhost:5432/BW_5Dec</property>
             <property name="odaUser">openerp</property>
             <encrypted-property name="odaPassword" encryptionID="base64">b3BlbnBncHdk</encrypted-property>
             <property name="odaJndiName">java:comp/env/jdbc/ReportDB</property>
