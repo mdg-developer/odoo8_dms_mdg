@@ -145,48 +145,56 @@ order by payment_type]]></xml-property>
                     <property name="columnName">sale_team</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">sale_team</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">sale_team</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">branch</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">branch</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">branch</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">principle</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">principle</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">principle</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">sub_group</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">sub_group</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">sub_group</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">category</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">category</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">category</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">total_amount</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">total_amount</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">total_amount</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">total_discount</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">total_discount</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">total_discount</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">net_amt</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">net_amt</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">net_amt</text-property>
                 </structure>
             </list-property>
@@ -198,6 +206,7 @@ order by payment_type]]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">1</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -208,6 +217,7 @@ order by payment_type]]></xml-property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">2</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -336,7 +346,7 @@ else
                     <property name="nativeDataType">2</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select  ccs.name as sale_team,rb.name as branch,pm.name as principle,pg.name as sub_group,pc.name as category,
+            <xml-property name="queryText"><![CDATA[select  rb.name as branch,pm.name as principle,pg.name as sub_group,pc.name as category,
 sum((ail.price_subtotal)+(ail.discount_amt)) as total_amount,
 sum(ail.discount_amt) as total_discount,
 sum(ail.price_subtotal) as net_amt
@@ -353,7 +363,7 @@ sum(ail.price_subtotal) as net_amt
 	--$sales_team$
 	--$branch$
     --$payment_type$
-	group by category,branch,sale_team,pm.name,pg.name 
+	group by category,branch,pm.name,pg.name 
 	order by pm.name,pg.name ,category
 ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
@@ -373,6 +383,9 @@ sum(ail.price_subtotal) as net_amt
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
         </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes/>
+        </design:inputAttributes>
       </design:ParameterDefinition>
     </parameter>
     <parameter>
@@ -388,6 +401,9 @@ sum(ail.price_subtotal) as net_amt
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
         </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes/>
+        </design:inputAttributes>
       </design:ParameterDefinition>
     </parameter>
   </DataSetParameters>
@@ -1011,12 +1027,7 @@ else&#13;
             <property name="width">7.677083333333333in</property>
             <property name="dataSet">Data Set</property>
             <list-property name="boundDataColumns">
-                <structure>
-                    <property name="name">sale_team</property>
-                    <text-property name="displayName">sale_team</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["sale_team"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
+              
                 <structure>
                     <property name="name">branch</property>
                     <text-property name="displayName">branch</text-property>
