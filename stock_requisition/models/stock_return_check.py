@@ -25,6 +25,7 @@ class stock_return_check(osv.osv):
     def on_change_stock_return(self, cr, uid, ids, name, context=None):
         values = {}
         data_line = []
+        team_id   =[]    
         product_obj = self.pool.get('product.product')
         if name:
             cr.execute('select srnl.product_id,srnl.product_uom,srnl.actual_return_quantity,srnl.to_location_id,srnl.status,srn.return_date,srn.sale_team_id from stock_return srn, stock_return_line srnl where srn.id=srnl.line_id and srnl.status != %s and srn.id = %s', ('Stock Return',name,))
@@ -62,6 +63,12 @@ class stock_return_check(osv.osv):
         if not branch_id:
             raise osv.except_osv(_('Error!'), _('There is no default branch for the current user!'))
         return branch_id
+    
+    def _get_default_company(self, cr, uid, context=None):
+        company_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
+        if not company_id:
+            raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
+        return company_id
     
     def cancel(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'cancel', })
@@ -102,7 +109,10 @@ class stock_return_check(osv.osv):
         'name':fields.many2one('stock.return', 'SRN Ref' , required=True),
         'return_date':fields.date('Date of Return', required=True),
         'branch_id':fields.many2one('res.branch', 'Branch',required=True),
+        'company_id':fields.many2one('res.company', 'Company'),
+        'partner_id':fields.many2one('res.partner', 'Customer'),
         'receive_by' : fields.char('Receive By'),
+        'approve_by':fields.many2one('res.users', "Approved By"),
         'return_date':fields.date('Date of Return'),
         'state': fields.selection([
             ('draft', 'Pending'),
@@ -118,6 +128,7 @@ class stock_return_check(osv.osv):
     _defaults = {
         'state' : 'draft',
         'branch_id': _get_default_branch,
+        'company_id': _get_default_company,
         'return_date' :fields.datetime.now,
 
         }
