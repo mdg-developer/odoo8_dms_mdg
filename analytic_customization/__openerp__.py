@@ -29,7 +29,7 @@
     'license': 'AGPL-3',
     'author': '7thcomputing Developer Group',
     'category' : 'Analytic Customization',
-    'depends': ['base','sale','sale_journal_principle','analytic','account'],
+    'depends': ['base','sale','sale_journal_principle','sale_foc_discount','analytic','account'],
     'data' : [            
             'views/product_category_view.xml',
     ],
