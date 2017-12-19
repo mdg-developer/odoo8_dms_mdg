@@ -550,9 +550,9 @@ class stock_return(osv.osv):
             return_quantity = line.return_quantity
             actual_return_quantity = line.actual_return_quantity
             uom_id = line.product_uom.id
-            if  line.status:
+            if  line.status and onground_quantity >0:
                 different_qty = 0
-                different_qty = onground_quantity - return_quantity
+                different_qty =  return_quantity -onground_quantity
                 cr.execute("update stock_return_line set different_qty= %s where id=%s", (different_qty, line.id,))            
                 if different_qty:
                     if different_qty < 0:

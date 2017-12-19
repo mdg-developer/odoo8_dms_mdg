@@ -152,13 +152,13 @@
 							<td class="text-right">
 								<span t-field="l.return_quantity" />
 							</td>
-							<td align="center">
+							<td align="text-right">
 								<span t-field="l.onground_quantity" />
 							</td>
-							<td align="center">
+							<td align="text-right">
 								<span t-field="l.actual_return_quantity" />
 							</td>
-							<td align="center">
+							<td align="text-right">
 								<span t-field="l.closing_stock_qty" />
 							</td>
 							<td align="center">

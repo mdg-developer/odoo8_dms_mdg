@@ -51,12 +51,12 @@
 						<td style="border:0pt;font-size:10pt;">
 							<span t-field="o.return_date" />
 						</td>
-						<td style="border:0pt;font-size:10pt;">
-							<strong>Approved By:</strong>
-						</td>
-						<td style="border:0pt;font-size:10pt;">
-							<span t-field="o.approve_by" />
-						</td>
+<!-- 						<td style="border:0pt;font-size:10pt;"> -->
+<!-- 							<strong>Approved By:</strong> -->
+<!-- 						</td> -->
+<!-- 						<td style="border:0pt;font-size:10pt;"> -->
+<!-- 							<span t-field="o.approve_by" /> -->
+<!-- 						</td> -->
 					</tr>
 
 					<tr>
