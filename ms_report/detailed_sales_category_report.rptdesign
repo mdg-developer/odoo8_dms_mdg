@@ -1027,12 +1027,7 @@ else&#13;
             <property name="width">7.677083333333333in</property>
             <property name="dataSet">Data Set</property>
             <list-property name="boundDataColumns">
-                <structure>
-                    <property name="name">sale_team</property>
-                    <text-property name="displayName">sale_team</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["sale_team"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
+              
                 <structure>
                     <property name="name">branch</property>
                     <text-property name="displayName">branch</text-property>
