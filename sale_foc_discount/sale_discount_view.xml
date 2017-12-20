@@ -36,7 +36,8 @@
 				<xpath
 					expr="//form/sheet/notebook/page/field/tree/field[@name='price_unit']"
 					position="replace">
-					<field name="price_unit" readonly="1" />
+					<!-- <field name="price_unit" readonly="1" /> -->
+					<field name="price_unit" />
 				</xpath>
 				<xpath
 					expr="//form/sheet/notebook/page/field/tree/field[@name='product_uom']"
@@ -47,9 +48,12 @@
 				</xpath>
 				<xpath expr="//form/sheet/notebook/page/field/tree/field[@name='tax_id']"
 					position="replace">
+					<!-- <field name="tax_id" widget="many2many_tags"
+						domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"
+						readonly="1" /> -->
 					<field name="tax_id" widget="many2many_tags"
 						domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"
-						readonly="1" />
+						/>
 				</xpath>
 				<xpath
 					expr="//form/sheet/notebook/page/field/tree/field[@name='price_subtotal']"
@@ -57,7 +61,7 @@
 
 					<field name="discount" groups="sale.group_discount_per_so_line"
 						on_change="onchange_discount_percent(discount,product_uom_qty, price_unit)"
-						readonly="1" />
+						 />
 					<field name="discount_amt" groups="sale.group_discount_per_so_line" />
 					<field name="sale_foc" groups="sale.group_discount_per_so_line"
 						on_change="foc_change(product_id,product_uos_qty,context)" />
