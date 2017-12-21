@@ -21,11 +21,11 @@
 ##############################################################################
 {
     'name': 'Add XLS export to accounting reports',
-    'version': '0.4',
+    'version': '8.0.0.4.0',
     'license': 'AGPL-3',
-    'author': 'Noviat',
+    'author': "Noviat,Odoo Community Association (OCA)",
     'category': 'Generic Modules/Accounting',
-    'description': """ 
+    'description': """
 
     This module adds XLS export to the following accounting reports:
         - general ledger
@@ -33,18 +33,22 @@
         - partner ledger
         - partner balance
         - open invoices
-        
+
     """,
     'depends': ['report_xls', 'account_financial_report_webkit'],
-    'demo_xml': [],
-    'init_xml': [],
-    'update_xml' : [
-        'wizard/general_ledger_wizard_view.xml',   
-        'wizard/trial_balance_wizard_view.xml',   
+    'demo': [],
+    'data': [
+        'wizard/general_ledger_wizard_view.xml',
+        'wizard/trial_balance_wizard_view.xml',
         'wizard/partners_ledger_wizard_view.xml',
         'wizard/partners_balance_wizard_view.xml',
         'wizard/open_invoices_wizard_view.xml',
     ],
+    'test': ['tests/general_ledger.yml',
+             'tests/partner_ledger.yml',
+             'tests/trial_balance.yml',
+             'tests/partner_balance.yml',
+             'tests/open_invoices.yml'],
     'active': False,
     'installable': True,
 }

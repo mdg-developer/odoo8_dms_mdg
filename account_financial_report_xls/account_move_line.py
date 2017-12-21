@@ -33,6 +33,7 @@ import openerp.addons.decimal_precision as dp
 #Finder.Type_Definitions import columns
 _logger = logging.getLogger(__name__)
 
+
 class account_financial_report(osv.osv):
     _name = "account.financial.report"
     _inherit = "account.financial.report"
@@ -163,20 +164,18 @@ class account_move_line(osv.osv):
             result = {}
             child_ids=[]
             analytic_query=None
-            
            # analytic_acct = analtyic_obj.browse(cr,uid,analytic_id)
             #child_ids = analytic_acct._child_compute(cr,uid,analytic_id,name=None,arg=None,context=context)
-            for account in analtyic_obj.browse(cr, uid, analytic_id[0], context=context):
+            for account in analtyic_obj.browse(cr, uid, analytic_id, context=context):
                 child_ids = map(lambda x: x.id, [child for child in account.child_ids if child.state != 'template'])
     
             if len(child_ids)>0:
-                analytic_query= 'AND '+obj+'.analytic_account_id IN (%s,%s) ' %  (analytic_id[0],child_ids)
+                analytic_query= 'AND '+obj+'.analytic_account_id IN (%s,%s) ' %  (analytic_id,child_ids)
             #TODO for analytic_account_id IN (%s,%s)' % (analytic_id,child_ids)
             else:
-                analytic_query= 'AND '+obj+'.analytic_account_id = %s' % analytic_id[0]
+                analytic_query= 'AND '+obj+'.analytic_account_id = %s' % analytic_id
             query += analytic_query
             
         query += company_clause
         return query
-    
 

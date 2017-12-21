@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #
-#    Copyright (c) 2014 Noviat nv/sa (www.noviat.com). All rights reserved.
+#    Copyright (c) 2013 Noviat nv/sa (www.noviat.com). All rights reserved.
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -12,17 +12,15 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program. If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 from openerp.osv import orm
-from openerp.addons.report_xls.utils import rowcol_to_cell, _render
-from openerp.tools.translate import _
 
 
 class account_journal(orm.Model):
@@ -36,19 +34,8 @@ class account_journal(orm.Model):
         return (select_extra, join_extra, where_extra)
 
     # allow inherited modules to add document references
-    def _report_xls_document_extra(self, cr, uid, context=None):
+    def _report_xls_document_extra(self, cr, uid, context):
         return "''"
-
-    # allow inherited modules to extend the render namespace
-    def _report_xls_render_space_extra(self, cr, uid, context=None):
-        """
-        extend render namespace for use in the template 'lines', e.g.
-        space_extra = {
-            'partner_obj': self.pool.get('res.partner'),
-        }
-        return space_extra
-        """
-        return None
 
     # override list in inherited module to add/drop columns or change order
     def _report_xls_fields(self, cr, uid, context=None):
@@ -70,17 +57,18 @@ class account_journal(orm.Model):
             'credit',            # account.move.line,credit
             'balance',           # debit-credit
             'docname',           # origin document if any
-            #'date_maturity',     # account.move.line,date_maturity
-            #'reconcile',         # account.move.line,reconcile_id.name
-            #'reconcile_partial', # account.move.line,reconcile_partial_id.name
-            #'partner_ref',       # res.partner,ref
-            #'move_ref',          # account.move,ref
-            #'move_id',           # account.move,id
-            #'acc_name',          # account.account,name
-            #'journal',           # account.journal,name
-            #'journal_code',      # account.journal,code
-            #'analytic_account',       # account.analytic.account,name
-            #'analytic_account_code',  # account.analytic.account,code
+            # 'date_maturity',     # account.move.line,date_maturity
+            # 'reconcile',         # account.move.line,reconcile_id.name
+            # 'reconcile_partial',
+            # account.move.line,reconcile_partial_id.name
+            # 'partner_ref',       # res.partner,ref
+            # 'move_ref',          # account.move,ref
+            # 'move_id',           # account.move,id
+            # 'acc_name',          # account.account,name
+            # 'journal',           # account.journal,name
+            # 'journal_code',      # account.journal,code
+            # 'analytic_account',       # account.analytic.account,name
+            # 'analytic_account_code',  # account.analytic.account,code
         ]
         return res
 
@@ -92,7 +80,8 @@ class account_journal(orm.Model):
         my_change = {
             'move_name':{
                 'header': [1, 20, 'text', _render("_('My Move Title')")],
-                'lines': [1, 0, 'text', _render("l['move_name'] != '/' and l['move_name'] or ('*'+str(l['move_id']))")],
+                'lines': [1, 0, 'text', _render("l['move_name'] != '/' and
+                l['move_name'] or ('*'+str(l['move_id']))")],
                 'totals': [1, 0, 'text', None]},
         }
         return my_change

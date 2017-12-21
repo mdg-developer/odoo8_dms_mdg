@@ -8,8 +8,8 @@
     <property name="imageDPI">96</property>
     <list-property name="libraries">
         <structure>
-            <property name="fileName">rb_report/library/report_library.rptlibrary</property>
-            <property name="namespace">report_library</property>
+            <property name="fileName">rb_report_library.rptlibrary</property>
+            <property name="namespace">rb_report_library</property>
         </structure>
     </list-property>
     <parameters>

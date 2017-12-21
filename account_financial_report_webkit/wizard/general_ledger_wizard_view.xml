@@ -15,6 +15,9 @@
                     <field name="chart_account_id" position='attributes'>
                         <attribute name="colspan">4</attribute>
                     </field>
+                    <!-- <xpath expr="/form[@string='Report Options']/group/field[@name='target_move']" position="after">
+                        <field name="branch_id" widget='selection'/>
+                    </xpath> -->
                     <form position="inside">
                         <field name="display_account" invisible="True"/>
                     </form>
@@ -30,13 +33,23 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="Branches Filters" name="branches">
-                            <separator string="Print only" colspan="4"/>
-                            <field name="branch_ids" colspan="4" nolabel="1"/>                              
-                        </page>
                         <page string="Analytic Accounts Filters" name="analytic_accounts">
                             <separator string="Print only" colspan="4"/>
-                            <field name="analytic_account_ids" colspan="4" nolabel="1"/>                               
+                            <field name="analytic_account_ids" colspan="4" nolabel="1">
+                                <tree>
+                                    <field name="code"/>
+                                    <field name="name"/>                                    
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Branches Filters" name="branch_ids">
+                            <separator string="Print only" colspan="4"/>
+                            <field name="branch_ids" colspan="4" nolabel="1">
+                                <tree>
+                                    <field name="branch_code"/>
+                                    <field name="name"/>                                    
+                                </tree>
+                            </field>
                         </page>
                         <page string="Layout Options" name="layout_options">
                             <group colspan="4" col="2">
@@ -84,7 +97,6 @@
 
         <record model="ir.values" id="action_account_general_ledger_values_webkit">
             <field name="model_id" ref="account.model_account_account"/>
-            <field name="object" eval="1"/>
             <field name="name">General Ledger</field>
             <field name="key2">client_print_multi</field>
             <field name="value"

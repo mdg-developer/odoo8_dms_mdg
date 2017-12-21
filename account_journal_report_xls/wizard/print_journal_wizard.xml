@@ -16,6 +16,31 @@
               <label nolabel="1" colspan="4" string="This report allows you to generate a pdf or xls of your journals"/>
             </xpath>
             <xpath expr="//notebook" position="replace">
+               <notebook>
+                  <page string="Journal Filters" name="journal_ids">
+                      <separator string="Journals" colspan="4"/>
+       		  		  <field name="journal_ids" colspan="4" nolabel="1"/> 
+                  </page> 
+                  <page string="Analytic Accounts Filters" name="analytic_accounts">
+                            <separator string="Print only" colspan="4"/>
+                            <field name="analytic_account_ids" colspan="4" nolabel="1">
+                                <tree>
+                                    <field name="code"/>
+                                    <field name="name"/>                                    
+                                </tree>
+                            </field>
+                   </page>
+                   <page string="Branches Filters" name="branch_ids">
+                       <separator string="Print only" colspan="4"/>
+                       <field name="branch_ids" colspan="4" nolabel="1">
+                           <tree>
+                               <field name="branch_code"/>
+                               <field name="name"/>                                    
+                           </tree>
+                       </field>
+                   </page>
+               </notebook> 
+                 
             </xpath>
             <xpath expr="//field[@name='target_move']" position="after">
               <field name="sort_selection"/>
@@ -25,12 +50,13 @@
               <separator string="Periods" colspan="4"/>
               <field name="period_from" domain="[('fiscalyear_id', '=', fiscalyear_id)]" colspan="4"/>
               <field name="period_to" domain="[('fiscalyear_id', '=', fiscalyear_id)]" colspan="4"/>
-              <separator string="Journals" colspan="4"/>
-              <field name="journal_ids" colspan="4" nolabel="1"/>
+               
+              
+                            
             </xpath>
             <button string="Print" position="replace">
               <button icon="gtk-print" name="print_report" string="Print" type="object"/>
-              <button icon="gtk-execute" name="xls_export" string="Export" type="object" class="oe_highlight" context="{'xls_export':1}"/>
+              <!-- <button icon="gtk-execute" name="xls_export" string="Export" type="object" class="oe_highlight" context="{'xls_export':1}"/> -->
             </button>
           </data>
         </field>
