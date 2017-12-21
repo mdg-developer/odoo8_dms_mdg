@@ -193,8 +193,8 @@ class stock_requisition(osv.osv):
                                     qty_on_hand = qty_on_hand[0]
                                 else:
                                     qty_on_hand = 0
-                                if sale_product_uom == product.product_tmpl_id.big_uom_id.id:                                                                          
-                                    cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (product.product_tmpl_id.big_uom_id.id,))
+                                if sale_product_uom != product.product_tmpl_id.uom_id.id:                                                                          
+                                    cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (sale_product_uom,))
                                     bigger_qty = cr.fetchone()[0]
                                     bigger_qty = int(bigger_qty)
                                     sale_qty = bigger_qty * sale_qty
@@ -326,15 +326,7 @@ class stock_requisition(osv.osv):
             product_id = req_line_value.product_id.id
             print 'product_id',product_id
             total_qty = sale_req_qty + add_req_qty
-            product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)                                                                          
-            cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (product.product_tmpl_id.big_uom_id.id,))
-            bigger_qty = cr.fetchone()[0]
-            bigger_qty = int(bigger_qty)
-            big_uom_qty = divmod(total_qty, bigger_qty)
-            if  big_uom_qty:
-                big_req_quantity = big_uom_qty[0]
-                req_quantity = big_uom_qty[1]
-                cr.execute("update stock_requisition_line set big_req_quantity=%s,req_quantity=%s where product_id=%s and line_id=%s", (big_req_quantity, req_quantity, product_id, ids[0],))
+            cr.execute("update stock_requisition_line set req_quantity=%s where product_id=%s and line_id=%s", (total_qty, product_id, ids[0],))
                                     
         return True    
 
