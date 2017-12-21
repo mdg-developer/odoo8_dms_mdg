@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="bidiLayoutOrientation">ltr</property>
@@ -49,130 +49,87 @@
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="DataSet" id="84">
             <list-property name="columnHints">
                 <structure>
-                    <property name="columnName">x_product</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">x_product</text-property>
-                    <text-property name="heading">x_product</text-property>
-                </structure>
-                <structure>
                     <property name="columnName">x_product_code</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">x_product_code</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">x_product_code</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">x_product_category</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">x_product_category</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">x_product_category</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">x_product_maingroup</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">x_product_maingroup</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">x_product_maingroup</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">x_product_group</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">x_product_group</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">x_product_group</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">cost</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">cost</text-property>
-                    <text-property name="heading">cost</text-property>
+                    <property name="columnName">x_product</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">x_product</text-property>
+                    <property name="onColumnLayout">false</property>
+                    <text-property name="heading">x_product</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">uom_name</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">uom_name</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">uom_name</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">x_opening</property>
+                    <property name="columnName">pcost</property>
                     <property name="analysis">measure</property>
-                    <text-property name="displayName">x_opening</text-property>
-                    <text-property name="heading">x_opening</text-property>
+                    <text-property name="displayName">pcost</text-property>
+                    <text-property name="heading">pcost</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">x_in</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">x_in</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">x_in</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">x_out</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">x_out</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">x_out</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">value_qty</property>
+                    <property name="columnName">x_opening</property>
                     <property name="analysis">measure</property>
-                    <text-property name="displayName">value_qty</text-property>
-                    <text-property name="heading">value_qty</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">x_transfer_in</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">x_transfer_in</text-property>
-                    <text-property name="heading">x_transfer_in</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">x_transfer_out</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">x_transfer_out</text-property>
-                    <text-property name="heading">x_transfer_out</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">x_purchase</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">x_purchase</text-property>
-                    <text-property name="heading">x_purchase</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">x_purchase_return</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">x_purchase_return</text-property>
-                    <text-property name="heading">x_purchase_return</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">x_sale_out</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">x_sale_out</text-property>
-                    <text-property name="heading">x_sale_out</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">x_sale_return_in</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">x_sale_return_in</text-property>
-                    <text-property name="heading">x_sale_return_in</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">x_scrap</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">x_scrap</text-property>
-                    <text-property name="heading">x_scrap</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">x_loss</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">x_loss</text-property>
-                    <text-property name="heading">x_loss</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">x_adjustment</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">x_adjustment</text-property>
-                    <text-property name="heading">x_adjustment</text-property>
+                    <text-property name="displayName">x_opening</text-property>
+                    <property name="onColumnLayout">false</property>
+                    <text-property name="heading">x_opening</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">x_closing</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">x_closing</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">x_closing</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">value_qty</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">value_qty</text-property>
+                    <property name="onColumnLayout">false</property>
+                    <text-property name="heading">value_qty</text-property>
                 </structure>
             </list-property>
             <list-property name="parameters">
@@ -183,6 +140,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">1</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -193,6 +151,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">2</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -203,6 +162,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">3</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -213,6 +173,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">4</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -223,6 +184,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">5</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -233,6 +195,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">6</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -243,6 +206,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">7</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -253,6 +217,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">8</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -263,6 +228,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">9</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -273,6 +239,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">10</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -283,6 +250,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">11</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -293,6 +261,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">12</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -303,6 +272,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">13</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -313,6 +283,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">14</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -323,6 +294,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">15</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -333,6 +305,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">16</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -343,6 +316,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">17</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -353,6 +327,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">18</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -363,6 +338,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">19</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -373,6 +349,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">20</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -383,6 +360,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">21</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -393,6 +371,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">22</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -403,6 +382,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">23</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -413,6 +393,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">24</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -423,6 +404,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">25</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -433,6 +415,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">26</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -443,6 +426,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">27</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -453,6 +437,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">28</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -463,6 +448,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">29</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -473,6 +459,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">30</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -483,6 +470,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">31</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -491,108 +479,63 @@
                 <list-property name="resultSet">
                     <structure>
                         <property name="position">1</property>
-                        <property name="name">x_product</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">2</property>
                         <property name="name">x_product_code</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">3</property>
+                        <property name="position">2</property>
                         <property name="name">x_product_category</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">4</property>
+                        <property name="position">3</property>
                         <property name="name">x_product_maingroup</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">5</property>
+                        <property name="position">4</property>
                         <property name="name">x_product_group</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">6</property>
-                        <property name="name">cost</property>
-                        <property name="dataType">decimal</property>
+                        <property name="position">5</property>
+                        <property name="name">x_product</property>
+                        <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">7</property>
+                        <property name="position">6</property>
                         <property name="name">uom_name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">8</property>
-                        <property name="name">x_opening</property>
-                        <property name="dataType">decimal</property>
+                        <property name="position">7</property>
+                        <property name="name">pcost</property>
+                        <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">9</property>
+                        <property name="position">8</property>
                         <property name="name">x_in</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">10</property>
+                        <property name="position">9</property>
                         <property name="name">x_out</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
+                        <property name="position">10</property>
+                        <property name="name">x_opening</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
                         <property name="position">11</property>
-                        <property name="name">value_qty</property>
+                        <property name="name">x_closing</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">12</property>
-                        <property name="name">x_transfer_in</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
-                        <property name="position">13</property>
-                        <property name="name">x_transfer_out</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
-                        <property name="position">14</property>
-                        <property name="name">x_purchase</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
-                        <property name="position">15</property>
-                        <property name="name">x_purchase_return</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
-                        <property name="position">16</property>
-                        <property name="name">x_sale_out</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
-                        <property name="position">17</property>
-                        <property name="name">x_sale_return_in</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
-                        <property name="position">18</property>
-                        <property name="name">x_scrap</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
-                        <property name="position">19</property>
-                        <property name="name">x_loss</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
-                        <property name="position">20</property>
-                        <property name="name">x_adjustment</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
-                        <property name="position">21</property>
-                        <property name="name">x_closing</property>
-                        <property name="dataType">decimal</property>
+                        <property name="name">value_qty</property>
+                        <property name="dataType">float</property>
                     </structure>
                 </list-property>
             </structure>
@@ -600,160 +543,103 @@
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
-                    <property name="name">x_product</property>
-                    <property name="nativeName">x_product</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-                <structure>
-                    <property name="position">2</property>
                     <property name="name">x_product_code</property>
                     <property name="nativeName">x_product_code</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">3</property>
+                    <property name="position">2</property>
                     <property name="name">x_product_category</property>
                     <property name="nativeName">x_product_category</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">4</property>
+                    <property name="position">3</property>
                     <property name="name">x_product_maingroup</property>
                     <property name="nativeName">x_product_maingroup</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">5</property>
+                    <property name="position">4</property>
                     <property name="name">x_product_group</property>
                     <property name="nativeName">x_product_group</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">6</property>
-                    <property name="name">cost</property>
-                    <property name="nativeName">cost</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">2</property>
+                    <property name="position">5</property>
+                    <property name="name">x_product</property>
+                    <property name="nativeName">x_product</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">7</property>
+                    <property name="position">6</property>
                     <property name="name">uom_name</property>
                     <property name="nativeName">uom_name</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">8</property>
-                    <property name="name">x_opening</property>
-                    <property name="nativeName">x_opening</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">2</property>
+                    <property name="position">7</property>
+                    <property name="name">pcost</property>
+                    <property name="nativeName">pcost</property>
+                    <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">9</property>
+                    <property name="position">8</property>
                     <property name="name">x_in</property>
                     <property name="nativeName">x_in</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">10</property>
+                    <property name="position">9</property>
                     <property name="name">x_out</property>
                     <property name="nativeName">x_out</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
+                    <property name="position">10</property>
+                    <property name="name">x_opening</property>
+                    <property name="nativeName">x_opening</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
+                <structure>
                     <property name="position">11</property>
-                    <property name="name">value_qty</property>
-                    <property name="nativeName">value_qty</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">2</property>
-                </structure>
-                <structure>
-                    <property name="position">12</property>
-                    <property name="name">x_transfer_in</property>
-                    <property name="nativeName">x_transfer_in</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">2</property>
-                </structure>
-                <structure>
-                    <property name="position">13</property>
-                    <property name="name">x_transfer_out</property>
-                    <property name="nativeName">x_transfer_out</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">2</property>
-                </structure>
-                <structure>
-                    <property name="position">14</property>
-                    <property name="name">x_purchase</property>
-                    <property name="nativeName">x_purchase</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">2</property>
-                </structure>
-                <structure>
-                    <property name="position">15</property>
-                    <property name="name">x_purchase_return</property>
-                    <property name="nativeName">x_purchase_return</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">2</property>
-                </structure>
-                <structure>
-                    <property name="position">16</property>
-                    <property name="name">x_sale_out</property>
-                    <property name="nativeName">x_sale_out</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">2</property>
-                </structure>
-                <structure>
-                    <property name="position">17</property>
-                    <property name="name">x_sale_return_in</property>
-                    <property name="nativeName">x_sale_return_in</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">2</property>
-                </structure>
-                <structure>
-                    <property name="position">18</property>
-                    <property name="name">x_scrap</property>
-                    <property name="nativeName">x_scrap</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">2</property>
-                </structure>
-                <structure>
-                    <property name="position">19</property>
-                    <property name="name">x_loss</property>
-                    <property name="nativeName">x_loss</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">2</property>
-                </structure>
-                <structure>
-                    <property name="position">20</property>
-                    <property name="name">x_adjustment</property>
-                    <property name="nativeName">x_adjustment</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">2</property>
-                </structure>
-                <structure>
-                    <property name="position">21</property>
                     <property name="name">x_closing</property>
                     <property name="nativeName">x_closing</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
+                <structure>
+                    <property name="position">12</property>
+                    <property name="name">value_qty</property>
+                    <property name="nativeName">value_qty</property>
+                    <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
+                </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select pp.name as x_product,
+            <xml-property name="queryText"><![CDATA[select abc.x_product_code,abc.x_product_category,abc.x_product_maingroup,abc.x_product_group,abc.x_product,abc.uom_name,abc.pcost,sum(abc.x_in) x_in,sum(abc.x_out)x_out,
+sum(abc.x_opening)x_opening,sum(abc.x_closing)x_closing,sum(abc.value_qty)value_qty from 
+(select pp.name as x_product,
 pp.default_code as x_product_code,
 pp.categ as x_product_category,
 pp.maingroup as x_product_maingroup,
 pp.pgroup as x_product_group,
-pp.list_price as Cost,
 pp.uom_name,
-
+(select value_float
+from ir_property ip,ir_model_fields im 
+where im.id=ip.fields_id 
+and model='product.template'  
+and im.name='standard_price' 
+and res_id='product.template,'|| (select product_tmpl_id from product_product where id=pp.id)) pcost,
 greatest(0,lm_transfer_in.qty) + greatest(0,lm_purchase_in.qty) + greatest(0,lm_sale_return_in.qty) -
 (greatest(0,lm_transfer_out.qty) + greatest(0,lm_purchase_return.qty) + greatest(0,lm_sale_out.qty)) - 
 (greatest(0,lm_scrap.qty)+greatest(0,lm_loss.qty))+ greatest(0,lm_adjustment.qty) as x_opening,
@@ -765,7 +651,12 @@ greatest(0,transfer_in.qty) + greatest(0,purchase_in.qty) + greatest(0,sale_retu
 (greatest(0,lm_transfer_out.qty) + greatest(0,lm_purchase_return.qty) + greatest(0,lm_sale_out.qty) +
 greatest(0,transfer_out.qty) + greatest(0,purchase_return.qty) + greatest(0,sale_out.qty)) - 
 (greatest(0,lm_scrap.qty)+greatest(0,lm_loss.qty) + greatest(0,scrap.qty)+greatest(0,loss.qty)) + 
-(greatest(0,lm_adjustment.qty) + greatest(0,adjustment.qty))) * pp.list_price) as value_qty,
+(greatest(0,lm_adjustment.qty) + greatest(0,adjustment.qty))) * (select value_float
+from ir_property ip,ir_model_fields im 
+where im.id=ip.fields_id 
+and model='product.template'  
+and im.name='standard_price' 
+and res_id='product.template,'|| (select product_tmpl_id from product_product where id=pp.id))) as value_qty,
 
 greatest(0,transfer_in.qty) as x_transfer_in,
 greatest(0,transfer_out.qty) as x_transfer_out,
@@ -787,16 +678,16 @@ as x_closing
 from 
 stock_warehouse w,
 (
-	select tmp.location_id,tmp.product_id,tmp.date
+	select tmp.location_id,tmp.product_id,tmp.date,tmp.price_unit
 	from
 	(
-		select location_id,product_id,date_trunc('day', date::date) as date
+		select location_id,product_id,date_trunc('day', date::date) as date ,price_unit
 		from stock_move
 		where 
 		state='done' and
 		((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?	
 		union
-		select location_dest_id,product_id,date_trunc('day', date::date) as date
+		select location_dest_id,product_id,date_trunc('day', date::date) as date ,price_unit
 		from stock_move
 		where state='done'
 		and ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?			
@@ -805,7 +696,7 @@ stock_warehouse w,
  s
 left join
 (
-select t.name,p.default_code,p.id,pc.name as categ,pm.name as maingroup, pg.name as pgroup,t.list_price,pu.name as uom_name
+select t.name,p.default_code,p.id,pc.name as categ,pm.name as maingroup, pg.name as pgroup,pu.name as uom_name
 from product_product p,
 product_template t,
 product_category pc,
@@ -954,7 +845,7 @@ and adjustment.date=s.date
 
 left join
 (
-select product_id,location_dest_id,greatest(0,sum(product_qty)) as qty, date_trunc('day', stock_move.date::date) as date
+select product_id,location_dest_id,greatest(0,sum(product_qty)) as qty
 from stock_move,
 stock_location fl,
 stock_location tl
@@ -963,11 +854,11 @@ and state='done'
 and stock_move.location_dest_id=tl.id
 and stock_move.location_id=fl.id
 and fl.usage='internal' and tl.usage='internal' and tl.scrap_location=false
-group by location_dest_id, product_id, date_trunc('day', date::date)
+group by location_dest_id, product_id
 ) lm_transfer_in on lm_transfer_in.product_id=s.product_id and lm_transfer_in.location_dest_id=s.location_id
 left join
 (
-select product_id,location_dest_id,greatest(0,sum(product_qty)) as qty, date_trunc('day', stock_move.date::date) as date
+select product_id,location_dest_id,greatest(0,sum(product_qty)) as qty
 from stock_move,
 stock_location fl,
 stock_location tl
@@ -976,11 +867,11 @@ and state='done'
 and stock_move.location_dest_id=tl.id
 and stock_move.location_id=fl.id
 and fl.usage='supplier' and tl.usage='internal'
-group by location_dest_id, product_id,date_trunc('day', stock_move.date::date)
+group by location_dest_id, product_id
 ) lm_purchase_in on lm_purchase_in.product_id=s.product_id and lm_purchase_in.location_dest_id=s.location_id
 left join
 (
-select stock_move.product_id,stock_move.location_id,greatest(0,sum(stock_move.product_qty)) as qty, date_trunc('day', stock_move.date::date) as date
+select stock_move.product_id,stock_move.location_id,greatest(0,sum(stock_move.product_qty)) as qty
 from stock_move,
 stock_location fl,
 stock_location tl
@@ -989,11 +880,11 @@ and state='done'
 and stock_move.location_dest_id=tl.id
 and stock_move.location_id=fl.id
 and fl.usage='internal' and tl.usage='internal' and tl.scrap_location=false
-group by stock_move.location_id, stock_move.product_id, date_trunc('day', date::date)
+group by stock_move.location_id, stock_move.product_id
 ) lm_transfer_out on s.product_id=lm_transfer_out.product_id and s.location_id=lm_transfer_out.location_id
 left join
 (
-select stock_move.product_id,stock_move.location_id,greatest(0,sum(stock_move.product_qty)) as qty, date_trunc('day', stock_move.date::date) as date
+select stock_move.product_id,stock_move.location_id,greatest(0,sum(stock_move.product_qty)) as qty
 from stock_move,
 stock_location fl,
 stock_location tl
@@ -1002,11 +893,11 @@ and state='done'
 and stock_move.location_dest_id=tl.id
 and stock_move.location_id=fl.id
 and fl.usage='internal' and tl.usage='customer'
-group by stock_move.location_id, stock_move.product_id, date_trunc('day', date::date)
+group by stock_move.location_id, stock_move.product_id
 ) lm_sale_out on s.product_id=lm_sale_out.product_id and s.location_id=lm_sale_out.location_id
 left join
 (
-select product_id,location_dest_id,greatest(0,sum(product_qty)) as qty, date_trunc('day', stock_move.date::date) as date
+select product_id,location_dest_id,greatest(0,sum(product_qty)) as qty
 from stock_move,
 stock_location fl,
 stock_location tl
@@ -1015,11 +906,11 @@ and state='done'
 and stock_move.location_dest_id=tl.id
 and stock_move.location_id=fl.id
 and fl.usage='customer' and tl.usage='internal'
-group by location_dest_id, product_id, date_trunc('day', date::date)
+group by location_dest_id, product_id
 ) lm_sale_return_in on lm_sale_return_in.product_id=s.product_id and lm_sale_return_in.location_dest_id=s.location_id
 left join
 (
-select stock_move.product_id,stock_move.location_id,greatest(0,sum(stock_move.product_qty)) as qty, date_trunc('day', stock_move.date::date) as date
+select stock_move.product_id,stock_move.location_id,greatest(0,sum(stock_move.product_qty)) as qty
 from stock_move,
 stock_location fl,
 stock_location tl
@@ -1028,11 +919,11 @@ and state='done'
 and stock_move.location_dest_id=tl.id
 and stock_move.location_id=fl.id
 and fl.usage='internal' and tl.usage='supplier'
-group by stock_move.location_id, stock_move.product_id, date_trunc('day', date::date)
+group by stock_move.location_id, stock_move.product_id
 ) lm_purchase_return on lm_purchase_return.product_id=s.product_id and lm_purchase_return.location_id=s.location_id
 left join
 (
-select stock_move.product_id,stock_move.location_id,greatest(0,sum(stock_move.product_qty)) as qty, date_trunc('day', stock_move.date::date) as date
+select stock_move.product_id,stock_move.location_id,greatest(0,sum(stock_move.product_qty)) as qty
 from stock_move,
 stock_location fl,
 stock_location tl
@@ -1041,11 +932,11 @@ and state='done'
 and stock_move.location_dest_id=tl.id
 and stock_move.location_id=fl.id
 and fl.usage='internal' and tl.scrap_location=true
-group by stock_move.location_id, stock_move.product_id, date_trunc('day', date::date)
+group by stock_move.location_id, stock_move.product_id
 ) lm_scrap on s.product_id=lm_scrap.product_id and s.location_id=lm_scrap.location_id
 left join
 (
-select stock_move.product_id,stock_move.location_id,greatest(0,sum(stock_move.product_qty)) as qty,  date_trunc('day', stock_move.date::date) as date
+select stock_move.product_id,stock_move.location_id,greatest(0,sum(stock_move.product_qty)) as qty
 from stock_move,
 stock_location fl,
 stock_location tl
@@ -1054,11 +945,11 @@ and state='done'
 and stock_move.location_dest_id=tl.id
 and stock_move.location_id=fl.id
 and fl.usage='internal' and tl.usage='inventory' and tl.name='Inventory loss'
-group by stock_move.location_id, stock_move.product_id, date_trunc('day', date::date)
+group by stock_move.location_id, stock_move.product_id
 ) lm_loss on s.product_id=lm_loss.product_id and s.location_id=lm_loss.location_id
 left join
 (
-select stock_move.product_id,stock_move.location_dest_id,greatest(0,sum(stock_move.product_qty)) as qty, date_trunc('day', stock_move.date::date) as date
+select stock_move.product_id,stock_move.location_dest_id,greatest(0,sum(stock_move.product_qty)) as qty
 from stock_move,
 stock_location fl,
 stock_location tl
@@ -1067,11 +958,12 @@ and state='done'
 and stock_move.location_dest_id=tl.id
 and stock_move.location_id=fl.id
 and fl.usage='inventory' and fl.name='Inventory loss' and tl.usage='internal' 
-group by stock_move.location_dest_id, stock_move.product_id, date_trunc('day', stock_move.date::date)
+group by stock_move.location_dest_id, stock_move.product_id
 ) lm_adjustment on s.product_id=lm_adjustment.product_id and s.location_id=lm_adjustment.location_dest_id
 
 where w.lot_stock_id=s.location_id
-order by ll.complete_name, pp.default_code]]></xml-property>
+order by ll.complete_name, pp.default_code)abc
+group by abc.x_product_code,abc.x_product,abc.uom_name,abc.pcost,abc.x_product_category,abc.x_product_maingroup,abc.x_product_group]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -2016,7 +1908,7 @@ order by ll.complete_name, pp.default_code]]></xml-property>
         <label id="7">
             <property name="fontWeight">bold</property>
             <property name="textAlign">center</property>
-            <text-property name="text">Item Status and Value - By Group</text-property>
+            <text-property name="text">Item Status and Value</text-property>
         </label>
         <label id="8"/>
         <label id="9">
@@ -2029,12 +1921,6 @@ order by ll.complete_name, pp.default_code]]></xml-property>
             <property name="width">7.758333333333334in</property>
             <property name="dataSet">DataSet</property>
             <list-property name="boundDataColumns">
-                <structure>
-                    <property name="name">cost</property>
-                    <text-property name="displayName">cost</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["cost"]</expression>
-                    <property name="dataType">decimal</property>
-                </structure>
                 <structure>
                     <property name="name">value_qty</property>
                     <text-property name="displayName">value_qty</text-property>
@@ -2240,7 +2126,7 @@ order by ll.complete_name, pp.default_code]]></xml-property>
                     <list-property name="arguments">
                         <structure>
                             <property name="name">Expression</property>
-                            <expression name="value" type="javascript">dataSetRow["cost"]</expression>
+                            <expression name="value" type="javascript">dataSetRow["pcost"]</expression>
                         </structure>
                     </list-property>
                     <property name="allowExport">true</property>
@@ -2256,6 +2142,12 @@ order by ll.complete_name, pp.default_code]]></xml-property>
                         </structure>
                     </list-property>
                     <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">pcost</property>
+                    <text-property name="displayName">pcost</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["pcost"]</expression>
+                    <property name="dataType">float</property>
                 </structure>
             </list-property>
             <column id="41">
@@ -2469,233 +2361,6 @@ order by ll.complete_name, pp.default_code]]></xml-property>
                     <expression name="expressionValue" type="javascript">row["x_product_group"]</expression>
                 </structure>
                 <property name="hideDetail">false</property>
-                <header>
-                    <row id="128">
-                        <property name="fontSize">8pt</property>
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <property name="textAlign">left</property>
-                        <property name="verticalAlign">middle</property>
-                        <property name="height">0.2916666666666667in</property>
-                        <cell id="129">
-                            <property name="colSpan">9</property>
-                            <property name="rowSpan">1</property>
-                            <data id="148">
-                                <property name="textUnderline">underline</property>
-                                <property name="paddingLeft">2pt</property>
-                                <property name="resultSetColumn">x_product_group</property>
-                            </data>
-                        </cell>
-                    </row>
-                </header>
-                <footer>
-                    <row id="138">
-                        <property name="verticalAlign">middle</property>
-                        <property name="height">0.24166666666666667in</property>
-                        <cell id="139">
-                            <property name="borderBottomColor">#000000</property>
-                            <property name="borderBottomStyle">solid</property>
-                            <property name="borderBottomWidth">thin</property>
-                            <property name="borderLeftColor">#000000</property>
-                            <property name="borderLeftStyle">solid</property>
-                            <property name="borderLeftWidth">thin</property>
-                            <property name="borderRightColor">#000000</property>
-                            <property name="borderRightStyle">solid</property>
-                            <property name="borderRightWidth">thin</property>
-                            <property name="borderTopColor">#000000</property>
-                            <property name="borderTopStyle">solid</property>
-                            <property name="borderTopWidth">thin</property>
-                        </cell>
-                        <cell id="140">
-                            <property name="borderBottomColor">#000000</property>
-                            <property name="borderBottomStyle">solid</property>
-                            <property name="borderBottomWidth">thin</property>
-                            <property name="borderLeftColor">#000000</property>
-                            <property name="borderLeftStyle">solid</property>
-                            <property name="borderLeftWidth">thin</property>
-                            <property name="borderRightColor">#000000</property>
-                            <property name="borderRightStyle">solid</property>
-                            <property name="borderRightWidth">thin</property>
-                            <property name="borderTopColor">#000000</property>
-                            <property name="borderTopStyle">solid</property>
-                            <property name="borderTopWidth">thin</property>
-                        </cell>
-                        <cell id="141">
-                            <property name="borderBottomColor">#000000</property>
-                            <property name="borderBottomStyle">solid</property>
-                            <property name="borderBottomWidth">thin</property>
-                            <property name="borderLeftColor">#000000</property>
-                            <property name="borderLeftStyle">solid</property>
-                            <property name="borderLeftWidth">thin</property>
-                            <property name="borderRightColor">#000000</property>
-                            <property name="borderRightStyle">solid</property>
-                            <property name="borderRightWidth">thin</property>
-                            <property name="borderTopColor">#000000</property>
-                            <property name="borderTopStyle">solid</property>
-                            <property name="borderTopWidth">thin</property>
-                        </cell>
-                        <cell id="142">
-                            <property name="borderBottomColor">#000000</property>
-                            <property name="borderBottomStyle">solid</property>
-                            <property name="borderBottomWidth">thin</property>
-                            <property name="borderLeftColor">#000000</property>
-                            <property name="borderLeftStyle">solid</property>
-                            <property name="borderLeftWidth">thin</property>
-                            <property name="borderRightColor">#000000</property>
-                            <property name="borderRightStyle">solid</property>
-                            <property name="borderRightWidth">thin</property>
-                            <property name="borderTopColor">#000000</property>
-                            <property name="borderTopStyle">solid</property>
-                            <property name="borderTopWidth">thin</property>
-                            <data id="149">
-                                <property name="fontSize">8pt</property>
-                                <property name="fontWeight">bold</property>
-                                <property name="paddingRight">2pt</property>
-                                <structure name="numberFormat">
-                                    <property name="category">Currency</property>
-                                    <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
-                                </structure>
-                                <property name="textAlign">right</property>
-                                <property name="resultSetColumn">Aggregation</property>
-                            </data>
-                        </cell>
-                        <cell id="143">
-                            <property name="borderBottomColor">#000000</property>
-                            <property name="borderBottomStyle">solid</property>
-                            <property name="borderBottomWidth">thin</property>
-                            <property name="borderLeftColor">#000000</property>
-                            <property name="borderLeftStyle">solid</property>
-                            <property name="borderLeftWidth">thin</property>
-                            <property name="borderRightColor">#000000</property>
-                            <property name="borderRightStyle">solid</property>
-                            <property name="borderRightWidth">thin</property>
-                            <property name="borderTopColor">#000000</property>
-                            <property name="borderTopStyle">solid</property>
-                            <property name="borderTopWidth">thin</property>
-                            <data id="151">
-                                <property name="fontSize">8pt</property>
-                                <property name="fontWeight">bold</property>
-                                <property name="paddingRight">2pt</property>
-                                <structure name="numberFormat">
-                                    <property name="category">Currency</property>
-                                    <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
-                                </structure>
-                                <property name="textAlign">right</property>
-                                <property name="resultSetColumn">Aggregation_1</property>
-                            </data>
-                        </cell>
-                        <cell id="144">
-                            <property name="borderBottomColor">#000000</property>
-                            <property name="borderBottomStyle">solid</property>
-                            <property name="borderBottomWidth">thin</property>
-                            <property name="borderLeftColor">#000000</property>
-                            <property name="borderLeftStyle">solid</property>
-                            <property name="borderLeftWidth">thin</property>
-                            <property name="borderRightColor">#000000</property>
-                            <property name="borderRightStyle">solid</property>
-                            <property name="borderRightWidth">thin</property>
-                            <property name="borderTopColor">#000000</property>
-                            <property name="borderTopStyle">solid</property>
-                            <property name="borderTopWidth">thin</property>
-                            <data id="152">
-                                <property name="fontSize">8pt</property>
-                                <property name="fontWeight">bold</property>
-                                <property name="paddingRight">2pt</property>
-                                <structure name="numberFormat">
-                                    <property name="category">Currency</property>
-                                    <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
-                                </structure>
-                                <property name="textAlign">right</property>
-                                <property name="resultSetColumn">Aggregation_2</property>
-                            </data>
-                        </cell>
-                        <cell id="145">
-                            <property name="borderBottomColor">#000000</property>
-                            <property name="borderBottomStyle">solid</property>
-                            <property name="borderBottomWidth">thin</property>
-                            <property name="borderLeftColor">#000000</property>
-                            <property name="borderLeftStyle">solid</property>
-                            <property name="borderLeftWidth">thin</property>
-                            <property name="borderRightColor">#000000</property>
-                            <property name="borderRightStyle">solid</property>
-                            <property name="borderRightWidth">thin</property>
-                            <property name="borderTopColor">#000000</property>
-                            <property name="borderTopStyle">solid</property>
-                            <property name="borderTopWidth">thin</property>
-                            <data id="153">
-                                <property name="fontSize">8pt</property>
-                                <property name="fontWeight">bold</property>
-                                <property name="paddingRight">2pt</property>
-                                <structure name="numberFormat">
-                                    <property name="category">Currency</property>
-                                    <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
-                                </structure>
-                                <property name="textAlign">right</property>
-                                <property name="resultSetColumn">Aggregation_3</property>
-                            </data>
-                        </cell>
-                        <cell id="146">
-                            <property name="borderBottomColor">#000000</property>
-                            <property name="borderBottomStyle">solid</property>
-                            <property name="borderBottomWidth">thin</property>
-                            <property name="borderLeftColor">#000000</property>
-                            <property name="borderLeftStyle">solid</property>
-                            <property name="borderLeftWidth">thin</property>
-                            <property name="borderRightColor">#000000</property>
-                            <property name="borderRightStyle">solid</property>
-                            <property name="borderRightWidth">thin</property>
-                            <property name="borderTopColor">#000000</property>
-                            <property name="borderTopStyle">solid</property>
-                            <property name="borderTopWidth">thin</property>
-                            <data id="154">
-                                <property name="fontSize">8pt</property>
-                                <property name="fontWeight">bold</property>
-                                <property name="paddingRight">2pt</property>
-                                <structure name="numberFormat">
-                                    <property name="category">Currency</property>
-                                    <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
-                                </structure>
-                                <property name="textAlign">right</property>
-                                <property name="resultSetColumn">Aggregation_4</property>
-                            </data>
-                        </cell>
-                        <cell id="147">
-                            <property name="borderBottomColor">#000000</property>
-                            <property name="borderBottomStyle">solid</property>
-                            <property name="borderBottomWidth">thin</property>
-                            <property name="borderLeftColor">#000000</property>
-                            <property name="borderLeftStyle">solid</property>
-                            <property name="borderLeftWidth">thin</property>
-                            <property name="borderRightColor">#000000</property>
-                            <property name="borderRightStyle">solid</property>
-                            <property name="borderRightWidth">thin</property>
-                            <property name="borderTopColor">#000000</property>
-                            <property name="borderTopStyle">solid</property>
-                            <property name="borderTopWidth">thin</property>
-                            <data id="155">
-                                <property name="fontSize">8pt</property>
-                                <property name="fontWeight">bold</property>
-                                <property name="paddingRight">2pt</property>
-                                <structure name="numberFormat">
-                                    <property name="category">Currency</property>
-                                    <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
-                                </structure>
-                                <property name="textAlign">right</property>
-                                <property name="resultSetColumn">Aggregation_5</property>
-                            </data>
-                        </cell>
-                    </row>
-                </footer>
             </group>
             <detail>
                 <row id="21">
@@ -2870,15 +2535,15 @@ order by ll.complete_name, pp.default_code]]></xml-property>
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="86">
+                        <data id="162">
                             <property name="fontSize">8pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
-                                <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
+                                <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
-                            <property name="resultSetColumn">cost</property>
+                            <property name="resultSetColumn">pcost</property>
                         </data>
                     </cell>
                     <cell id="30">
@@ -3053,7 +2718,7 @@ order by ll.complete_name, pp.default_code]]></xml-property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
-                                <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
+                                <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">Aggregation_10</property>

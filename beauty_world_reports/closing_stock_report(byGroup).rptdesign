@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="bidiLayoutOrientation">ltr</property>
@@ -52,72 +52,84 @@
                     <property name="columnName">x_product_code</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">x_product_code</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">x_product_code</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">x_product_category</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">x_product_category</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">x_product_category</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">x_product_maingroup</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">x_product_maingroup</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">x_product_maingroup</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">x_product_group</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">x_product_group</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">x_product_group</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">x_product</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">x_product</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">x_product</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">uom_name</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">uom_name</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">uom_name</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">price_unit</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">price_unit</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">price_unit</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">x_in</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">x_in</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">x_in</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">x_out</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">x_out</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">x_out</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">x_opening</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">x_opening</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">x_opening</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">x_closing</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">x_closing</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">x_closing</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">value_qty</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">value_qty</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">value_qty</text-property>
                 </structure>
             </list-property>
@@ -580,14 +592,14 @@
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">9</property>
+                    <property name="position">8</property>
                     <property name="name">x_in</property>
                     <property name="nativeName">x_in</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">10</property>
+                    <property name="position">9</property>
                     <property name="name">x_out</property>
                     <property name="nativeName">x_out</property>
                     <property name="dataType">decimal</property>
@@ -623,7 +635,12 @@ pp.categ as x_product_category,
 pp.maingroup as x_product_maingroup,
 pp.pgroup as x_product_group,
 pp.uom_name,
-s.price_unit,
+(select value_float
+from ir_property ip,ir_model_fields im 
+where im.id=ip.fields_id 
+and model='product.template'  
+and im.name='standard_price' 
+and res_id='product.template,'|| (select product_tmpl_id from product_product where id=pp.id)) price_unit,
 greatest(0,lm_transfer_in.qty) + greatest(0,lm_purchase_in.qty) + greatest(0,lm_sale_return_in.qty) -
 (greatest(0,lm_transfer_out.qty) + greatest(0,lm_purchase_return.qty) + greatest(0,lm_sale_out.qty)) - 
 (greatest(0,lm_scrap.qty)+greatest(0,lm_loss.qty))+ greatest(0,lm_adjustment.qty) as x_opening,
@@ -635,7 +652,12 @@ greatest(0,transfer_in.qty) + greatest(0,purchase_in.qty) + greatest(0,sale_retu
 (greatest(0,lm_transfer_out.qty) + greatest(0,lm_purchase_return.qty) + greatest(0,lm_sale_out.qty) +
 greatest(0,transfer_out.qty) + greatest(0,purchase_return.qty) + greatest(0,sale_out.qty)) - 
 (greatest(0,lm_scrap.qty)+greatest(0,lm_loss.qty) + greatest(0,scrap.qty)+greatest(0,loss.qty)) + 
-(greatest(0,lm_adjustment.qty) + greatest(0,adjustment.qty))) * greatest(0,s.price_unit)) as value_qty,
+(greatest(0,lm_adjustment.qty) + greatest(0,adjustment.qty))) * (select value_float
+from ir_property ip,ir_model_fields im 
+where im.id=ip.fields_id 
+and model='product.template'  
+and im.name='standard_price' 
+and res_id='product.template,'|| (select product_tmpl_id from product_product where id=pp.id))) as value_qty,
 
 greatest(0,transfer_in.qty) as x_transfer_in,
 greatest(0,transfer_out.qty) as x_transfer_out,
@@ -2534,7 +2556,7 @@ group by abc.x_product_code,abc.x_product,abc.uom_name,abc.price_unit,abc.x_prod
                                 <property name="paddingRight">2pt</property>
                                 <structure name="numberFormat">
                                     <property name="category">Currency</property>
-                                    <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
+                                    <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=HALF_UP}</property>
                                 </structure>
                                 <property name="textAlign">right</property>
                                 <property name="resultSetColumn">Aggregation_4</property>
@@ -2746,7 +2768,7 @@ group by abc.x_product_code,abc.x_product,abc.uom_name,abc.price_unit,abc.x_prod
                             <property name="paddingLeft">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
-                                <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
+                                <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">price_unit</property>
@@ -2924,7 +2946,7 @@ group by abc.x_product_code,abc.x_product,abc.uom_name,abc.price_unit,abc.x_prod
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
-                                <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
+                                <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">Aggregation_10</property>

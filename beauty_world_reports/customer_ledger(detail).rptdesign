@@ -79,6 +79,18 @@
                     <property name="fixedOrder">true</property>
                     <structure name="format"/>
                 </scalar-parameter>
+                <scalar-parameter name="customer_id" id="322">
+                    <text-property name="promptText">Customer</text-property>
+                    <property name="valueType">dynamic</property>
+                    <property name="isRequired">false</property>
+                    <property name="dataSetName">all_ds</property>
+                    <expression name="valueExpr">row["customer_id"]</expression>
+                    <expression name="labelExpr">row["customer_name"]</expression>
+                    <property name="dataType">integer</property>
+                    <property name="controlType">list-box</property>
+                    <property name="fixedOrder">true</property>
+                    <structure name="format"/>
+                </scalar-parameter>
             </parameters>
         </cascading-parameter-group>
     </parameters>
@@ -361,6 +373,13 @@ else
 {     
    this.queryText =this.queryText.replace("--$sales_team_id$", "and inv.section_id="+params["sales_team_id"])
 }
+if (params["customer_id"].value == null ){     
+   this.queryText =this.queryText.replace("--$customer_id$", "")
+}
+else
+{     
+   this.queryText =this.queryText.replace("--$customer_id$", "and inv.partner_id="+params["customer_id"])
+}
 ]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
@@ -509,6 +528,7 @@ and payment_type='credit'
 --$company_id$
 --$branch_id$
 --$sales_team_id$
+--$customer_id$
 group by rp.name,rp.id,number,date_invoice
 )A
 order by sequence]]></xml-property>

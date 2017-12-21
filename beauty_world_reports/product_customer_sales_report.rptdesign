@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="bidiLayoutOrientation">ltr</property>
@@ -12,13 +12,29 @@
         </structure>
     </list-property>
     <parameters>
-        <scalar-parameter name="from_date" id="111" extends="report_library.from_date">
-            <property name="isRequired">true</property>
+        <scalar-parameter name="from_date" id="258">
+            <text-property name="promptText">From Date</text-property>
+            <property name="valueType">static</property>
             <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
         </scalar-parameter>
-        <scalar-parameter name="to_date" id="112" extends="report_library.to_date">
-            <property name="isRequired">true</property>
+        <scalar-parameter name="to_date" id="259">
+            <text-property name="promptText">To Date</text-property>
+            <property name="valueType">static</property>
             <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
         </scalar-parameter>
         <scalar-parameter name="product" id="117">
             <text-property name="promptText">Product</text-property>
@@ -122,8 +138,25 @@
             <list-property name="computedColumns">
                 <structure>
                     <property name="name">net</property>
-                    <expression name="expression">row["credit_sales"]+row["cash_sales"]</expression>
-                    <property name="dataType">decimal</property>
+                    <expression name="expression">row["credit_sales"]+row["cash_sales"]-row["return"]</expression>
+                    <property name="dataType">float</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value">row["credit_sales"]+row["cash_sales"]-row["return"]</expression>
+                        </structure>
+                    </list-property>
+                </structure>
+                <structure>
+                    <property name="name">total</property>
+                    <expression name="expression">row["credit_sales"] + row["cash_sales"]</expression>
+                    <property name="dataType">float</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value">row["credit_sales"] + row["cash_sales"]</expression>
+                        </structure>
+                    </list-property>
                 </structure>
             </list-property>
             <list-property name="columnHints">
@@ -331,7 +364,12 @@
                     <structure>
                         <property name="position">11</property>
                         <property name="name">net</property>
-                        <property name="dataType">decimal</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
+                        <property name="name">total</property>
+                        <property name="dataType">float</property>
                     </structure>
                 </list-property>
             </structure>
@@ -1215,6 +1253,41 @@ order by id]]></xml-property>
                     </list-property>
                     <property name="allowExport">true</property>
                 </structure>
+                <structure>
+                    <property name="name">total</property>
+                    <text-property name="displayName">total</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["total"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">gtotal</property>
+                    <text-property name="displayName">gtotal</text-property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>product</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["total"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">gt_total</property>
+                    <text-property name="displayName">gt_total</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["gtotal"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
             </list-property>
             <column id="170"/>
             <column id="171"/>
@@ -1228,6 +1301,7 @@ order by id]]></xml-property>
             <column id="175"/>
             <column id="176"/>
             <column id="178"/>
+            <column id="253"/>
             <header>
                 <row id="122">
                     <property name="verticalAlign">middle</property>
@@ -1392,6 +1466,26 @@ order by id]]></xml-property>
                             <text-property name="text">CN</text-property>
                         </label>
                     </cell>
+                    <cell id="248">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="254">
+                            <property name="fontFamily">sans-serif</property>
+                            <property name="fontSize">9pt</property>
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">Net</text-property>
+                        </label>
+                    </cell>
                 </row>
             </header>
             <group id="215">
@@ -1429,6 +1523,7 @@ order by id]]></xml-property>
                                 <property name="resultSetColumn">default_code</property>
                             </data>
                         </cell>
+                        <cell id="249"/>
                     </row>
                 </header>
                 <footer>
@@ -1576,8 +1671,7 @@ order by id]]></xml-property>
                             <property name="borderTopColor">#000000</property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
-                            <data id="246">
-                                <property name="fontFamily">sans-serif</property>
+                            <data id="256">
                                 <property name="fontSize">8pt</property>
                                 <property name="paddingRight">2pt</property>
                                 <structure name="numberFormat">
@@ -1585,7 +1679,7 @@ order by id]]></xml-property>
                                     <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
                                 </structure>
                                 <property name="textAlign">right</property>
-                                <property name="resultSetColumn">Aggregation_12</property>
+                                <property name="resultSetColumn">gtotal</property>
                             </data>
                         </cell>
                         <cell id="241">
@@ -1611,6 +1705,31 @@ order by id]]></xml-property>
                                 </structure>
                                 <property name="textAlign">right</property>
                                 <property name="resultSetColumn">Aggregation_13</property>
+                            </data>
+                        </cell>
+                        <cell id="251">
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderLeftColor">#000000</property>
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">thin</property>
+                            <property name="borderRightColor">#000000</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                            <property name="borderTopColor">#000000</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <data id="246">
+                                <property name="fontFamily">sans-serif</property>
+                                <property name="fontSize">8pt</property>
+                                <property name="paddingRight">2pt</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Currency</property>
+                                    <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">Aggregation_12</property>
                             </data>
                         </cell>
                     </row>
@@ -1776,8 +1895,7 @@ order by id]]></xml-property>
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="159">
-                            <property name="fontFamily">sans-serif</property>
+                        <data id="255">
                             <property name="fontSize">8pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
@@ -1785,7 +1903,7 @@ order by id]]></xml-property>
                                 <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
-                            <property name="resultSetColumn">net</property>
+                            <property name="resultSetColumn">total</property>
                         </data>
                     </cell>
                     <cell id="158">
@@ -1811,6 +1929,31 @@ order by id]]></xml-property>
                             </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">return</property>
+                        </data>
+                    </cell>
+                    <cell id="250">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="159">
+                            <property name="fontFamily">sans-serif</property>
+                            <property name="fontSize">8pt</property>
+                            <property name="paddingRight">2pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">net</property>
                         </data>
                     </cell>
                 </row>
@@ -1955,8 +2098,7 @@ order by id]]></xml-property>
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="211">
-                            <property name="fontFamily">sans-serif</property>
+                        <data id="257">
                             <property name="fontSize">8pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
@@ -1964,7 +2106,7 @@ order by id]]></xml-property>
                                 <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
-                            <property name="resultSetColumn">Aggregation_10</property>
+                            <property name="resultSetColumn">gt_total</property>
                         </data>
                     </cell>
                     <cell id="169">
@@ -1990,6 +2132,31 @@ order by id]]></xml-property>
                             </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">Aggregation_11</property>
+                        </data>
+                    </cell>
+                    <cell id="252">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="211">
+                            <property name="fontFamily">sans-serif</property>
+                            <property name="fontSize">8pt</property>
+                            <property name="paddingRight">2pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">Aggregation_10</property>
                         </data>
                     </cell>
                 </row>

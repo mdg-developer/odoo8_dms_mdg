@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="bidiLayoutOrientation">ltr</property>
@@ -12,13 +12,29 @@
         </structure>
     </list-property>
     <parameters>
-        <scalar-parameter name="from_date" id="111" extends="report_library.from_date">
-            <property name="isRequired">true</property>
+        <scalar-parameter name="from_date" id="292">
+            <text-property name="promptText">From Date</text-property>
+            <property name="valueType">static</property>
             <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
         </scalar-parameter>
-        <scalar-parameter name="to_date" id="112" extends="report_library.to_date">
-            <property name="isRequired">true</property>
+        <scalar-parameter name="to_date" id="293">
+            <text-property name="promptText">To Date</text-property>
+            <property name="valueType">static</property>
             <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
         </scalar-parameter>
     </parameters>
     <data-sources>
@@ -103,7 +119,7 @@
             <list-property name="computedColumns">
                 <structure>
                     <property name="name">net</property>
-                    <expression name="expression">row["credit_sales"]+row["cash_sales"]</expression>
+                    <expression name="expression">row["credit_sales"]+row["cash_sales"]-row["return"]</expression>
                     <property name="dataType">decimal</property>
                 </structure>
             </list-property>
@@ -571,7 +587,7 @@ group by so.payment_type,rp.name,so.partner_id,rp.customer_code,return_tbl.retur
         </label>
         <data id="17">
             <property name="fontFamily">sans-serif</property>
-            <property name="fontSize">10pt</property>
+            <property name="fontSize">9pt</property>
             <property name="fontWeight">normal</property>
             <property name="textAlign">center</property>
             <property name="dataSet">param_from_to_date</property>
@@ -837,7 +853,7 @@ group by so.payment_type,rp.name,so.partner_id,rp.customer_code,return_tbl.retur
                         <property name="borderTopWidth">thin</property>
                         <data id="277">
                             <property name="fontFamily">sans-serif</property>
-                            <property name="fontSize">8pt</property>
+                            <property name="fontSize">9pt</property>
                             <property name="paddingLeft">2pt</property>
                             <property name="textAlign">left</property>
                             <property name="resultSetColumn">customer_code</property>
@@ -858,7 +874,7 @@ group by so.payment_type,rp.name,so.partner_id,rp.customer_code,return_tbl.retur
                         <property name="borderTopWidth">thin</property>
                         <data id="279">
                             <property name="fontFamily">sans-serif</property>
-                            <property name="fontSize">8pt</property>
+                            <property name="fontSize">9pt</property>
                             <property name="paddingLeft">2pt</property>
                             <property name="textAlign">left</property>
                             <property name="resultSetColumn">customer_name</property>
@@ -879,7 +895,7 @@ group by so.payment_type,rp.name,so.partner_id,rp.customer_code,return_tbl.retur
                         <property name="borderTopWidth">thin</property>
                         <data id="281">
                             <property name="fontFamily">sans-serif</property>
-                            <property name="fontSize">8pt</property>
+                            <property name="fontSize">9pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -904,7 +920,7 @@ group by so.payment_type,rp.name,so.partner_id,rp.customer_code,return_tbl.retur
                         <property name="borderTopWidth">thin</property>
                         <data id="283">
                             <property name="fontFamily">sans-serif</property>
-                            <property name="fontSize">8pt</property>
+                            <property name="fontSize">9pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -929,7 +945,7 @@ group by so.payment_type,rp.name,so.partner_id,rp.customer_code,return_tbl.retur
                         <property name="borderTopWidth">thin</property>
                         <data id="285">
                             <property name="fontFamily">sans-serif</property>
-                            <property name="fontSize">8pt</property>
+                            <property name="fontSize">9pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -954,7 +970,7 @@ group by so.payment_type,rp.name,so.partner_id,rp.customer_code,return_tbl.retur
                         <property name="borderTopWidth">thin</property>
                         <data id="287">
                             <property name="fontFamily">sans-serif</property>
-                            <property name="fontSize">8pt</property>
+                            <property name="fontSize">9pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -1013,7 +1029,7 @@ group by so.payment_type,rp.name,so.partner_id,rp.customer_code,return_tbl.retur
                         <property name="borderTopWidth">thin</property>
                         <data id="288">
                             <property name="fontFamily">sans-serif</property>
-                            <property name="fontSize">8pt</property>
+                            <property name="fontSize">9pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -1038,7 +1054,7 @@ group by so.payment_type,rp.name,so.partner_id,rp.customer_code,return_tbl.retur
                         <property name="borderTopWidth">thin</property>
                         <data id="289">
                             <property name="fontFamily">sans-serif</property>
-                            <property name="fontSize">8pt</property>
+                            <property name="fontSize">9pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -1063,7 +1079,7 @@ group by so.payment_type,rp.name,so.partner_id,rp.customer_code,return_tbl.retur
                         <property name="borderTopWidth">thin</property>
                         <data id="290">
                             <property name="fontFamily">sans-serif</property>
-                            <property name="fontSize">8pt</property>
+                            <property name="fontSize">9pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -1088,7 +1104,7 @@ group by so.payment_type,rp.name,so.partner_id,rp.customer_code,return_tbl.retur
                         <property name="borderTopWidth">thin</property>
                         <data id="291">
                             <property name="fontFamily">sans-serif</property>
-                            <property name="fontSize">8pt</property>
+                            <property name="fontSize">9pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
