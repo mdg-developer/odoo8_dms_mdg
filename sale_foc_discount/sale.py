@@ -136,7 +136,7 @@ class sale_order_line(osv.osv):
                'net_total':fields.function(_amount_line, string='Total', digits_compute= dp.get_precision('Account')),
                'discount':fields.float('Discount (%)',store=True),
                'discount_amt':fields.float('Discount (amt)',store=True),
-               'sale_foc':fields.boolean('FOC', readonly=True),
+               'sale_foc':fields.boolean('FOC'),
               # 'show_amt':fields.function(_amount_line2,string='Total Discount(-)',readonly=True)
                
                }

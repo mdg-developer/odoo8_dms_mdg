@@ -216,6 +216,14 @@
 									</tr>
 									<tr class="border-black">
 										<td style="padding-top: 2mm;padding-bottom: 2mm;">
+											Additional Discount(%)
+										</td>
+										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
+											<span t-field="o.additional_discount" />
+										</td>
+									</tr>
+									<tr class="border-black">
+										<td style="padding-top: 2mm;padding-bottom: 2mm;">
 											Deduction Amount
 										</td>
 										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;">
