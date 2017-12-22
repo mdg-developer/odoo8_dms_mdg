@@ -27,6 +27,8 @@ class insert_sale_team(osv.osv_memory):
     _description = 'Sale Team Insert'
     _columns = {
         'section_id':fields.many2one('crm.case.section','Sales Team' ),
+        'delivery_team_id':fields.many2one('crm.case.section','Delivery Team' ),
+        
         'category_ids': fields.many2one('res.partner.category', 'Customer Tags'),
                 'outlet_type': fields.many2one('outlettype.outlettype', 'Outlet Type'),
                 'sales_channel':fields.many2one('sale.channel', 'Sale Channel'),
@@ -76,6 +78,7 @@ class insert_sale_team(osv.osv_memory):
         township=data['township']
         price_list_id=data['property_product_pricelist']
         category_ids=data['category_ids']
+        delivery_team_id=data['delivery_team_id']
         
         print 'partner_id',partner_id
         for partner in partner_id: 
@@ -120,5 +123,8 @@ class insert_sale_team(osv.osv_memory):
             if cheque_true is True:
                 cr.execute('update res_partner set is_cheque=%s where id=%s',(True,partner,))
             if cheque_false is True:
-                cr.execute('update res_partner set is_cheque=%s where id=%s',(False,partner,))                                                          
+                cr.execute('update res_partner set is_cheque=%s where id=%s',(False,partner,))       
+            if delivery_team_id :
+                cr.execute('update res_partner set delivery_team_id=%s where id=%s',(delivery_team_id[0],partner,))       
+                                                                   
         return True              

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+		<!-- customer creation form -->
+		<record id="inherit_view_partners_form_crm1" model="ir.ui.view">
+			<field name="name">res.partner.form.view</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="crm.view_partners_form_crm1" />
+			<field name="arch" type="xml">
+				<data>
+
+					<xpath expr="//field[@name='section_id']" position="after">
+						<field name="delivery_team_id"
+							attrs="{'invisible':[('customer','=',False)]}" />
+					</xpath>
+				</data>
+			</field>
+		</record>
+
+		<!-- customer tree view -->
+		<record id="res_partner_tree_view" model="ir.ui.view">
+			<field name="name">res.partner.tree.view</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="base.view_partner_tree" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//field[@name='display_name']" position="after">
+
+						<field name="delivery_team_id" />
+
+					</xpath>
+
+				</data>
+			</field>
+		</record>
+
+		<!-- Partner group by -->
+		<record id="view_res_partner_filter_inherit" model="ir.ui.view">
+			<field name="name">Customer Filter</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="base.view_res_partner_filter" />
+			<field name="arch" type="xml">
+				<xpath expr="//group/filter[@string='Country']" position="after">
+					<filter string="Delivery Team" icon="terp-personal" domain="[]"
+						context="{'group_by' : 'delivery_team_id'}" />
+				</xpath>
+			</field>
+		</record>
+
+
+	</data>
+</openerp>
