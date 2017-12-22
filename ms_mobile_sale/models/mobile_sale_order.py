@@ -313,6 +313,7 @@ class mobile_sale_order(osv.osv):
         try : 
             product_trans_obj = self.pool.get('product.transactions')
             product_trans_line_obj = self.pool.get('product.transactions.line')
+            sale_team_obj = self.pool.get('crm.case.section')
             str = "{" + vals + "}"
             str = str.replace(":''", ":'")  # change Order_id
             str = str.replace("'',", "',")  # null
@@ -344,16 +345,30 @@ class mobile_sale_order(osv.osv):
 #                         saleManId = data[0][0]
 #                     else:
 #                         saleManId = None
+                    sale_team_id = int(pt['team_id'])
+                    sale_team_data = sale_team_obj.browse(cursor, user,sale_team_id , context=None)
+                    if pt['type'] =='Normal return':
+                        location_type_id = sale_team_data.normal_return_location_id.id
+                    elif pt['type'] =='Expired':
+                        location_type_id = sale_team_data.exp_location_id.id
+                    elif pt['type'] =='Near expiry':
+                        location_type_id = sale_team_data.near_exp_location_id.id
+                    elif pt['type'] =='Fresh stock not good':
+                        location_type_id = sale_team_data.fresh_stock_not_good_location_id.id
+                    elif pt['type'] =='Damaged':
+                        location_type_id = sale_team_data.damage_location_id.id
+                        
                     mso_result = {
-                        'transaction_id':pt['transaction_id'],
-                        'customer_id':pt['customer_id'],
-                        'customer_code':pt['customer_code'] ,
-                        'team_id':pt['team_id'],
-                        'date':pt['date'],
-                        'exchange_type':pt['exchange_type'],
-                        'void_flag':pt['void_flag'],
-                        'location_id':pt['location_id'],
-                    }
+                                'transaction_id':pt['transaction_id'],
+                                'customer_id':pt['customer_id'],
+                                'customer_code':pt['customer_code'] ,
+                                'team_id':pt['team_id'],
+                                'date':pt['date'],
+                                'exchange_type':pt['exchange_type'],
+                                'void_flag':pt['void_flag'],
+                                'location_id':location_type_id, #pt['location_id'],
+                                'location_type':pt['type'],
+                                }
                     s_order_id = product_trans_obj.create(cursor, user, mso_result, context=context)
                     
                     for ptl in product_trans_line:
@@ -375,7 +390,7 @@ class mobile_sale_order(osv.osv):
                                   'transaction_id':s_order_id,
                                   'product_id':ptl['product_id'],
                                   'product_qty':ptl['product_qty'],
-                                  'uom_id':uom_id,
+                                  'uom_id':ptl['uom_id'],
                                   'so_No':ptl['so_No'],
                                   'trans_type':ptl['trans_type'],
                                   'transaction_name':ptl['transaction_name'],
@@ -384,9 +399,8 @@ class mobile_sale_order(osv.osv):
                                   'batchno':ptl['batchno'],
                                 }
                                 product_trans_line_obj.create(cursor, user, mso_line_res, context=context)
-#                         product_trans_obj.action_convert_ep(cursor, user, [s_order_id], context=context)
+                    product_trans_obj.action_convert_ep(cursor, user, [s_order_id], context=context)
 
-                                    
             print 'Truwwwwwwwwwwwwwwwwwwwwwe'
             return True       
         except Exception, e:
@@ -2274,46 +2288,48 @@ class mobile_sale_order(osv.osv):
                                 sequence = None
 
                             ori_req_quantity = int(srl['req_quantity'])
+                            ori_uom_id = int(srl['product_uom'])
                             # print 'product_idddddddddddd',req_quantity
-                            cursor.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (big_uom_id,))
-                            bigger_qty = cursor.fetchone()[0]
-                            bigger_qty = int(bigger_qty)
+#                             cursor.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (big_uom_id,))
+#                             bigger_qty = cursor.fetchone()[0]
+#                             bigger_qty = int(bigger_qty)
                             # print ' bigger_qty',sale_qty,bigger_qty,type(sale_qty),type(bigger_qty)                        
-                            big_uom_qty = divmod(ori_req_quantity, bigger_qty)
+#                             big_uom_qty = divmod(ori_req_quantity, bigger_qty)
                             # print 'big_uom_qty',big_uom_qty
-                            if  big_uom_qty:
-                                big_req_quantity = big_uom_qty[0]
-                                req_quantity = big_uom_qty[1]
+#                             if  big_uom_qty:
+#                                 big_req_quantity = big_uom_qty[0]
+#                                 req_quantity = big_uom_qty[1]
                                 # print 'big_req',big_req_quantity,req_quantity
                             cursor.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (to_location_id, srl['product_id'],))
                             qty_on_hand = cursor.fetchone()
                             if qty_on_hand:
                                 qty_on_hand = qty_on_hand[0]
                             else:
-                                qty_on_hand = 0               
-                            if int(srl['product_uom']) == int(big_uom_id):                                                                          
-                                mso_line_res = {                                                            
+                                qty_on_hand = 0    
+                            #comment by EMTW           
+#                             if int(srl['product_uom']) == int(big_uom_id):                                                                          
+#                                 mso_line_res = {                                                            
+#                                       'line_id':stock_id,
+#                                       'remark':srl['remark'],
+#                                       'req_quantity':req_quantity,
+#                                       'product_id':int(srl['product_id']),
+#                                       'product_uom':big_uom_id,
+#                                       'uom_ratio':packing_unit ,
+#                                       'big_uom_id':big_uom_id,
+#                                       'big_req_quantity':ori_req_quantity,
+#                                       'qty_on_hand':qty_on_hand,
+#                                       'sequence':sequence,
+#                                       }
+#                             else:
+                            mso_line_res = {                                                            
                                       'line_id':stock_id,
                                       'remark':srl['remark'],
-                                      'req_quantity':0,
+                                      'req_quantity':ori_req_quantity,
                                       'product_id':int(srl['product_id']),
-                                      'product_uom':small_uom_id,
+                                      'product_uom':ori_uom_id,
                                       'uom_ratio':packing_unit ,
                                       'big_uom_id':big_uom_id,
-                                      'big_req_quantity':ori_req_quantity,
-                                      'qty_on_hand':qty_on_hand,
-                                      'sequence':sequence,
-                                      }
-                            else:
-                                mso_line_res = {                                                            
-                                      'line_id':stock_id,
-                                      'remark':srl['remark'],
-                                      'req_quantity':req_quantity,
-                                      'product_id':int(srl['product_id']),
-                                      'product_uom':small_uom_id,
-                                      'uom_ratio':packing_unit ,
-                                      'big_uom_id':big_uom_id,
-                                      'big_req_quantity':big_req_quantity,
+                                      'big_req_quantity':0,
                                       'qty_on_hand':qty_on_hand,
                                       'sequence':sequence,
                                       }

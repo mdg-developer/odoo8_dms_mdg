@@ -9,6 +9,7 @@
 			<field name="arch" type="xml">
 				<field name="location_id"  position="after">
 					<field name="branch_id" />
+					<field name="location_type" />
 				</field>
 			</field>
 		</record>

@@ -29,6 +29,7 @@
 									<form string="Multi Product">
 										<group>
 											<group>
+												<field name="sequence" invisible="1" />
 												<field name="product_id" on_change="on_change_product_id(product_id)" />
 												<field name="product_uom" />
 												<field name="product_uom_qty"
@@ -39,7 +40,9 @@
 											</group>
 										</group>
 									</form>
-									<tree string="Multi Product" editable="bottom">
+									<tree string="Multi Product" editable="bottom"
+										default_order="sequence asc">
+										<field name="sequence" invisible="1" />
 										<field name="product_id" on_change="on_change_product_id(product_id)" />
 										<field name="product_uom" />
 										<field name="product_uom_qty"
@@ -154,7 +157,7 @@
 				</graph>
 			</field>
 		</record>
-		
+
 
 		<record id="view_sale_target_search" model="ir.ui.view">
 			<field name="name">sale.team.search</field>

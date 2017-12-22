@@ -30,10 +30,10 @@
 															<td style="border:0pt;font-size:10pt;">
 																<strong t-field="o.sale_team_id.name"></strong>
 															</td>
-															<td style="border:0pt;font-size:10pt;">
+															<td style="border:0pt;font-size:8pt;">
 																<strong>Date :</strong>
 															</td>
-															<td style="border:0pt;font-size:10pt;">
+															<td style="border:0pt;font-size:8pt;">
 																<strong t-field="o.date"></strong>
 															</td>
 
@@ -54,17 +54,26 @@
 															</td>
 
 														</tr>
+
 														<tr>
 															<td style="border:0pt;font-size:10pt;">
+																<strong>Receive From :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong t-field="o.receive_from" />
+															</td>
+														</tr>
+														<tr>
+															<td style="border:0pt;font-size:8pt;">
 																<strong>Last Updated On :</strong>
 															</td>
-															<td style="border:0pt;font-size:10pt;">
+															<td style="border:0pt;font-size:8pt;">
 																<strong t-field="o.write_date" />
 															</td>
-															<td style="border:0pt;font-size:10pt;">
+															<td style="border:0pt;font-size:8pt;">
 																<strong>Last Updated By :</strong>
 															</td>
-															<td style="border:0pt;font-size:10pt;">
+															<td style="border:0pt;font-size:8pt;">
 																<strong t-field="o.write_uid" />
 															</td>
 														</tr>
@@ -379,10 +388,10 @@
 															<td style="border:0pt;font-size:10pt;">
 																<strong t-field="o.sale_team_id.name"></strong>
 															</td>
-															<td style="border:0pt;font-size:10pt;">
+															<td style="border:0pt;font-size:8pt;">
 																<strong>Date :</strong>
 															</td>
-															<td style="border:0pt;font-size:10pt;">
+															<td style="border:0pt;font-size:8pt;">
 																<strong t-field="o.date"></strong>
 															</td>
 														</tr>
@@ -401,17 +410,26 @@
 																<strong t-field="o.branch_id.name"></strong>
 															</td>
 														</tr>
+
 														<tr>
 															<td style="border:0pt;font-size:10pt;">
+																<strong>Receive From :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong t-field="o.receive_from" />
+															</td>
+														</tr>
+														<tr>
+															<td style="border:0pt;font-size:8pt;">
 																<strong>Last Updated On :</strong>
 															</td>
-															<td style="border:0pt;font-size:10pt;">
+															<td style="border:0pt;font-size:8pt;">
 																<strong t-field="o.write_date" />
 															</td>
-															<td style="border:0pt;font-size:10pt;">
+															<td style="border:0pt;font-size:8pt;">
 																<strong>Last Updated By :</strong>
 															</td>
-															<td style="border:0pt;font-size:10pt;">
+															<td style="border:0pt;font-size:8pt;">
 																<strong t-field="o.write_uid" />
 															</td>
 														</tr>

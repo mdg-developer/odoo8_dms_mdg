@@ -142,7 +142,8 @@
 					<thead>
 						<tr>
 							<th>Product</th>
-							<th>Qty(B/S)</th>
+							<th class="text-center">Qty</th>
+							<th class="text-center">UOM</th>
 							<th>Batch No</th>
 							<th>Expiry</th>
 							<th class="text-center">Qty on Hand(S)</th>
@@ -155,9 +156,12 @@
 								<span t-field="l.product_id" />
 							</td>
 							<td align="center">
-								<span t-field="l.big_issue_quantity" />
-								/
+								<!-- <span t-field="l.big_issue_quantity" />
+								/ -->
 								<span t-field="l.issue_quantity" />
+							</td>
+							<td align="center">
+								<span t-field="l.product_uom" />
 							</td>
 							<td>
 								<span t-field="l.batch_no.name" />
