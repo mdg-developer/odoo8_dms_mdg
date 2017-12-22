@@ -37,12 +37,12 @@ Sale Cashier Approval
     'data': [
 
        # 'views/product_product_view.xml',
-       
+       'views/code_sequence.xml',
          'views/cashier_approval_view.xml',
         'views/qweb_view.xml',
         'views/report_cashier_approval.xml',
         'views/custom_layout.xml',
-
+        
     ],
     'installable': True,
     'auto_install': False,
