@@ -30,51 +30,51 @@
 							<group>
 
 								<field name="name" readonly="1"  />
-								<field name="partner_id" readonly="1"  />
-								<field name="customer_code" readonly="1"  />
-								<field name="outlet_type" readonly="1"  />
-								<field name="user_id" readonly="1"  />
-								<field name="sale_team" readonly="1"  />
-								<field name="warehouse_id" readonly="1"  />
-								<field name="location_id" readonly="1"  />
-								<field name="branch_id" readonly="1"
+								<field name="partner_id" />
+								<field name="customer_code" />
+								<field name="outlet_type" />
+								<field name="user_id" />
+								<field name="sale_team" />
+								<field name="warehouse_id" />
+								<field name="location_id" />
+								<field name="branch_id" 
 									widget="selection" />
-								<field name="sale_plan_name" readonly="1"  />
-								<field name="sale_plan_day_id" readonly="1"  />
-								<field name="sale_plan_trip_id" readonly="1"  />
-								<field name="pricelist_id"  readonly="1" />
+								<field name="sale_plan_name" />
+								<field name="sale_plan_day_id" />
+								<field name="sale_plan_trip_id" />
+								<field name="pricelist_id"   />
 								<field name="mso_latitude" digits="(14,15)"
 									readonly="1"  />
 								<field name="mso_longitude" digits="(14,15)"
 									readonly="1"  />
-								<field name="po_no" readonly="1"/>
-								<field name="invoice_no" readonly="1"/>
+								<field name="po_no" />
+								<field name="invoice_no" />
 
 							</group>
 							<group>
-								<field name="date" readonly="1"  />
-								<field name="due_date" readonly="1"  />
-								<field name="payment_term" readonly="1"  />
-								<field name="type" readonly="1"  />
-								<field name="tablet_id" readonly="1"  />
-								<field name="delivery_remark" readonly="1"  />
-								<field name="amount_total" readonly="1"  />
-								<field name="additional_discount" readonly="1"  />
-								<field name="deduction_amount" readonly="1"  />
-								<field name="net_amount" readonly="1"  />
-								<field name="paid_amount" readonly="1"  />
-								<field name="change_amount" readonly="1"  />
-								<field name="remaining_amount" readonly="1"  />
-								<field name="paid" readonly="1"  />
-								<field name="void_flag" readonly="1"  />
-								<field name="balance" readonly="1"  />
+								<field name="date"   />
+								<field name="due_date"   />
+								<field name="payment_term"   />
+								<field name="type"   />
+								<field name="tablet_id"   />
+								<field name="delivery_remark"   />
+								<field name="amount_total"   />
+								<field name="additional_discount"   />
+								<field name="deduction_amount"   />
+								<field name="net_amount"   />
+								<field name="paid_amount"   />
+								<field name="change_amount"   />
+								<field name="remaining_amount"   />
+								<field name="paid"   />
+								<field name="void_flag"   />
+								<field name="balance"   />
 
 							</group>
 						</group>
 
 						<notebook>
 							<page string="Order Lines">
-								<field name="order_line" readonly="1" >
+								<field name="order_line"  >
 									<form string="Mobile Sales Order Lines" version="7.0">
 
 										<group>
@@ -113,7 +113,7 @@
 							</page>
 
 							<page string="Delivery Lines">
-								<field name="delivery_order_line" readonly="1" >
+								<field name="delivery_order_line"  >
 									<form string="Mobile Delivery Order Lines" version="7.0">
 
 										<group>
@@ -145,7 +145,7 @@
 							</page>
 
 							<page string="Promotion Lines">
-								<field name="promos_line_ids" readonly="1" >
+								<field name="promos_line_ids"  >
 									<form string="Promotion Lines" version="7.0">
 
 										<group>
@@ -171,7 +171,7 @@
 
 							</page>
 							<page string="Payments">
-								<field name="payment_line_ids" readonly="1" >
+								<field name="payment_line_ids"  >
 									<tree string="Payment Lines" editable="bottom"
 										readonly="1" >
 
@@ -207,6 +207,7 @@
 			<field name="arch" type="xml">
 				<tree string="Sale Order">
 					<field name="name" />
+					<field name="date" />
 					<field name="partner_id" />
 					<field name="customer_code" />
 					<field name="sale_plan_day_id" />
@@ -215,6 +216,7 @@
 					<field name="sale_team" />
 					<field name="pricelist_id" />
 					<field name="amount_total" />
+					<field name="void_flag" />
 					<field name="type" />
 					<field name="delivery_remark" />
 					<field name="additional_discount" />
@@ -222,8 +224,8 @@
 					<field name="paid_amount" />
 					<field name="paid" />
 					<field name="m_status" />
-					<field name="date" />
-					<field name="void_flag" />
+					<field name="mso_latitude"/>
+					<field name="mso_longitude"/>
 				</tree>
 			</field>
 		</record>

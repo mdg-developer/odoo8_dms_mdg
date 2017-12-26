@@ -20,7 +20,8 @@
           </field>
           <xpath expr="//field[@name='target_move']" position="after">
             <newline/>
-            <field name="result_selection" colspan="4"/>
+            <field name="result_selection" />
+            <!-- <field name="branch_id" /> -->
           </xpath>
           <xpath expr="/form/notebook[1]" position="after">
             <separator string="Clearance Analysis Options" colspan="4"/>
@@ -28,17 +29,27 @@
             <field name="until_date"/>
           </xpath>
           <page name="filters" position="after">
-          	<page string="Branches Filters" name="branches">
-              <separator string="Print only" colspan="4"/>
-              <field name="branch_ids" colspan="4" nolabel="1"/>
-            </page>
-            <page string="Analytic Accounts Filters" name="analytic_accounts">
-              <separator string="Print only" colspan="4"/>
-              <field name="analytic_account_id" colspan="4" nolabel="1"/>
-            </page>
             <page string="Partners Filters" name="partners">
               <separator string="Print only" colspan="4"/>
               <field name="partner_ids" colspan="4" nolabel="1"/>
+            </page>
+            <page string="Analytic Accounts Filters" name="analytic_accounts">
+              <separator string="Print only" colspan="4"/>
+              <field name="analytic_account_ids" colspan="4" nolabel="1"/>
+            </page>
+            <page string="Branches Filters" name="branch_ids">
+                 <separator string="Print only" colspan="4"/>
+                 <field name="branch_ids" colspan="4" nolabel="1">
+                     <tree>
+                         <field name="branch_code"/>
+                         <field name="name"/>                                    
+                     </tree>
+                 </field>
+             </page>
+            <page string="Layout Options" name="layout_options">
+                  <group colspan="4" col="2">
+                        <field name="amount_currency"/>
+                  </group>
             </page>
           </page>
           <page name="filters" position="attributes">
@@ -50,14 +61,17 @@
           <field name="fiscalyear_id" position="attributes">
             <attribute name="on_change">onchange_fiscalyear(fiscalyear_id, period_to, date_to, until_date)</attribute>
           </field>
-          <field name="date_to" position="attributes">
-            <attribute name="on_change">onchange_date_to(fiscalyear_id, period_to, date_to, until_date)</attribute>
+          <field name="filter" position="attributes">
+            <attribute name="invisible">True</attribute>
+          </field>
+          <field name="period_from" position="attributes">
+            <attribute name="invisible">True</attribute>
           </field>
           <field name="period_to" position="attributes">
             <attribute name="on_change">onchange_period_to(fiscalyear_id, period_to, date_to, until_date)</attribute>
           </field>
-          <field name="period_from" position="attributes">
-            <attribute name="domain">[('fiscalyear_id', '=', fiscalyear_id), ('special', '=', False)]</attribute>
+          <field name="period_to" position="attributes">
+            <attribute name="String">At the end of</attribute>
           </field>
           <field name="period_to" position="attributes">
             <attribute name="domain">[('fiscalyear_id', '=', fiscalyear_id), ('special', '=', False)]</attribute>

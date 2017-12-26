@@ -37,7 +37,19 @@ class accounting_report(osv.osv_memory):
         'date_from_cmp': fields.date("Start Date"),
         'date_to_cmp': fields.date("End Date"),
         'debit_credit': fields.boolean('Display Debit/Credit Columns', help="This option allows you to get more details about the way your balances are computed. Because it is space consuming, we do not allow to use it while doing a comparison."),
-        'account_analytic_id':  fields.many2one('account.analytic.account', 'Analytic Account'),
+        'account_analytic_id':  fields.many2one('account.analytic.account', 'Analytic Account'),        
+        #'account_analytic_ids': fields.many2many('account.analytic.account', string='Filter Analytic Account',),
+        
+#         'account_analytic_ids': fields.many2many('account.analytic.account', 'profit_loss_webkit_res_branch_rel', 'account_id', 'analytic_id', 'Filter Analytic Account'),
+#         
+#         'branch_ids': fields.many2many('res.branch','profit_loss_webkit_res_branch_rel','account_id', 'branch_id','Branches'),
+#         'account_analytic_ids': fields.many2many(
+#             'account.analytic.account', string='Filter on analytic accounts',
+#             help="""Only selected analytic accounts will be printed. Leave empty to
+#                     print all analytic accounts."""),
+#         'branch_ids': fields.many2many(
+#             'res.branch', string='Filter on branches',
+#             )
     }
 
     def _get_account_report(self, cr, uid, context=None):
