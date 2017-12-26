@@ -297,10 +297,12 @@ class account_report(osv.osv):
                     # REPORT with parent
                     
                     if fr_name:
-                        report_id = acc_financial_obj.search(cr, uid, [('name', '=', fr_name), ('company_id', '=', company_id)])
+                        #report_id = acc_financial_obj.search(cr, uid, [('name', '=', fr_name), ('company_id', '=', company_id)])
+                        report_id = acc_financial_obj.search(cr, uid, [('name', '=', fr_name)])
                         # #condition for parent report
                         if parent:
-                            parent_ids = acc_financial_obj.search(cr, uid, [('name', '=', parent), ('company_id', '=', company_id)])
+                            #parent_ids = acc_financial_obj.search(cr, uid, [('name', '=', parent), ('company_id', '=', company_id)])
+                            parent_ids = acc_financial_obj.search(cr, uid, [('name', '=', parent)])
                             if not parent_ids:
                                 parent_report_val = {
                                             'name':parent,
@@ -318,7 +320,8 @@ class account_report(osv.osv):
                         # if already exist update
                         if report_id:
                             report_id = report_id[0]
-                            report_val = {'name':fr_name, 'sequence':sequence , 'parent_id':parent_id, 'company_id':company_id}
+                            #report_val = {'name':fr_name, 'sequence':sequence , 'parent_id':parent_id, 'company_id':company_id}
+                            report_val = {'name':fr_name, 'sequence':sequence , 'parent_id':parent_id}
                             if report_style == 'automatic':
                                 report_val['style_overwrite'] = None
                             elif report_style == 'title1':
@@ -383,7 +386,8 @@ class account_report(osv.osv):
                                             acc_type = acc_type.split('.')[0]
                                         else:
                                             acc_type = int(acc_type)
-                                        acc_type_id = account_type_obj.search(cr, uid, [('code', '=', str(acc_type)), ('compay_id', '=', company_id)])
+                                        #acc_type_id = account_type_obj.search(cr, uid, [('code', '=', str(acc_type)), ('compay_id', '=', company_id)])
+                                        acc_type_id = account_type_obj.search(cr, uid, [('code', '=', str(acc_type))])
                                          
                                          
                                         if acc_type_id and report_ids:
@@ -420,7 +424,8 @@ class account_report(osv.osv):
                         # There no report id in account_financial_report                                
                         elif not report_id:
                             # condition for style
-                            report_val = {'name':fr_name, 'sequence':sequence , 'parent_id':parent_id, 'company_id':company_id}
+                            #report_val = {'name':fr_name, 'sequence':sequence , 'parent_id':parent_id, 'company_id':company_id}
+                            report_val = {'name':fr_name, 'sequence':sequence , 'parent_id':parent_id}
                             if report_style == 'automatic':
                                 report_val['style_overwrite'] = None
                             elif report_style == 'title1':
