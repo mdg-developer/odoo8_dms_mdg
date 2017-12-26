@@ -287,18 +287,20 @@ class mobile_sale_order(osv.osv):
                     result.append(x)
                 reprint_count = []
                 for r in result:                
-                   reprint_count.append(r)  
+                    reprint_count.append(r)  
                 if reprint_count:
                     for sync_reprint in reprint_count:
+                        cursor.execute("select id from sale_order where name = %s", (sync_reprint['presaleorder_id'].replace("\\",""),))    
+                        order_id =cursor.fetchone()[0]                                
                         cursor.execute('select branch_id from crm_case_section where id=%s', (sync_reprint['section_id'],))
                         branch_id = cursor.fetchone()[0]
-                        cursor.execute("delete from stock_delivery_reprint where presaleorder_id = %s ", (sync_reprint['presaleorder_id'].replace("\\",""),))    
-                                       
+                        cursor.execute("delete from stock_delivery_reprint where presaleorder_id = %s ", (order_id,))    
                         print_result = {
                             'reprint_date':datetime.now(),
+                            'branch_id':branch_id,
                             'section_id':sync_reprint['section_id'],
-                            'presaleorder_id':sync_reprint['presaleorder_id'].replace("\\",""),
-                            'customer':sync_reprint['customer'],
+                            'presaleorder_id':order_id,
+                            'partner_id':sync_reprint['customer'],
                             'customer_code':sync_reprint['customer_code'],
                             'total_amount':sync_reprint['total_amount'],
                             'reprint_count':sync_reprint['reprint_count'],

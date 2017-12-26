@@ -11,8 +11,9 @@
 						<group>
 							<field name="reprint_date" />
 							<field name="section_id" class="oe_inline" />
+							<field name="branch_id" />
 							<field name="presaleorder_id" />
-							<field name="customer" />
+							<field name="partner_id" />
 							<field name="customer_code" />
 							<field name="total_amount" />
 							<field name="reprint_count" />
@@ -26,11 +27,12 @@
 			<field name="name">Pending Delivery Reprint Tree</field>
 			<field name="model">stock.delivery.reprint</field>
 			<field name="arch" type="xml">
-				<tree string="Sync Log">
+				<tree string="Sync Log" default_order="reprint_date desc">
 					<field name="reprint_date" />
-					<field name="section_id" class="oe_inline" />					
+					<field name="section_id" class="oe_inline" />
+					<field name="branch_id" />
 					<field name="presaleorder_id" />
-					<field name="customer" />
+					<field name="partner_id" />
 					<field name="customer_code" />
 					<field name="total_amount" />
 					<field name="reprint_count" />
@@ -45,9 +47,11 @@
 				<search string="Search Stock Delivery Reprint Count">
 					<group expand="0" string="Group By...">
 						<filter string="Sales Team" icon="terp-partner" domain="[]"
-							context="{'group_by':'section_id'}" /> 
+							context="{'group_by':'section_id'}" />
 						<filter string="Date" icon="terp-partner" domain="[]"
-							context="{'group_by':'reprint_date'}" /> 
+							context="{'group_by':'reprint_date'}" />
+						<filter string="Branch" icon="terp-partner" domain="[]"
+							context="{'group_by':'branch_id'}" />
 					</group>
 				</search>
 			</field>
