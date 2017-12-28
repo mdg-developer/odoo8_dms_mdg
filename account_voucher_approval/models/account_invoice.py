@@ -186,7 +186,7 @@ class account_invoice(models.Model):
     payment_type = fields.Selection([
                     ('credit', 'Credit'),
                     ('cash', 'Cash'),
-               #     ('consignment', 'Consignment'),
+                    ('consignment', 'Consignment'),
 #                     ('advanced', 'Advanced')
                     ],string= 'Payment Type',default='cash')
     
