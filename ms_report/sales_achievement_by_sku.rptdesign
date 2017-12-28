@@ -213,6 +213,7 @@ this.queryText =this.queryText.replace("--$branch_id$", "and branch_id in ("+ pa
 	and ail.product_id=pp.id
 	and pp.product_tmpl_id=pt.id
 	and ai.state!='cancel'
+	and pt.type !='service'
 	and (foc!='true' or foc is null)
 	--$sales_team$
 	--$branch_id$
@@ -596,6 +597,14 @@ and uid=?
                 <ref-entry baseId="44" id="86"/>
                 <ref-entry baseId="45" id="87"/>
                 <ref-entry baseId="48" id="48"/>
+                <ref-entry baseId="136" name="NewGrid1" id="136"/>
+                <ref-entry baseId="137" id="137"/>
+                <ref-entry baseId="138" id="138"/>
+                <ref-entry baseId="139" id="139"/>
+                <ref-entry baseId="140" id="140"/>
+                <ref-entry baseId="142" name="NewText" id="142"/>
+                <ref-entry baseId="141" id="141"/>
+                <ref-entry baseId="143" name="NewText1" id="143"/>
             </overridden-values>
         </simple-master-page>
     </page-setup>

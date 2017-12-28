@@ -1036,7 +1036,7 @@ where ccs.id=rel.section_id
                                     <property name="paddingRight">3pt</property>
                                     <structure name="numberFormat">
                                         <property name="category">Currency</property>
-                                        <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=HALF_UP}</property>
+                                        <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
                                     </structure>
                                     <property name="textAlign">right</property>
                                     <property name="resultSetColumn">amount_Group/code_Group2/name</property>
@@ -1061,7 +1061,7 @@ where ccs.id=rel.section_id
                                     <property name="paddingRight">3pt</property>
                                     <structure name="numberFormat">
                                         <property name="category">Currency</property>
-                                        <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=HALF_UP}</property>
+                                        <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
                                     </structure>
                                     <property name="textAlign">right</property>
                                     <property name="resultSetColumn">amount_Group/code</property>
@@ -1083,7 +1083,7 @@ where ccs.id=rel.section_id
                                     <property name="paddingRight">3pt</property>
                                     <structure name="numberFormat">
                                         <property name="category">Currency</property>
-                                        <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=HALF_UP}</property>
+                                        <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
                                     </structure>
                                     <property name="textAlign">right</property>
                                     <property name="resultSetColumn">amount</property>
@@ -1106,7 +1106,7 @@ where ccs.id=rel.section_id
                                     <property name="paddingRight">3pt</property>
                                     <structure name="numberFormat">
                                         <property name="category">Currency</property>
-                                        <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=HALF_UP}</property>
+                                        <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
                                     </structure>
                                     <property name="textAlign">right</property>
                                     <property name="resultSetColumn">amount_Group2/name</property>
