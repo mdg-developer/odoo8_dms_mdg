@@ -201,7 +201,7 @@ class partner_ledger_xls(report_xls):
             ('date', 1, 0, 'text', _('Date'), None, c_hdr_cell_style),
             ('period', 1, 0, 'text', _('Period'), None, c_hdr_cell_style),
             ('move', 1, 0, 'text', _('Entry'), None, c_hdr_cell_style),
-            ('analytic_account', 1, 0, 'text', _('Analytic Account'), None, c_hdr_cell_style),
+            #('analytic_account', 1, 0, 'text', _('Analytic Account'), None, c_hdr_cell_style),
             ('journal', 1, 0, 'text', _('Journal'), None, c_hdr_cell_style),
             ('partner', 1, 0, 'text', _('Partner'), None, c_hdr_cell_style),
             ('label', 1, 0, 'text', _('Label'), None, c_hdr_cell_style),
@@ -211,6 +211,7 @@ class partner_ledger_xls(report_xls):
              None, c_hdr_cell_style_right),
             ('cumul_bal', 1, 0, 'text', _('Cumul. Bal.'),
              None, c_hdr_cell_style_right),
+            ('analytic_account', 1, 0, 'text', _('Analytic Account'), None, c_hdr_cell_style),       
         ]
         if _p.amount_currency(data):
             c_specs += [
@@ -365,8 +366,8 @@ class partner_ledger_xls(report_xls):
                              line.get('period_code') or ''),
                             ('move', 1, 0, 'text',
                              line.get('move_name') or ''),
-                            ('analytic_account', 1, 0, 'text',
-                             line.get('analytic_account') or ''),
+#                             ('analytic_account', 1, 0, 'text',
+#                              line.get('analytic_account') or ''),
                             ('journal', 1, 0, 'text', line.get('jname') or ''),
                             ('partner', 1, 0, 'text',
                              line.get('partner_name') or ''),
@@ -379,6 +380,8 @@ class partner_ledger_xls(report_xls):
                              None, ll_cell_style_decimal),
                             ('cumul_bal', 1, 0, 'number', None,
                              cumbal_formula, ll_cell_style_decimal),
+                            ('analytic_account', 1, 0, 'text',
+                             line.get('analytic_account') or ''),        
                         ]
                         if _p.amount_currency(data):
                             c_specs += [
