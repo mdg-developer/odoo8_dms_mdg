@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
     <list-property name="propertyBindings">
         <structure>
             <property name="name">queryText</property>
@@ -1690,22 +1690,40 @@ and date_invoice between ? and ?
         <simple-master-page name="Simple MasterPage" id="2">
             <property name="orientation">auto</property>
             <page-footer>
-                <text id="3">
-                    <property name="contentType">html</property>
-                    <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
-                </text>
+                <grid id="883">
+                    <column id="884"/>
+                    <column id="885"/>
+                    <row id="886">
+                        <cell id="887">
+                            <text id="889">
+                                <property name="fontFamily">"Arial"</property>
+                                <property name="textAlign">left</property>
+                                <property name="contentType">html</property>
+                                <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
+                            </text>
+                        </cell>
+                        <cell id="888">
+                            <text id="890">
+                                <property name="fontFamily">"Arial"</property>
+                                <property name="textAlign">right</property>
+                                <property name="contentType">html</property>
+                                <text-property name="content"><![CDATA[<B> Page - <VALUE-OF>pageNumber</VALUE-OF> of <VALUE-OF>totalPage</VALUE-OF></B>]]></text-property>
+                            </text>
+                        </cell>
+                    </row>
+                </grid>
             </page-footer>
         </simple-master-page>
     </page-setup>
     <body>
         <grid id="410">
             <property name="textAlign">center</property>
-            <property name="width">8.1in</property>
+            <property name="width">7.979166666666667in</property>
             <column id="411">
                 <property name="width">4.489583333333333in</property>
             </column>
             <column id="412">
-                <property name="width">3.4583333333333335in</property>
+                <property name="width">3.40625in</property>
             </column>
             <row id="427">
                 <cell id="428">
@@ -2381,6 +2399,7 @@ else&#13;
                 </extended-item>
             </property>
             <property name="hideMeasureHeader">true</property>
+            <property name="fontFamily">"Arial"</property>
             <list-property name="highlightRules">
                 <structure>
                     <property name="operator">eq</property>

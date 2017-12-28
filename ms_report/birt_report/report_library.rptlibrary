@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <library xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
     <property name="units">in</property>
     <property name="theme">defaultTheme</property>
     <parameters>
@@ -726,6 +726,28 @@ order by res.name]]></xml-property>
                     </row>
                 </grid>
             </page-header>
+            <page-footer>
+                <grid name="NewGrid1" id="136">
+                    <column id="137"/>
+                    <column id="138"/>
+                    <row id="139">
+                        <cell id="140">
+                            <text name="NewText" id="142">
+                                <property name="textAlign">left</property>
+                                <property name="contentType">html</property>
+                                <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
+                            </text>
+                        </cell>
+                        <cell id="141">
+                            <text name="NewText1" id="143">
+                                <property name="textAlign">right</property>
+                                <property name="contentType">html</property>
+                                <text-property name="content"><![CDATA[<B> Page - <VALUE-OF>pageNumber</VALUE-OF> of <VALUE-OF>totalPage</VALUE-OF></B>]]></text-property>
+                            </text>
+                        </cell>
+                    </row>
+                </grid>
+            </page-footer>
         </simple-master-page>
     </page-setup>
     <list-property name="images">

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
     <property name="units">in</property>
     <method name="initialize"><![CDATA[branchList = params["branch_id"].value.join(",");
 teamList = params["sales_team_id"].value.join(",");]]></method>
@@ -122,6 +122,12 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <text-property name="heading">company_id</text-property>
                 </structure>
                 <structure>
+                    <property name="columnName">sale_team</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">sale_team</text-property>
+                    <text-property name="heading">sale_team</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">sku_count</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">sku_count</text-property>
@@ -144,6 +150,12 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">company_id</text-property>
                     <text-property name="heading">company_id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">sale_team_1</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">sale_team</text-property>
+                    <text-property name="heading">sale_team</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">value_inv</property>
@@ -253,26 +265,36 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     </structure>
                     <structure>
                         <property name="position">12</property>
+                        <property name="name">sale_team</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">13</property>
                         <property name="name">sku_count</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">13</property>
+                        <property name="position">14</property>
                         <property name="name">partner_id_1</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">14</property>
+                        <property name="position">15</property>
                         <property name="name">branch_id_1</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">15</property>
+                        <property name="position">16</property>
                         <property name="name">company_id_1</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">16</property>
+                        <property name="position">17</property>
+                        <property name="name">sale_team_1</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">18</property>
                         <property name="name">value_inv</property>
                         <property name="dataType">decimal</property>
                     </structure>
@@ -361,61 +383,77 @@ this.queryText =this.queryText.replace("--$branch_id$", "and inv.branch_id in ("
                 </structure>
                 <structure>
                     <property name="position">12</property>
+                    <property name="name">sale_team</property>
+                    <property name="nativeName">sale_team</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">13</property>
                     <property name="name">sku_count</property>
                     <property name="nativeName">sku_count</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">-5</property>
                 </structure>
                 <structure>
-                    <property name="position">13</property>
+                    <property name="position">14</property>
                     <property name="name">partner_id_1</property>
                     <property name="nativeName">partner_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">14</property>
+                    <property name="position">15</property>
                     <property name="name">branch_id_1</property>
                     <property name="nativeName">branch_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">15</property>
+                    <property name="position">16</property>
                     <property name="name">company_id_1</property>
                     <property name="nativeName">company_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">16</property>
+                    <property name="position">17</property>
+                    <property name="name">sale_team_1</property>
+                    <property name="nativeName">sale_team</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">18</property>
                     <property name="name">value_inv</property>
                     <property name="nativeName">value_inv</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select row_number() over (order by name) as seq,*,case when invoices>0 then (value/invoices) else 0 end as value_inv
+            <xml-property name="queryText"><![CDATA[select row_number() over (order by A.sale_team,name) as seq,*,case when invoices>0 then (value/invoices) else 0 end as value_inv
 from 
-(select res.id,res.customer_code,res.name,oo.name as outlet_type,rt.code,COALESCE(sum(amount_total),0) as value,count(inv.id) as invoices,partner_id,inv.branch_id,inv.company_id
-from account_invoice inv,res_partner res,res_township rt,outlettype_outlettype oo 
+(select res.id,res.customer_code,res.name,oo.name as outlet_type,rt.code,COALESCE(sum(amount_total),0) as value,count(inv.id) as invoices,partner_id,inv.branch_id,inv.company_id,ccs.name as sale_team
+from account_invoice inv,res_partner res,res_township rt,outlettype_outlettype oo, crm_case_section ccs
 where inv.partner_id=res.id 
 and res.township=rt.id
+and inv.section_id=ccs.id
 and inv.state != 'cancel'
 and oo.id=res.outlet_type
 and origin like 'SO%'
 and inv.date_invoice between ? and ?
 --$sales_team$
 --$branch_id$
-group by inv.partner_id,res.customer_code,res.name,rt.code,inv.branch_id,inv.company_id,res.id,oo.name
-order by res.name)A
+group by inv.partner_id,res.customer_code,res.name,rt.code,inv.branch_id,inv.company_id,res.id,oo.name,ccs.name
+order by res.name,ccs.name)A
 left join
-(select count(distinct product_id) as sku_count,inv.partner_id,inv.branch_id,inv.company_id
-from account_invoice inv,account_invoice_line inl
+(select count(distinct product_id) as sku_count,inv.partner_id,inv.branch_id,inv.company_id,ccs.name as sale_team
+from account_invoice inv,account_invoice_line inl, crm_case_section ccs
 where inv.id=inl.invoice_id
+and inv.section_id=ccs.id
 and inv.state!='cancel'
 and inv.date_invoice between ? and ?
-group by inv.partner_id,inv.branch_id,inv.company_id)B on A.partner_id=B.partner_id and A.branch_id=B.branch_id and A.company_id=B.company_id]]></xml-property>
+group by inv.partner_id,inv.branch_id,inv.company_id,sale_team)B on A.partner_id=B.partner_id and A.branch_id=B.branch_id and A.company_id=B.company_id]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -942,6 +980,7 @@ and inv.date_invoice between ? and ?
                 <ref-entry baseId="40" id="110"/>
                 <ref-entry baseId="41" id="111"/>
                 <ref-entry baseId="42" id="112"/>
+                <ref-entry baseId="58" name="NewImage" id="58"/>
                 <ref-entry baseId="43" id="113"/>
                 <ref-entry baseId="59" name="NewData" id="59"/>
                 <ref-entry baseId="44" id="114"/>
@@ -956,6 +995,7 @@ and inv.date_invoice between ? and ?
             <row id="78">
                 <cell id="79">
                     <label id="87">
+                        <property name="fontFamily">"Arial"</property>
                         <property name="fontSize">12pt</property>
                         <property name="fontWeight">bold</property>
                         <property name="textAlign">center</property>
@@ -1020,7 +1060,7 @@ and inv.date_invoice between ? and ?
                                     <property name="colSpan">2</property>
                                     <property name="rowSpan">1</property>
                                     <text-data id="646">
-                                        <property name="fontFamily">sans-serif</property>
+                                        <property name="fontFamily">"Arial"</property>
                                         <property name="fontSize">12pt</property>
                                         <property name="fontWeight">bold</property>
                                         <property name="textAlign">center</property>
@@ -1032,7 +1072,7 @@ and inv.date_invoice between ? and ?
                         </footer>
                     </table>
                     <data id="788">
-                        <property name="fontFamily">sans-serif</property>
+                        <property name="fontFamily">"Arial"</property>
                         <property name="fontSize">12pt</property>
                         <property name="fontWeight">bold</property>
                         <property name="textAlign">center</property>
@@ -1052,6 +1092,7 @@ and inv.date_invoice between ? and ?
             <row id="82">
                 <cell id="83">
                     <data id="103">
+                        <property name="fontFamily">"Arial"</property>
                         <property name="fontSize">12pt</property>
                         <property name="fontWeight">bold</property>
                         <property name="textAlign">right</property>
@@ -1069,6 +1110,7 @@ and inv.date_invoice between ? and ?
             </row>
         </grid>
         <table id="675">
+            <property name="fontFamily">"Arial"</property>
             <property name="width">10.6875in</property>
             <property name="dataSet">Data Set</property>
             <list-property name="boundDataColumns">
@@ -1216,33 +1258,42 @@ and inv.date_invoice between ? and ?
                     <expression name="expression" type="javascript">dataSetRow["outlet_type"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">sale_team</property>
+                    <text-property name="displayName">sale_team</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["sale_team"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
             </list-property>
             <column id="744">
                 <property name="width">0.417in</property>
             </column>
+            <column id="799">
+                <property name="width">0.8645833333333334in</property>
+            </column>
             <column id="784">
-                <property name="width">1.6666666666666667in</property>
+                <property name="width">1.7604166666666667in</property>
             </column>
             <column id="746">
-                <property name="width">1.7395833333333333in</property>
+                <property name="width">1.625in</property>
             </column>
             <column id="793">
-                <property name="width">1.5208333333333333in</property>
+                <property name="width">1.2604166666666667in</property>
             </column>
             <column id="778">
-                <property name="width">0.75in</property>
+                <property name="width">0.875in</property>
             </column>
             <column id="747">
-                <property name="width">1.09375in</property>
+                <property name="width">1.0416666666666667in</property>
             </column>
             <column id="748">
-                <property name="width">1.1770833333333333in</property>
+                <property name="width">0.75in</property>
             </column>
             <column id="763">
-                <property name="width">1.1145833333333333in</property>
+                <property name="width">1.0416666666666667in</property>
             </column>
             <column id="752">
-                <property name="width">1.2083333333333333in</property>
+                <property name="width">1.0520833333333333in</property>
             </column>
             <header>
                 <row id="676">
@@ -1259,6 +1310,21 @@ and inv.date_invoice between ? and ?
                             <property name="fontWeight">bold</property>
                             <property name="textAlign">left</property>
                             <text-property name="text">No.</text-property>
+                        </label>
+                    </cell>
+                    <cell id="796">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="800">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">left</property>
+                            <text-property name="text">Sale Team</text-property>
                         </label>
                     </cell>
                     <cell id="781">
@@ -1399,6 +1465,19 @@ and inv.date_invoice between ? and ?
                             <property name="resultSetColumn">seq</property>
                         </data>
                     </cell>
+                    <cell id="797">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="801">
+                            <property name="resultSetColumn">sale_team</property>
+                        </data>
+                    </cell>
                     <cell id="782">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1532,7 +1611,7 @@ and inv.date_invoice between ? and ?
             <footer>
                 <row id="730">
                     <cell id="731">
-                        <property name="colSpan">5</property>
+                        <property name="colSpan">6</property>
                         <property name="rowSpan">1</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>

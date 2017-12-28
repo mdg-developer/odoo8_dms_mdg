@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
     <property name="units">in</property>
     <method name="initialize"><![CDATA[branchList = params["branch_id"].value.join(",");
 teamList = params["sales_team_id"].value.join(",");]]></method>
@@ -61,6 +61,7 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="users" id="677"
  extends="report_library.users"/>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="Data Set" id="691">
+            <property name="nullsOrdering">nulls lowest</property>
             <list-property name="columnHints">
                 <structure>
                     <property name="columnName">name</property>
@@ -250,18 +251,29 @@ else
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select mso.name,rp.name customer_name,cc.name as team,mso.customer_code,((mso.date at time zone 'utc' )at time zone 'asia/rangoon')::date date,res.login,pp.name_template,abs(price_unit) total_amt
-from mobile_sale_order mso,mobile_sale_order_line msol,res_partner rp,res_users res,product_product pp,crm_case_section cc
+            <xml-property name="queryText"><![CDATA[select ai.number as name,rp.name customer_name,cc.name as team,mso.customer_code,((mso.date at time zone 'utc' )at time zone 'asia/rangoon')::date date,res.login,pp.name_template,abs(msol.price_unit) total_amt
+from mobile_sale_order mso,mobile_sale_order_line msol,res_partner rp,res_users res,product_product pp,crm_case_section cc,sale_order so, sale_order_line sol,account_invoice ai,account_invoice_line ail
 where mso.id=msol.order_id
+and so.id=sol.order_id
+and ai.id=ail.invoice_id
+and mso.name=so.tb_ref_no
+and so.name=ai.origin
 and mso.partner_id=rp.id
+and so.partner_id=mso.partner_id
+and ai.partner_id=so.partner_id
 and mso.user_id=res.id
+and so.user_id=mso.user_id
+and ai.user_id=so.user_id
 and pp.id=msol.product_id
+and pp.id=sol.product_id
+and pp.id=ail.product_id
 and cc.id=mso.sale_team
-and price_unit<0
+and msol.price_unit<0
+and void_flag='none'
 and ((mso.date at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
 --$branch$
 --$sales_team$
-order by mso.name]]></xml-property>
+order by ai.number]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -453,6 +465,141 @@ order by mso.name]]></xml-property>
   </design:ResultSets>
 </model:DesignValues>]]></xml-property>
         </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="param_sales_team" id="880">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">string_agg</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">string_agg</text-property>
+                    <text-property name="heading">string_agg</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">from_date</property>
+                    <property name="paramName">from_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">to_date</property>
+                    <property name="paramName">to_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">2</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">string_agg</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <method name="beforeOpen"><![CDATA[if (params["sales_team_id"].value == null ){     
+   this.queryText =this.queryText.replace("--$sales_team$", "")
+}
+else
+{     
+   this.queryText =this.queryText.replace("--$sales_team$", "and section_id in ("+params["sales_team_id"].value.join(",")+")")
+}
+if (params["branch_id"].value == null ){     
+   this.queryText =this.queryText.replace("--$branch$", "")
+}
+else
+{     
+   this.queryText =this.queryText.replace("--$branch$", "and ai.branch_id in ("+params["branch_id"].value.join(",")+")")
+}]]></method>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">string_agg</property>
+                    <property name="nativeName">string_agg</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select string_agg(distinct(ccs.name), ',')
+from account_invoice ai,crm_case_section ccs
+where ai.section_id=ccs.id
+and date_invoice between ? and ?
+--$sales_team$
+--$branch$]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>2</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>string_agg</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>2147483647</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>string_agg</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>string_agg</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
     </data-sets>
     <styles>
         <style name="report" id="4">
@@ -493,10 +640,28 @@ order by mso.name]]></xml-property>
             <property name="type">us-letter</property>
             <property name="orientation">landscape</property>
             <page-footer>
-                <text id="3">
-                    <property name="contentType">html</property>
-                    <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
-                </text>
+                <grid id="709">
+                    <column id="710"/>
+                    <column id="711"/>
+                    <row id="712">
+                        <cell id="713">
+                            <text id="715">
+                                <property name="fontFamily">"Arial"</property>
+                                <property name="textAlign">left</property>
+                                <property name="contentType">html</property>
+                                <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
+                            </text>
+                        </cell>
+                        <cell id="714">
+                            <text id="716">
+                                <property name="fontFamily">"Arial"</property>
+                                <property name="textAlign">right</property>
+                                <property name="contentType">html</property>
+                                <text-property name="content"><![CDATA[<B> Page - <VALUE-OF>pageNumber</VALUE-OF> of <VALUE-OF>totalPage</VALUE-OF></B>]]></text-property>
+                            </text>
+                        </cell>
+                    </row>
+                </grid>
             </page-footer>
         </simple-master-page>
     </page-setup>
@@ -587,7 +752,7 @@ order by mso.name]]></xml-property>
                         <property name="colSpan">2</property>
                         <property name="rowSpan">1</property>
                         <text-data id="646">
-                            <property name="fontFamily">sans-serif</property>
+                            <property name="fontFamily">"Arial"</property>
                             <property name="fontSize">12pt</property>
                             <property name="fontWeight">bold</property>
                             <property name="paddingLeft">1pt</property>
@@ -599,6 +764,22 @@ order by mso.name]]></xml-property>
                 </row>
             </footer>
         </table>
+        <data id="882">
+            <property name="fontFamily">"Arial"</property>
+            <property name="fontSize">12pt</property>
+            <property name="fontWeight">bold</property>
+            <property name="textAlign">center</property>
+            <property name="dataSet">param_sales_team</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">string_agg</property>
+                    <text-property name="displayName">string_agg</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["string_agg"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <property name="resultSetColumn">string_agg</property>
+        </data>
         <data id="103">
             <property name="fontFamily">"Arial"</property>
             <property name="fontSize">12pt</property>
@@ -616,6 +797,7 @@ order by mso.name]]></xml-property>
         </data>
         <label id="21"/>
         <table id="50">
+            <property name="fontFamily">"Arial"</property>
             <property name="borderBottomStyle">none</property>
             <property name="borderLeftStyle">none</property>
             <property name="borderRightStyle">none</property>

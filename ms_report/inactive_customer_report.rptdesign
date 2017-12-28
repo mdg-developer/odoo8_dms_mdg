@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
     <property name="units">in</property>
     <method name="initialize"><![CDATA[branchList = params["branch_id"].value.join(",");
 teamList = params["sales_team_id"].value.join(",");]]></method>
@@ -504,15 +504,156 @@ order by customer_code]]></xml-property>
  extends="report_library.Sale_Team"/>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="users" id="266"
  extends="report_library.users"/>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="param_sales_team" id="683">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">string_agg</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">string_agg</text-property>
+                    <text-property name="heading">string_agg</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">from_date</property>
+                    <property name="paramName">from_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">to_date</property>
+                    <property name="paramName">to_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">2</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">string_agg</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <method name="beforeOpen"><![CDATA[this.queryText =this.queryText.replace("--$sales_team$", "and ai.section_id in ("+ params["sales_team_id"].value.join(",")+")")
+this.queryText =this.queryText.replace("--$branch_id$", "and ai.branch_id in ("+ params["branch_id"].value.join(",")+")")]]></method>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">string_agg</property>
+                    <property name="nativeName">string_agg</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select string_agg(distinct(ccs.name), ',')
+from account_invoice ai,crm_case_section ccs
+where ai.section_id=ccs.id
+and date_invoice between ? and ?
+--$sales_team$
+--$branch_id$]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>2</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>string_agg</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>2147483647</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>string_agg</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>string_agg</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
     </data-sets>
     <page-setup>
         <simple-master-page name="Simple MasterPage" id="2">
             <property name="orientation">landscape</property>
             <page-footer>
-                <text id="3">
-                    <property name="contentType">html</property>
-                    <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
-                </text>
+                <grid id="684">
+                    <column id="685"/>
+                    <column id="686"/>
+                    <row id="687">
+                        <cell id="688">
+                            <text id="690">
+                                <property name="fontFamily">"Arial"</property>
+                                <property name="textAlign">left</property>
+                                <property name="contentType">html</property>
+                                <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
+                            </text>
+                        </cell>
+                        <cell id="689">
+                            <text id="691">
+                                <property name="fontFamily">"Arial"</property>
+                                <property name="textAlign">right</property>
+                                <property name="contentType">html</property>
+                                <text-property name="content"><![CDATA[<B> Page - <VALUE-OF>pageNumber</VALUE-OF> of <VALUE-OF>totalPage</VALUE-OF></B>]]></text-property>
+                            </text>
+                        </cell>
+                    </row>
+                </grid>
             </page-footer>
         </simple-master-page>
     </page-setup>
@@ -541,6 +682,7 @@ order by customer_code]]></xml-property>
             <text-property name="text">Inactive Customer Report</text-property>
         </label>
         <table id="614">
+            <property name="fontFamily">"Arial"</property>
             <property name="width">10.46875in</property>
             <property name="dataSet">branch</property>
             <list-property name="boundDataColumns">
@@ -614,76 +756,22 @@ order by customer_code]]></xml-property>
                 </row>
             </footer>
         </table>
-        <table id="658">
-            <property name="width">10.4375in</property>
-            <property name="dataSet">Sale_Team</property>
+        <data id="682">
+            <property name="fontFamily">"Arial"</property>
+            <property name="fontSize">12pt</property>
+            <property name="fontWeight">bold</property>
+            <property name="textAlign">center</property>
+            <property name="dataSet">param_sales_team</property>
             <list-property name="boundDataColumns">
                 <structure>
-                    <property name="name">id</property>
-                    <text-property name="displayName">id</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["id"]</expression>
-                    <property name="dataType">integer</property>
-                </structure>
-                <structure>
-                    <property name="name">name</property>
-                    <text-property name="displayName">name</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["name"]</expression>
+                    <property name="name">string_agg</property>
+                    <text-property name="displayName">string_agg</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["string_agg"]</expression>
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
-            <column id="668">
-                <property name="width">5.177083333333333in</property>
-            </column>
-            <column id="669">
-                <property name="width">5.260416666666667in</property>
-            </column>
-            <header>
-                <row id="659">
-                    <cell id="660">
-                        <data id="670">
-                            <property name="fontSize">12pt</property>
-                            <property name="fontWeight">bold</property>
-                            <list-property name="visibility">
-                                <structure>
-                                    <property name="format">all</property>
-                                    <expression name="valueExpr" type="javascript">true</expression>
-                                </structure>
-                            </list-property>
-                            <property name="resultSetColumn">id</property>
-                        </data>
-                    </cell>
-                    <cell id="661">
-                        <data id="671">
-                            <property name="fontSize">12pt</property>
-                            <property name="fontWeight">bold</property>
-                            <list-property name="visibility">
-                                <structure>
-                                    <property name="format">all</property>
-                                    <expression name="valueExpr" type="javascript">true</expression>
-                                </structure>
-                            </list-property>
-                            <property name="resultSetColumn">name</property>
-                        </data>
-                    </cell>
-                </row>
-            </header>
-            <footer>
-                <row id="665">
-                    <cell id="666">
-                        <property name="colSpan">2</property>
-                        <property name="rowSpan">1</property>
-                        <text-data id="674">
-                            <property name="fontFamily">sans-serif</property>
-                            <property name="fontSize">12pt</property>
-                            <property name="fontWeight">bold</property>
-                            <property name="textAlign">center</property>
-                            <expression name="valueExpr">teamList;</expression>
-                            <property name="contentType">html</property>
-                        </text-data>
-                    </cell>
-                </row>
-            </footer>
-        </table>
+            <property name="resultSetColumn">string_agg</property>
+        </data>
         <data id="103">
             <property name="fontFamily">"Arial"</property>
             <property name="fontSize">12pt</property>
@@ -701,6 +789,7 @@ order by customer_code]]></xml-property>
         </data>
         <label id="15"/>
         <table id="16">
+            <property name="fontFamily">"Arial"</property>
             <property name="width">10.447916666666666in</property>
             <property name="dataSet">Data Set</property>
             <list-property name="boundDataColumns">

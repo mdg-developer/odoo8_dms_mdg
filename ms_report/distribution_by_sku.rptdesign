@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
     <property name="units">in</property>
     <method name="initialize"><![CDATA[branchList = params["branch_id"].value.join(",");
 teamList = params["sales_team_id"].value.join(",");]]></method>
@@ -252,13 +252,13 @@ sale AS (
 
 select *,case when target>0 then (ach::float/target::float) when target=0 then 0 end as percent_target
 from 
-(select row_number() over (order by name_template) as seq,name_template,case when sale.ach is null then 0 else sale.ach end as ach,case when target.target is null then 0 else target.target end as target
+(select row_number() over (order by sequence) as seq,name_template,case when sale.ach is null then 0 else sale.ach end as ach,case when target.target is null then 0 else target.target end as target
 from product_product pp
 left join product_template pt on (pp.product_tmpl_id=pt.id)
 left join saletarget target on (pp.id=target.product_id)
 left join sale sale on (pp.id=sale.product_id)
 where (is_foc!='true' or is_foc is null)
-)A]]></xml-property>
+and pp.active='t' and pt.type!='service')A]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -585,6 +585,7 @@ and inv.date_invoice between ? and ?
     </styles>
     <page-setup>
         <simple-master-page name="NewSimpleMasterPage" id="45" extends="report_library.NewSimpleMasterPage">
+            <property name="type">us-letter</property>
             <overridden-values>
                 <ref-entry baseId="37" name="NewGrid" id="46"/>
                 <ref-entry baseId="38" id="47"/>
@@ -592,11 +593,20 @@ and inv.date_invoice between ? and ?
                 <ref-entry baseId="40" id="49"/>
                 <ref-entry baseId="41" id="50"/>
                 <ref-entry baseId="42" id="51"/>
+                <ref-entry baseId="58" name="NewImage" id="58"/>
                 <ref-entry baseId="43" id="59"/>
                 <ref-entry baseId="59" name="NewData" id="60"/>
                 <ref-entry baseId="44" id="61"/>
                 <ref-entry baseId="45" id="62"/>
                 <ref-entry baseId="48" id="63"/>
+                <ref-entry baseId="136" name="NewGrid1" id="136"/>
+                <ref-entry baseId="137" id="137"/>
+                <ref-entry baseId="138" id="138"/>
+                <ref-entry baseId="139" id="139"/>
+                <ref-entry baseId="140" id="140"/>
+                <ref-entry baseId="142" name="NewText" id="142"/>
+                <ref-entry baseId="141" id="141"/>
+                <ref-entry baseId="143" name="NewText1" id="143"/>
             </overridden-values>
         </simple-master-page>
     </page-setup>
@@ -606,6 +616,7 @@ and inv.date_invoice between ? and ?
             <row id="96">
                 <cell id="97">
                     <label id="108">
+                        <property name="fontFamily">"Arial"</property>
                         <property name="fontSize">12pt</property>
                         <property name="fontWeight">bold</property>
                         <property name="textAlign">center</property>
@@ -674,7 +685,7 @@ and inv.date_invoice between ? and ?
                                     <property name="colSpan">2</property>
                                     <property name="rowSpan">1</property>
                                     <text-data id="646">
-                                        <property name="fontFamily">sans-serif</property>
+                                        <property name="fontFamily">"Arial"</property>
                                         <property name="fontSize">12pt</property>
                                         <property name="fontWeight">bold</property>
                                         <property name="textAlign">center</property>
@@ -690,6 +701,7 @@ and inv.date_invoice between ? and ?
             <row id="98">
                 <cell id="99">
                     <data id="677">
+                        <property name="fontFamily">"Arial"</property>
                         <property name="fontSize">12pt</property>
                         <property name="fontWeight">bold</property>
                         <property name="textAlign">center</property>
@@ -709,6 +721,7 @@ and inv.date_invoice between ? and ?
             <row id="100">
                 <cell id="101">
                     <data id="103">
+                        <property name="fontFamily">"Arial"</property>
                         <property name="fontSize">12pt</property>
                         <property name="fontWeight">bold</property>
                         <property name="textAlign">right</property>
@@ -726,6 +739,7 @@ and inv.date_invoice between ? and ?
             </row>
         </grid>
         <table id="14">
+            <property name="fontFamily">"Arial"</property>
             <property name="borderBottomStyle">none</property>
             <property name="borderLeftStyle">none</property>
             <property name="borderRightStyle">none</property>

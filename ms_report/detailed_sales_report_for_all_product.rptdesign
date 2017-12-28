@@ -622,7 +622,8 @@ else
 	pp.name_template,0 as uos_id,0 as uom_id,0 as big_uom_id,round(0,0) as product_quantity,'Sales Qty'::text as status,pp.sequence as seq
 	from product_product pp left outer join crm_case_section_product_product_rel ccsppl on pp.id=ccsppl.product_product_id
 	inner join crm_case_section ccs on ccs.id=ccsppl.crm_case_section_id
-	where pp.sequence !=0
+	inner join product_template pt on pt.id=pp.product_tmpl_id
+	where pt.type != 'service'
 	order by seq),
 foc_qty as (
 	select rp.id customer_id,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,product_id,name_template,ail.uos_id,pt.uom_id,pt.big_uom_id,
@@ -1713,10 +1714,28 @@ and date_invoice between ? and ?
         <simple-master-page name="Simple MasterPage" id="2">
             <property name="orientation">auto</property>
             <page-footer>
-                <text id="3">
-                    <property name="contentType">html</property>
-                    <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
-                </text>
+                <grid id="883">
+                    <column id="884"/>
+                    <column id="885"/>
+                    <row id="886">
+                        <cell id="887">
+                            <text id="889">
+                                <property name="fontFamily">"Arial"</property>
+                                <property name="textAlign">left</property>
+                                <property name="contentType">html</property>
+                                <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
+                            </text>
+                        </cell>
+                        <cell id="888">
+                            <text id="890">
+                                <property name="fontFamily">"Arial"</property>
+                                <property name="textAlign">right</property>
+                                <property name="contentType">html</property>
+                                <text-property name="content"><![CDATA[<B> Page - <VALUE-OF>pageNumber</VALUE-OF> of <VALUE-OF>totalPage</VALUE-OF></B>]]></text-property>
+                            </text>
+                        </cell>
+                    </row>
+                </grid>
             </page-footer>
         </simple-master-page>
     </page-setup>
