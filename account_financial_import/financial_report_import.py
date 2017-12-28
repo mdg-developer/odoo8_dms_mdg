@@ -195,7 +195,7 @@ class account_report(osv.osv):
                     company = fr_name = sequence = type = coa_name = parent = sign = report_style = account_code = display_type = analytic_code = parent_id = None
                     count = acc_count = 0
                     parent_report_val = report_val = {}
-                    company_id = None
+                    company_id = analytic_id = None
                     # some font type is Unicode so I use UTF-8 encoding
                     
                     try:
