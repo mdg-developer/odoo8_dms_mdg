@@ -129,6 +129,7 @@ class account_invoice(models.Model):
                 'date': inv.date_invoice,
                 'narration': inv.comment,
                 'company_id': inv.company_id.id,
+                'branch_id': inv.branch_id.id,
                 'account_analytic_id': analytic_row,
             }
             ctx['company_id'] = inv.company_id.id
@@ -144,7 +145,7 @@ class account_invoice(models.Model):
             ctx_nolang = ctx.copy()
             ctx_nolang.pop('lang', None)
             move = account_move.with_context(ctx_nolang).create(move_vals)
-
+            self.env.cr.execute('update account_move_line set branch_id=%s where move_id =%s ', (inv.branch_id.id ,move.id,))
             # make the invoice point to that move
             vals = {
                 'move_id': move.id,
