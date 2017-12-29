@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="bidiLayoutOrientation">ltr</property>
@@ -37,16 +37,16 @@
             </structure>
         </scalar-parameter>
         <cascading-parameter-group name="NewCascadingParameterGroup" id="121">
-            <property name="dataSet">company</property>
-            <property name="dataSetMode">multiple</property>
+            <property name="dataSet">all_ds</property>
+            <property name="dataSetMode">single</property>
             <parameters>
                 <scalar-parameter name="company_id" id="122">
                     <text-property name="promptText">Company</text-property>
                     <property name="valueType">dynamic</property>
                     <property name="isRequired">true</property>
-                    <property name="dataSetName">company</property>
-                    <expression name="valueExpr">row["id"]</expression>
-                    <expression name="labelExpr">row["name"]</expression>
+                    <property name="dataSetName">all_ds</property>
+                    <expression name="valueExpr">row["company_id"]</expression>
+                    <expression name="labelExpr">row["company_name"]</expression>
                     <property name="dataType">integer</property>
                     <property name="paramType">simple</property>
                     <property name="controlType">list-box</property>
@@ -56,8 +56,8 @@
                 <scalar-parameter name="branch_id" id="123">
                     <text-property name="promptText">Branch</text-property>
                     <property name="valueType">dynamic</property>
-                    <property name="isRequired">false</property>
-                    <property name="dataSetName">all_ds</property>
+                    <property name="isRequired">true</property>
+                    <property name="dataSetName">company</property>
                     <expression name="valueExpr">row["branch_id"]</expression>
                     <expression name="labelExpr">row["branch_code"]</expression>
                     <property name="dataType">integer</property>
@@ -69,8 +69,8 @@
                 <scalar-parameter name="sales_team_id" id="124">
                     <text-property name="promptText">Sales Team</text-property>
                     <property name="valueType">dynamic</property>
-                    <property name="isRequired">false</property>
-                    <property name="dataSetName">all_ds</property>
+                    <property name="isRequired">true</property>
+                    <property name="dataSetName">company</property>
                     <expression name="valueExpr">row["sale_team_id"]</expression>
                     <expression name="labelExpr">row["sale_team_code"]</expression>
                     <property name="dataType">integer</property>
@@ -83,7 +83,7 @@
                     <text-property name="promptText">Customer</text-property>
                     <property name="valueType">dynamic</property>
                     <property name="isRequired">false</property>
-                    <property name="dataSetName">all_ds</property>
+                    <property name="dataSetName">company</property>
                     <expression name="valueExpr">row["customer_id"]</expression>
                     <expression name="labelExpr">row["customer_name"]</expression>
                     <property name="dataType">integer</property>
@@ -272,26 +272,6 @@
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
-                <structure>
-                    <property name="name">param_4</property>
-                    <property name="paramName">from_date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">4</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_5</property>
-                    <property name="paramName">to_date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">5</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
             </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
@@ -380,6 +360,7 @@ else
 {     
    this.queryText =this.queryText.replace("--$customer_id$", "and inv.partner_id="+params["customer_id"])
 }
+
 ]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
@@ -470,19 +451,9 @@ else
 	where aa.type='receivable'
 	and reconcile_id is null	
 	and am.date<?
-	group by rp.name,customer_id),
-	sales_return as (
-	select COALESCE(sum(ai.amount_total),0)return_amt,ai.partner_id  from 
-	account_invoice ai,account_invoice_line ail,account_journal aj,res_partner rp
-	where ai.id=ail.invoice_id and ai.journal_id=aj.id and ai.partner_id=rp.id
-	and aj.name='Sale Return Journal' 
-	and ai.type='out_refund'
-	and date_invoice between ? and ?
-	group by ai.partner_id
-	)
-
+	group by rp.name,customer_id)
 select null::character varying as type,trim(rp.name) customer_name,rp.id customer_id,'Opening Balance'::character varying ref_no,null::date date,null::numeric inv,null::numeric collection,
-case when (select return_amt from sales_return where partner_id=rp.id) is null then 0 else (select return_amt from sales_return where partner_id=rp.id) end as cn,null::numeric discount,
+null::numeric cn,null::numeric discount,
 case when (select closing_balance from receivable_amount where customer_id=rp.id) is null then 0 else (select closing_balance from receivable_amount where customer_id=rp.id) end as closing_balance,1 as sequence
 from res_partner rp
 left join account_move_line aml on (rp.id=aml.partner_id)
@@ -492,6 +463,10 @@ join account_invoice inv on (rp.id=inv.partner_id)
 where rp.active='true'
 and rp.customer='true'
 and payment_type='credit'
+--$company_id$
+--$branch_id$
+--$sales_team_id$
+--$customer_id$
 group by rp.name,rp.id
 
 union
@@ -509,12 +484,14 @@ and ai.number=inv.number
 and av.state not in ('draft','cancel')
 and av.type='receipt'
 and payment_type='credit') collection,
-(select COALESCE(sum(ai.amount_total),0)return_amt  from 
-account_invoice ai,account_invoice_line ail,account_journal aj
-where ai.id=ail.invoice_id and ai.journal_id=aj.id and ai.number=inv.number
+(select COALESCE(sum(ai.amount_total),0)return_amt from 
+account_invoice ai,account_journal aj 
+where ai.journal_id=aj.id 
 and aj.name='Sale Return Journal' 
 and ai.type='out_refund'
-) cn,
+and ai.number=inv.number
+and ai.state not in ('draft','cancel')
+and date_invoice between '2017-12-29' and '2017-12-29')cn,
 (select COALESCE((sum(amount_untaxed)+sum(discount_total))-sum(amount_total)-sum(amount_tax),0)
 from account_invoice
 where number=inv.number
@@ -573,36 +550,6 @@ order by sequence]]></xml-property>
           <design:identifier>
             <design:name></design:name>
             <design:position>3</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>4</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>5</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
@@ -903,18 +850,7 @@ order by sequence]]></xml-property>
                     <text-property name="heading">customer_name</text-property>
                 </structure>
             </list-property>
-            <list-property name="parameters">
-                <structure>
-                    <property name="name">param_1</property>
-                    <property name="paramName">company_id</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                    <property name="position">1</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-            </list-property>
+            <list-property name="parameters"/>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
                     <structure>
@@ -1018,35 +954,21 @@ order by sequence]]></xml-property>
                     <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select rc.id company_id,rc.name company_name,rb.id branch_id,rb.branch_code,ccs.id sale_team_id,ccs.code sale_team_code,rp.id customer_id,rp.name customer_name from 
-res_company rc,crm_case_section ccs,res_partner rp,res_branch rb
-where rc.id=rb.res_company_id and ccs.branch_id=rb.id and rp.branch_id=rb.id and rp.company_id=rc.id
-and rp.customer='true'
-and rp.active='true'
-and ccs.active='true'
-and rb.active='true'
-and rc.id=?
-order by rc.id,rb.id,ccs.id,rp.id]]></xml-property>
+            <xml-property name="queryText"><![CDATA[select rc.id company_id,rc.name company_name,rb.id branch_id,
+rb.branch_code,ccs.id sale_team_id,ccs.code sale_team_code,
+rp.id customer_id,rp.name customer_name
+from res_company rc
+left join res_branch rb on rc.id=rb.res_company_id
+left join crm_case_section ccs on ccs.branch_id=rb.id 
+left join sale_team_customer_rel rel on rel.sale_team_id=ccs.id 
+left join res_partner rp on rp.id=rel.partner_id
+where rp.customer=true
+and rp.active=true
+and ccs.active=true
+order by rp.name]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
-  <DataSetParameters>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>1</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-  </DataSetParameters>
   <design:ResultSets derivedMetaData="true">
     <design:resultSetDefinitions>
       <design:resultSetColumns>
@@ -1229,9 +1151,11 @@ order by rc.id,rb.id,ccs.id,rp.id]]></xml-property>
     </data-sets>
     <page-setup>
         <simple-master-page name="Simple MasterPage" id="2">
-            <property name="type">us-ledger</property>
+            <property name="type">a4</property>
+            <property name="orientation">landscape</property>
             <page-footer>
                 <text id="3">
+                    <property name="fontSize">9pt</property>
                     <property name="contentType">html</property>
                     <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
                 </text>
@@ -1248,7 +1172,7 @@ order by rc.id,rb.id,ccs.id,rp.id]]></xml-property>
         </label>
         <data id="17">
             <property name="fontFamily">sans-serif</property>
-            <property name="fontSize">10pt</property>
+            <property name="fontSize">9pt</property>
             <property name="fontWeight">bold</property>
             <property name="textAlign">center</property>
             <property name="dataSet">param_from_to_date</property>
@@ -1295,7 +1219,7 @@ order by rc.id,rb.id,ccs.id,rp.id]]></xml-property>
                 <cell id="301">
                     <data id="12">
                         <property name="fontFamily">sans-serif</property>
-                        <property name="fontSize">10pt</property>
+                        <property name="fontSize">9pt</property>
                         <property name="fontWeight">normal</property>
                         <property name="paddingLeft">2pt</property>
                         <property name="textAlign">left</property>
@@ -1332,7 +1256,7 @@ order by rc.id,rb.id,ccs.id,rp.id]]></xml-property>
                 <cell id="305">
                     <data id="314">
                         <property name="fontFamily">sans-serif</property>
-                        <property name="fontSize">10pt</property>
+                        <property name="fontSize">9pt</property>
                         <property name="fontWeight">normal</property>
                         <property name="paddingLeft">2pt</property>
                         <property name="textAlign">left</property>
@@ -1375,7 +1299,7 @@ params["branch_id"].displayText&#13;
                 <cell id="317">
                     <data id="321">
                         <property name="fontFamily">sans-serif</property>
-                        <property name="fontSize">10pt</property>
+                        <property name="fontSize">9pt</property>
                         <property name="fontWeight">normal</property>
                         <property name="paddingLeft">2pt</property>
                         <property name="textAlign">left</property>
@@ -1626,6 +1550,7 @@ sales_team+'Customer Ledger('+Formatter.format(params["from_date"],'dd.MM.yy')+'
                         <property name="borderTopWidth">thin</property>
                         <label id="55">
                             <property name="fontFamily">sans-serif</property>
+                            <property name="fontSize">9pt</property>
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Type</text-property>
                         </label>
@@ -1642,6 +1567,7 @@ sales_team+'Customer Ledger('+Formatter.format(params["from_date"],'dd.MM.yy')+'
                         <property name="borderTopWidth">thin</property>
                         <label id="56">
                             <property name="fontFamily">sans-serif</property>
+                            <property name="fontSize">9pt</property>
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Ref.No.</text-property>
                         </label>
@@ -1658,6 +1584,7 @@ sales_team+'Customer Ledger('+Formatter.format(params["from_date"],'dd.MM.yy')+'
                         <property name="borderTopWidth">thin</property>
                         <label id="57">
                             <property name="fontFamily">sans-serif</property>
+                            <property name="fontSize">9pt</property>
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Date</text-property>
                         </label>
@@ -1674,6 +1601,7 @@ sales_team+'Customer Ledger('+Formatter.format(params["from_date"],'dd.MM.yy')+'
                         <property name="borderTopWidth">thin</property>
                         <label id="58">
                             <property name="fontFamily">sans-serif</property>
+                            <property name="fontSize">9pt</property>
                             <property name="fontWeight">bold</property>
                             <text-property name="text">INV</text-property>
                         </label>
@@ -1690,6 +1618,7 @@ sales_team+'Customer Ledger('+Formatter.format(params["from_date"],'dd.MM.yy')+'
                         <property name="borderTopWidth">thin</property>
                         <label id="59">
                             <property name="fontFamily">sans-serif</property>
+                            <property name="fontSize">9pt</property>
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Collection</text-property>
                         </label>
@@ -1706,6 +1635,7 @@ sales_team+'Customer Ledger('+Formatter.format(params["from_date"],'dd.MM.yy')+'
                         <property name="borderTopWidth">thin</property>
                         <label id="60">
                             <property name="fontFamily">sans-serif</property>
+                            <property name="fontSize">9pt</property>
                             <property name="fontWeight">bold</property>
                             <text-property name="text">CN</text-property>
                         </label>
@@ -1722,6 +1652,7 @@ sales_team+'Customer Ledger('+Formatter.format(params["from_date"],'dd.MM.yy')+'
                         <property name="borderTopWidth">thin</property>
                         <label id="61">
                             <property name="fontFamily">sans-serif</property>
+                            <property name="fontSize">9pt</property>
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Discount</text-property>
                         </label>
@@ -1738,6 +1669,7 @@ sales_team+'Customer Ledger('+Formatter.format(params["from_date"],'dd.MM.yy')+'
                         <property name="borderTopWidth">thin</property>
                         <label id="62">
                             <property name="fontFamily">sans-serif</property>
+                            <property name="fontSize">9pt</property>
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Closing Balance</text-property>
                         </label>

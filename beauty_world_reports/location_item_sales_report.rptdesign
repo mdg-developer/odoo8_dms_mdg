@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="bidiLayoutOrientation">ltr</property>
@@ -71,12 +71,12 @@
                 <scalar-parameter name="sales_team_id" id="315">
                     <text-property name="promptText">Sales Team</text-property>
                     <property name="valueType">dynamic</property>
-                    <property name="isRequired">true</property>
+                    <property name="isRequired">false</property>
                     <property name="dataSetName">company</property>
                     <expression name="valueExpr">row["sale_team_id"]</expression>
                     <expression name="labelExpr">row["sale_team_code"]</expression>
                     <property name="dataType">integer</property>
-                    <property name="paramType">multi-value</property>
+                    <property name="paramType">simple</property>
                     <property name="controlType">list-box</property>
                     <property name="fixedOrder">true</property>
                     <structure name="format"/>
@@ -384,7 +384,7 @@ this.queryText =this.queryText.replace("--$saleteam$", "")
 }
 else
 {
-this.queryText = this.queryText.replace("--$saleteam$", "and so.section_id in (" + params["sales_team_id"].value.join(",") + ")" );
+this.queryText = this.queryText.replace("--$saleteam$", "and so.section_id =" + params["sales_team_id"]);
 }
 if (params["company_id"].value == null ){     
    this.queryText =this.queryText.replace("--$company_id$", "")

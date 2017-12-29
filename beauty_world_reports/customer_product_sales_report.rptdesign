@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="bidiLayoutOrientation">ltr</property>
@@ -56,7 +56,7 @@
                 <scalar-parameter name="branch_id" id="218">
                     <text-property name="promptText">Branch</text-property>
                     <property name="valueType">dynamic</property>
-                    <property name="isRequired">false</property>
+                    <property name="isRequired">true</property>
                     <property name="dataSetName">company</property>
                     <expression name="valueExpr">row["branch_id"]</expression>
                     <expression name="labelExpr">row["branch_code"]</expression>
@@ -83,14 +83,8 @@
         </cascading-parameter-group>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="118"
- extends="report_library.Data Source">
-            <property name="odaDriverClass">org.postgresql.Driver</property>
-            <property name="odaURL">jdbc:postgresql://localhost:5432/BW_5Dec</property>
-            <property name="odaUser">openerp</property>
-            <encrypted-property name="odaPassword" encryptionID="base64">b3BlbnBncHdk</encrypted-property>
-            <property name="odaJndiName">java:comp/env/jdbc/ReportDB</property>
-        </oda-data-source>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="253"
+ extends="report_library.Data Source"/>
     </data-sources>
     <data-sets>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="param_from_to_date" id="13">
@@ -170,7 +164,7 @@
             <list-property name="computedColumns">
                 <structure>
                     <property name="name">net</property>
-                    <expression name="expression">row["credit_sales"] + row["cash_sales"] - row["return"]</expression>
+                    <expression name="expression">row["credit_sales"] + row["cash_sales"] - row["return_amt"]</expression>
                     <property name="dataType">decimal</property>
                 </structure>
                 <structure>
@@ -223,10 +217,10 @@
                     <text-property name="heading">cash_sales</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">return</property>
+                    <property name="columnName">return_amt</property>
                     <property name="analysis">measure</property>
-                    <text-property name="displayName">return</text-property>
-                    <text-property name="heading">return</text-property>
+                    <text-property name="displayName">return_amt</text-property>
+                    <text-property name="heading">return_amt</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">customer_name</property>
@@ -356,7 +350,7 @@
                     </structure>
                     <structure>
                         <property name="position">8</property>
-                        <property name="name">return</property>
+                        <property name="name">return_amt</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
@@ -379,11 +373,24 @@
             <method name="beforeOpen"><![CDATA[if (params["customer_id"].value == null )
 {
 this.queryText =this.queryText.replace("--$customers$", "")
+this.queryText =this.queryText.replace("--$customerss$", "")
 }
 else
 {
-this.queryText = this.queryText.replace("--$customers$", "and so.partner_id in (" + params["customer_id"].value.join(",") + ")" );
-};]]></method>
+this.queryText = this.queryText.replace("--$customers$", "and so.partner_id = " + params["customer_id"]);
+this.queryText = this.queryText.replace("--$customerss$", "and ai.partner_id = " + params["customer_id"]);
+}
+
+if (params["branch_id"].value == null )
+{
+this.queryText =this.queryText.replace("--$branch$", "")
+this.queryText =this.queryText.replace("--$branchs$", "")
+}
+else
+{
+this.queryText = this.queryText.replace("--$branch$", "and so.branch_id = " + params["branch_id"]);
+this.queryText = this.queryText.replace("--$branchs$", "and ai.branch_id = " + params["branch_id"]);
+}]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
                 <structure>
@@ -437,8 +444,8 @@ this.queryText = this.queryText.replace("--$customers$", "and so.partner_id in (
                 </structure>
                 <structure>
                     <property name="position">8</property>
-                    <property name="name">return</property>
-                    <property name="nativeName">return</property>
+                    <property name="name">return_amt</property>
+                    <property name="nativeName">return_amt</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
@@ -450,15 +457,14 @@ this.queryText = this.queryText.replace("--$customers$", "and so.partner_id in (
                     <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[Select a.pid,a.name_template,a.default_code, COALESCE(sum(a.qty_sold),0) qty_sold, COALESCE(sum(a.foc_qty_sold),0) foc_qty_sold,
-COALESCE(sum(a.credit_sales),0)credit_sales, COALESCE(sum(a.cash_sales),0)cash_sales, COALESCE(sum(a.return_qty),0)return,a.customer_name 
-From (with qty_sold as (
+            <xml-property name="queryText"><![CDATA[with qty_sold as (
 	select COALESCE(sum(product_uom_qty),0) qty_sold,product_id,
 	payment_type,rp.name customer_name,so.partner_id customer_id
 	from sale_order so,sale_order_line line , res_partner rp
 	where so.id=line.order_id and rp.id=so.partner_id 	
 	and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
 	--$customers$
+	--$branch$
 	group by product_id,payment_type,rp.name,so.partner_id
 	),
 foc_qty_sold as (
@@ -469,38 +475,49 @@ foc_qty_sold as (
 	and sale_foc='true' 	
 	and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
 	--$customers$
+	--$branch$
 	group by product_id,payment_type,rp.name,so.partner_id
 	),
-return_qty as (select ail.product_id,ai.section_id,COALESCE(sum(ai.amount_total),0)return_qty  from 
+return_tbl as (select ail.product_id,ai.section_id,COALESCE(sum(ai.amount_total),0)return_amt  from 
 		account_invoice ai,account_invoice_line ail,account_journal aj
 		where ai.id=ail.invoice_id and ai.journal_id=aj.id
 		and aj.name='Sale Return Journal' 
 		and ai.type='out_refund' 
+		--$customerss$
+		--$branchs$
 		and date_invoice::date between ? and ?
 		group by ail.product_id,ai.section_id)
 
 select distinct pp.id pid,name_template,default_code,
-greatest(0,qty_sold.qty_sold) qty_sold, greatest(0,foc_qty_sold.foc_qty_sold) foc_qty_sold,
-case when sales_record.payment_type='credit' then greatest(0,sales_record.sales) end as credit_sales,
-case when sales_record.payment_type='cash' then greatest(0,sales_record.sales) end as cash_sales,
-greatest(0,return_qty.return_qty) return_qty,
+COALESCE(sum(qty_sold.qty_sold),0)qty_sold,
+COALESCE(sum(foc_qty_sold.foc_qty_sold),0)foc_qty_sold,
+sales_record.credit_sales as credit_sales,
+sales_record.cash_sales as cash_sales,
+COALESCE(return_tbl.return_amt,0)return_amt,
 sales_record.customer_name
-from (select COALESCE(sum((product_uom_qty*price_unit)-discount_amt),0) sales,product_id,
-payment_type,rp.name customer_name,so.partner_id customer_id
-from sale_order so,sale_order_line line, res_partner rp
-where so.id=line.order_id and rp.id=so.partner_id 
-and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
-and rp.active='true'
---$customers$
-group by product_id,payment_type,rp.name,so.partner_id
-) sales_record
+
+from (select a.product_id,a.customer_id,a.customer_name,sum(a.credit_sales)credit_sales,sum(a.cash_sales)cash_sales 
+	from (select product_id,payment_type,rp.name customer_name,so.partner_id customer_id,
+	case when payment_type='credit' then COALESCE(sum((product_uom_qty*price_unit)-discount_amt),0) end as credit_sales,
+	case when payment_type='cash' then COALESCE(sum((product_uom_qty*price_unit)-discount_amt),0) end as cash_sales
+	from sale_order so,sale_order_line line, res_partner rp
+	where so.id=line.order_id and rp.id=so.partner_id 
+	and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+	and rp.active='true'
+	--$customers$
+	--$branch$
+	group by product_id,payment_type,rp.name,so.partner_id
+	) a
+	group by a.product_id,a.customer_id,a.customer_name
+	) sales_record
 inner join product_product pp on pp.id=sales_record.product_id 
 inner join product_template pt on pt.id=pp.product_tmpl_id  
 left join qty_sold on qty_sold.product_id=pp.id
 left join foc_qty_sold on foc_qty_sold.product_id=pp.id
-left join return_qty on return_qty.product_id=sales_record.product_id
+left join return_tbl on return_tbl.product_id=sales_record.product_id
 where pp.active='true'
-order by pp.id)a group by a.pid,a.name_template,a.default_code,a.customer_name]]></xml-property>
+group by  pp.id,name_template,default_code,sales_record.customer_name,cash_sales,credit_sales,return_tbl.return_amt
+order by pp.id]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -1387,8 +1404,9 @@ order by rc.id,rb.id]]></xml-property>
                 <structure>
                     <property name="name">return</property>
                     <text-property name="displayName">return</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["return"]</expression>
+                    <expression name="expression" type="javascript">dataSetRow["return_amt"]</expression>
                     <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
                 </structure>
                 <structure>
                     <property name="name">customer_name</property>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
     <list-property name="propertyBindings">
         <structure>
             <property name="name">queryText</property>
@@ -70,7 +70,7 @@
                 <scalar-parameter name="branch_id" id="329">
                     <text-property name="promptText">Branch</text-property>
                     <property name="valueType">dynamic</property>
-                    <property name="isRequired">false</property>
+                    <property name="isRequired">true</property>
                     <property name="dataSetName">branch_DS</property>
                     <expression name="valueExpr">row["branch_id"]</expression>
                     <expression name="labelExpr">row["branch_code"]</expression>
@@ -83,7 +83,7 @@
                 <scalar-parameter name="sales_team_id" id="338">
                     <text-property name="promptText">Sales Team</text-property>
                     <property name="valueType">dynamic</property>
-                    <property name="isRequired">false</property>
+                    <property name="isRequired">true</property>
                     <property name="dataSetName">branch_DS</property>
                     <expression name="valueExpr">row["sale_team_id"]</expression>
                     <expression name="labelExpr">row["sale_team_code"]</expression>
@@ -109,14 +109,8 @@
         </cascading-parameter-group>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="78"
- extends="report_library.Data Source">
-            <property name="odaDriverClass">org.postgresql.Driver</property>
-            <property name="odaURL">jdbc:postgresql://localhost:5432/BW_5Dec</property>
-            <property name="odaUser">openerp</property>
-            <encrypted-property name="odaPassword" encryptionID="base64">b3BlbnBncHdk</encrypted-property>
-            <property name="odaJndiName">java:comp/env/jdbc/ReportDB</property>
-        </oda-data-source>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="340"
+ extends="report_library.Data Source"/>
     </data-sources>
     <data-sets>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="Data Set" id="77">
@@ -1007,10 +1001,12 @@ rp.id customer_id,rp.name customer_name
 from res_company rc
 left join res_branch rb on rc.id=rb.res_company_id
 left join crm_case_section ccs on ccs.branch_id=rb.id 
-left join res_partner rp on rp.branch_id=rb.id 
+left join sale_team_customer_rel rel on rel.sale_team_id=ccs.id 
+left join res_partner rp on rp.id=rel.partner_id
 where rp.customer=true
 and rp.active=true
-order by rc.id,rb.id,ccs.id]]></xml-property>
+and ccs.active=true
+order by rp.name]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -1173,12 +1169,13 @@ and active=true]]></xml-property>
     </data-sets>
     <page-setup>
         <simple-master-page name="Simple MasterPage" id="2">
-            <property name="type">custom</property>
-            <property name="orientation">auto</property>
+            <property name="type">a4</property>
+            <property name="orientation">landscape</property>
             <property name="height">17in</property>
             <property name="width">12in</property>
             <page-footer>
                 <text id="3">
+                    <property name="fontSize">8pt</property>
                     <property name="contentType">html</property>
                     <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
                 </text>
@@ -1195,7 +1192,7 @@ and active=true]]></xml-property>
         </label>
         <data id="128">
             <property name="fontFamily">sans-serif</property>
-            <property name="fontSize">10pt</property>
+            <property name="fontSize">9pt</property>
             <property name="fontWeight">bold</property>
             <property name="textAlign">center</property>
             <property name="dataSet">param_from_to_date</property>
@@ -1242,7 +1239,7 @@ and active=true]]></xml-property>
                 <cell id="301">
                     <data id="12">
                         <property name="fontFamily">sans-serif</property>
-                        <property name="fontSize">10pt</property>
+                        <property name="fontSize">9pt</property>
                         <property name="fontWeight">normal</property>
                         <property name="paddingLeft">2pt</property>
                         <property name="textAlign">left</property>
@@ -1279,7 +1276,7 @@ and active=true]]></xml-property>
                 <cell id="305">
                     <data id="96">
                         <property name="fontFamily">sans-serif</property>
-                        <property name="fontSize">10pt</property>
+                        <property name="fontSize">9pt</property>
                         <property name="fontWeight">normal</property>
                         <property name="paddingLeft">2pt</property>
                         <property name="textAlign">left</property>
@@ -1322,7 +1319,7 @@ params["branch_id"].displayText&#13;
                 <cell id="317">
                     <data id="13">
                         <property name="fontFamily">sans-serif</property>
-                        <property name="fontSize">10pt</property>
+                        <property name="fontSize">9pt</property>
                         <property name="fontWeight">normal</property>
                         <property name="paddingLeft">2pt</property>
                         <property name="textAlign">left</property>
@@ -1457,7 +1454,7 @@ dataSetRow["discount"]&#13;
                     <list-property name="arguments">
                         <structure>
                             <property name="name">Expression</property>
-                            <expression name="value" type="javascript">row["discount"]</expression>
+                            <expression name="value" type="javascript">dataSetRow["sales_return"]</expression>
                         </structure>
                     </list-property>
                     <property name="allowExport">true</property>
@@ -1537,8 +1534,10 @@ dataSetRow["discount"]&#13;
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <property name="verticalAlign">middle</property>
                         <label id="63">
                             <property name="fontFamily">sans-serif</property>
+                            <property name="fontSize">9pt</property>
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Sr</text-property>
                         </label>
@@ -1552,8 +1551,10 @@ dataSetRow["discount"]&#13;
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <property name="verticalAlign">middle</property>
                         <label id="64">
                             <property name="fontFamily">sans-serif</property>
+                            <property name="fontSize">9pt</property>
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Customer Name</text-property>
                         </label>
@@ -1567,8 +1568,10 @@ dataSetRow["discount"]&#13;
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <property name="verticalAlign">middle</property>
                         <label id="106">
                             <property name="fontFamily">sans-serif</property>
+                            <property name="fontSize">9pt</property>
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Limit</text-property>
                         </label>
@@ -1582,8 +1585,10 @@ dataSetRow["discount"]&#13;
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <property name="verticalAlign">middle</property>
                         <data id="74">
                             <property name="fontFamily">sans-serif</property>
+                            <property name="fontSize">9pt</property>
                             <property name="fontWeight">bold</property>
                             <list-property name="boundDataColumns">
                                 <structure>
@@ -1605,8 +1610,10 @@ dataSetRow["discount"]&#13;
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <property name="verticalAlign">middle</property>
                         <label id="66">
                             <property name="fontFamily">sans-serif</property>
+                            <property name="fontSize">9pt</property>
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Credit Sale Amount</text-property>
                         </label>
@@ -1620,8 +1627,10 @@ dataSetRow["discount"]&#13;
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <property name="verticalAlign">middle</property>
                         <label id="67">
                             <property name="fontFamily">sans-serif</property>
+                            <property name="fontSize">9pt</property>
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Credit Collection Amount</text-property>
                         </label>
@@ -1635,8 +1644,10 @@ dataSetRow["discount"]&#13;
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <property name="verticalAlign">middle</property>
                         <label id="68">
                             <property name="fontFamily">sans-serif</property>
+                            <property name="fontSize">9pt</property>
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Discount</text-property>
                         </label>
@@ -1650,8 +1661,10 @@ dataSetRow["discount"]&#13;
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <property name="verticalAlign">middle</property>
                         <label id="69">
                             <property name="fontFamily">sans-serif</property>
+                            <property name="fontSize">9pt</property>
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Sale Return</text-property>
                         </label>
@@ -1665,8 +1678,10 @@ dataSetRow["discount"]&#13;
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <property name="verticalAlign">middle</property>
                         <label id="70">
                             <property name="fontFamily">sans-serif</property>
+                            <property name="fontSize">9pt</property>
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Transport Charges</text-property>
                         </label>
@@ -1680,8 +1695,10 @@ dataSetRow["discount"]&#13;
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <property name="verticalAlign">middle</property>
                         <data id="76">
                             <property name="fontFamily">sans-serif</property>
+                            <property name="fontSize">9pt</property>
                             <property name="fontWeight">bold</property>
                             <list-property name="boundDataColumns">
                                 <structure>
@@ -1703,8 +1720,10 @@ dataSetRow["discount"]&#13;
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <property name="verticalAlign">middle</property>
                         <label id="71">
                             <property name="fontFamily">sans-serif</property>
+                            <property name="fontSize">9pt</property>
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Remark</text-property>
                         </label>
