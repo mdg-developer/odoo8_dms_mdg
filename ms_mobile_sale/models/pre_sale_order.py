@@ -70,6 +70,7 @@ class pre_sale_order(osv.osv):
                 ('none', 'Unvoid')
             ], 'Void'),
       'is_convert':fields.boolean('Is Convert',readonly=True),
+      'print_count':fields.integer('RePrint Count'),
     }
     _order = 'id desc'
     _defaults = {
@@ -150,6 +151,7 @@ class pre_sale_order(osv.osv):
                         'mso_latitude':so['mso_latitude'],
                         'pricelist_id':so['pricelist_id'],
                         'branch_id':branch_id,
+                        'print_count':so['print_count'],
                     }
                     s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
                     so_ids.append(s_order_id)
@@ -220,12 +222,23 @@ class pre_sale_order(osv.osv):
                 for preObj_ids in presaleorderObj.browse(cr, uid, ids[0], context=context):
                     if preObj_ids:
                         print 'Sale Team', preObj_ids.sale_team
-                        cr.execute('select delivery_team_id from crm_case_section where id = %s ', (preObj_ids.sale_team.id,))
-                        data = cr.fetchall()
-                        if data:
-                            delivery_id = data[0][0]
+                        #for multi Sale Team
+                        cr.execute("select delivery_team_id from res_partner where id =%s",(preObj_ids.partner_id.id,))
+                        delivery_data=cr.fetchall()
+                        if delivery_data:
+                            delivery_id = delivery_data[0][0]
+                            if delivery_id is None:
+                                delivery_id =None
                         else:
                             delivery_id = None
+                            
+                        if delivery_id is None:                            
+                            cr.execute('select delivery_team_id from crm_case_section where id = %s ', (preObj_ids.sale_team.id,))
+                            data = cr.fetchall()
+                            if data:
+                                delivery_id = data[0][0]
+                            else:
+                                delivery_id = None
                         cr.execute('select warehouse_id from crm_case_section where id = %s ', (delivery_id,))
                         data = cr.fetchall()
                         if data:

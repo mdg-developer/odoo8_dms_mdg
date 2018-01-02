@@ -52,6 +52,7 @@
 								<field name="void_flag" readonly="1" />
 								<field name="note" class="oe_inline" placeholder="Terms and conditions..."
 									readonly="1" />
+								<field name="print_count" />
 
 							</group>
 						</group>

@@ -272,6 +272,44 @@ class mobile_sale_order(osv.osv):
                 return True
              except Exception, e:
                 return False        
+				
+    def create_stock_delivery_reprint(self, cursor, user, vals, context=None):
+             try :
+                sync_obj = self.pool.get('stock.delivery.reprint')
+                str = "{" + vals + "}"
+                str = str.replace("'',", "',")  # null
+                str = str.replace(":',", ":'',")  # due to order_id
+                str = str.replace("}{", "}|{")
+                new_arr = str.split('|')
+                result = []
+                for data in new_arr:
+                    x = ast.literal_eval(data)
+                    result.append(x)
+                reprint_count = []
+                for r in result:                
+                    reprint_count.append(r)  
+                if reprint_count:
+                    for sync_reprint in reprint_count:
+                        cursor.execute("select id from sale_order where name = %s", (sync_reprint['presaleorder_id'].replace("\\",""),))    
+                        order_id =cursor.fetchone()[0]                                
+                        cursor.execute('select branch_id from crm_case_section where id=%s', (sync_reprint['section_id'],))
+                        branch_id = cursor.fetchone()[0]
+                        cursor.execute("delete from stock_delivery_reprint where presaleorder_id = %s ", (order_id,))    
+                        print_result = {
+                            'reprint_date':datetime.now(),
+                            'branch_id':branch_id,
+                            'section_id':sync_reprint['section_id'],
+                            'presaleorder_id':order_id,
+                            'partner_id':sync_reprint['customer'],
+                            'customer_code':sync_reprint['customer_code'],
+                            'total_amount':sync_reprint['total_amount'],
+                            'reprint_count':sync_reprint['reprint_count'],
+                            }
+                        sync_obj.create(cursor, user, print_result, context=context)
+                return True
+             except Exception, e:
+                return False    
+            				
 # NZO
     def create_exchange_product(self, cursor, user, vals, context=None):
         print 'vals', vals
@@ -967,7 +1005,13 @@ class mobile_sale_order(osv.osv):
                         and ccs.id = %s ''', (section_id,))
         datas = cr.fetchall()
         return datas
-    
+
+    def get_productMainGroup(self, cr, uid, section_id, context=None, **kwargs):
+        cr.execute('''select id,name from product_maingroup''')
+        datas = cr.fetchall()
+        cr.execute
+        return datas
+		
     def get_salePlanDays_by_sale_team(self, cr, uid, section_id , context=None, **kwargs):
         cr.execute('''select id,name,date,sale_team from sale_plan_day where sale_team=%s ''', (section_id,))
         datas = cr.fetchall()
