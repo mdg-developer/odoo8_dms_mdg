@@ -197,16 +197,30 @@ optional but I left it as an example.
 Checkpoints
 ***********
 
+Record checkpoint
+-----------------
+
 When new records are imported and need a review, :ref:`checkpoint` are
-created. I propose to create a helper too in
-``connector_coffee/connector.py``::
+created. You can add it like this::
 
-    from openerp.addons.connector.checkpoint import checkpoint
+    backend_record.add_checkpoint(
+        model='res.partner', record_id=1, message='VAT number can be missing')
 
 
-    def add_checkpoint(session, model_name, record_id, backend_id):
-        return checkpoint.add_checkpoint(session, model_name, record_id,
-                                         'coffee.backend', backend_id)
+Message only checkpoint
+-----------------------
+
+When you need to show a warning message to a user
+you can create a :ref:`checkpoint`. You can add it like this::
+
+    backend_record.add_checkpoint(message='VAT number can be missing')
+
+A typical use case for this is:
+
+* you have a batch import of CSV file;
+* you don't want to break a whole batch job just because some line failed;
+* you want to notify the user with a nice warning message.
+
 
 *********************
 ConnectorUnit classes

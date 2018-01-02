@@ -247,7 +247,6 @@ class sale_denomination(osv.osv):
     'sign_diff_amount': fields.function(_get_plusorminus_diff_amount, string="Difference Amount", type="char"),
     #'sign': fields.function(_get_plusorminus, string="Sign", store=True, type="char"),
     #'sign_amount': fields.function(_get_plusorminus_amount,string= 'Sign Amount', digits_compute=dp.get_precision('Product Price'),type='float'),
-        'receive_from':fields.char('Received From')
          }
     _defaults = {
         'date': fields.datetime.now,

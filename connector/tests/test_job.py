@@ -2,7 +2,7 @@
 
 import cPickle
 import mock
-import unittest2
+import unittest
 from datetime import datetime, timedelta
 
 from openerp import SUPERUSER_ID, exceptions
@@ -65,7 +65,7 @@ def pickle_allowed_function(session):
     pass
 
 
-class TestJobs(unittest2.TestCase):
+class TestJobs(unittest.TestCase):
     """ Test Job """
 
     def setUp(self):
@@ -247,24 +247,19 @@ class TestJobs(unittest2.TestCase):
         self.assertEquals(job_a.state, PENDING)
         self.assertFalse(job_a.date_enqueued)
         self.assertFalse(job_a.date_started)
-        self.assertFalse(job_a.worker_uuid)
         self.assertEquals(job_a.retry, 0)
         self.assertEquals(job_a.result, 'test')
 
     def test_set_enqueued(self):
         job_a = Job(func=task_a)
-        worker = mock.Mock(name='Worker')
-        uuid = 'ae7d1161-dc34-40b1-af06-8057c049133e'
-        worker.uuid = 'ae7d1161-dc34-40b1-af06-8057c049133e'
         datetime_path = 'openerp.addons.connector.queue.job.datetime'
         with mock.patch(datetime_path, autospec=True) as mock_datetime:
             mock_datetime.now.return_value = datetime(2015, 3, 15, 16, 41, 0)
-            job_a.set_enqueued(worker)
+            job_a.set_enqueued()
 
         self.assertEquals(job_a.state, ENQUEUED)
         self.assertEquals(job_a.date_enqueued,
                           datetime(2015, 3, 15, 16, 41, 0))
-        self.assertEquals(job_a.worker_uuid, uuid)
         self.assertFalse(job_a.date_started)
 
     def test_set_started(self):
@@ -289,7 +284,6 @@ class TestJobs(unittest2.TestCase):
         self.assertEquals(job_a.result, 'test')
         self.assertEquals(job_a.date_done,
                           datetime(2015, 3, 15, 16, 41, 0))
-        self.assertFalse(job_a.worker_uuid)
         self.assertFalse(job_a.exc_info)
 
     def test_set_failed(self):
@@ -297,14 +291,6 @@ class TestJobs(unittest2.TestCase):
         job_a.set_failed(exc_info='failed test')
         self.assertEquals(job_a.state, FAILED)
         self.assertEquals(job_a.exc_info, 'failed test')
-        self.assertFalse(job_a.worker_uuid)
-
-    def test_cancel(self):
-        job_a = Job(func=task_a)
-        job_a.cancel(msg='test')
-        self.assertTrue(job_a.canceled)
-        self.assertEquals(job_a.state, DONE)
-        self.assertEquals(job_a.result, 'test')
 
     def test_postpone(self):
         job_a = Job(func=task_a)
@@ -413,7 +399,6 @@ class TestJobStorage(common.TransactionCase):
         job_read.date_enqueued = test_date
         job_read.date_started = test_date
         job_read.date_done = test_date
-        job_read.canceled = True
         storage.store(job_read)
 
         job_read = storage.load(test_job.uuid)
@@ -423,22 +408,6 @@ class TestJobStorage(common.TransactionCase):
                                delta=delta)
         self.assertAlmostEqual(job_read.date_done, test_date,
                                delta=delta)
-        self.assertEqual(job_read.canceled, True)
-
-    def test_job_worker(self):
-        worker = self.env['queue.worker'].create(
-            {'uuid': '57569b99-c2c1-47b6-aad1-72f953c92c87'}
-        )
-        test_job = Job(func=dummy_task_args,
-                       model_name='res.users',
-                       args=('o', 'k'),
-                       kwargs={'c': '!'})
-        test_job.worker_uuid = worker.uuid
-        storage = OpenERPJobStorage(self.session)
-        self.assertEqual(storage._worker_id(worker.uuid), worker.id)
-        storage.store(test_job)
-        job_read = storage.load(test_job.uuid)
-        self.assertEqual(job_read.worker_uuid, worker.uuid)
 
     def test_job_unlinked(self):
         test_job = Job(func=dummy_task_args,
@@ -510,6 +479,14 @@ class TestJobStorage(common.TransactionCase):
         stored = self.queue_job.search([])
         self.assertEqual(len(stored), 1)
 
+    def test_job_delay_override_channel(self):
+        self.cr.execute('delete from queue_job')
+        job(dummy_task_args)
+        task_a.delay(self.session, 'res.users', 'o', channel='root.sub.sub')
+        stored = self.queue_job.search([])
+        self.assertEqual(len(stored), 1)
+        self.assertEqual('root.sub.sub', stored.channel)
+
 
 class TestJobModel(common.TransactionCase):
 
@@ -540,18 +517,22 @@ class TestJobModel(common.TransactionCase):
             stored._change_job_state(STARTED)
 
     def test_button_done(self):
-        stored = self._create_job()
-        stored.button_done()
-        self.assertEqual(stored.state, DONE)
-        self.assertEqual(stored.result,
+        stored_1 = self._create_job()
+        stored_2 = self._create_job()
+        # set stored_2 job to started
+        stored_2.state = STARTED
+        stored_jobs = stored_1 + stored_2
+        stored_jobs.button_done()
+        self.assertEqual(stored_1.state, DONE)
+        self.assertEqual(stored_1.result,
                          'Manually set to done by %s' % self.env.user.name)
+        self.assertEqual(stored_2.state, STARTED)
 
     def test_requeue(self):
         stored = self._create_job()
         stored.write({'state': 'failed'})
         stored.requeue()
         self.assertEqual(stored.state, PENDING)
-        self.assertFalse(stored.worker_id)
 
     def test_message_when_write_fail(self):
         stored = self._create_job()
@@ -561,6 +542,8 @@ class TestJobModel(common.TransactionCase):
         self.assertEqual(len(messages), 2)
 
     def test_follower_when_write_fail(self):
+        """Check that inactive users doesn't are not followers even if
+        they are linked to an active partner"""
         group = self.env.ref('connector.group_connector_manager')
         vals = {'name': 'xx',
                 'login': 'xx',
@@ -568,20 +551,18 @@ class TestJobModel(common.TransactionCase):
                 'active': False,
                 }
         inactiveusr = self.user.create(vals)
-        self.assertTrue(inactiveusr.partner_id.active)
+        inactiveusr.partner_id.active = True
         self.assertFalse(inactiveusr in group.users)
         stored = self._create_job()
         stored.write({'state': 'failed'})
-        followers = stored.message_follower_ids
+        followers = stored.message_follower_ids.mapped('partner_id')
         self.assertFalse(inactiveusr.partner_id in followers)
         self.assertFalse(
             set([u.partner_id for u in group.users]) - set(followers))
 
     def test_autovacuum(self):
         stored = self._create_job()
-        stored2 = self._create_job()
         stored.write({'date_done': '2000-01-01 00:00:00'})
-        stored2.write({'date_done': '2000-01-01 00:00:00', 'active': False})
         self.env['queue.job'].autovacuum()
         self.assertEqual(len(self.env['queue.job'].search([])), 0)
 
@@ -593,7 +574,6 @@ class TestJobModel(common.TransactionCase):
                                    active_ids=stored.ids)
         model.create({}).requeue()
         self.assertEqual(stored.state, PENDING)
-        self.assertFalse(stored.worker_id)
 
     def test_context_uuid(self):
         test_job = Job(func=dummy_task_context)
@@ -703,9 +683,10 @@ class TestJobStorageMultiCompany(common.TransactionCase):
         )
         self.assertEqual(len(stored.message_follower_ids), len(users))
         expected_partners = [u.partner_id for u in users]
-        self.assertSetEqual(set(stored.message_follower_ids),
-                            set(expected_partners))
-        followers_id = [f.id for f in stored.message_follower_ids]
+        self.assertSetEqual(
+            set(stored.message_follower_ids.mapped('partner_id')),
+            set(expected_partners))
+        followers_id = stored.message_follower_ids.mapped('partner_id.id')
         self.assertIn(self.other_partner_a.id, followers_id)
         self.assertIn(self.other_partner_b.id, followers_id)
         # jobs created for a specific company_id are followed only by
@@ -718,9 +699,10 @@ class TestJobStorageMultiCompany(common.TransactionCase):
         self.assertEqual(len(stored.message_follower_ids), 2)
         users = User.browse([SUPERUSER_ID, self.other_user_a.id])
         expected_partners = [u.partner_id for u in users]
-        self.assertSetEqual(set(stored.message_follower_ids),
-                            set(expected_partners))
-        followers_id = [f.id for f in stored.message_follower_ids]
+        self.assertSetEqual(
+            set(stored.message_follower_ids.mapped('partner_id')),
+            set(expected_partners))
+        followers_id = stored.message_follower_ids.mapped('partner_id.id')
         self.assertIn(self.other_partner_a.id, followers_id)
         self.assertNotIn(self.other_partner_b.id, followers_id)
 
@@ -759,10 +741,19 @@ class TestJobChannels(common.TransactionCase):
         job(task_a)
         job(task_b)
         self.function_model._register_jobs()
-        path_a = 'openerp.addons.connector.tests.test_job.task_a'
-        path_b = 'openerp.addons.connector.tests.test_job.task_b'
-        self.assertTrue(self.function_model.search([('name', '=', path_a)]))
-        self.assertTrue(self.function_model.search([('name', '=', path_b)]))
+        path_a = 'connector.tests.test_job.task_a'
+        path_b = 'connector.tests.test_job.task_b'
+        # if you run tests with standard ``--test-enable`
+        # the path is exactly 'openerp.addons.connector.tests.test_job.task_a'
+        # BUT if you run them using nose test from anybox recipe
+        # you get different path, like '..connector.tests.test_job.task_a'
+        # So, let's use `like` to match them in both cases.
+        self.assertTrue(
+            self.function_model.search([('name', 'like', '%' + path_a)])
+        )
+        self.assertTrue(
+            self.function_model.search([('name', 'like', '%' + path_b)])
+        )
 
     def test_channel_on_job(self):
         job(task_a)
@@ -787,6 +778,13 @@ class TestJobChannels(common.TransactionCase):
         storage.store(test_job)
         stored = self.job_model.search([('uuid', '=', test_job.uuid)])
         self.assertEquals(stored.channel, 'root.sub')
+
+        # it's also possible to override the channel
+        test_job = Job(func=task_a, channel='root.sub.sub.sub')
+        storage = OpenERPJobStorage(self.session)
+        storage.store(test_job)
+        stored = self.job_model.search([('uuid', '=', test_job.uuid)])
+        self.assertEquals(stored.channel, test_job.channel)
 
     def test_default_channel(self):
         self.function_model.search([]).unlink()

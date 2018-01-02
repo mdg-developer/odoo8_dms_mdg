@@ -15,22 +15,5 @@
 			</field>
 		</record>
 		
-		<record id="view_warehouse_form_inherit" model="ir.ui.view">
-			<field name="name">stock.warehouse.form.inherit</field>
-			<field name="model">stock.warehouse</field>
-			<field name="inherit_id" ref="stock.view_warehouse" />
-			<field name="arch" type="xml">
-				<data>
-					<xpath expr="//field[@name='wh_output_stock_loc_id']" position="after">
-						<field name="wh_normal_return_location_id" />
-						<field name="wh_exp_location_id" />
-						<field name="wh_near_exp_location_id" />
-						<field name="wh_damage_location_id" />
-						<field name="wh_fresh_stock_not_good_location_id" />
-					</xpath>					
-				</data>
-			</field>
-		</record>
-		
 	</data>
 </openerp>

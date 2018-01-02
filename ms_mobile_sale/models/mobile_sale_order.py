@@ -271,51 +271,13 @@ class mobile_sale_order(osv.osv):
                         sync_obj.create(cursor, user, print_result, context=context)
                 return True
              except Exception, e:
-                return False   
-            
-    def create_stock_delivery_reprint(self, cursor, user, vals, context=None):
-             try :
-                sync_obj = self.pool.get('stock.delivery.reprint')
-                str = "{" + vals + "}"
-                str = str.replace("'',", "',")  # null
-                str = str.replace(":',", ":'',")  # due to order_id
-                str = str.replace("}{", "}|{")
-                new_arr = str.split('|')
-                result = []
-                for data in new_arr:
-                    x = ast.literal_eval(data)
-                    result.append(x)
-                reprint_count = []
-                for r in result:                
-                    reprint_count.append(r)  
-                if reprint_count:
-                    for sync_reprint in reprint_count:
-                        cursor.execute("select id from sale_order where name = %s", (sync_reprint['presaleorder_id'].replace("\\",""),))    
-                        order_id =cursor.fetchone()[0]                                
-                        cursor.execute('select branch_id from crm_case_section where id=%s', (sync_reprint['section_id'],))
-                        branch_id = cursor.fetchone()[0]
-                        cursor.execute("delete from stock_delivery_reprint where presaleorder_id = %s ", (order_id,))    
-                        print_result = {
-                            'reprint_date':datetime.now(),
-                            'branch_id':branch_id,
-                            'section_id':sync_reprint['section_id'],
-                            'presaleorder_id':order_id,
-                            'partner_id':sync_reprint['customer'],
-                            'customer_code':sync_reprint['customer_code'],
-                            'total_amount':sync_reprint['total_amount'],
-                            'reprint_count':sync_reprint['reprint_count'],
-                            }
-                        sync_obj.create(cursor, user, print_result, context=context)
-                return True
-             except Exception, e:
-                return False     
+                return False        
 # NZO
     def create_exchange_product(self, cursor, user, vals, context=None):
         print 'vals', vals
         try : 
             product_trans_obj = self.pool.get('product.transactions')
             product_trans_line_obj = self.pool.get('product.transactions.line')
-            sale_team_obj = self.pool.get('crm.case.section')
             str = "{" + vals + "}"
             str = str.replace(":''", ":'")  # change Order_id
             str = str.replace("'',", "',")  # null
@@ -347,30 +309,16 @@ class mobile_sale_order(osv.osv):
 #                         saleManId = data[0][0]
 #                     else:
 #                         saleManId = None
-                    sale_team_id = int(pt['team_id'])
-                    sale_team_data = sale_team_obj.browse(cursor, user,sale_team_id , context=None)
-                    if pt['type'] =='Normal return':
-                        location_type_id = sale_team_data.normal_return_location_id.id
-                    elif pt['type'] =='Expired':
-                        location_type_id = sale_team_data.exp_location_id.id
-                    elif pt['type'] =='Near expiry':
-                        location_type_id = sale_team_data.near_exp_location_id.id
-                    elif pt['type'] =='Fresh stock not good':
-                        location_type_id = sale_team_data.fresh_stock_not_good_location_id.id
-                    elif pt['type'] =='Damaged':
-                        location_type_id = sale_team_data.damage_location_id.id
-                        
                     mso_result = {
-                                'transaction_id':pt['transaction_id'],
-                                'customer_id':pt['customer_id'],
-                                'customer_code':pt['customer_code'] ,
-                                'team_id':pt['team_id'],
-                                'date':pt['date'],
-                                'exchange_type':pt['exchange_type'],
-                                'void_flag':pt['void_flag'],
-                                'location_id':location_type_id, #pt['location_id'],
-                                'location_type':pt['type'],
-                                }
+                        'transaction_id':pt['transaction_id'],
+                        'customer_id':pt['customer_id'],
+                        'customer_code':pt['customer_code'] ,
+                        'team_id':pt['team_id'],
+                        'date':pt['date'],
+                        'exchange_type':pt['exchange_type'],
+                        'void_flag':pt['void_flag'],
+                        'location_id':pt['location_id'],
+                    }
                     s_order_id = product_trans_obj.create(cursor, user, mso_result, context=context)
                     
                     for ptl in product_trans_line:
@@ -392,7 +340,7 @@ class mobile_sale_order(osv.osv):
                                   'transaction_id':s_order_id,
                                   'product_id':ptl['product_id'],
                                   'product_qty':ptl['product_qty'],
-                                  'uom_id':ptl['uom_id'],
+                                  'uom_id':uom_id,
                                   'so_No':ptl['so_No'],
                                   'trans_type':ptl['trans_type'],
                                   'transaction_name':ptl['transaction_name'],
@@ -401,8 +349,9 @@ class mobile_sale_order(osv.osv):
                                   'batchno':ptl['batchno'],
                                 }
                                 product_trans_line_obj.create(cursor, user, mso_line_res, context=context)
-                    product_trans_obj.action_convert_ep(cursor, user, [s_order_id], context=context)
+#                         product_trans_obj.action_convert_ep(cursor, user, [s_order_id], context=context)
 
+                                    
             print 'Truwwwwwwwwwwwwwwwwwwwwwe'
             return True       
         except Exception, e:
@@ -1017,12 +966,6 @@ class mobile_sale_order(osv.osv):
                         and pc.id = pt.categ_id                        
                         and ccs.id = %s ''', (section_id,))
         datas = cr.fetchall()
-        return datas
-    
-    def get_productMainGroup(self, cr, uid, section_id, context=None, **kwargs):
-        cr.execute('''select id,name from product_maingroup''')
-        datas = cr.fetchall()
-        cr.execute
         return datas
     
     def get_salePlanDays_by_sale_team(self, cr, uid, section_id , context=None, **kwargs):
@@ -2290,48 +2233,46 @@ class mobile_sale_order(osv.osv):
                                 sequence = None
 
                             ori_req_quantity = int(srl['req_quantity'])
-                            ori_uom_id = int(srl['product_uom'])
                             # print 'product_idddddddddddd',req_quantity
-#                             cursor.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (big_uom_id,))
-#                             bigger_qty = cursor.fetchone()[0]
-#                             bigger_qty = int(bigger_qty)
+                            cursor.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (big_uom_id,))
+                            bigger_qty = cursor.fetchone()[0]
+                            bigger_qty = int(bigger_qty)
                             # print ' bigger_qty',sale_qty,bigger_qty,type(sale_qty),type(bigger_qty)                        
-#                             big_uom_qty = divmod(ori_req_quantity, bigger_qty)
+                            big_uom_qty = divmod(ori_req_quantity, bigger_qty)
                             # print 'big_uom_qty',big_uom_qty
-#                             if  big_uom_qty:
-#                                 big_req_quantity = big_uom_qty[0]
-#                                 req_quantity = big_uom_qty[1]
+                            if  big_uom_qty:
+                                big_req_quantity = big_uom_qty[0]
+                                req_quantity = big_uom_qty[1]
                                 # print 'big_req',big_req_quantity,req_quantity
                             cursor.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (to_location_id, srl['product_id'],))
                             qty_on_hand = cursor.fetchone()
                             if qty_on_hand:
                                 qty_on_hand = qty_on_hand[0]
                             else:
-                                qty_on_hand = 0    
-                            #comment by EMTW           
-#                             if int(srl['product_uom']) == int(big_uom_id):                                                                          
-#                                 mso_line_res = {                                                            
-#                                       'line_id':stock_id,
-#                                       'remark':srl['remark'],
-#                                       'req_quantity':req_quantity,
-#                                       'product_id':int(srl['product_id']),
-#                                       'product_uom':big_uom_id,
-#                                       'uom_ratio':packing_unit ,
-#                                       'big_uom_id':big_uom_id,
-#                                       'big_req_quantity':ori_req_quantity,
-#                                       'qty_on_hand':qty_on_hand,
-#                                       'sequence':sequence,
-#                                       }
-#                             else:
-                            mso_line_res = {                                                            
+                                qty_on_hand = 0               
+                            if int(srl['product_uom']) == int(big_uom_id):                                                                          
+                                mso_line_res = {                                                            
                                       'line_id':stock_id,
                                       'remark':srl['remark'],
-                                      'req_quantity':ori_req_quantity,
+                                      'req_quantity':0,
                                       'product_id':int(srl['product_id']),
-                                      'product_uom':ori_uom_id,
+                                      'product_uom':small_uom_id,
                                       'uom_ratio':packing_unit ,
                                       'big_uom_id':big_uom_id,
-                                      'big_req_quantity':0,
+                                      'big_req_quantity':ori_req_quantity,
+                                      'qty_on_hand':qty_on_hand,
+                                      'sequence':sequence,
+                                      }
+                            else:
+                                mso_line_res = {                                                            
+                                      'line_id':stock_id,
+                                      'remark':srl['remark'],
+                                      'req_quantity':req_quantity,
+                                      'product_id':int(srl['product_id']),
+                                      'product_uom':small_uom_id,
+                                      'uom_ratio':packing_unit ,
+                                      'big_uom_id':big_uom_id,
+                                      'big_req_quantity':big_req_quantity,
                                       'qty_on_hand':qty_on_hand,
                                       'sequence':sequence,
                                       }

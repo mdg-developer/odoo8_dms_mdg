@@ -70,9 +70,11 @@ class TestJobSubscribe(common.TransactionCase):
         )
         self.assertEqual(len(stored.message_follower_ids), len(users))
         expected_partners = [u.partner_id for u in users]
-        self.assertSetEqual(set(stored.message_follower_ids),
-                            set(expected_partners))
-        followers_id = [f.id for f in stored.message_follower_ids]
+        self.assertSetEqual(set(stored.mapped(
+            'message_follower_ids.partner_id')),
+            set(expected_partners))
+        followers_id = [f.id for f in stored.mapped(
+            'message_follower_ids.partner_id')]
         self.assertIn(self.other_partner_a.id, followers_id)
         self.assertIn(self.other_partner_b.id, followers_id)
 
@@ -88,8 +90,10 @@ class TestJobSubscribe(common.TransactionCase):
         )
         self.assertEqual(len(stored.message_follower_ids), len(users))
         expected_partners = [u.partner_id for u in users]
-        self.assertSetEqual(set(stored.message_follower_ids),
-                            set(expected_partners))
-        followers_id = [f.id for f in stored.message_follower_ids]
+        self.assertSetEqual(set(stored.mapped(
+            'message_follower_ids.partner_id')),
+            set(expected_partners))
+        followers_id = [f.id for f in stored.mapped(
+            'message_follower_ids.partner_id')]
         self.assertIn(self.other_partner_a.id, followers_id)
         self.assertNotIn(self.other_partner_b.id, followers_id)
