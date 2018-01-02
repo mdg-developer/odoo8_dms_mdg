@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data noupdate="0">
+
+		<record id="stock_inventory_report" model="ir.model.access">
+			<field name="name">stock_inventory_report</field>
+			<field name="model_id" ref="stock_inventory_report.model_stock_inventory_reports" />
+			<field name="group_id" ref="" />
+			<field name="perm_read" eval="1" />
+			<field name="perm_create" eval="1" />
+			<field name="perm_write" eval="1" />
+			<field name="perm_unlink" eval="1" />
+		</record>
+
+	</data>
+</openerp>

@@ -1,0 +1,259 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* stock_inventory_report
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-05-06 07:24+0000\n"
+"PO-Revision-Date: 2017-05-06 07:24+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: stock_inventory_report
+#: view:stock.inventory.reports:stock_inventory_report.view_inventory_list
+msgid "(If you do not select any categories it will take all categories)"
+msgstr ""
+
+#. module: stock_inventory_report
+#: view:stock.inventory.reports:stock_inventory_report.view_inventory_list
+msgid "(If you do not select any location, then it will take all above warehouses internal locations)"
+msgstr ""
+
+#. module: stock_inventory_report
+#: view:stock.inventory.reports:stock_inventory_report.view_inventory_list
+msgid "(If you do not select any products it will take all products)"
+msgstr ""
+
+#. module: stock_inventory_report
+#: view:stock.inventory.reports:stock_inventory_report.view_inventory_list
+msgid "(If you do not select company it will take all companies)"
+msgstr ""
+
+#. module: stock_inventory_report
+#: view:stock.inventory.reports:stock_inventory_report.view_inventory_list
+msgid "(If you do not select warehouse it will take all warehouses)"
+msgstr ""
+
+#. module: stock_inventory_report
+#: view:website:stock_inventory_report.inventory_report_by_category
+#: view:website:stock_inventory_report.inventory_report_by_warehouse
+msgid "Adjustments"
+msgstr ""
+
+#. module: stock_inventory_report
+#: view:website:stock_inventory_report.inventory_report_by_category
+#: view:website:stock_inventory_report.inventory_report_by_warehouse
+msgid "Beginning"
+msgstr ""
+
+#. module: stock_inventory_report
+#: field:stock.inventory.reports,start_date:0
+msgid "Beginning Date"
+msgstr ""
+
+#. module: stock_inventory_report
+#: view:stock.inventory.reports:stock_inventory_report.view_inventory_list
+msgid "Cancel"
+msgstr ""
+
+#. module: stock_inventory_report
+#: field:stock.inventory.reports,filter_product_categ_ids:0
+msgid "Categories"
+msgstr ""
+
+#. module: stock_inventory_report
+#: view:stock.inventory.reports:stock_inventory_report.view_inventory_list
+#: field:stock.inventory.reports,company_id:0
+#: view:website:stock_inventory_report.inventory_report_by_category
+#: view:website:stock_inventory_report.inventory_report_by_warehouse
+msgid "Company"
+msgstr ""
+
+#. module: stock_inventory_report
+#: field:stock.inventory.reports,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: stock_inventory_report
+#: field:stock.inventory.reports,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: stock_inventory_report
+#: view:website:stock_inventory_report.inventory_report_by_category
+#: view:website:stock_inventory_report.inventory_report_by_warehouse
+msgid "Date"
+msgstr ""
+
+#. module: stock_inventory_report
+#: field:stock.inventory.reports,display_all_products:0
+msgid "Display Products?"
+msgstr ""
+
+#. module: stock_inventory_report
+#: field:stock.inventory.reports,end_date:0
+msgid "End Date"
+msgstr ""
+
+#. module: stock_inventory_report
+#: view:website:stock_inventory_report.inventory_report_by_category
+#: view:website:stock_inventory_report.inventory_report_by_warehouse
+msgid "Ending"
+msgstr ""
+
+#. module: stock_inventory_report
+#: field:stock.inventory.reports,sort_order:0
+msgid "Group By"
+msgstr ""
+
+#. module: stock_inventory_report
+#: field:report.stock_inventory_report.inventory_report_by_category,id:0
+#: field:report.stock_inventory_report.inventory_report_by_warehouse,id:0
+#: field:stock.inventory.reports,id:0
+msgid "ID"
+msgstr ""
+
+#. module: stock_inventory_report
+#: field:stock.inventory.reports,include_zero:0
+msgid "Include Zero Movement?"
+msgstr ""
+
+#. module: stock_inventory_report
+#: view:website:stock_inventory_report.inventory_report_by_category
+#: view:website:stock_inventory_report.inventory_report_by_warehouse
+msgid "Internal"
+msgstr ""
+
+#. module: stock_inventory_report
+#: model:ir.ui.menu,name:stock_inventory_report.menu_inventory_report
+#: view:stock.inventory.reports:stock_inventory_report.view_inventory_list
+msgid "Inventory"
+msgstr ""
+
+#. module: stock_inventory_report
+#: model:ir.actions.act_window,name:stock_inventory_report.action_inventory_report
+#: model:ir.actions.report.xml,name:stock_inventory_report.action_inventory_report_by_category
+#: model:ir.actions.report.xml,name:stock_inventory_report.action_inventory_report_by_warehouse
+#: model:ir.ui.menu,name:stock_inventory_report.menu_action_inventory_report
+#: view:website:stock_inventory_report.inventory_report_by_category
+#: view:website:stock_inventory_report.inventory_report_by_warehouse
+msgid "Inventory Report"
+msgstr ""
+
+#. module: stock_inventory_report
+#: field:stock.inventory.reports,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: stock_inventory_report
+#: field:stock.inventory.reports,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: stock_inventory_report
+#: view:stock.inventory.reports:stock_inventory_report.view_inventory_list
+#: field:stock.inventory.reports,location_id:0
+msgid "Location"
+msgstr ""
+
+#. module: stock_inventory_report
+#: code:addons/stock_inventory_report/wizard/inventory_wizard.py:110
+#, python-format
+msgid "Please select company of those warehouses to get correct view.\n"
+"You should remove all warehouses first from selection field."
+msgstr ""
+
+#. module: stock_inventory_report
+#: view:stock.inventory.reports:stock_inventory_report.view_inventory_list
+msgid "Print"
+msgstr ""
+
+#. module: stock_inventory_report
+#: selection:stock.inventory.reports,sort_order:0
+msgid "Product Category"
+msgstr ""
+
+#. module: stock_inventory_report
+#: view:stock.inventory.reports:stock_inventory_report.view_inventory_list
+#: field:stock.inventory.reports,filter_product_ids:0
+msgid "Products"
+msgstr ""
+
+#. module: stock_inventory_report
+#: view:website:stock_inventory_report.inventory_report_by_category
+#: view:website:stock_inventory_report.inventory_report_by_warehouse
+msgid "Received"
+msgstr ""
+
+#. module: stock_inventory_report
+#: view:website:stock_inventory_report.inventory_report_by_category
+#: view:website:stock_inventory_report.inventory_report_by_warehouse
+msgid "Sales"
+msgstr ""
+
+#. module: stock_inventory_report
+#: view:stock.inventory.reports:stock_inventory_report.view_inventory_list
+msgid "Select Categories"
+msgstr ""
+
+#. module: stock_inventory_report
+#: view:stock.inventory.reports:stock_inventory_report.view_inventory_list
+msgid "Select Location"
+msgstr ""
+
+#. module: stock_inventory_report
+#: view:stock.inventory.reports:stock_inventory_report.view_inventory_list
+msgid "Select Products"
+msgstr ""
+
+#. module: stock_inventory_report
+#: view:website:stock_inventory_report.inventory_report_by_category
+#: view:website:stock_inventory_report.inventory_report_by_warehouse
+msgid "Sort By"
+msgstr ""
+
+#. module: stock_inventory_report
+#: view:website:stock_inventory_report.inventory_report_by_category
+#: view:website:stock_inventory_report.inventory_report_by_warehouse
+msgid "Total Inventory"
+msgstr ""
+
+#. module: stock_inventory_report
+#: help:stock.inventory.reports,display_all_products:0
+msgid "True, if you want to display only warehouse/categories total."
+msgstr ""
+
+#. module: stock_inventory_report
+#: help:stock.inventory.reports,include_zero:0
+msgid "True, if you want to see zero movements of products.\n"
+"Note: It will consider only movements done in-between dates."
+msgstr ""
+
+#. module: stock_inventory_report
+#: selection:stock.inventory.reports,sort_order:0
+#: view:website:stock_inventory_report.inventory_report_by_category
+#: view:website:stock_inventory_report.inventory_report_by_warehouse
+msgid "Warehouse"
+msgstr ""
+
+#. module: stock_inventory_report
+#: view:stock.inventory.reports:stock_inventory_report.view_inventory_list
+msgid "Warehouses"
+msgstr ""
+
+#. module: stock_inventory_report
+#: view:stock.inventory.reports:stock_inventory_report.view_inventory_list
+msgid "or"
+msgstr ""
+
+#. module: stock_inventory_report
+#: field:stock.inventory.reports,warehouse_ids:0
+msgid "warehouse"
+msgstr ""
+

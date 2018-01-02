@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<template id="inventory_report_by_warehouse">
+			<t t-call="report.html_container">
+				<t t-set="data_report_margin_top" t-value="12" />
+				<t t-set="data_report_header_spacing" t-value="9" />
+				<t t-set="data_report_dpi" t-value="110" />
+				<t t-call="report.internal_layout">
+					<div class="page">
+						<h2 class="text-center">Inventory Report</h2>
+						<t t-foreach="get_company(data['form']['company_id'])" t-as="obj_company">
+							<div class="row" style="border-width:1px;border-style:ridge;">
+								<div class="col-xs-3 text-center">
+									<strong>Company</strong>
+									<p t-esc="obj_company['name']" />
+								</div>
+								<div class="col-xs-3 text-center">
+									<strong>Warehouse</strong>
+									<p
+										t-esc="data['form']['warehouse_ids'] and get_warehouse_name(data['form']['warehouse_ids']) or 'ALL'" />
+								</div>
+								<div class="col-xs-3 text-center">
+									<strong>Date</strong>
+									<p
+										t-esc="str(formatLang(data['form']['start_date'], date=True)) + ' To ' + str(formatLang(data['form']['end_date'], date=True))" />
+								</div>
+								<div class="col-xs-3 text-center">
+									<strong>Sort By</strong>
+									<p t-esc="data['form']['sort_order']" />
+								</div>
+							</div>
+							<table class="table table-condensed">
+								<thead>
+									<tr>
+										<th class="text-left" style="color:#0F33C6;font-size: 17px;">
+											<strong t-esc="obj_company['name']" />
+										</th>
+										<th class="text-right">Beginning</th>
+										<th class="text-right">Received</th>
+										<th class="text-right">Sales</th>
+										<th class="text-right">Internal</th>
+										<th class="text-right">Adjustments</th>
+										<th class="text-right">Ending</th>
+									</tr>
+								</thead>
+								<tbody>
+									<t t-foreach="get_lines(data, obj_company['id']).items()"
+										t-as="warehouse">
+										<tr>
+											<td>
+												<strong style="color:#827575;font-size: 17px;" t-esc=" get_warehouse(warehouse[0])" />
+											</td>
+										</tr>
+										<t t-if="data['form']['display_all_products']">
+											<t t-foreach="(warehouse[1])" t-as="l">
+												<tr>
+													<td class="text-left">
+														<p t-esc="get_product_name(l['product_id'])" />
+													</td>
+													<td class="text-right">
+														<p
+															t-esc="formatLang(get_beginning_inventory(data,warehouse[0],l['product_id'],l) or 0.0)" />
+													</td>
+													<td class="text-right">
+														<p t-esc="formatLang(l['product_qty_in'])" />
+													</td>
+													<td class="text-right">
+														<p t-esc="formatLang(l['product_qty_out'])" />
+													</td>
+													<td class="text-right">
+														<p t-esc="formatLang(l['product_qty_internal'])" />
+													</td>
+													<td class="text-right">
+														<p t-esc="formatLang(l['product_qty_adjustment'])" />
+													</td>
+													<td class="text-right">
+														<p
+															t-esc="formatLang(get_ending_inventory(l['product_qty_in'],l['product_qty_out'],l['product_qty_internal'],l['product_qty_adjustment']) or 0.0)" />
+													</td>
+												</tr>
+											</t>
+										</t>
+										<t t-if="not data['form']['display_all_products']">
+											<t t-foreach="(warehouse[1])" t-as="l">
+												<t t-set="p" t-value="formatLang(get_beginning_inventory(data,warehouse[0],l['product_id'],l) or 0.0)" />
+												<t t-set="q" t-value="formatLang(get_ending_inventory(l['product_qty_in'],l['product_qty_out'],l['product_qty_internal'],l['product_qty_adjustment']) or 0.0)" />
+											</t>
+										</t>
+										<!-- t t-if="warehouse[1]" -->
+										<tr class="border-black">
+											<p t-esc="get_value_exist(warehouse[0],obj_company['id'])" />
+											<td class="text-right">
+												<strong style="color:#827575;font-size: 17px;" t-esc=" get_warehouse(warehouse[0])" />
+											</td>
+											<td class="text-right">
+												<strong t-esc="formatLang(total_begin())" />
+											</td>
+											<td class="text-right">
+												<strong t-esc="formatLang(total_in())" />
+											</td>
+											<td class="text-right">
+												<strong t-esc="formatLang(total_out())" />
+											</td>
+											<td class="text-right">
+												<strong t-esc="formatLang(total_int())" />
+											</td>
+											<td class="text-right">
+												<strong t-esc="formatLang(total_adj())" />
+											</td>
+											<td class="text-right">
+												<strong t-esc="formatLang(total_end())" />
+											</td>
+										</tr>
+									</t>
+									<!-- /t -->
+									<tr class="border-black">
+										<td class="text-right">
+											<strong style="color:#4B524F;font-size: 19px;">Total Inventory</strong>
+										</td>
+										<td class="text-right">
+											<strong t-esc="formatLang(total_vals(obj_company['id'])[0])" />
+										</td>
+										<td class="text-right">
+											<strong t-esc="formatLang(total_vals(obj_company['id'])[1])" />
+										</td>
+										<td class="text-right">
+											<strong t-esc="formatLang(total_vals(obj_company['id'])[2])" />
+										</td>
+										<td class="text-right">
+											<strong t-esc="formatLang(total_vals(obj_company['id'])[3])" />
+										</td>
+										<td class="text-right">
+											<strong t-esc="formatLang(total_vals(obj_company['id'])[4])" />
+										</td>
+										<td class="text-right">
+											<strong t-esc="formatLang(total_vals(obj_company['id'])[5])" />
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<p style="page-break-before:always;">
+							</p>
+						</t>
+					</div>
+				</t>
+			</t>
+		</template>
+	</data>
+</openerp>
