@@ -65,7 +65,7 @@
 					<field name="discount_amt" groups="sale.group_discount_per_so_line" />
 					<field name="sale_foc" groups="sale.group_discount_per_so_line"
 						on_change="foc_change(product_id,product_uos_qty,context)" />
-					<field name="net_total" groups="sale.group_discount_per_so_line" />
+					<field name="net_total" groups="sale.group_discount_per_so_line" on_change="button_dummy"/>
 				</xpath>
 
 				<!-- for deduction -->

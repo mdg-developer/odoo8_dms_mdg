@@ -36,7 +36,7 @@ This module will import data  from a EXCEL file.
 for following data
  Product ,Customer, Sale Order
     """,
-    'depends': ['base', 'base_import', 'stock', 'address_management_system'],
+    'depends': ['base', 'base_import', 'stock', 'address_management_system','sale','sale_foc_discount'],
     'data' : [
 
               'views/data_import_view.xml',
