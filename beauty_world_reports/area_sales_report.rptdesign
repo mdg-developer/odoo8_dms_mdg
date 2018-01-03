@@ -327,8 +327,8 @@ COALESCE(return_tbl.return_amt,0)return from
 case when so.payment_type='credit' then COALESCE(sum(so.amount_total),0) end as credit_sales,
 case when so.payment_type='cash' then COALESCE(sum(so.amount_total),0) end as cash_sales
 
-from sale_order so, res_city rc,account_invoice ai,account_invoice_line ail,account_journal aj
-where rc.id=so.city and ai.city=so.city and ai.id=ail.invoice_id and ai.journal_id=aj.id and aj.name='Sale Return Journal'
+from sale_order so, res_city rc
+where rc.id=so.city 
 and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
 group by so.payment_type,rc.name,so.city,rc.code
 )a
@@ -1021,6 +1021,8 @@ group by a.city_id,a.city_code,a.city_name,return_tbl.return_amt]]></xml-propert
                     <property name="verticalAlign">middle</property>
                     <property name="height">0.3416666666666667in</property>
                     <cell id="266">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1034,21 +1036,13 @@ group by a.city_id,a.city_code,a.city_name,return_tbl.return_amt]]></xml-propert
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <property name="verticalAlign">middle</property>
-                    </cell>
-                    <cell id="267">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <property name="verticalAlign">middle</property>
+                        <label id="294">
+                            <property name="fontFamily">sans-serif</property>
+                            <property name="fontSize">8pt</property>
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">center</property>
+                            <text-property name="text">Grand Total</text-property>
+                        </label>
                     </cell>
                     <cell id="268">
                         <property name="borderBottomColor">#000000</property>

@@ -107,6 +107,26 @@
                 </scalar-parameter>
             </parameters>
         </cascading-parameter-group>
+        <scalar-parameter name="Analytic" id="455">
+            <text-property name="promptText">Analytic</text-property>
+            <property name="valueType">dynamic</property>
+            <property name="isRequired">false</property>
+            <property name="dataSetName">analyticDS</property>
+            <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
+            <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
+            <expression name="sortByColumn">dataSetRow["name"]</expression>
+            <property name="sortDirection">asc</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">list-box</property>
+            <property name="mustMatch">true</property>
+            <property name="fixedOrder">false</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
     </parameters>
     <data-sources>
         <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="340"
@@ -117,7 +137,7 @@
             <list-property name="computedColumns">
                 <structure>
                     <property name="name">closing_balance</property>
-                    <expression name="expression">row["opening_balance"]+row["credit_sales_amt"]-row["credit_collection_amount"]-row["discount"]-row["sales_return"]-row["transport_charges"]</expression>
+                    <expression name="expression">row["opening_balance"]+row["credit_sales_amt"]-row["credit_collection_amount"]-row["sales_return"]-row["transport_charges"]</expression>
                     <property name="dataType">float</property>
                 </structure>
             </list-property>
@@ -351,6 +371,15 @@ else
 {     
    this.queryText =this.queryText.replace("--$customer_id$", "and id="+params["customer_id"])
 }
+if (params["Analytic"].value == null ){     
+   this.queryText =this.queryText.replace("--$ailanalytic$", "")
+   this.queryText =this.queryText.replace("--$amlanalytic$", "")
+}
+else
+{     
+   this.queryText =this.queryText.replace("--$ailanalytic$", "and ail.account_analytic_id="+params["Analytic"])
+   this.queryText =this.queryText.replace("--$amlanalytic$", "and aml.analytic_account_id="+params["Analytic"])
+}
 ]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
@@ -427,6 +456,7 @@ and type='receivable'
 and reconcile_id is null
 and aml.partner_id=rp.id
 and am.date<?
+--$amlanalytic$
 ) opening_balance,
 (select COALESCE(sum(amount_total),0) 
 from sale_order
@@ -435,7 +465,7 @@ and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between 
 and state not in ('draft','cancel')
 and payment_type='credit'
 ) credit_sales_amt,
-(select COALESCE(sum(av.amount),0)
+(select COALESCE(sum(avl.amount),0)
 from account_voucher av,account_voucher_line avl,account_move_line aml,sale_order so
 where av.id=avl.voucher_id
 and avl.move_line_id=aml.id
@@ -445,6 +475,7 @@ and av.date between ? and ?
 and av.state not in ('draft','cancel')
 and av.type='receipt'
 and payment_type='credit'
+--$amlanalytic$
 ) credit_collection_amount,
 (select COALESCE((sum(amount_untaxed)+sum(total_dis))-sum(amount_total)-sum(amount_tax),0)
 from sale_order
@@ -459,6 +490,7 @@ where ai.id=ail.invoice_id and ai.journal_id=aj.id and ai.partner_id=rp.id
 and aj.name='Sale Return Journal' 
 and ai.type='out_refund'
 and date_invoice::date between ? and ?
+--$ailanalytic$
 ) sales_return,0 transport_charges
 from res_partner rp,sale_team_customer_rel rel
 where rp.id=rel.partner_id
@@ -1112,6 +1144,110 @@ order by rp.name]]></xml-property>
 from res_partner
 where customer=true
 and active=true]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>id</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>id</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>id</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>name</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>2147483647</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>name</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>name</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="analyticDS" id="454">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">id</text-property>
+                    <text-property name="heading">id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">name</text-property>
+                    <text-property name="heading">name</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters"/>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">id</property>
+                    <property name="nativeName">id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">name</property>
+                    <property name="nativeName">name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select id , name 
+from account_analytic_account
+where type not in ('view')]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="bidiLayoutOrientation">ltr</property>
     <property name="imageDPI">120</property>
     <list-property name="libraries">
         <structure>
-            <property name="fileName">beauty_world_reports/report_library.rptlibrary</property>
+            <property name="fileName">report_library.rptlibrary</property>
             <property name="namespace">report_library</property>
         </structure>
     </list-property>
@@ -36,6 +36,26 @@
             <property name="paramType">simple</property>
             <property name="concealValue">false</property>
             <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="Analytic" id="479">
+            <text-property name="promptText">Analytic</text-property>
+            <property name="valueType">dynamic</property>
+            <property name="isRequired">false</property>
+            <property name="dataSetName">analyticDS</property>
+            <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
+            <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
+            <expression name="sortByColumn">dataSetRow["name"]</expression>
+            <property name="sortDirection">asc</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">list-box</property>
+            <property name="mustMatch">true</property>
+            <property name="fixedOrder">false</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
             </structure>
@@ -336,6 +356,13 @@
                     </structure>
                 </list-property>
             </structure>
+            <method name="beforeOpen"><![CDATA[if (params["Analytic"].value == null ){     
+   this.queryText =this.queryText.replace("--$analytic$", "")
+}
+else
+{     
+   this.queryText =this.queryText.replace("--$analytic$", "and ail.account_analytic_id="+params["Analytic"])
+}]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
                 <structure>
@@ -421,18 +448,21 @@ purchase as (select ail.product_id,sum(ail.quantity) purchase_qty
 		from account_invoice ai, account_invoice_line ail 
 		where ai.id=ail.invoice_id and ai.type='in_invoice' 
 		and ((date_invoice at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+		--$analytic$
 		group by ail.product_id),
 
 cash_sale as (select ail.product_id,sum(ail.quantity) cash_sale_qty
 		from account_invoice ai, account_invoice_line ail 
 		where ai.id=ail.invoice_id and ai.type='out_invoice' and payment_type='cash'
 		and ((date_invoice at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+		--$analytic$
 		group by ail.product_id),
 
 credit_sale as (select ail.product_id,sum(ail.quantity) credit_sale_qty
 		from account_invoice ai, account_invoice_line ail 
 		where ai.id=ail.invoice_id and ai.type='out_invoice' and payment_type='credit'
 		and ((date_invoice at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+		--$analytic$
 		group by ail.product_id),
 
 sale_return as (select ail.product_id,COALESCE(sum(ail.quantity),0)sale_return_qty  from 
@@ -441,6 +471,7 @@ sale_return as (select ail.product_id,COALESCE(sum(ail.quantity),0)sale_return_q
 		and aj.name='Sale Return Journal'
 		and ai.type='out_refund' 
 		and ((date_invoice at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+		--$analytic$
 		group by ail.product_id),
 
 purchase_return as (select ail.product_id,COALESCE(sum(ail.quantity),0)purchase_return_qty  from 
@@ -448,11 +479,13 @@ purchase_return as (select ail.product_id,COALESCE(sum(ail.quantity),0)purchase_
 		where ai.id=ail.invoice_id and ai.journal_id=aj.id
 		and ai.type='in_refund' 
 		and ((date_invoice at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+		--$analytic$
 		group by ail.product_id),
 branch_sale as (select ail.product_id,sum(ail.quantity) branch_sale_qty
 		from account_invoice ai, account_invoice_line ail,res_partner rp 
 		where ai.id=ail.invoice_id and rp.id=ai.partner_id and ai.type='out_invoice'
 		and ((date_invoice at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+		--$analytic$
 		and rp.inter_company=true
 		group by ail.product_id),
 transfer as (select stock_move.product_id,greatest(0,sum(stock_move.product_qty)) as transfer_qty
@@ -959,6 +992,110 @@ order by credit_sale.credit_sale_qty,cash_sale.cash_sale_qty,purchase.purchase_q
             <design:label>transfer_qty</design:label>
             <design:formattingHints>
               <design:displaySize>131089</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="analyticDS" id="478">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">id</text-property>
+                    <text-property name="heading">id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">name</text-property>
+                    <text-property name="heading">name</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters"/>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">id</property>
+                    <property name="nativeName">id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">name</property>
+                    <property name="nativeName">name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select id , name 
+from account_analytic_account 
+where type not in ('view')]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>id</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>id</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>id</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>name</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>2147483647</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>name</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>name</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
             </design:formattingHints>
           </design:usageHints>
         </design:resultColumnDefinitions>
@@ -1994,6 +2131,5 @@ order by credit_sale.credit_sale_qty,cash_sale.cash_sale_qty,purchase.purchase_q
                 </row>
             </footer>
         </table>
-        <label id="427"/>
     </body>
 </report>
