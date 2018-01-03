@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="bidiLayoutOrientation">ltr</property>
@@ -635,29 +635,29 @@ pp.categ as x_product_category,
 pp.maingroup as x_product_maingroup,
 pp.pgroup as x_product_group,
 pp.uom_name,
-(select value_float
+coalesce((select value_float
 from ir_property ip,ir_model_fields im 
 where im.id=ip.fields_id 
 and model='product.template'  
 and im.name='standard_price' 
-and res_id='product.template,'|| (select product_tmpl_id from product_product where id=pp.id)) price_unit,
+and res_id='product.template,'|| (select product_tmpl_id from product_product where id=pp.id)),0) price_unit,
 greatest(0,lm_transfer_in.qty) + greatest(0,lm_purchase_in.qty) + greatest(0,lm_sale_return_in.qty) -
 (greatest(0,lm_transfer_out.qty) + greatest(0,lm_purchase_return.qty) + greatest(0,lm_sale_out.qty)) - 
 (greatest(0,lm_scrap.qty)+greatest(0,lm_loss.qty))+ greatest(0,lm_adjustment.qty) as x_opening,
-( greatest(0,transfer_in.qty) + greatest(0,purchase_in.qty) + greatest(0,sale_return_in.qty) + greatest(0,adjustment.qty)) as x_in,
-(greatest(0,transfer_out.qty) + greatest(0,purchase_return.qty) + greatest(0,sale_out.qty) + greatest(0,scrap.qty) + greatest(0,loss.qty)) as x_out,
+( greatest(0,purchase_in.qty) + greatest(0,sale_return_in.qty) + greatest(0,adjustment.qty)) as x_in,
+( greatest(0,purchase_return.qty) + greatest(0,sale_out.qty) + greatest(0,scrap.qty) + greatest(0,loss.qty)) as x_out,
 
 (((greatest(0,lm_transfer_in.qty) + greatest(0,lm_purchase_in.qty) + greatest(0,lm_sale_return_in.qty) + 
 greatest(0,transfer_in.qty) + greatest(0,purchase_in.qty) + greatest(0,sale_return_in.qty)) -
 (greatest(0,lm_transfer_out.qty) + greatest(0,lm_purchase_return.qty) + greatest(0,lm_sale_out.qty) +
 greatest(0,transfer_out.qty) + greatest(0,purchase_return.qty) + greatest(0,sale_out.qty)) - 
 (greatest(0,lm_scrap.qty)+greatest(0,lm_loss.qty) + greatest(0,scrap.qty)+greatest(0,loss.qty)) + 
-(greatest(0,lm_adjustment.qty) + greatest(0,adjustment.qty))) * (select value_float
+(greatest(0,lm_adjustment.qty) + greatest(0,adjustment.qty))) * coalesce((select value_float
 from ir_property ip,ir_model_fields im 
 where im.id=ip.fields_id 
 and model='product.template'  
 and im.name='standard_price' 
-and res_id='product.template,'|| (select product_tmpl_id from product_product where id=pp.id))) as value_qty,
+and res_id='product.template,'|| (select product_tmpl_id from product_product where id=pp.id)),0)) as value_qty,
 
 greatest(0,transfer_in.qty) as x_transfer_in,
 greatest(0,transfer_out.qty) as x_transfer_out,
@@ -2581,7 +2581,7 @@ group by abc.x_product_code,abc.x_product,abc.uom_name,abc.price_unit,abc.x_prod
                                 <property name="paddingRight">2pt</property>
                                 <structure name="numberFormat">
                                     <property name="category">Currency</property>
-                                    <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
+                                    <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=HALF_UP}</property>
                                 </structure>
                                 <property name="textAlign">right</property>
                                 <property name="resultSetColumn">Aggregation_5</property>
@@ -2765,7 +2765,8 @@ group by abc.x_product_code,abc.x_product,abc.uom_name,abc.price_unit,abc.x_prod
                         <property name="borderTopWidth">thin</property>
                         <data id="162">
                             <property name="fontSize">8pt</property>
-                            <property name="paddingLeft">2pt</property>
+                            <property name="paddingLeft">1pt</property>
+                            <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
                                 <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=HALF_UP}</property>
@@ -2792,7 +2793,7 @@ group by abc.x_product_code,abc.x_product,abc.uom_name,abc.price_unit,abc.x_prod
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
-                                <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
+                                <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">value_qty</property>
@@ -2971,7 +2972,7 @@ group by abc.x_product_code,abc.x_product,abc.uom_name,abc.price_unit,abc.x_prod
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
-                                <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
+                                <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">Aggregation_11</property>
