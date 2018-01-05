@@ -90,7 +90,8 @@
 	                                    <th class="text-center" style="border:1pt solid;border-color:black;"><strong>Quantity</strong></th>
 	                                    <th class="text-center" style="border:1pt solid;border-color:black;"><strong>UOM</strong></th>
 	                                    <th class="text-center" style="border:1pt solid;border-color:black;"><strong>Unit Price</strong></th>
-	                                    <th class="text-center" style="border:1pt solid;border-color:black;"><strong>Discount</strong></th>
+	                                    <th class="text-center" style="border:1pt solid;border-color:black;"><strong>Discount(%)</strong></th>
+	                                    <th class="text-center" style="border:1pt solid;border-color:black;"><strong>Discount Amount</strong></th>
 	                                    <th class="text-center" style="border:1pt solid;border-color:black;"><strong>Net Price</strong></th>
 	                                    <th class="text-center" style="border:1pt solid;border-color:black;"><strong>Amount</strong></th>
 	                                </tr>
@@ -119,6 +120,9 @@
 	                                    <td style="border:1pt solid;border-color:black;" class="text-center">
 	                                    	<span t-field="l.discount"/>
 	                                    </td>
+	                                    <td style="border:1pt solid;border-color:black;" class="text-center">
+	                                    	<span t-field="l.discount_amt"/>
+	                                    </td>
 	                                    <td style="border:1pt solid;border-color:black;" class="text-right">
 	                                    	<span t-field="l.price_unit"/>
 	                                    </td>
@@ -127,7 +131,7 @@
 	                                    </td>
 		                              </tr>
 		                              <tr style="border:1pt solid;border-color:black;">
-	                                    <td colspan="7" style="border:1pt solid;border-bottom-color:white;border-left-color:white;"></td>
+	                                    <td colspan="8" style="border:1pt solid;border-bottom-color:white;border-left-color:white;"></td>
 	                                    <td style="border:1pt solid;border-color:black;">
 	                                        Total(Exclusive)
 	                                    </td>
@@ -137,16 +141,36 @@
 				                        </td>
 	                                </tr>
 	                                <tr>
-	                                    <td colspan="7" style="border:1pt solid;border-bottom-color:white;border-left-color:white;"></td>
+	                                    <td colspan="8" style="border:1pt solid;border-bottom-color:white;border-left-color:white;"> </td>
 	                                    <td style="border:1pt solid;border-color:black;">
-	                                      
+	                                       Total Discount
 	                                    </td>
 	                                    <td class="text-right" style="border:1pt solid;border-color:black;">
-				                                
+				                               <span t-field="o.discount_total"/> 
 				                        </td>
 	                                </tr>
 	                                <tr>
-	                                    <td colspan="7" style="border:1pt solid;border-bottom-color:white;border-left-color:white;">
+	                                    <td colspan="8" style="border:1pt solid;border-bottom-color:white;border-left-color:white;"></td>
+	                                    <td style="border:1pt solid;border-color:black;">
+	                                        Additional Discount(%)
+	
+	                                    </td>
+	                                    <td class="text-right" style="border:1pt solid;border-color:black;">
+				                            <span t-field="o.additional_discount"/>    
+				                        </td>
+	                                </tr>
+	                                <tr>
+	                                    <td colspan="8" style="border:1pt solid;border-bottom-color:white;border-left-color:white;"></td>
+	                                    <td style="border:1pt solid;border-color:black;">
+	                                        Deduction Amount
+	
+	                                    </td>
+	                                    <td class="text-right" style="border:1pt solid;border-color:black;">
+				                            <span t-field="o.deduct_amt"/>    
+				                        </td>
+	                                </tr>
+	                                <tr>
+	                                    <td colspan="8" style="border:1pt solid;border-bottom-color:white;border-left-color:white;">
 	                                        (In Words .................................................................................)
 	                                    </td>
 	                                    <td style="border:1pt solid;border-color:black;" >
@@ -157,17 +181,9 @@
 				                                    t-field-options='{"widget": "monetary", "display_currency": "o.pricelist_id.currency_id"}'/>
 				                        </td>
 	                                </tr>
+	                                
 	                                <tr>
-	                                    <td colspan="7" style="border:1pt solid;border-bottom-color:white;border-left-color:white;"></td>
-	                                    <td style="border:1pt solid;border-color:black;">
-	                                      
-	                                    </td>
-	                                    <td class="text-right" style="border:1pt solid;border-color:black;">
-				                                
-				                        </td>
-	                                </tr>
-	                                <tr>
-	                                    <td colspan="7" style="border:1pt solid;border-bottom-color:white;border-left-color:white;"></td>
+	                                    <td colspan="8" style="border:1pt solid;border-bottom-color:white;border-left-color:white;"></td>
 	                                    <td style="border:1pt solid;border-color:black;">
 	                                        Total(Inclusive)
 	                                    </td>

@@ -43,7 +43,17 @@ class aged_partner_balance_xls(report_xls):
         # set print header/footer
         ws.header_str = self.xls_headers['standard']
         ws.footer_str = self.xls_footers['standard']
-
+        
+        branch_obj = self.pool.get('res.branch')
+        branch_name = ''        
+        if _p.branch_id:
+            
+            for branch in branch_obj.browse(self.cr,self.uid,_p.branch_id,context=None):
+                branch_name += str(branch.branch_code) + ','
+            branch_name = branch_name[:-1]    
+        else:
+            branch_name = 'All' 
+            
         # cf. account_report_general_ledger.mako
         initial_balance_text = {'initial_balance': _('Computed'),
                                 'opening_balance': _('Opening Entries'),
@@ -80,10 +90,9 @@ class aged_partner_balance_xls(report_xls):
              'filter_date' and _('Dates Filter') or _('Periods Filter')),
             ('cd', 1, 0, 'text', _('Clearance Date')),
             ('af', 2, 0, 'text', _('Accounts Filter')),
-            ('bf', 1, 0, 'text', _('Branches Filter')),
-            ('aaf', 1, 0, 'text', _('Analytic Accounts Filter')),
+            ('aaf', 2, 0, 'text', _('Analytic Accounts Filter')),
             ('tm', 2, 0, 'text', _('Target Moves')),
-            ('bf', 1, 0, 'text',  _('Branches Filter'), None, cell_style_center),
+            ('br', 2, 0, 'text', _('Branch')),
 
         ]
         row_data = self.xls_row_template(c_specs, [x[0] for x in c_specs])
@@ -111,10 +120,12 @@ class aged_partner_balance_xls(report_xls):
             ('df', 2, 0, 'text', df),
             ('cd', 1, 0, 'text', _p.date_until),
             ('af', 2, 0, 'text', _p.display_partner_account(data)),
-            ('bf', 1, 0, 'text', _p.branches(data) and ', '.join([branch.branch_code for branch in _p.branches(data)]) or _('All')),
-            ('aaf', 1, 0, 'text', _p.analytic_accounts(data) and ', '.join([analytic_account.code for analytic_account in _p.analytic_accounts(data)]) or _('All')),
+            ('aaf', 2, 0, 'text', _p.analytic_accounts(data) and ', '.join(
+                [analytic.code for analytic in _p.analytic_accounts(data)]) or _('All')),
             ('tm', 2, 0, 'text', _p.display_target_move(data)),
-            ('bf', 1, 0, 'text', _p.branches(data) and ', '.join([branch.branch_code for branch in _p.branches(data)]) or _('All'), None, cell_style_center),
+            #('br', 2, 0, 'text', _p.branch_id[1] if _p.branch_id else u''),
+            ('br', 2, 0, 'text', branch_name),
+            
         ]
         row_data = self.xls_row_template(c_specs, [x[0] for x in c_specs])
         row_pos = self.xls_write_row(
@@ -146,12 +157,17 @@ class aged_partner_balance_xls(report_xls):
         c_specs = [
             ('partner', 2, 0, 'text', _('Partner'), None, c_hdr_cell_style),
             ('code', 1, 0, 'text', _('Code'), None, c_hdr_cell_style),
-            ('balance', 1, 0, 'text', _('Balance'), None, c_hdr_cell_style)
+            ('balance', 1, 0, 'text', _('Balance'), None, c_hdr_cell_style),
         ]
         cnt = 0
         for range_title in _p.ranges_titles:
             cnt += 1
             c_specs.append(('classification' + str(cnt), 1, 0, 'text', _(range_title), None, c_hdr_cell_style))
+        if _p.amount_currency(data):
+            c_specs += [
+                    ('cur_bal', 1, 0, 'text', _('Cur Bal'), None, c_hdr_cell_style),
+                    ('curcode', 1, 0, 'text', _('Cur Code'), None, c_hdr_cell_style)
+                ]
 
         c_hdr_data = self.xls_row_template(c_specs, [x[0] for x in c_specs])
 
@@ -169,8 +185,6 @@ class aged_partner_balance_xls(report_xls):
         cnt = 0
         for acc in objects:
             if _p.agged_lines_accounts[acc.id]:
-            #if _p.aged_lines[acc.id]:    
-            #if acc.id:
                 cnt += 1
                 cumul_debit = 0.0
                 cumul_credit = 0.0
@@ -201,6 +215,12 @@ class aged_partner_balance_xls(report_xls):
                         for classif in _p.ranges:
                             count += 1
                             c_specs.append(('classification' + str(count), 1, 0, 'number', line['aged_lines'][classif] or 0.0, None, c_init_cell_style_decimal))
+  
+                        if _p.amount_currency(data):
+                            c_specs += [
+                                        ('cur_bal', 1, 0, 'number', line.get('amount_currency'), None, c_init_cell_style_decimal),
+                                        ('curcode', 1, 0, 'text', line.get('currency_code'), None, c_init_cell_style)
+                            ]
 
                         row_data = self.xls_row_template(c_specs, [x[0] for x in c_specs])
                         row_pos = self.xls_write_row(ws, row_pos, row_data)

@@ -134,9 +134,9 @@ class sale_order_line(osv.osv):
         'tax_id': fields.many2many('account.tax', 'sale_order_tax', 'order_line_id', 'tax_id', 'Taxes', readonly=True, domain=['|', ('active', '=', False), ('active', '=', True)]),          
                'price_subtotal': fields.function(_amount_line1, string='Subtotal'),
                'net_total':fields.function(_amount_line, string='Total', digits_compute= dp.get_precision('Account')),
-               'discount':fields.float('Discount (%)',store=True, readonly=True),
-               'discount_amt':fields.float('Discount (amt)',store=True, readonly=True),
-               'sale_foc':fields.boolean('FOC', readonly=True),
+               'discount':fields.float('Discount (%)',store=True),
+               'discount_amt':fields.float('Discount (amt)',store=True),
+               'sale_foc':fields.boolean('FOC'),
               # 'show_amt':fields.function(_amount_line2,string='Total Discount(-)',readonly=True)
                
                }
@@ -406,6 +406,7 @@ class sale_order(osv.osv):
             'additional_discount':order.additional_discount,
             'discount_total':order.total_dis,
             'branch_id': order.branch_id.id,
+            'payment_type': order.payment_type,
         }
 
         # Care for deprecated _inv_get() hook - FIXME: to be removed after 6.1

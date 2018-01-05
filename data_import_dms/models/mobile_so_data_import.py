@@ -436,8 +436,8 @@ class mobile_sale_import(osv.osv):
                     if partner_ids:
                         partner_id = partner_ids[0]
                 
-                # Calculate the Discount Amount
-                if discount != "":
+#                 Calculate the Discount Amount
+                if discount != 0:
                     discount_amount = (qty_pcs * unit_price) * (discount / 100)
       
                 
@@ -679,7 +679,7 @@ class mobile_sale_import(osv.osv):
                         partner_id = partner_ids[0]
                 
                 # Calculate the Discount Amount
-                if discount != "":
+                if discount != 0:
                     discount_amount = (qty_pcs * unit_price) * (discount / 100)
       
                 
@@ -740,7 +740,7 @@ class mobile_sale_import(osv.osv):
 #                         order_line_id = order_line_obj.write(cr, uid,order_line_flg, order_line_value, context)
 #                     else:    
                     order_line_id = order_line_obj.create(cr, uid, order_line_value, context)
-                  
+                    self.button_dummy(cr, uid, order_id, context=None)
                     # Tax Filed is inserted into the sale_order_tax table
                     cr.execute('select id,name,description  from account_tax where parent_id is null')
                     tax_rec = cr.fetchall() 
@@ -751,6 +751,46 @@ class mobile_sale_import(osv.osv):
                          
 #            COPY mobile_sale_order_temp FROM '/Users/iMac/akdata/order.csv' WITH CSV header
         
-        
-    
+    def button_dummy(self, cr, uid, order_id, context=None):
+        res=result={}
+        cur_obj = self.pool.get('res.currency')
+        deduct=untax=total=0.0        
+        if order_id:
+            if (type(order_id)==int):
+                cr.execute('select sum(discount_amt) from sale_order_line where order_id=%s',(order_id,))
+                total_dis_amt=cr.fetchall()[0]
+                cr.execute('select deduct_amt,amount_untaxed,amount_tax,additional_discount from sale_order where id=%s',(order_id,))
+                result=cr.fetchall()[0]
+                deduct=result[0]
+                untax=result[1]
+                amount_tax=result[2]
+                additional_discount=result[3]
+                print result,'result and deduction',deduct,total_dis_amt
+                if additional_discount is None:
+                    additional_discount=0.0
+                if deduct is None:
+                    deduct=0.0
+                if amount_tax is None:
+                    amount_tax=0.0           
+                total=untax+amount_tax-deduct-(untax*(additional_discount/100))
+                cr.execute('update sale_order so set amount_total=%s,total_dis=%s,deduct_amt=%s,additional_discount=%s where so.id=%s',(total,total_dis_amt,deduct,additional_discount,order_id))
+            else:
+                cr.execute('select sum(discount_amt) from sale_order_line where order_id=%s',(order_id[0],))
+                total_dis_amt=cr.fetchall()[0]
+                cr.execute('select deduct_amt,amount_untaxed,amount_tax,additional_discount from sale_order where id=%s',(order_id[0],))
+                result=cr.fetchall()[0]
+                deduct=result[0]
+                untax=result[1]
+                amount_tax=result[2]
+                additional_discount=result[3]
+                print result,'result and deduction',deduct,total_dis_amt,additional_discount
+                if deduct is None:
+                    deduct=0.0
+                if amount_tax is None:
+                    amount_tax=0.0           
+                print    '(untax*additional_discount)',untax,additional_discount,(additional_discount/100),amount_tax
+                total=untax+amount_tax-deduct-(untax*(additional_discount/100))
+                print 'total',total
+                cr.execute('update sale_order so set amount_total=%s,total_dis=%s,deduct_amt=%s,additional_discount=%s where so.id=%s',(total,total_dis_amt,deduct,additional_discount,order_id[0]))
+        return True
 # mobile_sale_import()

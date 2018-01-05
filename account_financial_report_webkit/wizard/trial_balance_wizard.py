@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, orm
+from openerp.osv import orm,fields
 
 
 class AccountTrialBalanceWizard(orm.TransientModel):
@@ -28,20 +28,34 @@ class AccountTrialBalanceWizard(orm.TransientModel):
     _inherit = "account.common.balance.report"
     _name = "trial.balance.webkit"
     _description = "Trial Balance Report"
-
-    _columns = {
-        'analytic_account_ids': fields.many2many('account.analytic.account', 'trial_balance_webkit_account_analytic_account','trial_balance_webkit_id','account_analytic_account_id', string='Filter on analytic accounts',
-                                         help="Only selected analytic accounts will be printed. Leave empty to print all analytic accounts."),
-    }
     
+    _columns = {
+                'amount_currency': fields.boolean("With Currency",
+                                          help="It adds the currency column"),
+                'analytic_account_ids': fields.many2many(
+                    'account.analytic.account', string='Filter on analytic accounts',
+                    help="""Only selected analytic accounts will be printed. Leave empty to
+                            print all analytic accounts."""),
+                'branch_ids': fields.many2many('res.branch', string='Filter on branches'),
+                }
+
     def pre_print_report(self, cr, uid, ids, data, context=None):
-        data = super(AccountTrialBalanceWizard, self).pre_print_report(cr, uid, ids, data, context)
+        data = super(AccountTrialBalanceWizard, self).pre_print_report(
+            cr, uid, ids, data, context)
+        if context is None:
+            context = {}
+        # will be used to attach the report on the main account
+        data['ids'] = [data['form']['chart_account_id']]
         vals = self.read(cr, uid, ids,
-                         ['branch_ids','analytic_account_ids'],                         
-                         context=context)[0]
+                         ['amount_currency',
+                          'display_account',
+                          'account_ids',
+                          'analytic_account_ids','branch_ids'],
+                         context=context)[0]     
         data['form'].update(vals)
         return data
-       
+
+
     def _print_report(self, cursor, uid, ids, data, context=None):
         context = context or {}
         # we update form with display account value
@@ -50,5 +64,3 @@ class AccountTrialBalanceWizard(orm.TransientModel):
         return {'type': 'ir.actions.report.xml',
                 'report_name': 'account.account_report_trial_balance_webkit',
                 'datas': data}
-
-AccountTrialBalanceWizard()

@@ -35,38 +35,41 @@ def make_ranges(top, offset):
     :param offset: offset for ranges
 
     :returns: list of sorted ranges tuples in days
-              eg. [(-100000, 0), (0, offset), (offset, n*offset), ... (top, 100000)]
+              eg. [(-100000, 0), (0, offset),
+                   (offset, n*offset), ... (top, 100000)]
     """
     ranges = [(n, min(n + offset, top)) for n in xrange(0, top, offset)]
     ranges.insert(0, (-100000000000, 0))
     ranges.append((top, 100000000000))
     return ranges
 
-#list of overdue ranges
+# list of overdue ranges
 RANGES = make_ranges(120, 30)
 
 
 def make_ranges_titles():
     """Generates title to be used by mako"""
-    titles = [_('Due')]
+    titles = [_('Not Due')]
     titles += [_(u'Overdue ≤ %s d.') % x[1] for x in RANGES[1:-1]]
-    titles.append(_('Older'))
+    titles.append(_('Overdue > %s d.') % RANGES[-1][0])
     return titles
 
-#list of overdue ranges title
+# list of overdue ranges title
 RANGES_TITLES = make_ranges_titles()
-#list of payable journal types
+# list of payable journal types
 REC_PAY_TYPE = ('purchase', 'sale')
-#list of refund payable type
+# list of refund payable type
 REFUND_TYPE = ('purchase_refund', 'sale_refund')
 INV_TYPE = REC_PAY_TYPE + REFUND_TYPE
 
 
 class AccountAgedTrialBalanceWebkit(PartnersOpenInvoicesWebkit):
+
     """Compute Aged Partner Balance based on result of Open Invoices"""
 
     def __init__(self, cursor, uid, name, context=None):
-        """Constructor, refer to :class:`openerp.report.report_sxw.rml_parse`"""
+        """Constructor,
+           refer to :class:`openerp.report.report_sxw.rml_parse`"""
         super(AccountAgedTrialBalanceWebkit, self).__init__(cursor, uid, name,
                                                             context=context)
         self.pool = pooler.get_pool(self.cr.dbname)
@@ -85,7 +88,7 @@ class AccountAgedTrialBalanceWebkit(PartnersOpenInvoicesWebkit):
             'uid': uid,
             'company': company,
             'ranges': self._get_ranges(),
-            'ranges_titles': self._get_ranges_titles(),            
+            'ranges_titles': self._get_ranges_titles(),
             'report_name': _('Aged Partner Balance'),
             'additional_args': [
                 ('--header-font-name', 'Helvetica'),
@@ -95,7 +98,8 @@ class AccountAgedTrialBalanceWebkit(PartnersOpenInvoicesWebkit):
                 ('--header-left', header_report_name),
                 ('--header-spacing', '2'),
                 ('--footer-left', footer_date_time),
-                ('--footer-right', ' '.join((_('Page'), '[page]', _('of'), '[topage]'))),
+                ('--footer-right',
+                 ' '.join((_('Page'), '[page]', _('of'), '[topage]'))),
                 ('--footer-line',),
             ],
         })
@@ -124,6 +128,7 @@ class AccountAgedTrialBalanceWebkit(PartnersOpenInvoicesWebkit):
                   call to set_context
 
         """
+
         res = super(AccountAgedTrialBalanceWebkit, self).set_context(
             objects,
             data,
@@ -131,22 +136,10 @@ class AccountAgedTrialBalanceWebkit(PartnersOpenInvoicesWebkit):
             report_type=report_type
         )
 
-        for acc in self.objects:
-            acc.aged_lines = {}
-            acc.agged_totals = {}
-            acc.agged_percents = {}
-            for part_id, partner_lines in acc.ledger_lines.items():
-                aged_lines = self.compute_aged_lines(part_id,
-                                                     partner_lines,
-                                                     data)
-                if aged_lines:
-                    acc.aged_lines[part_id] = aged_lines
-            acc.aged_totals = totals = self.compute_totals(acc.aged_lines.values())
-            
         agged_lines_accounts = {}
         agged_totals_accounts = {}
         agged_percents_accounts = {}
-        
+
         for acc in self.objects:
             agged_lines_accounts[acc.id] = {}
             agged_totals_accounts[acc.id] = {}
@@ -168,10 +161,10 @@ class AccountAgedTrialBalanceWebkit(PartnersOpenInvoicesWebkit):
             'agged_lines_accounts': agged_lines_accounts,
             'agged_totals_accounts': agged_totals_accounts,
             'agged_percents_accounts': agged_percents_accounts,
-        })    
-        
-        #Free some memory
-        del(acc.ledger_lines)
+        })
+
+        # Free some memory
+        del(self.localcontext['ledger_lines'])
         return res
 
     def compute_aged_lines(self, partner_id, ledger_lines, data):
@@ -188,13 +181,11 @@ class AccountAgedTrialBalanceWebkit(PartnersOpenInvoicesWebkit):
                        'aged_lines': {(90, 120): 0.0, ...}
 
         """
-        branch_ids = data['form']['branch_ids']  
-        analytic_account_ids = data['form']['analytic_account_ids']  
         lines_to_age = self.filter_lines(partner_id, ledger_lines)
         res = {}
         end_date = self._get_end_date(data)
         aged_lines = dict.fromkeys(RANGES, 0.0)
-        reconcile_lookup = self.get_reconcile_count_lookup(branch_ids,analytic_account_ids,lines_to_age)
+        reconcile_lookup = self.get_reconcile_count_lookup(lines_to_age)
         res['aged_lines'] = aged_lines
         for line in lines_to_age:
             compute_method = self.get_compute_method(reconcile_lookup,
@@ -203,6 +194,8 @@ class AccountAgedTrialBalanceWebkit(PartnersOpenInvoicesWebkit):
             delay = compute_method(line, end_date, ledger_lines)
             classification = self.classify_line(partner_id, delay)
             aged_lines[classification] += line['debit'] - line['credit']
+            res['amount_currency'] = line["amount_currency"]
+            res['currency_code'] = line["currency_code"]
         self.compute_balance(res, aged_lines)
         return res
 
@@ -294,17 +287,22 @@ class AccountAgedTrialBalanceWebkit(PartnersOpenInvoicesWebkit):
 
         :returns: delta in days
         """
-        sale_lines = [x for x in ledger_lines if x['jtype'] in REC_PAY_TYPE and
-                      line['rec_id'] == x['rec_id']]
-        refund_lines = [x for x in ledger_lines if x['jtype'] in REFUND_TYPE and
-                        line['rec_id'] == x['rec_id']]
+        sale_lines = [
+            x for x in ledger_lines if x['jtype'] in REC_PAY_TYPE and
+            line['rec_id'] == x['rec_id']
+        ]
+        refund_lines = [
+            x for x in ledger_lines if x['jtype'] in REFUND_TYPE and
+            line['rec_id'] == x['rec_id']
+        ]
         if len(sale_lines) == 1:
             reference_line = sale_lines[0]
         elif len(refund_lines) == 1:
             reference_line = refund_lines[0]
         else:
             reference_line = line
-        key = 'date_maturity' if reference_line.get('date_maturity') else 'ldate'
+        key = 'date_maturity' if reference_line.get(
+            'date_maturity') else 'ldate'
         return self._compute_delay_from_key(key,
                                             reference_line,
                                             end_date)
@@ -399,7 +397,7 @@ class AccountAgedTrialBalanceWebkit(PartnersOpenInvoicesWebkit):
             percents[drange] = (totals[drange] / base) * 100.0
         return percents
 
-    def get_reconcile_count_lookup(self, branch_ids, analytic_account_ids, lines):
+    def get_reconcile_count_lookup(self, lines):
         """Compute an lookup dict
 
         It contains has partial reconcile id as key and the count of lines
@@ -416,36 +414,18 @@ class AccountAgedTrialBalanceWebkit(PartnersOpenInvoicesWebkit):
         # but it seems not really possible for a partner
         # So I'll keep that option.
         l_ids = tuple(x['id'] for x in lines)
-        if branch_ids and not analytic_account_ids:
-            sql = ("SELECT reconcile_partial_id, COUNT(*) FROM account_move_line"
-                   "   WHERE reconcile_partial_id IS NOT NULL"
-                   "   AND id in %s and branch_id in %s" 
-                   "   GROUP BY reconcile_partial_id")
-            self.cr.execute(sql, (l_ids,tuple(branch_ids),))
-        if not branch_ids and analytic_account_ids:
-            sql = ("SELECT reconcile_partial_id, COUNT(*) FROM account_move_line"
-                   "   WHERE reconcile_partial_id IS NOT NULL"
-                   "   AND id in %s and analytic_account_id in %s" 
-                   "   GROUP BY reconcile_partial_id")
-            self.cr.execute(sql, (l_ids,tuple(analytic_account_ids),))
-        if branch_ids and analytic_account_ids:
-            sql = ("SELECT reconcile_partial_id, COUNT(*) FROM account_move_line"
-                   "   WHERE reconcile_partial_id IS NOT NULL"
-                   "   AND id in %s and branch_id in %s and analytic_account_id in %s" 
-                   "   GROUP BY reconcile_partial_id")
-            self.cr.execute(sql, (l_ids,tuple(branch_ids),tuple(analytic_account_ids),))
-        if not branch_ids and not analytic_account_ids:
-            sql = ("SELECT reconcile_partial_id, COUNT(*) FROM account_move_line"
-                   "   WHERE reconcile_partial_id IS NOT NULL"
-                   "   AND id in %s" 
-                   "   GROUP BY reconcile_partial_id")
-            self.cr.execute(sql, (l_ids,))
+        sql = ("SELECT reconcile_partial_id, COUNT(*) FROM account_move_line"
+               "   WHERE reconcile_partial_id IS NOT NULL"
+               "   AND id in %s"
+               "   GROUP BY reconcile_partial_id")
+        self.cr.execute(sql, (l_ids,))
         res = self.cr.fetchall()
         return dict((x[0], x[1]) for x in res)
 
 HeaderFooterTextWebKitParser(
     'report.account.account_aged_trial_balance_webkit',
     'account.account',
-    'addons/account_financial_report_webkit/report/templates/aged_trial_webkit.mako',
+    'addons/account_financial_report_webkit/report/templates/\
+                                                    aged_trial_webkit.mako',
     parser=AccountAgedTrialBalanceWebkit,
 )

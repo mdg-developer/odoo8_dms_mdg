@@ -122,7 +122,7 @@ class sale_order(osv.osv):
                'payment_type':fields.selection([
                     ('credit', 'Credit'),
                     ('cash', 'Cash'),
-                 #   ('consignment', 'Consignment'),
+                    ('consignment', 'Consignment'),
 #                     ('advanced', 'Advanced')
                     ], 'Payment Type', default='cash'),
             #'direct_credit':fields.boolean('Direct Credit',default=False),
@@ -151,7 +151,7 @@ class sale_order(osv.osv):
         'state_id': fields.many2one("res.country.state", 'State', ondelete='restrict' , readonly=True),
         'country_id': fields.many2one('res.country', 'Country', ondelete='restrict' , readonly=True),
         'township': fields.many2one('res.township', 'Township', ondelete='restrict' , readonly=True),
-         'payment_term': fields.many2one('account.payment.term', 'Payment Term', readonly=True),
+         'payment_term': fields.many2one('account.payment.term', 'Payment Term'),
          'issue_warehouse_id':fields.many2one('stock.warehouse', 'Warehouse'),
                }
     
@@ -328,6 +328,7 @@ class sale_order(osv.osv):
                     'deduct_amt':so_value.deduct_amt,
                     'state':'draft',
                     'date_due':fields.date.today(),
+                    'payment_type': so_value.payment_type,
                 }
                 cr.execute("update sale_order set state='progress' where id=%s", (ids[0],))
                 print 'inv', inv
