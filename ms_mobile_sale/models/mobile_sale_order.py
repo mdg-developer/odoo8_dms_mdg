@@ -2076,10 +2076,8 @@ class mobile_sale_order(osv.osv):
                             ori_req_quantity = int(srl['req_quantity'])
                             uom_id = (srl['product_uom'])
                             # print 'product_idddddddddddd',req_quantity
-                            if big_uom_id == None:
-                                cursor.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (small_uom_id,))
-                            else:
-                                cursor.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (big_uom_id,))
+                            
+                            cursor.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (big_uom_id,))
                             bigger_qty = cursor.fetchone()[0]
                             bigger_qty = int(bigger_qty)
                             # print ' bigger_qty',sale_qty,bigger_qty,type(sale_qty),type(bigger_qty)                        
@@ -2096,62 +2094,35 @@ class mobile_sale_order(osv.osv):
                             else:
                                 qty_on_hand = 0
                             
-                            if big_uom_id == None:                   
-                                if int(srl['product_uom']) == int(small_uom_id):                                                                          
-                                    mso_line_res = {                                                            
-                                                    'line_id':stock_id,
-                                                    'remark':srl['remark'],
-                                                    'req_quantity':ori_req_quantity,
-                                                    'product_id':int(srl['product_id']),
-                                                    'product_uom':uom_id,
-                                                    'uom_ratio':packing_unit ,
-                                                    'big_uom_id':small_uom_id,
-                                                    'big_req_quantity':ori_req_quantity,
-                                                    'qty_on_hand':qty_on_hand,
-                                                    'sequence':sequence,
-                                                    }
-                                else:
-                                    mso_line_res = {                                                            
-                                                    'line_id':stock_id,
-                                                    'remark':srl['remark'],
-                                                    'req_quantity':ori_req_quantity,
-                                                    'product_id':int(srl['product_id']),
-                                                    'product_uom':uom_id,
-                                                    'uom_ratio':packing_unit ,
-                                                    'big_uom_id':small_uom_id,
-                                                    'big_req_quantity':big_req_quantity,
-                                                    'qty_on_hand':qty_on_hand,
-                                                    'sequence':sequence,
-                                                    }
+                        
+                            if int(srl['product_uom']) == int(big_uom_id):                                                                          
+                                mso_line_res = {                                                            
+                                            'line_id':stock_id,
+                                            'remark':srl['remark'],
+                                            'req_quantity':ori_req_quantity,
+                                            'product_id':int(srl['product_id']),
+                                            'product_uom':uom_id,
+                                            'uom_ratio':packing_unit ,
+                                            'big_uom_id':big_uom_id,
+                                            'big_req_quantity':ori_req_quantity,
+                                            'qty_on_hand':qty_on_hand,
+                                            'sequence':sequence,
+                                                }
                             else:
-                                if int(srl['product_uom']) == int(big_uom_id):                                                                          
-                                    mso_line_res = {                                                            
-                                                    'line_id':stock_id,
-                                                    'remark':srl['remark'],
-                                                    'req_quantity':ori_req_quantity,
-                                                    'product_id':int(srl['product_id']),
-                                                    'product_uom':uom_id,
-                                                    'uom_ratio':packing_unit ,
-                                                    'big_uom_id':big_uom_id,
-                                                    'big_req_quantity':ori_req_quantity,
-                                                    'qty_on_hand':qty_on_hand,
-                                                    'sequence':sequence,
-                                                    }
-                                else:
-                                    mso_line_res = {                                                            
-                                                    'line_id':stock_id,
-                                                    'remark':srl['remark'],
-                                                    'req_quantity':ori_req_quantity,
-                                                    'product_id':int(srl['product_id']),
-                                                    'product_uom':uom_id,
-                                                    'uom_ratio':packing_unit ,
-                                                    'big_uom_id':big_uom_id,
-                                                    'big_req_quantity':big_req_quantity,
-                                                    'qty_on_hand':qty_on_hand,
-                                                    'sequence':sequence,
-                                                    }
+                                mso_line_res = {                                                            
+                                            'line_id':stock_id,
+                                            'remark':srl['remark'],
+                                            'req_quantity':ori_req_quantity,
+                                            'product_id':int(srl['product_id']),
+                                            'product_uom':uom_id,
+                                            'uom_ratio':packing_unit ,
+                                            'big_uom_id':big_uom_id,
+                                            'big_req_quantity':big_req_quantity,
+                                            'qty_on_hand':qty_on_hand,
+                                            'sequence':sequence,
+                                                }
                                 
-                            stock_request_line_obj.create(cursor, user, mso_line_res, context=context)
+                        stock_request_line_obj.create(cursor, user, mso_line_res, context=context)
             print 'True'
             return True
         except Exception, e:
