@@ -42,7 +42,9 @@ Welcome to Tablet Log Module.
                 
                 
     'data' : [
-              'stock_delivery_reprint_view.xml'
+              'pending_delivery_from_view.xml',
+              'stock_delivery_reprint_view.xml',
+              'wizard/pending_delivery_view.xml'
     ],
              
     'demo': [],

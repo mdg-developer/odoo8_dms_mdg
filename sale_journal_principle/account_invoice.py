@@ -436,7 +436,10 @@ class account_invoice(models.Model):
                     dis_amt = cr.fetchall()
                     if dis_amt:     
                         for amt in dis_amt:
-                            discount_amt = discount_amt + amt[0];
+                            if  amt[0] is not None:
+                                discount_amt = discount_amt + amt[0];
+                            else:
+                                discount_amt=0
                         line['price'] = line['price'] - discount_amt       
                 if  line['is_discount'] == True:
                     account_id = product.product_tmpl_id.main_group.property_account_discount.id
