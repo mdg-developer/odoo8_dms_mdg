@@ -117,12 +117,14 @@ class account_invoice(models.Model):
         is_discount = line.get('is_discount', False)
         print 'originoriginorigin', origin, is_discount
         if origin:
-            cr.execute("select type from account_invoice where origin=%s", (origin,))
+            cr.execute("select type,payment_type from account_invoice where origin=%s", (origin,))
             type = cr.fetchone()
             if type:
                 type = type[0]
+                payment_type=type[1]
             else:
                 type = None
+                payment_type=None
         print 'typeeeeeeeee', type
         if type == 'out_invoice' :
             if line['price'] < 0:
@@ -130,7 +132,10 @@ class account_invoice(models.Model):
                 print 'product>>>', product.id
                 print 'line.get>>>', line.get('product_id', False)
                 if  line['is_discount'] == True:
-                    account_id = product.product_tmpl_id.main_group.property_account_discount.id
+                    if payment_type=='credit':
+                        account_id = product.product_tmpl_id.categ_id.property_account_discount_credit.id
+                    else:
+                        account_id = product.product_tmpl_id.categ_id.property_account_discount_cash.id
                     line['price'] = -1 * line['price']
                 else:
                     account_id = product.product_tmpl_id.main_group.property_account_receivable.id
@@ -202,7 +207,10 @@ class account_invoice(models.Model):
                 print 'product>>>', product.id
                 print 'line.get>>>', line.get('product_id', False)
                 if  line['is_discount'] == True:
-                    account_id = product.product_tmpl_id.main_group.property_account_discount.id
+                    if payment_type=='credit':
+                        account_id = product.product_tmpl_id.categ_id.property_account_discount_credit.id
+                    else:
+                        account_id = product.product_tmpl_id.categ_id.property_account_discount_cash.id                
                 else:
                     account_id = product.product_tmpl_id.main_group.property_account_receivable.id
                 res = {
@@ -235,7 +243,10 @@ class account_invoice(models.Model):
                 print 'product>>>', product.id
                 print 'line.get>>>', line.get('product_id', False)
                 if  line['is_discount'] == True:
-                    account_id = product.product_tmpl_id.main_group.property_account_discount.id
+                    if payment_type=='credit':
+                        account_id = product.product_tmpl_id.categ_id.property_account_discount_credit.id
+                    else:
+                        account_id = product.product_tmpl_id.categ_id.property_account_discount_cash.id
                 else:
                     account_id = product.product_tmpl_id.main_group.property_account_payable.id                
 
@@ -272,12 +283,14 @@ class account_invoice(models.Model):
         print 'line_get_convert_newline_get_convert_new', line, part, self.id
         origin = line.get('ref', False)
         if origin:
-            cr.execute("select type from account_invoice where origin=%s", (origin,))
+            cr.execute("select type,payment_type from account_invoice where origin=%s", (origin,))
             type = cr.fetchone()
             if type:
                 type = type[0]
+                payment_type=type[1]
             else:
                 type = None
+                payment_type=None
         if type == 'out_invoice'  :
             product = self.env['product.product'].browse(line.get('product_id', False))
             product_code = product.default_code
@@ -294,7 +307,10 @@ class account_invoice(models.Model):
                             discount_amt = discount_amt + amt[0];
                         line['price'] = line['price'] + discount_amt        
                 if  line['is_discount'] == True:
-                    account_id = product.product_tmpl_id.main_group.property_account_discount.id
+                    if payment_type=='credit':
+                        account_id = product.product_tmpl_id.categ_id.property_account_discount_credit.id
+                    else:
+                        account_id = product.product_tmpl_id.categ_id.property_account_discount_cash.id
                 else:
                     account_id = product.product_tmpl_id.main_group.property_account_receivable.id
                 print 'account_id>>>', account_id        
@@ -342,7 +358,10 @@ class account_invoice(models.Model):
                             discount_amt = discount_amt + amt[0];
                         line['price'] = line['price'] + discount_amt                
                 if  line['is_discount'] == True:
-                    account_id = product.product_tmpl_id.main_group.property_account_discount.id
+                    if payment_type=='credit':
+                        account_id = product.product_tmpl_id.categ_id.property_account_discount_credit.id
+                    else:
+                        account_id = product.product_tmpl_id.categ_id.property_account_discount_cash.id
                 else:
                     account_id = product.product_tmpl_id.main_group.property_account_payable.id                
                 print 'account_id>>>', account_id        
@@ -390,7 +409,10 @@ class account_invoice(models.Model):
                             discount_amt = discount_amt + amt[0];
                         line['price'] = line['price']  - discount_amt       
                 if  line['is_discount'] == True:
-                    account_id = product.product_tmpl_id.main_group.property_account_discount.id
+                    if payment_type=='credit':
+                        account_id = product.product_tmpl_id.categ_id.property_account_discount_credit.id
+                    else:
+                        account_id = product.product_tmpl_id.categ_id.property_account_discount_cash.id                    
                     line['price'] = -1 * line['price']
                 else:
                     account_id = product.product_tmpl_id.main_group.property_account_receivable.id
@@ -442,7 +464,11 @@ class account_invoice(models.Model):
                                 discount_amt=0
                         line['price'] = line['price'] - discount_amt       
                 if  line['is_discount'] == True:
-                    account_id = product.product_tmpl_id.main_group.property_account_discount.id
+                    #account_id = product.product_tmpl_id.main_group.property_account_discount.id
+                    if payment_type=='credit':
+                        account_id = product.product_tmpl_id.categ_id.property_account_discount_credit.id
+                    else:
+                        account_id = product.product_tmpl_id.categ_id.property_account_discount_cash.id                    
                     line['price'] = -1 * line['price']
                 else:
                     account_id = product.product_tmpl_id.main_group.property_account_payable.id                

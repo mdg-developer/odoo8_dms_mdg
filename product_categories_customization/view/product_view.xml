@@ -3,12 +3,13 @@
 	<data>
 
 		<record id="view_category_property_form" model="ir.ui.view">
-			<field name="name">product.category.stock.property.form.inherit</field>
+			<field name="name">product.category.stock.property.form.inherit
+			</field>
 			<field name="model">product.category</field>
 			<field name="inherit_id" ref="stock_account.view_category_property_form" />
 			<field name="arch" type="xml">
 				<data>
-				    
+
 					<field name="property_stock_account_input_categ" position="replace">
 						<field name="property_stock_account_input_categ"
 							domain="[('type','&lt;&gt;','view'),('type','=','other'),('user_type','=','INVENTORY')]" />
@@ -21,7 +22,10 @@
 						<field name="property_stock_valuation_account_id"
 							domain="[('type','&lt;&gt;','view'),('type','=','other'),('user_type','=','INVENTORY')]" />
 					</field>
-
+					<field name="property_account_income_categ" position="after">
+						<field name="property_sale_credit_account_id"
+							domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" />
+					</field>
 				</data>
 			</field>
 		</record>
@@ -32,17 +36,31 @@
 			<field name="inherit_id" ref="account.view_category_property_form" />
 			<field name="arch" type="xml">
 				<data>
-				    
+
 					<field name="property_account_income_categ" position="replace">
 						<field name="property_account_income_categ"
 							domain="[('type','&lt;&gt;','view'),('type','=','other'),('user_type','=','Income')]]" />
 					</field>
-					
+
 					<field name="property_account_expense_categ" position="replace">
 						<field name="property_account_expense_categ"
 							domain="[('type','&lt;&gt;','view'),('type','=','other') ,('user_type','=','INVENTORY')]" />
 					</field>
 
+				</data>
+			</field>
+		</record>
+
+		<record id="product_template_form_view_inherit" model="ir.ui.view">
+			<field name="name">product.template.form.inherit</field>
+			<field name="model">product.template</field>
+			<field name="inherit_id" ref="product.product_template_form_view" />
+			<field name="arch" type="xml">
+				<data>
+					<field name="property_account_income" position="after">
+						<field name="property_account_credit_income" domain="[('type','=','other')]"
+							groups="account.group_account_user" />
+					</field>
 				</data>
 			</field>
 		</record>
