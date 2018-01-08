@@ -14,8 +14,12 @@
 						<field name="property_account_receivable" />
 
 						<field name="property_account_payable" />
+						<field name="property_account_foc_cash" />
+						<field name="property_account_foc_credit" />
+						<!-- <field name="property_account_discount_cash" />
+						<field name="property_account_discount_credit" />
 						<field name="property_account_foc" />
-						<field name="property_account_discount" />
+						<field name="property_account_discount" /> -->
 					</xpath>
 				</data>
 			</field>

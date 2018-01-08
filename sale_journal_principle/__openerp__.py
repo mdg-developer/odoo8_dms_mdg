@@ -36,6 +36,7 @@ With this module for discount making.
     'data' : [
         
         'views/product_maingroup_view.xml',
+        'views/product_category_view.xml',
         #'views/account_invoice.xml',
         #'views/res_partner_view.xml.xml',
     ],

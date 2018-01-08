@@ -9,5 +9,9 @@ class product_maingroup(osv.osv):
                 'property_account_receivable': fields.many2one('account.account', 'Account Receivable' , domain="[('type', '=', 'receivable')]", help="This account will be used instead of the default one as the receivable account for the current partner", required=True),
                 'property_account_foc': fields.many2one('account.account', 'Foc Account' , domain="[('type', '=', 'other')]", help="This account will be used instead of the default one as the receivable account for the current partner", required=True),
                 'property_account_discount': fields.many2one('account.account', 'Discount Account' , domain="[('type', '=', 'other')]", help="This account will be used instead of the default one as the receivable account for the current partner", required=True),
+#                 'property_account_foc_cash': fields.many2one('account.account', 'Foc Cash Account' , domain="[('type', '=', 'other')]",  required=True),
+#                 'property_account_foc_credit': fields.many2one('account.account', 'Foc Credit Account' , domain="[('type', '=', 'other')]",  required=True),
+#                 'property_account_discount_cash': fields.many2one('account.account', 'Discount Cash Account' , domain="[('type', '=', 'other')]",  required=True),
+#                 'property_account_discount_credit': fields.many2one('account.account', 'Discount Credit Account' , domain="[('type', '=', 'other')]",  required=True),
                 }
 product_maingroup()
