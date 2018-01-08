@@ -16,6 +16,8 @@ class inventory_report(report_sxw.rml_parse):
         super(inventory_report, self).__init__(cr, uid, name, context=context)
         self.begining_qty = 0.0
         self.total_in = 0.0
+        self.total_purchase = 0.0
+        self.total_sales_return = 0.0
         self.total_out = 0.0
         self.total_int = 0.0
         self.total_adj = 0.0
@@ -23,6 +25,7 @@ class inventory_report(report_sxw.rml_parse):
         self.total_end = 0.0
         self.total_inventory = []
         self.value_exist = {}
+        #self.get_lines = {}
         self.localcontext.update({
             'get_warehouse_name': self.get_warehouse_name,
             'get_company': self._get_company,
@@ -33,6 +36,8 @@ class inventory_report(report_sxw.rml_parse):
             'get_ending_inventory' : self._get_ending_inventory,
             'get_value_exist': self._get_value_exist,
             'total_in': self._total_in,
+            'total_purchase': self._total_purchase,
+            'total_sales_return': self._total_sales_return,
             'total_out': self._total_out,
             'total_int': self._total_int,
             'total_adj': self._total_adj,
@@ -46,6 +51,18 @@ class inventory_report(report_sxw.rml_parse):
         Warehouse wise inward Qty
         """
         return self.total_in
+
+    def _total_purchase(self):
+        """
+        Warehouse wise inward Qty
+        """
+        return self.total_purchase
+
+    def _total_sales_return(self):
+        """
+        Warehouse wise inward Qty
+        """
+        return self.total_sales_return
 
     def _total_out(self):
         """
@@ -81,45 +98,49 @@ class inventory_report(report_sxw.rml_parse):
         """
         Grand Total Inventory
         """
-        ftotal_in = ftotal_out = ftotal_int = ftotal_adj = ftotal_begin = ftotal_end = 0.0
+        ftotal_purchase = ftotal_sales_return = ftotal_out = ftotal_int = ftotal_adj = ftotal_begin = ftotal_end = 0.0
         for data in self.total_inventory:
             for key,value in data.items():
                 if key[1] == company_id:
-                    ftotal_in += value['total_in']
+                    ftotal_purchase += value['total_purchase']
+                    ftotal_sales_return += value['total_sales_return']
                     ftotal_out += value['total_out']
                     ftotal_int += value['total_int']
                     ftotal_adj += value['total_adj']
                     ftotal_begin += value['total_begin']
                     ftotal_end += value['total_end']
 
-        return ftotal_begin, ftotal_in,ftotal_out,ftotal_int,ftotal_adj,ftotal_end 
+        return ftotal_begin,ftotal_purchase, ftotal_sales_return,ftotal_out,ftotal_int,ftotal_adj,ftotal_end 
 
 
     def _get_value_exist(self,warehouse_id, company_id):
         """
         Compute Total Values
         """
-        total_in = total_out = total_int = total_adj = total_begin = 0.0
+        total_purchase = total_sales_return = total_out = total_int = total_adj = total_begin = 0.0
         for warehouse in self.value_exist[warehouse_id]:
-            total_in  += warehouse.get('product_qty_in',0.0)
+            total_purchase  += warehouse.get('product_qty_purchase',0.0)
+            total_sales_return  += warehouse.get('product_qty_sales_return',0.0)
             total_out  += warehouse.get('product_qty_out',0.0)
             total_int  += warehouse.get('product_qty_internal',0.0)
             total_adj  += warehouse.get('product_qty_adjustment',0.0)
             total_begin += warehouse.get('begining_qty',0.0)
 
-        self.total_in = total_in
+        self.total_purchase = total_purchase
+        self.total_sales_return = total_sales_return
         self.total_out = total_out
         self.total_int = total_int
         self.total_adj = total_adj
         self.total_begin = total_begin
-        self.total_end = total_begin + total_in + total_out + total_int + total_adj
+        self.total_end = total_begin + total_purchase + total_sales_return + total_out + total_int + total_adj
         self.total_inventory.append({
-                                     (warehouse_id,company_id):{'total_in': total_in, 
+                                     (warehouse_id,company_id):{'total_purchase': total_purchase, 
+                                                                'total_sales_return': total_sales_return, 
                                                                 'total_out': total_out,
                                                                 'total_int':total_int,
                                                                 'total_adj':total_adj,
                                                                 'total_begin':total_begin,
-                                                                'total_end':total_begin + total_in + total_out + total_int + total_adj
+                                                                'total_end':total_begin + total_purchase + total_sales_return + total_out + total_int + total_adj
                                                                 }}) 
         return ''
 
@@ -225,14 +246,14 @@ class inventory_report(report_sxw.rml_parse):
         current_record.update({'begining_qty': res and res[0].get('qty',0.0) or 0.0})
         return self.begining_qty
 
-    def _get_ending_inventory(self, in_qty, out_qty,internal_qty,adjust_qty):
+    def _get_ending_inventory(self, purchase_qty,sales_return_qty, out_qty,internal_qty,adjust_qty):
         """
         Process:
             -Inward, outward, internal, adjustment
         Return:
             - total of those qty
         """
-        return self.begining_qty + in_qty + out_qty + internal_qty + adjust_qty
+        return self.begining_qty + purchase_qty + sales_return_qty + out_qty + internal_qty + adjust_qty
 
     def convert_withtimezone(self, userdate, context=None):
         """ 
@@ -273,13 +294,19 @@ class inventory_report(report_sxw.rml_parse):
                                 END
                             )) AS product_qty_out,
                             sum((
-                                CASE WHEN spt.code in ('incoming') AND sm.location_dest_id in %s AND sourcel.usage !='inventory' AND destl.usage !='inventory' 
+                                CASE WHEN spt.code in ('incoming') AND sm.location_dest_id in %s AND sourcel.usage ='supplier' AND destl.usage ='internal' 
                                 THEN (sm.product_qty * pu.factor / pu2.factor)
                                 ELSE 0.0 
                                 END
-                            )) AS product_qty_in,
+                            )) AS product_qty_purchase,
                             sum((
-                                CASE WHEN (spt.code ='internal' or spt.code is null) AND sm.location_dest_id in %s AND sourcel.usage !='inventory' AND destl.usage !='inventory' 
+                                CASE WHEN spt.code in ('incoming') AND sm.location_dest_id in %s AND sourcel.usage ='customer' and destl.usage ='internal' 
+                                THEN (sm.product_qty * pu.factor / pu2.factor)
+                                ELSE 0.0 
+                                END
+                            )) AS product_qty_sales_return,
+                            sum((
+                                CASE WHEN (spt.code ='internal' or spt.code is null) AND sm.location_dest_id in %s AND sourcel.usage !='inventory' and destl.usage !='inventory' 
                                 THEN (sm.product_qty * pu.factor / pu2.factor)  
                                 WHEN (spt.code='internal' or spt.code is null) AND sm.location_id in %s AND sourcel.usage !='inventory' and destl.usage !='inventory' 
                                 THEN -(sm.product_qty * pu.factor / pu2.factor)
@@ -307,15 +334,17 @@ class inventory_report(report_sxw.rml_parse):
                         LEFT JOIN product_uom pu2 ON (sm.product_uom=pu2.id)
 
                         GROUP BY pp.id order by pp.id
-                        ''',(tuple(locations),tuple(locations),tuple(locations),tuple(locations),tuple(locations),tuple(locations),start_date, end_date))
+                        ''',(tuple(locations),tuple(locations),tuple(locations),tuple(locations),tuple(locations),tuple(locations),tuple(locations),start_date, end_date))
 
         values = self.cr.dictfetchall()
 
         for none_to_update in values:
             if not none_to_update.get('product_qty_out'):
                 none_to_update.update({'product_qty_out':0.0})
-            if not none_to_update.get('product_qty_in'):
-                none_to_update.update({'product_qty_in':0.0})
+            if not none_to_update.get('product_qty_purchase'):
+                none_to_update.update({'product_qty_purchase':0.0})
+            if not none_to_update.get('product_qty_sales_return'):
+                none_to_update.update({'product_qty_sales_return':0.0})
 
         #Removed zero values dictionary
         if not include_zero:
@@ -328,7 +357,7 @@ class inventory_report(report_sxw.rml_parse):
     def _remove_zero_inventory(self, values):
         final_values = []
         for rm_zero in values:
-            if rm_zero['product_qty_in'] == 0.0 and rm_zero['product_qty_internal'] == 0.0 and rm_zero['product_qty_out'] == 0.0 and rm_zero['product_qty_adjustment'] == 0.0:
+            if rm_zero['product_qty_purchase'] == 0.0 and rm_zero['product_qty_sales_return'] == 0.0 and rm_zero['product_qty_internal'] == 0.0 and rm_zero['product_qty_out'] == 0.0 and rm_zero['product_qty_adjustment'] == 0.0:
                 pass
             else: final_values.append(rm_zero)
         return final_values
@@ -417,6 +446,7 @@ class inventory_report(report_sxw.rml_parse):
                                          })
 
         self.value_exist = final_values
+        #self.get_lines = final_values
         return final_values
 
 class inventory_report_by_warehouse(osv.AbstractModel):

@@ -33,15 +33,19 @@
 							<table class="table table-condensed">
 								<thead>
 									<tr>
-										<th class="text-left" style="color:#0F33C6;font-size: 17px;">
+										<th rowspan="2" class="text-left" style="vertical-align: middle;color:#0F33C6;font-size: 17px;">
 											<strong t-esc="obj_company['name']" />
 										</th>
-										<th class="text-right">Beginning</th>
-										<th class="text-right">Received</th>
-										<th class="text-right">Sales</th>
-										<th class="text-right">Internal</th>
-										<th class="text-right">Adjustments</th>
-										<th class="text-right">Ending</th>
+										<th style="vertical-align: middle;" rowspan="2" class="text-right">Beginning</th>
+										<th colspan="2" class="text-center">Received</th>
+										<th style="vertical-align: middle;" rowspan="2" class="text-right">Sales</th>
+										<th style="vertical-align: middle;" rowspan="2" class="text-right">Internal</th>
+										<th style="vertical-align: middle;" rowspan="2" class="text-right">Adjustments</th>
+										<th style="vertical-align: middle;" rowspan="2" class="text-right">Ending</th>
+									</tr>
+									<tr>
+										<th class="text-right">Purchase</th>
+										<th class="text-right">Sales Return</th>							
 									</tr>
 								</thead>
 								<tbody>
@@ -63,7 +67,10 @@
 															t-esc="formatLang(get_beginning_inventory(data,warehouse[0],l['product_id'],l) or 0.0)" />
 													</td>
 													<td class="text-right">
-														<p t-esc="formatLang(l['product_qty_in'])" />
+														<p t-esc="formatLang(l['product_qty_purchase'])" />
+													</td>
+													<td class="text-right">
+														<p t-esc="formatLang(l['product_qty_sales_return'])" />
 													</td>
 													<td class="text-right">
 														<p t-esc="formatLang(l['product_qty_out'])" />
@@ -76,7 +83,7 @@
 													</td>
 													<td class="text-right">
 														<p
-															t-esc="formatLang(get_ending_inventory(l['product_qty_in'],l['product_qty_out'],l['product_qty_internal'],l['product_qty_adjustment']) or 0.0)" />
+															t-esc="formatLang(get_ending_inventory(l['product_qty_purchase'],l['product_qty_sales_return'],l['product_qty_out'],l['product_qty_internal'],l['product_qty_adjustment']) or 0.0)" />
 													</td>
 												</tr>
 											</t>
@@ -84,7 +91,7 @@
 										<t t-if="not data['form']['display_all_products']">
 											<t t-foreach="(warehouse[1])" t-as="l">
 												<t t-set="p" t-value="formatLang(get_beginning_inventory(data,warehouse[0],l['product_id'],l) or 0.0)" />
-												<t t-set="q" t-value="formatLang(get_ending_inventory(l['product_qty_in'],l['product_qty_out'],l['product_qty_internal'],l['product_qty_adjustment']) or 0.0)" />
+												<t t-set="q" t-value="formatLang(get_ending_inventory(l['product_qty_purchase'],l['product_qty_sales_return'],l['product_qty_out'],l['product_qty_internal'],l['product_qty_adjustment']) or 0.0)" />
 											</t>
 										</t>
 										<!-- t t-if="warehouse[1]" -->
@@ -97,7 +104,10 @@
 												<strong t-esc="formatLang(total_begin())" />
 											</td>
 											<td class="text-right">
-												<strong t-esc="formatLang(total_in())" />
+												<strong t-esc="formatLang(total_purchase())" />
+											</td>
+											<td class="text-right">
+												<strong t-esc="formatLang(total_sales_return())" />
 											</td>
 											<td class="text-right">
 												<strong t-esc="formatLang(total_out())" />
@@ -135,6 +145,9 @@
 										</td>
 										<td class="text-right">
 											<strong t-esc="formatLang(total_vals(obj_company['id'])[5])" />
+										</td>
+										<td class="text-right">
+											<strong t-esc="formatLang(total_vals(obj_company['id'])[6])" />
 										</td>
 									</tr>
 								</tbody>
