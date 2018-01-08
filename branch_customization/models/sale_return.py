@@ -12,7 +12,6 @@ class product_transactions(osv.osv):
         
     _columns = {
                'branch_id':fields.many2one('res.branch', 'Branch',required=True),
-               'location_type'  : fields.char('Selection Type', required=True),
                }
     _defaults = {
         'branch_id': _get_default_branch,

@@ -108,7 +108,7 @@
 		
 		<!-- Parent Menu -->
 		<menuitem name="Mobile Sales" id="base.menu_mobile_sale"
-			groups="base.group_sale_salesman,base.group_sale_manager" sequence="11"/>
+			groups="base.group_sale_salesman,base.group_sale_manager" sequence="20"/>
 
 		<!-- Child Menus -->
 		<menuitem name="Report" id="base.menu_mobile_sale_report_menu"

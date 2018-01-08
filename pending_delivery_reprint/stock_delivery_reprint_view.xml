@@ -71,8 +71,8 @@
 
 		<!-- First level menu -->
 		<menuitem id="menu_tablet_print_import" name="Pending Delivery Reprint"
-			action="action_tablet_sync_log" sequence="5"
-			parent="menu_customization.menu_sale_team_menu" />
+			action="action_tablet_sync_log" sequence="2"
+			parent="menu_pending_delivery_menu_parent" />
 
 	</data>
 </openerp>

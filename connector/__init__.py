@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from . import setting
-from . import backend_model
+import setting
+import backend_model
 from . import queue
-from . import connector
-from . import producer
+import connector
+import producer
 from . import checkpoint
 from . import controllers
 from . import jobrunner
