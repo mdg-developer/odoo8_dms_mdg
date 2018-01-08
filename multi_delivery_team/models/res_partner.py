@@ -14,6 +14,30 @@ class res_partner(osv.osv):
     _columns = {  
                 'delivery_team_id': fields.many2one('crm.case.section', 'Delivery Team'),
                     } 
-
     
-   
+class unassign_delivery_team(osv.osv_memory):
+    _name = 'partner.unassign.delivery.team'
+    _description = 'Unassign Delivery Team'
+    _columns = {
+        'confirm':fields.boolean('Confirm' ,readonly=True),
+    }
+
+    _defaults = {
+         'confirm': True,                  
+    }
+
+    def print_report(self, cr, uid, ids, context=None):
+        data = self.read(cr, uid, ids, context=context)[0]
+        partner_obj = self.pool.get('res.partner')
+        datas = {
+             'ids': context.get('active_ids', []),
+             'model': 'res.partner',
+             'form': data
+            }
+        partner_id=datas['ids']
+        confirm=data['confirm']
+        for partner in partner_id: 
+            if (confirm==True):
+                cr.execute('update res_partner set delivery_team_id=null where id=%s',(partner,))      
+        return True
+                                                        
