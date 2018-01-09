@@ -118,10 +118,10 @@ class account_invoice(models.Model):
         print 'originoriginorigin', origin, is_discount
         if origin:
             cr.execute("select type,payment_type from account_invoice where origin=%s", (origin,))
-            type = cr.fetchone()
-            if type:
-                type = type[0]
-                payment_type=type[1]
+            type_data = cr.fetchone()
+            if type_data:
+                type = type_data[0]
+                payment_type=type_data[1]
             else:
                 type = None
                 payment_type=None
@@ -284,10 +284,10 @@ class account_invoice(models.Model):
         origin = line.get('ref', False)
         if origin:
             cr.execute("select type,payment_type from account_invoice where origin=%s", (origin,))
-            type = cr.fetchone()
-            if type:
-                type = type[0]
-                payment_type=type[1]
+            type_data = cr.fetchone()
+            if type_data:
+                type = type_data[0]
+                payment_type=type_data[1]
             else:
                 type = None
                 payment_type=None
