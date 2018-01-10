@@ -138,7 +138,129 @@ class stock_quant(osv.osv):
         journal_id = accounts['stock_journal']
 
         return journal_id, acc_src, acc_dest, acc_valuation 
-         
+
+    #cutomize stock journal clearance
+    def _prepare_account_move_line(self, cr, uid, move, qty, cost, credit_account_id, debit_account_id, context=None):
+        """
+        Generate the account.move.line values to post to track the stock valuation difference due to the
+        processing of the given quant.
+        """
+        if context is None:
+            context = {}
+        currency_obj = self.pool.get('res.currency')
+        if context.get('force_valuation_amount'):
+            valuation_amount = context.get('force_valuation_amount')
+        else:
+            if move.product_id.cost_method == 'average':
+                valuation_amount = cost if move.location_id.usage != 'internal' and move.location_dest_id.usage == 'internal' else move.product_id.standard_price
+            else:
+                valuation_amount = cost if move.product_id.cost_method == 'real' else move.product_id.standard_price
+        #the standard_price of the product may be in another decimal precision, or not compatible with the coinage of
+        #the company currency... so we need to use round() before creating the accounting entries.
+        valuation_amount = currency_obj.round(cr, uid, move.company_id.currency_id, valuation_amount * qty)
+        partner_id = (move.picking_id.partner_id and self.pool.get('res.partner')._find_accounting_partner(move.picking_id.partner_id).id) or False
+        if move.foc:
+            type = self.get_foc_cashorcredit(cr, uid, move, context)
+            if type == 'cash':
+                credit_account_id_1 = move.product_id.categ_id.property_account_foc_cash.id 
+                debit_account_id_1 =move.product_id.categ_id.property_account_foc_principle_receivable.id
+                if credit_account_id_1 is False:
+                    raise orm.except_orm(_('Error :'), _("Please select FOC Cash Account in Product Category %s!")) % move.product_id.categ_id.name 
+                
+                if debit_account_id_1 is False:
+                    raise orm.except_orm(_('Error :'), _("Please select FOC Principle Account Receivable in Product Category %s!")) % move.product_id.categ_id.name          
+#                 debit_account_id_1 = move.product_id.categ_id.property_account_foc_cash.id 
+#                 credit_account_id_1 =move.product_id.categ_id.property_account_foc_principle_receivable.id                
+            elif type == 'credit':
+                credit_account_id_1 = move.product_id.categ_id.property_account_foc_credit.id 
+                debit_account_id_1 = move.product_id.categ_id.property_account_foc_principle_receivable.id  
+                if credit_account_id_1 is False:
+                    raise orm.except_orm(_('Error :'), _("Please select FOC Credit Account in Product Category %s!")) % move.product_id.categ_id.name 
+                
+                if debit_account_id_1 is False:
+                    raise orm.except_orm(_('Error :'), _("Please select FOC Principle Account Receivable in Product Category %s!")) % move.product_id.categ_id.name                  
+#                 debit_account_id_1 = move.product_id.categ_id.property_account_foc_credit.id 
+#                 credit_account_id_1 = move.product_id.categ_id.property_account_foc_principle_receivable.id
+            
+            debit_line_vals = {
+                        'name': move.name,
+                        'product_id': move.product_id.id,
+                        'quantity': qty,
+                        'product_uom_id': move.product_id.uom_id.id,
+                        'ref': move.picking_id and move.picking_id.name or False,
+                        'date': move.date,
+                        'partner_id': partner_id,
+                        'debit': valuation_amount > 0 and valuation_amount or 0,
+                        'credit': valuation_amount < 0 and -valuation_amount or 0,
+                        'account_id': debit_account_id,
+            }
+            credit_line_vals = {
+                        'name': move.name,
+                        'product_id': move.product_id.id,
+                        'quantity': qty,
+                        'product_uom_id': move.product_id.uom_id.id,
+                        'ref': move.picking_id and move.picking_id.name or False,
+                        'date': move.date,
+                        'partner_id': partner_id,
+                        'credit': valuation_amount > 0 and valuation_amount or 0,
+                        'debit': valuation_amount < 0 and -valuation_amount or 0,
+                        'account_id': credit_account_id,
+            }    
+            debit_line_vals1 = {
+                    'name': move.name,
+                    'product_id': move.product_id.id,
+                    'quantity': qty,
+                    'product_uom_id': move.product_id.uom_id.id,
+                    'ref': move.picking_id and move.picking_id.name or False,
+                    'date': move.date,
+                    'partner_id': partner_id,
+                    'debit': valuation_amount > 0 and valuation_amount or 0,
+                    'credit': valuation_amount < 0 and -valuation_amount or 0,
+                    'account_id': debit_account_id_1,
+                }
+            credit_line_vals1 = {
+                    'name': move.name,
+                    'product_id': move.product_id.id,
+                    'quantity': qty,
+                    'product_uom_id': move.product_id.uom_id.id,
+                    'ref': move.picking_id and move.picking_id.name or False,
+                    'date': move.date,
+                    'partner_id': partner_id,
+                    'credit': valuation_amount > 0 and valuation_amount or 0,
+                    'debit': valuation_amount < 0 and -valuation_amount or 0,
+                    'account_id': credit_account_id_1,
+            }
+            return [(0, 0, debit_line_vals), (0, 0, credit_line_vals),(0, 0, debit_line_vals1), (0, 0, credit_line_vals1)]    
+        else:
+            debit_line_vals = {
+                        'name': move.name,
+                        'product_id': move.product_id.id,
+                        'quantity': qty,
+                        'product_uom_id': move.product_id.uom_id.id,
+                        'ref': move.picking_id and move.picking_id.name or False,
+                        'date': move.date,
+                        'partner_id': partner_id,
+                        'debit': valuation_amount > 0 and valuation_amount or 0,
+                        'credit': valuation_amount < 0 and -valuation_amount or 0,
+                        'account_id': debit_account_id,
+            }
+            credit_line_vals = {
+                        'name': move.name,
+                        'product_id': move.product_id.id,
+                        'quantity': qty,
+                        'product_uom_id': move.product_id.uom_id.id,
+                        'ref': move.picking_id and move.picking_id.name or False,
+                        'date': move.date,
+                        'partner_id': partner_id,
+                        'credit': valuation_amount > 0 and valuation_amount or 0,
+                        'debit': valuation_amount < 0 and -valuation_amount or 0,
+                        'account_id': credit_account_id,
+            }
+            return [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]
+        
+            
+    
+                 
     def _get_accounting_data_for_valuation(self, cr, uid, move, context=None):
         """
         Return the accounts and journal to use to post Journal Entries for the real-time
@@ -162,15 +284,21 @@ class stock_quant(osv.osv):
             acc_dest = move.location_dest_id.valuation_in_account_id.id
         else:
             if move.foc:
+                journal_id =None
+                cr.execute("""select id from account_journal where lower(name) like '%miscellaneous%'""")
+                journal_data = cr.fetchall()
+                if journal_data:
+                    journal_id = journal_data[0][0]
+                    
                 acc_dest = foc_account_id
                 print 'quant>>>',move.quant_ids
                 type = self.get_foc_cashorcredit(cr, uid, move, context)
                 if type == 'cash':
                     acc_dest = move.product_id.categ_id.property_account_foc_cash.id
-                    #self._create_account_move_line(cr, uid, move.quant_ids, move, move.product_id.categ_id.property_account_foc_cash.id, move.product_id.categ_id.property_account_foc_principle_receivable.id, accounts['stock_journal'], context)
+                    #self._create_account_move_line(cr, uid, move.quant_ids, move, move.product_id.categ_id.property_account_foc_cash.id, move.product_id.categ_id.property_account_foc_principle_receivable.id, journal_id, context)
                 elif type == 'credit':
                     acc_dest = move.product_id.categ_id.property_account_foc_credit.id    
-                    #self._create_account_move_line(cr, uid, move.quant_ids, move, move.product_id.categ_id.property_account_foc_credit.id, move.product_id.categ_id.property_account_foc_principle_receivable.id, accounts['stock_journal'], context)
+                    #self._create_account_move_line(cr, uid, move.quant_ids, move, move.product_id.categ_id.property_account_foc_credit.id, move.product_id.categ_id.property_account_foc_principle_receivable.id, journal_id, context)
             else:
                 acc_dest = accounts['stock_account_output']
         acc_valuation = accounts.get('property_stock_valuation_account_id', False)
