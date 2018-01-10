@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="bidiLayoutOrientation">ltr</property>
@@ -40,40 +40,54 @@
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
+        <cascading-parameter-group name="NewCascadingParameterGroup" id="170">
+            <property name="dataSet">company</property>
+            <property name="dataSetMode">multiple</property>
+            <parameters>
+                <scalar-parameter name="company_id" id="171">
+                    <text-property name="promptText">Company</text-property>
+                    <property name="valueType">dynamic</property>
+                    <property name="isRequired">true</property>
+                    <property name="dataSetName">company</property>
+                    <expression name="valueExpr">row["id"]</expression>
+                    <expression name="labelExpr">row["name"]</expression>
+                    <property name="dataType">integer</property>
+                    <property name="paramType">simple</property>
+                    <property name="concealValue">false</property>
+                    <property name="controlType">list-box</property>
+                    <property name="mustMatch">true</property>
+                    <property name="fixedOrder">true</property>
+                    <structure name="format"/>
+                </scalar-parameter>
+                <scalar-parameter name="warehouse_id" id="172">
+                    <text-property name="promptText">Warehouse</text-property>
+                    <property name="valueType">dynamic</property>
+                    <property name="isRequired">false</property>
+                    <property name="dataSetName">COM_WH</property>
+                    <expression name="valueExpr">row["wh_id"]</expression>
+                    <expression name="labelExpr">row["wh_name"]</expression>
+                    <property name="dataType">integer</property>
+                    <property name="paramType">simple</property>
+                    <property name="controlType">list-box</property>
+                    <property name="fixedOrder">true</property>
+                    <structure name="format"/>
+                </scalar-parameter>
+            </parameters>
+        </cascading-parameter-group>
         <scalar-parameter name="product" id="86">
             <text-property name="promptText">Product</text-property>
             <property name="valueType">dynamic</property>
+            <property name="isRequired">false</property>
             <property name="dataSetName">pDS</property>
             <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
             <expression name="labelExpr" type="javascript">dataSetRow["name_template"]</expression>
-            <expression name="sortByColumn">dataSetRow["name_template"]</expression>
-            <property name="sortDirection">asc</property>
             <property name="dataType">string</property>
             <property name="distinct">true</property>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
             <property name="controlType">list-box</property>
             <property name="mustMatch">true</property>
-            <property name="fixedOrder">false</property>
-            <structure name="format">
-                <property name="category">Unformatted</property>
-            </structure>
-        </scalar-parameter>
-        <scalar-parameter name="warehouse" id="89">
-            <text-property name="promptText">Warehouse</text-property>
-            <property name="valueType">dynamic</property>
-            <property name="dataSetName">whDS</property>
-            <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
-            <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
-            <expression name="sortByColumn">dataSetRow["id"]</expression>
-            <property name="sortDirection">asc</property>
-            <property name="dataType">string</property>
-            <property name="distinct">true</property>
-            <list-property name="selectionList"/>
-            <property name="paramType">simple</property>
-            <property name="controlType">list-box</property>
-            <property name="mustMatch">true</property>
-            <property name="fixedOrder">false</property>
+            <property name="fixedOrder">true</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
             </structure>
@@ -84,148 +98,6 @@
  extends="report_library.Data Source"/>
     </data-sources>
     <data-sets>
-        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="pDS" id="85">
-            <list-property name="columnHints">
-                <structure>
-                    <property name="columnName">id</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">id</text-property>
-                    <text-property name="heading">id</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">default_code</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">default_code</text-property>
-                    <text-property name="heading">default_code</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">name_template</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">name_template</text-property>
-                    <text-property name="heading">name_template</text-property>
-                </structure>
-            </list-property>
-            <structure name="cachedMetaData">
-                <list-property name="resultSet">
-                    <structure>
-                        <property name="position">1</property>
-                        <property name="name">id</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">2</property>
-                        <property name="name">default_code</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">3</property>
-                        <property name="name">name_template</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                </list-property>
-            </structure>
-            <property name="dataSource">Data Source</property>
-            <list-property name="resultSet">
-                <structure>
-                    <property name="position">1</property>
-                    <property name="name">id</property>
-                    <property name="nativeName">id</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">2</property>
-                    <property name="name">default_code</property>
-                    <property name="nativeName">default_code</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-                <structure>
-                    <property name="position">3</property>
-                    <property name="name">name_template</property>
-                    <property name="nativeName">name_template</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-            </list-property>
-            <xml-property name="queryText"><![CDATA[select id,default_code,name_template
-from product_product 
-where active='t']]></xml-property>
-            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
-  <Version>2.0</Version>
-  <design:ResultSets derivedMetaData="true">
-    <design:resultSetDefinitions>
-      <design:resultSetColumns>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>id</design:name>
-              <design:position>1</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-            <design:precision>10</design:precision>
-            <design:scale>0</design:scale>
-            <design:nullability>NotNullable</design:nullability>
-            <design:uiHints>
-              <design:displayName>id</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>id</design:label>
-            <design:formattingHints>
-              <design:displaySize>11</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>default_code</design:name>
-              <design:position>2</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
-            <design:precision>2147483647</design:precision>
-            <design:scale>0</design:scale>
-            <design:nullability>Nullable</design:nullability>
-            <design:uiHints>
-              <design:displayName>default_code</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>default_code</design:label>
-            <design:formattingHints>
-              <design:displaySize>2147483647</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>name_template</design:name>
-              <design:position>3</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
-            <design:precision>2147483647</design:precision>
-            <design:scale>0</design:scale>
-            <design:nullability>Nullable</design:nullability>
-            <design:uiHints>
-              <design:displayName>name_template</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>name_template</design:label>
-            <design:formattingHints>
-              <design:displaySize>2147483647</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-      </design:resultSetColumns>
-      <design:criteria/>
-    </design:resultSetDefinitions>
-  </design:ResultSets>
-</model:DesignValues>]]></xml-property>
-        </oda-data-set>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="whDS" id="88">
             <list-property name="columnHints">
                 <structure>
@@ -757,13 +629,13 @@ from stock_warehouse]]></xml-property>
                     </structure>
                 </list-property>
             </structure>
-            <method name="beforeOpen"><![CDATA[if (params["warehouse"].value == null )
+            <method name="beforeOpen"><![CDATA[if (params["warehouse_id"].value == null )
 {	
 this.queryText =this.queryText.replace("--$location$",  "")
 }
 else
 {
-	myvar=" and stock_move.location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=" + params["warehouse"] + "))";
+	myvar=" and stock_move.location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=" + params["warehouse_id"] + "))";
 this.queryText =this.queryText.replace("--$location$", myvar)
 }
 
@@ -853,7 +725,12 @@ this.queryText =this.queryText.replace("--$product$", myvar)
 s.date as x_date,
 s.origin as x_origin,
 concat('from ',(select sl.name from stock_location sl where sl.id=s.location_id),' to ',(select sl.name from stock_location sl where sl.id=s.location_dest_id)) as desp,
-greatest(0,s.price_unit) as price_unit,
+(select value_float
+from ir_property ip,ir_model_fields im 
+where im.id=ip.fields_id 
+and model='product.template'  
+and im.name='standard_price' 
+and res_id='product.template,'|| (select product_tmpl_id from product_product where id=pp.id)) price_unit,
 ll.usage as type,
 
 greatest(0,lm_transfer_in.qty) + greatest(0,lm_purchase_in.qty) + greatest(0,lm_sale_return_in.qty) -
@@ -876,20 +753,18 @@ stock_warehouse w,
 	(
 		select location_id,product_id,date_trunc('day', date::date) as date,price_unit,origin,location_dest_id
 		from stock_move
-		where state='done'
+		where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
 		--$product$
 		--$location$
-		--and stock_move.product_id=?
-		and ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+		--and stock_move.product_id=?		
 		--and stock_move.location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)order by id)
 		union
 		select location_dest_id,product_id,date_trunc('day', date::date) as date,price_unit,origin,location_dest_id
 		from stock_move
-		where state='done'
+		where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
 		--$product$
 		--$location$
 		--and stock_move.product_id=?
-		and ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
 		--and stock_move.location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)order by id)			
 	)tmp
 )
@@ -915,7 +790,6 @@ stock_location tl
 where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
 and state='done'
 --$product$
---$location$
 --and stock_move.product_id=?
 --and stock_move.location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)order by id)
 and stock_move.location_dest_id=tl.id
@@ -933,7 +807,6 @@ stock_location tl
 where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
 and state='done'
 --$product$
---$location$
 --and stock_move.product_id=?
 --and stock_move.location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)order by id)
 and stock_move.location_dest_id=tl.id
@@ -951,7 +824,6 @@ stock_location tl
 where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
 and state='done'
 --$product$
---$location$
 --and stock_move.product_id=?
 --and stock_move.location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)order by id)
 and stock_move.location_dest_id=tl.id
@@ -969,7 +841,6 @@ stock_location tl
 where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
 and state='done'
 --$product$
---$location$
 --and stock_move.product_id=?
 --and stock_move.location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)order by id)
 and stock_move.location_dest_id=tl.id
@@ -987,7 +858,6 @@ stock_location tl
 where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
 and state='done'
 --$product$
---$location$
 --and stock_move.product_id=?
 --and stock_move.location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)order by id)
 and stock_move.location_dest_id=tl.id
@@ -1005,7 +875,6 @@ stock_location tl
 where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
 and state='done'
 --$product$
---$location$
 --and stock_move.product_id=?
 --and stock_move.location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)order by id)
 and stock_move.location_dest_id=tl.id
@@ -1023,7 +892,6 @@ stock_location tl
 where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
 and state='done'
 --$product$
---$location$
 --and stock_move.product_id=?
 --and stock_move.location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)order by id)
 and stock_move.location_dest_id=tl.id
@@ -1041,7 +909,6 @@ stock_location tl
 where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
 and state='done'
 --$product$
---$location$
 --and stock_move.product_id=?
 --and stock_move.location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)order by id)
 and stock_move.location_dest_id=tl.id
@@ -1059,7 +926,6 @@ stock_location tl
 where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
 and state='done'
 --$product$
---$location$
 --and stock_move.product_id=?
 --and stock_move.location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)order by id)
 and stock_move.location_dest_id=tl.id
@@ -1079,7 +945,6 @@ stock_location tl
 where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? 
 and state='done'
 --$product$
---$location$
 --and stock_move.product_id=?
 --and stock_move.location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)order by id)
 and stock_move.location_dest_id=tl.id
@@ -1096,7 +961,6 @@ stock_location tl
 where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? 
 and state='done'
 --$product$
---$location$
 --and stock_move.product_id=?
 --and stock_move.location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)order by id)
 and stock_move.location_dest_id=tl.id
@@ -1113,7 +977,6 @@ stock_location tl
 where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? 
 and state='done'
 --$product$
---$location$
 --and stock_move.product_id=?
 --and stock_move.location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)order by id)
 and stock_move.location_dest_id=tl.id
@@ -1130,7 +993,6 @@ stock_location tl
 where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? 
 and state='done'
 --$product$
---$location$
 --and stock_move.product_id=?
 --and stock_move.location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)order by id)
 and stock_move.location_dest_id=tl.id
@@ -1147,7 +1009,6 @@ stock_location tl
 where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? 
 and state='done'
 --$product$
---$location$
 --and stock_move.product_id=?
 --and stock_move.location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)order by id)
 and stock_move.location_dest_id=tl.id
@@ -1164,7 +1025,6 @@ stock_location tl
 where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? 
 and state='done'
 --$product$
---$location$
 --and stock_move.product_id=?
 --and stock_move.location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)order by id)
 and stock_move.location_dest_id=tl.id
@@ -1181,7 +1041,6 @@ stock_location tl
 where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? 
 and state='done'
 --$product$
---$location$
 --and stock_move.product_id=?
 --and stock_move.location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)order by id)
 and stock_move.location_dest_id=tl.id
@@ -1198,7 +1057,6 @@ stock_location tl
 where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? 
 and state='done'
 --$product$
---$location$
 --and stock_move.product_id=?
 --and stock_move.location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)order by id)
 and stock_move.location_dest_id=tl.id
@@ -1215,7 +1073,6 @@ stock_location tl
 where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? 
 and state='done'
 --$product$
---$location$
 --and stock_move.location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)order by id)
 --and stock_move.product_id=?
 and stock_move.location_dest_id=tl.id
@@ -1894,6 +1751,381 @@ order by ll.complete_name, pp.default_code]]></xml-property>
   </design:ResultSets>
 </model:DesignValues>]]></xml-property>
         </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="COM_WH" id="169">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">company_id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">company_id</text-property>
+                    <text-property name="heading">company_id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">company_name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">company_name</text-property>
+                    <text-property name="heading">company_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">wh_id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">wh_id</text-property>
+                    <text-property name="heading">wh_id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">wh_name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">wh_name</text-property>
+                    <text-property name="heading">wh_name</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">param_1</property>
+                    <property name="paramName">company_id</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">company_id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">company_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">wh_id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">wh_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">company_id</property>
+                    <property name="nativeName">company_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">company_name</property>
+                    <property name="nativeName">company_name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">wh_id</property>
+                    <property name="nativeName">wh_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">wh_name</property>
+                    <property name="nativeName">wh_name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select rc.id company_id,rc.name company_name,w.id wh_id,w.name wh_name
+from res_company rc,stock_warehouse w
+where rc.id=w.company_id
+and rc.id=?
+order by rc.id,w.id]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>company_id</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>company_id</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>company_id</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>company_name</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>2147483647</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>company_name</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>company_name</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>id</design:name>
+              <design:position>3</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>id</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>id</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>name</design:name>
+              <design:position>4</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>2147483647</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>name</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>name</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="company" id="174"
+ extends="report_library.company"/>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="pDS" id="85">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">id</text-property>
+                    <text-property name="heading">id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">default_code</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">default_code</text-property>
+                    <text-property name="heading">default_code</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">name_template</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">name_template</text-property>
+                    <text-property name="heading">name_template</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">po_uom</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">po_uom</text-property>
+                    <text-property name="heading">po_uom</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters"/>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">default_code</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">name_template</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">po_uom</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">id</property>
+                    <property name="nativeName">id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">default_code</property>
+                    <property name="nativeName">default_code</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">name_template</property>
+                    <property name="nativeName">name_template</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">po_uom</property>
+                    <property name="nativeName">po_uom</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select p.id,p.default_code,p.name_template,pu.name po_uom
+from product_product p,product_template t, product_uom pu
+where p.product_tmpl_id=t.id and pu.id=t.uom_po_id and p.active='t']]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>id</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>id</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>id</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>default_code</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>2147483647</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>default_code</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>default_code</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>name_template</design:name>
+              <design:position>3</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>2147483647</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>name_template</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>name_template</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
     </data-sets>
     <styles>
         <style name="report" id="4">
@@ -1946,21 +2178,52 @@ order by ll.complete_name, pp.default_code]]></xml-property>
             <property name="fontWeight">bold</property>
             <text-property name="text">BEAUTY WORLD TRADING CO.,LTD. (TRADING)</text-property>
         </label>
-        <grid id="129">
-            <property name="height">0.26666666666666666in</property>
-            <property name="width">7.758333333333334in</property>
-            <column id="130">
-                <property name="width">1.9416666666666667in</property>
+        <grid id="173">
+            <property name="height">0.2in</property>
+            <property name="width">7.666666666666667in</property>
+            <property name="dataSet">mainDS</property>
+            <column id="175">
+                <property name="width">0.9916666666666667in</property>
             </column>
-            <column id="131">
-                <property name="width">5.816666666666666in</property>
+            <column id="176">
+                <property name="width">0.14166666666666666in</property>
             </column>
-            <row id="132">
-                <property name="height">0.26666666666666666in</property>
-                <cell id="133">
-                    <data id="92">
+            <column id="188">
+                <property name="width">1.3in</property>
+            </column>
+            <column id="189">
+                <property name="width">2.566666666666667in</property>
+            </column>
+            <column id="192">
+                <property name="width">0.975in</property>
+            </column>
+            <column id="190">
+                <property name="width">0.125in</property>
+            </column>
+            <column id="186">
+                <property name="width">1.5666666666666667in</property>
+            </column>
+            <row id="177">
+                <property name="verticalAlign">middle</property>
+                <property name="height">0.25in</property>
+                <cell id="178">
+                    <label id="193">
                         <property name="fontSize">8pt</property>
-                        <property name="textUnderline">underline</property>
+                        <property name="paddingLeft">2pt</property>
+                        <property name="textAlign">left</property>
+                        <text-property name="text">Product Name</text-property>
+                    </label>
+                </cell>
+                <cell id="179">
+                    <label id="194">
+                        <text-property name="text">:</text-property>
+                    </label>
+                </cell>
+                <cell id="187">
+                    <data id="195">
+                        <property name="fontSize">8pt</property>
+                        <property name="textUnderline">none</property>
+                        <property name="paddingLeft">2pt</property>
                         <property name="textAlign">left</property>
                         <list-property name="boundDataColumns">
                             <structure>
@@ -1973,59 +2236,59 @@ order by ll.complete_name, pp.default_code]]></xml-property>
                         <property name="resultSetColumn">product</property>
                     </data>
                 </cell>
-                <cell id="134">
-                    <data id="91">
+                <cell id="180"/>
+                <cell id="191">
+                    <label id="204">
                         <property name="fontSize">8pt</property>
-                        <property name="textUnderline">underline</property>
+                        <property name="paddingLeft">2pt</property>
                         <property name="textAlign">left</property>
-                        <list-property name="boundDataColumns">
-                            <structure>
-                                <property name="name">warehouse</property>
-                                <expression name="expression" type="javascript">params["warehouse"].displayText</expression>
-                                <property name="dataType">string</property>
-                                <property name="allowExport">true</property>
-                            </structure>
-                        </list-property>
-                        <property name="resultSetColumn">warehouse</property>
-                    </data>
-                </cell>
-            </row>
-        </grid>
-        <label id="83">
-            <property name="fontSize">8pt</property>
-            <property name="textAlign">left</property>
-            <text-property name="text">BOSS MASTER (20X20X6)</text-property>
-        </label>
-        <grid id="153">
-            <property name="height">0.25in</property>
-            <property name="width">7.758333333333334in</property>
-            <column id="154">
-                <property name="width">1.2333333333333334in</property>
-            </column>
-            <column id="155">
-                <property name="width">0.16666666666666666in</property>
-            </column>
-            <column id="156">
-                <property name="width">6.358333333333333in</property>
-            </column>
-            <row id="157">
-                <property name="backgroundColor">#FFFFFF</property>
-                <property name="height">0.25in</property>
-                <cell id="158">
-                    <label id="161">
-                        <property name="fontSize">9pt</property>
-                        <property name="textAlign">center</property>
-                        <text-property name="text">Opening Balance</text-property>
+                        <text-property name="text">Purchase UOM</text-property>
                     </label>
                 </cell>
-                <cell id="159">
-                    <label id="162">
+                <cell id="205">
+                    <label id="206">
                         <text-property name="text">:</text-property>
                     </label>
                 </cell>
-                <cell id="160">
-                    <data id="140">
+                <cell id="185">
+                    <data id="213">
                         <property name="fontSize">8pt</property>
+                        <property name="textUnderline">none</property>
+                        <property name="paddingLeft">2pt</property>
+                        <property name="textAlign">left</property>
+                        <property name="dataSet">pDS</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">po_uom</property>
+                                <text-property name="displayName">po_uom</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["po_uom"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">po_uom</property>
+                    </data>
+                </cell>
+            </row>
+            <row id="208">
+                <property name="verticalAlign">middle</property>
+                <property name="height">0.25in</property>
+                <cell id="196">
+                    <label id="209">
+                        <property name="fontSize">8pt</property>
+                        <property name="paddingLeft">2pt</property>
+                        <property name="textAlign">left</property>
+                        <text-property name="text">Opening Balance</text-property>
+                    </label>
+                </cell>
+                <cell id="197">
+                    <label id="203">
+                        <text-property name="text">:</text-property>
+                    </label>
+                </cell>
+                <cell id="198">
+                    <data id="210">
+                        <property name="fontSize">8pt</property>
+                        <property name="textUnderline">none</property>
                         <property name="paddingLeft">2pt</property>
                         <property name="textAlign">left</property>
                         <property name="dataSet">mainDS</property>
@@ -2038,6 +2301,37 @@ order by ll.complete_name, pp.default_code]]></xml-property>
                             </structure>
                         </list-property>
                         <property name="resultSetColumn">x_opening</property>
+                    </data>
+                </cell>
+                <cell id="199"/>
+                <cell id="200">
+                    <label id="211">
+                        <property name="fontSize">8pt</property>
+                        <property name="paddingLeft">2pt</property>
+                        <property name="textAlign">left</property>
+                        <text-property name="text">Warehouse</text-property>
+                    </label>
+                </cell>
+                <cell id="201">
+                    <label id="212">
+                        <text-property name="text">:</text-property>
+                    </label>
+                </cell>
+                <cell id="202">
+                    <data id="91">
+                        <property name="fontSize">8pt</property>
+                        <property name="textUnderline">none</property>
+                        <property name="paddingLeft">2pt</property>
+                        <property name="textAlign">left</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">warehouse</property>
+                                <expression name="expression" type="javascript">params["warehouse_id"].displayText</expression>
+                                <property name="dataType">string</property>
+                                <property name="allowExport">true</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">warehouse</property>
                     </data>
                 </cell>
             </row>
@@ -2475,7 +2769,7 @@ order by ll.complete_name, pp.default_code]]></xml-property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
-                                <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
+                                <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">price_unit</property>

@@ -1,0 +1,42 @@
+<?xml version="1.0" ?>
+<openerp>
+	<data>
+
+		<record id="pol_import_view" model="ir.ui.view">
+			<field name="name">pol.import.form</field>
+			<field name="model">pol.import</field>
+			<field name="priority">1</field>
+			<field name="arch" type="xml">
+				<form string="Import File" version="7.0">
+					<group colspan="4" col="4">
+						<separator string="Select your file :" colspan="4" />
+						<field name="pol_data" filename="pol_fname" />
+						<newline />
+					</group>
+					<footer>
+						<button name="pol_import" string="_Import" type="object"
+							class="oe_highlight" />
+						or
+						<button string="Cancel" class="oe_link" special="cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="pol_import_result_view" model="ir.ui.view">
+			<field name="name">pol.import.result.form</field>
+			<field name="model">pol.import</field>
+			<field name="priority">2</field>
+			<field name="arch" type="xml">
+				<form string="Import File" version="7.0">
+					<separator colspan="4" string="Results :" />
+					<field name="note" colspan="4" nolabel="1" width="850"
+						height="400" />
+					<footer>
+						<button string="Close" class="oe_link" special="cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+	</data>
+</openerp>

@@ -12,10 +12,10 @@
         </structure>
     </list-property>
     <parameters>
-        <scalar-parameter name="company_id" id="5" extends="report_library.company_id"/>
         <scalar-parameter name="from_date" id="214">
             <text-property name="promptText">From Date</text-property>
             <property name="valueType">static</property>
+            <property name="isRequired">true</property>
             <property name="dataType">date</property>
             <property name="distinct">true</property>
             <list-property name="selectionList"/>
@@ -28,6 +28,7 @@
         <scalar-parameter name="to_date" id="215">
             <text-property name="promptText">To Date</text-property>
             <property name="valueType">static</property>
+            <property name="isRequired">true</property>
             <property name="dataType">date</property>
             <property name="distinct">true</property>
             <list-property name="selectionList"/>
@@ -37,43 +38,51 @@
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
-        <scalar-parameter name="saleteam" id="117">
-            <text-property name="promptText">Sale Team</text-property>
-            <property name="valueType">dynamic</property>
-            <property name="dataSetName">teamDS</property>
-            <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
-            <expression name="labelExpr" type="javascript">dataSetRow["team_name"]</expression>
-            <expression name="sortByColumn">dataSetRow["name"]</expression>
-            <property name="sortDirection">asc</property>
-            <property name="dataType">string</property>
-            <property name="distinct">true</property>
-            <list-property name="selectionList"/>
-            <property name="paramType">multi-value</property>
-            <property name="controlType">list-box</property>
-            <property name="mustMatch">true</property>
-            <property name="fixedOrder">false</property>
-            <structure name="format">
-                <property name="category">Unformatted</property>
-            </structure>
-        </scalar-parameter>
-        <scalar-parameter name="branch" id="276">
-            <property name="valueType">dynamic</property>
-            <property name="dataSetName">branchDS</property>
-            <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
-            <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
-            <expression name="sortByColumn">dataSetRow["id"]</expression>
-            <property name="sortDirection">asc</property>
-            <property name="dataType">string</property>
-            <property name="distinct">true</property>
-            <list-property name="selectionList"/>
-            <property name="paramType">simple</property>
-            <property name="controlType">list-box</property>
-            <property name="mustMatch">true</property>
-            <property name="fixedOrder">false</property>
-            <structure name="format">
-                <property name="category">Unformatted</property>
-            </structure>
-        </scalar-parameter>
+        <cascading-parameter-group name="NewCascadingParameterGroup" id="216">
+            <property name="dataSet">all_ds</property>
+            <property name="dataSetMode">single</property>
+            <parameters>
+                <scalar-parameter name="company_id" id="217">
+                    <text-property name="promptText">Company</text-property>
+                    <property name="valueType">dynamic</property>
+                    <property name="isRequired">true</property>
+                    <property name="dataSetName">all_ds</property>
+                    <expression name="valueExpr">row["company_id"]</expression>
+                    <expression name="labelExpr">row["company_name"]</expression>
+                    <property name="dataType">integer</property>
+                    <property name="paramType">simple</property>
+                    <property name="controlType">list-box</property>
+                    <property name="fixedOrder">true</property>
+                    <structure name="format"/>
+                </scalar-parameter>
+                <scalar-parameter name="branch_id" id="218">
+                    <text-property name="promptText">Branch</text-property>
+                    <property name="valueType">dynamic</property>
+                    <property name="isRequired">false</property>
+                    <property name="dataSetName">company</property>
+                    <expression name="valueExpr">row["branch_id"]</expression>
+                    <expression name="labelExpr">row["branch_code"]</expression>
+                    <property name="dataType">integer</property>
+                    <property name="paramType">simple</property>
+                    <property name="controlType">list-box</property>
+                    <property name="fixedOrder">true</property>
+                    <structure name="format"/>
+                </scalar-parameter>
+                <scalar-parameter name="sales_team_id" id="315">
+                    <text-property name="promptText">Sales Team</text-property>
+                    <property name="valueType">dynamic</property>
+                    <property name="isRequired">false</property>
+                    <property name="dataSetName">company</property>
+                    <expression name="valueExpr">row["sale_team_id"]</expression>
+                    <expression name="labelExpr">row["sale_team_code"]</expression>
+                    <property name="dataType">integer</property>
+                    <property name="paramType">simple</property>
+                    <property name="controlType">list-box</property>
+                    <property name="fixedOrder">true</property>
+                    <structure name="format"/>
+                </scalar-parameter>
+            </parameters>
+        </cascading-parameter-group>
     </parameters>
     <data-sources>
         <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="118"
@@ -157,8 +166,13 @@
             <list-property name="computedColumns">
                 <structure>
                     <property name="name">net</property>
-                    <expression name="expression">row["credit_sales"]+row["cash_sales"]</expression>
+                    <expression name="expression">row["credit_sales"]+row["cash_sales"] - row["return"]</expression>
                     <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">total</property>
+                    <expression name="expression">row["credit_sales"] + row["cash_sales"]</expression>
+                    <property name="dataType">float</property>
                 </structure>
             </list-property>
             <list-property name="columnHints">
@@ -225,6 +239,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">1</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -235,6 +250,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">2</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -245,6 +261,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">3</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -255,6 +272,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">4</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -265,6 +283,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">5</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -275,6 +294,27 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">6</property>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_7</property>
+                    <property name="paramName">from_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">7</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_8</property>
+                    <property name="paramName">to_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">8</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -331,15 +371,20 @@
                         <property name="name">net</property>
                         <property name="dataType">decimal</property>
                     </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">total</property>
+                        <property name="dataType">float</property>
+                    </structure>
                 </list-property>
             </structure>
-            <method name="beforeOpen"><![CDATA[if (params["saleteam"].value == null )
+            <method name="beforeOpen"><![CDATA[if (params["sales_team_id"].value == null )
 {
 this.queryText =this.queryText.replace("--$saleteam$", "")
 }
 else
 {
-this.queryText = this.queryText.replace("--$saleteam$", "and so.section_id in (" + params["saleteam"].value.join(",") + ")" );
+this.queryText = this.queryText.replace("--$saleteam$", "and so.section_id =" + params["sales_team_id"]);
 }
 if (params["company_id"].value == null ){     
    this.queryText =this.queryText.replace("--$company_id$", "")
@@ -348,12 +393,12 @@ else
 {     
    this.queryText =this.queryText.replace("--$company_id$", "and so.company_id="+params["company_id"])
 }
-if (params["branch"].value == null ){     
+if (params["branch_id"].value == null ){     
    this.queryText =this.queryText.replace("--$branch$", "")
 }
 else
 {     
-   this.queryText =this.queryText.replace("--$branch$", "and so.branch_id="+params["branch"])
+   this.queryText =this.queryText.replace("--$branch$", "and so.branch_id="+params["branch_id"])
 };]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
@@ -379,35 +424,35 @@ else
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">3</property>
+                    <property name="position">4</property>
                     <property name="name">qty_sold</property>
                     <property name="nativeName">qty_sold</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">4</property>
+                    <property name="position">5</property>
                     <property name="name">foc_qty_sold</property>
                     <property name="nativeName">foc_qty_sold</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">5</property>
+                    <property name="position">6</property>
                     <property name="name">credit_sales</property>
                     <property name="nativeName">credit_sales</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">6</property>
+                    <property name="position">7</property>
                     <property name="name">cash_sales</property>
                     <property name="nativeName">cash_sales</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">7</property>
+                    <property name="position">8</property>
                     <property name="name">return</property>
                     <property name="nativeName">return</property>
                     <property name="dataType">decimal</property>
@@ -421,7 +466,10 @@ else
                     <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[with qty_sold as (
+            <xml-property name="queryText"><![CDATA[Select a.pid,a.name_template,a.default_code, COALESCE(sum(a.qty_sold),0) qty_sold, COALESCE(sum(a.foc_qty_sold),0) foc_qty_sold,
+COALESCE(sum(a.credit_sales),0)credit_sales, COALESCE(sum(a.cash_sales),0)cash_sales, COALESCE(sum(a.return_amt),0)return,a.team_name 
+From (
+with qty_sold as (
 	select COALESCE(sum(product_uom_qty),0) qty_sold,product_id,
 	payment_type,ccs.name team_name,so.section_id team_id
 	from sale_order so,sale_order_line line , crm_case_section ccs
@@ -439,25 +487,31 @@ foc_qty_sold as (
 	from sale_order so,sale_order_line line, crm_case_section ccs
 	where so.id=line.order_id and ccs.id=so.section_id
 	and sale_foc='true' 	
-	and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+	and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ? 
 	and ccs.active='true' 
 	--$saleteam$
 	--$company_id$
 	--$branch$
 	group by product_id,payment_type,ccs.name,so.section_id
-	)
+	),
+return as (select ail.product_id,ai.section_id,COALESCE(sum(ai.amount_total),0)return_amt  from 
+		account_invoice ai,account_invoice_line ail,account_journal aj
+		where ai.id=ail.invoice_id and ai.journal_id=aj.id
+		and aj.name='Sale Return Journal' 
+		and date_invoice::date between ? and ? 
+		group by ail.product_id,ai.section_id)
 
 select distinct pp.id pid,name_template,default_code,
 greatest(0,qty_sold.qty_sold) qty_sold, greatest(0,foc_qty_sold.foc_qty_sold) foc_qty_sold,
 case when sales_record.payment_type='credit' then greatest(0,sales_record.sales) end as credit_sales,
 case when sales_record.payment_type='cash' then greatest(0,sales_record.sales) end as cash_sales,
-0.0 return,
+greatest(0,return.return_amt) return_amt,
 sales_record.team_name
 from (select COALESCE(sum((product_uom_qty*price_unit)-discount_amt),0) sales,product_id,
 payment_type,ccs.name team_name,so.section_id team_id
 from sale_order so,sale_order_line line, crm_case_section ccs
 where so.id=line.order_id and ccs.id=so.section_id
-and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ? 
 and ccs.active='true'
 --$saleteam$
 --$company_id$
@@ -468,8 +522,9 @@ inner join product_product pp on pp.id=sales_record.product_id
 inner join product_template pt on pt.id=pp.product_tmpl_id  
 left join qty_sold on qty_sold.product_id=pp.id
 left join foc_qty_sold on foc_qty_sold.product_id=pp.id
+left join return on return.product_id=sales_record.product_id
 where pp.active='true'
-order by pp.id]]></xml-property>
+order by pp.id)a group by a.pid,a.name_template,a.default_code,a.team_name]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -556,6 +611,36 @@ order by pp.id]]></xml-property>
           <design:identifier>
             <design:name></design:name>
             <design:position>6</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>7</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>8</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
@@ -742,177 +827,27 @@ order by pp.id]]></xml-property>
   </design:ResultSets>
 </model:DesignValues>]]></xml-property>
         </oda-data-set>
-        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="teamDS" id="116">
-            <list-property name="columnHints">
-                <structure>
-                    <property name="columnName">id</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">id</text-property>
-                    <text-property name="heading">id</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">code</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">code</text-property>
-                    <text-property name="heading">code</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">name</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">name</text-property>
-                    <text-property name="heading">name</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">team_name</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">team_name</text-property>
-                    <text-property name="heading">team_name</text-property>
-                </structure>
-            </list-property>
-            <list-property name="parameters"/>
-            <structure name="cachedMetaData">
-                <list-property name="resultSet">
-                    <structure>
-                        <property name="position">1</property>
-                        <property name="name">id</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">2</property>
-                        <property name="name">code</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">3</property>
-                        <property name="name">name</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">4</property>
-                        <property name="name">team_name</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                </list-property>
-            </structure>
-            <property name="dataSource">Data Source</property>
-            <list-property name="resultSet">
-                <structure>
-                    <property name="position">1</property>
-                    <property name="name">id</property>
-                    <property name="nativeName">id</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">2</property>
-                    <property name="name">code</property>
-                    <property name="nativeName">code</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-                <structure>
-                    <property name="position">3</property>
-                    <property name="name">name</property>
-                    <property name="nativeName">name</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-                <structure>
-                    <property name="position">4</property>
-                    <property name="name">team_name</property>
-                    <property name="nativeName">team_name</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-            </list-property>
-            <xml-property name="queryText"><![CDATA[select id,code,name, concat(code,'/ ',name) team_name
-from crm_case_section 
-where active='t'
-order by name]]></xml-property>
-            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
-  <Version>2.0</Version>
-  <design:ResultSets derivedMetaData="true">
-    <design:resultSetDefinitions>
-      <design:resultSetColumns>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>id</design:name>
-              <design:position>1</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-            <design:precision>10</design:precision>
-            <design:scale>0</design:scale>
-            <design:nullability>NotNullable</design:nullability>
-            <design:uiHints>
-              <design:displayName>id</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>id</design:label>
-            <design:formattingHints>
-              <design:displaySize>11</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>customer_code</design:name>
-              <design:position>2</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
-            <design:precision>2147483647</design:precision>
-            <design:scale>0</design:scale>
-            <design:nullability>Nullable</design:nullability>
-            <design:uiHints>
-              <design:displayName>customer_code</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>customer_code</design:label>
-            <design:formattingHints>
-              <design:displaySize>2147483647</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>name</design:name>
-              <design:position>3</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
-            <design:precision>2147483647</design:precision>
-            <design:scale>0</design:scale>
-            <design:nullability>NotNullable</design:nullability>
-            <design:uiHints>
-              <design:displayName>name</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>name</design:label>
-            <design:formattingHints>
-              <design:displaySize>2147483647</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-      </design:resultSetColumns>
-      <design:criteria/>
-    </design:resultSetDefinitions>
-  </design:ResultSets>
-</model:DesignValues>]]></xml-property>
-        </oda-data-set>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="company" id="119"
  extends="report_library.company"/>
-        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="branchDS" id="275">
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="all_ds" id="106">
             <list-property name="columnHints">
                 <structure>
-                    <property name="columnName">id</property>
+                    <property name="columnName">company_id</property>
                     <property name="analysis">measure</property>
-                    <text-property name="displayName">id</text-property>
-                    <text-property name="heading">id</text-property>
+                    <text-property name="displayName">company_id</text-property>
+                    <text-property name="heading">company_id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">company_name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">company_name</text-property>
+                    <text-property name="heading">company_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">branch_id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">branch_id</text-property>
+                    <text-property name="heading">branch_id</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">branch_code</property>
@@ -921,27 +856,49 @@ order by name]]></xml-property>
                     <text-property name="heading">branch_code</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">name</property>
+                    <property name="columnName">sale_team_id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">sale_team_id</text-property>
+                    <text-property name="heading">sale_team_id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">sale_team_code</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">name</text-property>
-                    <text-property name="heading">name</text-property>
+                    <text-property name="displayName">sale_team_code</text-property>
+                    <text-property name="heading">sale_team_code</text-property>
                 </structure>
             </list-property>
+            <list-property name="parameters"/>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
                     <structure>
                         <property name="position">1</property>
-                        <property name="name">id</property>
+                        <property name="name">company_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">2</property>
-                        <property name="name">branch_code</property>
+                        <property name="name">company_name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">3</property>
-                        <property name="name">name</property>
+                        <property name="name">branch_id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">branch_code</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">sale_team_id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">sale_team_code</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
@@ -950,29 +907,53 @@ order by name]]></xml-property>
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
-                    <property name="name">id</property>
-                    <property name="nativeName">id</property>
+                    <property name="name">company_id</property>
+                    <property name="nativeName">company_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
                     <property name="position">2</property>
+                    <property name="name">company_name</property>
+                    <property name="nativeName">company_name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">branch_id</property>
+                    <property name="nativeName">branch_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
                     <property name="name">branch_code</property>
                     <property name="nativeName">branch_code</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">3</property>
-                    <property name="name">name</property>
-                    <property name="nativeName">name</property>
+                    <property name="position">5</property>
+                    <property name="name">sale_team_id</property>
+                    <property name="nativeName">sale_team_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">sale_team_code</property>
+                    <property name="nativeName">sale_team_code</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select id,branch_code,name
-from res_branch
-where active='t']]></xml-property>
+            <xml-property name="queryText"><![CDATA[select rc.id company_id,rc.name company_name,rb.id branch_id,
+rb.branch_code,ccs.id sale_team_id,ccs.code sale_team_code
+from res_company rc
+left join res_branch rb on rc.id=rb.res_company_id
+left join crm_case_section ccs on ccs.branch_id=rb.id
+order by rc.id,rb.id]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -982,7 +963,7 @@ where active='t']]></xml-property>
         <design:resultColumnDefinitions>
           <design:attributes>
             <design:identifier>
-              <design:name>id</design:name>
+              <design:name>company_id</design:name>
               <design:position>1</design:position>
             </design:identifier>
             <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
@@ -990,11 +971,53 @@ where active='t']]></xml-property>
             <design:scale>0</design:scale>
             <design:nullability>NotNullable</design:nullability>
             <design:uiHints>
-              <design:displayName>id</design:displayName>
+              <design:displayName>company_id</design:displayName>
             </design:uiHints>
           </design:attributes>
           <design:usageHints>
-            <design:label>id</design:label>
+            <design:label>company_id</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>company_name</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>2147483647</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>company_name</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>company_name</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>branch_id</design:name>
+              <design:position>3</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>branch_id</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>branch_id</design:label>
             <design:formattingHints>
               <design:displaySize>11</design:displaySize>
             </design:formattingHints>
@@ -1004,7 +1027,7 @@ where active='t']]></xml-property>
           <design:attributes>
             <design:identifier>
               <design:name>branch_code</design:name>
-              <design:position>2</design:position>
+              <design:position>4</design:position>
             </design:identifier>
             <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
             <design:precision>2147483647</design:precision>
@@ -1024,19 +1047,82 @@ where active='t']]></xml-property>
         <design:resultColumnDefinitions>
           <design:attributes>
             <design:identifier>
-              <design:name>name</design:name>
-              <design:position>3</design:position>
+              <design:name>sale_team_id</design:name>
+              <design:position>5</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>sale_team_id</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>sale_team_id</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>sale_team_code</design:name>
+              <design:position>6</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>8</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>sale_team_code</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>sale_team_code</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>customer_id</design:name>
+              <design:position>7</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>customer_id</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>customer_id</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>customer_name</design:name>
+              <design:position>8</design:position>
             </design:identifier>
             <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
             <design:precision>2147483647</design:precision>
             <design:scale>0</design:scale>
             <design:nullability>NotNullable</design:nullability>
             <design:uiHints>
-              <design:displayName>name</design:displayName>
+              <design:displayName>customer_name</design:displayName>
             </design:uiHints>
           </design:attributes>
           <design:usageHints>
-            <design:label>name</design:label>
+            <design:label>customer_name</design:label>
             <design:formattingHints>
               <design:displaySize>2147483647</design:displaySize>
             </design:formattingHints>
@@ -1057,15 +1143,15 @@ where active='t']]></xml-property>
     </page-setup>
     <body>
         <label id="11">
-            <property name="fontFamily">serif</property>
-            <property name="fontSize">13pt</property>
+            <property name="fontFamily">sans-serif</property>
+            <property name="fontSize">11pt</property>
             <property name="fontWeight">bold</property>
             <property name="textAlign">center</property>
             <text-property name="text">Location Item Sales Report</text-property>
         </label>
         <data id="17">
-            <property name="fontFamily">serif</property>
-            <property name="fontSize">10pt</property>
+            <property name="fontFamily">sans-serif</property>
+            <property name="fontSize">9pt</property>
             <property name="fontWeight">normal</property>
             <property name="textAlign">center</property>
             <property name="dataSet">param_from_to_date</property>
@@ -1083,13 +1169,13 @@ where active='t']]></xml-property>
             <property name="height">0.49166666666666664in</property>
             <property name="width">7.758333333333334in</property>
             <column id="295">
-                <property name="width">0.7583333333333333in</property>
+                <property name="width">0.65in</property>
             </column>
             <column id="296">
-                <property name="width">0.13333333333333333in</property>
+                <property name="width">0.15in</property>
             </column>
             <column id="297">
-                <property name="width">6.866666666666666in</property>
+                <property name="width">6.958333333333333in</property>
             </column>
             <row id="298">
                 <property name="verticalAlign">middle</property>
@@ -1157,7 +1243,7 @@ where active='t']]></xml-property>
                         <list-property name="boundDataColumns">
                             <structure>
                                 <property name="name">branch</property>
-                                <expression name="expression" type="javascript">params["branch"].displayText</expression>
+                                <expression name="expression" type="javascript">params["branch_id"].displayText</expression>
                                 <property name="dataType">string</property>
                                 <property name="allowExport">true</property>
                             </structure>
@@ -1400,27 +1486,65 @@ where active='t']]></xml-property>
                     </list-property>
                     <property name="allowExport">true</property>
                 </structure>
+                <structure>
+                    <property name="name">total</property>
+                    <text-property name="displayName">total</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["total"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">gtotal</property>
+                    <text-property name="displayName">gtotal</text-property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>team</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["total"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">gt_total</property>
+                    <text-property name="displayName">gt_total</text-property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["total"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
             </list-property>
             <column id="170">
-                <property name="width">1.175in</property>
+                <property name="width">1in</property>
             </column>
             <column id="171">
-                <property name="width">1.7833333333333334in</property>
+                <property name="width">1.5in</property>
             </column>
             <column id="172">
-                <property name="width">0.8in</property>
+                <property name="width">0.7in</property>
             </column>
             <column id="174">
-                <property name="width">1in</property>
+                <property name="width">0.9in</property>
             </column>
             <column id="175">
-                <property name="width">1in</property>
+                <property name="width">0.9in</property>
             </column>
             <column id="176">
-                <property name="width">1in</property>
+                <property name="width">0.9in</property>
             </column>
             <column id="178">
-                <property name="width">1in</property>
+                <property name="width">0.9in</property>
+            </column>
+            <column id="321">
+                <property name="width">0.9in</property>
             </column>
             <header>
                 <row id="122">
@@ -1440,7 +1564,7 @@ where active='t']]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="126">
-                            <property name="fontFamily">serif</property>
+                            <property name="fontFamily">sans-serif</property>
                             <property name="fontSize">9pt</property>
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Item No</text-property>
@@ -1460,7 +1584,7 @@ where active='t']]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="124">
-                            <property name="fontFamily">serif</property>
+                            <property name="fontFamily">sans-serif</property>
                             <property name="fontSize">9pt</property>
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Description</text-property>
@@ -1480,7 +1604,7 @@ where active='t']]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="128">
-                            <property name="fontFamily">serif</property>
+                            <property name="fontFamily">sans-serif</property>
                             <property name="fontSize">9pt</property>
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Qty Sold</text-property>
@@ -1500,7 +1624,7 @@ where active='t']]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="132">
-                            <property name="fontFamily">serif</property>
+                            <property name="fontFamily">sans-serif</property>
                             <property name="fontSize">9pt</property>
                             <property name="fontWeight">bold</property>
                             <text-property name="text">INV</text-property>
@@ -1520,7 +1644,7 @@ where active='t']]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="134">
-                            <property name="fontFamily">serif</property>
+                            <property name="fontFamily">sans-serif</property>
                             <property name="fontSize">9pt</property>
                             <property name="fontWeight">bold</property>
                             <text-property name="text">CS</text-property>
@@ -1540,7 +1664,7 @@ where active='t']]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="140">
-                            <property name="fontFamily">serif</property>
+                            <property name="fontFamily">sans-serif</property>
                             <property name="fontSize">9pt</property>
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Total</text-property>
@@ -1560,10 +1684,30 @@ where active='t']]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="136">
-                            <property name="fontFamily">serif</property>
+                            <property name="fontFamily">sans-serif</property>
                             <property name="fontSize">9pt</property>
                             <property name="fontWeight">bold</property>
                             <text-property name="text">CN</text-property>
+                        </label>
+                    </cell>
+                    <cell id="316">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="322">
+                            <property name="fontFamily">sans-serif</property>
+                            <property name="fontSize">9pt</property>
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">NET</text-property>
                         </label>
                     </cell>
                 </row>
@@ -1595,12 +1739,27 @@ where active='t']]></xml-property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
                             <data id="238">
+                                <property name="fontFamily">sans-serif</property>
                                 <property name="fontSize">8pt</property>
                                 <property name="textUnderline">underline</property>
                                 <property name="paddingLeft">2pt</property>
                                 <property name="textAlign">left</property>
                                 <property name="resultSetColumn">team_name</property>
                             </data>
+                        </cell>
+                        <cell id="317">
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderLeftColor">#000000</property>
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">thin</property>
+                            <property name="borderRightColor">#000000</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                            <property name="borderTopColor">#000000</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
                         </cell>
                     </row>
                 </header>
@@ -1638,6 +1797,7 @@ where active='t']]></xml-property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
                             <data id="239">
+                                <property name="fontFamily">sans-serif</property>
                                 <property name="fontSize">8pt</property>
                                 <property name="paddingRight">2pt</property>
                                 <structure name="numberFormat">
@@ -1662,6 +1822,7 @@ where active='t']]></xml-property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
                             <data id="241">
+                                <property name="fontFamily">sans-serif</property>
                                 <property name="fontSize">8pt</property>
                                 <property name="paddingRight">2pt</property>
                                 <structure name="numberFormat">
@@ -1686,6 +1847,7 @@ where active='t']]></xml-property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
                             <data id="242">
+                                <property name="fontFamily">sans-serif</property>
                                 <property name="fontSize">8pt</property>
                                 <property name="paddingRight">2pt</property>
                                 <structure name="numberFormat">
@@ -1709,7 +1871,8 @@ where active='t']]></xml-property>
                             <property name="borderTopColor">#000000</property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
-                            <data id="243">
+                            <data id="324">
+                                <property name="fontFamily">sans-serif</property>
                                 <property name="fontSize">8pt</property>
                                 <property name="paddingRight">2pt</property>
                                 <structure name="numberFormat">
@@ -1717,7 +1880,7 @@ where active='t']]></xml-property>
                                     <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
                                 </structure>
                                 <property name="textAlign">right</property>
-                                <property name="resultSetColumn">Aggregation_4</property>
+                                <property name="resultSetColumn">gtotal</property>
                             </data>
                         </cell>
                         <cell id="237">
@@ -1734,6 +1897,7 @@ where active='t']]></xml-property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
                             <data id="244">
+                                <property name="fontFamily">sans-serif</property>
                                 <property name="fontSize">8pt</property>
                                 <property name="paddingRight">2pt</property>
                                 <structure name="numberFormat">
@@ -1742,6 +1906,31 @@ where active='t']]></xml-property>
                                 </structure>
                                 <property name="textAlign">right</property>
                                 <property name="resultSetColumn">Aggregation_5</property>
+                            </data>
+                        </cell>
+                        <cell id="319">
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderLeftColor">#000000</property>
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">thin</property>
+                            <property name="borderRightColor">#000000</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                            <property name="borderTopColor">#000000</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <data id="243">
+                                <property name="fontFamily">sans-serif</property>
+                                <property name="fontSize">8pt</property>
+                                <property name="paddingRight">2pt</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Currency</property>
+                                    <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">Aggregation_4</property>
                             </data>
                         </cell>
                     </row>
@@ -1765,6 +1954,7 @@ where active='t']]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="145">
+                            <property name="fontFamily">sans-serif</property>
                             <property name="fontSize">8pt</property>
                             <property name="paddingLeft">2pt</property>
                             <property name="textAlign">left</property>
@@ -1785,6 +1975,7 @@ where active='t']]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="143">
+                            <property name="fontFamily">sans-serif</property>
                             <property name="fontSize">8pt</property>
                             <property name="paddingLeft">2pt</property>
                             <property name="textAlign">left</property>
@@ -1805,6 +1996,7 @@ where active='t']]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="147">
+                            <property name="fontFamily">sans-serif</property>
                             <property name="fontSize">8pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
@@ -1829,6 +2021,7 @@ where active='t']]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="151">
+                            <property name="fontFamily">sans-serif</property>
                             <property name="fontSize">8pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
@@ -1853,6 +2046,7 @@ where active='t']]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="153">
+                            <property name="fontFamily">sans-serif</property>
                             <property name="fontSize">8pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
@@ -1876,7 +2070,8 @@ where active='t']]></xml-property>
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="159">
+                        <data id="323">
+                            <property name="fontFamily">sans-serif</property>
                             <property name="fontSize">8pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
@@ -1884,7 +2079,7 @@ where active='t']]></xml-property>
                                 <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
-                            <property name="resultSetColumn">net</property>
+                            <property name="resultSetColumn">total</property>
                         </data>
                     </cell>
                     <cell id="158">
@@ -1901,6 +2096,7 @@ where active='t']]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="155">
+                            <property name="fontFamily">sans-serif</property>
                             <property name="fontSize">8pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
@@ -1909,6 +2105,31 @@ where active='t']]></xml-property>
                             </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">return</property>
+                        </data>
+                    </cell>
+                    <cell id="318">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="159">
+                            <property name="fontFamily">sans-serif</property>
+                            <property name="fontSize">8pt</property>
+                            <property name="paddingRight">2pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">net</property>
                         </data>
                     </cell>
                 </row>
@@ -1933,6 +2154,7 @@ where active='t']]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="213">
+                            <property name="fontFamily">sans-serif</property>
                             <property name="fontSize">9pt</property>
                             <property name="fontWeight">normal</property>
                             <property name="textAlign">center</property>
@@ -1953,6 +2175,7 @@ where active='t']]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="207">
+                            <property name="fontFamily">sans-serif</property>
                             <property name="fontSize">8pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
@@ -1977,6 +2200,7 @@ where active='t']]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="209">
+                            <property name="fontFamily">sans-serif</property>
                             <property name="fontSize">8pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
@@ -2001,6 +2225,7 @@ where active='t']]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="210">
+                            <property name="fontFamily">sans-serif</property>
                             <property name="fontSize">8pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
@@ -2024,7 +2249,8 @@ where active='t']]></xml-property>
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="211">
+                        <data id="325">
+                            <property name="fontFamily">sans-serif</property>
                             <property name="fontSize">8pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
@@ -2032,7 +2258,7 @@ where active='t']]></xml-property>
                                 <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
-                            <property name="resultSetColumn">Aggregation_10</property>
+                            <property name="resultSetColumn">gt_total</property>
                         </data>
                     </cell>
                     <cell id="169">
@@ -2049,6 +2275,7 @@ where active='t']]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="212">
+                            <property name="fontFamily">sans-serif</property>
                             <property name="fontSize">8pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
@@ -2057,6 +2284,31 @@ where active='t']]></xml-property>
                             </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">Aggregation_11</property>
+                        </data>
+                    </cell>
+                    <cell id="320">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="211">
+                            <property name="fontFamily">sans-serif</property>
+                            <property name="fontSize">8pt</property>
+                            <property name="paddingRight">2pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">Aggregation_10</property>
                         </data>
                     </cell>
                 </row>

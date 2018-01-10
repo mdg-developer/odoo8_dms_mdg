@@ -85,7 +85,7 @@
                  </group>
            </xpath>
            <field name="category_ids" position="replace">
-           		<field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time" groups="base.group_hr_user" required="1" />
+           		<field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time" groups="base.group_hr_user"/>
            </field>
         </field>
     </record>  

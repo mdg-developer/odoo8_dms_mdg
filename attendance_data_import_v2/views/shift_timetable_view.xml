@@ -1,0 +1,95 @@
+<openerp>
+  <data>
+            
+    <!-- Section tree -->
+    <record model="ir.ui.view" id="view_shift_timetable_tree">
+        <field name="name">Shift Timetable</field>
+        <field name="model">shift.timetable</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Shift Timetable">
+                <field name="shift_name" />
+				<field name="onduty" />
+                <field name="offduty" /> 
+                <field name="clockin" /> 
+                <field name="clockin_end" /> 
+                <field name="clockout" /> 
+                <field name="clockout_end" />   
+                <field name="normal" />  
+                <field name="ot_time" />
+                
+            </tree>
+        </field>
+    </record>
+    
+    <record id="view_shift_timetable_filter" model="ir.ui.view">
+            <field name="name">Shift Timetable</field>
+            <field name="model">shift.timetable</field>
+            <field name="arch" type="xml">
+                <search string="Shift Timetable">
+                    <field name="shift_name" />
+                    <field name="onduty" />
+	                <field name="offduty" /> 
+	                <field name="clockin" /> 
+	                <field name="clockin_end" /> 
+	                <field name="clockout" /> 
+	                <field name="clockout_end" />   
+	                <field name="normal" />  
+	                <field name="ot_time" />
+                   <!--  <group expand="0" string="Group By">
+                        <filter string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
+                        <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
+                        <filter string="Section" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}"/>
+                        <filter string="Status" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Date" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'date'}"/>
+                    </group> -->
+                </search>
+             </field>
+         </record>
+         
+     <!-- Section form -->
+    <record model="ir.ui.view" id="view_shift_timetable_form">
+        <field name="name">Shift Timetable</field>
+        <field name="model">shift.timetable</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Shift Timetable">
+                <sheet>
+                    <group>
+						<group>
+						   	<field name="shift_name" />
+			                <field name="onduty" placeholder="HH:MM"/>
+			                <field name="offduty" placeholder="HH:MM" /> 
+			                <field name="clockin" placeholder="HH:MM"/> 
+			                <field name="clockin_end" placeholder="HH:MM"/> 
+			                <field name="clockout" placeholder="HH:MM"/> 
+			                <field name="clockout_end" placeholder="HH:MM"/>   
+			                <field name="normal" placeholder="0.00"/>  
+			                <field name="ot_time" placeholder="0"/>  
+						</group>
+						<group>
+						    
+						</group>
+					</group>
+				</sheet>
+            </form>
+        </field>
+    </record>
+    
+     <!-- Menu -->
+    <record model="ir.actions.act_window" id="open_view_shift_timetable_form">
+        <field name="name">Shift Timetable</field>
+        <field name="res_model">shift.timetable</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_shift_timetable_filter"/>
+    </record>
+                       
+	<menuitem id="menu_hr_attendance_parent" parent='hr.menu_hr_root'  name="Attendance" sequence="16"/>
+	<menuitem name="Shift Timetable"
+              parent="attendance_data_import_v2.menu_hr_attendance_parent" 
+              id="menu_shift_timetable_form"
+              action="open_view_shift_timetable_form" sequence="3" />      
+     
+  </data>
+</openerp>

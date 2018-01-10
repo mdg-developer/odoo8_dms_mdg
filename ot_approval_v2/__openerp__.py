@@ -33,7 +33,7 @@ HR Section
     'author': 'Seventh Computing',
     'website': 'http://www.7thcomputing.com',
     'depends': ['base',      
-        'hr',
+        'hr','attendance_data_import_v2'
  
     ],
     'data': [

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<template id="style">
+			body {
+			color: #000 !important;
+			word-wrap:
+			break-word;
+			}
+			.border-black td {
+			border-top: 1pt solid black !important;
+			}
+			.table-condensed > thead > tr > th {
+			border-bottom: 1pt solid black
+			!important;
+			}
+			.table-condensed > tbody > tr {
+			page-break-inside: avoid
+			!important;
+			}
+			.zero_min_height {
+			min-height: 0pt !important;
+			}
+		</template>
+
+		<template id="invoice_custom_layout">
+			<!-- Multicompany -->
+			<t t-if="o and 'company_id' in o">
+				<t t-set="company" t-value="o.company_id"></t>
+			</t>
+			<t t-if="not o or not 'company_id' in o">
+				<t t-set="company" t-value="res_company"></t>
+			</t>
+
+			<t t-call="invoice_customization.invoice_custom_layout_header" />
+			<t t-raw="0" />
+			<t t-call="invoice_customization.invoice_custom_layout_footer" />
+		</template>
+
+		<template id="invoice_custom_layout_header">
+		</template>
+
+		<template id="invoice_custom_layout_footer">
+			<div class="footer">
+			</div>
+		</template>
+	</data>
+</openerp>

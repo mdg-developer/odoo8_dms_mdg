@@ -21,6 +21,8 @@
 				<field name="offduty"/>
 				<field name="clockin"/>
 				<field name="clockout"/>
+				<field name="miss_punch_in"/>
+				<field name="miss_punch_out"/>
 				<field name="normal"/>
 				<field name="realtime"/>
 				<field name="late"/>
@@ -91,6 +93,7 @@
 								<field name="department_id" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>
 								<field name="onduty" on_change="calculate_on_change(timetable,onduty,offduty,clockin, clockout)" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>
 								<field name="clockin" on_change="calculate_on_change(timetable,onduty,offduty,clockin, clockout)" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>
+								<field name="miss_punch_in" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>
 								<field name="normal" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>
 								<field name="late" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>
 								<field name="absent" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>
@@ -103,10 +106,11 @@
 							</group>
 							<group>
 								<field name="date" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>
-								<field name="timetable" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>
+								<field name="timetable" on_change="timetable_on_change(timetable)" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>
 								<field name="ndays" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>
 								<field name="offduty" on_change="calculate_on_change(timetable,onduty,offduty,clockin, clockout)" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>
 								<field name="clockout" on_change="calculate_on_change(timetable,onduty,offduty,clockin, clockout)" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>
+								<field name="miss_punch_out" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>
 								<field name="realtime" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>
 								<field name="early" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>
 								<field name="ot_time" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>

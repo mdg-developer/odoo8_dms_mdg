@@ -61,6 +61,10 @@ class product_category(osv.osv):
             relation='account.account',
             string="Sale Credit Account",
             help="When real-time inventory valuation is enabled on a product, this account will hold the current value of the products.",),
+        'property_sale_return_account_id': fields.property(
+            type='many2one',
+            relation='account.account',
+            string="Sale Return Account"),
                 
                                 
                 

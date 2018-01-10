@@ -6,6 +6,24 @@ from openerp.exceptions import except_orm, Warning, RedirectWarning
 from openerp.tools import float_compare
 import openerp.addons.decimal_precision as dp
 
+# mapping invoice type to journal type
+TYPE2JOURNAL = {
+    'out_invoice': 'sale',
+    'in_invoice': 'purchase',
+    'out_refund': 'sale_refund',
+    'in_refund': 'purchase_refund',
+}
+
+# mapping invoice type to refund type
+TYPE2REFUND = {
+    'out_invoice': 'out_refund',        # Customer Invoice
+    'in_invoice': 'in_refund',          # Supplier Invoice
+    'out_refund': 'out_invoice',        # Customer Refund
+    'in_refund': 'in_invoice',          # Supplier Refund
+}
+
+MAGIC_COLUMNS = ('id', 'create_uid', 'create_date', 'write_uid', 'write_date')
+
 class account_invoice(models.Model):
     _inherit = "account.invoice"
 
@@ -119,6 +137,7 @@ class account_invoice(models.Model):
                          'foc':False,
                         'account_analytic_id': inv.invoice_line[0].account_analytic_id.id,
                         'taxes': False,
+                        'uos_id': line.uos_id.id,
                         }
                 res.append(val1)                
             total=line.discount_amt
@@ -135,6 +154,7 @@ class account_invoice(models.Model):
                      'foc':False,
                     'account_analytic_id': inv.invoice_line[0].account_analytic_id.id,
                     'taxes': False,
+                    'uos_id': line.uos_id.id,
                     }
             if total>0:
                 res.append(val1)
@@ -151,6 +171,7 @@ class account_invoice(models.Model):
                              'foc':False,
                             'account_analytic_id': inv.invoice_line[0].account_analytic_id.id,
                             'taxes': False,
+                            'uos_id': line.uos_id.id,
                             }
                 res.append(val2)
 
@@ -336,3 +357,61 @@ class account_invoice(models.Model):
             move.post()
         self._log_event()
         return True
+
+    @api.model
+    def _prepare_refund(self, invoice, date=None, period_id=None, description=None, journal_id=None):
+        """ Prepare the dict of values to create the new refund from the invoice.
+            This method may be overridden to implement custom
+            refund generation (making sure to call super() to establish
+            a clean extension chain).
+
+            :param record invoice: invoice to refund
+            :param string date: refund creation date from the wizard
+            :param integer period_id: force account.period from the wizard
+            :param string description: description of the refund from the wizard
+            :param integer journal_id: account.journal from the wizard
+            :return: dict of value to create() the refund
+        """
+        values = {}
+        product_obj = self.pool.get('product.product')
+        for field in ['name', 'reference', 'comment', 'date_due', 'partner_id', 'company_id',
+                'account_id', 'currency_id', 'payment_term', 'user_id', 'fiscal_position']:
+            if invoice._fields[field].type == 'many2one':
+                values[field] = invoice[field].id
+            else:
+                values[field] = invoice[field] or False
+        values['invoice_line'] = self._refund_cleanup_lines(invoice.invoice_line)
+        if journal_id:
+            journal = self.env['account.journal'].browse(journal_id)
+            if journal:
+                    j_name=journal.name.strip()
+        if j_name =='Sale Return Journal':
+            for line in values['invoice_line']:
+                pp_ids = self.env['product.product'].browse(line[2]['product_id'])
+                if pp_ids.categ_id.property_sale_return_account_id.id:
+                    line[2]['account_id']=pp_ids.categ_id.property_sale_return_account_id.id    
+                else:
+                    raise except_orm(_('Sale Return Account Error!'),
+                                        _('Product %s has no related Sale Return Account.') % (pp_ids.name))      
+        tax_lines = filter(lambda l: l.manual, invoice.tax_line)
+        values['tax_line'] = self._refund_cleanup_lines(tax_lines)
+
+        if journal_id:
+            journal = self.env['account.journal'].browse(journal_id)
+        elif invoice['type'] == 'in_invoice':
+            journal = self.env['account.journal'].search([('type', '=', 'purchase_refund')], limit=1)
+        else:
+            journal = self.env['account.journal'].search([('type', '=', 'sale_refund')], limit=1)
+        values['journal_id'] = journal.id
+
+        values['type'] = TYPE2REFUND[invoice['type']]
+        values['date_invoice'] = date or fields.Date.context_today(invoice)
+        values['state'] = 'draft'
+        values['number'] = False
+        values['origin'] = invoice.number
+
+        if period_id:
+            values['period_id'] = period_id
+        if description:
+            values['name'] = description
+        return values

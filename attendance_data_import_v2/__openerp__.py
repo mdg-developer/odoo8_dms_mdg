@@ -40,6 +40,7 @@ HR Section
 
        'views/attendance_data_import_view.xml',
        'views/attendance_upload_view.xml',
+       'views/shift_timetable_view.xml'
     ],
     #'demo': ['hr_recruitment_demo.xml'],
     #'test': ['test/recruitment_process.yml'],

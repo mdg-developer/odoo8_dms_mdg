@@ -13,8 +13,14 @@
     </list-property>
     <parameters>
         <scalar-parameter name="company_id" id="5" extends="report_library.company_id"/>
-        <scalar-parameter name="from_date" id="111" extends="report_library.from_date"/>
-        <scalar-parameter name="to_date" id="112" extends="report_library.to_date"/>
+        <scalar-parameter name="from_date" id="111" extends="report_library.from_date">
+            <property name="isRequired">true</property>
+            <property name="dataType">date</property>
+        </scalar-parameter>
+        <scalar-parameter name="to_date" id="112" extends="report_library.to_date">
+            <property name="isRequired">true</property>
+            <property name="dataType">date</property>
+        </scalar-parameter>
         <scalar-parameter name="group" id="115">
             <text-property name="promptText">Group</text-property>
             <property name="valueType">dynamic</property>
@@ -118,7 +124,7 @@
             <list-property name="computedColumns">
                 <structure>
                     <property name="name">net</property>
-                    <expression name="expression">row["credit_sales"]+row["cash_sales"]+row["return"]</expression>
+                    <expression name="expression">row["credit_sales"]+row["cash_sales"]-row["return"]</expression>
                     <property name="dataType">decimal</property>
                 </structure>
             </list-property>
@@ -134,12 +140,6 @@
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">default_code</text-property>
                     <text-property name="heading">default_code</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">group</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">group</text-property>
-                    <text-property name="heading">group</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">qty_sold</property>
@@ -171,6 +171,12 @@
                     <text-property name="displayName">return</text-property>
                     <text-property name="heading">return</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">group</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">group</text-property>
+                    <text-property name="heading">group</text-property>
+                </structure>
             </list-property>
             <list-property name="parameters">
                 <structure>
@@ -180,6 +186,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">1</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -190,6 +197,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">2</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -200,6 +208,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">3</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -210,6 +219,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">4</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -220,6 +230,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">5</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -230,6 +241,29 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">6</property>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_7</property>
+                    <property name="paramName">from_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">7</property>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_8</property>
+                    <property name="paramName">to_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">8</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -248,33 +282,33 @@
                     </structure>
                     <structure>
                         <property name="position">3</property>
-                        <property name="name">group</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">4</property>
                         <property name="name">qty_sold</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">5</property>
+                        <property name="position">4</property>
                         <property name="name">foc_qty_sold</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">6</property>
+                        <property name="position">5</property>
                         <property name="name">credit_sales</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">7</property>
+                        <property name="position">6</property>
                         <property name="name">cash_sales</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">8</property>
+                        <property name="position">7</property>
                         <property name="name">return</property>
                         <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">group</property>
+                        <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">9</property>
@@ -315,48 +349,50 @@ else
                 </structure>
                 <structure>
                     <property name="position">3</property>
-                    <property name="name">group</property>
-                    <property name="nativeName">group</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-                <structure>
-                    <property name="position">4</property>
                     <property name="name">qty_sold</property>
                     <property name="nativeName">qty_sold</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">5</property>
+                    <property name="position">4</property>
                     <property name="name">foc_qty_sold</property>
                     <property name="nativeName">foc_qty_sold</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">6</property>
+                    <property name="position">5</property>
                     <property name="name">credit_sales</property>
                     <property name="nativeName">credit_sales</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">7</property>
+                    <property name="position">6</property>
                     <property name="name">cash_sales</property>
                     <property name="nativeName">cash_sales</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">8</property>
+                    <property name="position">7</property>
                     <property name="name">return</property>
                     <property name="nativeName">return</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">group</property>
+                    <property name="nativeName">group</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[with qty_sold as (
+            <xml-property name="queryText"><![CDATA[Select a.name_template,a.default_code, COALESCE(sum(a.qty_sold),0) qty_sold, COALESCE(sum(a.foc_qty_sold),0) foc_qty_sold,
+COALESCE(sum(a.credit_sales),0)credit_sales, COALESCE(sum(a.cash_sales),0)cash_sales, COALESCE(sum(a.return_qty),0)return,a.group 
+From (with qty_sold as (
 	select COALESCE(sum(product_uom_qty),0) qty_sold,product_id
 	from sale_order so,sale_order_line line 
 	where so.id=line.order_id 	
@@ -380,18 +416,31 @@ sales_record as (
 	and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
 	--$company_id$
 	group by product_id,payment_type
-	)
+	),
+return_qty as (select ail.product_id,ai.section_id,COALESCE(sum(ai.amount_total),0)return_qty  from 
+		account_invoice ai,account_invoice_line ail,account_journal aj
+		where ai.id=ail.invoice_id and ai.journal_id=aj.id
+		and aj.name='Sale Return Journal' 
+		and date_invoice::date between ? and ?
+		group by ail.product_id,ai.section_id)
 
-select name_template,default_code,cat.name as group,case when (select qty_sold from qty_sold where product_id=pp.id) is null then 0 else (select qty_sold from qty_sold where product_id=pp.id) end as qty_sold,
-case when (select foc_qty_sold from foc_qty_sold where product_id=pp.id) is null then 0 else (select foc_qty_sold from foc_qty_sold where product_id=pp.id) end as foc_qty_sold,
-case when (select sales from sales_record where payment_type='credit' and product_id=pp.id) is null then 0 else (select sales from sales_record where payment_type='credit' and product_id=pp.id) end as credit_sales,
-case when (select sales from sales_record where payment_type='cash' and product_id=pp.id) is null then 0 else (select sales from sales_record where payment_type='cash' and product_id=pp.id) end as cash_sales,0.0 return
-from product_product pp,product_template pt,product_category cat
-where pp.product_tmpl_id=pt.id
-and pt.categ_id=cat.id
-and pp.active='true'
+select name_template,default_code,cat.name as group,
+greatest(0,qty_sold.qty_sold) qty_sold, 
+greatest(0,foc_qty_sold.foc_qty_sold) foc_qty_sold,
+case when sales_record.payment_type='credit' then greatest(0,sales_record.sales) end as credit_sales,
+case when sales_record.payment_type='cash' then greatest(0,sales_record.sales) end as cash_sales,
+greatest(0,return_qty.return_qty) return_qty
+from product_product pp
+inner join product_template pt on pp.product_tmpl_id=pt.id 
+inner join product_category cat on pt.categ_id=cat.id
+left join sales_record on sales_record.product_id=pp.id
+left join qty_sold on qty_sold.product_id=pp.id
+left join foc_qty_sold on foc_qty_sold.product_id=pp.id
+left join return_qty on return_qty.product_id=sales_record.product_id
+where pp.active='true'
 --$category_id$
-order by cat.name,default_code]]></xml-property>
+order by cat.name,default_code)a group by a.name_template,a.default_code,a.group
+order by qty_sold Desc]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -478,6 +527,36 @@ order by cat.name,default_code]]></xml-property>
           <design:identifier>
             <design:name></design:name>
             <design:position>6</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>7</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>8</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
@@ -767,6 +846,8 @@ order by name]]></xml-property>
   </design:ResultSets>
 </model:DesignValues>]]></xml-property>
         </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="company" id="116"
+ extends="report_library.company"/>
     </data-sets>
     <page-setup>
         <simple-master-page name="Simple MasterPage" id="2">
@@ -789,7 +870,7 @@ order by name]]></xml-property>
         </label>
         <data id="17">
             <property name="fontFamily">sans-serif</property>
-            <property name="fontSize">12pt</property>
+            <property name="fontSize">10pt</property>
             <property name="fontWeight">bold</property>
             <property name="textAlign">center</property>
             <property name="dataSet">param_from_to_date</property>
@@ -805,7 +886,7 @@ order by name]]></xml-property>
         </data>
         <data id="10">
             <property name="fontFamily">sans-serif</property>
-            <property name="fontSize">12pt</property>
+            <property name="fontSize">10pt</property>
             <property name="fontWeight">bold</property>
             <property name="textAlign">left</property>
             <list-property name="boundDataColumns">
@@ -1002,7 +1083,7 @@ order by name]]></xml-property>
                         <property name="borderTopWidth">thin</property>
                         <label id="58">
                             <property name="fontFamily">sans-serif</property>
-                            <property name="fontSize">10pt</property>
+                            <property name="fontSize">9pt</property>
                             <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
                             <text-property name="text">Item No.</text-property>
@@ -1019,7 +1100,7 @@ order by name]]></xml-property>
                         <property name="borderTopWidth">thin</property>
                         <label id="59">
                             <property name="fontFamily">sans-serif</property>
-                            <property name="fontSize">10pt</property>
+                            <property name="fontSize">9pt</property>
                             <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
                             <text-property name="text">Item Description</text-property>
@@ -1036,7 +1117,7 @@ order by name]]></xml-property>
                         <property name="borderTopWidth">thin</property>
                         <label id="60">
                             <property name="fontFamily">sans-serif</property>
-                            <property name="fontSize">10pt</property>
+                            <property name="fontSize">9pt</property>
                             <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
                             <text-property name="text">Qty Sold</text-property>
@@ -1053,7 +1134,7 @@ order by name]]></xml-property>
                         <property name="borderTopWidth">thin</property>
                         <label id="61">
                             <property name="fontFamily">sans-serif</property>
-                            <property name="fontSize">10pt</property>
+                            <property name="fontSize">9pt</property>
                             <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
                             <text-property name="text">FOC</text-property>
@@ -1070,7 +1151,7 @@ order by name]]></xml-property>
                         <property name="borderTopWidth">thin</property>
                         <label id="62">
                             <property name="fontFamily">sans-serif</property>
-                            <property name="fontSize">10pt</property>
+                            <property name="fontSize">9pt</property>
                             <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
                             <text-property name="text">INV</text-property>
@@ -1087,7 +1168,7 @@ order by name]]></xml-property>
                         <property name="borderTopWidth">thin</property>
                         <label id="63">
                             <property name="fontFamily">sans-serif</property>
-                            <property name="fontSize">10pt</property>
+                            <property name="fontSize">9pt</property>
                             <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
                             <text-property name="text">CS</text-property>
@@ -1104,7 +1185,7 @@ order by name]]></xml-property>
                         <property name="borderTopWidth">thin</property>
                         <label id="65">
                             <property name="fontFamily">sans-serif</property>
-                            <property name="fontSize">10pt</property>
+                            <property name="fontSize">9pt</property>
                             <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
                             <text-property name="text">CN</text-property>
@@ -1121,7 +1202,7 @@ order by name]]></xml-property>
                         <property name="borderTopWidth">thin</property>
                         <label id="64">
                             <property name="fontFamily">sans-serif</property>
-                            <property name="fontSize">10pt</property>
+                            <property name="fontSize">9pt</property>
                             <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
                             <text-property name="text">NET</text-property>
@@ -1151,6 +1232,8 @@ order by name]]></xml-property>
                             <property name="borderTopWidth">thin</property>
                             <data id="101">
                                 <property name="fontFamily">sans-serif</property>
+                                <property name="fontSize">9pt</property>
+                                <property name="textUnderline">underline</property>
                                 <property name="resultSetColumn">group</property>
                             </data>
                         </cell>
@@ -1171,7 +1254,7 @@ order by name]]></xml-property>
                             <property name="borderTopWidth">thin</property>
                             <label id="108">
                                 <property name="fontFamily">sans-serif</property>
-                                <property name="fontSize">10pt</property>
+                                <property name="fontSize">8pt</property>
                                 <property name="fontWeight">bold</property>
                                 <property name="textAlign">center</property>
                                 <text-property name="text">Total</text-property>
@@ -1188,6 +1271,7 @@ order by name]]></xml-property>
                             <property name="borderTopWidth">thin</property>
                             <data id="102">
                                 <property name="fontFamily">sans-serif</property>
+                                <property name="fontSize">9pt</property>
                                 <property name="fontWeight">bold</property>
                                 <property name="textAlign">center</property>
                                 <property name="resultSetColumn">Aggregation</property>
@@ -1204,6 +1288,7 @@ order by name]]></xml-property>
                             <property name="borderTopWidth">thin</property>
                             <data id="103">
                                 <property name="fontFamily">sans-serif</property>
+                                <property name="fontSize">9pt</property>
                                 <property name="fontWeight">bold</property>
                                 <property name="textAlign">center</property>
                                 <property name="resultSetColumn">Aggregation_1</property>
@@ -1220,6 +1305,7 @@ order by name]]></xml-property>
                             <property name="borderTopWidth">thin</property>
                             <data id="104">
                                 <property name="fontFamily">sans-serif</property>
+                                <property name="fontSize">9pt</property>
                                 <property name="fontWeight">bold</property>
                                 <property name="paddingRight">3pt</property>
                                 <structure name="numberFormat">
@@ -1241,6 +1327,7 @@ order by name]]></xml-property>
                             <property name="borderTopWidth">thin</property>
                             <data id="105">
                                 <property name="fontFamily">sans-serif</property>
+                                <property name="fontSize">9pt</property>
                                 <property name="fontWeight">bold</property>
                                 <property name="paddingRight">3pt</property>
                                 <structure name="numberFormat">
@@ -1262,6 +1349,7 @@ order by name]]></xml-property>
                             <property name="borderTopWidth">thin</property>
                             <data id="106">
                                 <property name="fontFamily">sans-serif</property>
+                                <property name="fontSize">9pt</property>
                                 <property name="fontWeight">bold</property>
                                 <property name="paddingRight">3pt</property>
                                 <structure name="numberFormat">
@@ -1283,6 +1371,7 @@ order by name]]></xml-property>
                             <property name="borderTopWidth">thin</property>
                             <data id="107">
                                 <property name="fontFamily">sans-serif</property>
+                                <property name="fontSize">9pt</property>
                                 <property name="fontWeight">bold</property>
                                 <property name="paddingRight">3pt</property>
                                 <structure name="numberFormat">
@@ -1309,6 +1398,7 @@ order by name]]></xml-property>
                         <property name="borderTopWidth">thin</property>
                         <data id="66">
                             <property name="fontFamily">sans-serif</property>
+                            <property name="fontSize">9pt</property>
                             <property name="resultSetColumn">default_code</property>
                         </data>
                     </cell>
@@ -1323,6 +1413,7 @@ order by name]]></xml-property>
                         <property name="borderTopWidth">thin</property>
                         <data id="67">
                             <property name="fontFamily">sans-serif</property>
+                            <property name="fontSize">9pt</property>
                             <property name="resultSetColumn">name_template</property>
                         </data>
                     </cell>
@@ -1337,6 +1428,7 @@ order by name]]></xml-property>
                         <property name="borderTopWidth">thin</property>
                         <data id="69">
                             <property name="fontFamily">sans-serif</property>
+                            <property name="fontSize">9pt</property>
                             <property name="textAlign">center</property>
                             <property name="resultSetColumn">qty_sold</property>
                         </data>
@@ -1352,6 +1444,7 @@ order by name]]></xml-property>
                         <property name="borderTopWidth">thin</property>
                         <data id="68">
                             <property name="fontFamily">sans-serif</property>
+                            <property name="fontSize">9pt</property>
                             <property name="textAlign">center</property>
                             <property name="resultSetColumn">foc_qty_sold</property>
                         </data>
@@ -1367,6 +1460,7 @@ order by name]]></xml-property>
                         <property name="borderTopWidth">thin</property>
                         <data id="70">
                             <property name="fontFamily">sans-serif</property>
+                            <property name="fontSize">9pt</property>
                             <property name="paddingRight">3pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -1387,6 +1481,7 @@ order by name]]></xml-property>
                         <property name="borderTopWidth">thin</property>
                         <data id="71">
                             <property name="fontFamily">sans-serif</property>
+                            <property name="fontSize">9pt</property>
                             <property name="paddingRight">3pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -1407,6 +1502,7 @@ order by name]]></xml-property>
                         <property name="borderTopWidth">thin</property>
                         <data id="72">
                             <property name="fontFamily">sans-serif</property>
+                            <property name="fontSize">9pt</property>
                             <property name="paddingRight">3pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -1427,6 +1523,7 @@ order by name]]></xml-property>
                         <property name="borderTopWidth">thin</property>
                         <data id="73">
                             <property name="fontFamily">sans-serif</property>
+                            <property name="fontSize">9pt</property>
                             <property name="paddingRight">3pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>

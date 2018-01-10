@@ -14,7 +14,7 @@ class attendance_data_import(osv.osv):
         'fingerprint_id': fields.char('Emp No'),
         'auto_assign': fields.char('Auto Assign'),
         'date': fields.date('Date'),        
-        'timetable': fields.char('Timetable'),
+        'timetable': fields.many2one('shift.timetable', 'Timetable'),
         'onduty': fields.char('On duty'),
         'offduty': fields.char('Off duty'),
         'clockin': fields.char('Clock In'),
@@ -44,7 +44,8 @@ class attendance_data_import(osv.osv):
                 ], 'Status',default='draft'),
         'remark': fields.text('Remark'),
         'section_id': fields.many2one('hr.section', 'Section'),
-        
+        'miss_punch_in': fields.boolean('Miss Punch In'),
+        'miss_punch_out': fields.boolean('Miss Punch Out'),
         #'section_id' : fields.function(_get_section_id, method=True, string="Section", type='char', store=True),
     }
 #     def calculate_on_change(self,cr,uid, ids,on_duty,off_duty,clock_in, clock_out, context=None):
@@ -72,10 +73,24 @@ class attendance_data_import(osv.osv):
             emp_obj = self.pool.get('hr.employee')
             emp_id = emp_obj.browse(cr,uid,employee_id,context=context)
             if emp_id:
-                result = {'section_id': emp_id.section_id.id,                    
-                                         
+                result = {'department_id': emp_id.department_id.id,                    
+                           'fingerprint_id':emp_id.fingerprint_id            
                      } 
                            
+            return {'value':result}
+    def timetable_on_change(self,cr,uid, ids,timetable, context=None):
+        result = {}
+        if timetable:
+            timetable_obj = self.pool.get('shift.timetable')
+            timetable_data = timetable_obj.browse(cr,uid,timetable,context=context)
+            if timetable_data:
+                    result = {'onduty': timetable_data.onduty,
+                              'offduty': timetable_data.offduty,  
+                              'clockin': timetable_data.clockin,
+                              'clockout': timetable_data.clockout,  
+                              'normal': timetable_data.normal, 
+                              'ot_time': timetable_data.ot_time                  
+                         }               
             return {'value':result}
     def calculate_on_change(self,cr,uid, ids,timetable,on_duty,off_duty,clock_in, clock_out, context=None):
         result = {}
@@ -98,14 +113,14 @@ class attendance_data_import(osv.osv):
                 early_date = cr.fetchall()
                 if early_date:
                     early = early_date[0][0]    
-            
+             
             if int(late) < 0:
                 late_t = late * -1
                 #late_t = self.convert_hour_minute(int(late))
             if int(early) < 0:
                 early_t = early * -1   
                 #early_t = self.convert_hour_minute(int(early))
-            
+             
             if clock_in or clock_out:
                 absent = False
                 realtime = 0.5
@@ -121,9 +136,9 @@ class attendance_data_import(osv.osv):
                 min_out = date_time_out.strftime("%M")
                 clock_out_min = int(hour_out) * 60 + int(min_out)
                 work_time = clock_out_min - clock_in_min
-                if timetable.upper() == 'OT':
-                    realtime = 0.0
-                    ot_time = work_time
+#                 if timetable.upper() == 'OT':
+#                     realtime = 0.0
+#                     ot_time = work_time
             if clock_in is False and clock_out is False:
                 absent = True
                 realtime = 0.0    
@@ -134,7 +149,7 @@ class attendance_data_import(osv.osv):
                       'work_time' : work_time,
                       'ot_time' : ot_time,                      
                      } 
-                           
+                            
             return {'value':result}
         except Exception, e:            
             raise orm.except_orm(_('Error :'), _("Error while processing input time. \n\nPlease check time format must be HH:MM!"))
@@ -152,12 +167,22 @@ class attendance_data_import(osv.osv):
         else:
             total = str(modulus)
         if remainder == 0:
-           total += "00"
+            total += "00"
         else:
-           total += str(remainder)
+            total += str(remainder)
         return total      
     def decline(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'decline'}, context=context)
+        return True
+    def is_not_absent(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'absent':False}, context=context)
+        for attendance_data in self.browse(cr, uid, ids, context=context):
+            clock_in = attendance_data.clockin
+            clock_out = attendance_data.clockout
+            if clock_in is False:
+                self.write(cr, uid, attendance_data.id, {'miss_punch_in':True}, context=context)
+            if clock_out is False:
+                self.write(cr, uid, attendance_data.id, {'miss_punch_out':True}, context=context)
         return True
     def approve(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'approve'}, context=context)
@@ -167,6 +192,18 @@ class attendance_data_import(osv.osv):
         return True   
 attendance_data_import()   
 
-
-
+class time_table(osv.osv):
+    _name = 'shift.timetable'
+    _rec_name = 'shift_name'
+    _columns = {
+        'shift_name': fields.char('Shift Name'),
+        'onduty': fields.char('On Duty Time'),
+        'offduty': fields.char('Off Duty Time'),
+        'clockin': fields.char('Clock In Beginning'),
+        'clockin_end': fields.char('Clock In End'),
+        'clockout': fields.char('Clock Out Beginning'),
+        'clockout_end': fields.char('Clock Out End'),
+        'normal' : fields.char('Count As'),
+        'ot_time': fields.char('OT Shift'),
+        }
     
