@@ -12,6 +12,7 @@
 					<xpath expr="//field[@name='name']" position="after">
 
 						<field name="property_account_receivable" />
+						<field name ="property_account_receivable_control"/>
 						<field name="property_account_payable" />
 						<field name="property_account_receivable_clearing" />
 						<field name="property_account_payable_clearing" />						
