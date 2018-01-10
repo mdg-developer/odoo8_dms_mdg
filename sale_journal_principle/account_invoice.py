@@ -1,6 +1,6 @@
 import itertools
 from lxml import etree
-
+import time
 from openerp import models, fields, api, _
 from openerp.exceptions import except_orm, Warning, RedirectWarning
 from openerp.tools import float_compare
@@ -46,15 +46,32 @@ class account_invoice(models.Model):
         invoice_obj = self.pool.get('account.invoice')
         move_obj =self.pool.get('account.move')
         move_line_obj=self.pool.get('account.move.line')
+        period_obj = self.pool.get('account.period')
+        date = False
+        period_id = False
+        journal_id= False
+        account_id = False
+
+        if context is None:
+            context = {}
+
+        date = time.strftime('%Y-%m-%d')
+        period_ids = period_obj.find(cr, uid, dt=date, context=context)
+        if period_ids:
+            period_id = period_ids[0]            
+        line_id=[]
+
         if ids:
             invoice = self.browse(cr, uid, ids[0], context=context)
             move_id=invoice.move_id.id
             move = move_obj.browse(cr, uid,move_id, context=context)
             for moveline in move.line_id:
                 if moveline.name=="/":
+                    line_id=[]
                     control_account_id =moveline.account_id.id
                     cr.execute("select property_account_receivable_clearing from product_maingroup where property_account_receivable_control =%s",(control_account_id,) )
                     clearing_account_id=cr.fetchone()[0]
+                    line_id.append(moveline.id)
                     vals = {
                                 'move_id':move_id,
                                 'date_maturity': moveline.date_maturity,
@@ -75,7 +92,9 @@ class account_invoice(models.Model):
                                 'product_uom_id': moveline.product_uom_id.id,
                                 'analytic_account_id': moveline.analytic_account_id.id,
                             }
-                    move_line_obj.create(cr, uid, vals)          
+                    move_line_id =move_line_obj.create(cr, uid, vals)
+                    line_id.append(move_line_id)          
+                
                     vals_1 = {
                                 'move_id':move_id,
                                 'date_maturity': moveline.date_maturity,
@@ -96,8 +115,11 @@ class account_invoice(models.Model):
                                 'product_uom_id': moveline.product_uom_id.id,
                                 'analytic_account_id': moveline.analytic_account_id.id,
                             }
-                    move_line_obj.create(cr, uid, vals_1)                                                    
-        return self.write(cr, uid, ids, {'state':'open' , 'credit_approve_by':uid,'credit_control':True})            
+                    move_line_obj.create(cr, uid, vals_1) 
+                    move_line_obj.reconcile(cr, uid, line_id, 'manual', account_id,
+                                        period_id, journal_id, context=context)                                                                                   
+        return self.write(cr, uid, ids, {'state':'open' , 'credit_approve_by':uid,'credit_control':True})        
+        
     def _compute_payments(self):
         partial_lines = lines = self.env['account.move.line']
         cr = self._cr
@@ -121,7 +143,8 @@ class account_invoice(models.Model):
             if self.residual != 0.0:
                 if self.origin:
                     if self.payment_type =='credit' and self.type=='out_invoice':
-                        cr.execute("update account_invoice set state='credit_state' where credit_control !=True and  id=%s", (self.id,)) 
+                        print ' self.type',self.type,self.id
+                        cr.execute("update account_invoice set state='credit_state',credit_control=False where credit_control !=True and  id=%s", (self.id,)) 
                     else:
                         cr.execute("update account_invoice set state='open' where id=%s", (self.id,)) 
                            
@@ -1131,8 +1154,8 @@ class account_invoice(models.Model):
     account_id = fields.Many2one('account.account', string='Account',
         required=False, readonly=True, states={'draft': [('readonly', False)]},
         help="The partner account used for this invoice.")
-    credit_approve_by = fields.Many2one('res.users','Credit Control',readonly=True)    
-    credit_control = fields.Boolean('Credit Control',readonly=True)    
+    credit_approve_by = fields.Many2one('res.users','Credit Approve By',readonly=True)    
+    credit_control = fields.Boolean('Credit Control',default='False',)    
     
     state = fields.Selection([
                     ('draft','Draft'),

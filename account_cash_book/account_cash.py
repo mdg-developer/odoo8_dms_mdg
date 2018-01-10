@@ -13,7 +13,7 @@ class account_bank_statement_line(osv.osv):
          #   'department_id':fields.many2one('account.department', 'Department'),
             'sequence': fields.integer('No.' , readonly=True),
             'date': fields.date('Date'),
-            'account_id': fields.many2one('account.account', 'Account' , required=True),
+            'account_id': fields.many2one('account.account', 'Account' ),
             'income_amt': fields.float('Income', digits_compute=dp.get_precision('Account')),
             'expense_amt': fields.float('Expenses', digits_compute=dp.get_precision('Account')),
         }
