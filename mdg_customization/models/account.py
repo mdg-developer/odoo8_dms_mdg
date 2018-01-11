@@ -114,10 +114,6 @@ class account_invoice(osv.osv):
         'state_id': fields.many2one("res.country.state", 'State', ondelete='restrict', readonly=True),
         'country_id': fields.many2one('res.country', 'Country', ondelete='restrict', readonly=True),
         'township': fields.many2one('res.township', 'Township', ondelete='restrict', readonly=True),
-        'payment_term' : fields.many2one('account.payment.term', string='Payment Terms',readonly=True,
-        help="If you use payment terms, the due date will be computed automatically at the generation "
-             "of accounting entries. If you keep the payment term and the due date empty, it means direct payment. "
-             "The payment term may compute several due dates, for example 50% now, 50% in one month."),
         'paid_amount': fields.function(_get_paid_amount, type='char', string='Paid Amount',digits_compute= dp.get_precision('Product Price')),     
 }
         

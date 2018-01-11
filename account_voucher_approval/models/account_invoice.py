@@ -93,13 +93,13 @@ class account_invoice(models.Model):
             else:
                 account_id = pay_account.id
                 payment_term_id = p.property_supplier_payment_term.id
-            if p.credit_allow ==True:
-                payment_type='credit'
-            elif p.is_consignment==True:
-                payment_type='consignment'
-            else:
-                payment_type='cash'
-                payment_term_id = 1                
+#             if p.credit_allow ==True:
+#                 payment_type='credit'
+#             elif p.is_consignment==True:
+#                 payment_type='consignment'
+#             else:
+#                 payment_type='cash'
+#                 payment_term_id = 1                
             fiscal_position = p.property_account_position.id
             bank_id = p.bank_ids and p.bank_ids[0].id or False
             pricelist = p.property_product_pricelist and p.property_product_pricelist.id or False
@@ -112,9 +112,9 @@ class account_invoice(models.Model):
             township= p.township and p.township.id or False
         result = {'value': {
             'account_id': account_id,
-            'payment_term': payment_term_id,
+           # 'payment_term': payment_term_id,
             'fiscal_position': fiscal_position,
-            'payment_type':payment_type,
+         #   'payment_type':payment_type,
             'code':code,
             'street': street,
             'street2': street2,

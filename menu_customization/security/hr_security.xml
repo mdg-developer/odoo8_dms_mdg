@@ -8,7 +8,14 @@
 		</record>
 		<record id="make_invisible" model="res.groups">
 			<field name="name">Invisible</field>
-
 		</record>
+		<record id="crm.group_scheduled_calls" model="res.groups">
+			<field name="name">Show Scheduled Calls Menu</field>
+			<field name="category_id" ref="base.module_category_hidden" />
+		</record>
+		   <record id="crm.group_fund_raising" model="res.groups">
+        <field name="name">Manage Fund Raising</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>		
 	</data>
 </openerp>

@@ -22,8 +22,24 @@ class account_invoice(models.Model):
     @api.multi
     def action_cancel(self):
         moves = self.env['account.move']
+        obj_move_line = self.pool.get('account.move.line')
+        move_obj = self.pool.get('account.move')
+       
+        cr = self._cr
+        uid = self._uid
+        context=self._context
+        unreconcile_id=[]        
+        
         for inv in self:
             if inv.move_id:
+                if inv.payment_type =='credit':
+                    move_data = move_obj.browse(cr, uid,inv.move_id.id,context=context)
+                    print 'move_data',move_data
+                    
+                    for moveline in move_data.line_id:
+                        if moveline.name=="/" or moveline.name=='Control':  
+                            unreconcile_id.append(moveline.id)          
+                    obj_move_line._remove_move_reconcile(cr, uid, unreconcile_id,context=context)
                 moves += inv.move_id
             if inv.payment_ids:
                 for move_line in inv.payment_ids:

@@ -38,7 +38,7 @@
 
 				<field name="date_invoice" position='after'>
 					<field name="payment_type" on_change="on_change_payment_type(partner_id,payment_type)"
-						attrs="{'readonly': [('payment_type','!=','credit')]}" />
+						 />
 					<field name="payment_term" readonly="1" />
 					<field name="date_due" />
 				</field>
