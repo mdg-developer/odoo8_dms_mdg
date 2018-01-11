@@ -398,7 +398,7 @@ class account_invoice(models.Model):
                 print 'product>>>', product.id
                 print 'line.get>>>', line.get('product_id', False)
                 if origin and line['is_discount'] == False:
-                    cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s", (origin, product.id,))
+                    cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s and av.state!='cancel' ", (origin, product.id,))
                     dis_amt = cr.fetchall()
                     if dis_amt:     
                         for amt in dis_amt:
@@ -453,7 +453,7 @@ class account_invoice(models.Model):
                 print 'product>>>', product.id
                 print 'line.get>>>', line.get('product_id', False)
                 if origin and line['is_discount'] == False:
-                    cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s", (origin, product.id,))
+                    cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s and av.state!='cancel' ", (origin, product.id,))
                     dis_amt = cr.fetchall()
                     if dis_amt:     
                         for amt in dis_amt:
@@ -504,7 +504,7 @@ class account_invoice(models.Model):
                 print 'product>>>', product.id
                 print 'line.get>>>', line.get('product_id', False)
                 if origin and line['is_discount'] == False:
-                    cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s", (origin, product.id,))
+                    cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s and av.state!='cancel' ", (origin, product.id,))
                     dis_amt = cr.fetchall()
                     if dis_amt:     
                         for amt in dis_amt:
@@ -560,7 +560,7 @@ class account_invoice(models.Model):
                 print 'product>>>', product.id
                 print 'line.get>>>', line.get('product_id', False)
                 if origin and line['is_discount'] == False:
-                    cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s", (origin, product.id,))
+                    cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s  and av.state!='cancel' ", (origin, product.id,))
                     dis_amt = cr.fetchall()
                     if dis_amt:     
                         for amt in dis_amt:
