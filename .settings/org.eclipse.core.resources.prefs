@@ -1,0 +1,12 @@
+eclipse.preferences.version=1
+encoding//account_voucher_approval/__openerp__.py=utf-8
+encoding//account_voucher_approval/wizard/account_invoice_state.py=utf-8
+encoding//connector_clear_message/models/inherit_connector.py=utf-8
+encoding//crm_management/wizard/insert_sale_team.py=utf-8
+encoding//crm_management/wizard/remove_sale_team.py=utf-8
+encoding//pending_delivery_reprint/__openerp__.py=utf-8
+encoding//pending_delivery_reprint/wizard/pending_delivery.py=utf-8
+encoding//product_categories_customization/models/product_categories.py=utf-8
+encoding//report_balancesheet_xls/account_move_line.py=utf-8
+encoding//sale_foc_discount/sale.py=utf-8
+encoding//sale_journal_principle/__openerp__.py=utf-8

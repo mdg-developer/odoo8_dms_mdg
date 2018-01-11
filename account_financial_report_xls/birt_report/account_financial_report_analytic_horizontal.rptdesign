@@ -27,25 +27,17 @@
     <property name="account_cube.balance_sheet_report.y">80</property>
     <property name="Finance Cube.balance_sheet_report.x">135</property>
     <property name="Finance Cube.balance_sheet_report.y">80</property>
-    <list-property name="propertyBindings">
-        <structure>
-            <property name="name">queryText</property>
-            <property name="id">12</property>
-        </structure>
-        <structure>
-            <property name="name">queryTimeOut</property>
-            <property name="id">12</property>
-        </structure>
-        <structure>
-            <property name="name">rowFetchSize</property>
-            <property name="id">12</property>
-        </structure>
-    </list-property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="layoutPreference">auto layout</property>
     <property name="bidiLayoutOrientation">ltr</property>
     <property name="imageDPI">96</property>
+    <list-property name="libraries">
+        <structure>
+            <property name="fileName">general_library.rptlibrary</property>
+            <property name="namespace">general_library</property>
+        </structure>
+    </list-property>
     <parameters>
         <scalar-parameter name="report_id" id="9">
             <property name="hidden">false</property>
@@ -57,27 +49,6 @@
             <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
             <property name="dataType">integer</property>
             <property name="distinct">true</property>
-            <list-property name="selectionList"/>
-            <property name="paramType">simple</property>
-            <property name="controlType">list-box</property>
-            <property name="mustMatch">true</property>
-            <property name="fixedOrder">true</property>
-            <structure name="format">
-                <property name="category">Unformatted</property>
-            </structure>
-        </scalar-parameter>
-        <scalar-parameter name="fiscal_year_id" id="11">
-            <text-property name="promptText">Fiscal Year</text-property>
-            <property name="valueType">dynamic</property>
-            <property name="isRequired">true</property>
-            <property name="dataSetName">fiscal_year</property>
-            <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
-            <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
-            <property name="dataType">integer</property>
-            <property name="distinct">true</property>
-            <simple-property-list name="defaultValue">
-                <value type="constant">5</value>
-            </simple-property-list>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
             <property name="controlType">list-box</property>
@@ -107,113 +78,50 @@
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
-        <scalar-parameter name="start_period_id" id="13">
-            <text-property name="promptText">Start Period</text-property>
-            <property name="valueType">dynamic</property>
-            <property name="isRequired">false</property>
-            <property name="dataSetName">period</property>
-            <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
-            <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
-            <property name="dataType">integer</property>
-            <property name="distinct">true</property>
-            <list-property name="selectionList"/>
-            <property name="paramType">simple</property>
-            <property name="controlType">list-box</property>
-            <property name="mustMatch">true</property>
-            <property name="fixedOrder">true</property>
-            <structure name="format">
-                <property name="category">Unformatted</property>
-            </structure>
-        </scalar-parameter>
-        <scalar-parameter name="end_period_id" id="93">
-            <text-property name="promptText">End Period</text-property>
-            <property name="valueType">dynamic</property>
-            <property name="isRequired">false</property>
-            <property name="dataSetName">period</property>
-            <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
-            <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
-            <property name="dataType">integer</property>
-            <property name="distinct">true</property>
-            <list-property name="selectionList"/>
-            <property name="paramType">simple</property>
-            <property name="controlType">list-box</property>
-            <property name="mustMatch">true</property>
-            <property name="fixedOrder">true</property>
-            <structure name="format">
-                <property name="category">Unformatted</property>
-            </structure>
-        </scalar-parameter>
-        <scalar-parameter name="start_date" id="96">
-            <text-property name="promptText">Start Date</text-property>
+        <cascading-parameter-group name="fiscal_year_period" id="711" extends="general_library.fiscal_year_period">
+            <overridden-values>
+                <ref-entry baseId="24" name="fiscal_year_id" id="24"/>
+                <ref-entry baseId="25" name="start_period_id" id="25"/>
+                <ref-entry baseId="26" name="end_period_id" id="26"/>
+            </overridden-values>
+        </cascading-parameter-group>
+        <scalar-parameter name="start_date" id="712" extends="general_library.start_date"/>
+        <scalar-parameter name="end_date" id="713" extends="general_library.end_date"/>
+        <scalar-parameter name="target_move" id="714" extends="general_library.target_move"/>
+        <scalar-parameter name="currency_rate" id="736" extends="general_library.currency_rate">
             <property name="valueType">static</property>
-            <property name="isRequired">false</property>
-            <property name="dataType">date</property>
+            <property name="dataType">float</property>
             <property name="distinct">true</property>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
-            <property name="concealValue">false</property>
             <property name="controlType">text-box</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
-        <scalar-parameter name="end_date" id="97">
-            <text-property name="promptText">End  Date</text-property>
-            <property name="valueType">static</property>
-            <property name="isRequired">false</property>
-            <property name="dataType">date</property>
-            <property name="distinct">true</property>
-            <list-property name="selectionList"/>
-            <property name="paramType">simple</property>
-            <property name="concealValue">false</property>
-            <property name="controlType">text-box</property>
-            <structure name="format">
-                <property name="category">Unformatted</property>
-            </structure>
-        </scalar-parameter>
-        <scalar-parameter name="target_move" id="15">
-            <text-property name="promptText">Target Move</text-property>
-            <property name="valueType">static</property>
-            <property name="isRequired">true</property>
-            <property name="sortBy">label</property>
+        <scalar-parameter name="currency" id="747" extends="general_library.currency">
+            <text-property name="promptText">Currency</text-property>
+            <property name="valueType">dynamic</property>
+            <property name="dataSetName">currency</property>
+            <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
+            <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
+            <expression name="sortByColumn">dataSetRow["name"]</expression>
             <property name="sortDirection">asc</property>
-            <property name="dataType">string</property>
+            <property name="dataType">integer</property>
             <property name="distinct">true</property>
-            <simple-property-list name="defaultValue">
-                <value type="constant">all</value>
-            </simple-property-list>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
-            <property name="concealValue">false</property>
-            <property name="controlType">text-box</property>
+            <property name="controlType">list-box</property>
+            <property name="mustMatch">true</property>
+            <property name="fixedOrder">false</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="7">
-            <list-property name="privateDriverProperties">
-                <ex-property>
-                    <name>metadataBidiFormatStr</name>
-                    <value>ILYNN</value>
-                </ex-property>
-                <ex-property>
-                    <name>disabledMetadataBidiFormatStr</name>
-                </ex-property>
-                <ex-property>
-                    <name>contentBidiFormatStr</name>
-                    <value>ILYNN</value>
-                </ex-property>
-                <ex-property>
-                    <name>disabledContentBidiFormatStr</name>
-                </ex-property>
-            </list-property>
-            <property name="odaDriverClass">org.postgresql.Driver</property>
-            <property name="odaURL">jdbc:postgresql://localhost:5432/asahi-loihein</property>
-            <property name="odaUser">openerp</property>
-            <encrypted-property name="odaPassword" encryptionID="base64">b3BlbnBncHdk</encrypted-property>
-        </oda-data-source>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="708"
+ extends="general_library.Data Source"/>
     </data-sources>
     <data-sets>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="report_name" id="8">
@@ -263,212 +171,7 @@
                     <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select id,name from account_financial_report where parent_id is null and id in (1,4,9)]]></xml-property>
-        </oda-data-set>
-        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="fiscal_year" id="10">
-            <list-property name="columnHints">
-                <structure>
-                    <property name="columnName">id</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">id</text-property>
-                    <text-property name="heading">id</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">name</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">name</text-property>
-                    <text-property name="heading">name</text-property>
-                </structure>
-            </list-property>
-            <structure name="cachedMetaData">
-                <list-property name="resultSet">
-                    <structure>
-                        <property name="position">1</property>
-                        <property name="name">id</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">2</property>
-                        <property name="name">name</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                </list-property>
-            </structure>
-            <property name="dataSource">Data Source</property>
-            <list-property name="resultSet">
-                <structure>
-                    <property name="position">1</property>
-                    <property name="name">id</property>
-                    <property name="nativeName">id</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">2</property>
-                    <property name="name">name</property>
-                    <property name="nativeName">name</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-            </list-property>
-            <xml-property name="queryText"><![CDATA[select id,name from account_fiscalyear
-]]></xml-property>
-            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
-  <Version>2.0</Version>
-  <design:ResultSets derivedMetaData="true">
-    <design:resultSetDefinitions>
-      <design:resultSetColumns>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>id</design:name>
-              <design:position>1</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-            <design:precision>10</design:precision>
-            <design:scale>0</design:scale>
-            <design:nullability>NotNullable</design:nullability>
-            <design:uiHints>
-              <design:displayName>id</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>id</design:label>
-            <design:formattingHints>
-              <design:displaySize>11</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>name</design:name>
-              <design:position>2</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
-            <design:precision>2147483647</design:precision>
-            <design:scale>0</design:scale>
-            <design:nullability>NotNullable</design:nullability>
-            <design:uiHints>
-              <design:displayName>name</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>name</design:label>
-            <design:formattingHints>
-              <design:displaySize>2147483647</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-      </design:resultSetColumns>
-      <design:criteria/>
-    </design:resultSetDefinitions>
-  </design:ResultSets>
-</model:DesignValues>]]></xml-property>
-        </oda-data-set>
-        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="period" id="12">
-            <property name="nullsOrdering">nulls lowest</property>
-            <list-property name="columnHints">
-                <structure>
-                    <property name="columnName">id</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">id</text-property>
-                    <text-property name="heading">id</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">name</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">name</text-property>
-                    <text-property name="heading">name</text-property>
-                </structure>
-            </list-property>
-            <list-property name="parameters"/>
-            <structure name="cachedMetaData">
-                <list-property name="resultSet">
-                    <structure>
-                        <property name="position">1</property>
-                        <property name="name">id</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">2</property>
-                        <property name="name">name</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                </list-property>
-            </structure>
-            <property name="dataSource">Data Source</property>
-            <list-property name="resultSet">
-                <structure>
-                    <property name="position">1</property>
-                    <property name="name">id</property>
-                    <property name="nativeName">id</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">2</property>
-                    <property name="name">name</property>
-                    <property name="nativeName">name</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-            </list-property>
-            <xml-property name="queryText"><![CDATA[select id,name from account_period ]]></xml-property>
-            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
-  <Version>2.0</Version>
-  <design:ResultSets derivedMetaData="true">
-    <design:resultSetDefinitions>
-      <design:resultSetColumns>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>id</design:name>
-              <design:position>1</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-            <design:precision>10</design:precision>
-            <design:scale>0</design:scale>
-            <design:nullability>NotNullable</design:nullability>
-            <design:uiHints>
-              <design:displayName>id</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>id</design:label>
-            <design:formattingHints>
-              <design:displaySize>11</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>name</design:name>
-              <design:position>2</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
-            <design:precision>2147483647</design:precision>
-            <design:scale>0</design:scale>
-            <design:nullability>NotNullable</design:nullability>
-            <design:uiHints>
-              <design:displayName>name</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>name</design:label>
-            <design:formattingHints>
-              <design:displaySize>2147483647</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-      </design:resultSetColumns>
-      <design:criteria/>
-    </design:resultSetDefinitions>
-  </design:ResultSets>
-</model:DesignValues>]]></xml-property>
+            <xml-property name="queryText"><![CDATA[select id,name from account_financial_report where parent_id is null ]]></xml-property>
         </oda-data-set>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="balance_sheet_report" id="17">
             <property name="nullsOrdering">nulls lowest</property>
@@ -476,6 +179,11 @@
                 <structure>
                     <property name="name">balance_value</property>
                     <expression name="expression">row["balance"]*row["sign"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">curr_balance</property>
+                    <expression name="expression">row["balance"]*row["sign"]*params["currency_rate"].value</expression>
                     <property name="dataType">decimal</property>
                 </structure>
             </list-property>
@@ -656,6 +364,11 @@
                     <structure>
                         <property name="position">9</property>
                         <property name="name">balance_value</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">curr_balance</property>
                         <property name="dataType">decimal</property>
                     </structure>
                 </list-property>
@@ -1347,6 +1060,7 @@ report.parent_id=? and aa.parent_id = ? order by path]]></xml-property>
                     <text-property name="heading">name</text-property>
                 </structure>
             </list-property>
+            <list-property name="parameters"/>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
                     <structure>
@@ -1379,7 +1093,8 @@ report.parent_id=? and aa.parent_id = ? order by path]]></xml-property>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select id , name 
-from account_analytic_account ]]></xml-property>
+from account_analytic_account 
+where parent_id is null]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -1434,6 +1149,12 @@ from account_analytic_account ]]></xml-property>
   </design:ResultSets>
 </model:DesignValues>]]></xml-property>
         </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="fiscal_year" id="709"
+ extends="general_library.fiscal_year"/>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="period" id="710"
+ extends="general_library.period"/>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="currency" id="738"
+ extends="general_library.currency"/>
     </data-sets>
     <cubes>
         <tabular-cube name="Finance Cube" id="317">
@@ -1495,10 +1216,18 @@ from account_analytic_account ]]></xml-property>
                 </tabular-dimension>
             </property>
             <property name="measureGroups">
-                <tabular-measure-group name="Summary Field" id="346">
+                <tabular-measure-group name="bal" id="346">
                     <property name="measures">
                         <tabular-measure name="balance_value" id="494">
                             <expression name="measureExpression" type="javascript">dataSetRow["balance_value"]</expression>
+                            <property name="dataType">decimal</property>
+                        </tabular-measure>
+                    </property>
+                </tabular-measure-group>
+                <tabular-measure-group name="curr_bal" id="739">
+                    <property name="measures">
+                        <tabular-measure name="curr_balance" id="740">
+                            <expression name="measureExpression" type="javascript">dataSetRow["curr_balance"]</expression>
                             <property name="dataType">decimal</property>
                         </tabular-measure>
                     </property>
@@ -1811,8 +1540,8 @@ from account_analytic_account ]]></xml-property>
                             <property name="style">comp_name</property>
                             <property name="fontSize">15pt</property>
                             <property name="fontWeight">bold</property>
-                            <property name="paddingLeft">50pt</property>
-                            <property name="textAlign">left</property>
+                            <property name="paddingLeft">1pt</property>
+                            <property name="textAlign">center</property>
                             <list-property name="boundDataColumns">
                                 <structure>
                                     <property name="name">report_id</property>
@@ -1822,6 +1551,32 @@ from account_analytic_account ]]></xml-property>
                                 </structure>
                             </list-property>
                             <property name="resultSetColumn">report_id</property>
+                        </data>
+                    </cell>
+                </row>
+                <row id="715">
+                    <property name="fontFamily">"Arial"</property>
+                    <property name="verticalAlign">middle</property>
+                    <property name="height">0.46875in</property>
+                    <cell id="716">
+                        <property name="colSpan">4</property>
+                        <property name="rowSpan">1</property>
+                        <property name="borderBottomStyle">none</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">none</property>
+                        <property name="borderTopStyle">none</property>
+                        <data id="720">
+                            <property name="fontSize">15pt</property>
+                            <property name="fontWeight">bold</property>
+                            <list-property name="boundDataColumns">
+                                <structure>
+                                    <property name="name">analytic_id</property>
+                                    <expression name="expression" type="javascript">params["analytic_id"].displayText</expression>
+                                    <property name="dataType">string</property>
+                                    <property name="allowExport">true</property>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">analytic_id</property>
                         </data>
                     </cell>
                 </row>
@@ -2028,7 +1783,8 @@ from account_analytic_account ]]></xml-property>
                             <property name="borderRightStyle">solid</property>
                             <property name="borderRightWidth">thin</property>
                             <property name="borderRightColor">#C0C0C0</property>
-                            <property name="width">211px</property>
+                            <property name="height">26px</property>
+                            <property name="width">200px</property>
                             <property name="content">
                                 <data id="548">
                                     <property name="style">financial_amt_cell</property>
@@ -2046,6 +1802,31 @@ from account_analytic_account ]]></xml-property>
                             <property name="content">
                                 <label id="550">
                                     <text-property name="text">balance_value</text-property>
+                                </label>
+                            </property>
+                        </extended-item>
+                    </property>
+                </extended-item>
+                <extended-item extensionName="MeasureView" id="741">
+                    <property name="measure">curr_balance</property>
+                    <property name="detail">
+                        <extended-item extensionName="AggregationCell" id="742">
+                            <property name="aggregationOnRow">Group1/name</property>
+                            <property name="aggregationOnColumn">Group2/analytic_name</property>
+                            <property name="width">245px</property>
+                            <property name="content">
+                                <data id="743">
+                                    <property name="textAlign">right</property>
+                                    <property name="resultSetColumn">curr_balance_Group1/name_Group2/analytic_name</property>
+                                </data>
+                            </property>
+                        </extended-item>
+                    </property>
+                    <property name="header">
+                        <extended-item extensionName="CrosstabCell" id="744">
+                            <property name="content">
+                                <label id="745">
+                                    <text-property name="text">curr_balance</text-property>
                                 </label>
                             </property>
                         </extended-item>
@@ -2069,7 +1850,6 @@ from account_analytic_account ]]></xml-property>
                                                         <property name="pattern">###0;(###0){RoundingMode=HALF_UP}</property>
                                                     </structure>
                                                     <property name="display">none</property>
-                                                    <property name="width">1px</property>
                                                     <property name="allowExport">false</property>
                                                     <property name="resultSetColumn">row_number</property>
                                                 </data>
@@ -2082,7 +1862,7 @@ from account_analytic_account ]]></xml-property>
                                             <property name="borderBottomWidth">thin</property>
                                             <property name="borderRightStyle">solid</property>
                                             <property name="borderRightWidth">thin</property>
-                                            <property name="width">1px</property>
+                                            <property name="width">5px</property>
                                         </extended-item>
                                     </property>
                                 </extended-item>
@@ -2103,7 +1883,7 @@ from account_analytic_account ]]></xml-property>
                                                     <property name="resultSetColumn">style_overwrite</property>
                                                 </data>
                                             </property>
-                                            <property name="width">1px</property>
+                                            <property name="width">121px</property>
                                         </extended-item>
                                     </property>
                                 </extended-item>
@@ -2136,7 +1916,8 @@ from account_analytic_account ]]></xml-property>
                                             <property name="borderRightStyle">solid</property>
                                             <property name="borderRightWidth">thin</property>
                                             <property name="borderRightColor">#C0C0C0</property>
-                                            <property name="width">433px</property>
+                                            <property name="height">3em</property>
+                                            <property name="width">396px</property>
                                             <property name="style">Border_style</property>
                                         </extended-item>
                                     </property>
@@ -2157,15 +1938,42 @@ from account_analytic_account ]]></xml-property>
                                     <property name="member">
                                         <extended-item extensionName="CrosstabCell" id="620">
                                             <property name="content">
-                                                <data name="analytic_name" id="621">
-                                                    <property name="style">Heading_style</property>
-                                                    <property name="fontWeight">bold</property>
-                                                    <property name="borderBottomStyle">none</property>
-                                                    <property name="borderLeftStyle">none</property>
-                                                    <property name="borderRightStyle">none</property>
-                                                    <property name="borderTopStyle">none</property>
-                                                    <property name="resultSetColumn">analytic_name</property>
-                                                </data>
+                                                <grid id="750">
+                                                    <property name="width">3.875in</property>
+                                                    <column id="751">
+                                                        <property name="width">1.78125in</property>
+                                                    </column>
+                                                    <column id="752">
+                                                        <property name="width">2.28125in</property>
+                                                    </column>
+                                                    <row id="753">
+                                                        <cell id="754">
+                                                            <property name="borderBottomStyle">none</property>
+                                                            <property name="borderLeftStyle">none</property>
+                                                            <property name="borderRightColor">#000000</property>
+                                                            <property name="borderRightStyle">solid</property>
+                                                            <property name="borderRightWidth">thin</property>
+                                                            <property name="borderTopStyle">none</property>
+                                                            <data name="analytic_name" id="621">
+                                                                <property name="style">Heading_style</property>
+                                                                <property name="fontWeight">bold</property>
+                                                                <property name="borderBottomStyle">none</property>
+                                                                <property name="borderLeftStyle">none</property>
+                                                                <property name="borderRightStyle">none</property>
+                                                                <property name="borderTopStyle">none</property>
+                                                                <property name="resultSetColumn">analytic_name</property>
+                                                            </data>
+                                                        </cell>
+                                                        <cell id="755">
+                                                            <text-data id="746">
+                                                                <property name="fontWeight">bold</property>
+                                                                <property name="textAlign">center</property>
+                                                                <expression name="valueExpr">params["currency"].displayText</expression>
+                                                                <property name="contentType">html</property>
+                                                            </text-data>
+                                                        </cell>
+                                                    </row>
+                                                </grid>
                                             </property>
                                             <property name="fontWeight">normal</property>
                                             <property name="backgroundColor">silver</property>
@@ -2189,16 +1997,14 @@ from account_analytic_account ]]></xml-property>
             </property>
             <property name="header">
                 <extended-item extensionName="CrosstabCell" id="514">
-                    <property name="borderTopStyle">solid</property>
-                    <property name="borderTopWidth">thin</property>
-                    <property name="borderTopColor">#000000</property>
-                    <property name="borderLeftStyle">solid</property>
-                    <property name="borderLeftWidth">thin</property>
-                    <property name="borderLeftColor">#000000</property>
-                    <property name="borderBottomStyle">solid</property>
-                    <property name="borderBottomWidth">thin</property>
-                    <property name="borderBottomColor">#000000</property>
-                    <property name="width">0px</property>
+                    <property name="borderTopStyle">none</property>
+                    <property name="borderLeftStyle">none</property>
+                    <property name="borderBottomStyle">none</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="width">5px</property>
+                    <property name="scope">rowgroup</property>
                     <property name="style">Heading_style</property>
                 </extended-item>
                 <extended-item extensionName="CrosstabCell" id="579">
@@ -2368,6 +2174,16 @@ label;</expression>
                 <structure>
                     <property name="name">balance_value_Group1/name_Group2/analytic_name</property>
                     <expression name="expression">measure["balance_value"]</expression>
+                    <property name="dataType">decimal</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Group1/name</value>
+                        <value>Group2/analytic_name</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                </structure>
+                <structure>
+                    <property name="name">curr_balance_Group1/name_Group2/analytic_name</property>
+                    <expression name="expression">measure["curr_balance"]</expression>
                     <property name="dataType">decimal</property>
                     <simple-property-list name="aggregateOn">
                         <value>Group1/name</value>
