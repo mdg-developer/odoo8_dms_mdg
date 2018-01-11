@@ -12,10 +12,13 @@ class account_invoice(models.Model):
     
     def cancel_credit(self, cr, uid, ids, context=None):
         invoice_obj = self.pool.get('account.invoice')
-        invoice_obj.action_cancel(cr, uid, ids, context=context)
+        #invoice_obj.action_cancel(cr, uid, ids, context=context)
+        #action_invoice_cancel
         invoice = self.browse(cr, uid, ids[0], context=context)
+        invoice.signal_workflow('invoice_cancel')
         order_no=invoice.origin
-        cr.execute("update  sale_order set  credit_to_cash =True where name=%s",(order_no,))
+        cr.execute("update sale_order set  credit_to_cash =True where name=%s",(order_no,))
+        
         return True            
         
     
@@ -133,8 +136,9 @@ class account_invoice(models.Model):
                             }
                     move_line_obj.create(cr, uid, vals_1) 
                     move_line_obj.reconcile(cr, uid, line_id, 'manual', account_id,
-                                        period_id, journal_id, context=context)                                                                                   
-        return self.write(cr, uid, ids, {'state':'open' , 'credit_approve_by':uid,'credit_control':True})        
+                                        period_id, journal_id, context=context) 
+            self.write(cr, uid, ids, {'state':'open' , 'credit_approve_by':uid,'credit_control':True})   
+        return True    
         
     def _compute_payments(self):
         partial_lines = lines = self.env['account.move.line']
@@ -160,7 +164,7 @@ class account_invoice(models.Model):
                 if self.origin:
                     if self.payment_type =='credit' and self.type=='out_invoice':
                         print ' self.type',self.type,self.id
-                        cr.execute("update account_invoice set state='credit_state',credit_control=False where credit_control !=True and  id=%s", (self.id,)) 
+                        cr.execute("update account_invoice set state='credit_state' where credit_control !=True and  id=%s", (self.id,)) 
                     else:
                         cr.execute("update account_invoice set state='open' where id=%s", (self.id,)) 
                            
@@ -1159,6 +1163,7 @@ class account_invoice(models.Model):
                 'move_id': move.id,
                 'period_id': period.id,
                 'move_name': move.name,
+                'credit_control':False,
             }
             inv.with_context(ctx).write(vals)
             # Pass invoice in context in method post: used if you want to get the same
@@ -1167,10 +1172,21 @@ class account_invoice(models.Model):
         self._log_event()
         return True
     
+    @api.multi
+    def invoice_validate(self):
+        state='open'
+        if self.type=='out_invoice' or self.type =='out_refund':
+            if self.payment_type=='credit':
+                state='credit_state'
+            else:
+                state='open'      
+        print 'statestatestatestatestatestatestatestate',state
+        return self.write({'state': state})    
     account_id = fields.Many2one('account.account', string='Account',
         required=False, readonly=True, states={'draft': [('readonly', False)]},
         help="The partner account used for this invoice.")
     credit_approve_by = fields.Many2one('res.users','Credit Approve By',readonly=True)    
+    
     credit_control = fields.Boolean('Credit Control',default='False',)    
     
     state = fields.Selection([
