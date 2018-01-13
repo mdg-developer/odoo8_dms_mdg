@@ -12,12 +12,20 @@ from openerp.addons.connector.session import ConnectorSession
 from openerp.addons.connector.exception import FailedJobError
 from openerp.addons.connector.jobrunner.runner import ConnectorRunner
 
+@job(default_channel='root.pendingdelivery')
+def automation_pending_delivery(session,delivery_mobile):
+    delivery_obj = session.pool['pending.delivery']    
+    context = session.context.copy()
+    cr = session.cr
+    uid = session.uid
+    for mobile in delivery_mobile: 
+        delivery_obj.action_convert_pending_delivery(cr, uid, [mobile], context=context)    
+    return True    
     
 @job(default_channel='root.direct')
 def automation_direct_order(session, list_mobile):
     mobile_obj = session.pool['mobile.sale.order']
     context = session.context.copy()
-    print 'automation pre order:', list_mobile
     cr = session.cr
     uid = session.uid
     # list_mobile = mobile_obj.search(cr, uid, [('void_flag', '=', 'none'), ('m_status', '=', 'draft'), ('partner_id', '!=', None)])            
@@ -25,16 +33,6 @@ def automation_direct_order(session, list_mobile):
         mobile_obj.action_convert_so(cr, uid, [mobile], context=context)    
     return True
 
-@job(default_channel='root.pendingdelivery')
-def automation_pending_delivery(session,list_mobile):
-    context = session.context.copy()
-    cr = session.cr
-    uid = session.uid
-    print 'automation pendingdelivery:',list_mobile
-    mobile_obj = session.pool.get('pending.delivery')
-    for mobile in list_mobile: 
-        mobile_obj.action_convert_pending_delivery(cr, uid, [mobile], context=context)    
-    return True    
 class customer_payment(osv.osv):
     _name = "customer.payment"
     _columns = {               
@@ -241,7 +239,7 @@ class mobile_sale_order(osv.osv):
                     
                     # convert to sale order.
             session = ConnectorSession(cursor, user, context)
-            jobid = automation_direct_order.delay(session, so_ids, priority=1, eta=10)
+            jobid = automation_direct_order.delay(session, so_ids, priority=10)
             runner = ConnectorRunner()
             runner.run_jobs()
             return True     
@@ -2030,30 +2028,36 @@ class mobile_sale_order(osv.osv):
                     if deli['miss'] == 't':
                         So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
                                                        , ('name', '=', so_ref_no)], context=context)    
+                        so_data = soObj.browse(cr, uid, So_id, context=context)
+                        delivery_team_id =so_data.delivery_id.id
                         delivery = {                                                            
                                   'order_id':So_id[0],
                                   'miss':True,
                                   'due_date':deli['due_date'],                        
                                   'state':'draft', 
+                                  'delivery_team_id': delivery_team_id ,
                             }
                         pending_id=pending_obj.create(cr, uid, delivery, context=context)                                            
                     else:                            
                         So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
                                                        , ('name', '=', so_ref_no)], context=context)
+                        so_data = soObj.browse(cr, uid, So_id, context=context)
+                        delivery_team_id =so_data.delivery_id.id                        
                         delivery = {                                                            
                                   'order_id':So_id[0],
                                   'miss':False,
                                   'due_date':deli['due_date'],
                                   'state':'draft', 
+                                  'delivery_team_id': delivery_team_id ,                                  
                             }
                         pending_id=pending_obj.create(cr, uid, delivery, context=context)                                                                                                                                 
                     pending_ids.append(pending_id)
             session = ConnectorSession(cr, uid, context)
-            jobid=automation_pending_delivery.delay(session,pending_ids,priority=1, eta=10)
-            print "Job",jobid
+            #jobid=pending_obj.create_automation_pending_delivery(cr, uid, pending_ids, context=context)       
+            jobid=automation_pending_delivery.delay(session,pending_ids, priority=50 ,max_retries=20)
             runner = ConnectorRunner()
             runner.run_jobs()
-            return True                                                                         
+            return True                                                                    
 #     def update_deliver_sale_order(self, cr, uid, saleorderList, context=None):
 #          
 #             context = {'lang':'en_US', 'params':{'action':458}, 'tz': 'Asia/Rangoon', 'uid': 1}
