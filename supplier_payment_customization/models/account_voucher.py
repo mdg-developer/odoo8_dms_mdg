@@ -37,7 +37,7 @@ class account_voucher(osv.osv):
                                                                relation='account.account', required=True,
                                                                string="Discount Account",
                                                                domain="[('type', '=', 'other')]" ),
-                                                            
+                        'voucher_rate':fields.float('Rate',default=1),                                                                                   
               }
     
 #     def first_move_line_get(self, cr, uid, voucher_id, move_id, company_currency, current_currency, context=None):
@@ -156,6 +156,8 @@ class account_voucher(osv.osv):
             #m3w cutomize supplier payment to get gain loss foreign curreny for partial payment
             if not line.move_line_id:
                 raise osv.except_osv(_('Wrong voucher line'), _("The invoice you are willing to pay is not valid anymore."))
+            #if len(voucher.reference) != False or len(voucher.reference) > 0:
+                
             tmp_mmk_total = tmp_fore_total = tmp_rate = v_amt = v_rate = v_total = 0.0
             tmp_mmk_total = line.move_line_id.credit
             if tmp_mmk_total <= 0:
@@ -163,8 +165,12 @@ class account_voucher(osv.osv):
             tmp_fore_total = line.move_line_id.amount_currency
             if tmp_fore_total <= 0:
                 tmp_fore_total = tmp_fore_total * -1
-            tmp_rate =  tmp_mmk_total / tmp_fore_total  
-            v_rate = voucher.payment_rate
+            tmp_rate =  tmp_mmk_total / tmp_fore_total 
+            if voucher.voucher_rate > 1: 
+                v_rate = voucher.voucher_rate
+                voucher.payment_rate = voucher.voucher_rate
+            else:
+                v_rate = voucher.payment_rate    
             v_total = ((tmp_rate - v_rate) * line.amount)    
             sign = line.type == 'dr' and -1 or 1
             currency_rate_difference = sign * (v_total)    
