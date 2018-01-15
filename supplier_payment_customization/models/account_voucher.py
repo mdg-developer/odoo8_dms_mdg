@@ -152,6 +152,22 @@ class account_voucher(osv.osv):
                 currency_rate_difference = sign * (line.move_line_id.amount_residual - amount)
             else:
                 currency_rate_difference = 0.0
+            
+            #m3w cutomize supplier payment to get gain loss foreign curreny for partial payment
+            if not line.move_line_id:
+                raise osv.except_osv(_('Wrong voucher line'), _("The invoice you are willing to pay is not valid anymore."))
+            tmp_mmk_total = tmp_fore_total = tmp_rate = v_amt = v_rate = v_total = 0.0
+            tmp_mmk_total = line.move_line_id.credit
+            if tmp_mmk_total <= 0:
+                tmp_mmk_total = tmp_mmk_total * -1
+            tmp_fore_total = line.move_line_id.amount_currency
+            if tmp_fore_total <= 0:
+                tmp_fore_total = tmp_fore_total * -1
+            tmp_rate =  tmp_mmk_total / tmp_fore_total  
+            v_rate = voucher.payment_rate
+            v_total = ((tmp_rate - v_rate) * line.amount)    
+            sign = line.type == 'dr' and -1 or 1
+            currency_rate_difference = sign * (v_total)    
             move_line = {
                 'journal_id': voucher.journal_id.id,
                 'period_id': voucher.period_id.id,
