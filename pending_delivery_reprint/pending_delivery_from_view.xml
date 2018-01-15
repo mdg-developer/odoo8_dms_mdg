@@ -17,6 +17,7 @@
 					<sheet>
 						<group>
 							<field name="due_date" />
+							<field name="delivery_date" />
 					        <field name="create_date" />
 							<field name="order_id" class="oe_inline" />
 							<field name="delivery_team_id" class="oe_inline" />
@@ -32,7 +33,8 @@
 			<field name="name">Pending Delivery Tree</field>
 			<field name="model">pending.delivery</field>
 			<field name="arch" type="xml">
-				<tree string="Pending Delivery" default_order="due_date desc">
+				<tree string="Pending Delivery" default_order="delivery_date desc">
+				    <field name="delivery_date" />				    
 					<field name="due_date" />
 					<field name="create_date" />
 					<field name="delivery_team_id" />

@@ -13,7 +13,8 @@ from openerp.addons.connector.jobrunner.runner import ConnectorRunner
 class pendingdelivery(osv.osv):
     _name = 'pending.delivery'
     _columns = {
-                'due_date':fields.date('Date',readonly=True),          
+                'delivery_date':fields.date('Delivery Date',readonly=True),
+                'due_date':fields.date('Order Date',readonly=True),          
                 'order_id':fields.many2one('sale.order','Order No',readonly=True),
                 'miss':fields.boolean('Miss',readonly=True),
                 'state':fields.selection([('draft', 'Draft'),
