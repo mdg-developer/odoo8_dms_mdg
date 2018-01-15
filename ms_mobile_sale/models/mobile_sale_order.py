@@ -12,12 +12,20 @@ from openerp.addons.connector.session import ConnectorSession
 from openerp.addons.connector.exception import FailedJobError
 from openerp.addons.connector.jobrunner.runner import ConnectorRunner
 
+@job(default_channel='root.pendingdelivery')
+def automation_pending_delivery(session,delivery_mobile):
+    delivery_obj = session.pool['pending.delivery']    
+    context = session.context.copy()
+    cr = session.cr
+    uid = session.uid
+    for mobile in delivery_mobile: 
+        delivery_obj.action_convert_pending_delivery(cr, uid, [mobile], context=context)    
+    return True    
     
 @job(default_channel='root.direct')
 def automation_direct_order(session, list_mobile):
     mobile_obj = session.pool['mobile.sale.order']
     context = session.context.copy()
-    print 'automation pre order:', list_mobile
     cr = session.cr
     uid = session.uid
     # list_mobile = mobile_obj.search(cr, uid, [('void_flag', '=', 'none'), ('m_status', '=', 'draft'), ('partner_id', '!=', None)])            
@@ -25,16 +33,6 @@ def automation_direct_order(session, list_mobile):
         mobile_obj.action_convert_so(cr, uid, [mobile], context=context)    
     return True
 
-@job(default_channel='root.pendingdelivery')
-def automation_pending_delivery(session,list_mobile):
-    context = session.context.copy()
-    cr = session.cr
-    uid = session.uid
-    print 'automation pendingdelivery:',list_mobile
-    mobile_obj = session.pool.get('pending.delivery')
-    for mobile in list_mobile: 
-        mobile_obj.action_convert_pending_delivery(cr, uid, [mobile], context=context)    
-    return True    
 class customer_payment(osv.osv):
     _name = "customer.payment"
     _columns = {               
@@ -241,7 +239,7 @@ class mobile_sale_order(osv.osv):
                     
                     # convert to sale order.
             session = ConnectorSession(cursor, user, context)
-            jobid = automation_direct_order.delay(session, so_ids, priority=1, eta=10)
+            jobid = automation_direct_order.delay(session, so_ids, priority=10)
             runner = ConnectorRunner()
             runner.run_jobs()
             return True     
@@ -1410,6 +1408,9 @@ class mobile_sale_order(osv.osv):
             ar_obj = self.pool.get('ar.payment')
             inv_Obj = self.pool.get('account.invoice')
             invoice_obj = self.pool.get('account.invoice.line')
+            Order_obj = self.pool.get('sale.order')
+            Order_Lineobj = self.pool.get('sale.order.line')
+            
             ar_amount = 0.0
             product_amount = 0.0
             deno_amount = 0.0
@@ -1511,43 +1512,49 @@ class mobile_sale_order(osv.osv):
                 ar_bank_ids = cursor.fetchall()                              
                 cursor.execute("select id from mobile_sale_order where due_date=%s and user_id=%s and m_status !='done' and void_flag != 'voided' and type='cash'", (de_date, user_id))
                 m_mobile_ids = cursor.fetchall()
-                cursor.execute("select id from account_invoice where date_invoice=%s and section_id =%s and state='open' and payment_type='cash' ", (de_date, team_id,))
-                invoice_ids = cursor.fetchall()       
+#                 cursor.execute("select id from account_invoice where date_invoice=%s and section_id =%s and state='open' and payment_type='cash' ", (de_date, team_id,))
+#                 invoice_ids = cursor.fetchall()       
+                cursor.execute("select order_id from pending_delivery where delivery_date=%s and delivery_team_id =%s and state='draft'  and miss !=True ", (de_date, team_id,))
+                invoice_ids = cursor.fetchall()                       
                 if invoice_ids:
                     for data_pro in invoice_ids:
                         pre_mobile_ids.append(data_pro[0])
                 if pre_mobile_ids:
-                    invoice_data = inv_Obj.search(cursor, user, [('id', 'in', tuple(pre_mobile_ids))], context=context)   
+                    #invoice_data = inv_Obj.search(cursor, user, [('id', 'in', tuple(pre_mobile_ids))], context=context)   
+                    invoice_data = Order_obj.search(cursor, user, [('id', 'in', tuple(pre_mobile_ids))], context=context)   
                     for invoice_id in invoice_data:
-                        invoice = inv_Obj.browse(cursor, user, invoice_id, context=context)
+                        invoice = Order_obj.browse(cursor, user, invoice_id, context=context)
                         deduct_amt = invoice.deduct_amt
                         amount_total = invoice.amount_untaxed
                         deduct_percent = invoice.additional_discount / 100
                         discount_total += amount_total * deduct_percent
                         discount_amount += deduct_amt                    
-                    line_ids = invoice_obj.search(cursor, user, [('invoice_id', 'in', pre_mobile_ids)], context=context)         
-                    order_line_ids = invoice_obj.browse(cursor, user, line_ids, context=context)         
-                    cursor.execute('select product_id,sum(quantity) as quantity,sum(price_subtotal) as  sub_total,uos_id from account_invoice_line where id in %s group by product_id,uos_id', (tuple(order_line_ids.ids),))
-                    order_line = cursor.fetchall()
-                    for data in order_line:
-                        product = self.pool.get('product.product').browse(cursor, user, data[0], context=context)
+                    #line_ids = invoice_obj.search(cursor, user, [('order_id', 'in', pre_mobile_ids)], context=context)         
+                    line_ids = Order_Lineobj.search(cursor, user, [('order_id', 'in', pre_mobile_ids)], context=context)         
+#                     order_line_ids = Order_Lineobj.browse(cursor, user, line_ids, context=context)         
+#                     cursor.execute('select product_id,sum(product_uom_qty) as quantity,sum((product_uom_qty*price_unit)-discount_amt ) as  sub_total,product_uom from sale_order_line group by product_id,product_uom', (tuple(order_line_ids.ids),))
+#                     order_line = cursor.fetchall()
+                    for data in line_ids:
+                        order_line_data = Order_Lineobj.browse(cursor, user, data, context=context)
+                        product_id=order_line_data.product_id.id      
+                        product_amount += order_line_data.net_total
+                        pre_qty=order_line_data.product_uom_qty
+                        pre_p_uom=order_line_data.product_uom.id
+                        product = self.pool.get('product.product').browse(cursor, user, product_id, context=context)
                         sequence = product.sequence
-                        product_amount += data[2]
-                        pre_qty = data[1]
-                        pre_p_uom = data[3]
                         if pre_p_uom == product.product_tmpl_id.big_uom_id.id:                                                                          
                             cursor.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (product.product_tmpl_id.big_uom_id.id,))
                             bigger_qty = cursor.fetchone()[0]
                             bigger_qty = int(bigger_qty)
                             pre_qty = bigger_qty * pre_qty         
-                        data_id = {'product_id':data[0],
+                        data_id = {'product_id':product_id,
                                           'product_uom_qty':pre_qty,
                                           'denomination_product_ids':deno_id,
                                           'sequence':sequence,
-                                          'amount':data[2]}
-                        exit_data = deno_product_obj.search(cursor, user, [('denomination_product_ids', '=', deno_id), ('product_id', '=', data[0])], context=context)         
+                                          'amount':order_line_data.net_total}
+                        exit_data = deno_product_obj.search(cursor, user, [('denomination_product_ids', '=', deno_id), ('product_id', '=', product_id)], context=context)         
                         if exit_data:
-                            cursor.execute("update sales_denomination_product_line set product_uom_qty = product_uom_qty + %s , amount = amount + %s where denomination_product_ids = %s and product_id =%s", (pre_qty, data[2], deno_id, data[0],))
+                            cursor.execute("update sales_denomination_product_line set product_uom_qty = product_uom_qty + %s , amount = amount + %s where denomination_product_ids = %s and product_id =%s", (pre_qty, order_line_data.net_total, deno_id, product_id,))
                         else:
                             deno_product_obj.create(cursor, user, data_id, context=context)                        
                 if  m_mobile_ids:
@@ -2030,30 +2037,38 @@ class mobile_sale_order(osv.osv):
                     if deli['miss'] == 't':
                         So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
                                                        , ('name', '=', so_ref_no)], context=context)    
+                        so_data = soObj.browse(cr, uid, So_id, context=context)
+                        delivery_team_id =so_data.delivery_id.id
                         delivery = {                                                            
                                   'order_id':So_id[0],
                                   'miss':True,
+                                  'delivery_date':datetime.now(),
                                   'due_date':deli['due_date'],                        
                                   'state':'draft', 
+                                  'delivery_team_id': delivery_team_id ,
                             }
                         pending_id=pending_obj.create(cr, uid, delivery, context=context)                                            
                     else:                            
                         So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
                                                        , ('name', '=', so_ref_no)], context=context)
+                        so_data = soObj.browse(cr, uid, So_id, context=context)
+                        delivery_team_id =so_data.delivery_id.id                        
                         delivery = {                                                            
                                   'order_id':So_id[0],
                                   'miss':False,
                                   'due_date':deli['due_date'],
+                                  'delivery_date':datetime.now(),
                                   'state':'draft', 
+                                  'delivery_team_id': delivery_team_id ,                                  
                             }
                         pending_id=pending_obj.create(cr, uid, delivery, context=context)                                                                                                                                 
                     pending_ids.append(pending_id)
             session = ConnectorSession(cr, uid, context)
-            jobid=automation_pending_delivery.delay(session,pending_ids,priority=1, eta=10)
-            print "Job",jobid
+            #jobid=pending_obj.create_automation_pending_delivery(cr, uid, pending_ids, context=context)       
+            jobid=automation_pending_delivery.delay(session,pending_ids, priority=50 ,max_retries=20)
             runner = ConnectorRunner()
             runner.run_jobs()
-            return True                                                                         
+            return True                                                                    
 #     def update_deliver_sale_order(self, cr, uid, saleorderList, context=None):
 #          
 #             context = {'lang':'en_US', 'params':{'action':458}, 'tz': 'Asia/Rangoon', 'uid': 1}
