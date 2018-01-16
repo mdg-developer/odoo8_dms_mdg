@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+	
+	    	<!-- Good Issue Note -->
+		<!-- <report id="report_stock_transfer" model="stock.transfer.request" -->
+		<!-- string="Stock Transfer Report" report_type="qweb-pdf" -->
+		<!-- name="warehouse_transfer_request.report_stock_transfer_document" -->
+		<!-- file="stock_transfer.report_stock_transfer_document" attachment_use="False" -->
+		<!-- attachment="('Stock Transfer Report')+'.pdf'" /> -->
+
+		<report string="Way Bill" id="action_report_way_bill" model="stock.picking"
+			report_type="qweb-pdf" name="warehouse_way_bill.report_way_bill_document"
+			file="warehouse_way_bill.report_way_bill_document" />
+
+	</data>
+</openerp>

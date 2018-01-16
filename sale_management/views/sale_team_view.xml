@@ -45,6 +45,11 @@
 					<field name="issue_warehouse_id" />
 					<field name="issue_location_id" />
 					<field name="temp_location_id" />
+					<field name="normal_return_location_id" />
+					<field name="exp_location_id" />
+					<field name="near_exp_location_id" />
+					<field name="damage_location_id" />
+					<field name="fresh_stock_not_good_location_id" />
 					<field name="receiver" />
 					<field name="analytic_account_id" />
 					<field name="van_id" invisible="1" />
