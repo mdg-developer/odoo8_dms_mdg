@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
 	<data>
-
+		
+	    <record id="invoice_tree_inherti_currency" model="ir.ui.view">
+			<field name="name">account.invoice.tree</field>
+			<field name="model">account.invoice</field>
+			<field name="inherit_id" ref="account.invoice_tree" />
+			<field name="arch" type="xml">
+				<data>
+					<field name="number" position="after">
+						<field name="currency_id" />
+						
+					</field>
+					
+					
+				</data>
+			</field>
+		</record>
+		
 		<record id="inherit_invoice_form_new" model="ir.ui.view">
 			<field name="name">account.invoice.form</field>
 			<field name="model">account.invoice</field>
