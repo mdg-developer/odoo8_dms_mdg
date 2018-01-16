@@ -80,7 +80,51 @@ class account_voucher(osv.osv):
 #                 'date': voucher.date,
 #                 'date_maturity': voucher.date_due
 #             }
-#         return move_line      
+#         return move_line 
+    def first_move_line_get(self, cr, uid, voucher_id, move_id, company_currency, current_currency, context=None):
+        '''
+        Return a dict to be use to create the first account move line of given voucher.
+
+        :param voucher_id: Id of voucher what we are creating account_move.
+        :param move_id: Id of account move where this line will be added.
+        :param company_currency: id of currency of the company to which the voucher belong
+        :param current_currency: id of currency of the voucher
+        :return: mapping between fieldname and value of account move line to create
+        :rtype: dict
+        '''
+        voucher = self.pool.get('account.voucher').browse(cr,uid,voucher_id,context)
+        debit = credit = 0.0
+        # TODO: is there any other alternative then the voucher type ??
+        # ANSWER: We can have payment and receipt "In Advance".
+        # TODO: Make this logic available.
+        # -for sale, purchase we have but for the payment and receipt we do not have as based on the bank/cash journal we can not know its payment or receipt
+        if voucher.type in ('purchase', 'payment'):
+            credit = voucher.paid_amount_in_company_currency
+            if voucher.voucher_rate > 1 and company_currency != current_currency: 
+                credit = voucher.voucher_rate * voucher.amount
+        elif voucher.type in ('sale', 'receipt'):
+            debit = voucher.paid_amount_in_company_currency
+        if debit < 0: credit = -debit; debit = 0.0
+        if credit < 0: debit = -credit; credit = 0.0
+        sign = debit - credit < 0 and -1 or 1
+        #set the first line of the voucher
+        move_line = {
+                'name': voucher.name or '/',
+                'debit': debit,
+                'credit': credit,
+                'account_id': voucher.account_id.id,
+                'move_id': move_id,
+                'journal_id': voucher.journal_id.id,
+                'period_id': voucher.period_id.id,
+                'partner_id': voucher.partner_id.id,
+                'currency_id': company_currency <> current_currency and  current_currency or False,
+                'amount_currency': (sign * abs(voucher.amount) # amount < 0 for refunds
+                    if company_currency != current_currency else 0.0),
+                'date': voucher.date,
+                'date_maturity': voucher.date_due
+            }
+        return move_line
+         
     def voucher_move_line_create(self, cr, uid, voucher_id, line_total, move_id, company_currency, current_currency, context=None):
         '''
         Create one account move line, on the given account move, per voucher line where amount is not 0.0.
@@ -154,26 +198,28 @@ class account_voucher(osv.osv):
                 currency_rate_difference = 0.0
             
             #m3w cutomize supplier payment to get gain loss foreign curreny for partial payment
-            if not line.move_line_id:
-                raise osv.except_osv(_('Wrong voucher line'), _("The invoice you are willing to pay is not valid anymore."))
-            #if len(voucher.reference) != False or len(voucher.reference) > 0:
-                
-            tmp_mmk_total = tmp_fore_total = tmp_rate = v_amt = v_rate = v_total = 0.0
-            tmp_mmk_total = line.move_line_id.credit
-            if tmp_mmk_total <= 0:
-                tmp_mmk_total = tmp_mmk_total * -1
-            tmp_fore_total = line.move_line_id.amount_currency
-            if tmp_fore_total <= 0:
-                tmp_fore_total = tmp_fore_total * -1
-            tmp_rate =  tmp_mmk_total / tmp_fore_total 
-            if voucher.voucher_rate > 1: 
-                v_rate = voucher.voucher_rate
-                voucher.payment_rate = voucher.voucher_rate
-            else:
-                v_rate = voucher.payment_rate    
-            v_total = ((tmp_rate - v_rate) * line.amount)    
-            sign = line.type == 'dr' and -1 or 1
-            currency_rate_difference = sign * (v_total)    
+            if voucher.type in ('purchase', 'payment'):
+                if not line.move_line_id:
+                    raise osv.except_osv(_('Wrong voucher line'), _("The invoice you are willing to pay is not valid anymore."))
+                #if len(voucher.reference) != False or len(voucher.reference) > 0:
+                    
+                tmp_mmk_total = tmp_fore_total = tmp_rate = v_amt = v_rate = v_total = 0.0
+                tmp_mmk_total = line.move_line_id.credit
+                if tmp_mmk_total <= 0:
+                    tmp_mmk_total = tmp_mmk_total * -1
+                tmp_fore_total = line.move_line_id.amount_currency
+                if tmp_fore_total <= 0:
+                    tmp_fore_total = tmp_fore_total * -1
+                tmp_rate =  tmp_mmk_total / tmp_fore_total 
+                if voucher.voucher_rate > 1: 
+                    v_rate = voucher.voucher_rate
+                    voucher.payment_rate = voucher.voucher_rate
+                else:
+                    v_rate = voucher.payment_rate            
+                        
+                v_total = ((tmp_rate - v_rate) * line.amount)    
+                sign = line.type == 'dr' and -1 or 1
+                currency_rate_difference = sign * (v_total)    
             move_line = {
                 'journal_id': voucher.journal_id.id,
                 'period_id': voucher.period_id.id,
