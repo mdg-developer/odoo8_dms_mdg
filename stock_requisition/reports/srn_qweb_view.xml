@@ -4,6 +4,9 @@
 		<report id="stock_return" model="stock.return" string="Stock Return"
 			report_type="qweb-pdf" name="stock_requisition.stock_return_note" file="stock_requisition.stock_return"
 			attachment_use="True" attachment="('Stock Return Note')+'.pdf'" />
-		
+			
+		<report id="stock_return_check" model="stock.return.check" string="Stock Return Check"
+			report_type="qweb-pdf" name="stock_requisition.stock_return_check_note" file="stock_requisition.stock_return_check_note_document"
+			attachment_use="True" attachment="('Stock Return Check Note')+'.pdf'" />
 	</data>
 </openerp>
