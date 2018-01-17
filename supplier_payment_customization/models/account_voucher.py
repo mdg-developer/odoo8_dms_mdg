@@ -148,6 +148,7 @@ class account_voucher(osv.osv):
         tax_obj = self.pool.get('account.tax')
         tot_line = line_total
         rec_lst_ids = []
+        move_ids = []
         total_discount = 0.0
         total_discount_account_id = None
         total_discount_account_id = self.pool.get('account.voucher').browse(cr, uid, voucher_id, context=None).discount_account_id.id
@@ -335,6 +336,9 @@ class account_voucher(osv.osv):
                 rec_lst_ids.append(rec_ids)
  
             rec_ids = [voucher_line, line.move_line_id.id]
+            for rec_id in self.pool.get('account.move.line').browse(cr,uid,rec_ids,context=context):
+                if rec_id.move_id.state== 'draft':
+                   self.pool.get('account.move').button_validate(cr,uid,rec_id.move_id.id,context=context) 
         return (tot_line, rec_lst_ids)
     
 account_voucher()
