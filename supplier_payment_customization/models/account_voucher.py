@@ -1,5 +1,6 @@
 from openerp.osv import fields, osv
 from openerp.tools import float_compare
+from openerp.tools.translate import _
 
 class account_voucher(osv.osv):
     _inherit = 'account.voucher'
@@ -8,7 +9,34 @@ class account_voucher(osv.osv):
         res = {}
         res['value'] = {'discount_account_id': False}
         return res
-        
+    
+    def _check_valid_input(self, cr, uid, ids, fields, arg, context):
+             
+        x = {}
+        data = self.browse(cr, uid, ids)[0]
+        currency_obj = self.pool.get('res.currency')
+        max_exchange_rate = min_exchange_rate = tolerance = 0
+        if self.get_mmk_or_not(cr, uid, ids, data.currency_id.id,context=None) == False:
+            
+            cur_id = currency_obj.browse(cr, uid, data.currency_id.id, context=context)
+            if cur_id:
+                tolerance = cur_id.tolerance
+            rate = self.get_rate(cr, uid, ids, data.currency_id.id, data.date, context=context)
+            rate = float(format(rate, '.2f'))
+            tolerance = cur_id.tolerance
+            min_exchange_rate = rate - tolerance
+            max_exchange_rate = rate + tolerance
+            if data.voucher_rate <= max_exchange_rate and data.voucher_rate >=min_exchange_rate:
+                return x
+            else:               
+                raise osv.except_osv(_('Please Check Rate'), _("Rate shouldn't less than Minimum Exchange Rate or Rate shouldn't greater than Maximum Exchange Rate"))
+#         if data.voucher_rate:
+#             if data.voucher_rate > 1:
+#                 if data.voucher_rate <= data.max_exchange_rate and data.voucher_rate >=data.min_exchange_rate:
+#                     return True
+#                 else:               
+#                    raise osv.except_osv(_('Please Check Rate'), _("Rate shouldn't less than Minimum Exchange Rate or Rate shouldn't greater than Maximum Exchange Rate"))
+        return x;        
     def _get_writeoff_amount(self, cr, uid, ids, name, args, context=None):
         if not ids: return {}
         currency_obj = self.pool.get('res.currency')
@@ -37,7 +65,11 @@ class account_voucher(osv.osv):
                                                                relation='account.account', required=True,
                                                                string="Discount Account",
                                                                domain="[('type', '=', 'other')]" ),
-                        'voucher_rate':fields.float('Rate',default=1),                                                                                   
+                        'voucher_rate':fields.float('Rate',default=1),
+                        'exchange_rate':fields.float('Exchange Rate'),
+                        'min_exchange_rate':fields.float('Minimum Exchange Rate'),
+                        'max_exchange_rate':fields.float('Maximum Exchange Rate'),
+                        'check_valid': fields.function(_check_valid_input, type='many2one', obj='account.invoice', string="check valid", store=True),                                                                                   
               }
     
 #     def first_move_line_get(self, cr, uid, voucher_id, move_id, company_currency, current_currency, context=None):
@@ -80,7 +112,83 @@ class account_voucher(osv.osv):
 #                 'date': voucher.date,
 #                 'date_maturity': voucher.date_due
 #             }
-#         return move_line 
+#         return move_line
+    def get_mmk_or_not(self, cr, uid, ids, currency_id,context=None):
+        mmk = None
+        cr.execute("""select id from res_currency where lower(name)='mmk'""")
+        data = cr.fetchall()
+        if data:
+            mmk = data[0][0]
+        if currency_id:
+            if currency_id == mmk:
+                return True
+            else:
+                return False
+                        
+        return True
+       
+    def get_rate(self, cr, uid, ids, currency_id, date, context=None):
+        rate = 0.0
+        cr.execute("""select rate from res_currency_rate where currency_id =%s 
+        and name::date<=%s order by name desc limit 1
+        """,(currency_id,date,))
+        data = cr.fetchall()
+        if data:
+           rate = data[0][0]
+        return 1/rate
+    def rate_validation(self, cr, uid, ids, payment_rate_currency_id, min_exchange_rate, max_exchange_rate, voucher_rate, context=None):
+        res = {}
+        if voucher_rate > 1:
+            if voucher_rate <= max_exchange_rate and voucher_rate >=min_exchange_rate:
+                return True
+            else:               
+               raise osv.except_osv(_('Please Check Rate'), _("Rate shouldn't less than Minimum Exchange Rate or Rate shouldn't greater than Maximum Exchange Rate"))
+                
+    def onchange_date(self, cr, uid, ids, date, currency_id, payment_rate_currency_id, amount, company_id, context=None):
+        """
+        @param date: latest value from user input for field date
+        @param args: other arguments
+        @param context: context arguments, like lang, time zone
+        @return: Returns a dict which contains new values, and context
+        """
+        if context is None:
+            context ={}
+        res = {'value': {}}
+        tolerance = 0
+        #set the period of the voucher
+        period_pool = self.pool.get('account.period')
+        currency_obj = self.pool.get('res.currency')
+        ctx = context.copy()
+        ctx.update({'company_id': company_id, 'account_period_prefer_normal': True})
+        voucher_currency_id = currency_id or self.pool.get('res.company').browse(cr, uid, company_id, context=ctx).currency_id.id
+        pids = period_pool.find(cr, uid, date, context=ctx)
+        if pids:
+            res['value'].update({'period_id':pids[0]})
+        if payment_rate_currency_id:
+            ctx.update({'date': date})
+            payment_rate = 1.0
+            if payment_rate_currency_id != currency_id:
+                tmp = currency_obj.browse(cr, uid, payment_rate_currency_id, context=ctx).rate
+                payment_rate = tmp / currency_obj.browse(cr, uid, voucher_currency_id, context=ctx).rate
+                
+                
+            vals = self.onchange_payment_rate_currency(cr, uid, ids, payment_rate_currency_id, payment_rate, payment_rate_currency_id, date, amount, company_id, context=context)
+            cur_id = currency_obj.browse(cr, uid, payment_rate_currency_id, context=ctx)
+            if cur_id:
+                tolerance = cur_id.tolerance
+            rate = self.get_rate(cr, uid, ids, currency_id, date, context=context)
+            rate = float(format(rate, '.2f'))
+            vals['value'].update({'voucher_rate': rate})
+            if rate == 0:
+               vals['value'].update({'voucher_rate': 1}) 
+            vals['value'].update({'payment_rate': payment_rate})
+            vals['value'].update({'exchange_rate': rate})
+            vals['value'].update({'min_exchange_rate': rate - tolerance})
+            vals['value'].update({'max_exchange_rate': rate + tolerance})
+            for key in vals.keys():
+                res[key].update(vals[key])
+        return res
+    
     def first_move_line_get(self, cr, uid, voucher_id, move_id, company_currency, current_currency, context=None):
         '''
         Return a dict to be use to create the first account move line of given voucher.
@@ -100,6 +208,11 @@ class account_voucher(osv.osv):
         # -for sale, purchase we have but for the payment and receipt we do not have as based on the bank/cash journal we can not know its payment or receipt
         if voucher.type in ('purchase', 'payment'):
             credit = voucher.paid_amount_in_company_currency
+#             if voucher.voucher_rate > 1:
+#                 if voucher.voucher_rate <= voucher.max_exchange_rate and voucher.voucher_rate >=voucher.max_exchange_rate:
+#                     print 'ok'
+#                 else:
+#                    raise osv.except_osv(_('Please Check Rate'), _("Rate shouldn't less than Minimum Exchange Rate or Rate shouldn't greater than Maximum Exchange Rate"))
             if voucher.voucher_rate > 1 and company_currency != current_currency: 
                 credit = voucher.voucher_rate * voucher.amount
                 voucher.paid_amount_in_company_currency = credit

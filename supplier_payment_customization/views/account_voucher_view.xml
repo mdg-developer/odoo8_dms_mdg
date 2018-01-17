@@ -2,7 +2,6 @@
 <openerp>
 	<data>
 		
-		
 		<record id="view_vendor_receipt_dialog_form_inherit" model="ir.ui.view">
 			<field name="name">account.voucher.receipt.dialog.form</field>
 			<field name="model">account.voucher</field>
@@ -10,8 +9,11 @@
 			<field name="arch" type="xml">
 				<data>
 					<field name="journal_id" position="after">
-						<field name="voucher_rate" />
-						
+						<field name="voucher_rate" on_change="rate_validation(payment_rate_currency_id, min_exchange_rate, max_exchange_rate, voucher_rate, context)"/>
+						<field name="exchange_rate" readonly="1"/>
+						<field name="min_exchange_rate" readonly="1"/>
+						<field name="max_exchange_rate" readonly="1"/>
+						<!-- <field name="date" invisible="context.get('line_type', False)" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id, context)"/> -->
 					</field>
 					
 					<!-- <field name="reconcile" position="after">

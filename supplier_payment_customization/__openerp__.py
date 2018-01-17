@@ -37,6 +37,7 @@
     'depends': ['base', 'account'],
     'data': [
                 'views/account_voucher_view.xml',
+                'views/res_currency_view.xml',
                 ],
                 'installable': True,
                 'auto_install': False,
