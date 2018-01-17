@@ -190,7 +190,7 @@ class pre_sale_order(osv.osv):
             print 'True'
             
             session = ConnectorSession(cursor, user, context)
-            jobid=automation_pre_order.delay(session,so_ids,priority=30)
+            jobid=automation_pre_order.delay(session,so_ids, priority=10)
             print "Job",jobid
             runner = ConnectorRunner()
             runner.run_jobs()
