@@ -80,7 +80,52 @@ class account_voucher(osv.osv):
 #                 'date': voucher.date,
 #                 'date_maturity': voucher.date_due
 #             }
-#         return move_line      
+#         return move_line 
+    def first_move_line_get(self, cr, uid, voucher_id, move_id, company_currency, current_currency, context=None):
+        '''
+        Return a dict to be use to create the first account move line of given voucher.
+
+        :param voucher_id: Id of voucher what we are creating account_move.
+        :param move_id: Id of account move where this line will be added.
+        :param company_currency: id of currency of the company to which the voucher belong
+        :param current_currency: id of currency of the voucher
+        :return: mapping between fieldname and value of account move line to create
+        :rtype: dict
+        '''
+        voucher = self.pool.get('account.voucher').browse(cr,uid,voucher_id,context)
+        debit = credit = 0.0
+        # TODO: is there any other alternative then the voucher type ??
+        # ANSWER: We can have payment and receipt "In Advance".
+        # TODO: Make this logic available.
+        # -for sale, purchase we have but for the payment and receipt we do not have as based on the bank/cash journal we can not know its payment or receipt
+        if voucher.type in ('purchase', 'payment'):
+            credit = voucher.paid_amount_in_company_currency
+            if voucher.voucher_rate > 1 and company_currency != current_currency: 
+                credit = voucher.voucher_rate * voucher.amount
+                voucher.paid_amount_in_company_currency = credit
+        elif voucher.type in ('sale', 'receipt'):
+            debit = voucher.paid_amount_in_company_currency
+        if debit < 0: credit = -debit; debit = 0.0
+        if credit < 0: debit = -credit; credit = 0.0
+        sign = debit - credit < 0 and -1 or 1
+        #set the first line of the voucher
+        move_line = {
+                'name': voucher.name or '/',
+                'debit': debit,
+                'credit': credit,
+                'account_id': voucher.account_id.id,
+                'move_id': move_id,
+                'journal_id': voucher.journal_id.id,
+                'period_id': voucher.period_id.id,
+                'partner_id': voucher.partner_id.id,
+                'currency_id': company_currency <> current_currency and  current_currency or False,
+                'amount_currency': (sign * abs(voucher.amount) # amount < 0 for refunds
+                    if company_currency != current_currency else 0.0),
+                'date': voucher.date,
+                'date_maturity': voucher.date_due
+            }
+        return move_line
+         
     def voucher_move_line_create(self, cr, uid, voucher_id, line_total, move_id, company_currency, current_currency, context=None):
         '''
         Create one account move line, on the given account move, per voucher line where amount is not 0.0.
@@ -154,26 +199,28 @@ class account_voucher(osv.osv):
                 currency_rate_difference = 0.0
             
             #m3w cutomize supplier payment to get gain loss foreign curreny for partial payment
-            if not line.move_line_id:
-                raise osv.except_osv(_('Wrong voucher line'), _("The invoice you are willing to pay is not valid anymore."))
-            #if len(voucher.reference) != False or len(voucher.reference) > 0:
-                
-            tmp_mmk_total = tmp_fore_total = tmp_rate = v_amt = v_rate = v_total = 0.0
-            tmp_mmk_total = line.move_line_id.credit
-            if tmp_mmk_total <= 0:
-                tmp_mmk_total = tmp_mmk_total * -1
-            tmp_fore_total = line.move_line_id.amount_currency
-            if tmp_fore_total <= 0:
-                tmp_fore_total = tmp_fore_total * -1
-            tmp_rate =  tmp_mmk_total / tmp_fore_total 
-            if voucher.voucher_rate > 1: 
-                v_rate = voucher.voucher_rate
-                voucher.payment_rate = voucher.voucher_rate
-            else:
-                v_rate = voucher.payment_rate    
-            v_total = ((tmp_rate - v_rate) * line.amount)    
-            sign = line.type == 'dr' and -1 or 1
-            currency_rate_difference = sign * (v_total)    
+            if voucher.type in ('purchase', 'payment'):
+                if not line.move_line_id:
+                    raise osv.except_osv(_('Wrong voucher line'), _("The invoice you are willing to pay is not valid anymore."))
+                #if len(voucher.reference) != False or len(voucher.reference) > 0:
+                    
+                tmp_mmk_total = tmp_fore_total = tmp_rate = v_amt = v_rate = v_total = 0.0
+                tmp_mmk_total = line.move_line_id.credit
+                if tmp_mmk_total <= 0:
+                    tmp_mmk_total = tmp_mmk_total * -1
+                tmp_fore_total = line.move_line_id.amount_currency
+                if tmp_fore_total <= 0:
+                    tmp_fore_total = tmp_fore_total * -1
+                tmp_rate =  tmp_mmk_total / tmp_fore_total 
+                if voucher.voucher_rate > 1: 
+                    v_rate = voucher.voucher_rate
+                    voucher.payment_rate = voucher.voucher_rate
+                else:
+                    v_rate = voucher.payment_rate            
+                        
+                v_total = ((tmp_rate - v_rate) * line.amount)    
+                sign = line.type == 'dr' and -1 or 1
+                currency_rate_difference = sign * (v_total)    
             move_line = {
                 'journal_id': voucher.journal_id.id,
                 'period_id': voucher.period_id.id,
@@ -198,6 +245,19 @@ class account_voucher(osv.osv):
             if (line.type == 'dr'):
                 tot_line += amount 
                 move_line['debit'] = amount + total_discount
+                if voucher.type in ('purchase', 'payment'):
+                    m_rate = (tmp_rate - v_rate)
+                    if m_rate < 0:
+                        move_line['debit'] = (line.amount * tmp_rate) + total_discount
+                        #tot_line += (m_rate * line.amount) * -1
+                        tot_line = 0
+                        #print 'tot_line>>',tot_line
+                    elif m_rate > 0:
+                        move_line['debit'] = (line.amount * tmp_rate) + total_discount
+                        #tot_line -= m_rate * line.amount
+                        tot_line = 0
+                        #print 'tot_line>>',tot_line   
+                    
             else:
                 tot_line -= amount
                 move_line['credit'] = amount
@@ -227,14 +287,30 @@ class account_voucher(osv.osv):
  
             move_line['amount_currency'] = amount_currency
             print 'move line >>>',move_line
+            #customize debit
             voucher_line = move_line_obj.create(cr, uid, move_line)
             rec_ids = [voucher_line, line.move_line_id.id]
  
             if not currency_obj.is_zero(cr, uid, voucher.company_id.currency_id, currency_rate_difference):
                 # Change difference entry in company currency
                 exch_lines = self._get_exchange_lines(cr, uid, line, move_id, currency_rate_difference, company_currency, current_currency, context=context)
-                new_id = move_line_obj.create(cr, uid, exch_lines[0], context)
-                move_line_obj.create(cr, uid, exch_lines[1], context)
+                if voucher.type in ('purchase', 'payment'):
+                    m_rate = (tmp_rate - v_rate)
+                    if m_rate < 0:
+                       #new_id = move_line_obj.create(cr, uid, exch_lines[1], context)
+                       for exc in exch_lines:
+                           if exc['debit'] > 0:
+                               new_id = move_line_obj.create(cr, uid, exc, context)
+                    elif m_rate > 0:
+                        for exc in exch_lines:
+                           if exc['credit'] > 0:
+                               new_id = move_line_obj.create(cr, uid, exc, context)
+                       #new_id = move_line_obj.create(cr, uid, exch_lines[0], context)     
+                else:        
+                    new_id = move_line_obj.create(cr, uid, exch_lines[0], context)
+                    move_line_obj.create(cr, uid, exch_lines[1], context)
+#                 new_id = move_line_obj.create(cr, uid, exch_lines[0], context)
+#                 move_line_obj.create(cr, uid, exch_lines[1], context)
                 rec_ids.append(new_id)
  
             if line.move_line_id and line.move_line_id.currency_id and not currency_obj.is_zero(cr, uid, line.move_line_id.currency_id, foreign_currency_diff):
