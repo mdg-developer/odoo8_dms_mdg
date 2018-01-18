@@ -43,7 +43,7 @@
 						<group>
 							<notebook>
 								<page>
-									<field name="p_line"> attrs="{'readonly':[('state','=','approve')]}"
+									<field name="p_line" attrs="{'readonly':[('state','=','approve')]}">
 										<tree string="Stock Taking and Loading Instruction Line" editable="bottom">											
 											<field name="product_id" on_change="on_change_product_id(product_id)" />
 											<field name="product_uom" />
