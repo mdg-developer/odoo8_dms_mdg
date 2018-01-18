@@ -467,11 +467,12 @@ class partner(osv.osv):
                     if data:
                         state_ids = data[0][0]
                     else:
-                        state_ids = self.pool.get('res.country').create(cr, uid, {
-                                                                                                'code':region[:3],  # get first three words
-                                                                                                'name':region,
-                                                                                                'country_id':country_id
-                                                                                                })
+                        raise osv.except_osv(_('Error!'), _('"%s" State Not Found In System!')%region)
+#                         state_ids = self.pool.get('res.country.state').create(cr, uid, {
+#                                                                                         'code':region[:3],  # get first three words
+#                                                                                         'name':region,
+#                                                                                         'country_id':country_id
+#                                                                                                 })
 
                     
                 if city:  # no need to create or update city
@@ -481,11 +482,12 @@ class partner(osv.osv):
                     if data:
                         city_id = data[0][0]
                     else:
-                        city_id = self.pool.get('res.city').create(cr, uid, {
-                                                                                                'code':city[:3],  # get first three words
-                                                                                                'name':city,
-                                                                                                'state_id':state_ids
-                                                                                            }, context)
+                        raise osv.except_osv(_('Error!'), _('"%s" City Not Found In System!')%city)
+#                         city_id = self.pool.get('res.city').create(cr, uid, {
+#                                                                                 'code':city[:3],  # get first three words
+#                                                                                 'name':city,
+#                                                                                 'state_id':state_ids
+#                                                                                             }, context)
                     
                 if township:  # no need to update or create township
                     township = township.strip()
@@ -495,11 +497,12 @@ class partner(osv.osv):
                     if data:
                         township_id = data[0][0]
                     else:
-                        township_id = self.pool.get('res.township').create(cr, uid, {
-                                                                                                'code':township,  # get first three words
-                                                                                                'name':township,
-                                                                                                'city':city_id
-                                                                                            }, context)
+                        raise osv.except_osv(_('Error!'), _('"%s" Township Not Found In System!')%township)
+#                         township_id = self.pool.get('res.township').create(cr, uid, {
+#                                                                                                 'code':township,  # get first three words
+#                                                                                                 'name':township,
+#                                                                                                 'city':city_id
+#                                                                                             }, context)
                         
                 if branch_code:  # no need to update
                     
