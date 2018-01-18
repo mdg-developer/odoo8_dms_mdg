@@ -16,7 +16,20 @@ class account_bank_statement_line(osv.osv):
             # account_id = st_line.company_id.income_currency_exchange_account_id.id
             if not account_id:
                 raise osv.except_osv(_('Insufficient Configuration!'), _("You should configure the 'Gain Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))    
-
+        return {
+            'move_id': move_id,
+            'name': _('change') + ': ' + (st_line.name or '/'),
+            'period_id': st_line.statement_id.period_id.id,
+            'journal_id': st_line.journal_id.id,
+            'partner_id': st_line.partner_id.id,
+            'company_id': st_line.company_id.id,
+            'statement_id': st_line.statement_id.id,
+            'debit': currency_diff < 0 and -currency_diff or 0,
+            'credit': currency_diff > 0 and currency_diff or 0,
+            'amount_currency': 0.0,
+            'date': st_line.date,
+            'account_id': account_id
+            }
 class account_voucher(osv.osv):
     _inherit = 'account.voucher'
     
@@ -71,7 +84,7 @@ class account_voucher(osv.osv):
             'journal_id': line.voucher_id.journal_id.id,
             'period_id': line.voucher_id.period_id.id,
             'name': _('change') + ': ' + (line.name or '/'),
-            'account_id': account_id.id,
+            'account_id': account_id,
             'move_id': move_id,
             'amount_currency': 0.0,
             'partner_id': line.voucher_id.partner_id.id,

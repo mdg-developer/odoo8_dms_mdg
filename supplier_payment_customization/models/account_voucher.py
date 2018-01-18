@@ -449,9 +449,9 @@ class account_voucher(osv.osv):
                 rec_lst_ids.append(rec_ids)
  
             rec_ids = [voucher_line, line.move_line_id.id]
-            for rec_id in self.pool.get('account.move.line').browse(cr,uid,rec_ids,context=context):
-                if rec_id.move_id.state== 'draft':
-                   self.pool.get('account.move').button_validate(cr,uid,rec_id.move_id.id,context=context) 
+#             for rec_id in self.pool.get('account.move.line').browse(cr,uid,rec_ids,context=context):
+#                 if rec_id.move_id.state== 'draft':
+#                    self.pool.get('account.move').button_validate(cr,uid,rec_id.move_id.id,context=context) 
         return (tot_line, rec_lst_ids)
     
 account_voucher()
