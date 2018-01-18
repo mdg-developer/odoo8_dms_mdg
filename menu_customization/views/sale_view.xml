@@ -611,8 +611,11 @@
 			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
 		</record>
 		<!-- Product Category -->
+		
+		<!-- <menuitem id="product_product.product_menu" name="Products Configuration"
+			parent="base.menu_base_config" sequence="2" /> -->
 		<menuitem id="product_product.product_menu" name="Products Configuration"
-			parent="base.menu_base_config" sequence="2" />
+			parent="account.menu_finance_configuration" sequence="2" />	
 		<menuitem action="product.product_category_action_form"
 			groups="base.group_no_one" id="product.menu_product_category_action_form"
 			parent="product_product.product_menu" sequence="1" />
