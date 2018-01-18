@@ -453,6 +453,8 @@ where inv.id=inl.invoice_id
 and inv.section_id=ccs.id
 and inv.state!='cancel'
 and inv.date_invoice between ? and ?
+--$sales_team$
+--$branch_id$
 group by inv.partner_id,inv.branch_id,inv.company_id,sale_team)B on A.partner_id=B.partner_id and A.branch_id=B.branch_id and A.company_id=B.company_id]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
