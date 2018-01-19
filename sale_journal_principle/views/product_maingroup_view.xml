@@ -13,9 +13,9 @@
 
 						<field name="property_account_receivable" />
 						<field name ="property_account_receivable_control"/>
-						<field name="property_account_payable" />
+						<!-- <field name="property_account_payable" /> -->
 						<field name="property_account_receivable_clearing" />
-						<field name="property_account_payable_clearing" />						
+						<!-- <field name="property_account_payable_clearing" /> -->						
 						
 <!-- 						<field name="property_account_foc_cash" /> -->
 <!-- 						<field name="property_account_foc_credit" /> -->

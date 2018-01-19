@@ -238,7 +238,7 @@ class account_invoice(models.Model):
                 }
     
     def line_get_convert_new(self, line, part, date):
-        account_id = None
+        account_id = property_account_payable  = property_account_payable_clearing = None
         discount_receivable_acc=None
         cr = self._cr
         type = 'out_invoice' 
@@ -246,6 +246,9 @@ class account_invoice(models.Model):
         origin = line.get('ref', False)
         is_discount = line.get('is_discount', False)
         res_data=[]
+        for inv in self:
+            property_account_payable = inv.partner_id.property_account_payable.id
+            property_account_payable_clearing = inv.partner_id.property_account_payable_clearing.id
         print 'originoriginorigin', origin, is_discount
         if origin:
             cr.execute("select type,payment_type from account_invoice where origin=%s and state!='cancel' ", (origin,))
@@ -305,7 +308,10 @@ class account_invoice(models.Model):
                 product = self.env['product.product'].browse(line.get('product_id', False))
                 print 'product>>>', product.id
                 print 'line.get>>>', line.get('product_id', False)
-                account_id = product.product_tmpl_id.main_group.property_account_payable.id
+                #account_id = product.product_tmpl_id.main_group.property_account_payable.id
+                account_id = property_account_payable
+                if account_id is None:
+                    raise except_orm(_('Warning!'), _('Please define payable control account.'))
                 # acount_id= product.product_tmpl_id.main_group.property_account_payable.id
                 print 'account_id>>>', account_id        
     
@@ -386,8 +392,10 @@ class account_invoice(models.Model):
                     else:
                         account_id = product.product_tmpl_id.categ_id.property_account_discount_cash.id
                 else:
-                    account_id = product.product_tmpl_id.main_group.property_account_payable.id                
-
+                    #account_id = product.product_tmpl_id.main_group.property_account_payable.id
+                    account_id = property_account_payable                
+                    if account_id is None:
+                        raise except_orm(_('Warning!'), _('Please define payable control account.'))
                 res = {
                     'date_maturity': line.get('date_maturity', False),
                     'partner_id': part,
@@ -414,12 +422,16 @@ class account_invoice(models.Model):
                 return res    
             
     def line_get_convert_dr(self, line, part, date):
-        account_id = None
+        account_id = property_account_payable = property_account_payable_clearing = None
         cr = self._cr
         type = 'out_invoice' 
         discount_amt=0
         print 'line_get_convert_newline_get_convert_new', line, part, self.id
         origin = line.get('ref', False)
+        for inv in self:
+            property_account_payable = inv.partner_id.property_account_payable.id
+            property_account_payable_clearing = inv.partner_id.property_account_payable_clearing.id
+            
         if origin:
             cr.execute("select type,payment_type from account_invoice where origin=%s and state!='cancel' ", (origin,))
             type_data = cr.fetchone()
@@ -505,7 +517,10 @@ class account_invoice(models.Model):
                     else:
                         account_id = product.product_tmpl_id.categ_id.property_account_discount_cash.id
                 else:
-                    account_id = product.product_tmpl_id.main_group.property_account_payable.id                
+                    #account_id = product.product_tmpl_id.main_group.property_account_payable.id
+                    account_id = property_account_payable
+                    if account_id is None:
+                        raise except_orm(_('Warning!'), _('Please define payable control account.'))                
                 print 'account_id>>>', account_id        
                 print 'line>>>', line
                 print 'line[price]', line['price']
@@ -548,7 +563,8 @@ class account_invoice(models.Model):
                     dis_amt = cr.fetchall()
                     if dis_amt:     
                         for amt in dis_amt:
-                            discount_amt = discount_amt + amt[0];
+                            if amt[0] is not None:
+                                discount_amt = discount_amt + amt[0];
                         line['price'] = line['price']  - discount_amt       
                 if  line['is_discount'] == True:
                     if payment_type=='credit':
@@ -617,7 +633,10 @@ class account_invoice(models.Model):
                         account_id = product.product_tmpl_id.categ_id.property_account_discount_cash.id                    
                     line['price'] = -1 * line['price']
                 else:
-                    account_id = product.product_tmpl_id.main_group.property_account_payable.id                
+                    #account_id = product.product_tmpl_id.main_group.property_account_payable.id
+                    account_id = property_account_payable
+                    if account_id is None:
+                        raise except_orm(_('Warning!'), _('Please define payable control account.'))                
                 print 'account_id>>>', account_id        
                 print 'line>>>', line
                 print 'line[price]', line['price']
