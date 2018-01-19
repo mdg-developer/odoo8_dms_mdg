@@ -38,12 +38,14 @@ class account(osv.osv):
         if context is None:
             context = {}
         for line in self.browse(cr, uid, ids, context=context):
-            
-            price = line.price_unit
-            qty = line.quantity
-            amount = price * qty
-            cur = line.invoice_id.currency_id
-            res[line.id] = cur_obj.round(cr, uid, cur, amount)
+            if line.foc ==True:
+                res[line.id] = 0.0
+            else:
+                price = line.price_unit
+                qty = line.quantity
+                amount = price * qty
+                cur = line.invoice_id.currency_id
+                res[line.id] = cur_obj.round(cr, uid, cur, amount)
         return res    
     _columns={
                'net_total': fields.function(_net_total, string='Subtotal', type='float'),
@@ -85,6 +87,9 @@ class account_invoice_line(models.Model):
         'product_id', 'invoice_id.partner_id', 'invoice_id.currency_id')
     def _compute_price(self):
         price=show=0.0
+        if self.foc==True:
+            self.price_subtotal = 0
+
         if self.discount_amt>0:
             show=self.discount_amt
             price = self.price_unit

@@ -66,10 +66,13 @@ class sale_order_line(osv.osv):
                     cur = line.order_id.pricelist_id.currency_id
                     res[line.id] = cur_obj.round(cr, uid, cur, taxes['total']-line.discount_amt) 
             else:
-                price = line.price_unit
-                taxes = tax_obj.compute_all(cr, uid, line.tax_id, price, line.product_uom_qty, line.product_id, line.order_id.partner_id)
-                cur = line.order_id.pricelist_id.currency_id
-                res[line.id] = cur_obj.round(cr, uid, cur,taxes['total'] )              
+                if (line.sale_foc == True):
+                    res[line.id] = 0
+                else:                
+                    price = line.price_unit
+                    taxes = tax_obj.compute_all(cr, uid, line.tax_id, price, line.product_uom_qty, line.product_id, line.order_id.partner_id)
+                    cur = line.order_id.pricelist_id.currency_id
+                    res[line.id] = cur_obj.round(cr, uid, cur,taxes['total'] )              
         return res
         
         
@@ -82,19 +85,24 @@ class sale_order_line(osv.osv):
         if context is None:
             context = {}
         for line in self.browse(cr, uid, ids, context=context):
-            
-            price = line.price_unit
-            qty=line.product_uom_qty
-            amount=price*qty
-            taxes = tax_obj.compute_all(cr, uid, line.tax_id, price, line.product_uom_qty, line.product_id, line.order_id.partner_id)
-            cur = line.order_id.pricelist_id.currency_id
-            res[line.id] = cur_obj.round(cr, uid, cur, amount)
+            if (line.sale_foc == True):
+                res[line.id] = 0
+            else:            
+                price = line.price_unit
+                qty=line.product_uom_qty
+                amount=price*qty
+                taxes = tax_obj.compute_all(cr, uid, line.tax_id, price, line.product_uom_qty, line.product_id, line.order_id.partner_id)
+                cur = line.order_id.pricelist_id.currency_id
+                res[line.id] = cur_obj.round(cr, uid, cur, amount)
         return res
 		
     def _get_price_reduce(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, 0.0)
         for line in self.browse(cr, uid, ids, context=context):
-            res[line.id] = line.net_total / line.product_uom_qty
+            if (line.sale_foc == True):
+                res[line.id] = 0
+            else:                        
+                res[line.id] = line.net_total / line.product_uom_qty
         return res
     def onchange_discount_amount(self, cr, uid, ids, discount_amt,product_uom_qty, price_unit,context=None):
         val = {'discount': 0.0}
@@ -135,9 +143,10 @@ class sale_order_line(osv.osv):
                'price_subtotal': fields.function(_amount_line1, string='Subtotal'),
                'net_total':fields.function(_amount_line, string='Total', digits_compute= dp.get_precision('Account')),
                'discount':fields.float('Discount (%)',store=True, readonly=True),
-               'discount_amt':fields.float('Discount (amt)',store=True, readonly=True),
-               'sale_foc':fields.boolean('FOC', readonly=True),
+               'discount_amt':fields.float('Discount (amt)',store=True, readonly=True, states={'draft': [('readonly', False)]} ),
+               'sale_foc':fields.boolean('FOC', readonly=True, states={'draft': [('readonly', False)]}, ),
               # 'show_amt':fields.function(_amount_line2,string='Total Discount(-)',readonly=True)
+              'product_type':fields.char('Product Type'),
                
                }
 
@@ -208,6 +217,8 @@ class sale_order_line(osv.osv):
             if not account_id:
                 raise osv.except_osv(_('Error!'),
                             _('There is no Fiscal Position defined or Income category account defined for default properties of Product categories.'))
+            if line.sale_foc==True:
+                pu=0.0;                
             res = {
                 'name': line.name,
                 'sequence': line.sequence,
