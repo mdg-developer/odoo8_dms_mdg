@@ -96,7 +96,24 @@ class product_pricelist_version(osv.osv):
                                           'categ_id':categ_id,
                                           'price_version_id':ids[0]}, context=context)
         return True
-    
+
+class product_pricelist_item(osv.osv):
+    _inherit = "product.pricelist.item"
+    _columns = {
+                 'default_code': fields.char(string="Internal Reference") 
+                }
+    def product_id_change(self, cr, uid, ids, product_id, context=None):
+        if not product_id:
+            return {}
+        prod = self.pool.get('product.product').read(cr, uid, [product_id], ['code','name'])
+        if prod[0]['code']:
+            default_code= categ_id = None
+            product = self.pool.get('product.product').browse(cr, uid, [product_id], context=context)
+            if product:
+                default_code = product.default_code
+                categ_id = product.product_tmpl_id.categ_id.id 
+            return {'value': {'name': prod[0]['code'],'default_code': default_code, 'categ_id':categ_id}}
+        return {}    
 # class product_pricelist_item(osv.osv):
 #     _inherit = "product.pricelist.item"
 #     _description = "Pricelist Item"     
