@@ -979,6 +979,12 @@ ON sale.sale_parner_id=supplier.pn_id and sale.product_tem_id=supplier.pt_id)rb_
                     <text-property name="heading">address</text-property>
                 </structure>
                 <structure>
+                    <property name="columnName">phone</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">phone</text-property>
+                    <text-property name="heading">phone</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">khathanumber</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">khathanumber</text-property>
@@ -1099,66 +1105,71 @@ ON sale.sale_parner_id=supplier.pn_id and sale.product_tem_id=supplier.pt_id)rb_
                     </structure>
                     <structure>
                         <property name="position">6</property>
-                        <property name="name">khathanumber</property>
+                        <property name="name">phone</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">7</property>
-                        <property name="name">branch</property>
+                        <property name="name">khathanumber</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">8</property>
-                        <property name="name">brand</property>
+                        <property name="name">branch</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">9</property>
+                        <property name="name">brand</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
                         <property name="name">sale_parner_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">10</property>
+                        <property name="position">11</property>
                         <property name="name">product_tem_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">11</property>
+                        <property name="position">12</property>
                         <property name="name">payment_type</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">12</property>
+                        <property name="position">13</property>
                         <property name="name">tax_type</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">13</property>
+                        <property name="position">14</property>
                         <property name="name">ctax_registration_no</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">14</property>
+                        <property name="position">15</property>
                         <property name="name">po_no</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">15</property>
+                        <property name="position">16</property>
                         <property name="name">invoice_no</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">16</property>
+                        <property name="position">17</property>
                         <property name="name">gold_code</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">17</property>
+                        <property name="position">18</property>
                         <property name="name">pn_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">18</property>
+                        <property name="position">19</property>
                         <property name="name">pt_id</property>
                         <property name="dataType">integer</property>
                     </structure>
@@ -1203,90 +1214,97 @@ ON sale.sale_parner_id=supplier.pn_id and sale.product_tem_id=supplier.pt_id)rb_
                 </structure>
                 <structure>
                     <property name="position">6</property>
+                    <property name="name">phone</property>
+                    <property name="nativeName">phone</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
                     <property name="name">khathanumber</property>
                     <property name="nativeName">khathanumber</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">7</property>
+                    <property name="position">8</property>
                     <property name="name">branch</property>
                     <property name="nativeName">branch</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">8</property>
+                    <property name="position">9</property>
                     <property name="name">brand</property>
                     <property name="nativeName">brand</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">9</property>
+                    <property name="position">10</property>
                     <property name="name">sale_parner_id</property>
                     <property name="nativeName">sale_parner_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">10</property>
+                    <property name="position">11</property>
                     <property name="name">product_tem_id</property>
                     <property name="nativeName">product_tem_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">11</property>
+                    <property name="position">12</property>
                     <property name="name">payment_type</property>
                     <property name="nativeName">payment_type</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">12</property>
+                    <property name="position">13</property>
                     <property name="name">tax_type</property>
                     <property name="nativeName">tax_type</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">13</property>
+                    <property name="position">14</property>
                     <property name="name">ctax_registration_no</property>
                     <property name="nativeName">ctax_registration_no</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">14</property>
+                    <property name="position">15</property>
                     <property name="name">po_no</property>
                     <property name="nativeName">po_no</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">15</property>
+                    <property name="position">16</property>
                     <property name="name">invoice_no</property>
                     <property name="nativeName">invoice_no</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">16</property>
+                    <property name="position">17</property>
                     <property name="name">gold_code</property>
                     <property name="nativeName">gold_code</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">17</property>
+                    <property name="position">18</property>
                     <property name="name">pn_id</property>
                     <property name="nativeName">pn_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">18</property>
+                    <property name="position">19</property>
                     <property name="name">pt_id</property>
                     <property name="nativeName">pt_id</property>
                     <property name="dataType">integer</property>
@@ -1295,7 +1313,7 @@ ON sale.sale_parner_id=supplier.pn_id and sale.product_tem_id=supplier.pt_id)rb_
             </list-property>
             <xml-property name="queryText"><![CDATA[
 SELECT * FROM 
-(select distinct h.name,h.date::date,v.display_name partner,t.name payment_due_date, v.street2 ||','|| s.name ||','|| c.name address, com.kha_tha_number khathaNumber,
+(select distinct h.name,h.date::date,v.display_name partner,t.name payment_due_date, v.street2 ||','|| s.name ||','|| c.name address, v.phone,com.kha_tha_number khathaNumber,
 b.name branch,mg.name brand,h.partner_id as sale_parner_id,pt.id as product_tem_id,h.type as payment_type,
 (CASE WHEN v.isexclusive = true THEN 'Exclusive' ELSE 'Inclusive' END) as tax_type,v.ctax_registration_no,h.po_no,
 h.invoice_no
@@ -1612,7 +1630,7 @@ ON sale.sale_parner_id=supplier.pn_id and sale.product_tem_id=supplier.pt_id]]><
             <text-property name="text">INVOICE</text-property>
         </label>
         <grid id="378">
-            <property name="height">1.9666666666666666in</property>
+            <property name="height">2.1416666666666666in</property>
             <property name="width">7.758333333333334in</property>
             <column id="379">
                 <property name="width">4.416666666666667in</property>
@@ -1621,7 +1639,7 @@ ON sale.sale_parner_id=supplier.pn_id and sale.product_tem_id=supplier.pt_id]]><
                 <property name="width">3.341666666666667in</property>
             </column>
             <row id="381">
-                <property name="height">1.9666666666666666in</property>
+                <property name="height">2.1416666666666666in</property>
                 <cell id="382">
                     <table id="384">
                         <property name="verticalAlign">middle</property>
@@ -1665,9 +1683,9 @@ ON sale.sale_parner_id=supplier.pn_id and sale.product_tem_id=supplier.pt_id]]><
                                 <property name="dataType">string</property>
                             </structure>
                             <structure>
-                                <property name="name">brand</property>
-                                <text-property name="displayName">brand</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["brand"]</expression>
+                                <property name="name">phone</property>
+                                <text-property name="displayName">phone</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["phone"]</expression>
                                 <property name="dataType">string</property>
                             </structure>
                         </list-property>
@@ -1718,7 +1736,7 @@ ON sale.sale_parner_id=supplier.pn_id and sale.product_tem_id=supplier.pt_id]]><
                             </row>
                             <row id="400">
                                 <property name="verticalAlign">middle</property>
-                                <property name="height">0.23333333333333334in</property>
+                                <property name="height">0.45in</property>
                                 <cell id="401">
                                     <property name="colSpan">3</property>
                                     <property name="rowSpan">1</property>
@@ -1735,6 +1753,34 @@ ON sale.sale_parner_id=supplier.pn_id and sale.product_tem_id=supplier.pt_id]]><
                                 <property name="verticalAlign">middle</property>
                                 <property name="height">0.23333333333333334in</property>
                                 <cell id="409">
+                                    <label id="575">
+                                        <property name="fontSize">8pt</property>
+                                        <property name="fontWeight">bold</property>
+                                        <property name="paddingLeft">2pt</property>
+                                        <property name="textAlign">left</property>
+                                        <text-property name="text">Phone No</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="410">
+                                    <label id="576">
+                                        <property name="fontSize">8pt</property>
+                                        <text-property name="text">:</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="411">
+                                    <data id="577">
+                                        <property name="fontSize">8pt</property>
+                                        <property name="fontWeight">normal</property>
+                                        <property name="paddingLeft">2pt</property>
+                                        <property name="textAlign">left</property>
+                                        <property name="resultSetColumn">phone</property>
+                                    </data>
+                                </cell>
+                            </row>
+                            <row id="427">
+                                <property name="verticalAlign">middle</property>
+                                <property name="height">0.23333333333333334in</property>
+                                <cell id="428">
                                     <label id="331">
                                         <property name="fontSize">8pt</property>
                                         <property name="fontWeight">bold</property>
@@ -1743,13 +1789,13 @@ ON sale.sale_parner_id=supplier.pn_id and sale.product_tem_id=supplier.pt_id]]><
                                         <text-property name="text">Commercial Tax Registration</text-property>
                                     </label>
                                 </cell>
-                                <cell id="410">
+                                <cell id="429">
                                     <label id="424">
                                         <property name="fontSize">8pt</property>
                                         <text-property name="text">:</text-property>
                                     </label>
                                 </cell>
-                                <cell id="411">
+                                <cell id="430">
                                     <data id="536">
                                         <property name="fontSize">8pt</property>
                                         <property name="fontWeight">normal</property>
@@ -1759,10 +1805,10 @@ ON sale.sale_parner_id=supplier.pn_id and sale.product_tem_id=supplier.pt_id]]><
                                     </data>
                                 </cell>
                             </row>
-                            <row id="427">
+                            <row id="412">
                                 <property name="verticalAlign">middle</property>
                                 <property name="height">0.23333333333333334in</property>
-                                <cell id="428">
+                                <cell id="413">
                                     <label id="431">
                                         <property name="fontSize">8pt</property>
                                         <property name="fontWeight">bold</property>
@@ -1771,13 +1817,13 @@ ON sale.sale_parner_id=supplier.pn_id and sale.product_tem_id=supplier.pt_id]]><
                                         <text-property name="text">Tax Type</text-property>
                                     </label>
                                 </cell>
-                                <cell id="429">
+                                <cell id="414">
                                     <label id="432">
                                         <property name="fontSize">8pt</property>
                                         <text-property name="text">:</text-property>
                                     </label>
                                 </cell>
-                                <cell id="430">
+                                <cell id="415">
                                     <data id="488">
                                         <property name="fontSize">8pt</property>
                                         <property name="fontWeight">normal</property>
@@ -1787,10 +1833,10 @@ ON sale.sale_parner_id=supplier.pn_id and sale.product_tem_id=supplier.pt_id]]><
                                     </data>
                                 </cell>
                             </row>
-                            <row id="412">
+                            <row id="419">
                                 <property name="verticalAlign">middle</property>
                                 <property name="height">0.23333333333333334in</property>
-                                <cell id="413">
+                                <cell id="420">
                                     <label id="423">
                                         <property name="fontSize">8pt</property>
                                         <property name="fontWeight">bold</property>
@@ -1799,13 +1845,13 @@ ON sale.sale_parner_id=supplier.pn_id and sale.product_tem_id=supplier.pt_id]]><
                                         <text-property name="text">Branch</text-property>
                                     </label>
                                 </cell>
-                                <cell id="414">
+                                <cell id="421">
                                     <label id="425">
                                         <property name="fontSize">8pt</property>
                                         <text-property name="text">:</text-property>
                                     </label>
                                 </cell>
-                                <cell id="415">
+                                <cell id="422">
                                     <data id="478">
                                         <property name="fontSize">8pt</property>
                                         <property name="fontWeight">normal</property>
@@ -1815,10 +1861,10 @@ ON sale.sale_parner_id=supplier.pn_id and sale.product_tem_id=supplier.pt_id]]><
                                     </data>
                                 </cell>
                             </row>
-                            <row id="419">
+                            <row id="563">
                                 <property name="verticalAlign">middle</property>
                                 <property name="height">0.23333333333333334in</property>
-                                <cell id="420">
+                                <cell id="564">
                                     <label id="233">
                                         <property name="fontSize">8pt</property>
                                         <property name="fontWeight">bold</property>
@@ -1827,13 +1873,13 @@ ON sale.sale_parner_id=supplier.pn_id and sale.product_tem_id=supplier.pt_id]]><
                                         <text-property name="text">PO No</text-property>
                                     </label>
                                 </cell>
-                                <cell id="421">
+                                <cell id="565">
                                     <label id="426">
                                         <property name="fontSize">8pt</property>
                                         <text-property name="text">:</text-property>
                                     </label>
                                 </cell>
-                                <cell id="422">
+                                <cell id="566">
                                     <data id="543">
                                         <property name="fontSize">8pt</property>
                                         <property name="fontWeight">normal</property>
@@ -1843,40 +1889,12 @@ ON sale.sale_parner_id=supplier.pn_id and sale.product_tem_id=supplier.pt_id]]><
                                     </data>
                                 </cell>
                             </row>
-                            <row id="563">
-                                <property name="verticalAlign">middle</property>
-                                <property name="height">0.23333333333333334in</property>
-                                <cell id="564">
-                                    <label id="567">
-                                        <property name="fontSize">8pt</property>
-                                        <property name="fontWeight">bold</property>
-                                        <property name="paddingLeft">2pt</property>
-                                        <property name="textAlign">left</property>
-                                        <text-property name="text">Brand</text-property>
-                                    </label>
-                                </cell>
-                                <cell id="565">
-                                    <label id="568">
-                                        <property name="fontSize">8pt</property>
-                                        <text-property name="text">:</text-property>
-                                    </label>
-                                </cell>
-                                <cell id="566">
-                                    <data id="570">
-                                        <property name="fontSize">8pt</property>
-                                        <property name="fontWeight">normal</property>
-                                        <property name="paddingLeft">2pt</property>
-                                        <property name="textAlign">left</property>
-                                        <property name="resultSetColumn">brand</property>
-                                    </data>
-                                </cell>
-                            </row>
                         </header>
                     </table>
                 </cell>
                 <cell id="383">
                     <table id="433">
-                        <property name="width">3.825in</property>
+                        <property name="width">3.325in</property>
                         <property name="dataSet">header</property>
                         <list-property name="boundDataColumns">
                             <structure>
@@ -1915,15 +1933,21 @@ ON sale.sale_parner_id=supplier.pn_id and sale.product_tem_id=supplier.pt_id]]><
                                 <expression name="expression" type="javascript">dataSetRow["invoice_no"]</expression>
                                 <property name="dataType">string</property>
                             </structure>
+                            <structure>
+                                <property name="name">brand</property>
+                                <text-property name="displayName">brand</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["brand"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
                         </list-property>
                         <column id="446">
-                            <property name="width">1.8583333333333334in</property>
+                            <property name="width">1.8in</property>
                         </column>
                         <column id="447">
                             <property name="width">0.125in</property>
                         </column>
                         <column id="448">
-                            <property name="width">1.8416666666666666in</property>
+                            <property name="width">1.4in</property>
                         </column>
                         <header>
                             <row id="434">
@@ -2114,6 +2138,34 @@ ON sale.sale_parner_id=supplier.pn_id and sale.product_tem_id=supplier.pt_id]]><
                                         <property name="paddingLeft">2pt</property>
                                         <property name="textAlign">left</property>
                                         <property name="resultSetColumn">payment_due_date</property>
+                                    </data>
+                                </cell>
+                            </row>
+                            <row id="571">
+                                <property name="verticalAlign">middle</property>
+                                <property name="height">0.225in</property>
+                                <cell id="572">
+                                    <label id="567">
+                                        <property name="fontSize">8pt</property>
+                                        <property name="fontWeight">bold</property>
+                                        <property name="paddingLeft">2pt</property>
+                                        <property name="textAlign">left</property>
+                                        <text-property name="text">Brand</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="573">
+                                    <label id="568">
+                                        <property name="fontSize">8pt</property>
+                                        <text-property name="text">:</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="574">
+                                    <data id="578">
+                                        <property name="fontSize">8pt</property>
+                                        <property name="fontWeight">normal</property>
+                                        <property name="paddingLeft">2pt</property>
+                                        <property name="textAlign">left</property>
+                                        <property name="resultSetColumn">brand</property>
                                     </data>
                                 </cell>
                             </row>
@@ -3041,7 +3093,7 @@ false&#13;
                         <property name="rowSpan">1</property>
                         <label id="322">
                             <property name="fontSize">8pt</property>
-                            <property name="fontWeight">bold</property>
+                            <property name="fontWeight">normal</property>
                             <text-property name="text">(In Words ................................................................................................................)</text-property>
                         </label>
                     </cell>
