@@ -133,10 +133,11 @@ class mobile_sale_order(osv.osv):
                                 cursor.execute("""select m.code from product_product p, product_template t,product_maingroup m where p.product_tmpl_id=t.id and t.main_group=m.id and p.id=%s """,(product_id,))
                                 mgcode = cursor.fetchall()
                                 if mgcode:
-                                    last_invoices = self.pool.get("mobile.sale.order").search(cursor, user, [('invoice_no', 'like', _(mgcode[0][0])),('sale_team', '=', sale_team)], context=context)
+                                    cursor.execute("""select id From mobile_sale_order where regexp_replace(invoice_no, '[^a-zA-Z]', '', 'g') = %s and sale_team = %s """, (str(mgcode[0][0]),sale_team,))
+                                    last_invoices = cursor.fetchall()
                                     last_invoice_id = last_invoices and max(last_invoices)
                                 if last_invoice_id:
-                                    cursor.execute("""select invoice_no from mobile_sale_order where id=%s """,(last_invoice_id,))
+                                    cursor.execute("""select invoice_no from mobile_sale_order where id=%s """,(last_invoice_id[0],))
                                     last_invoice = cursor.fetchall()  
                                 if not last_invoice_id:
                                     if mgcode:
