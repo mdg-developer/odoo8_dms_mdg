@@ -256,7 +256,7 @@
 					<xpath
 						expr="//page[@name='sales_purchases']/group/group/field[@name='customer']"
 						position="replace">
-						<field name="customer" /> 
+						<field name="customer"/> 
 
 					</xpath>
 					<xpath
