@@ -94,7 +94,7 @@ class product_pricelist_item(osv.osv):
                 }
 
     
-    def product_id_change(self, cr, uid, ids, product_id, context=None):
+    def product_id_change(self, cr, uid, ids, product_id,price_discount,price_surcharge, context=None):
         if not product_id:
             return {}
         
@@ -114,9 +114,8 @@ class product_pricelist_item(osv.osv):
         uom_list = cr.fetchall()
         print 'UOM-->>',uom_list        
         domain = {'product_uom_id': [('id', 'in', uom_list)]}
-
-        if prod[0]['code']:
-            return {'value': {'name': prod[0]['code'], 'new_price': product_price, 'list_price':product_price, 'product_uom_id':uom_id, 'base':1, 'categ_id':categ_id, 'product_tmpl_id':product_tmpl_id}
+        if prod[0]['code']:     
+            return {'value': {'name': prod[0]['code'], 'new_price': (product_price * (1 + price_discount)) + price_surcharge, 'list_price':product_price, 'product_uom_id':uom_id, 'base':1, 'categ_id':categ_id, 'product_tmpl_id':product_tmpl_id}
                     , 'domain': domain}
         return {}
     
