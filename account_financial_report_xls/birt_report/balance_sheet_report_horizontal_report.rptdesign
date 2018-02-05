@@ -4,6 +4,18 @@
     <list-property name="propertyBindings">
         <structure>
             <property name="name">queryText</property>
+            <property name="id">12</property>
+        </structure>
+        <structure>
+            <property name="name">queryTimeOut</property>
+            <property name="id">12</property>
+        </structure>
+        <structure>
+            <property name="name">rowFetchSize</property>
+            <property name="id">12</property>
+        </structure>
+        <structure>
+            <property name="name">queryText</property>
             <property name="id">379</property>
         </structure>
         <structure>
@@ -14,25 +26,53 @@
             <property name="name">rowFetchSize</property>
             <property name="id">379</property>
         </structure>
+        <structure>
+            <property name="name">odaDriverClass</property>
+            <property name="id">7</property>
+        </structure>
+        <structure>
+            <property name="name">odaURL</property>
+            <property name="id">7</property>
+        </structure>
+        <structure>
+            <property name="name">odaUser</property>
+            <property name="id">7</property>
+        </structure>
+        <structure>
+            <property name="name">odaAutoCommit</property>
+            <property name="id">7</property>
+        </structure>
+        <structure>
+            <property name="name">odaIsolationMode</property>
+            <property name="id">7</property>
+        </structure>
+        <structure>
+            <property name="name">odaPassword</property>
+            <property name="id">7</property>
+        </structure>
+        <structure>
+            <property name="name">odaJndiName</property>
+            <property name="id">7</property>
+        </structure>
+        <structure>
+            <property name="name">OdaConnProfileName</property>
+            <property name="id">7</property>
+        </structure>
+        <structure>
+            <property name="name">OdaConnProfileStorePath</property>
+            <property name="id">7</property>
+        </structure>
     </list-property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
-    <property name="layoutPreference">auto layout</property>
     <property name="bidiLayoutOrientation">ltr</property>
     <property name="imageDPI">96</property>
-    <list-property name="libraries">
-        <structure>
-            <property name="fileName">birt_report/general_library_uat.rptlibrary</property>
-            <property name="namespace">general_library_uat</property>
-        </structure>
-    </list-property>
     <parameters>
-        <scalar-parameter name="company_id" id="218">
-            <property name="hidden">false</property>
-            <text-property name="promptText">Company Name</text-property>
+        <scalar-parameter name="fiscal_year_id" id="11">
+            <text-property name="promptText">Fiscal Year</text-property>
             <property name="valueType">dynamic</property>
             <property name="isRequired">true</property>
-            <property name="dataSetName">company</property>
+            <property name="dataSetName">fiscal_year</property>
             <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
             <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
             <expression name="sortByColumn">dataSetRow["name"]</expression>
@@ -48,22 +88,329 @@
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
-        <cascading-parameter-group name="fiscal_year_period" id="407" extends="general_library_uat.fiscal_year_period">
-            <overridden-values>
-                <ref-entry baseId="24" name="fiscal_year_id" id="24"/>
-                <ref-entry baseId="25" name="start_period_id" id="25"/>
-                <ref-entry baseId="26" name="end_period_id" id="26"/>
-            </overridden-values>
-        </cascading-parameter-group>
-        <scalar-parameter name="start_date" id="408" extends="general_library_uat.start_date"/>
-        <scalar-parameter name="end_date" id="409" extends="general_library_uat.end_date"/>
-        <scalar-parameter name="target_move" id="410" extends="general_library_uat.target_move"/>
+        <scalar-parameter name="start_period_id" id="13">
+            <text-property name="promptText">Start Period</text-property>
+            <property name="valueType">dynamic</property>
+            <property name="isRequired">false</property>
+            <property name="dataSetName">period</property>
+            <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
+            <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">list-box</property>
+            <property name="mustMatch">true</property>
+            <property name="fixedOrder">true</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="end_period_id" id="93">
+            <text-property name="promptText">End Period</text-property>
+            <property name="valueType">dynamic</property>
+            <property name="isRequired">false</property>
+            <property name="dataSetName">period</property>
+            <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
+            <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">list-box</property>
+            <property name="mustMatch">true</property>
+            <property name="fixedOrder">true</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="start_date" id="96">
+            <text-property name="promptText">Start Date</text-property>
+            <property name="valueType">static</property>
+            <property name="isRequired">false</property>
+            <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="end_date" id="97">
+            <text-property name="promptText">End  Date</text-property>
+            <property name="valueType">static</property>
+            <property name="isRequired">false</property>
+            <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="target_move" id="15">
+            <text-property name="promptText">Target Move</text-property>
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="sortBy">label</property>
+            <property name="sortDirection">asc</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <simple-property-list name="defaultValue">
+                <value type="constant">all</value>
+            </simple-property-list>
+            <list-property name="selectionList">
+                <structure>
+                    <property name="value">all</property>
+                    <property name="label">All Entries</property>
+                </structure>
+                <structure>
+                    <property name="value">posted</property>
+                    <property name="label">All Posted Entries</property>
+                </structure>
+            </list-property>
+            <property name="paramType">simple</property>
+            <property name="controlType">list-box</property>
+            <property name="mustMatch">true</property>
+            <property name="fixedOrder">false</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="406"
- extends="general_library_uat.Data Source"/>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="7">
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>metadataBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledMetadataBidiFormatStr</name>
+                </ex-property>
+                <ex-property>
+                    <name>contentBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledContentBidiFormatStr</name>
+                </ex-property>
+            </list-property>
+            <property name="odaDriverClass">org.postgresql.Driver</property>
+            <property name="odaURL">jdbc:postgresql://localhost:5432/asahi_loihein</property>
+            <property name="odaUser">openerp</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">b3BlbnBncHdk</encrypted-property>
+        </oda-data-source>
     </data-sources>
     <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="fiscal_year" id="10">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">id</property>
+                    <text-property name="displayName">id</text-property>
+                    <text-property name="heading">id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">name</property>
+                    <text-property name="displayName">name</text-property>
+                    <text-property name="heading">name</text-property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">id</property>
+                    <property name="nativeName">id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">name</property>
+                    <property name="nativeName">name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select id,name from account_fiscalyear
+]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>id</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>id</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>id</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>name</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>2147483647</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>name</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>name</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="period" id="12">
+            <property name="nullsOrdering">nulls lowest</property>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">id</text-property>
+                    <text-property name="heading">id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">name</text-property>
+                    <text-property name="heading">name</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters"/>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">id</property>
+                    <property name="nativeName">id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">name</property>
+                    <property name="nativeName">name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select id,name from account_period
+]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>id</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>id</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>id</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>name</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>2147483647</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>name</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>name</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="balance_sheet_report_right" id="17">
             <property name="nullsOrdering">nulls lowest</property>
             <list-property name="columnHints">
@@ -229,9 +576,7 @@
             </list-property>
             <xml-property name="queryText"><![CDATA[select name,style_overwrite,sign,financial_report_balance(id,?,?,?,?,?,?) ,depth
 from financial_report_tree where depth>1 and 
-parent_id=1393 
-and 130 = any(path) or 151 = any(path) 
-and sequence is not null]]></xml-property>
+parent_id=4 and 130 = any(path) or 151 = any(path) and sequence is not null]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -943,9 +1288,7 @@ and sequence is not null]]></xml-property>
             <xml-property name="queryText"><![CDATA[select name,style_overwrite,sign,
 financial_report_balance(id,?,?,?,?,?,?) ,depth
 from financial_report_tree where depth>1 and 
-parent_id=1393 
-and 88 = any(path) 
-and sequence is not null]]></xml-property>
+parent_id=4 and 88 = any(path) and sequence is not null]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -2477,28 +2820,15 @@ and sequence is not null
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="company" id="385">
             <list-property name="columnHints">
                 <structure>
-                    <property name="columnName">id</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">id</text-property>
-                    <text-property name="heading">id</text-property>
-                </structure>
-                <structure>
                     <property name="columnName">name</property>
-                    <property name="analysis">dimension</property>
                     <text-property name="displayName">name</text-property>
                     <text-property name="heading">name</text-property>
                 </structure>
             </list-property>
-            <list-property name="parameters"/>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
                     <structure>
                         <property name="position">1</property>
-                        <property name="name">id</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">2</property>
                         <property name="name">name</property>
                         <property name="dataType">string</property>
                     </structure>
@@ -2508,20 +2838,13 @@ and sequence is not null
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
-                    <property name="name">id</property>
-                    <property name="nativeName">id</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">2</property>
                     <property name="name">name</property>
                     <property name="nativeName">name</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select id,name from res_company]]></xml-property>
+            <xml-property name="queryText"><![CDATA[select name from res_company]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -2558,14 +2881,10 @@ and sequence is not null
     </data-sets>
     <styles>
         <style name="report" id="4">
-            <property name="fontFamily">"Arial"</property>
-            <property name="fontSize">medium</property>
-            <property name="pageBreakAfter">avoid</property>
-            <property name="pageBreakBefore">avoid</property>
+            <property name="fontFamily">sans-serif</property>
+            <property name="fontSize">10pt</property>
         </style>
         <style name="crosstab-cell" id="5">
-            <property name="fontFamily">"Arial"</property>
-            <property name="fontSize">12pt</property>
             <property name="borderBottomColor">#CCCCCC</property>
             <property name="borderBottomStyle">solid</property>
             <property name="borderBottomWidth">1pt</property>
@@ -2580,8 +2899,6 @@ and sequence is not null
             <property name="borderTopWidth">1pt</property>
         </style>
         <style name="crosstab" id="6">
-            <property name="fontFamily">"Arial"</property>
-            <property name="fontSize">12pt</property>
             <property name="borderBottomColor">#CCCCCC</property>
             <property name="borderBottomStyle">solid</property>
             <property name="borderBottomWidth">1pt</property>
@@ -2609,14 +2926,12 @@ and sequence is not null
         </style>
         <style name="financial_cell" id="388">
             <property name="fontFamily">"Arial"</property>
-            <property name="fontSize">12pt</property>
+            <property name="fontSize">9pt</property>
             <property name="fontWeight">normal</property>
             <structure name="numberFormat">
                 <property name="category">Currency</property>
                 <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=UNNECESSARY}</property>
             </structure>
-            <property name="pageBreakAfter">avoid</property>
-            <property name="pageBreakBefore">avoid</property>
             <list-property name="highlightRules">
                 <structure>
                     <property name="operator">eq</property>
@@ -2678,7 +2993,7 @@ and sequence is not null
         </style>
         <style name="bold_underline" id="389">
             <property name="fontFamily">"Arial"</property>
-            <property name="fontSize">12pt</property>
+            <property name="fontSize">10pt</property>
             <property name="fontWeight">bold</property>
             <property name="borderBottomStyle">solid</property>
             <property name="borderTopStyle">solid</property>
@@ -2690,8 +3005,6 @@ and sequence is not null
             <property name="verticalAlign">bottom</property>
         </style>
         <style name="financial_amt_cell" id="390">
-            <property name="fontFamily">"Arial"</property>
-            <property name="fontSize">12pt</property>
             <list-property name="highlightRules">
                 <structure>
                     <property name="operator">eq</property>
@@ -2706,7 +3019,6 @@ and sequence is not null
                     <property name="operator">eq</property>
                     <property name="fontSize">10pt</property>
                     <property name="fontWeight">bold</property>
-                    <property name="color">#FFFFFF</property>
                     <expression name="testExpr" type="javascript">row["Column Binding"]</expression>
                     <simple-property-list name="value1">
                         <value type="javascript">2</value>
@@ -2749,7 +3061,6 @@ and sequence is not null
         </style>
         <style name="two_nunderline" id="391">
             <property name="fontFamily">"Arial"</property>
-            <property name="fontSize">10pt</property>
             <property name="fontWeight">bold</property>
             <property name="borderBottomStyle">solid</property>
             <property name="borderBottomWidth">thin</property>
@@ -2766,13 +3077,6 @@ and sequence is not null
         <simple-master-page name="Simple MasterPage" id="2">
             <property name="type">a4</property>
             <property name="orientation">landscape</property>
-            <property name="topMargin">0in</property>
-            <property name="leftMargin">0in</property>
-            <property name="bottomMargin">0in</property>
-            <property name="rightMargin">0in</property>
-            <property name="canShrink">true</property>
-            <property name="height">210mm</property>
-            <property name="width">297mm</property>
             <page-footer>
                 <text id="3">
                     <property name="contentType">html</property>
@@ -2783,52 +3087,49 @@ and sequence is not null
     </page-setup>
     <body>
         <grid id="226">
-            <property name="fontSize">8pt</property>
-            <property name="marginTop">0in</property>
-            <property name="marginLeft">0in</property>
-            <property name="marginBottom">0in</property>
-            <property name="marginRight">0in</property>
-            <property name="height">210mm</property>
-            <property name="width">288mm</property>
+            <property name="height">9.569444444444445in</property>
+            <property name="width">11.135416666666666in</property>
             <column id="227">
-                <property name="width">6.791666666666667in</property>
+                <property name="width">5.65625in</property>
             </column>
             <column id="228">
-                <property name="width">7.489583333333333in</property>
+                <property name="width">5.479166666666667in</property>
             </column>
             <row id="310">
-                <property name="height">0.2in</property>
+                <property name="height">0.3125in</property>
                 <cell id="311">
                     <property name="colSpan">2</property>
                     <property name="rowSpan">1</property>
-                    <data id="411">
-                        <property name="fontSize">10pt</property>
+                    <data id="386">
+                        <property name="fontSize">14pt</property>
                         <property name="fontWeight">bold</property>
+                        <property name="paddingRight">30pt</property>
                         <property name="textAlign">center</property>
+                        <property name="dataSet">company</property>
                         <list-property name="boundDataColumns">
                             <structure>
-                                <property name="name">company_id</property>
-                                <expression name="expression" type="javascript">params["company_id"].displayText</expression>
+                                <property name="name">name</property>
+                                <text-property name="displayName">name</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["name"]</expression>
                                 <property name="dataType">string</property>
-                                <property name="allowExport">true</property>
                             </structure>
                         </list-property>
-                        <property name="resultSetColumn">company_id</property>
+                        <property name="resultSetColumn">name</property>
                     </data>
                 </cell>
             </row>
             <row id="264">
-                <property name="height">0.2in</property>
+                <property name="height">0.3333333333333333in</property>
                 <cell id="265">
                     <property name="colSpan">2</property>
                     <property name="rowSpan">1</property>
                     <property name="borderBottomStyle">solid</property>
                     <property name="borderBottomWidth">thin</property>
-                    <label id="394">
+                    <label id="267">
                         <property name="fontFamily">"Arial"</property>
-                        <property name="fontSize">10pt</property>
+                        <property name="fontSize">15pt</property>
                         <property name="fontWeight">bold</property>
-                        <property name="textUnderline">underline</property>
+                        <property name="paddingLeft">50pt</property>
                         <text-property name="text">Horizontal Balance Sheet Report</text-property>
                     </label>
                 </cell>
@@ -2838,7 +3139,7 @@ and sequence is not null
                 <property name="borderLeftStyle">none</property>
                 <property name="borderRightStyle">none</property>
                 <property name="borderTopStyle">none</property>
-                <property name="height">0.5in</property>
+                <property name="height">0.6666666666666666in</property>
                 <cell id="269">
                     <property name="colSpan">2</property>
                     <property name="rowSpan">1</property>
@@ -2847,30 +3148,18 @@ and sequence is not null
                     <property name="borderRightStyle">none</property>
                     <property name="borderTopStyle">none</property>
                     <grid id="287">
-                        <property name="height">0.5104166666666666in</property>
-                        <property name="width">14.072916666666666in</property>
+                        <property name="height">0.6111111111111112in</property>
                         <column id="288"/>
-                        <column id="289">
-                            <property name="width">2.9791666666666665in</property>
-                        </column>
-                        <column id="290">
-                            <property name="width">2.5729166666666665in</property>
-                        </column>
-                        <column id="364">
-                            <property name="width">2.7395833333333335in</property>
-                        </column>
-                        <column id="368">
-                            <property name="width">2.1979166666666665in</property>
-                        </column>
-                        <column id="291">
-                            <property name="width">2.1770833333333335in</property>
-                        </column>
+                        <column id="289"/>
+                        <column id="290"/>
+                        <column id="364"/>
+                        <column id="368"/>
+                        <column id="291"/>
                         <row id="292">
                             <property name="fontFamily">"Arial"</property>
-                            <property name="height">0.23in</property>
+                            <property name="height">0.3194444444444444in</property>
                             <cell id="293">
                                 <label id="302">
-                                    <property name="fontSize">8pt</property>
                                     <property name="fontWeight">bold</property>
                                     <property name="textAlign">center</property>
                                     <text-property name="text">Fiscal Year:</text-property>
@@ -2878,7 +3167,6 @@ and sequence is not null
                             </cell>
                             <cell id="294">
                                 <label id="303">
-                                    <property name="fontSize">8pt</property>
                                     <property name="fontWeight">bold</property>
                                     <property name="textAlign">center</property>
                                     <text-property name="text">Start Period:</text-property>
@@ -2886,7 +3174,6 @@ and sequence is not null
                             </cell>
                             <cell id="295">
                                 <label id="304">
-                                    <property name="fontSize">8pt</property>
                                     <property name="fontWeight">bold</property>
                                     <property name="textAlign">center</property>
                                     <text-property name="text">End Period:</text-property>
@@ -2894,7 +3181,6 @@ and sequence is not null
                             </cell>
                             <cell id="362">
                                 <label id="365">
-                                    <property name="fontSize">8pt</property>
                                     <property name="fontWeight">bold</property>
                                     <property name="textAlign">center</property>
                                     <text-property name="text">From Date:</text-property>
@@ -2902,7 +3188,6 @@ and sequence is not null
                             </cell>
                             <cell id="366">
                                 <label id="369">
-                                    <property name="fontSize">8pt</property>
                                     <property name="fontWeight">bold</property>
                                     <property name="textAlign">center</property>
                                     <text-property name="text">To Date:</text-property>
@@ -2910,7 +3195,6 @@ and sequence is not null
                             </cell>
                             <cell id="296">
                                 <label id="305">
-                                    <property name="fontSize">8pt</property>
                                     <property name="fontWeight">bold</property>
                                     <property name="textAlign">center</property>
                                     <text-property name="text">Target Move:</text-property>
@@ -2918,11 +3202,10 @@ and sequence is not null
                             </cell>
                         </row>
                         <row id="297">
-                            <property name="height">0.27in</property>
+                            <property name="height">0.2916666666666667in</property>
                             <cell id="298">
                                 <property name="fontFamily">"Arial"</property>
                                 <data id="306">
-                                    <property name="fontSize">8pt</property>
                                     <property name="textAlign">center</property>
                                     <list-property name="boundDataColumns">
                                         <structure>
@@ -2938,7 +3221,6 @@ and sequence is not null
                             <cell id="299">
                                 <property name="fontFamily">"Arial"</property>
                                 <data id="307">
-                                    <property name="fontSize">8pt</property>
                                     <property name="textAlign">center</property>
                                     <list-property name="boundDataColumns">
                                         <structure>
@@ -2954,7 +3236,6 @@ and sequence is not null
                             <cell id="300">
                                 <property name="fontFamily">"Arial"</property>
                                 <data id="308">
-                                    <property name="fontSize">8pt</property>
                                     <property name="textAlign">center</property>
                                     <list-property name="boundDataColumns">
                                         <structure>
@@ -2970,7 +3251,6 @@ and sequence is not null
                             <cell id="363">
                                 <property name="fontFamily">"Arial"</property>
                                 <data id="351">
-                                    <property name="fontSize">8pt</property>
                                     <property name="textAlign">center</property>
                                     <list-property name="boundDataColumns">
                                         <structure>
@@ -2985,7 +3265,6 @@ and sequence is not null
                             <cell id="367">
                                 <property name="fontFamily">"Arial"</property>
                                 <data id="352">
-                                    <property name="fontSize">8pt</property>
                                     <property name="textAlign">center</property>
                                     <list-property name="boundDataColumns">
                                         <structure>
@@ -3000,7 +3279,6 @@ and sequence is not null
                             <cell id="301">
                                 <property name="fontFamily">"Arial"</property>
                                 <data id="309">
-                                    <property name="fontSize">8pt</property>
                                     <property name="textAlign">center</property>
                                     <list-property name="boundDataColumns">
                                         <structure>
@@ -3018,20 +3296,12 @@ and sequence is not null
                 </cell>
             </row>
             <row id="229">
-                <property name="pageBreakAfter">avoid</property>
-                <property name="pageBreakBefore">avoid</property>
-                <property name="pageBreakInside">avoid</property>
-                <property name="canShrink">true</property>
                 <property name="height">8.072916666666666in</property>
                 <cell id="230">
-                    <property name="paddingTop">1pt</property>
-                    <property name="paddingBottom">1pt</property>
-                    <property name="paddingRight">1pt</property>
-                    <property name="canShrink">true</property>
+                    <property name="paddingRight">2pt</property>
                     <table id="232">
                         <property name="fontFamily">"Zawgyi-One"</property>
-                        <property name="canShrink">false</property>
-                        <property name="width">6.645833333333333in</property>
+                        <property name="width">5.645833333333333in</property>
                         <property name="dataSet">balance_sheet_report_left</property>
                         <list-property name="boundDataColumns">
                             <structure>
@@ -3065,10 +3335,10 @@ label;</expression>
                             </structure>
                         </list-property>
                         <column id="242">
-                            <property name="width">4.208333333333333in</property>
+                            <property name="width">3.6145833333333335in</property>
                         </column>
                         <column id="243">
-                            <property name="width">2.4375in</property>
+                            <property name="width">2.03125in</property>
                         </column>
                         <header>
                             <row id="233">
@@ -3077,20 +3347,21 @@ label;</expression>
                                 <property name="fontSize">12pt</property>
                                 <property name="color">#000000</property>
                                 <property name="verticalAlign">middle</property>
-                                <property name="height">0.2in</property>
+                                <property name="height">0.3472222222222222in</property>
                                 <cell id="234">
                                     <label id="256">
                                         <property name="fontFamily">"Arial"</property>
-                                        <property name="fontSize">8pt</property>
+                                        <property name="fontSize">11pt</property>
                                         <property name="fontWeight">bold</property>
-                                        <property name="paddingLeft">1pt</property>
+                                        <property name="paddingLeft">25pt</property>
                                         <property name="textAlign">center</property>
                                         <text-property name="text">Accounts</text-property>
                                     </label>
                                 </cell>
                                 <cell id="235">
+                                    <property name="style">financial_amt_cell</property>
                                     <label id="258">
-                                        <property name="fontSize">8pt</property>
+                                        <property name="fontSize">11pt</property>
                                         <property name="fontWeight">bold</property>
                                         <property name="textAlign">center</property>
                                         <text-property name="text">Amount (KS)</text-property>
@@ -3103,13 +3374,11 @@ label;</expression>
                                 <property name="style">financial_cell</property>
                                 <property name="fontFamily">"Arial"</property>
                                 <property name="fontSize">8pt</property>
-                                <property name="height">0.2in</property>
+                                <property name="height">0.2708333333333333in</property>
                                 <cell id="237">
                                     <data id="257">
-                                        <property name="style">financial_cell</property>
-                                        <property name="backgroundPositionX">center</property>
                                         <property name="fontFamily">"Arial"</property>
-                                        <property name="fontSize">8pt</property>
+                                        <property name="fontSize">9pt</property>
                                         <property name="paddingLeft">1pt</property>
                                         <structure name="numberFormat">
                                             <property name="category">Currency</property>
@@ -3122,8 +3391,8 @@ label;</expression>
                                 <cell id="238">
                                     <data id="392">
                                         <property name="style">financial_amt_cell</property>
-                                        <property name="fontSize">8pt</property>
-                                        <property name="paddingRight">1pt</property>
+                                        <property name="fontSize">10pt</property>
+                                        <property name="paddingRight">15pt</property>
                                         <property name="textAlign">right</property>
                                         <property name="resultSetColumn">financial_report_balance</property>
                                     </data>
@@ -3132,7 +3401,7 @@ label;</expression>
                         </detail>
                         <footer>
                             <row id="239">
-                                <property name="height">0.2604166666666667in</property>
+                                <property name="height">0.2916666666666667in</property>
                                 <cell id="240"/>
                                 <cell id="241"/>
                             </row>
@@ -3145,8 +3414,7 @@ label;</expression>
                     <property name="borderRightStyle">none</property>
                     <property name="borderTopStyle">none</property>
                     <table id="244">
-                        <property name="canShrink">false</property>
-                        <property name="width">7.208333333333333in</property>
+                        <property name="width">5.5in</property>
                         <property name="dataSet">balance_sheet_report_right</property>
                         <list-property name="boundDataColumns">
                             <structure>
@@ -3173,21 +3441,21 @@ label;</expression>
                             </structure>
                         </list-property>
                         <column id="254">
-                            <property name="width">4.604166666666667in</property>
+                            <property name="width">3.3125in</property>
                         </column>
                         <column id="255">
-                            <property name="width">2.6041666666666665in</property>
+                            <property name="width">2.1875in</property>
                         </column>
                         <header>
                             <row id="245">
                                 <property name="backgroundColor">#7F7F7F</property>
-                                <property name="height">0.2in</property>
+                                <property name="height">0.3472222222222222in</property>
                                 <cell id="246">
                                     <property name="fontFamily">"Arial"</property>
                                     <property name="fontSize">12pt</property>
                                     <property name="verticalAlign">middle</property>
                                     <label id="260">
-                                        <property name="fontSize">8pt</property>
+                                        <property name="fontSize">11pt</property>
                                         <property name="fontWeight">bold</property>
                                         <text-property name="text">Accounts</text-property>
                                     </label>
@@ -3197,7 +3465,7 @@ label;</expression>
                                     <property name="verticalAlign">middle</property>
                                     <label id="262">
                                         <property name="fontFamily">"Arial"</property>
-                                        <property name="fontSize">8pt</property>
+                                        <property name="fontSize">11pt</property>
                                         <property name="fontWeight">bold</property>
                                         <property name="textAlign">center</property>
                                         <text-property name="text">Amount (KS)</text-property>
@@ -3209,12 +3477,12 @@ label;</expression>
                             <row id="248">
                                 <property name="style">financial_cell</property>
                                 <property name="fontFamily">"Arial"</property>
-                                <property name="height">0.2in</property>
+                                <property name="height">0.2708333333333333in</property>
                                 <cell id="249">
                                     <data id="261">
                                         <property name="style">financial_cell</property>
                                         <property name="fontFamily">"Arial"</property>
-                                        <property name="fontSize">8pt</property>
+                                        <property name="fontSize">10pt</property>
                                         <property name="paddingLeft">10pt</property>
                                         <property name="resultSetColumn">name</property>
                                     </data>
@@ -3223,8 +3491,8 @@ label;</expression>
                                     <data id="263">
                                         <property name="style">financial_amt_cell</property>
                                         <property name="fontFamily">"Arial"</property>
-                                        <property name="fontSize">8pt</property>
-                                        <property name="paddingRight">1pt</property>
+                                        <property name="fontSize">10pt</property>
+                                        <property name="paddingRight">15pt</property>
                                         <structure name="numberFormat">
                                             <property name="category">Currency</property>
                                             <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=UNNECESSARY}</property>
@@ -3237,7 +3505,7 @@ label;</expression>
                         </detail>
                         <footer>
                             <row id="251">
-                                <property name="height">0.2in</property>
+                                <property name="height">0.22916666666666666in</property>
                                 <cell id="252"/>
                                 <cell id="253"/>
                             </row>

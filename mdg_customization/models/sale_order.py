@@ -84,7 +84,7 @@ class sale_order_line(osv.osv):
                 result['product_uos_qty'] = qty
                 uos_category_id = False
             result['th_weight'] = qty * product_obj.weight
-            result['product_type'] = product_obj.product_tmpl_id.type            
+            
             print 'IDS-->>',product_obj.id
             cr.execute("""SELECT uom.id FROM product_product pp 
                           LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)

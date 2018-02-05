@@ -27,16 +27,8 @@ class product_category(osv.osv):
         'property_account_income_categ': fields.property(
             type='many2one',
             relation='account.account',
-            string="Sale Cash Account",
+            string="Sale",
             help="This account will be used for invoices to value sales."),
-                
-        'property_sale_credit_account_id': fields.property(
-            type='many2one',
-            relation='account.account',
-            string="Sale Credit Account",
-            help="When real-time inventory valuation is enabled on a product, this account will hold the current value of the products.",),                
-                
-                
         'property_account_expense_categ': fields.property(
             type='many2one',
             relation='account.account',
@@ -64,15 +56,3 @@ class product_category(osv.osv):
             string="Inventory Account",
             help="When real-time inventory valuation is enabled on a product, this account will hold the current value of the products.",),
     }
-    
-    
-class product_template(osv.osv):
-    _inherit = "product.template"
-    _columns = {
-                
-            'property_account_credit_income': fields.property(
-            type='many2one',
-            relation='account.account',
-            string="Income Credit Account",
-            help="This account will be used for invoices instead of the default one to value sales for the current product."),
-                }    

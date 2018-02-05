@@ -235,6 +235,7 @@ class OpenERPJobStorage(JobStorage):
             vals['eta'] = dt_to_string(job_.eta)
 
         db_record = self.db_record(job_)
+
         if db_record:
             db_record.write(vals)
         else:

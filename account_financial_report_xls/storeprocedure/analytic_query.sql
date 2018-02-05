@@ -1,4 +1,4 @@
---report for analytic report for SIR
+
 -- View: financial_report_tree
 
 CREATE OR REPLACE VIEW financial_report_tree AS 
@@ -112,120 +112,17 @@ ALTER TABLE analytic_report_tree
 
 -- DROP FUNCTION financial_report_balance_analytic(integer, integer, date, date, integer, integer, text, integer);
 
---CREATE OR REPLACE FUNCTION financial_report_balance_analytic(report_id integer, fiscal_year integer, start_date date, end_date date, start_period_id integer, end_period_id integer, state_cond text, analytic_id integer)
---  RETURNS numeric AS
---$BODY$
---  DECLARE
---    balance numeric;
---    analytic_account_ids int[];
---    account_ids int[];
---    temp_account_id int[];
---    r account_account_financial_report%rowtype;
---    sql text :=   'select
---                    COALESCE(sum((aml.debit - aml.credit)),0)
---                  from account_move_line aml,
---                    account_period period,
---                    account_fiscalyear fiscalyear,
---                    account_move
---                  WHERE
---                    aml.period_id = period.id AND
---                    aml.move_id = account_move.id AND
---                    period.fiscalyear_id = fiscalyear.id';
---
---  BEGIN  
---  
--- 
---			
---			    select array_agg(id) into analytic_account_ids 
---			    from analytic_report_tree  where analytic_id  = ANY(PATH);
---
---			    FOR r IN select *  from account_account_financial_report where report_line_id=$1
---
---			    LOOP
---			    
---				select array_cat(account_ids,array_agg(id)) into account_ids from account_tree where r.account_id = ANY(PATH);
---
---			    END LOOP;
---			    
---			    
---			    IF account_ids IS NULL THEN
---				return null;
---			    END IF;
---			    
---			    IF account_ids IS NOT NULL THEN
---				sql := sql || ' AND aml.account_id in ('|| array_to_string(account_ids, ',') ||')';
---			    END IF;
---
---			    IF analytic_account_ids IS NULL THEN
---				sql := sql || ' AND aml.analytic_account_id is not null';
---			    END IF;
---			    
---			    IF analytic_account_ids IS NOT NULL THEN
---				sql := sql || ' AND aml.analytic_account_id in ('|| array_to_string(analytic_account_ids, ',') ||')';
---			    END IF;
---		    
---    IF  fiscal_year>0 THEN
---      sql := sql || ' AND fiscalyear.id = $2';
---    END IF;
---
---    IF  start_date > end_date and start_date is not null and end_date is not null THEN
---      sql := sql || ' AND account_move.date between $3 and $4';
---    END IF;
---
---    IF  end_date is null and start_date is not null THEN
---      sql := sql || ' AND account_move.date = $3';
---    END IF;
---
---     IF   start_date is null and end_date is not null THEN
---      sql := sql || ' AND account_move.date = $4';
---    END IF;
---
---    IF start_period_id >0  and end_period_id >0 and start_period_id is not null and end_period_id is not null  THEN
---      sql := sql || ' AND aml.period_id between $5 and $6';
---    END IF;
---    
---   IF start_period_id >0  and end_period_id is null and start_period_id is not null THEN
---      sql := sql || ' AND aml.period_id = $5 ';
---    END IF;
---       
---   IF end_period_id >0  and start_period_id is null and end_period_id is not null THEN
---      sql := sql || ' AND aml.period_id = $6 ';
---    END IF;
---
--- 
---    IF $7 = 'posted' THEN
---       sql := sql || ' AND account_move.state = $7';
---    END IF;
---
---    EXECUTE sql into balance USING analytic_account_ids,fiscal_year,start_date,end_date,start_period_id,end_period_id,state_cond;
---    IF balance < 0 THEN
---    balance = balance * -1;
---    END IF;
---   return balance;
---  END;
---  $BODY$
---  LANGUAGE plpgsql VOLATILE
---  COST 100;
---ALTER FUNCTION financial_report_balance_analytic(integer, integer, date, date, integer, integer, text, integer)
---  OWNER TO postgres;
---  
-  
-  -- Function: financial_report_balance_currency(integer, integer, date, date, integer, integer, text, text, text)
-
--- DROP FUNCTION financial_report_balance_currency(integer, integer, date, date, integer, integer, text, text, text);
-
-CREATE OR REPLACE FUNCTION financial_report_balance_currency(report_id integer, fiscal_year integer, start_date date, end_date date, start_period_id integer, end_period_id integer, state_cond text, currency_code text, analytic_code text)
+CREATE OR REPLACE FUNCTION financial_report_balance_analytic(report_id integer, fiscal_year integer, start_date date, end_date date, start_period_id integer, end_period_id integer, state_cond text, analytic_id integer)
   RETURNS numeric AS
 $BODY$
   DECLARE
     balance numeric;
+    analytic_account_ids int[];
     account_ids int[];
     temp_account_id int[];
-    currency_id int;
-    analytic_id int;
     r account_account_financial_report%rowtype;
     sql text :=   'select
-                    COALESCE(sum((aml.amount_currency)),0)
+                    COALESCE(sum((aml.debit - aml.credit)),0)
                   from account_move_line aml,
                     account_period period,
                     account_fiscalyear fiscalyear,
@@ -233,38 +130,45 @@ $BODY$
                   WHERE
                     aml.period_id = period.id AND
                     aml.move_id = account_move.id AND
-                    aml.currency_id = $8 AND
-                    aml.amount_currency > 0 AND
-                    period.fiscalyear_id = fiscalyear.id  ';
+                    period.fiscalyear_id = fiscalyear.id';
 
-  BEGIN
-		-- search currency id
-                    select id into currency_id from res_currency where name = $8;
-                    
-                    raise NOTICE 'search currency id (%)', currency_id;
-                     -- select account_id from account_account_financial_report where report_line_id=report_id
-                    FOR r IN select *  from account_account_financial_report where report_line_id=$1
-                    LOOP
-                    raise NOTICE ' searching id(%)',r.account_id;
-			select array_cat(account_ids,array_agg(id)) into account_ids from account_tree where r.account_id = ANY(PATH);
-                    END LOOP;
-                    --there is not account and return null for that
-		     IF account_ids IS NULL THEN
-			return null;
-		     END IF;
-                    IF account_ids IS NOT NULL THEN
-                        sql := sql || ' AND aml.account_id in ('|| array_to_string(account_ids, ',') ||')';
-	            END IF;
-		    RAISE NOTICE ' SQL (%)', sql;
+  BEGIN  
+  
+ 
+			
+			    select array_agg(id) into analytic_account_ids 
+			    from analytic_report_tree  where analytic_id  = ANY(PATH);
+
+			    FOR r IN select *  from account_account_financial_report where report_line_id=$1
+
+			    LOOP
+			    
+				select array_cat(account_ids,array_agg(id)) into account_ids from account_tree where r.account_id = ANY(PATH);
+
+			    END LOOP;
+			    
+			    
+			    IF account_ids IS NULL THEN
+				return null;
+			    END IF;
+			    
+			    IF account_ids IS NOT NULL THEN
+				sql := sql || ' AND aml.account_id in ('|| array_to_string(account_ids, ',') ||')';
+			    END IF;
+
+			    IF analytic_account_ids IS NULL THEN
+				sql := sql || ' AND aml.analytic_account_id is not null';
+			    END IF;
+			    
+			    IF analytic_account_ids IS NOT NULL THEN
+				sql := sql || ' AND aml.analytic_account_id in ('|| array_to_string(analytic_account_ids, ',') ||')';
+			    END IF;
+		    
     IF  fiscal_year>0 THEN
       sql := sql || ' AND fiscalyear.id = $2';
     END IF;
 
     IF  start_date > end_date and start_date is not null and end_date is not null THEN
-      sql := sql || ' AND account_move.date between $3 and $4';
-    END IF;
-
-     IF  start_date = end_date and start_date is not null and end_date is not null THEN
       sql := sql || ' AND account_move.date between $3 and $4';
     END IF;
 
@@ -287,25 +191,20 @@ $BODY$
    IF end_period_id >0  and start_period_id is null and end_period_id is not null THEN
       sql := sql || ' AND aml.period_id = $6 ';
     END IF;
-    
+
+ 
     IF $7 = 'posted' THEN
        sql := sql || ' AND account_move.state = $7';
     END IF;
-    
-    IF analytic_code IS NOT NULL THEN
-	select id into analytic_id from account_analytic_account where code = analytic_code;
-	sql := sql ||   ' AND aml.analytic_account_id= '||analytic_id;
-    END IF;
-    RAISE NOTICE ' SQL (%)', sql;
-    EXECUTE sql into balance USING account_ids,fiscal_year,start_date,end_date,start_period_id,end_period_id,state_cond,currency_id;
+
+    EXECUTE sql into balance USING analytic_account_ids,fiscal_year,start_date,end_date,start_period_id,end_period_id,state_cond;
     IF balance < 0 THEN
     balance = balance * -1;
     END IF;
-        RAISE NOTICE 'balance (%)', balance;
-
    return balance;
   END;
   $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
-
+ALTER FUNCTION financial_report_balance_analytic(integer, integer, date, date, integer, integer, text, integer)
+  OWNER TO postgres;

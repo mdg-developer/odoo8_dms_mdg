@@ -66,13 +66,10 @@ class sale_order_line(osv.osv):
                     cur = line.order_id.pricelist_id.currency_id
                     res[line.id] = cur_obj.round(cr, uid, cur, taxes['total']-line.discount_amt) 
             else:
-                if (line.sale_foc == True):
-                    res[line.id] = 0
-                else:                
-                    price = line.price_unit
-                    taxes = tax_obj.compute_all(cr, uid, line.tax_id, price, line.product_uom_qty, line.product_id, line.order_id.partner_id)
-                    cur = line.order_id.pricelist_id.currency_id
-                    res[line.id] = cur_obj.round(cr, uid, cur,taxes['total'] )              
+                price = line.price_unit
+                taxes = tax_obj.compute_all(cr, uid, line.tax_id, price, line.product_uom_qty, line.product_id, line.order_id.partner_id)
+                cur = line.order_id.pricelist_id.currency_id
+                res[line.id] = cur_obj.round(cr, uid, cur,taxes['total'] )              
         return res
         
         
@@ -85,24 +82,19 @@ class sale_order_line(osv.osv):
         if context is None:
             context = {}
         for line in self.browse(cr, uid, ids, context=context):
-            if (line.sale_foc == True):
-                res[line.id] = 0
-            else:            
-                price = line.price_unit
-                qty=line.product_uom_qty
-                amount=price*qty
-                taxes = tax_obj.compute_all(cr, uid, line.tax_id, price, line.product_uom_qty, line.product_id, line.order_id.partner_id)
-                cur = line.order_id.pricelist_id.currency_id
-                res[line.id] = cur_obj.round(cr, uid, cur, amount)
+            
+            price = line.price_unit
+            qty=line.product_uom_qty
+            amount=price*qty
+            taxes = tax_obj.compute_all(cr, uid, line.tax_id, price, line.product_uom_qty, line.product_id, line.order_id.partner_id)
+            cur = line.order_id.pricelist_id.currency_id
+            res[line.id] = cur_obj.round(cr, uid, cur, amount)
         return res
 		
     def _get_price_reduce(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, 0.0)
         for line in self.browse(cr, uid, ids, context=context):
-            if (line.sale_foc == True):
-                res[line.id] = 0
-            else:                        
-                res[line.id] = line.net_total / line.product_uom_qty
+            res[line.id] = line.net_total / line.product_uom_qty
         return res
     def onchange_discount_amount(self, cr, uid, ids, discount_amt,product_uom_qty, price_unit,context=None):
         val = {'discount': 0.0}
@@ -143,10 +135,9 @@ class sale_order_line(osv.osv):
                'price_subtotal': fields.function(_amount_line1, string='Subtotal'),
                'net_total':fields.function(_amount_line, string='Total', digits_compute= dp.get_precision('Account')),
                'discount':fields.float('Discount (%)',store=True, readonly=True),
-               'discount_amt':fields.float('Discount (amt)',store=True, readonly=True, states={'draft': [('readonly', False)]} ),
-               'sale_foc':fields.boolean('FOC', readonly=True, states={'draft': [('readonly', False)]}, ),
+               'discount_amt':fields.float('Discount (amt)',store=True, readonly=True),
+               'sale_foc':fields.boolean('FOC', readonly=True),
               # 'show_amt':fields.function(_amount_line2,string='Total Discount(-)',readonly=True)
-              'product_type':fields.char('Product Type'),
                
                }
 
@@ -169,38 +160,17 @@ class sale_order_line(osv.osv):
                (this is used for returning products including service)
            :return: dict of values to create() the invoice line
         """
-        sale_obj = self.pool.get('sale.order')        
         res = {}
         if not line.invoiced:
-            sale_data=sale_obj.browse(cr,uid,line.order_id.id,context)
-            payment_type =sale_data.payment_type
-
             if not account_id:
                 if line.product_id:
                     account_id = line.product_id.property_account_income.id
-                    if payment_type == 'cash':
-                        account_id = line.product_id.property_account_income.id
-                    if payment_type == 'credit':
-                        account_id = line.product_id.property_account_credit_income.id                        
                     if not account_id:
                         account_id = line.product_id.categ_id.property_account_income_categ.id
-                        if payment_type == 'cash':
-                            account_id = line.product_id.categ_id.property_account_income_categ.id
-                        if payment_type == 'credit':
-                            account_id = line.product_id.categ_id.property_sale_credit_account_id.id                           
                     if not account_id:
                         raise osv.except_osv(_('Error!'),
                                 _('Please define income account for this product: "%s" (id:%d).') % \
-                                    (line.product_id.name, line.product_id.id,))            
-#             if not account_id:
-#                 if line.product_id:
-#                     account_id = line.product_id.property_account_income.id
-#                     if not account_id:
-#                         account_id = line.product_id.categ_id.property_account_income_categ.id
-#                     if not account_id:
-#                         raise osv.except_osv(_('Error!'),
-#                                 _('Please define income account for this product: "%s" (id:%d).') % \
-#                                     (line.product_id.name, line.product_id.id,))
+                                    (line.product_id.name, line.product_id.id,))
                 else:
                     prop = self.pool.get('ir.property').get(cr, uid,
                             'property_account_income_categ', 'product.category',
@@ -217,8 +187,6 @@ class sale_order_line(osv.osv):
             if not account_id:
                 raise osv.except_osv(_('Error!'),
                             _('There is no Fiscal Position defined or Income category account defined for default properties of Product categories.'))
-            if line.sale_foc==True:
-                pu=0.0;                
             res = {
                 'name': line.name,
                 'sequence': line.sequence,
@@ -435,7 +403,6 @@ class sale_order(osv.osv):
             'deduct_amt':order.deduct_amt,
             'additional_discount':order.additional_discount,
             'discount_total':order.total_dis,
-            'payment_type':order.payment_type,
         }
 
         # Care for deprecated _inv_get() hook - FIXME: to be removed after 6.1

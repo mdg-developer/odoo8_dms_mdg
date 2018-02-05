@@ -44,8 +44,6 @@ class product_pricelist_version(osv.osv):
     def retrieve_data(self, cr, uid,ids, context=None):
         item_obj=self.pool.get('product.pricelist.item')        
         product_obj=self.pool.get('product.product')        
-        product_uom_price_obj=self.pool.get('product.uom.price')        
-        
         list_obj=self.pool.get('product.pricelist')        
         product_price_type_obj = self.pool.get('product.price.type')
         if ids:
@@ -69,22 +67,34 @@ class product_pricelist_version(osv.osv):
             product_ids = product_obj.search(cr, uid, [('is_foc', '=', False),('type','=','product')], context=context) 
             for product in product_ids:                
                 product_data=product_obj.browse(cr, uid, product, context=context)
-                uom_price_ids=product_uom_price_obj.search(cr, uid, [('product_id', '=', product_data.product_tmpl_id.id)], context=context) 
-                for  uom_price_id in uom_price_ids:
-                    uom_price_data=product_uom_price_obj.browse(cr, uid, uom_price_id, context=context)
-                    uom_id= uom_price_data.name.id or False,
-                    price=uom_price_data.price
-                    name=product_data.product_tmpl_id.default_code
-                    categ_id=product_data.product_tmpl_id.categ_id.id
-                    item_obj.create(cr, uid, {
-                                                        'product_id':product_data.id,
-                                                        'name': name,
-                                                    'new_price':price,
-                                              'list_price': price,
-                                              'product_uom_id':uom_id,
-                                              'base':base_id,
-                                              'categ_id':categ_id,
-                                              'price_version_id':ids[0]}, context=context)
+                uom_id= product_data.product_tmpl_id.uom_id.id or False,
+                big_uom_id= product_data.product_tmpl_id.big_uom_id.id or False,
+                big_price=product_data.big_list_price
+                price=product_data.list_price
+                name=product_data.product_tmpl_id.default_code
+                categ_id=product_data.product_tmpl_id.categ_id.id
+                if uom_id!=False:
+                    uom_id=uom_id[0]
+                if big_uom_id!=False:
+                    big_uom_id=big_uom_id[0]
+                item_id = item_obj.create(cr, uid, {
+                                                    'product_id':product_data.id,
+                                                    'name': name,
+                                                'new_price':price,
+                                          'list_price': price,
+                                          'product_uom_id':uom_id,
+                                          'base':base_id,
+                                          'categ_id':categ_id,
+                                          'price_version_id':ids[0]}, context=context)
+                item_2_id = item_obj.create(cr, uid, {
+                                                    'product_id':product_data.id,
+                                                    'name': name,
+                                                'new_price':big_price,
+                                          'list_price': big_price,
+                                          'product_uom_id':big_uom_id,
+                                          'base':base_id,
+                                          'categ_id':categ_id,
+                                          'price_version_id':ids[0]}, context=context)
         return True
     
 class product_pricelist_item(osv.osv):

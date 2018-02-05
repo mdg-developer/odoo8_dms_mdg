@@ -33,7 +33,6 @@ import openerp.addons.decimal_precision as dp
 #Finder.Type_Definitions import columns
 _logger = logging.getLogger(__name__)
 
-
 class account_financial_report(osv.osv):
     _name = "account.financial.report"
     _inherit = "account.financial.report"
@@ -178,4 +177,5 @@ class account_move_line(osv.osv):
             
         query += company_clause
         return query
+    
 

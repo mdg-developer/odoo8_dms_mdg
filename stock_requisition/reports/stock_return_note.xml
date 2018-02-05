@@ -112,16 +112,11 @@
 					<thead>
 						<tr>
 							<th>Product</th>
-							<th class="text-right">From Location</th>
-							<th class="text-right">To Location</th>
-							<th class="text-right">UOM</th>
-							<th class="text-right">Status</th>
-							<th class="text-right">Opening Stock Qty</th>
+							<th class="text-right">Issued Qty</th>
 							<th class="text-right">Sales Qty</th>
-							<th class="text-right">Return Qty</th>
-							<th class="text-right">On Ground Qty</th>
-							<th class="text-right">Actual Return Qty</th>
-							<th class="text-right">Closing Stock Qty</th>
+							<th class="text-right">FOC Qty</th>
+							<th class="text-right">Returned Qty(B/S)</th>
+							<th class="text-right">Received Qty(B/S)</th>
 							<th>Expiry</th>
 							<th>Remark</th>
 						</tr>
@@ -132,34 +127,23 @@
 								<span t-field="l.product_id" />
 							</td>
 							<td class="text-right">
-								<span t-field="l.from_location_id" />
-							</td>
-							<td class="text-right">
-								<span t-field="l.to_location_id" />
-							</td>
-							<td class="text-right">
-								<span t-field="l.product_uom" />
-							</td>
-							<td class="text-right">
-								<span t-field="l.status" />
-							</td>
-							<td class="text-right">
-								<span t-field="l.opening_stock_qty" />
+								<span t-field="l.receive_quantity" />
 							</td>
 							<td class="text-right">
 								<span t-field="l.sale_quantity" />
 							</td>
 							<td class="text-right">
+								<span t-field="l.foc_quantity" />
+							</td>
+							<td align="center">
+								<span t-field="l.return_quantity_big" />
+								/
 								<span t-field="l.return_quantity" />
 							</td>
-							<td align="text-right">
-								<span t-field="l.onground_quantity" />
-							</td>
-							<td align="text-right">
-								<span t-field="l.actual_return_quantity" />
-							</td>
-							<td align="text-right">
-								<span t-field="l.closing_stock_qty" />
+							<td align="center">
+								<span t-field="l.rec_big_quantity" />
+								/
+								<span t-field="l.rec_small_quantity" />
 							</td>
 							<td align="center">
 								<span t-field="l.expiry_date" />

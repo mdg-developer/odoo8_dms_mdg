@@ -38,7 +38,7 @@ This report generates an excel for all financial report.
         'views/report_financial_cust.xml',
         'wizard/account_financial_report_xls_view.xml',
         'account_financial_report_view.xml',
-        #'account_financial_report_srno_view.xml',
+        'account_financial_report_srno_view.xml',
     ],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

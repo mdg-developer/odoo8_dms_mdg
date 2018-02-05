@@ -1,29 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data>
-		
-		<record id="view_vendor_receipt_dialog_form_inherit" model="ir.ui.view">
-			<field name="name">account.voucher.receipt.dialog.form</field>
-			<field name="model">account.voucher</field>
-			<field name="inherit_id" ref="account_voucher.view_vendor_receipt_dialog_form" />
-			<field name="arch" type="xml">
-				<data>
-					<field name="journal_id" position="after">
-					   
-						<field name="voucher_rate" on_change="rate_validation(payment_rate_currency_id, min_exchange_rate, max_exchange_rate, voucher_rate, context)" attrs="{'invisible': [('type','=','receipt')]}"/>
-						<field name="exchange_rate" readonly="1" attrs="{'invisible': [('type','=','receipt')]}"/>
-						<field name="min_exchange_rate" readonly="1" attrs="{'invisible': [('type','=','receipt')]}"/>
-						<field name="max_exchange_rate" readonly="1" attrs="{'invisible': [('type','=','receipt')]}"/>
-						<!-- <field name="date" invisible="context.get('line_type', False)" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id, context)"/> -->
-					</field>
-					
-					<!-- <field name="reconcile" position="after">
-						<field name="total_discount" sum="Total Discount" on_change="onchange_discount_amount(total_discount, context)"/>
-					</field> -->
-				</data>
-			</field>
-		</record>
-		
+
 		<!-- Supplier Payment -->
 		<record id="view_vendor_payment_form_inherit" model="ir.ui.view">
 			<field name="name">account.voucher.payment.form</field>

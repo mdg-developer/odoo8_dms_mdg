@@ -50,6 +50,8 @@ ACTION_TYPES = [
     
   #  ('cart_disc_perc', _('Discount % on Sub Total')),
     ('cart_disc_fix', _('Fixed amount on Sub Total')),
+    ('qty_disc_fix', _('Fixed amount on Qty')),
+    
     ('disc_perc_on_grand_total', _('Discount % on Grand Total')),
     ('fix_amt_on_grand_total', _('Fix Amount on Grand Total')),
     ('discount_on_categ', _('Discount % on Product Category')),
@@ -1425,7 +1427,15 @@ class PromotionsRulesActions(osv.Model):
                              'arguments':"0.00",
                              }
                     }
-        
+        if action_type in [
+                           'qty_disc_fix',
+                           ] :
+            return {
+                    'value':{
+                             'product_code':"'product_code'",
+                             'arguments':"0.00|LimitQty",
+                             }
+                    }        
         if action_type in [
                            'prod_x_get_y',
                            ] :

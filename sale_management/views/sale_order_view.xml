@@ -96,11 +96,9 @@
 					<field name="delivery_remark" />
 				</field>
 				<field name="date_order" position="after">
-					<field name="payment_type" on_change="on_change_payment_type(partner_id,payment_type)" 
-					    attrs="{'readonly': [('state','not in',('draft','invoice_except'))]}"  
-					/>
-<!-- 						attrs="{'readonly': [('payment_type','=','cash')]}"  -->
-					<field name="payment_term" options="{'no_create': True}"  attrs="{'readonly': [('state','not in',('draft','invoice_except'))]}"  />
+					<field name="payment_type" on_change="on_change_payment_type(partner_id,payment_type)"
+						attrs="{'readonly': [('payment_type','=','cash')]}" />
+					<field name="payment_term" options="{'no_create': True}" />
 					<field name="due_date"></field>
 				</field>
 				<field name="client_order_ref" position="replace">

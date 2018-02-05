@@ -16,20 +16,7 @@ class account_bank_statement_line(osv.osv):
             # account_id = st_line.company_id.income_currency_exchange_account_id.id
             if not account_id:
                 raise osv.except_osv(_('Insufficient Configuration!'), _("You should configure the 'Gain Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))    
-        return {
-            'move_id': move_id,
-            'name': _('change') + ': ' + (st_line.name or '/'),
-            'period_id': st_line.statement_id.period_id.id,
-            'journal_id': st_line.journal_id.id,
-            'partner_id': st_line.partner_id.id,
-            'company_id': st_line.company_id.id,
-            'statement_id': st_line.statement_id.id,
-            'debit': currency_diff < 0 and -currency_diff or 0,
-            'credit': currency_diff > 0 and currency_diff or 0,
-            'amount_currency': 0.0,
-            'date': st_line.date,
-            'account_id': account_id
-            }
+
 class account_voucher(osv.osv):
     _inherit = 'account.voucher'
     
@@ -84,7 +71,7 @@ class account_voucher(osv.osv):
             'journal_id': line.voucher_id.journal_id.id,
             'period_id': line.voucher_id.period_id.id,
             'name': _('change') + ': ' + (line.name or '/'),
-            'account_id': account_id,
+            'account_id': account_id.id,
             'move_id': move_id,
             'amount_currency': 0.0,
             'partner_id': line.voucher_id.partner_id.id,
@@ -107,7 +94,8 @@ class account_invoice(osv.osv):
                         
         for invoice in self.browse(cr, uid, ids, context=context):
             invoice_data=self.browse(cr, uid, invoice.id, context=context)
-            paid_amount=invoice_data.amount_total - invoice_data.residual    
+            if invoice_data.residual >0:
+                paid_amount=invoice_data.amount_total - invoice_data.residual    
             res[invoice.id]= paid_amount            
         return res   
     
@@ -127,6 +115,10 @@ class account_invoice(osv.osv):
         'state_id': fields.many2one("res.country.state", 'State', ondelete='restrict', readonly=True),
         'country_id': fields.many2one('res.country', 'Country', ondelete='restrict', readonly=True),
         'township': fields.many2one('res.township', 'Township', ondelete='restrict', readonly=True),
+        'payment_term' : fields.many2one('account.payment.term', string='Payment Terms',readonly=True,
+        help="If you use payment terms, the due date will be computed automatically at the generation "
+             "of accounting entries. If you keep the payment term and the due date empty, it means direct payment. "
+             "The payment term may compute several due dates, for example 50% now, 50% in one month."),
         'paid_amount': fields.function(_get_paid_amount, type='char', string='Paid Amount',digits_compute= dp.get_precision('Product Price')),     
 }
         

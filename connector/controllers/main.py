@@ -1,7 +1,7 @@
 import logging
 import traceback
 from cStringIO import StringIO
-
+import time
 from psycopg2 import OperationalError
 
 import openerp
@@ -19,7 +19,7 @@ from ..exception import (NoSuchJobError,
 
 _logger = logging.getLogger(__name__)
 
-PG_RETRY = 10  # seconds
+PG_RETRY = 30  # seconds
 
 
 # TODO: perhaps the notion of ConnectionSession is less important
@@ -103,10 +103,15 @@ class RunJobController(http.Controller):
 
         def retry_postpone(job, message, seconds=None):
             with session_hdl.session() as session:
-                job.postpone(result=message, seconds=seconds)
-                job.set_pending(reset_retry=False)
-                self.job_storage_class(session).store(job)
-
+                try:
+                    job.postpone(result=message, seconds=seconds)
+                    job.set_pending(reset_retry=False)
+                    self.job_storage_class(session).store(job)
+                except NothingToDoJob as err:
+                    time.sleep(10)
+                    retry_postpone(job, message, seconds);			
+                    _logger.debug('%s %s job retry postpond error.', job, err)
+                    
         with session_hdl.session() as session:
             job = self._load_job(session, job_uuid)
             if job is None:
@@ -131,10 +136,14 @@ class RunJobController(http.Controller):
                 # errors
                 if err.pgcode not in PG_CONCURRENCY_ERRORS_TO_RETRY:
                     raise
-
-                retry_postpone(job, tools.ustr(err.pgerror, errors='replace'),
+                try:
+                    retry_postpone(job, tools.ustr(err.pgerror, errors='replace'),
                                seconds=PG_RETRY)
-                _logger.debug('%s OperationalError, postponed', job)
+                    _logger.debug('%s OperationalError, postponed', job)
+                except NothingToDoJob as err:
+                        retry_postpone(job, tools.ustr(err.pgerror, errors='replace'),
+                               seconds=PG_RETRY)
+                        _logger.debug('%s postponed',job)
 
         except NothingToDoJob as err:
             if unicode(err):

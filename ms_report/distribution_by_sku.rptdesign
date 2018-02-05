@@ -74,7 +74,13 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
     </parameters>
     <data-sources>
         <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="676"
- extends="report_library.Data Source"/>
+ extends="report_library.Data Source">
+            <property name="odaDriverClass">org.postgresql.Driver</property>
+            <property name="odaURL">jdbc:postgresql://localhost:5432/mdg_uat_05012918</property>
+            <property name="odaUser">odoo</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">b3BlbnBncHdk</encrypted-property>
+            <property name="odaJndiName">java:comp/env/jdbc/ReportDB</property>
+        </oda-data-source>
     </data-sources>
     <data-sets>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="company" id="44"
@@ -238,7 +244,7 @@ if (params["status"].value == 'non_foc' )
 	group by product_id
 ),
 sale AS (
-	select count(inv.partner_id) as ach,product_id	
+	select count(distinct(inv.partner_id)) as ach,product_id	
 	from account_invoice inv,account_invoice_line inv_line
 	where inv.id=inv_line.invoice_id
 	and inv.state !='cancel'
