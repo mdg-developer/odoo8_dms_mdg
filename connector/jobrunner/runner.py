@@ -26,16 +26,8 @@
 """
 What is the job runner?
 -----------------------
-This is an alternative to connector workers, with the goal
-of resolving issues due to the polling nature of workers:
-
-* jobs do not start immediately even if there is a free connector worker,
-* connector workers may starve while other workers have too many jobs enqueued,
-* connector workers require another startup script,
-  making deployment more difficult
-
-It is fully compatible with the connector mechanism and only
-replaces workers.
+The job runner is the main process managing the dispatch of delayed jobs to
+available Odoo workers
 
 How does it work?
 -----------------
@@ -51,10 +43,36 @@ How does it work?
 How to use it?
 --------------
 
-* Set the following environment variables:
+* By default, the job runner will use Odoo's configuration:
 
-  - ``ODOO_CONNECTOR_CHANNELS=root:4`` (or any other channels configuration)
-  - optional if ``xmlrpc_port`` is not set: ``ODOO_CONNECTOR_PORT=8069``
+  - connect to Odoo via
+    - host ``xmlrpc_interface`` or ``localhost`` if unset
+    - port ``xmlrpc_port``, or ``8069`` if unset
+  - connect to the database via ``db_host`` and ``db_port``
+
+* To adjust these values, you can either use environment variables:
+
+  - ``ODOO_CONNECTOR_SCHEME=https``
+  - ``ODOO_CONNECTOR_HOST=load-balancer``
+  - ``ODOO_CONNECTOR_PORT=443``
+  - ``ODOO_CONNECTOR_HTTP_AUTH_USER=connector``
+  - ``ODOO_CONNECTOR_HTTP_AUTH_PASSWORD=s3cr3t``
+  - ``ODOO_CONNECTOR_JOBRUNNER_DB_HOST=master-db``
+  - ``ODOO_CONNECTOR_JOBRUNNER_DB_PORT=5432``
+
+* Or alternatively, you can add a ``[options-connector]`` section in Odoo's
+  configuration file, like this:
+
+.. code-block:: ini
+
+  [options-connector]
+  scheme = https
+  host = load-balancer
+  port = 443
+  http_auth_user = connector
+  http_auth_password = s3cr3t
+  jobrunner_db_host = master-db
+  jobrunner_db_port = 5432
 
 * Start Odoo with ``--load=web,web_kanban,connector``
   and ``--workers`` greater than 1. [2]_
@@ -67,10 +85,6 @@ How to use it?
   ...INFO...connector.jobrunner.runner: initializing database connections
   ...INFO...connector.jobrunner.runner: connector runner ready for db <dbname>
   ...INFO...connector.jobrunner.runner: database connections ready
-
-* Disable the "Enqueue Jobs" cron.
-
-* Do NOT start openerp-connector-worker.
 
 * Create jobs (eg using base_import_async) and observe they
   start immediately and in parallel.
@@ -110,9 +124,9 @@ Caveat
 """
 
 from contextlib import closing
+import datetime
 import logging
 import os
-import re
 import select
 import threading
 import time
@@ -122,6 +136,7 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 import requests
 
 import openerp
+from openerp.tools import config
 
 from .channels import ChannelManager, PENDING, ENQUEUED, NOT_DONE
 
@@ -131,11 +146,53 @@ ERROR_RECOVERY_DELAY = 5
 _logger = logging.getLogger(__name__)
 
 
-def _async_http_get(port, db_name, job_uuid):
+# Unfortunately, it is not possible to extend the Odoo
+# server command line arguments, so we resort to environment variables
+# to configure the runner (channels mostly).
+#
+# On the other hand, the odoo configuration file can be extended at will,
+# so we check it in addition to the environment variables.
+
+
+def _channels():
+    return (
+        os.environ.get('ODOO_CONNECTOR_CHANNELS') or
+        config.misc.get("options-connector", {}).get("channels") or
+        "root:1"
+    )
+
+
+def _datetime_to_epoch(dt):
+    # important: this must return the same as postgresql
+    # EXTRACT(EPOCH FROM TIMESTAMP dt)
+    return (dt - datetime.datetime(1970, 1, 1)).total_seconds()
+
+
+def _openerp_now():
+    dt = datetime.datetime.utcnow()
+    return _datetime_to_epoch(dt)
+
+
+def _connection_info_for(db_name):
+    db_or_uri, connection_info = openerp.sql_db.connection_info_for(db_name)
+
+    for p in ('host', 'port'):
+        cfg = (os.environ.get('ODOO_CONNECTOR_JOBRUNNER_DB_%s' % p.upper()) or
+               config.misc
+               .get("options-connector", {}).get('jobrunner_db_' + p))
+
+        if cfg:
+            connection_info[p] = cfg
+
+    return connection_info
+
+
+def _async_http_get(scheme, host, port, user, password, db_name, job_uuid):
     # Method to set failed job (due to timeout, etc) as pending,
     # to avoid keeping it as enqueued.
     def set_job_pending():
-        conn = psycopg2.connect(openerp.sql_db.dsn(db_name)[1])
+        connection_info = _connection_info_for(db_name)
+        conn = psycopg2.connect(**connection_info)
         conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         with closing(conn.cursor()) as cr:
             cr.execute(
@@ -148,12 +205,20 @@ def _async_http_get(port, db_name, job_uuid):
     #       if this was python3 I would be doing this with
     #       asyncio, aiohttp and aiopg
     def urlopen():
-        url = ('http://localhost:%s/connector/runjob?db=%s&job_uuid=%s' %
-               (port, db_name, job_uuid))
+        url = ('%s://%s:%s/connector/runjob?db=%s&job_uuid=%s' %
+               (scheme, host, port, db_name, job_uuid))
         try:
+            auth = None
+            if user:
+                auth = (user, password)
             # we are not interested in the result, so we set a short timeout
             # but not too short so we trap and log hard configuration errors
-            requests.get(url, timeout=1)
+            response = requests.get(url, timeout=1, auth=auth)
+
+            # raise_for_status will result in either nothing, a Client Error
+            # for HTTP Response codes between 400 and 500 or a Server Error
+            # for codes between 500 and 600
+            response.raise_for_status()
         except requests.Timeout:
             set_job_pending()
         except:
@@ -168,11 +233,11 @@ class Database(object):
 
     def __init__(self, db_name):
         self.db_name = db_name
-        self.conn = psycopg2.connect(openerp.sql_db.dsn(db_name)[1])
+        connection_info = _connection_info_for(db_name)
+        self.conn = psycopg2.connect(**connection_info)
         self.conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         self.has_connector = self._has_connector()
         if self.has_connector:
-            self.has_channel = self._has_queue_job_column('channel')
             self._initialize()
 
     def close(self):
@@ -194,15 +259,6 @@ class Database(object):
                     return False
                 else:
                     raise
-            return cr.fetchone()
-
-    def _has_queue_job_column(self, column):
-        if not self.has_connector:
-            return False
-        with closing(self.conn.cursor()) as cr:
-            cr.execute("SELECT 1 FROM information_schema.columns "
-                       "WHERE table_name=%s AND column_name=%s",
-                       ('queue_job', column))
             return cr.fetchone()
 
     def _initialize(self):
@@ -233,11 +289,10 @@ class Database(object):
             cr.execute("LISTEN connector")
 
     def select_jobs(self, where, args):
-        query = ("SELECT %s, uuid, id as seq, date_created, "
-                 "priority, eta, state "
+        query = ("SELECT channel, uuid, id as seq, date_created, "
+                 "priority, EXTRACT(EPOCH FROM eta), state "
                  "FROM queue_job WHERE %s" %
-                 ('channel' if self.has_channel else 'NULL',
-                  where))
+                 (where, ))
         with closing(self.conn.cursor()) as cr:
             cr.execute(query, args)
             return list(cr.fetchall())
@@ -253,9 +308,21 @@ class Database(object):
 
 class ConnectorRunner(object):
 
-    def __init__(self, port=8069, channel_config_string='root:1'):
+    def __init__(self,
+                 scheme='http',
+                 host='localhost',
+                 port=8069,
+                 user=None,
+                 password=None,
+                 channel_config_string=None):
+        self.scheme = scheme
+        self.host = host
         self.port = port
+        self.user = user
+        self.password = password
         self.channel_manager = ChannelManager()
+        if channel_config_string is None:
+            channel_config_string = _channels()
         self.channel_manager.simple_configure(channel_config_string)
         self.db_by_name = {}
         self._stop = False
@@ -266,9 +333,6 @@ class ConnectorRunner(object):
             db_names = openerp.tools.config['db_name'].split(',')
         else:
             db_names = openerp.service.db.exp_list(True)
-        dbfilter = openerp.tools.config['dbfilter']
-        if dbfilter and '%d' not in dbfilter and '%h' not in dbfilter:
-            db_names = [d for d in db_names if re.match(dbfilter, d)]
         return db_names
 
     def close_databases(self, remove_jobs=True):
@@ -294,14 +358,20 @@ class ConnectorRunner(object):
                 _logger.info('connector runner ready for db %s', db_name)
 
     def run_jobs(self):
-        now = openerp.fields.Datetime.now()
+        now = _openerp_now()
         for job in self.channel_manager.get_jobs_to_run(now):
             if self._stop:
                 break
             _logger.info("asking Odoo to run job %s on db %s",
                          job.uuid, job.db_name)
             self.db_by_name[job.db_name].set_job_enqueued(job.uuid)
-            _async_http_get(self.port, job.db_name, job.uuid)
+            _async_http_get(self.scheme,
+                            self.host,
+                            self.port,
+                            self.user,
+                            self.password,
+                            job.db_name,
+                            job.uuid)
 
     def process_notifications(self):
         for db in self.db_by_name.values():
@@ -328,6 +398,40 @@ class ConnectorRunner(object):
             for conn in conns:
                 conn.poll()
 
+        
+#         for db in self.db_by_name.values():
+#             if db.conn.notifies:
+#                 # something is going on in the queue, no need to wait
+#                 return
+#         # wait for something to happen in the queue_job tables
+#         # we'll select() on database connections and the stop pipe
+#         conns = [db.conn for db in self.db_by_name.values()]
+#         conns.append(self._stop_pipe[0])
+#         # look if the channels specify a wakeup time
+#         wakeup_time = self.channel_manager.get_wakeup_time()
+#         if not wakeup_time:
+#             # this could very well be no timeout at all, because
+#             # any activity in the job queue will wake us up, but
+#             # let's have a timeout anyway, just to be safe
+#             timeout = SELECT_TIMEOUT
+#         else:
+#             timeout = wakeup_time - _openerp_now()
+#         # wait for a notification or a timeout;
+#         # if timeout is negative (ie wakeup time in the past),
+#         # do not wait; this should rarely happen
+#         # because of how get_wakeup_time is designed; actually
+#         # if timeout remains a large negative number, it is most
+#         # probably a bug
+#         _logger.debug("select() timeout: %.2f sec", timeout)
+#         if timeout > 0:
+# #             conns, _, _ = select.select(conns, [], [], timeout)
+# #             if conns and not self._stop:
+# #                 for conn in conns:
+# #                     conn.poll()
+#             conns, _, _ = select.select(conns, [], [], timeout)
+#             if conns and not self._stop:
+#                 for conn in conns:
+#                     conn.poll()
     def stop(self):
         _logger.info("graceful stop requested")
         self._stop = True

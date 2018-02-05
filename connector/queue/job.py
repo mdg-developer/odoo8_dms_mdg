@@ -24,12 +24,11 @@ import functools
 import logging
 import uuid
 import sys
-from datetime import date, datetime, timedelta, MINYEAR
+from datetime import datetime, timedelta, MINYEAR
 from cPickle import dumps, UnpicklingError, Unpickler
 from cStringIO import StringIO
 
 import openerp
-from openerp.tools.translate import _
 
 from ..exception import (NotReadableJobError,
                          NoSuchJobError,
@@ -78,7 +77,6 @@ def whitelist_unpickle_global(fn_or_class):
 # register common types that might be used in job arguments
 whitelist_unpickle_global(datetime)
 whitelist_unpickle_global(timedelta)
-whitelist_unpickle_global(date)
 
 
 def _unpickle(pickled):
@@ -135,18 +133,17 @@ class OpenERPJobStorage(JobStorage):
     """ Store a job on OpenERP """
 
     _job_model_name = 'queue.job'
-    _worker_model_name = 'queue.worker'
 
     def __init__(self, session):
         super(OpenERPJobStorage, self).__init__()
         self.session = session
         self.job_model = self.session.env[self._job_model_name]
-        self.worker_model = self.session.env[self._worker_model_name]
         assert self.job_model is not None, (
             "Model %s not found" % self._job_model_name)
 
     def enqueue(self, func, model_name=None, args=None, kwargs=None,
-                priority=None, eta=None, max_retries=None, description=None):
+                priority=None, eta=None, max_retries=None, description=None,
+                channel=None):
         """Create a Job and enqueue it in the queue. Return the job uuid.
 
         This expects the arguments specific to the job to be already extracted
@@ -155,17 +152,18 @@ class OpenERPJobStorage(JobStorage):
         """
         new_job = Job(func=func, model_name=model_name, args=args,
                       kwargs=kwargs, priority=priority, eta=eta,
-                      max_retries=max_retries, description=description)
+                      max_retries=max_retries, description=description,
+                      channel=channel)
         new_job.user_id = self.session.uid
         if 'company_id' in self.session.context:
             company_id = self.session.context['company_id']
         else:
             company_model = self.session.env['res.company']
             company_model = company_model.sudo(new_job.user_id)
-            company_id = company_model._company_default_get(
-                object='queue.job',
-                field='company_id')
-        new_job.company_id = company_id
+            #company_id = company_model._company_default_get(
+            #    object='queue.job',
+            #    field='company_id').id
+        #new_job.company_id = company_id
         self.store(new_job)
         return new_job.uuid
 
@@ -176,33 +174,39 @@ class OpenERPJobStorage(JobStorage):
         model_name = kwargs.pop('model_name', None)
         max_retries = kwargs.pop('max_retries', None)
         description = kwargs.pop('description', None)
+        channel = kwargs.pop('channel', None)
 
         return self.enqueue(func, model_name=model_name,
                             args=args, kwargs=kwargs,
                             priority=priority,
                             max_retries=max_retries,
                             eta=eta,
-                            description=description)
+                            description=description,
+                            channel=channel)
 
     def exists(self, job_uuid):
         """Returns if a job still exists in the storage."""
         return bool(self.db_record_from_uuid(job_uuid))
 
     def db_record_from_uuid(self, job_uuid):
-        model = self.job_model.sudo().with_context(active_test=False)
+        model = self.job_model.sudo()
         record = model.search([('uuid', '=', job_uuid)], limit=1)
         if record:
             return record.with_env(self.job_model.env)
+    
+    def exists_deadlock(self,job_uuid):
+        deadlock = False
+        model = self.job_model.sudo()
+        #self.env.cr.execute("select * from queue_job where state in ('started','failed','pending') and result like 'dead %'")
+        #record =self.env.cr.fetchall()
+        
+        record = model.search([('state', 'in', ['started','pending']),('result','=ilike','error')], limit=1)
+        if record:
+            deadlock = True
+        return deadlock
 
     def db_record(self, job_):
         return self.db_record_from_uuid(job_.uuid)
-
-    def _worker_id(self, worker_uuid):
-        worker = self.worker_model.sudo().search(
-            [('uuid', '=', worker_uuid)],
-            limit=1)
-        if worker:
-            return worker.id
 
     def store(self, job_):
         """ Store the Job """
@@ -220,7 +224,6 @@ class OpenERPJobStorage(JobStorage):
                 'eta': False,
                 'func_name': job_.func_name,
                 }
-
         dt_to_string = openerp.fields.Datetime.to_string
         if job_.date_enqueued:
             vals['date_enqueued'] = dt_to_string(job_.date_enqueued)
@@ -231,15 +234,8 @@ class OpenERPJobStorage(JobStorage):
         if job_.eta:
             vals['eta'] = dt_to_string(job_.eta)
 
-        if job_.canceled:
-            vals['active'] = False
-
-        if job_.worker_uuid:
-            vals['worker_id'] = self._worker_id(job_.worker_uuid)
-        else:
-            vals['worker_id'] = False
-
         db_record = self.db_record(job_)
+
         if db_record:
             db_record.write(vals)
         else:
@@ -251,7 +247,10 @@ class OpenERPJobStorage(JobStorage):
                          'model_name': (job_.model_name if job_.model_name
                                         else False),
                          })
-
+            # if the channel is not specified, lets the job_model compute
+            # the right one to use
+            if job_.channel:
+                vals.update({'forced_channel': job_.channel})
             vals['func'] = dumps((job_.func_name,
                                   job_.args,
                                   job_.kwargs))
@@ -276,7 +275,7 @@ class OpenERPJobStorage(JobStorage):
 
         job_ = Job(func=func_name, args=args, kwargs=kwargs,
                    priority=stored.priority, eta=eta, job_uuid=stored.uuid,
-                   description=stored.name)
+                   description=stored.name, channel=stored.channel)
 
         if stored.date_created:
             job_.date_created = dt_from_string(stored.date_created)
@@ -294,12 +293,9 @@ class OpenERPJobStorage(JobStorage):
         job_.result = stored.result if stored.result else None
         job_.exc_info = stored.exc_info if stored.exc_info else None
         job_.user_id = stored.user_id.id if stored.user_id else None
-        job_.canceled = not stored.active
         job_.model_name = stored.model_name if stored.model_name else None
         job_.retry = stored.retry
         job_.max_retries = stored.max_retries
-        if stored.worker_id:
-            job_.worker_uuid = stored.worker_id.uuid
         if stored.company_id:
             job_.company_id = stored.company_id.id
         return job_
@@ -311,10 +307,6 @@ class Job(object):
     .. attribute:: uuid
 
         Id (UUID) of the job.
-
-    .. attribute:: worker_uuid
-
-        When the job is enqueued, UUID of the worker.
 
     .. attribute:: state
 
@@ -397,16 +389,19 @@ class Job(object):
         Estimated Time of Arrival of the job. It will not be executed
         before this date/time.
 
-    .. attribute:: canceled
 
-        True if the job has been canceled.
+    .. attribute:: channel
+
+        The complete name of the channel to use to process the job. If
+        provided it overrides the one defined on the job's function.
+
 
     """
 
     def __init__(self, func=None, model_name=None,
                  args=None, kwargs=None, priority=None,
                  eta=None, job_uuid=None, max_retries=None,
-                 description=None):
+                 description=None, channel=None):
         """ Create a Job
 
         :param func: function to execute
@@ -484,8 +479,7 @@ class Job(object):
         self.company_id = None
         self._eta = None
         self.eta = eta
-        self.canceled = False
-        self.worker_uuid = None
+        self.channel = channel
 
     def __cmp__(self, other):
         if not isinstance(other, Job):
@@ -504,7 +498,6 @@ class Job(object):
         :param session: session to execute the job
         :type session: ConnectorSession
         """
-        assert not self.canceled, "Canceled job"
         with session.change_user(self.user_id):
             self.retry += 1
             try:
@@ -581,17 +574,15 @@ class Job(object):
         self.state = PENDING
         self.date_enqueued = None
         self.date_started = None
-        self.worker_uuid = None
         if reset_retry:
             self.retry = 0
         if result is not None:
             self.result = result
 
-    def set_enqueued(self, worker):
+    def set_enqueued(self):
         self.state = ENQUEUED
         self.date_enqueued = datetime.now()
         self.date_started = None
-        self.worker_uuid = worker.uuid
 
     def set_started(self):
         self.state = STARTED
@@ -601,23 +592,16 @@ class Job(object):
         self.state = DONE
         self.exc_info = None
         self.date_done = datetime.now()
-        self.worker_uuid = None
         if result is not None:
             self.result = result
 
     def set_failed(self, exc_info=None):
         self.state = FAILED
-        self.worker_uuid = None
         if exc_info is not None:
             self.exc_info = exc_info
 
     def __repr__(self):
         return '<Job %s, priority:%d>' % (self.uuid, self.priority)
-
-    def cancel(self, msg=None):
-        self.canceled = True
-        result = msg if msg is not None else _('Canceled. Nothing to do.')
-        self.set_done(result=result)
 
     def _get_retry_seconds(self, seconds=None):
         retry_pattern = self.func.retry_pattern
@@ -704,6 +688,8 @@ def job(func=None, default_channel='root', retry_pattern=None):
                      intended to discriminate job instances
                      (Default is the func.__doc__ or
                       'Function %s' % func.__name__)
+    * channel : The complete name of the channel to use to process the job. If
+                provided it overrides the one defined on the job's function.
 
     Example:
 

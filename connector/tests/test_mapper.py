@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import unittest2
+import unittest
 import mock
 import openerp.tests.common as common
 
@@ -25,7 +25,7 @@ from openerp.addons.connector.connector import ConnectorEnvironment
 from openerp.addons.connector.session import ConnectorSession
 
 
-class test_mapper(unittest2.TestCase):
+class test_mapper(unittest.TestCase):
     """ Test Mapper """
 
     def test_mapping_decorator(self):
@@ -570,10 +570,11 @@ class test_mapper_binding(common.TransactionCase):
             direct = [(backend_to_m2o('country'), 'country_id')]
 
         record = {'country': 10}
-        self.country_binder.to_openerp.return_value = 44
+        ch = self.env.ref('base.ch')
+        self.country_binder.to_openerp.return_value = ch
         mapper = MyMapper(self.connector_env)
         map_record = mapper.map_record(record)
-        self.assertEqual(map_record.values(), {'country_id': 44})
+        self.assertEqual(map_record.values(), {'country_id': ch.id})
         self.country_binder.to_openerp.assert_called_once_with(
             10, unwrap=False)
 

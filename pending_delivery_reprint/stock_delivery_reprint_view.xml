@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="view_tablet_sync_log_form" model="ir.ui.view">
+			<field name="name">Pending Delivery Reprint Form</field>
+			<field name="model">stock.delivery.reprint</field>
+			<field name="arch" type="xml">
+				<form string="Reprint Count" version="7.0">
+					<sheet>
+						<group>
+							<field name="reprint_date" />
+							<field name="section_id" class="oe_inline" />
+							<field name="branch_id" />
+							<field name="presaleorder_id" />
+							<field name="partner_id" />
+							<field name="customer_code" />
+							<field name="total_amount" />
+							<field name="reprint_count" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="view_tablet_sync_log_tree" model="ir.ui.view">
+			<field name="name">Pending Delivery Reprint Tree</field>
+			<field name="model">stock.delivery.reprint</field>
+			<field name="arch" type="xml">
+				<tree string="Sync Log" default_order="reprint_date desc">
+					<field name="reprint_date" />
+					<field name="section_id" class="oe_inline" />
+					<field name="branch_id" />
+					<field name="presaleorder_id" />
+					<field name="partner_id" />
+					<field name="customer_code" />
+					<field name="total_amount" />
+					<field name="reprint_count" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_tablet_sync_filter" model="ir.ui.view">
+			<field name="name">Pending Delivery Reprint</field>
+			<field name="model">stock.delivery.reprint</field>
+			<field name="arch" type="xml">
+				<search string="Search Stock Delivery Reprint Count">
+					<group expand="0" string="Group By...">
+						<filter string="Sales Team" icon="terp-partner" domain="[]"
+							context="{'group_by':'section_id'}" />
+						<filter string="Date" icon="terp-partner" domain="[]"
+							context="{'group_by':'reprint_date'}" />
+						<filter string="Branch" icon="terp-partner" domain="[]"
+							context="{'group_by':'branch_id'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<!-- Action -->
+		<record id="action_tablet_sync_log" model="ir.actions.act_window">
+			<field name="name">Pending Delivery Reprint</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">stock.delivery.reprint</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_tablet_sync_log_tree" />
+			<field name="search_view_id" ref="view_tablet_sync_filter" />
+
+		</record>
+
+		<!-- First level menu -->
+		<menuitem id="menu_tablet_print_import" name="Pending Delivery Reprint"
+			action="action_tablet_sync_log" sequence="2"
+			parent="menu_pending_delivery_menu_parent" />
+
+	</data>
+</openerp>

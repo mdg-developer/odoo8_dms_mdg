@@ -23,10 +23,8 @@ import hashlib
 import logging
 import struct
 
-from contextlib import contextmanager
-from openerp import models, fields
+from openerp import models, fields, tools
 
-from .deprecate import log_deprecate, DeprecatedClass
 from .exception import RetryableJobError
 
 _logger = logging.getLogger(__name__)
@@ -49,11 +47,6 @@ def _get_openerp_module_name(module_path):
     else:
         module_name = module_parts[0]
     return module_name
-
-
-def install_in_connector():
-    log_deprecate("This call to 'install_in_connector()' has no effect and is "
-                  "not required.")
 
 
 def is_module_installed(env, module_name):
@@ -83,11 +76,6 @@ class MetaConnectorUnit(type):
     it for the Model classes. It is then used to filter them according to
     the state of the module (installed or not).
     """
-
-    @property
-    def model_name(cls):
-        log_deprecate('renamed to for_model_names')
-        return cls.for_model_names
 
     @property
     def for_model_names(cls):
@@ -138,11 +126,6 @@ class ConnectorUnit(object):
         self.backend = self.connector_env.backend
         self.backend_record = self.connector_env.backend_record
         self.session = self.connector_env.session
-
-    @property
-    def environment(self):
-        log_deprecate('renamed to connector_env')
-        return self.connector_env
 
     @classmethod
     def match(cls, session, model):
@@ -212,24 +195,10 @@ class ConnectorUnit(object):
 
         return env.get_connector_unit(connector_unit_class)
 
-    def get_connector_unit_for_model(self, connector_unit_class, model=None):
-        """ Deprecated in favor of :meth:`~unit_for` """
-        log_deprecate('renamed to unit_for()')
-        return self.unit_for(connector_unit_class, model=model)
-
     def binder_for(self, model=None):
         """ Returns an new instance of the correct ``Binder`` for
         a model """
         return self.unit_for(Binder, model)
-
-    def get_binder_for_model(self, model=None):
-        """ Returns an new instance of the correct ``Binder`` for
-        a model
-
-        Deprecated, use ``binder_for`` now.
-        """
-        log_deprecate('renamed to binder_for()')
-        return self.binder_for(model=model)
 
     def advisory_lock_or_retry(self, lock, retry_seconds=1):
         """ Acquire a Postgres transactional advisory lock or retry job
@@ -329,18 +298,6 @@ class ConnectorEnvironment(object):
     def env(self):
         return self.session.env
 
-    @contextmanager
-    def set_lang(self, code):
-        """ Change the working language in the environment.
-
-        It changes the ``lang`` key in the session's context.
-
-
-        """
-        raise DeprecationWarning('ConnectorEnvironment.set_lang has been '
-                                 'deprecated. session.change_context should '
-                                 'be used instead.')
-
     def get_connector_unit(self, base_class):
         """ Searches and returns an instance of the
         :py:class:`~connector.connector.ConnectorUnit` for the current
@@ -379,9 +336,6 @@ class ConnectorEnvironment(object):
         else:
             return cls(backend_record, session, model)
 
-Environment = DeprecatedClass('Environment',
-                              ConnectorEnvironment)
-
 
 class Binder(ConnectorUnit):
     """ For one record of a model, capable to find an external or
@@ -397,6 +351,9 @@ class Binder(ConnectorUnit):
     _model_name = None  # define in sub-classes
     _external_field = 'external_id'  # override in sub-classes
     _backend_field = 'backend_id'  # override in sub-classes
+    # TODO 2016-10-14: rename this to `odoo_id` for v10.
+    # For existing implementations you'll have to override
+    # `_openerp_field` according to your internal id field.
     _openerp_field = 'openerp_id'  # override in sub-classes
     _sync_date_field = 'sync_date'  # override in sub-classes
 
@@ -412,10 +369,12 @@ class Binder(ConnectorUnit):
         :rtype: recordset
         """
         bindings = self.model.with_context(active_test=False).search(
-            [(self._external_field, '=', str(external_id)),
+            [(self._external_field, '=', tools.ustr(external_id)),
              (self._backend_field, '=', self.backend_record.id)]
         )
         if not bindings:
+            if unwrap:
+                return getattr(self.model.browse(), self._openerp_field)
             return self.model.browse()
         bindings.ensure_one()
         if unwrap:
@@ -460,7 +419,7 @@ class Binder(ConnectorUnit):
         :type binding_id: int
         """
         # Prevent False, None, or "", but not 0
-        assert (external_id or external_id == 0) and binding_id, (
+        assert (external_id or external_id is 0) and binding_id, (
             "external_id or binding_id missing, "
             "got: %s, %s" % (external_id, binding_id)
         )
@@ -469,7 +428,7 @@ class Binder(ConnectorUnit):
         if not isinstance(binding_id, models.BaseModel):
             binding_id = self.model.browse(binding_id)
         binding_id.with_context(connector_no_export=True).write(
-            {self._external_field: str(external_id),
+            {self._external_field: tools.ustr(external_id),
              self._sync_date_field: now_fmt,
              })
 
@@ -487,10 +446,10 @@ class Binder(ConnectorUnit):
         else:
             binding = self.model.browse(binding_id)
 
-        openerp_record = getattr(binding, self._openerp_field)
+        record = getattr(binding, self._openerp_field)
         if browse:
-            return openerp_record
-        return openerp_record.id
+            return record
+        return record.id
 
     def unwrap_model(self):
         """ For a binding model, gives the normal model.
