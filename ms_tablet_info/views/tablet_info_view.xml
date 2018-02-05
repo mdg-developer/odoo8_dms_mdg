@@ -29,6 +29,8 @@
 							context="{'group_by':'sale_team_id'}" />
 						<filter name="date" string="Date" domain="[]"
 							context="{'group_by':'date'}" />
+						<filter string="Branch" icon="terp-partner" domain="[]"
+							context="{'group_by':'branch_id'}" />
 					</group>
 				</search>
 			</field>
@@ -46,6 +48,7 @@
 					<field name="sale_team_id" />
 					<field name="date" />
 					<field name="hotline" />
+					<field name="branch_id" />
 				</tree>
 
 			</field>
@@ -64,7 +67,7 @@
 								<field name="type" />
 								<field name="sale_team_id" />
 								<field name ="is_testing"/>
-
+								<field name="branch_id" />
 							</group>
 							<group>
 							    <field name="token" />
