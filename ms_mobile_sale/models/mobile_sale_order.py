@@ -419,8 +419,8 @@ class mobile_sale_order(osv.osv):
                     product_uom_qty = bigger_qty * p_qty  
                     user_data = self.pool.get('res.users').browse(cursor, user, user, context=context)
                     comps = [x.id for x in user_data.company_ids]
-                    for comp in comps:            
-                        procurement_obj.run_scheduler(cursor, user, use_new_cursor=cursor.dbname, company_id = comp, context=context)                                      
+#                     for comp in comps:            
+#                         procurement_obj.run_scheduler(cursor, user, use_new_cursor=cursor.dbname, company_id = comp, context=context)                                      
                     cursor.execute("select COALESCE(sum(qty),0) from stock_quant where location_id  in  %s and product_id =%s and reservation_id is null", (tuple(location_ids),tuple(product_id),))      
                     qty = cursor.fetchone()[0]   
                     if uom:
