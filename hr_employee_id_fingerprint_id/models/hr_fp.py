@@ -49,7 +49,9 @@ class hr_employee(osv.osv):
                 section_id = section_obj.browse(cr,uid,section,context=context)
                 if section_id:
                     section_code = section_id.parent_section_id.code or section_id.code
-                    vals['employee_id'] = section_code +'-'+ txnCode
+                   # vals['employee_id'] = section_code +'-'+ txnCode
+                    vals['employee_id'] =  txnCode
+                   
                     vals['fingerprint_id'] = txnCode   
               
         new_id = super(hr_employee, self).create(cr, uid, vals, context=context)
