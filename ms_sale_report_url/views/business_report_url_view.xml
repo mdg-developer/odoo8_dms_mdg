@@ -63,7 +63,7 @@
 			<field name="view_id" ref="view_business_report_tree" />
 		</record>
 
-		<menuitem id="action_report_url_id" action="menu_business_report_action"
+		<menuitem id="action_business_report_url_id" action="menu_business_report_action"
 			parent="base.menu_mobile_sale_report_menu" sequence="52" />
 	</data>
 </openerp>

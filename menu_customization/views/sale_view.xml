@@ -465,6 +465,9 @@
 		<menuitem id='ms_sale_report_url.action_report_url_id'
 			action="ms_sale_report_url.menu_sale_report_action" parent="menu_sales_report_menu"
 			sequence="2" />
+		<menuitem id='ms_sale_report_url.action_business_report_url_id'
+			action="ms_sale_report_url.menu_business_report_action" parent="menu_sales_report_menu"
+			sequence="2" />
 		<menuitem id="ms_customer_visit.menu_visit_partner_form"
 			parent="menu_sales_report_menu" action="ms_customer_visit.action_visit_partner_form1"
 			sequence="3" />
