@@ -173,7 +173,7 @@ class account_voucher(osv.osv):
                 
                 
             vals = self.onchange_payment_rate_currency(cr, uid, ids, payment_rate_currency_id, payment_rate, payment_rate_currency_id, date, amount, company_id, context=context)
-            cur_id = currency_obj.browse(cr, uid, payment_rate_currency_id, context=ctx)
+            cur_id = currency_obj.browse(cr, uid, currency_id, context=ctx)
             if cur_id:
                 tolerance = cur_id.tolerance
             rate = self.get_rate(cr, uid, ids, currency_id, date, context=context)
@@ -325,7 +325,12 @@ class account_voucher(osv.osv):
                 tmp_fore_total = line.move_line_id.amount_currency
                 if tmp_fore_total <= 0:
                     tmp_fore_total = tmp_fore_total * -1
-                tmp_rate =  tmp_mmk_total / tmp_fore_total 
+                if tmp_fore_total == 0 or tmp_fore_total == -0:
+                    tmp_fore_total = 1
+                    tmp_rate = 1
+                else:
+                    tmp_rate =  tmp_mmk_total / tmp_fore_total        
+                #tmp_rate =  tmp_mmk_total / tmp_fore_total 
                 if voucher.voucher_rate > 1: 
                     v_rate = voucher.voucher_rate
                     voucher.payment_rate = voucher.voucher_rate
