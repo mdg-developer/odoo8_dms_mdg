@@ -53,7 +53,7 @@
 					</div>					
 				</xpath>
 				
-				<xpath expr="//field[@name='ean13']" position="replace">
+				<xpath expr="//field[@name='ean13']" position="after">
 					<field name="barcode_no"/>								
 				</xpath>
 				
