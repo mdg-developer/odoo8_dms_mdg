@@ -12,6 +12,21 @@
 				</field>
 			</field>
 		</record>
+		
+		<record model="ir.ui.view"  id="view_sale_team_form_filter_inherit">
+			<field name="name">Case Sections - Search</field>
+			<field name="model">crm.case.section</field>
+			<field name="inherit_id" ref="sales_team.crm_case_section_salesteams_search" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//search/group" position="inside">
+						
+							<filter string="Branch" domain="[]" context="{'group_by':'branch_id'}" />
+					</xpath>
+				</data>
+			</field>
+		</record>
+		
 	</data>
 </openerp>
 				
