@@ -318,6 +318,12 @@ class pre_sale_order(osv.osv):
                                               'from_date':pre_promo_data.from_date,
                                               'to_date':pre_promo_data.to_date,
                                               'manual':pre_promo_data.manual,
+                                              'product_id':pre_promo_data.product_id.id,
+                                               'is_foc': pre_promo_data.is_foc,
+                                              'is_discount':pre_promo_data.is_discount,
+                                              'foc_qty': pre_promo_data.foc_qty,
+                                              'discount_amount': pre_promo_data.discount_amount,
+                                              'discount_percent': pre_promo_data.discount_percent,
                                                           }
                             saleOrderPromoLineObj.create(cr, uid, so_promo_line_result, context=context)                                   
                     if so_id and  so_state != 'cancel':

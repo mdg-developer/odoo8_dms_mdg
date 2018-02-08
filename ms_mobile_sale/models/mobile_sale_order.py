@@ -607,6 +607,12 @@ class mobile_sale_order(osv.osv):
                                               'from_date':mso_promo_data.from_date,
                                               'to_date':mso_promo_data.to_date,
                                               'manual':mso_promo_data.manual,
+                                               'product_id':mso_promo_data.product_id.id,
+                                               'is_foc': mso_promo_data.is_foc,
+                                              'is_discount':mso_promo_data.is_discount,
+                                              'foc_qty': mso_promo_data.foc_qty,
+                                              'discount_amount': mso_promo_data.discount_amount,
+                                              'discount_percent': mso_promo_data.discount_percent,
                                                           }
                             msoPromoLineObj.create(cr, uid, mso_promo_line_result, context=context)                    
                     if soId and ms_ids.order_line:
