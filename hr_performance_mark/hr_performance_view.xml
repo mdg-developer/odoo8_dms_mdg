@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<openerp>
+	<data>
+
+		<record id="hr_performance_mark_view" model="ir.ui.view">
+			<field name="name">hr.performance.mark.tree</field>
+			<field name="model">hr.performance.mark</field>
+			<field name="arch" type="xml">
+				<tree string="Performance Mark Tree">
+					<field name="badge_id" />
+					<field name="employee_id" />
+					<field name="department_id" />
+					<field name="section_id" />
+					<field name="code" />
+					<field name="date" />
+					<field name="mark" />
+					<field name="note" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="hr_performance_mark_form_view" model="ir.ui.view">
+			<field name="name">hr.performance.mark.form</field>
+			<field name="model">hr.performance.mark</field>
+			<field name="arch" type="xml">
+				<form string="Performance Mark" version="7.0">
+					<sheet>
+						<group>
+							<group>
+								<field name="employee_id" on_change="onchange_employee_id(employee_id)" />
+								<field name="badge_id" />
+								<field name="department_id" />
+								<field name="section_id" />
+								<field name="job_id" />
+							</group>
+							<group>
+								<field name="code" />
+								<field name="date" />
+								<field name="mark" />
+								<field name="note" />
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="view_hr_performance_mark_filter" model="ir.ui.view">
+			<field name="name">HR Performance Mark</field>
+			<field name="model">hr.performance.mark</field>
+			<field name="arch" type="xml">
+				<search string="HR Performance Mark">
+					<field name="employee_id"/>
+					<field name="badge_id" />
+					<group expand="0" string="Group By">
+						<filter string="Employee" icon="terp-personal" domain="[]"
+							context="{'group_by':'employee_id'}" />
+						<filter string="Department" icon="terp-personal+" domain="[]"
+							context="{'group_by':'department_id'}" />
+						<filter string="Section" icon="terp-personal+" domain="[]"
+							context="{'group_by':'section_id'}" />
+						<filter string="Date" icon="terp-personal+" domain="[]"
+							context="{'group_by':'date'}" />
+						<filter string="Position" icon="terp-gtk-select-all"
+							domain="[]" context="{'group_by':'job_id'}" />
+						<filter string="Reason" icon="terp-gtk-select-all"
+							domain="[]" context="{'group_by':'note'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<record id="open_hr_performance_mark" model="ir.actions.act_window">
+			<field name="name">Performance Mark</field>
+			<field name="res_model">hr.performance.mark</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem id="menu_hr_performance_mark_parent" parent='hr.menu_hr_root'
+			name="Performance Marking" sequence="18" />
+
+		<menuitem id="menu_hr_performance_mark" parent="menu_hr_performance_mark_parent"
+			action="open_hr_performance_mark" sequence="1" />
+
+	</data>
+</openerp>
