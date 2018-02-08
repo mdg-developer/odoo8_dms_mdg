@@ -354,7 +354,8 @@ class hr_payslip_customize(osv.osv):
         quality_value =cr.fetchone()[0]       
         cr.execute(" select COALESCE(sum(amount),0) from hr_efficiency_value where employee_id= %s and code ='PFB' and date between %s and %s",(employee_id,date_from, date_to,))      
         performance_bonus =cr.fetchone()[0]               
-                 
+        cr.execute(" select COALESCE(sum(mark),0) from hr_performance_mark where employee_id= %s and code ='MARK' and date between %s and %s",(employee_id,date_from, date_to,))      
+        performance_marking=cr.fetchone()[0]                                
         for contract in contract_obj.browse(cr, uid, contract_ids, context=context):
             for rule in rule_obj.browse(cr, uid, sorted_rule_ids, context=context):
                 if rule.input_ids:
@@ -554,7 +555,14 @@ class hr_payslip_customize(osv.osv):
                                'code': input.code,
                                'amount':performance_bonus,
                                'contract_id': contract.id,
-                              }                                                                                                                                                                                                                                                                                             
+                              }      
+                        if input.code == 'MARK':
+                            inputs = {
+                               'name': input.name,
+                               'code': input.code,
+                               'amount':performance_marking,
+                               'contract_id': contract.id,
+                              }                                                                                                                                                                                                                                                                                                                            
                         res += [inputs]
         return res
     
