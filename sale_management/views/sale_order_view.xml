@@ -156,21 +156,33 @@
 				<xpath expr="/form/sheet/notebook/page[@string='Order Lines']"
 					position="after">
 					<page name='promo_lines' string="Promotion Lines">
-						<field name="promos_line_ids" readonly="1">
+						<field name="promos_line_ids" attrs="{'readonly':[('state','!=','draft')]}">
 							<form string="Promotion Lines" version="7.0">
 								<group>
 									<group>
 										<field name="pro_id" on_change="onchange_promo_id(pro_id)" />
 										<field name="from_date" />
 										<field name="to_date" />
+										<field name="product_id" />
+										<field name="is_foc" />
+										<field name="is_discount" />
+										<field name="foc_qty" />
+										<field name="discount_amount" />
+										<field name="discount_percent" />										
 										<field name="manual" />
 									</group>
 								</group>
 							</form>
-							<tree string="Promotion Lines" editable="bottom" readonly="1">
+							<tree string="Promotion Lines" editable="bottom" >
 								<field name="pro_id" on_change="onchange_promo_id(pro_id)" />
 								<field name="from_date" />
 								<field name="to_date" />
+								<field name="product_id" />
+								<field name="is_foc" />
+								<field name="is_discount" />
+								<field name="foc_qty" />
+								<field name="discount_amount" />
+								<field name="discount_percent" />														
 								<field name="manual" />
 							</tree>
 						</field>

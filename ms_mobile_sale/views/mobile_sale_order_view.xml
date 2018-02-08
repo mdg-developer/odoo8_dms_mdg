@@ -146,6 +146,12 @@
 												<field name="pro_id" on_change='onchange_promo_id(pro_id)' />
 												<field name="from_date" />
 												<field name="to_date" />
+												<field name="product_id" />
+												<field name="is_foc" />
+												<field name="is_discount" />
+												<field name="foc_qty" />
+												<field name="discount_amount" />
+												<field name="discount_percent" />
 												<field name="manual" />
 
 											</group>
@@ -158,6 +164,12 @@
 										<field name="pro_id" on_change='onchange_promo_id(pro_id)' />
 										<field name="from_date" />
 										<field name="to_date" />
+										<field name="product_id" />
+										<field name="is_foc" />
+										<field name="is_discount" />
+										<field name="foc_qty" />
+										<field name="discount_amount" />
+										<field name="discount_percent" />
 										<field name="manual" />
 
 									</tree>

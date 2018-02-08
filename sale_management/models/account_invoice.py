@@ -94,9 +94,17 @@ class sale_order_promotion_line(osv.osv):
               'from_date':fields.datetime('From Date'),
               'to_date':fields.datetime('To Date'),
               'manual':fields.boolean('Manual'),
+              'product_id': fields.many2one('product.product', 'Product',readonly=False),
+              'is_foc': fields.boolean('Is FOC',readonly=False),
+              'is_discount': fields.boolean('Is Discount',readonly=False),
+              'foc_qty': fields.float('Foc Qty',readonly=False),
+              'discount_amount': fields.float('Discount Amount',readonly=False),
+              'discount_percent': fields.float('Discount Percent',readonly=False),                             
               }
     _defaults = {
         'manual':False,
+        'is_foc':False,
+        'is_discount':False,              
     }
     
     def onchange_promo_id(self, cr, uid, ids, pro_id, context=None):
