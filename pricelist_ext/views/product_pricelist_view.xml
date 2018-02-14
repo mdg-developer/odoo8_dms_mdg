@@ -5,9 +5,9 @@
             <field name="name">product_pricelist_new_tree</field>
             <field name="model">product.pricelist.new</field>
             <field name="arch" type="xml">
-                <tree string="Products Pricelist Items">
-                	<field name="pricelist_version"/>
-                	<field name="pricelist"/>                      
+                <tree string="Products Pricelist Items">                	
+                	<field name="pricelist"/>  
+                	<field name="pricelist_version"/>                    
                     <field name="product_id"/>
                     <field name="product_tmpl_id"/>                    
                     <field name="product_uom_id"/>     
@@ -42,7 +42,7 @@
 					<field name="pricelist" />
 					<field name="pricelist_version" />					
 					<group expand="0" string="Group By">
-						<filter string="Main Pricelist Requisition" icon="terp-personal"
+						<filter string="Main Pricelist" icon="terp-personal"
 							domain="[]" context="{'group_by':'pricelist'}" />
 						<filter string="Pricelist Version" icon="terp-personal+" domain="[]"
 							context="{'group_by':'pricelist_version'}" />						
