@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="product_pricelist_new_tree_view" model="ir.ui.view">
+            <field name="name">product_pricelist_new_tree</field>
+            <field name="model">product.pricelist.new</field>
+            <field name="arch" type="xml">
+                <tree string="Products Pricelist Items">
+                	<field name="pricelist_version"/>
+                	<field name="pricelist"/>                      
+                    <field name="product_id"/>
+                    <field name="product_tmpl_id"/>                    
+                    <field name="product_uom_id"/>     
+	                <field name="price_surcharge" />                    
+                </tree>
+            </field>
+        </record>
+		
+		 <record id="product_pricelist_new_form_view" model="ir.ui.view">
+            <field name="name">product_pricelist_new_form</field>
+            <field name="model">product.pricelist.new</field>
+            <field name="arch" type="xml">
+                <form string="Products Pricelist Items">                   
+					<group>
+						<group col="4">
+							<field name="pricelist"/>
+							<field name="pricelist_version"/>							
+	                        <field name="product_id"/>
+	                        <field name="product_tmpl_id"/>	                       
+	                        <field name="product_uom_id"/>     
+	                        <field name="price_surcharge" />                  
+                    	</group>                    
+					</group>                    
+                 </form>
+            </field>
+        </record>
+		<record id="view_product_pricelist_new_filter" model="ir.ui.view">
+			 <field name="name">product_pricelist_new_form_search</field>
+            <field name="model">product.pricelist.new</field>
+            <field name="arch" type="xml">
+				<search string="Pricelist Item Search">
+					<field name="pricelist" />
+					<field name="pricelist_version" />					
+					<group expand="0" string="Group By">
+						<filter string="Main Pricelist Requisition" icon="terp-personal"
+							domain="[]" context="{'group_by':'pricelist'}" />
+						<filter string="Pricelist Version" icon="terp-personal+" domain="[]"
+							context="{'group_by':'pricelist_version'}" />						
+					</group>
+				</search>
+			</field>
+		</record>
+		<record id="product_pricelist_new_action1" model="ir.actions.act_window">
+			<field name="name">Pricelist Item</field>
+			<field name="res_model">product.pricelist.new</field>			
+			<field name="view_type">form</field>
+        	<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="product_pricelist_new_tree_view" /> 
+			<field name="search_view_id" ref="view_product_pricelist_new_filter" />
+			<field name="context">{ 'tree_view_ref':'product_pricelist_new_tree_view'}</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to register new price list.
+				</p>
+			</field>
+		</record>
+		
+		<menuitem id="pricelist_ext_menu_1test" name="Pricelist Item"
+            parent="product.menu_product_pricelist_main" action="product_pricelist_new_action1" sequence="3"/>
+
+	</data>
+</openerp>
