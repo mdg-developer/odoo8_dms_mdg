@@ -13,6 +13,7 @@ class product_pricelist_new(osv.osv):
                 'product_tmpl_id': fields.many2one('product.template', 'Product Template'),                
                 'product_uom_id':fields.many2one('product.uom', string='Product UoM'),
                 'price_surcharge': fields.float('Price Surcharge'),
+                'price_discount': fields.float('Price Discount', digits=(16,4)),
             }
      
     _order = "product_id"
@@ -25,6 +26,7 @@ class product_pricelist_new(osv.osv):
                 p.name pricelist,
                 v.name pricelist_version,
                 i.price_surcharge,
+                i.price_discount,
                 pp.name_template product,
                 pt.name product_template,
                 u.name uom,

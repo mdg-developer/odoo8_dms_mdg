@@ -11,7 +11,8 @@
                     <field name="product_id"/>
                     <field name="product_tmpl_id"/>                    
                     <field name="product_uom_id"/>     
-	                <field name="price_surcharge" />                    
+	                <field name="price_surcharge" />
+	                <field name="price_discount" />                    
                 </tree>
             </field>
         </record>
@@ -28,7 +29,8 @@
 	                        <field name="product_id"/>
 	                        <field name="product_tmpl_id"/>	                       
 	                        <field name="product_uom_id"/>     
-	                        <field name="price_surcharge" />                  
+	                        <field name="price_surcharge" />
+	                        <field name="price_discount" />                  
                     	</group>                    
 					</group>                    
                  </form>
