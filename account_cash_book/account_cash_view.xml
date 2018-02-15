@@ -31,8 +31,8 @@
 
 				<xpath expr="//form/sheet/notebook/page/field/tree/field[@name='name']"
 					position="before">
-					<field name="account_id"
-						domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" />
+					<field name="account_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" />
+					<field name="analytic_account_id" string="Analytic Account" />
 
 				</xpath>
 				<xpath expr="//form/sheet/notebook/page/field/tree/field[@name='date']"
