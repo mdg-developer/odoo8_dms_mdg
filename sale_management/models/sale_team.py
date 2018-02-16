@@ -255,7 +255,7 @@ class crm_case_section(osv.osv):
                'branch_id':fields.many2one('res.branch', 'Branch'),
                'allow_foc':fields.boolean('Allow FOC'),
              'allow_tax':fields.boolean('Allow Tax'),
-
+            'default_division':fields.char('Division'),
         }
     _sql_constraints = [
         ('code_uniq', 'unique (code)', 'The code of the sales team must be unique !')
