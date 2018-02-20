@@ -7,7 +7,7 @@
 			<field name="inherit_id" ref="account.view_partner_property_form" />
 			<field name="arch" type="xml">
 				<field name="credit_limit" position="after">
-					<field name="credit_allow" string ="Credit Approved"/>
+					<field name="credit_allow" string ="Credit Approved" invisible="1"/>
 				</field>
 			</field>
 		</record>

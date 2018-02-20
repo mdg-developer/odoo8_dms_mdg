@@ -17,7 +17,7 @@
 			<field name="inherit_id" ref="crm_partner_assign.view_crm_partner_assign_form" />
 			<field name="arch" type="xml">
 				<xpath expr="//page[@name='geo_localization']" position="replace">
-					<page string="Information" name="geo_localization">
+					<page string="Information" name="geo_localization" invisible="1">
 						<group>
 							<group>
 								<separator string="Geo Localization" colspan="2" />
@@ -194,8 +194,8 @@
 										<h1>
 											<field name="name" style="width: 70%%" />
 										</h1>
-										<field name="category_id" widget="many2many_tags"
-											placeholder="Tags..." style="width: 70%%" />
+										<!-- <field name="category_id" widget="many2many_tags"
+											placeholder="Tags..." style="width: 70%%" /> -->
 									</div>
 									<group>
 										<field name="function" placeholder="e.g. Sales Director" />
@@ -281,10 +281,10 @@
 			<field name="inherit_id" ref="crm.view_partners_form_crm1" />
 			<field name="arch" type="xml">
 				<data>
-					<field name="section_id" position="replace">
+					<!-- <field name="section_id" position="replace" invisible="1">
 						<field name="section_id" completion="1"
 							groups="base.group_multi_salesteams" widget="many2many_tags" />
-					</field>
+					</field> -->
 				</data>
 			</field>
 		</record>
@@ -296,13 +296,21 @@
 			<field name="inherit_id" ref="account.view_partner_property_form" />
 			<field name="arch" type="xml">
 				<data>
-					<!-- <field name="property_account_receivable" position="replace"> <field 
-						name="property_account_receivable" groups="account.group_account_invoice" 
-						attrs="{'invisible':[('supplier','=',True)]}" /> </field> <field name="property_payment_term" 
-						position="replace"> <field name="property_payment_term" widget="selection" 
-						attrs="{'invisible':[('supplier','=',True)]}" /> </field> -->
+					<field name="property_account_receivable" position="replace"> 
+					    <field name="property_account_receivable" groups="account.group_account_invoice" 
+						attrs="{'invisible':[('supplier','=',True)]}" /> </field> 
+						
+					<field name="property_payment_term" position="replace"> <field name="property_payment_term" widget="selection" 
+						attrs="{'invisible':[('supplier','=',True)]}" invisible="1"/></field>
+					
+				
+			   <xpath expr="//field[@name='property_account_position']" position="after">
+			       <field name="property_supplier_payment_term" widget="selection"
+					attrs="{'invisible':[('customer','=',True)]}" />
+				</xpath>
+					
 					<field name="credit" position="replace">
-						<field name="credit" attrs="{'invisible':[('supplier','=',True)]}" />
+						<field name="credit" attrs="{'invisible':[('supplier','=',True)]}"/>
 					</field>
 
 					<field name="credit_limit" position="replace">
@@ -318,10 +326,7 @@
 						<field name="loss_account_id" groups="account.group_account_invoice"
 							attrs="{'invisible':[('customer','=',True)]}" />
 					</field>
-					<!-- <field name="property_supplier_payment_term" position="replace"> -->
-					<!-- <field name="property_supplier_payment_term" widget="selection" -->
-					<!-- attrs="{'invisible':[('customer','=',True)]}" /> -->
-					<!-- </field> -->
+					
 					<field name="debit" position="replace">
 						<field name="debit" attrs="{'invisible':[('customer','=',True)]}" />
 					</field>
@@ -334,12 +339,12 @@
 			<field name="model">res.partner</field>
 			<field name="inherit_id"
 				ref="ms_credit_limit.view_res_partner_credit_limit_form" />
-			<field name="arch" type="xml">
-				<field name="credit_allow" position="after">
-					<field name="is_bank" attrs="{'invisible':[('supplier','=',True)]}" />
-					<field name="is_cheque" attrs="{'invisible':[('supplier','=',True)]}" />
+			<field name="arch" type="xml" >
+				<field name="credit_allow" position="after" >
+					<field name="is_bank" attrs="{'invisible':[('supplier','=',True)]}"/>
+					<field name="is_cheque" attrs="{'invisible':[('supplier','=',True)]}"/>
 					<field name="is_consignment" attrs="{'invisible':[('supplier','=',True)]}" />
-					<field name="is_tax"  attrs="{'invisible':[('supplier','=',True)]}" />
+					<field name="is_tax"  attrs="{'invisible':[('supplier','=',True)]}"/>
 					
 				</field>
 			</field>
@@ -373,9 +378,10 @@
 			<field name="arch" type="xml">
 				<field name="property_product_pricelist" position="replace">
 					<field name="property_product_pricelist" groups="product.group_sale_pricelist"
-						attrs="{'required':[('customer','=',True)]}" />
+						attrs="{'required':[('customer','=',True)]}" invisible="1" />
 				</field>
-			</field>
+			</field> 
+			
 		</record>
 		<record id="mdg_purchase_view_partner_property_form" model="ir.ui.view">
 			<field name="name">res.partner.purchase.property.form.inherit</field>
@@ -384,8 +390,8 @@
 			<field name="priority">36</field>
 			<field name="groups_id" eval="[(4, ref('product.group_purchase_pricelist'))]" />
 			<field name="arch" type="xml">
-				<field name="property_product_pricelist_purchase" position="replace">
-					<field name="property_product_pricelist_purchase" attrs="{'readonly':[('customer','=',True)]}" />
+				<field name="property_product_pricelist_purchase" position="replace"> 
+					<field name="property_product_pricelist_purchase" attrs="{'readonly':[('customer','=',True)]}" invisible="1"/>
 				</field>
 			</field>
 		</record>
