@@ -71,12 +71,10 @@
 					<xpath expr="//filter[@name='draft']" position="replace">						
                         <filter name="pending" string="Pending" domain="[('state','=','draft')]" help="pending Invoices"/>                        
 					</xpath>
-                	<xpath expr="//search/group/filter[@string='Status']"
+					<xpath expr="//search/group/filter[@string='Status']"
 						position="after">
 						<filter string="Payment Type" context="{'group_by':'payment_type'}" />
-					</xpath>
-					
-					
+					</xpath>		
 				</data>
 						
 			</field>
