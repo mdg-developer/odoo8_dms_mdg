@@ -491,25 +491,25 @@ class res_partner(osv.osv):
     # MMK
     def generate_customercode(self, cr, uid, ids, val, context=None):
             codeObj = self.pool.get('res.code')
-            cityId = townshipId = channelId = codeId = code = None
+            cityId = townshipId = branch_id = codeId = code = None
             codeResult = {}
             if ids:
                 for resVal in self.browse(cr, uid, ids, context=context):
                     if resVal:
                         cityId = resVal.city
                         townshipId = resVal.township
-                        channelId = resVal.sales_channel
-                        if cityId and townshipId and channelId:
-                            codeId = codeObj.search(cr, uid, [('city_id', '=', cityId.id), ('township_id', '=', townshipId.id), ('sale_channel_id', '=', channelId.id)])
+                        branch_id = resVal.branch_id
+                        if cityId and townshipId and branch_id:
+                            codeId = codeObj.search(cr, uid, [('city_id', '=', cityId.id), ('township_id', '=', townshipId.id), ('branch_id', '=', branch_id.id)])
                             if codeId:
                                 code = codeObj.generateCode(cr, uid, codeId[0], context=context)
                             else:
-                                codeResult = {'city_id':cityId.id, 'township_id':townshipId.id, 'sale_channel_id':channelId.id, 'nextnumber':1, 'padding':6}
+                                codeResult = {'city_id':cityId.id, 'township_id':townshipId.id, 'branch_id':branch_id.id, 'nextnumber':1, 'padding':6}
                                 codeId = codeObj.create(cr, uid, codeResult, context=context)
                                 code = codeObj.generateCode(cr, uid, codeId, context=context)
                 if code:
                     from datetime import datetime
-                    cr.execute("update res_partner set customer_code=%s ,date_partnership=now()::date ,mobile_customer=False where id=%s",(code,ids[0], ))
+                    cr.execute("update res_partner set customer_code=%s ,date_partnership=now()::date ,write_date =now() ,mobile_customer=False where id=%s",(code,ids[0], ))
                     #self.write(cr, uid, ids, {'customer_code':code,'date_partnership':datetime.now().date(),'mobile_customer':False}, context=context)
             return True
 res_partner()
