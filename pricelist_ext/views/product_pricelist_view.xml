@@ -41,13 +41,14 @@
             <field name="model">product.pricelist.new</field>
             <field name="arch" type="xml">
 				<search string="Pricelist Item Search">
+					<field name="product_id" string="Product" filter_domain="[('product_id','ilike',self)]"/>
 					<field name="pricelist" />
 					<field name="pricelist_version" />					
 					<group expand="0" string="Group By">
 						<filter string="Main Pricelist" icon="terp-personal"
 							domain="[]" context="{'group_by':'pricelist'}" />
 						<filter string="Pricelist Version" icon="terp-personal+" domain="[]"
-							context="{'group_by':'pricelist_version'}" />						
+							context="{'group_by':'pricelist_version'}" />					
 					</group>
 				</search>
 			</field>
