@@ -129,7 +129,14 @@ class pre_sale_order(osv.osv):
                        
                     else:
                         partner_id = None
-
+                    
+#                     utc_date = so['date']
+#                     cursor.execute("""SELECT %s - interval '6 hours 30 minutes' AS six_hour_30_min_go""",(so['date'],))
+#                     utc_data = cursor.fetchall()
+#                     
+#                     if utc_data:
+#                        utc_date = utc_data[0][0]
+                        
                     mso_result = {
                         'customer_code':so['customer_code'],
                         'paid': True,
@@ -257,7 +264,14 @@ class pre_sale_order(osv.osv):
                        
                     else:
                         partner_id = None
-
+                    
+                    utc_date = so['date']
+                    cursor.execute("""SELECT %s::timestamp without time zone - interval '6 hours 30 minutes' AS six_hour_30_min_go""",(so['date'],))
+                    utc_data = cursor.fetchall()
+                    
+                    if utc_data:
+                       utc_date = utc_data[0][0]
+                           
                     mso_result = {
                         'customer_code':so['customer_code'],
                         'paid': True,
@@ -276,7 +290,7 @@ class pre_sale_order(osv.osv):
                         'cash_discount':so['cash_discount'],
                         'additional_discount':so['additionalDiscount'],
                         'sale_team':so['sale_team'],
-                        'date':so['date'],
+                        'date':utc_date,#so['date'],
                         'due_date':so['due_date'],
                         'void_flag':so['void_flag'],
                         'sale_plan_day_id':so['sale_plan_day_id'],
