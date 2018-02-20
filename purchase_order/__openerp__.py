@@ -34,7 +34,8 @@ Purchase Order
     'website': 'http://www.7thcomputing.com',
     'depends': ['base','purchase'
     ],
-    'data': [        
+    'data': [ 
+             'views/stock_picking_view.xml',       
     ],
     'installable': True,
     'auto_install': False,
