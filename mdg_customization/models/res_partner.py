@@ -30,11 +30,6 @@ TIME_SELECTION = [
 class res_partner(osv.osv):
     _inherit = "res.partner"
     _columns = {
-                'property_supplier_payment_term': fields.property(
-             type='many2one',
-             relation='account.payment.term',
-             string ='Supplier Payment Term',
-             help="This payment term will be used instead of the default one for purchase orders and supplier invoices"),
                  'is_bank':fields.boolean('Bank Transfer'),
                 'is_cheque':fields.boolean('Cheque'),
                 'is_tax':fields.boolean('WithHolding Tax Allow'),
@@ -42,7 +37,7 @@ class res_partner(osv.osv):
         'partner_longitude': fields.float('Geo Longitude', digits=(16, 5), readonly=True),
         'date_localization': fields.date('Geo Localization Date'),
         'contact_note': fields.text('Note'),
-        'credit_allow':fields.boolean('Credit Approved'),
+       'credit_allow':fields.boolean('Credit Approved'),
        'is_consignment':fields.boolean('Consignment'),
          'gain_account_id': fields.property(
             type='many2one',
@@ -67,7 +62,7 @@ class res_partner(osv.osv):
          'fri':fields.boolean('FRI'),
          'sat':fields.boolean('SAT'),
          'sun':fields.boolean('SUN'),
-#      'section_id':fields.many2many('crm.case.section', 'sale_team_customer_rel', 'partner_id', 'sale_team_id', string='Sales Team'),
+     'section_id':fields.many2many('crm.case.section', 'sale_team_customer_rel', 'partner_id', 'sale_team_id', string='Sales Team'),
     }
     _defaults = {
                'start_time':'01',
