@@ -38,8 +38,13 @@
 					<xpath expr="//field[@name='temp_customer']" position="before">
 						<field name="title" invisible="1" />
 					</xpath>
+					<xpath expr="//field[@name='category_id']" position="replace">
+
+						<field name="category_id" widget="many2many_tags"
+							placeholder="Tags..." attrs="{'invisible':[('supplier','=',True)]}" />
+					</xpath>
 					<xpath expr="//field[@name='email']" position="after">
-						<field name="class_id" />
+						<field name="class_id" attrs="{'invisible':[('supplier','=',True)]}" />
 						<field name="frequency_id" attrs="{'invisible':[('customer','=',False)]}" />
 
 						<field name="old_code" />
@@ -134,9 +139,9 @@
 										options="{'no_create': True}" />
 								</group>
 								<group>
-									<field name="customer"  readonly="1"  />
+									<field name="customer" readonly="1" />
 									<field name="supplier" />
-									<field name="mobile_customer"  readonly="1" />
+									<field name="mobile_customer" readonly="1" attrs="{'invisible':[('supplier','=',True)]}"  />
 								</group>
 								<!-- <group> <field name="ref"/> <field name="lang"/> <field name="date"/> 
 									</group> -->
@@ -582,7 +587,7 @@
 
 		<menuitem id="config_asset_type_action" name="Miscellaneous"
 			parent="base.menu_base_config" sequence="20" />
-		
+
 		<menuitem id="config_view_customer_asset_type_action" parent="config_asset_type_action"
 			action="open_view_customer_asset_type_action" />
 	</data>
