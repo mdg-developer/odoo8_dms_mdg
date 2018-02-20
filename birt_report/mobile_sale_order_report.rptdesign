@@ -602,7 +602,9 @@
 ELSE ((coalesce(rb_ex.unit_price,0) - (coalesce(rb_ex.net_price,0))) * coalesce(rb_ex.qty,0)) END) as net_dis_amt
 from (SELECT * ,(CASE WHEN sale.isexclusive = true THEN (sale.exclusive_price * (100 - sale.discount_amt) / 100) ELSE (sale.unit_price * (100 - sale.discount_amt) / 100) END) as net_price
 FROM 
-(select distinct h.name,h.date::date,v.display_name partner,t.name payment_due_date,
+(select distinct h.name,
+((h.date at time zone 'utc' )at time zone 'asia/rangoon')::date date,
+v.display_name partner,t.name payment_due_date,
 b.name branch,mg.name brand,h.partner_id as sale_parner_id,
 p.default_code ||' '|| p.name_template description,pt.id as product_tem_id,
 u.name uom,d.product_uos_qty qty,d.discount discount_amt,d.price_unit unit_price,d.sub_total amount , --psi.product_code gold_code,
@@ -1313,7 +1315,8 @@ ON sale.sale_parner_id=supplier.pn_id and sale.product_tem_id=supplier.pt_id)rb_
             </list-property>
             <xml-property name="queryText"><![CDATA[
 SELECT * FROM 
-(select distinct h.name,h.date::date,v.display_name partner,t.name payment_due_date, v.street2 ||','|| s.name ||','|| c.name address, v.phone,com.kha_tha_number khathaNumber,
+(select distinct h.name,
+((h.date at time zone 'utc' )at time zone 'asia/rangoon')::date date,v.display_name partner,t.name payment_due_date, v.street2 ||','|| s.name ||','|| c.name address, v.phone,com.kha_tha_number khathaNumber,
 b.name branch,mg.name brand,h.partner_id as sale_parner_id,pt.id as product_tem_id,h.type as payment_type,
 (CASE WHEN v.isexclusive = true THEN 'Exclusive' ELSE 'Inclusive' END) as tax_type,v.ctax_registration_no,h.po_no,
 h.invoice_no
@@ -1833,34 +1836,6 @@ ON sale.sale_parner_id=supplier.pn_id and sale.product_tem_id=supplier.pt_id]]><
                                     </data>
                                 </cell>
                             </row>
-                            <row id="419">
-                                <property name="verticalAlign">middle</property>
-                                <property name="height">0.23333333333333334in</property>
-                                <cell id="420">
-                                    <label id="423">
-                                        <property name="fontSize">8pt</property>
-                                        <property name="fontWeight">bold</property>
-                                        <property name="paddingLeft">2pt</property>
-                                        <property name="textAlign">left</property>
-                                        <text-property name="text">Branch</text-property>
-                                    </label>
-                                </cell>
-                                <cell id="421">
-                                    <label id="425">
-                                        <property name="fontSize">8pt</property>
-                                        <text-property name="text">:</text-property>
-                                    </label>
-                                </cell>
-                                <cell id="422">
-                                    <data id="478">
-                                        <property name="fontSize">8pt</property>
-                                        <property name="fontWeight">normal</property>
-                                        <property name="paddingLeft">2pt</property>
-                                        <property name="textAlign">left</property>
-                                        <property name="resultSetColumn">branch</property>
-                                    </data>
-                                </cell>
-                            </row>
                             <row id="563">
                                 <property name="verticalAlign">middle</property>
                                 <property name="height">0.23333333333333334in</property>
@@ -2338,7 +2313,7 @@ ON sale.sale_parner_id=supplier.pn_id and sale.product_tem_id=supplier.pt_id]]><
                             <property name="name">Expression</property>
                             <expression name="value" type="javascript">if (dataSetRow["tax_type"]=='Exclusive')&#13;
 {&#13;
-dataSetRow["ntamt_nondisc"] * 0.05&#13;
+dataSetRow["net_amount"] * 0.05&#13;
 }&#13;
 else&#13;
 {&#13;
@@ -2455,10 +2430,10 @@ row["Aggregation_2"] - dataSetRow["deduction_amount"] - dataSetRow["add_disc"]&#
                 </structure>
             </list-property>
             <column id="149">
-                <property name="width">0.35833333333333334in</property>
+                <property name="width">0.35in</property>
             </column>
             <column id="150">
-                <property name="width">0.7666666666666667in</property>
+                <property name="width">0.95in</property>
             </column>
             <column id="151">
                 <property name="width">1.45in</property>
@@ -2479,7 +2454,7 @@ row["Aggregation_2"] - dataSetRow["deduction_amount"] - dataSetRow["add_disc"]&#
                 <property name="width">0.5583333333333333in</property>
             </column>
             <column id="260">
-                <property name="width">1.1416666666666666in</property>
+                <property name="width">0.85in</property>
             </column>
             <column id="156">
                 <property name="width">1.0416666666666667in</property>
@@ -2489,7 +2464,7 @@ row["Aggregation_2"] - dataSetRow["deduction_amount"] - dataSetRow["add_disc"]&#
                     <property name="verticalAlign">middle</property>
                     <property name="height">0.32in</property>
                     <cell id="120">
-                        <property name="backgroundColor">#C0C0C0</property>
+                        <property name="backgroundColor">#E6E3E8</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -2505,7 +2480,7 @@ row["Aggregation_2"] - dataSetRow["deduction_amount"] - dataSetRow["add_disc"]&#
                         </label>
                     </cell>
                     <cell id="121">
-                        <property name="backgroundColor">#C0C0C0</property>
+                        <property name="backgroundColor">#E6E3E8</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -2521,7 +2496,7 @@ row["Aggregation_2"] - dataSetRow["deduction_amount"] - dataSetRow["add_disc"]&#
                         </label>
                     </cell>
                     <cell id="122">
-                        <property name="backgroundColor">#C0C0C0</property>
+                        <property name="backgroundColor">#E6E3E8</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -2537,7 +2512,7 @@ row["Aggregation_2"] - dataSetRow["deduction_amount"] - dataSetRow["add_disc"]&#
                         </label>
                     </cell>
                     <cell id="123">
-                        <property name="backgroundColor">#C0C0C0</property>
+                        <property name="backgroundColor">#E6E3E8</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -2553,7 +2528,7 @@ row["Aggregation_2"] - dataSetRow["deduction_amount"] - dataSetRow["add_disc"]&#
                         </label>
                     </cell>
                     <cell id="124">
-                        <property name="backgroundColor">#C0C0C0</property>
+                        <property name="backgroundColor">#E6E3E8</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -2569,7 +2544,7 @@ row["Aggregation_2"] - dataSetRow["deduction_amount"] - dataSetRow["add_disc"]&#
                         </label>
                     </cell>
                     <cell id="346">
-                        <property name="backgroundColor">#C0C0C0</property>
+                        <property name="backgroundColor">#E6E3E8</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -2585,7 +2560,7 @@ row["Aggregation_2"] - dataSetRow["deduction_amount"] - dataSetRow["add_disc"]&#
                         </label>
                     </cell>
                     <cell id="125">
-                        <property name="backgroundColor">#C0C0C0</property>
+                        <property name="backgroundColor">#E6E3E8</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -2601,7 +2576,7 @@ row["Aggregation_2"] - dataSetRow["deduction_amount"] - dataSetRow["add_disc"]&#
                         </label>
                     </cell>
                     <cell id="126">
-                        <property name="backgroundColor">#C0C0C0</property>
+                        <property name="backgroundColor">#E6E3E8</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -2617,7 +2592,7 @@ row["Aggregation_2"] - dataSetRow["deduction_amount"] - dataSetRow["add_disc"]&#
                         </label>
                     </cell>
                     <cell id="257">
-                        <property name="backgroundColor">#C0C0C0</property>
+                        <property name="backgroundColor">#E6E3E8</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -2633,7 +2608,7 @@ row["Aggregation_2"] - dataSetRow["deduction_amount"] - dataSetRow["add_disc"]&#
                         </label>
                     </cell>
                     <cell id="127">
-                        <property name="backgroundColor">#C0C0C0</property>
+                        <property name="backgroundColor">#E6E3E8</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -2846,14 +2821,19 @@ row["Aggregation_2"] - dataSetRow["deduction_amount"] - dataSetRow["add_disc"]&#
                     <cell id="144"/>
                     <cell id="348"/>
                     <cell id="145"/>
-                    <cell id="146"/>
-                    <cell id="259">
+                    <cell id="146">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
                         <property name="borderLeftStyle">solid</property>
                         <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="333">
@@ -2907,14 +2887,19 @@ false&#13;
                     <cell id="288"/>
                     <cell id="349"/>
                     <cell id="289"/>
-                    <cell id="290"/>
-                    <cell id="291">
+                    <cell id="290">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
                         <property name="borderLeftStyle">solid</property>
                         <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="332">
@@ -2955,14 +2940,19 @@ false&#13;
                     <cell id="498"/>
                     <cell id="499"/>
                     <cell id="500"/>
-                    <cell id="501"/>
-                    <cell id="502">
+                    <cell id="501">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
                         <property name="borderLeftStyle">solid</property>
                         <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="515">
@@ -2999,14 +2989,19 @@ false&#13;
                     <cell id="509"/>
                     <cell id="510"/>
                     <cell id="511"/>
-                    <cell id="512"/>
-                    <cell id="513">
+                    <cell id="512">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
                         <property name="borderLeftStyle">solid</property>
                         <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="516">
@@ -3047,14 +3042,19 @@ false&#13;
                     <cell id="550"/>
                     <cell id="551"/>
                     <cell id="552"/>
-                    <cell id="553"/>
-                    <cell id="554">
+                    <cell id="553">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
                         <property name="borderLeftStyle">solid</property>
                         <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="556">
@@ -3089,7 +3089,7 @@ false&#13;
                     <property name="verticalAlign">middle</property>
                     <property name="height">0.25in</property>
                     <cell id="294">
-                        <property name="colSpan">8</property>
+                        <property name="colSpan">7</property>
                         <property name="rowSpan">1</property>
                         <label id="322">
                             <property name="fontSize">8pt</property>
@@ -3097,13 +3097,19 @@ false&#13;
                             <text-property name="text">(In Words ................................................................................................................)</text-property>
                         </label>
                     </cell>
-                    <cell id="301">
+                    <cell id="585">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
                         <property name="borderLeftStyle">solid</property>
                         <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="304">
