@@ -106,9 +106,10 @@ class account_invoice(osv.osv):
             context = {}       
                         
         for invoice in self.browse(cr, uid, ids, context=context):
-            invoice_data=self.browse(cr, uid, invoice.id, context=context)
-            paid_amount=invoice_data.amount_total - invoice_data.residual    
-            res[invoice.id]= paid_amount            
+            invoice_data=self.browse(cr, uid, invoice.id, context=context)            
+            if invoice_data.residual >0:
+                paid_amount=invoice_data.amount_total - invoice_data.residual    
+            res[invoice.id]= paid_amount 
         return res   
     
     _columns = {

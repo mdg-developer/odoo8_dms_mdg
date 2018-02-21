@@ -10,11 +10,11 @@
 				</field>
 				<field name="uom_id" position="replace">
 					<field name="uom_id" on_change="product.onchange_uom(uom_id,uom_po_id)"
-						groups="product.group_uom" string="Smaller UoM" />
+						groups="product.group_uom" />
 					<field name="list_price" />
 					<field name="big_uom_id" on_change="product.onchange_uom(uom_id,uom_po_id)"
-						groups="product.group_uom" string="Bigger UoM" />
-					<field name="big_list_price" />
+						groups="product.group_uom" string="Bigger UoM"  invisible="1"/>
+					<field name="big_list_price"  invisible="1"/>
 					<field name='is_foc' />
 					<field name='is_posm' />
 				</field>
@@ -32,8 +32,8 @@
 				<field name="categ_id" position="after">
 					<field name="uom_id" string="S.UOM" />
 					<field name="list_price" string="S.Price" />
-					<field name="big_uom_id" string="B.UOM" />
-					<field name="big_list_price" string="B.Price" />
+					<field name="big_uom_id" string="B.UOM"   invisible="1"/>
+					<field name="big_list_price" string="B.Price"   invisible="1"/>
 					<field name="uom_ratio" />
 					<field name="sequence" />
 					

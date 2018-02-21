@@ -102,7 +102,9 @@ class product_uom_price(osv.osv):
         value = {'name': [],'category_id':[],'price': 0.0, 'factor': 1.0}
         if product_uom:
             prod = self.pool.get('product.uom').browse(cr, uid, product_uom, context=context)
-            value = {'category_id':prod.category_id, 'price': 0.0, 'factor': 1.0}
+            cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (prod.id,))
+            factor = cr.fetchone()[0]
+            value = {'category_id':prod.category_id, 'price': 0.0, 'factor': factor}
         return {'value': value}
     
     
