@@ -2,17 +2,31 @@
 <openerp>
 	<data>
 		<record id="view_picking_form_purchase_order_inherit" model="ir.ui.view">
-					<field name="name">stock.pricking.form</field>
-					<field name="model">stock.picking</field>
-					<field name="inherit_id" ref="stock.view_picking_form" />
-					<field name="arch" type="xml">
-						<field name="picking_type_id" position="after">
-						      <button name="change_location" width="50px" string="⇒ Change Receipt Location" type="object" attrs="{'invisible':[('state','in',('cancel','done'))]}"/>
-							 <!-- <field name="picking_type_id" on_change="onchange_picking_type_id(picking_type_id)"/> -->
-						</field>
-					</field>
+			<field name="name">stock.pricking.form</field>
+			<field name="model">stock.picking</field>
+			<field name="inherit_id" ref="stock.view_picking_form" />
+			<field name="arch" type="xml">
+				<field name="picking_type_id" position="after">
+					<button name="change_location" width="50px"
+						string="⇒ Change Receipt Location" type="object"
+						attrs="{'invisible':[('state','in',('cancel','done'))]}" />
+					<!-- <field name="picking_type_id" on_change="onchange_picking_type_id(picking_type_id)"/> -->
+				</field>
+				<field name="date_done" position="after">
+				    <field name ="customer"/>
+				    <field name ="supplier"/>
+					<field name="bl_date"
+						attrs="{'invisible':[('customer','=',True)]}" />
+					<field name="staffing_date"
+						attrs="{'invisible':[('customer','=',True)]}" />
+					<field name="etd_date"
+						attrs="{'invisible':[('customer','=',True)]}" />
+					<field name="eta_date"
+						attrs="{'invisible':[('customer','=',True)]}" />
+				</field>
+			</field>
 		</record>
-		   
+
 		<record id="view_move_picking_tree_po" model="ir.ui.view">
 			<field name="name">stock.move.tree.inherit</field>
 			<field name="model">stock.move</field>
@@ -24,6 +38,6 @@
 
 				</field>
 			</field>
-		</record>	
+		</record>
 	</data>
 </openerp>	

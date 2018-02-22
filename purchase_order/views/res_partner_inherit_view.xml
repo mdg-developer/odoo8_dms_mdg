@@ -2,7 +2,7 @@
 <openerp>
 	<data>
 		
-		<record id="inherit_partner_payable" model="ir.ui.view">
+		<record id="inherit_payment_based_on_payable" model="ir.ui.view">
 			<field name="name">res.partner.form</field>
 			<field name="model">res.partner</field>
 			<field name="inherit_id" ref="base.view_partner_form" />
@@ -10,8 +10,7 @@
 							
 				
 				<xpath expr="//field[@name='property_supplier_payment_term']" position="after">		
-					<field name="property_account_payable"  attrs="{'invisible':[('customer','=',True)], 'required':[('supplier','=',True)]}"/>
-					<field name="property_account_payable_clearing" attrs="{'invisible':[('customer','=',True)], 'required':[('supplier','=',True)]}"/>
+					<field name="base_on_payment"  attrs="{'invisible':[('customer','=',True)], 'required':[('supplier','=',True)]}"/>
 				</xpath>
 			</field>
 		</record>
