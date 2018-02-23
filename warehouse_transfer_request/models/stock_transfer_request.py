@@ -99,7 +99,7 @@ class stock_transfer_request(osv.osv):
                     }
                 proc = proc_obj.create(cr, uid, vals, context=context)
               #  proc_obj.run(cr, uid, [proc], context=context)
-        cr.execute("update stock_picking set is_transfer_request =True,dispatched_to=%s where group_id =%s", (transfer_data.warehouse_id.id, new_group,))
+        cr.execute("update stock_picking set is_transfer_request =True,dispatched_to=%s where origin != %s and group_id =%s", (transfer_data.warehouse_id.id, transfer_data.name,new_group,))
         return self.write(cr, uid, ids, {'state':'approve' , 'approve_by':uid})    
     
     def cancel(self, cr, uid, ids, context=None):

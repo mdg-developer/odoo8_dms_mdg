@@ -10,7 +10,7 @@
 							
 				
 				<xpath expr="//field[@name='property_supplier_payment_term']" position="after">		
-					<field name="base_on_payment"  attrs="{'invisible':[('customer','=',True)], 'required':[('supplier','=',True)]}"/>
+					<field name="base_on_payment"  attrs="{'invisible':[('customer','=',True)]}"/>
 				</xpath>
 			</field>
 		</record>
