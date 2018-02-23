@@ -620,8 +620,9 @@ else
 	group by rp.id,rp.name,rt.code,number,payment_type,date_invoice,ai.section_id,ccs.name,ai.branch_id,product_id,name_template,pp.sequence,ail.uos_id,pt.uom_id,big_uom_id
 	order by seq),
 sale_qty as (
-	select rp.id customer,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,product_id,name_template,ail.uos_id,pt.uom_id,pt.big_uom_id,
-	case when ail.uos_id=pt.uom_id then round(quantity,0) when ail.uos_id=pt.big_uom_id then round(quantity*(select floor(round(1/factor,2)) from product_uom where id=big_uom_id),0) end as product_quantity,'Sales Qty'::text as status,pp.sequence as seq
+	select rp.id customer,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,
+        ccs.name sales_team,ai.branch_id,product_id,name_template,ail.uos_id,pt.uom_id,pt.big_uom_id,
+        case when ail.uos_id=pt.uom_id then sum(round(quantity,0)) when ail.uos_id=pt.big_uom_id then sum(round(quantity*(select floor(round(1/factor,2)) from product_uom where id=big_uom_id),0)) end as product_quantity,'Sales Qty'::text as status,pp.sequence as seq
 	from account_invoice ai,res_partner rp,res_township rt,account_invoice_line ail,product_uom uom,product_product pp,product_template pt,crm_case_section ccs
 	where ai.partner_id=rp.id
 	and rp.township=rt.id
@@ -632,6 +633,7 @@ sale_qty as (
 	and ai.section_id=ccs.id			
 	and foc='false'
 	and date_invoice between ? and ?
+        group by rp.id,rp.name,rt.code,number,payment_type,date_invoice,ai.section_id,ccs.name,ai.branch_id,product_id,name_template,pp.sequence,ail.uos_id,pt.uom_id,big_uom_id
 	order by seq),
 total_amt as (
 	select rp.id customer,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,0,'Total Amt.'::character varying name_template,0,0,0,
@@ -1742,11 +1744,11 @@ and date_invoice between ? and ?
                             <structure>
                                 <property name="name">payment_type</property>
                                 <expression name="expression" type="javascript">if (params["payment_type"].value == null ){     &#13;
-'Daily Cash Credit Sales Record of Yangon Office'&#13;
+'Daily Cash Credit Sales Record '&#13;
 }&#13;
 else&#13;
 {     &#13;
-'Daily '+params["payment_type"].charAt(0).toUpperCase()+params["payment_type"].substr(1,params["payment_type"].length)+' Sales Record of Yangon Office'&#13;
+'Daily '+params["payment_type"].charAt(0).toUpperCase()+params["payment_type"].substr(1,params["payment_type"].length)+' Sales Record '&#13;
 }</expression>
                                 <property name="dataType">string</property>
                                 <property name="allowExport">true</property>

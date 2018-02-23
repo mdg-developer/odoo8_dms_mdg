@@ -150,6 +150,7 @@ class mobile_sale_order(osv.osv):
         'm_status' : 'draft',
         'is_convert':False,
         'type':'cash',
+        'user_id': lambda obj, cr, uid, context: uid,
        
     } 
     
