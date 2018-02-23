@@ -1,0 +1,59 @@
+from openerp.osv import fields , osv
+
+class customer_stock_check(osv.osv):
+    _name = "partner.stock.check"
+    _description = "Customer Stock Check"
+    
+    _columns = {      
+                'partner_id':fields.many2one('res.partner','Customer name'), 
+                'sale_team_id':fields.many2one('crm.case.section', 'Sales Team'),  
+                'user_id':fields.many2one('res.users', 'Sale Person'),    
+                'township_id':fields.many2one('res.township','Township'),  
+                'outlet_type': fields.many2one('outlettype.outlettype', 'Outlet Type'), 
+                'date': fields.date('Checked Date'),   
+                'customer_code':fields.char('Customer Code'),  
+                'branch_id' :fields.many2one('res.branch', 'Branch'),
+                'stock_check_line':fields.one2many('partner.stock.check.line', 'stock_check_ids', string='Product'),
+    }    
+    
+    def on_change_partner_id(self, cr, uid, ids, partner_id, context=None):
+        values = {}
+        if partner_id:
+            partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
+            values = {
+                'customer_code':partner.customer_code,
+                'township_id':partner.township.id,
+                'outlet_type':partner.outlet_type.id,
+                'branch_id':partner.branch_id.id,
+            }
+        return {'value': values}
+    
+    def retrieve_stock(self, cr, uid, ids, context=None):  
+        stock_line_obj = self.pool.get('partner.stock.check.line')
+        if ids:
+            stock_check_data = self.browse(cr, uid, ids[0], context=context) 
+            sale_team_id= stock_check_data.sale_team_id.id
+            sale_team = self.pool.get('crm.case.section').browse(cr, uid, sale_team_id, context=context)           
+            product_line = sale_team.product_ids   
+            for p_line in product_line:
+                if p_line:
+                    stock_line_obj.create(cr, uid, {'stock_check_ids': ids[0],
+                                        'product_id': p_line.id,
+                                        'product_uom': p_line.product_tmpl_id.uom_id.id,  
+                                        }, context=context)
+        return True 
+customer_stock_check()
+
+class customer_stock_check_line(osv.osv):    
+    _name = 'partner.stock.check.line'      
+    
+    _columns = {
+                'stock_check_ids': fields.many2one('partner.stock.check', 'Partner Stock Check Line'),                
+                'product_id':fields.many2one('product.product', 'Product'),
+                'product_uom':fields.many2one('product.uom', 'UOM'),
+                'available': fields.boolean('Available'),
+                'product_uom_qty':fields.float('QTY'),
+                'facing':fields.boolean('Facing'),
+                'chiller':fields.float('Chiller')                
+                }
+customer_stock_check_line()    
