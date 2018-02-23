@@ -80,6 +80,24 @@
 
 			</field>
 		</record>
+		
+		<record id="inherit_view_bank_statement_form_branch" model="ir.ui.view">
+			<field name="name">account.bank.statement.form</field>
+			<field name="model">account.bank.statement</field>
+			<field name="inherit_id" ref="account.view_bank_statement_form" />
+			<field name="arch" type="xml">
+
+				
+				
+				<xpath expr="//form/sheet/group/group/field[@name='company_id']"
+					position="after">
+					<field name="brand_id" domain="[('res_company_id', '=', company_id)]" />
+
+					
+				</xpath>
+
+			</field>
+		</record>
     <menuitem action="account.action_view_bank_statement_tree" id="account.journal_cash_move_lines" name ="Cash Book"
             parent="account.menu_finance_bank_and_cash"/>       		
 	</data>
