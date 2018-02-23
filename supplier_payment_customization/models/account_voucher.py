@@ -339,6 +339,9 @@ class account_voucher(osv.osv):
                 
                 if tmp_rate == 1:
                     v_total = 0
+                elif tmp_rate > 1 and company_currency == current_currency:
+                    fore_amt = line.amount / v_rate
+                    v_total = ((tmp_rate - v_rate) * fore_amt)      
                 else:            
                     v_total = ((tmp_rate - v_rate) * line.amount) 
                        
@@ -376,11 +379,14 @@ class account_voucher(osv.osv):
                         tot_line = 0
                         #print 'tot_line>>',tot_line
                     elif m_rate > 0:
+                        
                         move_line['debit'] = (line.amount * tmp_rate) + total_discount
                         #tot_line -= m_rate * line.amount
                         tot_line = 0
                         #print 'tot_line>>',tot_line   
-                    
+                    if tmp_rate > 1 and company_currency == current_currency:
+                        amt = (line.amount / v_rate) * tmp_rate                                                
+                        move_line['debit'] = (amt) + total_discount
             else:
                 tot_line -= amount
                 move_line['credit'] = amount
