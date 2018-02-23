@@ -36,6 +36,7 @@ Customer Stock Check Module
     'sequence': 16,
     'data': [
         'views/customer_stock_check_view.xml',
+        'views/customer_stock_check_setting_view.xml',
     ],
     'test': [
 

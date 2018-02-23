@@ -3,7 +3,7 @@ from openerp.osv import fields , osv
 class customer_stock_check(osv.osv):
     _name = "partner.stock.check"
     _description = "Customer Stock Check"
-    
+    _rec_name = "partner_id"
     _columns = {      
                 'partner_id':fields.many2one('res.partner','Customer name'), 
                 'sale_team_id':fields.many2one('crm.case.section', 'Sales Team'),  
@@ -38,6 +38,7 @@ class customer_stock_check(osv.osv):
             for p_line in product_line:
                 if p_line:
                     stock_line_obj.create(cr, uid, {'stock_check_ids': ids[0],
+                                        'sequence':p_line.sequence,
                                         'product_id': p_line.id,
                                         'product_uom': p_line.product_tmpl_id.uom_id.id,  
                                         }, context=context)
@@ -48,12 +49,13 @@ class customer_stock_check_line(osv.osv):
     _name = 'partner.stock.check.line'      
     
     _columns = {
-                'stock_check_ids': fields.many2one('partner.stock.check', 'Partner Stock Check Line'),                
+                'stock_check_ids': fields.many2one('partner.stock.check', 'Partner Stock Check Line'), 
+                'sequence':fields.integer('Sequence'),               
                 'product_id':fields.many2one('product.product', 'Product'),
                 'product_uom':fields.many2one('product.uom', 'UOM'),
-                'available': fields.boolean('Available'),
+                'available': fields.boolean('Available',default=False),
                 'product_uom_qty':fields.float('QTY'),
-                'facing':fields.boolean('Facing'),
+                'facing':fields.boolean('Facing',default=False),
                 'chiller':fields.float('Chiller')                
                 }
 customer_stock_check_line()    

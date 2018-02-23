@@ -1,1 +1,2 @@
 import customer_stock_check
+import customer_stock_check_setting

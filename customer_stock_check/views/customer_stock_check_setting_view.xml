@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+	    <!-- Customer Stock Check Form -->
+	    <record id="partner_stock_check_setting_form" model="ir.ui.view">
+			<field name="name">partner.stock.check.setting.form</field>
+			<field name="model">stock.check.setting</field>
+			<field name="arch" type="xml">
+				<form string="Stock Check Setting">					
+					<sheet>
+						<group>
+							<group>
+								<field name="date"/>
+								<field name="outlet_type"/>
+							</group>
+							<group>
+							</group>
+						</group>
+						<div>
+							<group>
+								<button name="retrieve_stock" string="Retrieve" class="oe_highlight" type="object" icon="terp-gtk-jump-to-ltr"/>
+							</group>
+						</div>
+						<group>					
+							<notebook>
+								<page string="Product Lines">
+									<field name="stock_setting_line">
+										<tree string="Product Lines" editable="bottom" default_order="sequence asc">
+										    <field name="sequence" invisible="1" />
+											<field name="product_id" />
+											<field name="available" />
+											<field name="product_uom_qty" />
+											<field name="facing" />
+										</tree>
+									</field>
+								</page>
+							</notebook>
+						</group>								
+					</sheet>
+				</form>
+			</field>
+		</record>
+		<!-- Customer Stock Check Tree -->
+	    <record id="partner_stock_check_setting_tree" model="ir.ui.view">
+			<field name="name">partner.stock.check.tree</field>
+			<field name="model">stock.check.setting</field>
+			<field name="arch" type="xml">
+				<tree string="Stock Check Setting Tree">
+					<field name="date"/>
+					<field name="outlet_type"/>
+				</tree>
+			</field>
+		</record>
+		<!-- Customer Stock Check Filter  -->
+	    <record id="view_partner_stock_setting_filter" model="ir.ui.view">
+			<field name="name">Stock Check Setting Filter</field>
+			<field name="model">stock.check.setting</field>
+			<field name="arch" type="xml">
+				<search string="Search Stock Check Setting">
+					<field name="date"/>
+					<field name="outlet_type"/>
+					<group expand="0" string="Group By...">
+						<filter string="Date" icon="terp-partner" domain="[]"
+							context="{'group_by':'date'}" />
+						<filter string="Outlet Type" icon="terp-partner" domain="[]"
+							context="{'group_by':'outlet_type'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+		
+	    <record id="action_partner_stock_check_setting" model="ir.actions.act_window">
+			<field name="name">Stock Check Setting</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">stock.check.setting</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="partner_stock_check_setting_tree" />
+			<field name="search_view_id" ref="view_partner_stock_setting_filter" />
+			<field name="domain">[]</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to Check Customer Stock Setting
+				</p>
+			</field>
+		</record>
+
+		<menuitem id="menu_partner_stock_check_setting" parent="sale_promotions.sales"
+			action="action_partner_stock_check_setting" sequence="10" />
+    </data>
+</openerp>
