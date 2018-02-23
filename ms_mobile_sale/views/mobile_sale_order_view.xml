@@ -28,50 +28,49 @@
 					<sheet>
 						<group>
 							<group>
-
-								<field name="name" attrs="{'readonly':[('is_manual','!=',True),('state','=','complete')],'required':[('is_manual','=',True)]}"  />
+								<field name="name" attrs="{'readonly':['|',('is_manual','!=',True),('m_status','=','done')],'required':[('is_manual','=',True)]}"  />
 								<field name="partner_id" readonly="0"
 									on_change='onchange_customer_id(partner_id)' />
-								<field name="customer_code" attrs="{'readonly':[('is_manual','!=',True),('m_status','=','done')]}" />
-								<field name="outlet_type" attrs="{'readonly':[('is_manual','!=',True),('m_status','=','done')]}"  />
-								<field name="user_id" attrs="{'readonly':[('is_manual','!=',True),('m_status','=','done')]}"  />
-								<field name="sale_team" attrs="{'readonly':[('is_manual','!=',True),('m_status','=','done')]}" 
+								<field name="customer_code" attrs="{'readonly':['|',('is_manual','!=',True),('m_status','=','done')]}" />
+								<field name="outlet_type" attrs="{'readonly':['|',('is_manual','!=',True),('m_status','=','done')]}" />
+								<field name="user_id" attrs="{'readonly':['|',('is_manual','!=',True),('m_status','=','done')]}"/>
+								<field name="sale_team" attrs="{'readonly':['|',('is_manual','!=',True),('m_status','=','done')]}"
 									on_change='onchange_team_id(sale_team)' />
-								<field name="warehouse_id" attrs="{'readonly':[('is_manual','!=',True),('m_status','=','done')]}"  />
-								<field name="location_id" attrs="{'readonly':[('is_manual','!=',True),('m_status','=','done')]}"  />
-								<field name="branch_id" attrs="{'readonly':[('is_manual','!=',True),('m_status','=','done')]}" 
+								<field name="warehouse_id" attrs="{'readonly':['|',('is_manual','!=',True),('m_status','=','done')]}" />
+								<field name="location_id" attrs="{'readonly':['|',('is_manual','!=',True),('m_status','=','done')]}"/>
+								<field name="branch_id" attrs="{'readonly':['|',('is_manual','!=',True),('m_status','=','done')]}"
 									widget="selection" />
-								<field name="sale_plan_name" attrs="{'readonly':[('is_manual','!=',True),('m_status','=','done')]}"  />
-								<field name="sale_plan_day_id" attrs="{'readonly':[('is_manual','!=',True)]}" />
-								<field name="sale_plan_trip_id" attrs="{'readonly':[('is_manual','!=',True)]}" />
-								<field name="pricelist_id" attrs="{'readonly':[('is_manual','!=',True)]}" />
+								<field name="sale_plan_name" attrs="{'readonly':['|',('is_manual','!=',True),('m_status','=','done')]}" />
+								<field name="sale_plan_day_id" attrs="{'readonly':['|',('is_manual','!=',True),('m_status','=','done')]}" />
+								<field name="sale_plan_trip_id" attrs="{'readonly':['|',('is_manual','!=',True),('m_status','=','done')]}"/>
+								<field name="pricelist_id" attrs="{'readonly':['|',('is_manual','!=',True),('m_status','=','done')]}" />
 								<field name="mso_latitude" digits="(14,15)" readonly="0" />
 								<field name="mso_longitude" digits="(14,15)" readonly="0" />
 								<field name="note" class="oe_inline" placeholder="Terms and conditions..."
-									attrs="{'readonly':[('is_manual','!=',True)]}" />
+									attrs="{'readonly':['|',('is_manual','!=',True),('m_status','=','done')]}" />
 
 							</group>
 							<group>
-								<field name="date" attrs="{'readonly':[('is_manual','!=',True)]}" />
-								<field name="due_date" attrs="{'readonly':[('is_manual','!=',True)]}" />
-								<field name="payment_term" attrs="{'readonly':[('is_manual','!=',True)]}" />
-								<field name="type" attrs="{'readonly':[('is_manual','!=',True)]}" />
+								<field name="date" attrs="{'readonly':['|',('is_manual','!=',True),('m_status','=','done')]}"/>
+								<field name="due_date" attrs="{'readonly':['|',('is_manual','!=',True),('m_status','=','done')]}"/>
+								<field name="payment_term" attrs="{'readonly':['|',('is_manual','!=',True),('m_status','=','done')]}"/>
+								<field name="type" attrs="{'readonly':['|',('is_manual','!=',True),('m_status','=','done')]}"/>
 								<field name="tablet_id" readonly="1" />
-								<field name="delivery_remark" attrs="{'readonly':[('is_manual','!=',True)]}" />
-								<field name="amount_total" attrs="{'readonly':[('is_manual','!=',True)]}" />
+								<field name="delivery_remark" attrs="{'readonly':['|',('is_manual','!=',True),('m_status','=','done')]}"/>
+								<field name="amount_total" attrs="{'readonly':['|',('is_manual','!=',True),('m_status','=','done')]}"/>
 								<field name="additional_discount" readonly="1" />
 								<field name="deduction_amount" readonly="1" />
 								<field name="net_amount"
-									attrs="{'readonly':[('is_manual','!=',True)],'required':[('is_manual','=',True)]}" />
+									attrs="{'readonly':['|',('is_manual','!=',True),('m_status','=','done')],'required':[('is_manual','=',True)]}" />
 								<field name="paid_amount"
-									attrs="{'readonly':[('is_manual','!=',True)],'required':[('is_manual','=',True)]}" />
+									attrs="{'readonly':['|',('is_manual','!=',True),('m_status','=','done')],'required':[('is_manual','=',True)]}" />
 								<field name="change_amount" readonly="1" />
 								<field name="remaining_amount"
-									attrs="{'readonly':[('is_manual','!=',True)], 'required':[('is_manual','=',True)]}" />
-								<field name="paid" attrs="{'readonly':[('is_manual','!=',True)]}" />
+									attrs="{'readonly':['|',('is_manual','!=',True),('m_status','=','done')],'required':[('is_manual','=',True)]}" />
+								<field name="paid" attrs="{'readonly':['|',('is_manual','!=',True),('m_status','=','done')]}"/>
 								<field name="void_flag" readonly="1" />
 								<field name="balance"
-									attrs="{'readonly':[('is_manual','!=',True)], 'required':[('is_manual','=',True)]}" />
+									attrs="{'readonly':['|',('is_manual','!=',True),('m_status','=','done')],'required':[('is_manual','=',True)]}" />
 								<field name="is_convert" />
 								<field name="print_count" readonly="1" />
 								<field name="is_manual" />
@@ -82,7 +81,7 @@
 
 						<notebook>
 							<page string="Order Lines">
-								<field name="order_line" attrs="{'readonly':[('is_manual','!=',True)]}">
+								<field name="order_line" attrs="{'readonly':['|',('is_manual','!=',True),('m_status','=','done')]}">
 									<form string="Mobile Sales Order Lines" version="7.0">
 										<group>
 											<group>
@@ -148,7 +147,7 @@
 							</page>
 
 							<page string="Promotion Lines">
-								<field name="promos_line_ids" attrs="{'readonly':[('is_manual','!=',True)]}">
+								<field name="promos_line_ids" attrs="{'readonly':['|',('is_manual','!=',True),('m_status','=','done')]}">
 									<form string="Promotion Lines" version="7.0">
 
 										<group>
@@ -170,7 +169,7 @@
 
 									</form>
 									<tree string="Promotion Lines" editable="bottom"
-										attrs="{'readonly':[('is_manual','!=',True)]}">
+										attrs="{'readonly':['|',('is_manual','!=',True),('m_status','=','done')]}">
 
 										<field name="pro_id" on_change='onchange_promo_id(pro_id)' />
 										<field name="from_date" />
@@ -188,7 +187,7 @@
 
 							</page>
 							<page string="Payments">
-								<field name="payment_line_ids" attrs="{'readonly':[('is_manual','!=',True)]}">
+								<field name="payment_line_ids" attrs="{'readonly':['|',('is_manual','!=',True),('m_status','=','done')]}">
 									<tree string="Payment Lines" editable="bottom">
 
 										<field name="date" />
