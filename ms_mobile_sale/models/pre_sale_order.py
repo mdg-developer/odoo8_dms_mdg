@@ -368,16 +368,40 @@ class pre_sale_order(osv.osv):
                     if manual is not None:
                         manual = manual
                     else:
-                        manual = False                                    
-                    promo_line_result = {
-                        'promo_line_id':saleOrder_Id,
-                        'pro_id':pro_line['pro_id'],
-                        'from_date':pro_line['from_date'],
-                        'to_date':pro_line['to_date'] ,
-                         'manual':manual,
-
-                        }
-                    mso_promotion_line_obj.create(cursor, user, promo_line_result, context=context)
+                        manual = False  
+                    print  'pro_line ',len(pro_line)    
+                    if pro_line['productId']:
+                        if pro_line['foc'] =='False':
+                            pro_foc=False
+                        else:
+                            pro_foc=True
+                        if pro_line['discount'] =='False':
+                            pro_discount=False       
+                        else:
+                            pro_discount=True                     
+                        promo_line_result = {
+                            'promo_line_id':saleOrder_Id,
+                            'pro_id':pro_line['pro_id'],
+                            'from_date':pro_line['from_date'],
+                            'to_date':pro_line['to_date'] ,
+                             'manual':manual,
+                             'product_id':pro_line['productId'],
+                             'is_foc':pro_foc,
+                             'is_discount':pro_discount,
+                             'foc_qty': pro_line['focQty'],
+                             'discount_amount': pro_line['discountAmt'],
+                            'discount_percent': pro_line['discountPercent'],
+                            }
+                        mso_promotion_line_obj.create(cursor, user, promo_line_result, context=context)                          
+                    if manual ==True:
+                            promo_line_result = {
+                                    'promo_line_id':saleOrder_Id,
+                                    'pro_id':pro_line['pro_id'],
+                                    'from_date':pro_line['from_date'],
+                                    'to_date':pro_line['to_date'] ,
+                                     'manual':manual,
+                                }
+                            mso_promotion_line_obj.create(cursor, user, promo_line_result, context=context)  
             return True
         except Exception, e:
             return False

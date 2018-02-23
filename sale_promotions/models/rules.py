@@ -380,6 +380,7 @@ class PromotionsRules(osv.Model):
             # cursor.execute("select attribute,value,comparator from promos_rules_conditions_exps where promotion=%s",(promotion_rule.id,))
             
             # Check attribute total amount
+            # Check attribute total amount
             if attribute == 'amount_total':
                 svalue = eval(value)
                 if comparator == '==':
@@ -507,7 +508,46 @@ class PromotionsRules(osv.Model):
                         return True
                 elif comparator == '<=':    
                     if tota_qty <= product_qty:
-                        return True                
+                        return True          
+                       
+            # Check attribute is product_product category subtotal  
+            elif attribute == 'cat_total':
+                tota_qty = 0.0
+                totalValue=0.0
+                svalue = value.split(":")
+                category_code = eval(svalue[0])
+                subtotal = eval(svalue[1])
+                
+                for order_line in order.order_line:  
+                        
+                        cat_name = order_line.product_id.categ_id.name
+                        category_name1 = str(cat_name)
+                        cat_value1 = str(category_code)
+                        category_name = category_name1.strip() 
+                        cat_value = cat_value1.strip() 
+                        
+                        if category_name == cat_value:
+                            totalValue += order_line.net_total
+                x=totalValue;
+                y=subtotal;
+                if comparator == '==':
+                    if x == y:
+                        return True
+                elif comparator == '!=':    
+                    if x != y:
+                        return True
+                elif comparator == '>':
+                    if x > y:
+                        return True
+                elif comparator == '<':    
+                    if x < y:
+                        return True
+                elif comparator == '>=':
+                    if x >= y:
+                        return True
+                elif comparator == '<=':    
+                    if x <= y:
+                        return True                         
                     
             # Check attribute is sub total amount                
             elif attribute == 'prod_sub_total':   
@@ -731,6 +771,7 @@ class PromotionsRules(osv.Model):
                         if ori_qtys <= product_qty:
                             return True                    
         return False
+       
        
     def evaluate(self, cursor, user, promotion_rule, order, context=None):
         """

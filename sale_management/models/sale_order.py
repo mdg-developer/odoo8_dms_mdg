@@ -179,7 +179,7 @@ class sale_order(osv.osv):
         branch_id = False
         if section_id:
             team = self.pool.get('crm.case.section').browse(cr, uid, section_id, context=context)
-            issue_warehouse_id = team.issue_warehouse_id and  team.issue_warehouse_id.id or False
+            issue_warehouse_id = team.warehouse_id and  team.warehouse_id.id or False
             delivery_id = team.delivery_team_id and  team.delivery_team_id.id or False
             branch_id = team.branch_id and  team.branch_id.id or False
         values = {

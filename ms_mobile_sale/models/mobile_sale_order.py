@@ -52,7 +52,42 @@ class mobile_sale_order(osv.osv):
     
     _name = "mobile.sale.order"
     _description = "Mobile Sales Order"
-   
+    
+    def onchange_customer_id(self, cr, uid, ids, customer_id, context=None):
+        
+        result = {}
+        res_partner = self.pool.get('res.partner')
+        res_user = self.pool.get('res.users')
+        datas = res_partner.browse(cr, uid, customer_id, context=context)
+        user_data = res_user.browse(cr, uid, uid, context=context)
+        print 'datas', datas
+        if datas:
+            customer_code=datas.customer_code
+            if datas.credit_allow ==True:
+                type='credit'
+            else:
+                type='cash'
+            pricelist_id=datas.property_product_pricelist.id
+            outlet_type=datas.outlet_type
+            delivery_remark='delivered'
+            payment_term=datas.property_payment_term.id
+            void_flag='none'
+            branch_id=user_data.branch_id.id
+            user_id=user_data.id
+            result.update({'type':type,'pricelist_id':pricelist_id,'customer_code':customer_code,'outlet_type':outlet_type,'delivery_remark':delivery_remark,'void_flag':void_flag,'payment_term':payment_term,'user_id':user_id,'branch_id':branch_id})            
+        return {'value':result}    
+    
+    def onchange_team_id(self, cr, uid, ids, team_id, context=None):        
+        result = {}
+        team_obj = self.pool.get('crm.case.section')
+        datas = team_obj.browse(cr, uid, team_id, context=context)
+        print 'datas', datas
+        if datas:
+            warehouse_id=datas.warehouse_id.id
+            location_id=datas.location_id.id
+            result.update({'warehouse_id':warehouse_id,'location_id':location_id})            
+        return {'value':result}        
+    
     _columns = {
         'name': fields.char('Order Reference', size=64),
         'partner_id':fields.many2one('res.partner', 'Customer'),
@@ -66,8 +101,8 @@ class mobile_sale_order(osv.osv):
         'type':fields.selection([
                 ('credit', 'Credit'),
                 ('cash', 'Cash'),
-                ('consignment', 'Consignment'),
-                ('advanced', 'Advanced')
+#                 ('consignment', 'Consignment'),
+#                 ('advanced', 'Advanced')
             ], 'Payment Type'),
         'delivery_remark':fields.selection([
                 ('partial', 'Partial'),
@@ -106,6 +141,7 @@ class mobile_sale_order(osv.osv):
       'branch_id': fields.many2one('res.branch', 'Branch', required=True),
       'is_convert':fields.boolean('Is Convert', readonly=True),
       'print_count':fields.integer('RePrint Count'),
+      'is_manual':fields.boolean('Manual', readonly=True),
    #     'journal_id'  : fields.many2one('account.journal', 'Journal' ,domain=[('type','in',('cash','bank'))]),   
     }
     _order = 'id desc'
@@ -113,6 +149,7 @@ class mobile_sale_order(osv.osv):
         'date': datetime.now(),
         'm_status' : 'draft',
         'is_convert':False,
+        'type':'cash',
        
     } 
     
@@ -1012,6 +1049,12 @@ class mobile_sale_order(osv.osv):
                                                       'from_date':mso_inv_promo_data.from_date,
                                                       'to_date':mso_inv_promo_data.to_date,
                                                       'manual':mso_inv_promo_data.manual,
+                                                        'product_id':mso_inv_promo_data.product_id.id,
+                                                       'is_foc': mso_inv_promo_data.is_foc,
+                                                      'is_discount':mso_inv_promo_data.is_discount,
+                                                      'foc_qty': mso_inv_promo_data.foc_qty,
+                                                      'discount_amount': mso_inv_promo_data.discount_amount,
+                                                      'discount_percent': mso_inv_promo_data.discount_percent,
                                                                   }
                                     mso_inv_PromoLineObj.create(cr, uid, mso_inv_promo_line_result, context=context)  
             self.write(cr, uid, ids[0], {'m_status':'done'}, context=context)
@@ -1278,9 +1321,10 @@ class mobile_sale_order(osv.osv):
         cr.execute
         return datas
     def sale_team_return(self, cr, uid, section_id , saleTeamId, context=None, **kwargs):
-        cr.execute('''select DISTINCT cr.id,cr.complete_name,cr.warehouse_id,cr.name,sm.member_id,cr.code,pr.product_product_id,cr.location_id,cr.allow_foc,cr.allow_tax,cr.branch_id
-                    from crm_case_section cr, sale_member_rel sm,crm_case_section_product_product_rel pr where sm.section_id = cr.id and cr.id=pr.crm_case_section_id  
-                    and sm.member_id =%s 
+        cr.execute('''select DISTINCT cr.id,cr.complete_name,cr.warehouse_id,cr.name,sm.member_id,cr.code,pr.product_product_id,cr.location_id,cr.allow_foc,cr.allow_tax,cr.branch_id,state.name
+                    from crm_case_section cr, sale_member_rel sm,crm_case_section_product_product_rel pr,res_country_state state
+                     where sm.section_id = cr.id and cr.id=pr.crm_case_section_id  
+                     and state.id =cr.default_division and sm.member_id =%s 
                     and cr.id = %s
             ''', (section_id, saleTeamId,))
         datas = cr.fetchall()
@@ -1431,14 +1475,38 @@ class mobile_sale_order(osv.osv):
                         manual = manual
                     else:
                         manual = False
-                    promo_line_result = {
-                        'promo_line_id':saleOrder_Id,
-                        'pro_id':pro_line['pro_id'],
-                        'from_date':pro_line['from_date'],
-                        'to_date':pro_line['to_date'],
-                        'manual':manual,
-                        }
-                    mso_promotion_line_obj.create(cursor, user, promo_line_result, context=context)
+                    if pro_line['productId']:
+                        if pro_line['foc'] =='False':
+                            pro_foc=False
+                        else:
+                            pro_foc=True
+                        if pro_line['discount'] =='False':
+                            pro_discount=False       
+                        else:
+                            pro_discount=True                                    
+                        promo_line_result = {
+                            'promo_line_id':saleOrder_Id,
+                            'pro_id':pro_line['pro_id'],
+                            'from_date':pro_line['from_date'],
+                            'to_date':pro_line['to_date'],
+                            'manual':manual,
+                             'product_id':pro_line['productId'],
+                             'is_foc':pro_foc,
+                             'is_discount':pro_discount,
+                             'foc_qty': pro_line['focQty'],
+                             'discount_amount': pro_line['discountAmt'],
+                            'discount_percent': pro_line['discountPercent'],                        
+                            }
+                        mso_promotion_line_obj.create(cursor, user, promo_line_result, context=context)
+                    if manual ==True:
+                            promo_line_result = {
+                                                    'promo_line_id':saleOrder_Id,
+                                                    'pro_id':pro_line['pro_id'],
+                                                    'from_date':pro_line['from_date'],
+                                                    'to_date':pro_line['to_date'],
+                                                    'manual':manual,
+                                }
+                            mso_promotion_line_obj.create(cursor, user, promo_line_result, context=context)                      
             return True
         except Exception, e:
             return False
@@ -3316,7 +3384,27 @@ class mobile_sale_order_line(osv.osv):
         for rec in self.browse(cr, uid, ids, context=context):
             result[rec.id] = rec.product_id.uom_id
         return result    
-    
+
+    def onchange_product_id(self, cr, uid, ids, product_id, context=None):
+        """
+        onchange handler of product_id.
+        """
+        values={}
+        domain={'uom_id': []} 
+        product_obj = self.pool.get('product.product')
+
+        if  product_id:
+            product = product_obj.browse(cr, uid, product_id, context=context)   
+            values['uom_id'] = product.uom_id.id
+            cr.execute("""SELECT uom.id FROM product_product pp 
+                          LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
+                          LEFT JOIN product_template_product_uom_rel rel ON (rel.product_template_id=pt.id)
+                          LEFT JOIN product_uom uom ON (rel.product_uom_id=uom.id)
+                          WHERE pp.id = %s""", (product.id,))
+            uom_list = cr.fetchall()
+            print 'UOM-->>',uom_list
+            domain ={'uom_id': [('id', 'in', uom_list)]} 
+        return {'value': values, 'domain': domain}                           
     _columns = {
         'product_type':fields.char('Product Type'),
         'product_id':fields.many2one('product.product', 'Products'),

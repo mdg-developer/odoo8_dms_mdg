@@ -52,7 +52,29 @@
 		<menuitem id="ms_mobile_sale.menu_mobile_sale_order" parent="menu_direct_sale_order_menu"
 			name="Direct Sales Mobile" action="ms_mobile_sale.action_moble_sale_order"
 			sequence="2" />
-
+		
+		<record id="menu_direct_sale_order_menu1" model="ir.actions.act_window">
+			<field name="name">Direct Sales Mobile</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">mobile.sale.order</field>
+			<field name="domain">[('is_manual','=',True)]</field>
+			<field name="context">{'default_is_manual':
+				True,'search_default_state_filter': 1}
+			</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="ms_mobile_sale.view_mobile_sale_order_tree" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create new mobile sale order.
+				</p>
+			</field>
+		</record>		
+		
+		<menuitem id="menu_manual_sale_order" parent="menu_direct_sale_order_menu"
+			name="Direct Sales Manual" action="menu_direct_sale_order_menu1"
+			sequence="2"  groups="base.group_no_one,base.group_account_entry" />
+		
 		<record id="action_stock_requsition1" model="ir.actions.act_window">
 			<field name="name">Pre-Sales RFI</field>
 			<field name="type">ir.actions.act_window</field>
