@@ -215,6 +215,27 @@ class account_invoice(models.Model):
                     'product_uom_id': line.get('uos_id', False),
                     'analytic_account_id': line.get('account_analytic_id', False),
                 }
+            elif type == 'in_refund':
+                return {
+                    'date_maturity': line.get('date_maturity', False),
+                    'partner_id': part,
+                    'name': line['name'][:64],
+                    'date': date,
+                    'debit': line['debit'],  # line['price']>0 and line['price'],
+                    'credit': line['credit'],  # line['price']<0 and -line['price'],
+                    'account_id': line['account_id'],
+                    # 'account_id': account_id,
+                    'analytic_lines': line.get('analytic_lines', []),
+                    'amount_currency': line.get('amount_currency', False),
+                    'currency_id': line.get('currency_id', False),
+                    'tax_code_id': line.get('tax_code_id', False),
+                    'tax_amount': line.get('tax_amount', False),
+                    'ref': line.get('ref', False),
+                    'quantity': line.get('quantity', 1.00),
+                    'product_id': line.get('product_id', False),
+                    'product_uom_id': line.get('uos_id', False),
+                    'analytic_account_id': line.get('account_analytic_id', False),
+                }    
             else:            
                 return {
                     'date_maturity': line.get('date_maturity', False),
@@ -327,6 +348,7 @@ class account_invoice(models.Model):
                     # 'account_id': account_id,
                     'analytic_lines': line.get('analytic_lines', []),
                     'amount_currency': line['price'] > 0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
+                    #'amount_currency': line['price'] > 0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
                     'currency_id': line.get('currency_id', False),
                     'tax_code_id': line.get('tax_code_id', False),
                     'tax_amount': line.get('tax_amount', False),
@@ -795,7 +817,7 @@ class account_invoice(models.Model):
                     tmp_currency = res['amount_currency']      
                 if type == 'in_refund':             
                     debit += res['debit']
-                    tmp_currency = res['amount_currency']
+                    tmp_currency += res['amount_currency']
                                                                  
                 date_maturity = res['date_maturity']
                 partner_id = res['partner_id']
@@ -1196,9 +1218,9 @@ class account_invoice(models.Model):
             lines = line_cr + line_dr
             print 'lines>>>',lines
             line = [(0, 0, self.line_get_convert(l, part.id, date)) for l in lines  if l is not None]
-            
+            print 'line>>>',line
             line = inv.group_lines(iml, line)
-
+            print 'line1>>>',line
             journal = inv.journal_id.with_context(ctx)
             if journal.centralisation:
                 raise except_orm(_('User Error!'),
