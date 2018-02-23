@@ -336,8 +336,12 @@ class account_voucher(osv.osv):
                     voucher.payment_rate = voucher.voucher_rate
                 else:
                     v_rate = voucher.payment_rate            
-                        
-                v_total = ((tmp_rate - v_rate) * line.amount)    
+                
+                if tmp_rate == 1:
+                    v_total = 0
+                else:            
+                    v_total = ((tmp_rate - v_rate) * line.amount) 
+                       
                 sign = line.type == 'dr' and -1 or 1
                 currency_rate_difference = sign * (v_total)    
             move_line = {

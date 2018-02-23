@@ -767,7 +767,8 @@ class account_invoice(models.Model):
             result = [a for a in list_one if a is not None and a['main_group'] == v]
             print 'result>>>', result
             cr = self._cr
-            for res in result:
+            tmp_currency =0
+            for res in result:                
                 origin = res['ref']
                 product = self.env['product.product'].browse(res.get('product_id', False))
                 product_code = product.default_code                
@@ -780,22 +781,29 @@ class account_invoice(models.Model):
                     if type:
                         type = type[0]
                     else:
-                        type = None   
+                        type = None
+                           
                 if type == 'out_invoice':
                     debit += res['debit']
+                    tmp_currency = res['amount_currency']
                 if type == 'in_invoice':             
-                    credit += res['credit']    
+                    credit += res['credit']
+                    tmp_currency +=  -1 * res['amount_currency']
+                      
                 if type == 'out_refund':             
-                    credit += res['credit']       
+                    credit += res['credit'] 
+                    tmp_currency = res['amount_currency']      
                 if type == 'in_refund':             
-                    debit += res['debit']                                             
+                    debit += res['debit']
+                    tmp_currency = res['amount_currency']
+                                                                 
                 date_maturity = res['date_maturity']
                 partner_id = res['partner_id']
                 name = res['name']
                 date = res['date']
                 account_id = res['main_group']  # replace with product principle AR account
                 analytic_lines = res['analytic_lines']
-                amount_currency = res['amount_currency']
+                amount_currency = tmp_currency#res['amount_currency']
                 currency_id = res['currency_id']
                 tax_code_id = res['tax_code_id']
                 tax_amount = res['tax_amount']
@@ -1178,11 +1186,15 @@ class account_invoice(models.Model):
             iml = data
             print 'imllllllllllllllllllll',iml
             line_cr = [self.line_get_convert_new(l, part.id, date) for l in iml]
+            print 'line_cr>>>',line_cr
             line_tmp = [self.line_get_convert_dr(l, part.id, date) for l in iml]
+            print 'line_tmp>>>',line_tmp
             line_dr = self.line_dr_convert_account_with_principle(line_tmp)
+            print 'line_dr>>>',line_dr
             # line_product = [self.line_get_product(l, part.id, date) for l in iml]
             # line_dr = [(0, 0, self.line_get_convert_accountid(l, part.id, date)) for l in line_cr]
             lines = line_cr + line_dr
+            print 'lines>>>',lines
             line = [(0, 0, self.line_get_convert(l, part.id, date)) for l in lines  if l is not None]
             
             line = inv.group_lines(iml, line)
