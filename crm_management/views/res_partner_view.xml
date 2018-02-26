@@ -52,6 +52,11 @@
 						<group>
 							<button name="generate_customercode" type="object" string="Generate Code" />
 						</group>
+						
+						<group>
+						<!-- <field name="customer_target_id" widget="selection"/>  -->   
+						<button name="customer_target" type="object" string="Customer Target" />
+						</group>
 					</xpath>
 
 					<xpath expr="//div[@name='buttons']" position="inside">

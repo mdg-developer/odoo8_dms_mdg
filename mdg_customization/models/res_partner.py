@@ -63,6 +63,7 @@ class res_partner(osv.osv):
          'sat':fields.boolean('SAT'),
          'sun':fields.boolean('SUN'),
      'section_id':fields.many2many('crm.case.section', 'sale_team_customer_rel', 'partner_id', 'sale_team_id', string='Sales Team'),
+     #'customer_target_id':fields.many2one('customer.target','Target'),
     }
     _defaults = {
                'start_time':'01',
@@ -70,5 +71,26 @@ class res_partner(osv.osv):
                'start_rate':'am',
                'end_rate':'pm',
                'is_tax':False,
+               
     }
     
+    def customer_target(self, cr, uid, ids, context=None):
+        mod_obj = self.pool.get('ir.model.data')
+        wiz_view = mod_obj.get_object_reference(cr, uid, 'mdg_customization', 'customer_target_view')
+        for move in self.browse(cr, uid, ids, context=context):
+            ctx = {
+                'partner_id': move.id,
+                
+            }
+            act_import = {
+                'name': _('Import File'),
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'customer.target',
+                'view_id': [wiz_view[1]],
+                'nodestroy': True,
+                'target': 'new',
+                'type': 'ir.actions.act_window',
+                'context': ctx,
+            }
+            return act_import

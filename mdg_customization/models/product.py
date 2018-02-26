@@ -3,8 +3,8 @@ import openerp.addons.decimal_precision as dp
 from openerp.osv.fields import _column
 
 class product_product(osv.osv):
-    _inherit = 'product.product'
-
+    _inherit = 'product.product'    
+    
 class product_template(osv.osv):
     _inherit = 'product.template'
     _columns = {
@@ -12,6 +12,7 @@ class product_template(osv.osv):
         'is_foc':fields.boolean('FOC Item'),
         'is_posm':fields.boolean('POSM Item'),
         'big_list_price': fields.float('Bigger Price', digits_compute=dp.get_precision('Product Price'), help="Base price to compute the customer price. Sometimes called the catalog price."),
+        'report_uom_id': fields.many2one('product.uom', 'Report UOM', required=True),
        # 'list_price': fields.float('Smaller Price', digits_compute=dp.get_precision('Product Price'), help="Base price to compute the customer price. Sometimes called the catalog price."),
                     }
     

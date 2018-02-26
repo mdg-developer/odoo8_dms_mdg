@@ -41,6 +41,7 @@ MDG Customization
              'views/account_journal_view.xml',
         #     'security/sales_security.xml',
         'views/sale_order_view.xml',
+        'wizard/customer_target_wizard.xml',
     ],
     'installable': True,
     'auto_install': False,
