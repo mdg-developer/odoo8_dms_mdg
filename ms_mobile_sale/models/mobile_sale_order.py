@@ -1991,6 +1991,24 @@ class mobile_sale_order(osv.osv):
         datas = cr.fetchall()
         cr.execute
         return datas
+        
+    def get_target_setting(self, cr, uid, sale_team_id , context=None, **kwargs):
+        cr.execute('''            
+                  select tl.id ,target.partner_id,tl.product_id,tl.product_uom,tl.ach_qty,tl.target_qty,tl.target_qty -tl.ach_qty as gap 
+                    from customer_target target ,customer_target_line tl,crm_case_section_product_product_rel cr
+                    where target.id= tl.line_id
+                    and cr.product_product_id=tl.product_id
+                   and cr.crm_case_section_id =%s
+         ''', (sale_team_id,))
+        datas = cr.fetchall()
+        return datas    
+    
+    def get_stockcheck(self, cr, uid, sale_team_id , context=None, **kwargs):
+        cr.execute('''            
+                  select sc.outlet_type,scl.product_id,scl.available,scl.product_uom_qty as quantity,scl.facing  from stock_check_setting sc ,stock_check_setting_line scl where sc.id=scl.stock_setting_ids
+         ''')
+        datas = cr.fetchall()
+        return datas        
     
     def udpate_credit_notes_issue_status(self, cr, uid, sale_team_id , context=None, **kwargs):
         try:
