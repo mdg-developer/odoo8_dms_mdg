@@ -191,7 +191,7 @@ class account_bank_statement(osv.osv):
 
     _inherit = 'account.bank.statement'
     _columns = {
-                            'brand_id' :fields.many2one('res.branch', 'Branch'),
+                            'brand_id' :fields.many2one('res.branch', 'Branch',required=True),
                             }
     
     def _prepare_move(self, cr, uid, st_line, st_line_number, context=None):
