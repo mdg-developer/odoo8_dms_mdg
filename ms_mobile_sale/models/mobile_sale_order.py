@@ -2005,7 +2005,7 @@ class mobile_sale_order(osv.osv):
     
     def get_stockcheck(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('''            
-                  select sc.outlet_type,scl.product_id,scl.available,scl.product_uom_qty as quantity,scl.facing  from stock_check_setting sc ,stock_check_setting_line scl where sc.id=scl.stock_setting_ids
+                  select scl.id ,sc.outlet_type,scl.product_id,scl.product_uom_qty as quantity,scl.available,scl.facing  from stock_check_setting sc ,stock_check_setting_line scl where sc.id=scl.stock_setting_ids
          ''')
         datas = cr.fetchall()
         return datas        
