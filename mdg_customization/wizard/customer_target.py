@@ -72,7 +72,7 @@ class customer_target(osv.osv):
         return res
     
     
-    def get_so_qty(self,cr,uid,ids,t_date,partner_id,context=None):
+    def get_so_qty(self,cr,uid,ids,t_date,partner_id,outlet_type,context=None):
         month_count = 6
         start_date = end_date = first_t_date = None
         month_qty = []
@@ -90,6 +90,36 @@ class customer_target(osv.osv):
 #                start_month = start_month.replace('0','')
             customer_target_line_obj = self.pool.get('customer.target.line')
             line_ids = customer_target_line_obj.search(cr,uid,[('line_id','=',ids[0])],context=context)
+            
+            stock_check_setting_obj = self.pool.get('stock.check.setting')
+            stock_check_id = stock_check_setting_obj.search(cr,uid,[('outlet_type','=',outlet_type.id)],context=context)
+            stock_check_setting_line_obj = self.pool.get('stock.check.setting.line')
+            stock_check_setting_ids = None
+            if stock_check_id:
+                stock_check_setting_ids = stock_check_setting_line_obj.search(cr,uid,[('stock_setting_ids','=',stock_check_id[0]),('available','=',True)],context=context)
+            if not line_ids:
+                if stock_check_setting_ids:
+#                     for rec in self.pool.get('product.product').browse(cr, uid, product, context=context):
+#                         uom_id = rec.product_id.product_tmpl_id.report_uom_id.id or rec.product_id.product_tmpl_id.uom_id.id
+                    for stock_setting_id in stock_check_setting_line_obj.browse(cr,uid,stock_check_setting_ids,context):
+                        data ={
+                               'product_id':stock_setting_id.product_id.id,
+                               'line_id':ids[0],
+                               #'product_uom':uom_id,
+                               }
+                        new_id = customer_target_line_obj.create(cr,uid,data,context=context)
+            else:
+                if stock_check_id: 
+                    cr.execute("""select product_id from stock_check_setting_line where stock_setting_ids =%s and product_id not in (select product_id from customer_target_line where line_id=%s)
+                    and available='t'""",(stock_check_id[0],ids[0],))
+                    product_data = cr.fetchall()
+                    for p_id in product_data:
+                        data ={
+                                   'product_id':p_id[0],
+                                   'line_id':ids[0],
+                                   #'product_uom':uom_id,
+                                   }
+                        new_id = customer_target_line_obj.create(cr,uid,data,context=context)            
             #cr.execute("""select *  from customer_target_data(%s,%s,%s)""",(start_date,t_date,ids,))
             #cr.execute("SELECT * FROM customer_target_data( %s,%s,%s); ",(start_date,t_date,ids))
             cr.execute("""
@@ -154,6 +184,7 @@ class customer_target(osv.osv):
                     month6 = product_line['month6']
                     #print 'product>>>',product
                     line_ids = customer_target_line_obj.search(cr,uid,[('line_id','=',ids[0]),('product_id','=',product)],context=context)
+                              
                     for target in customer_target_line_obj.browse(cr, uid, line_ids, context):
                         
                         if month1 is not None and month1 > 0:
@@ -224,7 +255,7 @@ class customer_target(osv.osv):
         
         data = self.browse(cr, uid, ids)[0]
         if data:
-            self.get_so_qty(cr, uid, ids, data.date,data.partner_id.id,context=None)
+            self.get_so_qty(cr, uid, ids, data.date,data.partner_id.id,data.outlet_type,context=None)
             self.write(cr, uid, ids, {'updated_by':uid,'updated_time':fields.datetime.now()}, context=context)
         #import_file = data.sl_data
         # print 'file',data.sl_data
