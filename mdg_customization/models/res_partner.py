@@ -72,3 +72,40 @@ class res_partner(osv.osv):
                'is_tax':False,
     }
     
+    def customer_target(self, cr, uid, ids, context=None):
+        mod_obj = self.pool.get('ir.model.data')
+        wiz_view = mod_obj.get_object_reference(cr, uid, 'mdg_customization', 'customer_target_view')
+        for move in self.browse(cr, uid, ids, context=context):
+            ctx = {
+                'partner_id': move.id,
+                
+            }
+            #customer.target.form
+            target = self.pool.get('customer.target').search(cr,uid,[('partner_id','=',move.id)],limit=1,order='id desc')
+            if target:
+                return {
+                'type': 'ir.actions.act_window',
+                'name': _('Customer Target'),
+                'res_model': 'customer.target',
+                'res_id': target[0], #If you want to go on perticuler record then you can use res_id 
+    
+                'context': ctx,
+                'view_type': 'form',
+                'view_mode': 'form',
+                'view_id': [wiz_view[1]],
+                'target': 'current',
+                'nodestroy': True,
+            }
+            else:    
+                act_import = {
+                    'name': _('Customer Target'),
+                    'view_type': 'form',
+                    'view_mode': 'form',
+                    'res_model': 'customer.target',
+                    'view_id': [wiz_view[1]],
+                    'nodestroy': True,
+                    'target': 'new',
+                    'type': 'ir.actions.act_window',
+                    'context': ctx,
+                }
+                return act_import
