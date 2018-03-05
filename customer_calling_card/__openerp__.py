@@ -21,28 +21,25 @@
 ##############################################################################
 
 {
-    'name': 'MDG Customization',
+    'name': 'Customer Calling Card',
     'version': '1.0',
-    'category': 'MDG Customization',
+    'category': 'Customer Calling Card',
     'sequence': 30,
-    'summary': 'MDG Customization',
+    'summary': 'Customer Calling Card',
     'description': """
-MDG Customization
+Customer Calling Card
 """,
     'author': 'Seventh Computing',
     'website': 'http://www.7thcomputing.com',
-    'depends': ['base', 'product' , 'stock', 'product_pricelists'],
+    'depends': ['base', 'product' , 'stock', 'product_pricelists','crm_management','mdg_customization'],
     'data': [        
              'views/product_view.xml',
-             'views/location_view.xml',
+             
              'views/res_partner_view.xml',
-          #   'views/product_uom_view.xml',
-             'views/account_invoice_view.xml',
-             'views/account_journal_view.xml',
-        #     'security/sales_security.xml',
-        'views/sale_order_view.xml',
-                #'wizard/customer_target_wizard.xml',
-
+         
+        
+            'wizard/customer_target_wizard.xml',
+            'wizard/res_partner_multi_view.xml',
     ],
     'installable': True,
     'auto_install': False,
