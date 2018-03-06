@@ -408,7 +408,8 @@ class account_invoice(models.Model):
                 product = self.env['product.product'].browse(line.get('product_id', False))
                 print 'product>>>', product.id
                 print 'line.get>>>', line.get('product_id', False)
-                if  line['is_discount'] == True:
+                #if  line['is_discount'] == True:
+                if line.get('is_discount') == True:
                     if payment_type=='credit':
                         account_id = product.product_tmpl_id.categ_id.property_account_discount_credit.id
                     else:
@@ -637,7 +638,8 @@ class account_invoice(models.Model):
                 product = self.env['product.product'].browse(line.get('product_id', False))
                 print 'product>>>', product.id
                 print 'line.get>>>', line.get('product_id', False)
-                if origin and line['is_discount'] == False:
+                #if origin and line['is_discount'] == False:
+                if origin and line.get('is_discount') == False:
                     cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s  and av.state!='cancel' ", (origin, product.id,))
                     dis_amt = cr.fetchall()
                     if dis_amt:     
@@ -647,7 +649,8 @@ class account_invoice(models.Model):
                             else:
                                 discount_amt=0
                         line['price'] = line['price'] - discount_amt       
-                if  line['is_discount'] == True:
+                #if  line['is_discount'] == True:
+                if  line.get('is_discount') == True:
                     #account_id = product.product_tmpl_id.main_group.property_account_discount.id
                     if payment_type=='credit':
                         account_id = product.product_tmpl_id.categ_id.property_account_discount_credit.id
