@@ -32,7 +32,7 @@ header_fields = ['sale channel', 'postal code', 'region', 'class', 'outlet id co
                  'outlet type', 'address', 'ward', 'district', 'township', 'city/town', 'village/ village group',
                  'telephone', 'contact person', 'rb code', 'selling brand', 'branch code', 'demarcation code', 'display',
                  'ka_tha', 'website', 'title', 'job position', 'old code', 'email', 'fax' , 'credit limit', 'credit allow',
-                 'branch code','country','latitude','longitude','ctax no','exclusive']
+                 'branch code','country','latitude','longitude','ctax no','exclusive','customer','supplier']
 
 class partner(osv.osv):
     _name = 'data_import.partner'
@@ -136,6 +136,7 @@ class partner(osv.osv):
                             val = len(b3)
                     header_line = True
                     credit_limit_i = credit_allow_i = website_i = title_i = job_position_i = old_code_i = email_i = fax_i = display_i = city_i = rb_code_i = postal_code_i = region_i = sale_channel_i = class_i = demarcation_i = customer_code_i = shop_name_i = shop_type_i = address_i = street_i = state_id_i = territory_i = township_i = village_i = phone_i = name_i = brand_i = branch_code_i = ka_tha_i = latitude_i = longitude_i = ctax_no_i = exclusive_i =  None
+                    customer_i = supplier_i = None
                     column_cnt = 0
                     for cnt in range(len(ln)):
                         if ln[cnt] == '':
@@ -218,7 +219,11 @@ class partner(osv.osv):
                         elif header_field == 'ctax no':
                             ctax_no_i = i
                         elif header_field == 'exclusive':
-                            exclusive_i = i                             
+                            exclusive_i = i
+                        elif header_field == 'customer':
+                            customer_i = i 
+                        elif header_field == 'supplier':
+                            supplier_i = i                            
                     for f in [(credit_allow_i, 'credit allow'), (credit_limit_i, 'credit limit'), (website_i, 'website'), (title_i, 'title'), (job_position_i, 'job position'), (old_code_i, 'old code'), (email_i, 'email'), (fax_i, 'fax'), (display_i, 'display'), (postal_code_i, 'postal_code'), (city_i, 'city'), (rb_code_i, 'rb_code'), (region_i, 'region'), (sale_channel_i, 'sale_channel'), (class_i, 'class'), (demarcation_i, 'demarcation'), (customer_code_i, 'customer_code'), (shop_name_i, 'shop_name'), (shop_type_i, 'shop_type'), (address_i, 'address'), (street_i, 'street'), (territory_i, 'territory'), (township_i, 'township'), (village_i, 'village'), (phone_i, 'phone'), (name_i, 'name'), (brand_i, 'brand'), (branch_code_i, 'branch_code'), (ka_tha_i, 'ka_tha'),(latitude_i, 'latitude'),(longitude_i, 'longitude'),(exclusive_i, 'exclusive'),(ctax_no_i, 'ctax no')]:
                         
                         if not isinstance(f[0], int):
@@ -263,6 +268,8 @@ class partner(osv.osv):
                     import_vals['longitude'] = ln[longitude_i]
                     import_vals['ctax no'] = ln[ctax_no_i]
                     import_vals['exclusive'] = ln[exclusive_i]
+                    import_vals['customer'] = ln[customer_i]
+                    import_vals['supplier'] = ln[supplier_i]
                     amls.append(import_vals)
         if err_log:
             self.write(cr, uid, ids[0], {'note': err_log})
@@ -284,7 +291,7 @@ class partner(osv.osv):
                 website = job_position = old_code = email = fax = title = region = postal_code = class_name = customer_code = shop_name = shop_type = address = street = territory = township =division= None
                 village = phone = brand = contact = city = sale_channel = branch_code = demarcation = ka_tha = display = class_val = latitude = longitude = ctax_registration_no = None
                 credit_limit = 0
-                credit_allow = False
+                credit_allow = customer = supplier = False
                 exclusive=False
                 
                 if aml['credit allow']:
@@ -307,6 +314,22 @@ class partner(osv.osv):
                             exclusive = False
                     except Exception, e:
                         credit_allow = False
+                if aml['customer']:
+                    try:
+                        if str(aml['customer']).strip() == '1':
+                            customer = True
+                        else:
+                            customer = False
+                    except Exception, e:
+                        customer = False
+                if aml['supplier']:
+                    try:
+                        if str(aml['supplier']).strip() == '1':
+                            supplier = True
+                        else:
+                            supplier = False
+                    except Exception, e:
+                        supplier = False
                 if aml['website']:
                     website = str(aml['website'])
                 if aml['job position']:
@@ -589,7 +612,9 @@ class partner(osv.osv):
                        'partner_latitude':latitude,
                        'partner_longitude':longitude,
                        'ctax_registration_no':ctax_registration_no ,
-                       'isexclusive':exclusive}
+                       'isexclusive':exclusive,
+                       'customer':customer,
+                       'supplier':supplier}
                 # ##below code is purpose for contained customer_code
 #                 if shop_name or customer_code and shop_ids and sale_channel_ids:
                 if shop_name:
