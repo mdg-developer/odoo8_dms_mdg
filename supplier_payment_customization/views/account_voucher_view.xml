@@ -32,9 +32,21 @@
 			<field name="arch" type="xml">
 				<data>
 					<field name="journal_id" position="after">
-						<field name="discount_account_id" />
+						<!-- <field name="discount_account_id" /> -->
+						<field name="voucher_rate" on_change="rate_validation(payment_rate_currency_id, min_exchange_rate, max_exchange_rate, voucher_rate, context)" attrs="{'invisible': [('type','=','receipt')]}"/>
+						<field name="exchange_rate" readonly="1" attrs="{'invisible': [('type','=','receipt')]}"/>
+						<field name="min_exchange_rate" readonly="1" attrs="{'invisible': [('type','=','receipt')]}"/>
+						<field name="max_exchange_rate" readonly="1" attrs="{'invisible': [('type','=','receipt')]}"/>
 					</field>
 					
+					<xpath expr="//label[@for='payment_rate']" position="replace" />
+					
+					<field name="payment_rate" position="replace">
+						<field name="payment_rate" invisible="1" on_change="onchange_amount(amount, payment_rate, partner_id, journal_id, currency_id, type, date, payment_rate_currency_id, company_id, context)"/>
+					</field>
+					<field name="payment_rate_currency_id" position="replace">
+                    	<field name="payment_rate_currency_id" invisible="1" class="oe_inline" on_change="onchange_payment_rate_currency(currency_id, payment_rate, payment_rate_currency_id, date, amount, company_id, context)" groups="base.group_multi_currency"/>
+                    </field>
 					<!-- <field name="reconcile" position="after">
 						<field name="total_discount" sum="Total Discount" on_change="onchange_discount_amount(total_discount, context)"/>
 					</field> -->

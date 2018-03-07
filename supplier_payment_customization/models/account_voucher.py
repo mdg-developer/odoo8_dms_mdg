@@ -62,7 +62,7 @@ class account_voucher(osv.osv):
                         'total_discount':fields.float('Discount'),
                         'writeoff_amount': fields.function(_get_writeoff_amount, string='Difference Amount', type='float', readonly=True, help="Computed as the difference between the amount stated in the voucher and the sum of allocation on the voucher lines."),
                         'discount_account_id': fields.related('company_id', 'discount_account_id', type="many2one",
-                                                               relation='account.account', required=True,
+                                                               relation='account.account', required=False,
                                                                string="Discount Account",
                                                                domain="[('type', '=', 'other')]" ),
                         'voucher_rate':fields.float('Rate',default=1),
@@ -143,6 +143,77 @@ class account_voucher(osv.osv):
                 return True
             else:               
                raise osv.except_osv(_('Please Check Rate'), _("Rate shouldn't less than Minimum Exchange Rate or Rate shouldn't greater than Maximum Exchange Rate"))
+           
+    def onchange_journal(self, cr, uid, ids, journal_id, line_ids, tax_id, partner_id, date, amount, ttype, company_id, context=None):
+        if context is None:
+            context = {}
+        if not journal_id:
+            return False
+        journal_pool = self.pool.get('account.journal')
+        journal = journal_pool.browse(cr, uid, journal_id, context=context)
+        if ttype in ('sale', 'receipt'):
+            account_id = journal.default_debit_account_id
+        elif ttype in ('purchase', 'payment'):
+            account_id = journal.default_credit_account_id
+        else:
+            account_id = journal.default_credit_account_id or journal.default_debit_account_id
+        tax_id = False
+        if account_id and account_id.tax_ids:
+            tax_id = account_id.tax_ids[0].id
+
+        vals = {'value':{} }
+        if ttype in ('sale', 'purchase'):
+            vals = self.onchange_price(cr, uid, ids, line_ids, tax_id, partner_id, context)
+            vals['value'].update({'tax_id':tax_id,'amount': amount})
+        currency_id = False
+        if journal.currency:
+            currency_id = journal.currency.id
+        else:
+            currency_id = journal.company_id.currency_id.id
+        
+        #get tolerance rate
+        if currency_id:
+            currency_obj = self.pool.get('res.currency')
+            payment_rate = 1.0
+            payment_rate_currency_id = journal.currency.id or journal.company_id.currency_id.id
+            if payment_rate_currency_id != currency_id:
+                tmp = currency_obj.browse(cr, uid, payment_rate_currency_id, context=context).rate
+                payment_rate = tmp / currency_obj.browse(cr, uid, currency_id, context=context).rate
+                
+                
+            vals = self.onchange_payment_rate_currency(cr, uid, ids, payment_rate_currency_id, payment_rate, payment_rate_currency_id, date, amount, company_id, context=context)
+            cur_id = currency_obj.browse(cr, uid, currency_id, context=context)
+            if cur_id:
+                tolerance = cur_id.tolerance
+            rate = self.get_rate(cr, uid, ids, currency_id, date, context=context)
+            rate = float(format(rate, '.2f'))
+            vals['value'].update({'voucher_rate': rate})
+            if rate == 0:
+               vals['value'].update({'voucher_rate': 1}) 
+            vals['value'].update({'payment_rate': payment_rate})
+            vals['value'].update({'exchange_rate': rate})
+            vals['value'].update({'min_exchange_rate': rate - tolerance})
+            vals['value'].update({'max_exchange_rate': rate + tolerance})
+            for key in vals.keys():
+                vals[key].update(vals[key])
+                    
+        period_ids = self.pool['account.period'].find(cr, uid, dt=date, context=dict(context, company_id=company_id))
+        vals['value'].update({
+            'currency_id': currency_id,
+            'payment_rate_currency_id': currency_id,
+            'period_id': period_ids and period_ids[0] or False
+        })
+        #in case we want to register the payment directly from an invoice, it's confusing to allow to switch the journal 
+        #without seeing that the amount is expressed in the journal currency, and not in the invoice currency. So to avoid
+        #this common mistake, we simply reset the amount to 0 if the currency is not the invoice currency.
+        if context.get('payment_expected_currency') and currency_id != context.get('payment_expected_currency'):
+            vals['value']['amount'] = 0
+            amount = 0
+        if partner_id:
+            res = self.onchange_partner_id(cr, uid, ids, partner_id, journal_id, amount, currency_id, ttype, date, context)
+            for key in res.keys():
+                vals[key].update(res[key])
+        return vals
                 
     def onchange_date(self, cr, uid, ids, date, currency_id, payment_rate_currency_id, amount, company_id, context=None):
         """
