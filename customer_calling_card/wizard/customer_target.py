@@ -271,6 +271,11 @@ class customer_target_line(osv.osv):
         for rec in self.browse(cr, uid, ids, context=context):
             result[rec.id] = rec.product_id.product_tmpl_id.report_uom_id.id or rec.product_id.product_tmpl_id.uom_id.id
         return result  
+    def _get_price_from_product(self, cr, uid, ids, field_name, arg, context=None):
+        result = {}
+        for rec in self.browse(cr, uid, ids, context=context):
+            result[rec.id] = rec.product_id.product_tmpl_id.list_price
+        return result      
     
     def _amount_6ams(self, cr, uid, ids, name, args, context=None):
         res = dict.fromkeys(ids, 0)
@@ -301,7 +306,7 @@ class customer_target_line(osv.osv):
                 'product_id':fields.many2one('product.product', 'Product Name'),
                 #'product_uom':fields.many2one('product.uom', 'UOM',readonly=True,required=True),            
                 'product_uom':fields.function(_get_uom_from_product, type='many2one', relation='product.uom', string='UOM'),
-                'price':fields.float('Unit Price'),
+                'price':fields.function(_get_price_from_product, type='float', string='Unit Price'),
                 'month1':fields.float('Month1'),
                 'month2':fields.float('Month2'),
                 'month3':fields.float('Month3'),

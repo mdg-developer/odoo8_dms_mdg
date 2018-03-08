@@ -37,6 +37,8 @@ class customer_stock_check_line(osv.osv):
                 'product_id':fields.many2one('product.product', 'Product'),
                 'available': fields.boolean('Available',default=False),
                 'product_uom_qty':fields.boolean('QTY',default=False),
-                'facing':fields.boolean('Facing',default=False),          
+                'facing':fields.boolean('Facing',default=False),    
+                'chiller':fields.boolean('Chiller',default=False),          
+      
                 }
 customer_stock_check_line()    

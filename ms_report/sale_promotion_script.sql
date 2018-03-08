@@ -87,10 +87,6 @@ ALTER TABLE public.pre_directsale_with_promotion
   OWNER TO odoo;
 
 
--- View: public.promotion_sale_temp_report
-
--- DROP VIEW public.promotion_sale_temp_report;
-
 CREATE OR REPLACE VIEW public.promotion_sale_temp_report AS 
 SELECT DISTINCT (aa.code::text || '-'::text) || aa.name::text as account_name,
     aa.name AS account_desc,
@@ -110,7 +106,9 @@ SELECT DISTINCT (aa.code::text || '-'::text) || aa.name::text as account_name,
     invoice_line.discount_amt,
     uom.name AS uom,
     invoice_line.price_unit AS unit_price,
-    invoice_line.price_subtotal AS sub_total,
+    invoice_line.price_subtotal AS net_total,
+    invoice_line.discount,
+    invoice_line.price_subtotal + invoice_line.discount_amt as  sub_total,
     promotion.description AS promotion,
     promotion.id as promotion_id,
     ai.branch_id,

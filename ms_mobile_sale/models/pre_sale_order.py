@@ -318,12 +318,12 @@ class pre_sale_order(osv.osv):
                                               'from_date':pre_promo_data.from_date,
                                               'to_date':pre_promo_data.to_date,
                                               'manual':pre_promo_data.manual,
-                                              'product_id':pre_promo_data.product_id.id,
-                                               'is_foc': pre_promo_data.is_foc,
-                                              'is_discount':pre_promo_data.is_discount,
-                                              'foc_qty': pre_promo_data.foc_qty,
-                                              'discount_amount': pre_promo_data.discount_amount,
-                                              'discount_percent': pre_promo_data.discount_percent,
+#                                               'product_id':pre_promo_data.product_id.id,
+#                                                'is_foc': pre_promo_data.is_foc,
+#                                               'is_discount':pre_promo_data.is_discount,
+#                                               'foc_qty': pre_promo_data.foc_qty,
+#                                               'discount_amount': pre_promo_data.discount_amount,
+#                                               'discount_percent': pre_promo_data.discount_percent,
                                                           }
                             saleOrderPromoLineObj.create(cr, uid, so_promo_line_result, context=context)                                   
                     if so_id and  so_state != 'cancel':
@@ -369,39 +369,39 @@ class pre_sale_order(osv.osv):
                         manual = manual
                     else:
                         manual = False  
-                    print  'pro_line ',len(pro_line)    
-                    if pro_line['productId']:
-                        if pro_line['foc'] =='False':
-                            pro_foc=False
-                        else:
-                            pro_foc=True
-                        if pro_line['discount'] =='False':
-                            pro_discount=False       
-                        else:
-                            pro_discount=True                     
-                        promo_line_result = {
-                            'promo_line_id':saleOrder_Id,
-                            'pro_id':pro_line['pro_id'],
-                            'from_date':pro_line['from_date'],
-                            'to_date':pro_line['to_date'] ,
-                             'manual':manual,
-                             'product_id':pro_line['productId'],
-                             'is_foc':pro_foc,
-                             'is_discount':pro_discount,
-                             'foc_qty': pro_line['focQty'],
-                             'discount_amount': pro_line['discountAmt'],
-                            'discount_percent': pro_line['discountPercent'],
-                            }
-                        mso_promotion_line_obj.create(cursor, user, promo_line_result, context=context)                          
-                    if manual ==True:
-                            promo_line_result = {
+#                     print  'pro_line ',len(pro_line)    
+#                     if pro_line['productId']:
+#                         if pro_line['foc'] =='False':
+#                             pro_foc=False
+#                         else:
+#                             pro_foc=True
+#                         if pro_line['discount'] =='False':
+#                             pro_discount=False       
+#                         else:
+#                             pro_discount=True                     
+#                         promo_line_result = {
+#                             'promo_line_id':saleOrder_Id,
+#                             'pro_id':pro_line['pro_id'],
+#                             'from_date':pro_line['from_date'],
+#                             'to_date':pro_line['to_date'] ,
+#                              'manual':manual,
+# #                              'product_id':pro_line['productId'],
+# #                              'is_foc':pro_foc,
+# #                              'is_discount':pro_discount,
+# #                              'foc_qty': pro_line['focQty'],
+# #                              'discount_amount': pro_line['discountAmt'],
+# #                             'discount_percent': pro_line['discountPercent'],
+#                             }
+#                         mso_promotion_line_obj.create(cursor, user, promo_line_result, context=context)                          
+#                     if manual ==True:
+                    promo_line_result = {
                                     'promo_line_id':saleOrder_Id,
                                     'pro_id':pro_line['pro_id'],
                                     'from_date':pro_line['from_date'],
                                     'to_date':pro_line['to_date'] ,
                                      'manual':manual,
                                 }
-                            mso_promotion_line_obj.create(cursor, user, promo_line_result, context=context)  
+                    mso_promotion_line_obj.create(cursor, user, promo_line_result, context=context)  
             return True
         except Exception, e:
             return False

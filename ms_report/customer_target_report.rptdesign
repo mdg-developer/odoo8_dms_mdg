@@ -1501,6 +1501,8 @@ from crm_case_section ccs
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
                             <label id="1447">
+                                <property name="fontWeight">bold</property>
+                                <property name="textAlign">center</property>
                                 <text-property name="text">Customer</text-property>
                             </label>
                         </cell>
@@ -1740,7 +1742,7 @@ from crm_case_section ccs
                                 <property name="fontSize">10pt</property>
                                 <property name="fontWeight">bold</property>
                                 <property name="textAlign">center</property>
-                                <text-property name="text">Ach Percent</text-property>
+                                <text-property name="text">Ach(%)</text-property>
                             </label>
                         </cell>
                         <cell id="1505">
@@ -1763,7 +1765,7 @@ from crm_case_section ccs
                 </header>
                 <footer>
                     <row id="1349">
-                        <property name="height">0.7395833333333334in</property>
+                        <property name="height">0.3958333333333333in</property>
                         <cell id="1351">
                             <property name="borderBottomStyle">solid</property>
                             <property name="borderBottomWidth">thin</property>
@@ -1773,31 +1775,11 @@ from crm_case_section ccs
                             <property name="borderRightWidth">thin</property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
-                            <grid id="1569">
-                                <column id="1570"/>
-                                <row id="1571">
-                                    <cell id="1572">
-                                        <label id="1575">
-                                            <property name="fontWeight">bold</property>
-                                            <property name="textAlign">left</property>
-                                            <text-property name="text">Total Target(A):</text-property>
-                                        </label>
-                                    </cell>
-                                </row>
-                                <row id="1573">
-                                    <cell id="1574">
-                                        <data id="1577">
-                                            <property name="fontWeight">bold</property>
-                                            <structure name="numberFormat">
-                                                <property name="category">Currency</property>
-                                                <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
-                                            </structure>
-                                            <property name="textAlign">center</property>
-                                            <property name="resultSetColumn">uom_price</property>
-                                        </data>
-                                    </cell>
-                                </row>
-                            </grid>
+                            <label id="1575">
+                                <property name="fontWeight">bold</property>
+                                <property name="textAlign">center</property>
+                                <text-property name="text">Total Target</text-property>
+                            </label>
                         </cell>
                         <cell id="1352">
                             <property name="borderBottomStyle">solid</property>
@@ -1808,31 +1790,11 @@ from crm_case_section ccs
                             <property name="borderRightWidth">thin</property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
-                            <grid id="1578">
-                                <column id="1579"/>
-                                <row id="1580">
-                                    <cell id="1581">
-                                        <label id="1584">
-                                            <property name="fontWeight">bold</property>
-                                            <property name="textAlign">left</property>
-                                            <text-property name="text">Total Ach(B):</text-property>
-                                        </label>
-                                    </cell>
-                                </row>
-                                <row id="1582">
-                                    <cell id="1583">
-                                        <data id="1585">
-                                            <property name="fontWeight">bold</property>
-                                            <structure name="numberFormat">
-                                                <property name="category">Currency</property>
-                                                <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
-                                            </structure>
-                                            <property name="textAlign">center</property>
-                                            <property name="resultSetColumn">invoice_amount</property>
-                                        </data>
-                                    </cell>
-                                </row>
-                            </grid>
+                            <label id="1584">
+                                <property name="fontWeight">bold</property>
+                                <property name="textAlign">center</property>
+                                <text-property name="text">Total Ach</text-property>
+                            </label>
                         </cell>
                         <cell id="1353">
                             <property name="borderBottomStyle">solid</property>
@@ -1843,31 +1805,11 @@ from crm_case_section ccs
                             <property name="borderRightWidth">thin</property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
-                            <grid id="1586">
-                                <column id="1587"/>
-                                <row id="1588">
-                                    <cell id="1589">
-                                        <label id="1592">
-                                            <property name="fontWeight">bold</property>
-                                            <property name="textAlign">left</property>
-                                            <text-property name="text">Invoice Qty(C):</text-property>
-                                        </label>
-                                    </cell>
-                                </row>
-                                <row id="1590">
-                                    <cell id="1591">
-                                        <data id="1593">
-                                            <property name="fontWeight">bold</property>
-                                            <structure name="numberFormat">
-                                                <property name="category">Currency</property>
-                                                <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
-                                            </structure>
-                                            <property name="textAlign">center</property>
-                                            <property name="resultSetColumn">invoice_count</property>
-                                        </data>
-                                    </cell>
-                                </row>
-                            </grid>
+                            <label id="1592">
+                                <property name="fontWeight">bold</property>
+                                <property name="textAlign">center</property>
+                                <text-property name="text">Invoice Qty</text-property>
+                            </label>
                         </cell>
                         <cell id="1354">
                             <property name="borderBottomStyle">solid</property>
@@ -1878,31 +1820,11 @@ from crm_case_section ccs
                             <property name="borderRightWidth">thin</property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
-                            <grid id="1594">
-                                <column id="1595"/>
-                                <row id="1596">
-                                    <cell id="1597">
-                                        <label id="1600">
-                                            <property name="fontWeight">bold</property>
-                                            <property name="textAlign">left</property>
-                                            <text-property name="text">Value/Inv:B/C If  Not Zero</text-property>
-                                        </label>
-                                    </cell>
-                                </row>
-                                <row id="1598">
-                                    <cell id="1599">
-                                        <data id="1602">
-                                            <property name="fontWeight">bold</property>
-                                            <structure name="numberFormat">
-                                                <property name="category">Currency</property>
-                                                <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
-                                            </structure>
-                                            <property name="textAlign">center</property>
-                                            <property name="resultSetColumn">value</property>
-                                        </data>
-                                    </cell>
-                                </row>
-                            </grid>
+                            <label id="1600">
+                                <property name="fontWeight">bold</property>
+                                <property name="textAlign">center</property>
+                                <text-property name="text">Value/Inv</text-property>
+                            </label>
                         </cell>
                         <cell id="1355">
                             <property name="borderBottomStyle">solid</property>
@@ -1913,31 +1835,11 @@ from crm_case_section ccs
                             <property name="borderRightWidth">thin</property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
-                            <grid id="1603">
-                                <column id="1604"/>
-                                <row id="1605">
-                                    <cell id="1606">
-                                        <label id="1609">
-                                            <property name="fontWeight">bold</property>
-                                            <property name="textAlign">center</property>
-                                            <text-property name="text">% Ach:</text-property>
-                                        </label>
-                                    </cell>
-                                </row>
-                                <row id="1607">
-                                    <cell id="1608">
-                                        <data id="1610">
-                                            <property name="fontWeight">bold</property>
-                                            <structure name="numberFormat">
-                                                <property name="category">Currency</property>
-                                                <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
-                                            </structure>
-                                            <property name="textAlign">center</property>
-                                            <property name="resultSetColumn">ach_total</property>
-                                        </data>
-                                    </cell>
-                                </row>
-                            </grid>
+                            <label id="1609">
+                                <property name="fontWeight">bold</property>
+                                <property name="textAlign">center</property>
+                                <text-property name="text">Ach(%)</text-property>
+                            </label>
                         </cell>
                         <cell id="1356">
                             <property name="colSpan">2</property>
@@ -1950,26 +1852,126 @@ from crm_case_section ccs
                             <property name="borderRightWidth">thin</property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
-                            <grid id="1561">
-                                <column id="1562"/>
-                                <column id="1563"/>
-                                <row id="1564">
-                                    <cell id="1565">
-                                        <label id="1551">
-                                            <property name="fontWeight">bold</property>
-                                            <property name="textAlign">right</property>
-                                            <text-property name="text">SKU Count:</text-property>
-                                        </label>
-                                    </cell>
-                                    <cell id="1566">
-                                        <data id="1550">
-                                            <property name="fontWeight">bold</property>
-                                            <property name="textAlign">left</property>
-                                            <property name="resultSetColumn">Aggregation</property>
-                                        </data>
-                                    </cell>
-                                </row>
-                            </grid>
+                            <label id="1551">
+                                <property name="fontWeight">bold</property>
+                                <property name="textAlign">center</property>
+                                <text-property name="text">SKU Count</text-property>
+                            </label>
+                        </cell>
+                    </row>
+                    <row id="1612">
+                        <property name="height">0.3229166666666667in</property>
+                        <cell id="1613">
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">thin</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <data id="1577">
+                                <property name="fontWeight">bold</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Currency</property>
+                                    <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">center</property>
+                                <property name="resultSetColumn">uom_price</property>
+                            </data>
+                        </cell>
+                        <cell id="1614">
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">thin</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <data id="1585">
+                                <property name="fontWeight">bold</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Currency</property>
+                                    <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">center</property>
+                                <property name="resultSetColumn">invoice_amount</property>
+                            </data>
+                        </cell>
+                        <cell id="1615">
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">thin</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <data id="1593">
+                                <property name="fontWeight">bold</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Currency</property>
+                                    <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">center</property>
+                                <property name="resultSetColumn">invoice_count</property>
+                            </data>
+                        </cell>
+                        <cell id="1616">
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">thin</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <data id="1602">
+                                <property name="fontWeight">bold</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Currency</property>
+                                    <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">center</property>
+                                <property name="resultSetColumn">value</property>
+                            </data>
+                        </cell>
+                        <cell id="1617">
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">thin</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <data id="1610">
+                                <property name="fontWeight">bold</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Currency</property>
+                                    <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">center</property>
+                                <property name="resultSetColumn">ach_total</property>
+                            </data>
+                        </cell>
+                        <cell id="1618">
+                            <property name="colSpan">2</property>
+                            <property name="rowSpan">1</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">thin</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <data id="1550">
+                                <property name="fontWeight">bold</property>
+                                <property name="textAlign">center</property>
+                                <property name="resultSetColumn">Aggregation</property>
+                            </data>
                         </cell>
                     </row>
                     <row id="1552">
@@ -2029,7 +2031,7 @@ from crm_case_section ccs
             </group>
             <detail>
                 <row id="1467">
-                    <property name="height">0.7916666666666666in</property>
+                    <property name="height">0.3645833333333333in</property>
                     <cell id="1469">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2128,16 +2130,29 @@ from crm_case_section ccs
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="1488">
-                            <property name="paddingLeft">1pt</property>
-                            <property name="paddingRight">5pt</property>
-                            <structure name="numberFormat">
-                                <property name="category">Currency</property>
-                                <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
-                            </structure>
-                            <property name="textAlign">right</property>
-                            <property name="resultSetColumn">ach_percent</property>
-                        </data>
+                        <grid id="1625">
+                            <column id="1626"/>
+                            <column id="1627"/>
+                            <row id="1628">
+                                <cell id="1629">
+                                    <data id="1488">
+                                        <property name="paddingLeft">1pt</property>
+                                        <property name="paddingRight">5pt</property>
+                                        <structure name="numberFormat">
+                                            <property name="category">Currency</property>
+                                            <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
+                                        </structure>
+                                        <property name="textAlign">right</property>
+                                        <property name="resultSetColumn">ach_percent</property>
+                                    </data>
+                                </cell>
+                                <cell id="1630">
+                                    <label id="1620">
+                                        <text-property name="text">%</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                        </grid>
                     </cell>
                     <cell id="1475">
                         <property name="borderBottomStyle">solid</property>

@@ -108,7 +108,14 @@
 			</field>
 		</record>
 
-		<menuitem id="menu_customer_stock_check" parent="menu_customization.menu_customer_customization_menu"
-			action="action_partner_stock_check" sequence="6" />
+<!-- 		<menuitem id="menu_customer_stock_check" parent="menu_customization.menu_customer_customization_menu" -->
+<!-- 			action="action_partner_stock_check" sequence="6" /> -->
+		
+		<menuitem id="menu_main_customer_stock_check" name="Stock Check"
+			parent="base.menu_base_partner" sequence="3" />
+		<menuitem id="menu_customer_stock_check" parent="menu_main_customer_stock_check"
+			name="Stock Check" action="action_partner_stock_check"
+			sequence="1" />
+
     </data>
 </openerp>

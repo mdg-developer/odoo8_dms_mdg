@@ -645,12 +645,12 @@ class mobile_sale_order(osv.osv):
                                               'from_date':mso_promo_data.from_date,
                                               'to_date':mso_promo_data.to_date,
                                               'manual':mso_promo_data.manual,
-                                               'product_id':mso_promo_data.product_id.id,
-                                               'is_foc': mso_promo_data.is_foc,
-                                              'is_discount':mso_promo_data.is_discount,
-                                              'foc_qty': mso_promo_data.foc_qty,
-                                              'discount_amount': mso_promo_data.discount_amount,
-                                              'discount_percent': mso_promo_data.discount_percent,
+#                                                'product_id':mso_promo_data.product_id.id,
+#                                                'is_foc': mso_promo_data.is_foc,
+#                                               'is_discount':mso_promo_data.is_discount,
+#                                               'foc_qty': mso_promo_data.foc_qty,
+#                                               'discount_amount': mso_promo_data.discount_amount,
+#                                               'discount_percent': mso_promo_data.discount_percent,
                                                           }
                             msoPromoLineObj.create(cr, uid, mso_promo_line_result, context=context)                    
                     if soId and ms_ids.order_line:
@@ -1050,12 +1050,13 @@ class mobile_sale_order(osv.osv):
                                                       'from_date':mso_inv_promo_data.from_date,
                                                       'to_date':mso_inv_promo_data.to_date,
                                                       'manual':mso_inv_promo_data.manual,
-                                                        'product_id':mso_inv_promo_data.product_id.id,
-                                                       'is_foc': mso_inv_promo_data.is_foc,
-                                                      'is_discount':mso_inv_promo_data.is_discount,
-                                                      'foc_qty': mso_inv_promo_data.foc_qty,
-                                                      'discount_amount': mso_inv_promo_data.discount_amount,
-                                                      'discount_percent': mso_inv_promo_data.discount_percent,
+#                                                         'product_id':mso_inv_promo_data.product_id.id,
+#                                                        'is_foc': mso_inv_promo_data.is_foc,
+#                                                       'is_discount':mso_inv_promo_data.is_discount,
+#                                                       'foc_qty': mso_inv_promo_data.foc_qty,
+#                                                       'discount_amount': mso_inv_promo_data.discount_amount,
+#                                                       'discount_percent': mso_inv_promo_data.discount_percent,
+#                                                                   
                                                                   }
                                     mso_inv_PromoLineObj.create(cr, uid, mso_inv_promo_line_result, context=context)  
             self.write(cr, uid, ids[0], {'m_status':'done'}, context=context)
@@ -1476,38 +1477,38 @@ class mobile_sale_order(osv.osv):
                         manual = manual
                     else:
                         manual = False
-                    if pro_line['productId']:
-                        if pro_line['foc'] =='False':
-                            pro_foc=False
-                        else:
-                            pro_foc=True
-                        if pro_line['discount'] =='False':
-                            pro_discount=False       
-                        else:
-                            pro_discount=True                                    
-                        promo_line_result = {
-                            'promo_line_id':saleOrder_Id,
-                            'pro_id':pro_line['pro_id'],
-                            'from_date':pro_line['from_date'],
-                            'to_date':pro_line['to_date'],
-                            'manual':manual,
-                             'product_id':pro_line['productId'],
-                             'is_foc':pro_foc,
-                             'is_discount':pro_discount,
-                             'foc_qty': pro_line['focQty'],
-                             'discount_amount': pro_line['discountAmt'],
-                            'discount_percent': pro_line['discountPercent'],                        
-                            }
-                        mso_promotion_line_obj.create(cursor, user, promo_line_result, context=context)
-                    if manual ==True:
-                            promo_line_result = {
-                                                    'promo_line_id':saleOrder_Id,
-                                                    'pro_id':pro_line['pro_id'],
-                                                    'from_date':pro_line['from_date'],
-                                                    'to_date':pro_line['to_date'],
-                                                    'manual':manual,
-                                }
-                            mso_promotion_line_obj.create(cursor, user, promo_line_result, context=context)                      
+#                     if pro_line['productId']:
+#                         if pro_line['foc'] =='False':
+#                             pro_foc=False
+#                         else:
+#                             pro_foc=True
+#                         if pro_line['discount'] =='False':
+#                             pro_discount=False       
+#                         else:
+#                             pro_discount=True                                    
+#                         promo_line_result = {
+#                             'promo_line_id':saleOrder_Id,
+#                             'pro_id':pro_line['pro_id'],
+#                             'from_date':pro_line['from_date'],
+#                             'to_date':pro_line['to_date'],
+#                             'manual':manual,
+# #                              'product_id':pro_line['productId'],
+# #                              'is_foc':pro_foc,
+# #                              'is_discount':pro_discount,
+# #                              'foc_qty': pro_line['focQty'],
+# #                              'discount_amount': pro_line['discountAmt'],
+# #                             'discount_percent': pro_line['discountPercent'],                        
+#                             }
+#                         mso_promotion_line_obj.create(cursor, user, promo_line_result, context=context)
+#                     if manual ==True:
+                    promo_line_result = {
+                                            'promo_line_id':saleOrder_Id,
+                                            'pro_id':pro_line['pro_id'],
+                                            'from_date':pro_line['from_date'],
+                                            'to_date':pro_line['to_date'],
+                                            'manual':manual,
+                        }
+                    mso_promotion_line_obj.create(cursor, user, promo_line_result, context=context)                      
             return True
         except Exception, e:
             return False
@@ -2000,7 +2001,7 @@ class mobile_sale_order(osv.osv):
                     and cr.product_product_id=tl.product_id
                    and cr.crm_case_section_id =%s
                    and tl.target_qty > 0
-         ''', (sale_team_id,))
+         ''', (sale_team_id,))                
         datas = cr.fetchall()
         return datas    
     
@@ -2587,7 +2588,87 @@ class mobile_sale_order(osv.osv):
         except Exception, e:
             print 'False'
             return False
-    
+
+    # Stock Check From Mobile
+    def create_stock_check_from_mobile(self, cursor, user, vals, context=None):
+        print 'vals', vals
+
+        try : 
+            stock_check_obj = self.pool.get('partner.stock.check')
+            stock_check_line_obj = self.pool.get('partner.stock.check.line')
+            str = "{" + vals + "}"
+            str = str.replace(":''", ":'")  # change Order_id
+            str = str.replace("'',", "',")  # null
+            str = str.replace(":',", ":'',")  # due to order_id
+            str = str.replace(":'}", ":''}")
+            str = str.replace("}{", "}|{")
+            
+            new_arr = str.split('|')
+            result = []
+            for data in new_arr:
+                x = ast.literal_eval(data)
+                result.append(x)
+            stock = []
+            stock_line = []
+            for r in result:
+                print "length", len(r)
+                if len(r) >= 8:
+                    stock.append(r)                                    
+                else:
+                    stock_line.append(r)
+            if stock:
+                for sr in stock:                                    
+                    cursor.execute('select id ,township ,outlet_type from res_partner where customer_code = %s ', (sr['customer_code'],))
+                    customer_data = cursor.fetchone()
+                    if customer_data:
+                        customer_id = customer_data[0]
+                        township_id = customer_data[1]
+                        outlet_type =customer_data[2]
+
+                    else:
+                        customer_id = None
+                        township_id = None
+                        outlet_type= None
+                    
+                           
+                    mso_result = {
+                        'partner_id':customer_id,
+                        'sale_team_id':sr['sale_team_id'] ,
+                         'user_id':sr['user_id'] ,
+                        'township_id': township_id,
+                        'outlet_type':outlet_type,
+                        'date':sr['date'],
+                        'customer_code':sr['customer_code'],
+                        'branch_id':sr['branch'],
+                    }
+                    stock_id = stock_check_obj.create(cursor, user, mso_result, context=context)
+                    
+                    for srl in stock_line:
+                        if (sr['st_id'] == srl['stock_check_no']):
+                            cursor.execute("select sequence from product_product where id =%s",(srl['product_id'],))
+                            product_data = cursor.fetchone()
+                            if  product_data:
+                                sequence = product_data[0]
+                            else:
+                                sequence=None
+                                
+                            mso_line_res = {                                                            
+                                      'stock_check_ids':stock_id,
+                                      'sequence':sequence,
+                                      'product_id':(srl['product_id']),
+                                      'product_uom':int(srl['uom_id']),
+                                      'available':(srl['avail']),
+                                      'product_uom_qty':(srl['qty']),
+                                      'facing':(srl['facing']),
+                                      'chiller':(srl['chiller']),
+                                      }
+                        stock_check_line_obj.create(cursor, user, mso_line_res, context=context)
+            print 'True'
+            return True       
+        except Exception, e:
+            print 'False'
+            return False
+            
     def get_promos_outlet(self, cr, uid, context=None, **kwargs):    
         cr.execute("""select promos_rules_id,outlettype_id from promos_rules_outlettype_rel""")
         datas = cr.fetchall()        
