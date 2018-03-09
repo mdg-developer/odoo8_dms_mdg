@@ -82,13 +82,14 @@ class account_bank_statement_line(osv.osv):
             if st_line.currency_id == company_currency:
                 amount = st_line.amount_currency
             else:
-                ctx = context.copy()
+                ctx = context.copy()                                                        
+                ctx['active_model'] = 'account.bank.statement'
                 ctx['date'] = st_line.date
                 amount = currency_obj.compute(cr, uid, st_line.statement_id.currency.id, company_currency.id, st_line.amount, context=ctx)
         else:
             amount = st_line.amount
         bank_st_move_vals = bs_obj._prepare_bank_move_line(cr, uid, st_line, move_id, amount, company_currency.id, context=context)
-        aml_obj.create(cr, uid, bank_st_move_vals, context=context)
+        bnk_moveline_id = aml_obj.create(cr, uid, bank_st_move_vals, context=context)
         # Complete the dicts
         st_line_currency = st_line.currency_id or statement_currency
         st_line_currency_rate = st_line.currency_id and (st_line.amount_currency / st_line.amount) or False
@@ -111,6 +112,7 @@ class account_bank_statement_line(osv.osv):
                 mv_line_dict['account_id'] = mv_line.account_id.id
             if st_line_currency.id != company_currency.id:
                 ctx = context.copy()
+                ctx['active_model'] = 'account.bank.statement'
                 ctx['date'] = st_line.date
                 mv_line_dict['amount_currency'] = mv_line_dict['debit'] - mv_line_dict['credit']
                 mv_line_dict['currency_id'] = st_line_currency.id
@@ -135,12 +137,12 @@ class account_bank_statement_line(osv.osv):
                         credit_at_old_rate = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, mv_line_dict['credit'], context=ctx)
                     mv_line_dict['credit'] = credit_at_old_rate
                     mv_line_dict['debit'] = debit_at_old_rate
-                    if debit_at_old_rate - debit_at_current_rate:
-                        currency_diff = debit_at_current_rate - debit_at_old_rate
-                        to_create.append(self.get_currency_rate_line(cr, uid, st_line, -currency_diff, move_id, context=context))
-                    if credit_at_old_rate - credit_at_current_rate:
-                        currency_diff = credit_at_current_rate - credit_at_old_rate
-                        to_create.append(self.get_currency_rate_line(cr, uid, st_line, currency_diff, move_id, context=context))
+#                     if debit_at_old_rate - debit_at_current_rate:
+#                         currency_diff = debit_at_current_rate - debit_at_old_rate
+#                         to_create.append(self.get_currency_rate_line(cr, uid, st_line, -currency_diff, move_id, context=context))
+#                     if credit_at_old_rate - credit_at_current_rate:
+#                         currency_diff = credit_at_current_rate - credit_at_old_rate
+#                         to_create.append(self.get_currency_rate_line(cr, uid, st_line, currency_diff, move_id, context=context))
                     if mv_line.currency_id and mv_line_dict['currency_id'] == mv_line.currency_id.id:
                         amount_unreconciled = mv_line.amount_residual_currency
                     else:
@@ -167,10 +169,20 @@ class account_bank_statement_line(osv.osv):
         if st_line_currency.id != company_currency.id:
             diff_amount = bank_st_move_vals['debit'] - bank_st_move_vals['credit'] \
                 + sum(aml['debit'] for aml in to_create) - sum(aml['credit'] for aml in to_create)
-            if not company_currency.is_zero(diff_amount):
+            if not company_currency.is_zero(diff_amount):                
+                for bnk_id in aml_obj.browse(cr,uid,bnk_moveline_id,context=context):
+                    value = {}
+                    if bnk_id.debit !=0:
+                        value.update({'debit':bnk_id.debit + diff_amount})
+                    elif bnk_id.credit !=0:
+                        value.update({'credit':bnk_id.credit + diff_amount})
+                    elif bnk_id.state <> 'valid':
+                        value.update({'state':'valid'}) 
+                              
+                    aml_obj.write(cr,uid,bnk_id.id,value,context=context)
                 diff_aml = self.get_currency_rate_line(cr, uid, st_line, diff_amount, move_id, context=context)
                 diff_aml['name'] = _('Rounding error from currency conversion')
-                to_create.append(diff_aml)
+                #to_create.append(diff_aml)
         # Create move lines
         move_line_pairs_to_reconcile = []
         for mv_line_dict in to_create:
