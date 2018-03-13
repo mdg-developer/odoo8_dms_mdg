@@ -85,6 +85,7 @@ class PromotionsRules(osv.Model):
     _name = "promos.rules"
     _description = __doc__
     _order = 'sequence'
+    _rec_name = 'description'    
 
     def generate_code(self, cr, uid, ids, val, context=None):
             codeObj = self.pool.get('res.promotion.code')

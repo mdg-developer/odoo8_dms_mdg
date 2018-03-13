@@ -136,7 +136,7 @@ class sale_order_line(osv.osv):
                'net_total':fields.function(_amount_line, string='Total', digits_compute= dp.get_precision('Account')),
                'discount':fields.float('Discount (%)',store=True, readonly=True),
                'discount_amt':fields.float('Discount (amt)',store=True, readonly=True),
-               'sale_foc':fields.boolean('FOC', readonly=True),
+               'sale_foc':fields.boolean('FOC', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
               # 'show_amt':fields.function(_amount_line2,string='Total Discount(-)',readonly=True)
                
                }
@@ -201,6 +201,8 @@ class sale_order_line(osv.osv):
                 'product_id': line.product_id.id or False,
                 'invoice_line_tax_id': [(6, 0, [x.id for x in line.tax_id])],
                 'account_analytic_id': line.order_id.project_id and line.order_id.project_id.id or False,
+                'promotion_id':line.promotion_id and line.promotion_id.id or False,
+
             }
 
         return res
