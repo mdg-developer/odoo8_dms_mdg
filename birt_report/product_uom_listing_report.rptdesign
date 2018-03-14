@@ -1213,6 +1213,7 @@ group by pc.name,pc.id order by pc.name asc]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="116">
+                            <property name="textAlign">center</property>
                             <property name="resultSetColumn">product_id</property>
                         </data>
                     </cell>
@@ -1226,6 +1227,7 @@ group by pc.name,pc.id order by pc.name asc]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="117">
+                            <property name="textAlign">center</property>
                             <property name="resultSetColumn">template_id</property>
                         </data>
                     </cell>
@@ -1265,6 +1267,7 @@ group by pc.name,pc.id order by pc.name asc]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="120">
+                            <property name="textAlign">center</property>
                             <property name="resultSetColumn">category_id</property>
                         </data>
                     </cell>
@@ -1291,6 +1294,7 @@ group by pc.name,pc.id order by pc.name asc]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="123">
+                            <property name="textAlign">center</property>
                             <property name="resultSetColumn">uoms_id</property>
                         </data>
                     </cell>
@@ -1317,6 +1321,7 @@ group by pc.name,pc.id order by pc.name asc]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="125">
+                            <property name="textAlign">right</property>
                             <property name="resultSetColumn">uoms_ratio</property>
                         </data>
                     </cell>
@@ -1330,6 +1335,7 @@ group by pc.name,pc.id order by pc.name asc]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="126">
+                            <property name="textAlign">right</property>
                             <property name="resultSetColumn">price</property>
                         </data>
                     </cell>
@@ -1343,6 +1349,7 @@ group by pc.name,pc.id order by pc.name asc]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="127">
+                            <property name="textAlign">right</property>
                             <property name="resultSetColumn">min_qty</property>
                         </data>
                     </cell>
@@ -1356,6 +1363,7 @@ group by pc.name,pc.id order by pc.name asc]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="128">
+                            <property name="textAlign">right</property>
                             <property name="resultSetColumn">_sequence</property>
                         </data>
                     </cell>
@@ -1369,6 +1377,7 @@ group by pc.name,pc.id order by pc.name asc]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="129">
+                            <property name="textAlign">right</property>
                             <property name="resultSetColumn">based_on</property>
                         </data>
                     </cell>
@@ -1382,6 +1391,7 @@ group by pc.name,pc.id order by pc.name asc]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="130">
+                            <property name="textAlign">right</property>
                             <property name="resultSetColumn">price_discount</property>
                         </data>
                     </cell>
@@ -1395,6 +1405,7 @@ group by pc.name,pc.id order by pc.name asc]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="131">
+                            <property name="textAlign">right</property>
                             <property name="resultSetColumn">price_surcharge</property>
                         </data>
                     </cell>
@@ -1408,6 +1419,7 @@ group by pc.name,pc.id order by pc.name asc]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="132">
+                            <property name="textAlign">right</property>
                             <property name="resultSetColumn">rounding</property>
                         </data>
                     </cell>
@@ -1421,6 +1433,7 @@ group by pc.name,pc.id order by pc.name asc]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="133">
+                            <property name="textAlign">right</property>
                             <property name="resultSetColumn">min_margin</property>
                         </data>
                     </cell>
@@ -1434,6 +1447,7 @@ group by pc.name,pc.id order by pc.name asc]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="135">
+                            <property name="textAlign">right</property>
                             <property name="resultSetColumn">max_margin</property>
                         </data>
                     </cell>
