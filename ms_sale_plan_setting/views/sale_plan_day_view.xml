@@ -36,7 +36,50 @@
 							</group>
 							<notebook>
 								<page string="Customers">
-									<field name="day_customer_ids" widget="many2many_list">
+								<field name="day_line_ids" >
+									<form string="Customers">
+										<sheet>
+											<group>
+												<field name="sequence" digits="(14,0)" />
+											    <field name="partner_id" />
+											    <field name="outlet_type" />
+											    <field name="township" />                 
+		                						<field name="branch_id" />
+		                						<field name="section_ids" />
+		                						<field name="sales_channel" />
+		                						<field name="frequency_id" />
+		               							<field name="class_id" />
+		                						<field name="delivery_team_id" />
+											</group>
+										</sheet>
+									</form>
+									<tree string="Customers" editable="bottom">
+										<field name="sequence" digits="(14,0)" />
+									    <field name="partner_id" readonly="1"/>
+									    <field name="outlet_type" readonly="1"/>
+									    <field name="township" readonly="1"/>                 
+                						<field name="branch_id" readonly="1"/>
+                						<field name="section_ids" readonly="1"/>
+                						<field name="sales_channel" readonly="1"/>
+                						<field name="frequency_id" readonly="1"/>
+               							<field name="class_id" readonly="1"/>
+                						<field name="delivery_team_id" readonly="1"/>
+									</tree>
+								</field>
+									<!-- <field name="day_line_ids" > 
+									    <tree string="Customers" editable="bottom">
+									           
+									    <field name="sequence" digits="(14,0)" />
+									    <field name="partner_id"/>
+									    <field name="outlet_type"/>
+									    <field name="township"/>                 
+                						<field name="branch_id"/>
+                						<field name="section_ids"/>
+                						<field name="sales_channel"/>
+                						<field name="frequency_id"/>
+               							<field name="class_id"/>
+                						<field name="delivery_team_id"/>
+                						</tree>
 										<kanban quick_create="false" create="true">
 											<field name="name" />
 											<templates>
@@ -53,7 +96,7 @@
 												</t>
 											</templates>
 										</kanban>
-									</field>
+									</field> -->
 								</page>
 							</notebook>
 						</page>
