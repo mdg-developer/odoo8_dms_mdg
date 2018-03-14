@@ -10,13 +10,13 @@ from openerp.addons.connector.exception import FailedJobError
 from openerp.addons.connector.jobrunner.runner import ConnectorRunner
 
 @job(default_channel='root.preorder')
-def automation_pre_order(session, list_mobile):
+def automation_pre_order(session,list_mobile):
     context = session.context.copy()
     cr = session.cr
     uid = session.uid
-    print 'automation pre order:', list_mobile
+    print 'automation pre order:',list_mobile
     mobile_obj = session.pool.get('pre.sale.order')
-    # list_mobile = mobile_obj.search(cr, uid, [('void_flag', '=', 'none'), ('m_status', '=', 'draft'), ('partner_id', '!=', None)])            
+    #list_mobile = mobile_obj.search(cr, uid, [('void_flag', '=', 'none'), ('m_status', '=', 'draft'), ('partner_id', '!=', None)])            
     for mobile in list_mobile: 
         mobile_obj.action_convert_presaleorder(cr, uid, [mobile], context=context)    
     return True
@@ -69,7 +69,7 @@ class pre_sale_order(osv.osv):
                 ('voided', 'Voided'),
                 ('none', 'Unvoid')
             ], 'Void'),
-      'is_convert':fields.boolean('Is Convert', readonly=True),
+      'is_convert':fields.boolean('Is Convert',readonly=True),
       'print_count':fields.integer('RePrint Count'),
     }
     _order = 'id desc'
@@ -95,7 +95,7 @@ class pre_sale_order(osv.osv):
             str = str.replace("}{", "}|{")
             new_arr = str.split('|')
             result = []
-            so_ids = []
+            so_ids=[]
             for data in new_arr:
                 x = ast.literal_eval(data)
                 result.append(x)
@@ -190,8 +190,8 @@ class pre_sale_order(osv.osv):
             print 'True'
             
             session = ConnectorSession(cursor, user, context)
-            jobid = automation_pre_order.delay(session, so_ids, priority=10)
-            print "Job", jobid
+            jobid=automation_pre_order.delay(session,so_ids, priority=10)
+            print "Job",jobid
             runner = ConnectorRunner()
             runner.run_jobs()
             return True 
@@ -222,13 +222,13 @@ class pre_sale_order(osv.osv):
                 for preObj_ids in presaleorderObj.browse(cr, uid, ids[0], context=context):
                     if preObj_ids:
                         print 'Sale Team', preObj_ids.sale_team
-                        # for multi Sale Team
-                        cr.execute("select delivery_team_id from res_partner where id =%s", (preObj_ids.partner_id.id,))
-                        delivery_data = cr.fetchall()
+                        #for multi Sale Team
+                        cr.execute("select delivery_team_id from res_partner where id =%s",(preObj_ids.partner_id.id,))
+                        delivery_data=cr.fetchall()
                         if delivery_data:
                             delivery_id = delivery_data[0][0]
                             if delivery_id is None:
-                                delivery_id = None
+                                delivery_id =None
                         else:
                             delivery_id = None
                             
@@ -242,7 +242,7 @@ class pre_sale_order(osv.osv):
                         cr.execute('select warehouse_id from crm_case_section where id = %s ', (delivery_id,))
                         data = cr.fetchall()
                         if data:
-                            warehouse_id = data[0][0]
+                            warehouse_id=data[0][0]
                         else:
                             warehouse_id = None                            
                         cr.execute('select company_id from res_users where id=%s', (preObj_ids.user_id.id,))
@@ -253,7 +253,7 @@ class pre_sale_order(osv.osv):
                         elif preObj_ids.void_flag == 'none':
                             so_state = 'manual'
                             cancel_user_id = None
-                        print 'so_ssssssssssssstae', so_state
+                        print 'so_ssssssssssssstae',so_state
                         saleOrderResult = {'partner_id':preObj_ids.partner_id.id,
                                                         'customer_code':preObj_ids.customer_code,
                                                         'sale_plan_name':preObj_ids.sale_plan_name,
@@ -294,7 +294,7 @@ class pre_sale_order(osv.osv):
                                     sale_foc = line_id.foc
                                     priceUnit = line_id.price_unit
                                     productName = line_id.product_id.name
-                                product_data = self.pool.get('product.product').browse(cr, uid, line_id.product_id.id, context=context)   
+                                product_data = self.pool.get('product.product').browse(cr, uid,line_id.product_id.id, context=context)   
                                 detailResult = {'order_id':so_id,
                                                         'product_type':product_data.product_tmpl_id.type,
                                                         'product_id':line_id.product_id.id,
@@ -309,21 +309,15 @@ class pre_sale_order(osv.osv):
                                                         }   
                                 saleOrderLineObj.create(cr, uid, detailResult, context=context)
                     if so_id:
-                        # Insert Sale Order Promotion Line
+                        #Insert Sale Order Promotion Line
                         for so_p_line in preObj_ids.promos_line_ids:
-                            pre_promo_data = pre_promotion_line_obj.browse(cr, uid, so_p_line.id, context=context)
+                            pre_promo_data=pre_promotion_line_obj.browse(cr, uid, so_p_line.id, context=context)
                             so_promo_line_result = {
                                               'promo_line_id':so_id,
                                               'pro_id':pre_promo_data.pro_id.id,
                                               'from_date':pre_promo_data.from_date,
                                               'to_date':pre_promo_data.to_date,
                                               'manual':pre_promo_data.manual,
-#                                               'product_id':pre_promo_data.product_id.id,
-#                                                'is_foc': pre_promo_data.is_foc,
-#                                               'is_discount':pre_promo_data.is_discount,
-#                                               'foc_qty': pre_promo_data.foc_qty,
-#                                               'discount_amount': pre_promo_data.discount_amount,
-#                                               'discount_percent': pre_promo_data.discount_percent,
                                                           }
                             saleOrderPromoLineObj.create(cr, uid, so_promo_line_result, context=context)                                   
                     if so_id and  so_state != 'cancel':
@@ -363,45 +357,21 @@ class pre_sale_order(osv.osv):
                         saleOrder_Id = data[0][0]
                     else:
                         saleOrder_Id = None
-                    cursor.execute("select manual from promos_rules where id=%s", (pro_line['pro_id'],))
-                    manual = cursor.fetchone()[0]
+                    cursor.execute("select manual from promos_rules where id=%s",(pro_line['pro_id'],))
+                    manual =cursor.fetchone()[0]
                     if manual is not None:
-                        manual = manual
+                        manual=manual
                     else:
-                        manual = False  
-#                     print  'pro_line ',len(pro_line)    
-#                     if pro_line['productId']:
-#                         if pro_line['foc'] =='False':
-#                             pro_foc=False
-#                         else:
-#                             pro_foc=True
-#                         if pro_line['discount'] =='False':
-#                             pro_discount=False       
-#                         else:
-#                             pro_discount=True                     
-#                         promo_line_result = {
-#                             'promo_line_id':saleOrder_Id,
-#                             'pro_id':pro_line['pro_id'],
-#                             'from_date':pro_line['from_date'],
-#                             'to_date':pro_line['to_date'] ,
-#                              'manual':manual,
-# #                              'product_id':pro_line['productId'],
-# #                              'is_foc':pro_foc,
-# #                              'is_discount':pro_discount,
-# #                              'foc_qty': pro_line['focQty'],
-# #                              'discount_amount': pro_line['discountAmt'],
-# #                             'discount_percent': pro_line['discountPercent'],
-#                             }
-#                         mso_promotion_line_obj.create(cursor, user, promo_line_result, context=context)                          
-#                     if manual ==True:
+                        manual=False                                    
                     promo_line_result = {
-                                    'promo_line_id':saleOrder_Id,
-                                    'pro_id':pro_line['pro_id'],
-                                    'from_date':pro_line['from_date'],
-                                    'to_date':pro_line['to_date'] ,
-                                     'manual':manual,
-                                }
-                    mso_promotion_line_obj.create(cursor, user, promo_line_result, context=context)  
+                        'promo_line_id':saleOrder_Id,
+                        'pro_id':pro_line['pro_id'],
+                        'from_date':pro_line['from_date'],
+                        'to_date':pro_line['to_date'] ,
+                         'manual':manual,
+
+                        }
+                    mso_promotion_line_obj.create(cursor, user, promo_line_result, context=context)
             return True
         except Exception, e:
             return False
@@ -431,6 +401,7 @@ class pre_sale_order_line(osv.osv):
         'sub_total':fields.float('Sub Total'),
         'foc':fields.boolean('FOC'),
         'manual_foc':fields.boolean('Manual Foc'),
+        'promotion_id': fields.many2one('promos.rules', 'Promotion', readonly=True)  
     }
     _defaults = {
        'product_uos_qty':1.0,
@@ -445,23 +416,15 @@ class pre_promotion_line(osv.osv):
               'from_date':fields.datetime('From Date'),
               'to_date':fields.datetime('To Date'),
               'manual':fields.boolean('Manual'),
-              'product_id': fields.many2one('product.product', 'Product', readonly=False),
-              'is_foc': fields.boolean('Is FOC', readonly=False),
-              'is_discount': fields.boolean('Is Discount', readonly=False),
-              'foc_qty': fields.float('Foc Qty', readonly=False),
-              'discount_amount': fields.float('Discount Amount', readonly=False),
-              'discount_percent': fields.float('Discount Percent', readonly=False),
               }
     _defaults = {
         'manual':False,
-        'is_foc':False,
-        'is_discount':False,
     }
     
     def onchange_promo_id(self, cr, uid, ids, pro_id, context=None):
             result = {}
             promo_pool = self.pool.get('promos.rules')
-            datas = promo_pool.read(cr, uid, pro_id, ['from_date', 'to_date', 'manual'], context=context)
+            datas = promo_pool.read(cr, uid, pro_id, ['from_date', 'to_date','manual'], context=context)
     
             if datas:
                 result.update({'from_date':datas['from_date']})

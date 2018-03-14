@@ -74,6 +74,7 @@ ACTION_TYPES = [
     ('prod_dis_double', _('Double Discount % on SubTotal')),
     ('prod_multi_get_x_by_limit', _('Buy Multi Products get X free By Limit')),
     ('foc_any_prod_fix', _('FOC Any Product by Fix')),
+    ('discount_amount_by_product', _('Discount Amount By Product')),
 ]
 
 
@@ -85,6 +86,7 @@ class PromotionsRules(osv.Model):
     _name = "promos.rules"
     _description = __doc__
     _order = 'sequence'
+    _rec_name = 'description'    
 
     def generate_code(self, cr, uid, ids, val, context=None):
             codeObj = self.pool.get('res.promotion.code')
@@ -1615,8 +1617,17 @@ class PromotionsRulesActions(osv.Model):
                               'arguments':"0.00",
                               }
                    }            
+
+        if action_type in ['discount_amount_by_product', ] :
+            return{
+                   'value' : {
+                              'product_code':"'discount_product_code'",
+                              'arguments':"0.00",
+                              }
+                   }            
         # Finally if nothing works prod_dis_double
-        return {}
+        return {}    
+    
     
     _columns = {
         'sequence':fields.integer('Sequence', required=True),
