@@ -5,17 +5,19 @@
       <field name="name">product.pricelist.import.form</field>
       <field name="model">product.pricelist.import</field>
       <field name="arch" type="xml">
-        <form string="Product Import" version="7.0">
-        <header>
-        <button name="product_import" string="Import" type="object" class="oe_highlight" />
-        </header>
+        <form string="Product Import" version="7.0">        
           <group col="4">
             <separator string="Select your file :" colspan="4"/>
             <field name="file" filename="import_fname"/>
             	<field name="import_fname" invisible="1" class="oe_inline oe_right"/>
             <newline/>
-            <field name="note" colspan="4"/>
+            <field name="note" colspan="4" nolabel="1" width="850" 	height="200" />
           </group>
+          	<footer>
+        		<button name="product_import" string="Import" type="object" class="oe_highlight" />
+        		or
+						<button string="Cancel" class="oe_link" special="cancel" />
+        	</footer>
         </form>
       </field>
     </record>

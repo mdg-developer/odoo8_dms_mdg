@@ -1,13 +1,17 @@
-from openerp.osv import orm
-from openerp.osv import fields, osv
-from xlrd import open_workbook
+import base64, StringIO, csv
+from openerp.osv import orm, fields, osv
 from openerp.tools.translate import _
+import xlrd
+from xlrd import open_workbook
 from datetime import datetime
-import base64
+import openerp.addons.decimal_precision as dp
 import logging
 _logger = logging.getLogger(__name__)
 
-header_fields=['product code','minimum quantity','pricelist','product category','discount amount']
+header_fields=['product_id','template_id','category_id',
+               'uoms_id','min qty','sequence','based_on',
+               'price_discount','price_surcharge','rounding',
+               'min_margin','max_margin']
 class product_pricelist_import(osv.osv):
     _name="product.pricelist.import"
     _columns={
@@ -45,6 +49,7 @@ class product_pricelist_import(osv.osv):
         product_obj = self.pool.get('product.product')
         category_obj = self.pool.get('product.category')
         pricelist_item_obj = self.pool.get('product.pricelist.item')
+        pricelist_obj = self.pool.get('product.pricelist')
         
         data = self.browse(cr,uid,ids)[0]
         import_file = data.file
@@ -94,7 +99,7 @@ class product_pricelist_import(osv.osv):
                                 count = count + 1
                                 val = count
                     header_line = True
-                    product_code_i = minimum_quantity_i = pricelist_i = product_category_i = discount_amount_i = None
+                    product_i = product_tmpl_i = uoms_id_i = category_id_i = min_qty_i = sequence_i = based_on_i = max_margin_i = min_margin_i = price_surcharge_i = price_discount_i = rounding_i = None
                     column_cnt = 0
                     for cnt in range(len(ln)):
                         if ln[cnt] == '':
@@ -109,17 +114,31 @@ class product_pricelist_import(osv.osv):
                         if header_field not in header_fields:
                             err_log += '\n' + _("Invalid CSV File, Header Field '%s' is not supported !") %ln[i]
                         # required header fields : account, debit, credit
-                        elif header_field == 'product code':
-                            product_code_i = i
-                        elif header_field == 'minimum quantity':
-                            minimum_quantity_i = i
-                        elif header_field == 'pricelist':
-                            pricelist_i = i
-                        elif header_field == 'product category':
-                            product_category_i = i
-                        elif header_field =='discount amount':
-                            discount_amount_i = i
-                    for f in [(product_code_i,'product code'),(minimum_quantity_i,'minimum quantity'),(pricelist_i,'pricelist'),(product_category_i,'product category'),(discount_amount_i,'discount amount')]:
+                        elif header_field == 'product_id':
+                            product_i = i
+                        elif header_field == 'template_id':
+                            product_tmpl_i = i
+                        elif header_field == 'category_id':
+                            category_id_i = i
+                        elif header_field == 'uoms_id':
+                            uoms_id_i = i
+                        elif header_field == 'min qty':
+                            min_qty_i = i
+                        elif header_field == 'sequence':
+                            sequence_i = i
+                        elif header_field == 'based_on':
+                            based_on_i = i
+                        elif header_field == 'price_discount':
+                            price_discount_i = i
+                        elif header_field == 'price_surcharge':
+                            price_surcharge_i = i
+                        elif header_field == 'rounding':
+                            rounding_i = i 
+                        elif header_field == 'min_margin':
+                            min_margin_i = i
+                        elif header_field == 'max_margin':
+                            max_margin_i = i                        
+                    for f in [(product_i,'product_id'),(product_tmpl_i,'template_id'),(category_id_i,'category_id'),(uoms_id_i,'uoms_id'),(min_qty_i,'min qty'),(sequence_i,'sequence'),(based_on_i,'based_on'),(price_discount_i,'price_discount'),(price_surcharge_i,'price_surcharge'),(rounding_i,'rounding'), (min_margin_i,'min_margin'),(max_margin_i,'max_margin')]:
                         if not isinstance(f[0],int):
                             err_log += '\n'+ _("Invalid Excel file, Header '%s' is missing !") % f[1]
                          
@@ -128,82 +147,106 @@ class product_pricelist_import(osv.osv):
                 #add the without value for without header fields columns
                 for i in range(0, val):
                     ln.append('')
-                if ln and ln[0] and ln[0][0] not in ['#','']:
+                if ln and ln[0] and ln[0][0] not in ['#','']:   
+                    if ln[product_i]:
+                        pname=abcdd=None
+                        pid = int(ln[product_i])
+                        cr.execute('select name_template from product_product where id = %s',(pid,))
+                        product_ids = cr.fetchall()
+                        if product_ids:
+                            pname =product_ids[0]
+                        else:
+                            pname = None
+                    else:
+                        pname = ''                 
                     import_vals = {}
-                    import_vals['product code'] =  ln[product_code_i]
-                    import_vals['minimum quantity'] = ln[minimum_quantity_i]
-                    import_vals['pricelist'] = ln[pricelist_i]
-                    import_vals['product category'] = ln[product_category_i]
-                    import_vals['discount amount'] = ln[discount_amount_i]
-                    amls.append(import_vals)
-       
-        
+                    abcdd=pname[0]
+                    abcdd=abcdd.strip()
+                    import_vals['price_version_id'] =  version_id
+                    import_vals['name'] =abcdd
+                    import_vals['product_id'] =  int(ln[product_i])
+                    import_vals['product_tmpl_id'] = int(ln[product_tmpl_i])
+                    import_vals['categ_id'] = int(ln[category_id_i])
+                    import_vals['product_uom_id'] = int(ln[uoms_id_i])
+                    import_vals['min_quantity'] = int(ln[min_qty_i])
+                    import_vals['sequence'] =  int(ln[sequence_i])
+                    import_vals['base'] = int(ln[based_on_i])
+                    import_vals['price_discount'] = float(ln[price_discount_i])
+                    import_vals['price_surcharge'] = float(ln[price_surcharge_i])
+                    import_vals['price_round'] = float(ln[rounding_i])
+                    import_vals['price_min_margin'] =  float(ln[min_margin_i])
+                    import_vals['price_max_margin'] = float(ln[max_margin_i])
+                    pricelist_item_obj.create(cr, uid, import_vals,context=context)
+                    amls.append((0, 0, import_vals))               
+
         if err_log:
             self.write(cr, uid, ids[0], {'note': err_log})
             self.write(cr, uid, ids[0], {'state': 'error'})
         else:
-            try:
-                for aml in amls:
-                    product_id = code = category_id = name = min_qty = category = price_list = price_type = prod = temp = None
-                    discount_amount = new_price =0.0
-                    if aml['product code']:
-                        code = str(aml['product code'])
-                        cr.execute('select id from product_product where lower(default_code) like %s',(code.lower(),))
-                        product_ids = cr.fetchall()
-                        if product_ids:
-                            product_id = product_ids[0]
-                        else:
-                            product_id = None
-                    else:
-                        code = ''
-                        
-                    if code:
-                        name = code
-                    if aml['product category']:
-                        category = str(aml['product category'])
-                        cr.execute('select id from product_category where lower(name) like %s',(category.lower(),))
-                        category_ids = cr.fetchall()
-                        if category_ids:
-                            category_id =category_ids[0]
-                        else:
-                            category_id = None
-                    else:
-                        category = ''
-                        category_id = None
-                        
-                    if aml['minimum quantity']:
-                        min_qty = float(aml['minimum quantity'])
-                    
-                    if aml['pricelist']:
-                        price_list = str(aml['pricelist'])
-                        if price_list.lower() =='public price':
-                            price_type = int(1)
-                        elif price_list.lower() =='cost price':
-                            price_type = int(2)
-                        elif price_list.lower() =='other price':
-                            price_type = int(-1)
-                        elif price_list.lower() =='supplier price':
-                            price_type = int(-2)
-                    if aml['discount amount']:
-                        discount_amount = float(aml['discount amount'])
-                        
-                    if product_id:
-                        prod = self.pool.get('product.product').read(cr, uid, product_id, ['product_tmpl_id'])
-                        if prod:
-                            product_tmpl_id = prod['product_tmpl_id'][0]
-                        temp = self.pool.get('product.template').read(cr,uid,product_tmpl_id,['list_price'])
-                        if temp:
-                            product_price = temp['list_price']
-                        
-                        if discount_amount:
-                            new_price = (product_price * (1 + 0.0)) + discount_amount
-                            pricelist_res_discount = {'name':name, 'price_version_id':version_id, 'product_id':product_id, 'categ_id':category_id, 'min_quantity':min_qty, 'base':price_type, 'base_pricelist_id':None, 'price_surcharge':discount_amount, 'new_price':new_price}
-                            pricelist_item_obj.create(cr,uid,pricelist_res_discount,context=context)
-                        
-                        if discount_amount == 0:
-                            new_price = (product_price * (1 + 0.0)) + discount_amount
-                            pricelist_res_nodiscount = {'name':name, 'price_version_id':version_id, 'product_id':product_id, 'categ_id':category_id, 'min_quantity':min_qty, 'base':price_type, 'base_pricelist_id':None, 'price_surcharge':product_price, 'new_price':new_price}
-                            pricelist_item_obj.create(cr, uid, pricelist_res_nodiscount, context=context)
-                        
-            except Exception,e:
-                raise osv.except_osv(_('Warning!'),_('Something wrong with this %s .')%(e))    
+            amls = sorted(amls)
+            print amls  
+#             try:
+#                 for aml in amls:
+#                     product_id = code = category_id = name = min_qty = category = price_list = price_type = prod = temp = None
+#                     discount_amount = new_price =0.0
+#                     if aml['product code']:
+#                         code = str(aml['product code'])
+#                         cr.execute('select id from product_product where lower(default_code) like %s',(code.lower(),))
+#                         product_ids = cr.fetchall()
+#                         if product_ids:
+#                             product_id = product_ids[0]
+#                         else:
+#                             product_id = None
+#                     else:
+#                         code = ''
+#                         
+#                     if code:
+#                         name = code
+#                     if aml['product category']:
+#                         category = str(aml['product category'])
+#                         cr.execute('select id from product_category where lower(name) like %s',(category.lower(),))
+#                         category_ids = cr.fetchall()
+#                         if category_ids:
+#                             category_id =category_ids[0]
+#                         else:
+#                             category_id = None
+#                     else:
+#                         category = ''
+#                         category_id = None
+#                         
+#                     if aml['minimum quantity']:
+#                         min_qty = float(aml['minimum quantity'])
+#                     
+#                     if aml['pricelist']:
+#                         price_list = str(aml['pricelist'])
+#                         if price_list.lower() =='public price':
+#                             price_type = int(1)
+#                         elif price_list.lower() =='cost price':
+#                             price_type = int(2)
+#                         elif price_list.lower() =='other price':
+#                             price_type = int(-1)
+#                         elif price_list.lower() =='supplier price':
+#                             price_type = int(-2)
+#                     if aml['discount amount']:
+#                         discount_amount = float(aml['discount amount'])
+#                         
+#                     if product_id:
+#                         prod = self.pool.get('product.product').read(cr, uid, product_id, ['product_tmpl_id'])
+#                         if prod:
+#                             product_tmpl_id = prod['product_tmpl_id'][0]
+#                         temp = self.pool.get('product.template').read(cr,uid,product_tmpl_id,['list_price'])
+#                         if temp:
+#                             product_price = temp['list_price']
+#                         
+#                         if discount_amount:
+#                             new_price = (product_price * (1 + 0.0)) + discount_amount
+#                             pricelist_res_discount = {'name':name, 'price_version_id':version_id, 'product_id':product_id, 'categ_id':category_id, 'min_quantity':min_qty, 'base':price_type, 'base_pricelist_id':None, 'price_surcharge':discount_amount, 'new_price':new_price}
+#                             pricelist_item_obj.create(cr,uid,pricelist_res_discount,context=context)
+#                         
+#                         if discount_amount == 0:
+#                             new_price = (product_price * (1 + 0.0)) + discount_amount
+#                             pricelist_res_nodiscount = {'name':name, 'price_version_id':version_id, 'product_id':product_id, 'categ_id':category_id, 'min_quantity':min_qty, 'base':price_type, 'base_pricelist_id':None, 'price_surcharge':product_price, 'new_price':new_price}
+#                             pricelist_item_obj.create(cr, uid, pricelist_res_nodiscount, context=context)
+#                         
+#             except Exception,e:
+#                 raise osv.except_osv(_('Warning!'),_('Something wrong with this %s .')%(e))    
