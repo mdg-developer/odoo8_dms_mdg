@@ -71,9 +71,6 @@
 			</field>
 		</record>		
 		
-		<menuitem id="menu_manual_sale_order" parent="menu_direct_sale_order_menu"
-			name="Direct Sales Manual" action="menu_direct_sale_order_menu1"
-			sequence="2"  groups="base.group_no_one,base.group_account_entry" />
 		
 		<record id="action_stock_requsition1" model="ir.actions.act_window">
 			<field name="name">Pre-Sales RFI</field>
@@ -287,9 +284,11 @@
 
 		<menuitem action="action_invoice_tree_cus_2" id="menu_direct_action_invoice_tree_cus_2"
 			parent="menu_direct_sale_order_menu" name="Direct Sales Invoices" />
+		
 		<!-- Quotation -->
-		<!-- <menuitem id="sale.menu_sale_quotations" action="sale.action_quotations" -->
-		<!-- parent="base.menu_sales" name="Draft Order" sequence="1" /> -->
+		 <menuitem id="sale.menu_sale_quotations" action="sale.action_quotations"
+		parent="base.menu_sales" name="Draft Order" sequence="1" /> 
+		
 		<!-- Sale Order -->
 		<record id="cancel_customized_action_orders1" model="ir.actions.act_window">
 			<field name="name">Cancelled Orders</field>
@@ -303,8 +302,31 @@
 			<field name="domain">[('state','=','cancel')]
 			</field>
 		</record>
-
-		<menuitem action="sale.action_orders" id="sale.menu_sale_order"
+		<!-- Sale Order -->
+        <record id="action_orders" model="ir.actions.act_window">
+            <field name="name">Sales Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="search_view_id" ref="sale.view_sales_order_filter"/>
+            <field name="context">{
+                    'search_default_my_sale_orders_filter': 1,'default_is_entry':True
+                }
+            </field>
+            <field name="domain">[('state', 'not in', ('draft', 'sent', 'cancel'))]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a quotation that can be converted into a sales
+                    order.
+                </p><p>
+                    Odoo will help you efficiently handle the complete sales flow:
+                    quotation, sales order, delivery, invoicing and payment.
+                </p>
+            </field>
+        </record>
+		
+		<menuitem action="action_orders" id="sale.menu_sale_order"
 			parent="base.menu_sales" sequence="2"
 			groups="base.group_sale_salesman,base.group_sale_manager" />
 		<menuitem action="cancel_customized_action_orders1" id="menu_cancel_customized_sale_order"

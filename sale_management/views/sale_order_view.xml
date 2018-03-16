@@ -146,11 +146,14 @@
 					<field name="user_id" domain="[('default_section_id', '=',section_id)]"
 						required="1" attrs="{'readonly':[('state','!=','draft')]}"
 						context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'account.group_account_invoice', 'base.group_sale_salesman_all_leads']}" />
-					<field name="delivery_id" attrs="{'readonly':[('state','=','done')]}"></field>
+					<field name="delivery_id" attrs="{'readonly':[('state','!=','draft')]}"></field>
+					<field name="create_uid" readonly="1" string ="Entry By" attrs="{'invisible':[('is_entry','!=',True)]}"/>
+					<field name="write_uid" readonly="1" attrs="{'invisible':[('is_entry','!=',True)]}"/>
 					<field name="cancel_user_id" attrs="{'readonly':[('state','=','cancel')],'invisible':[('state','not in',('cancel'))]}"></field>
 				</field>
 				<field name="invoiced" position="before">
 					<field name="pre_order" />
+					<field name="is_entry" readonly="1"/>										
 					<field name="is_generate" />
 				</field>
 				<xpath expr="/form/sheet/notebook/page[@string='Order Lines']"

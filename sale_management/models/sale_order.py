@@ -154,6 +154,8 @@ class sale_order(osv.osv):
          'issue_warehouse_id':fields.many2one('stock.warehouse', 'Warehouse'),
          'promos_line_ids':fields.one2many('sale.order.promotion.line', 'promo_line_id', 'Promotion Lines'),
         'cancel_user_id': fields.many2one('res.users', 'Cancel By'),
+        'is_entry': fields.boolean('Is Entry Data',default=False),
+
                }
     
     def on_change_payment_type(self, cr, uid, ids, partner_id, payment_type, context=None):
