@@ -58,6 +58,7 @@
 				<tree string="Customer Stock Check Tree">
 					<field name="partner_id" />
 					<field name="township_id" />
+					<field name="outlet_type"/>
 					<field name="sale_team_id" />
 					<field name="user_id" />
 					<field name="branch_id" />
