@@ -32,6 +32,7 @@ from openerp import workflow
 from openerp.exceptions import except_orm, Warning, RedirectWarning
 from openerp.tools import float_compare
 import openerp.addons.decimal_precision as dp
+from celery.worker.strategy import default
 class sale_order_line(osv.osv):
 
     _inherit='sale.order.line'
@@ -109,6 +110,9 @@ class sale_order_line(osv.osv):
         if price_unit:
             discount_amt =float(discount) *(float(price_unit*product_uom_qty)) / 100
             val['discount_amt'] = discount_amt
+            val['price_subtotal'] = (price_unit*product_uom_qty) - discount_amt
+            val['net_total'] = (price_unit*product_uom_qty) - discount_amt
+            
         return {'value': val}     
     def foc_change(self, cr, uid, ids, product, qty=0, context=None):
         product_obj = self.pool.get('product.product')
@@ -134,7 +138,8 @@ class sale_order_line(osv.osv):
         'tax_id': fields.many2many('account.tax', 'sale_order_tax', 'order_line_id', 'tax_id', 'Taxes', readonly=True, domain=['|', ('active', '=', False), ('active', '=', True)]),          
                'price_subtotal': fields.function(_amount_line1, string='Subtotal'),
                'net_total':fields.function(_amount_line, string='Total', digits_compute= dp.get_precision('Account')),
-               'discount':fields.float('Discount (%)',store=True, readonly=True),
+               'service_product' : fields.boolean('Service Product',default=False),
+               'discount':fields.float('Discount (%)',store=True),
                'discount_amt':fields.float('Discount (amt)',store=True, readonly=True),
                'sale_foc':fields.boolean('FOC', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
               # 'show_amt':fields.function(_amount_line2,string='Total Discount(-)',readonly=True)
@@ -285,6 +290,7 @@ class sale_order(osv.osv):
         return None
 ## customize_model
     _columns={
+              
               'is_add_discount':fields.boolean('Allow Discount',default=False),
               'deduct_amt':fields.float('Discount Amount',store=True),
               'additional_discount':fields.float('Additional Discount',store=True),
