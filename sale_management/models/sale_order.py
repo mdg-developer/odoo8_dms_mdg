@@ -54,15 +54,15 @@ class sale_order(osv.osv):
         @param vals: Values of current record.
         @param context: Context(no direct use).
         """
-        # Validate before save
+        #Validate before save
         if type(ids) in [list, tuple] and ids:
             ids = ids[0]
             print 'vals_sale_order', vals
-
+ 
             if vals.get('partner_id'):
                 partner_id = vals['partner_id']
                 part = self.pool.get('res.partner').browse(cursor, user, partner_id, context=context)    
-                defaults = self.onchange_partner_id(cursor, user, [], vals['partner_id'], context=context)['value']
+                defaults = self.onchange_partner_id_for_write(cursor, user, [], vals['partner_id'], context=context)['value']
                 vals = dict(defaults, **vals)
         ctx = dict(context or {}, mail_create_nolog=True)
         new_id = super(sale_order, self).write(cursor, user, ids, vals, context=context)
@@ -150,10 +150,12 @@ class sale_order(osv.osv):
         'state_id': fields.many2one("res.country.state", 'State', ondelete='restrict' , readonly=True),
         'country_id': fields.many2one('res.country', 'Country', ondelete='restrict' , readonly=True),
         'township': fields.many2one('res.township', 'Township', ondelete='restrict' , readonly=True),
-         'payment_term': fields.many2one('account.payment.term', 'Payment Term', readonly=True),
+         'payment_term': fields.many2one('account.payment.term', 'Payment Term', readonly=False),
          'issue_warehouse_id':fields.many2one('stock.warehouse', 'Warehouse'),
          'promos_line_ids':fields.one2many('sale.order.promotion.line', 'promo_line_id', 'Promotion Lines'),
         'cancel_user_id': fields.many2one('res.users', 'Cancel By'),
+        'is_entry': fields.boolean('Is Entry Data',default=False),
+
                }
     
     def on_change_payment_type(self, cr, uid, ids, partner_id, payment_type, context=None):
@@ -235,6 +237,52 @@ class sale_order(osv.osv):
         sale_note = self.get_salenote(cr, uid, ids, part.id, context=context)
         if sale_note: val.update({'note': sale_note})  
         return {'value': val, 'domain': domain}
+    
+    def onchange_partner_id_for_write(self, cr, uid, ids, part, context=None):
+        
+        if not part:
+            return {'value': {'partner_invoice_id': False, 'partner_shipping_id': False, 'payment_term': False, 'fiscal_position': False}}
+
+        part = self.pool.get('res.partner').browse(cr, uid, part, context=context)       
+        addr = self.pool.get('res.partner').address_get(cr, uid, [part.id], ['delivery', 'invoice', 'contact'])
+        pricelist = part.property_product_pricelist and part.property_product_pricelist.id or False
+        invoice_part = self.pool.get('res.partner').browse(cr, uid, addr['invoice'], context=context)
+        payment_term = invoice_part.property_payment_term and invoice_part.property_payment_term.id or False
+        if part.credit_allow == True:
+            payment_type = 'credit'
+        elif part.is_consignment == True:
+            payment_type = 'consignment'
+        else:
+            payment_type = 'cash'
+            payment_term = 1
+        dedicated_salesman = part.user_id and part.user_id.id or uid
+        val = {
+            'partner_invoice_id': addr['invoice'],
+            'partner_shipping_id': addr['delivery'],
+            'customer_code': part.customer_code,
+          #  'payment_term': payment_term,
+            'user_id': dedicated_salesman,
+          #  'payment_type':payment_type,
+            'code': part.customer_code,
+            'street': part.street,
+            'street2': part.street2,
+            'city': part.city and part.city.id or False,
+            'state_id': part.state_id and part.state_id.id or False,
+            'country_id': part.country_id and part.country_id.id or False,
+            'township': part.township and part.township.id or False,
+        }
+        print 'payment_typepayment_type', payment_type
+        domain = {'payment_type': [('payment_type', '=', payment_type)]}
+        print 'domain', domain
+        delivery_onchange = self.onchange_delivery_id(cr, uid, ids, False, part.id, addr['delivery'], False, context=context)
+        val.update(delivery_onchange['value'])
+        if pricelist:
+            val['pricelist_id'] = pricelist
+#         if not self._get_default_section_id(cr, uid, context=context) and part.section_id:
+#             val['section_id'] = part.section_id.id
+        sale_note = self.get_salenote(cr, uid, ids, part.id, context=context)
+        if sale_note: val.update({'note': sale_note})  
+        return {'value': val, 'domain': domain}    
   
     def action_confirm(self, cr, uid, ids, context=None):
         if not context:
