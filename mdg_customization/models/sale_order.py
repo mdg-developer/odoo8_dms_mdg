@@ -42,8 +42,12 @@ class sale_order_line(osv.osv):
         result = {}
         warning_msgs = ''
         product_obj = product_obj.browse(cr, uid, product, context=context_partner)
-
+        price = 0
         uom2 = False
+        if product_obj.product_tmpl_id.type == 'service':
+            result.update({'service_product': True})
+        else:
+            result.update({'service_product': False})    
         if uom:
             uom2 = product_uom_obj.browse(cr, uid, uom)
             if product_obj.uom_id.category_id.id != uom2.category_id.id:
@@ -155,4 +159,8 @@ class sale_order_line(osv.osv):
                        'title': _('Configuration Error!'),
                        'message' : warning_msgs
                     }
+        if price > 0 and qty > 0:
+            result.update({'price_subtotal': price * qty})
+            result.update({'net_total': price * qty})
+            
         return {'value': result, 'domain': domain, 'warning': warning}

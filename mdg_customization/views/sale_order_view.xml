@@ -25,6 +25,8 @@
 				<xpath expr="//field[@name='amount_total']" position="replace">
 					<field name="amount_total" sum="Total Tax Included" string="Value" />
 				</xpath>
+				
+				
 			</field>
 		</record>
 
