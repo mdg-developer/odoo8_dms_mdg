@@ -46,25 +46,6 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
         <scalar-parameter name="branch_id" id="913" extends="report_library.branch_id"/>
         <scalar-parameter name="sales_team_id" id="914" extends="report_library.sales_team_id"/>
         <scalar-parameter name="user_id" id="915" extends="report_library.user_id"/>
-        <scalar-parameter name="promotion_id" id="1039">
-            <property name="hidden">true</property>
-            <text-property name="promptText">Promotion</text-property>
-            <property name="valueType">dynamic</property>
-            <property name="isRequired">false</property>
-            <property name="dataSetName">promotion</property>
-            <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
-            <expression name="labelExpr" type="javascript">dataSetRow["description"]</expression>
-            <property name="dataType">integer</property>
-            <property name="distinct">true</property>
-            <list-property name="selectionList"/>
-            <property name="paramType">multi-value</property>
-            <property name="controlType">list-box</property>
-            <property name="mustMatch">true</property>
-            <property name="fixedOrder">true</property>
-            <structure name="format">
-                <property name="category">Unformatted</property>
-            </structure>
-        </scalar-parameter>
         <scalar-parameter name="product_id" id="1041">
             <text-property name="promptText">Product</text-property>
             <property name="valueType">dynamic</property>
@@ -86,7 +67,13 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
     </parameters>
     <data-sources>
         <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="1171"
- extends="report_library.Data Source"/>
+ extends="report_library.Data Source">
+            <property name="odaDriverClass">org.postgresql.Driver</property>
+            <property name="odaURL">jdbc:postgresql://localhost:5432/mdg_uat</property>
+            <property name="odaUser">odoo</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">b3BlbnBncHdk</encrypted-property>
+            <property name="odaJndiName">java:comp/env/jdbc/ReportDB</property>
+        </oda-data-source>
     </data-sources>
     <data-sets>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="Company_Infos" id="732">
@@ -411,7 +398,7 @@ where active=True
 from product_product pp ,product_template pt
 where pp.active =True
 and pp.product_tmpl_id =pt.id
-and pt.type!='service'
+--and pt.type!='service'
 and pp.id in (select product_product_id from crm_case_section_product_product_rel
 --$sale_team_id$
 )]]></xml-property>
@@ -469,7 +456,7 @@ and pp.id in (select product_product_id from crm_case_section_product_product_re
   </design:ResultSets>
 </model:DesignValues>]]></xml-property>
         </oda-data-set>
-        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="Data Set" id="1170">
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="Data Set" id="1180">
             <list-property name="columnHints">
                 <structure>
                     <property name="columnName">account_name</property>
@@ -587,7 +574,7 @@ and pp.id in (select product_product_id from crm_case_section_product_product_re
                 </structure>
                 <structure>
                     <property name="columnName">promotion_id</property>
-                    <property name="analysis">measure</property>
+                    <property name="analysis">dimension</property>
                     <text-property name="displayName">promotion_id</text-property>
                     <text-property name="heading">promotion_id</text-property>
                 </structure>
@@ -732,7 +719,7 @@ and pp.id in (select product_product_id from crm_case_section_product_product_re
                     <structure>
                         <property name="position">20</property>
                         <property name="name">promotion_id</property>
-                        <property name="dataType">integer</property>
+                        <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">21</property>
@@ -887,14 +874,14 @@ this.queryText =this.queryText.replace("--$product_id$", "and product_id in ("+ 
                     <property name="name">promotion</property>
                     <property name="nativeName">promotion</property>
                     <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
+                    <property name="nativeDataType">2003</property>
                 </structure>
                 <structure>
                     <property name="position">20</property>
                     <property name="name">promotion_id</property>
                     <property name="nativeName">promotion_id</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2003</property>
                 </structure>
                 <structure>
                     <property name="position">21</property>
@@ -1346,7 +1333,7 @@ order by date_invoice,sale_team,customer]]></xml-property>
               <design:name>promotion</design:name>
               <design:position>19</design:position>
             </design:identifier>
-            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:nativeDataTypeCode>2003</design:nativeDataTypeCode>
             <design:precision>2147483647</design:precision>
             <design:scale>0</design:scale>
             <design:nullability>Nullable</design:nullability>
@@ -1367,7 +1354,7 @@ order by date_invoice,sale_team,customer]]></xml-property>
               <design:name>promotion_id</design:name>
               <design:position>20</design:position>
             </design:identifier>
-            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:nativeDataTypeCode>2003</design:nativeDataTypeCode>
             <design:precision>10</design:precision>
             <design:scale>0</design:scale>
             <design:nullability>Nullable</design:nullability>
@@ -1750,6 +1737,12 @@ order by date_invoice,sale_team,customer]]></xml-property>
                     </list-property>
                     <property name="allowExport">true</property>
                 </structure>
+                <structure>
+                    <property name="name">payment_type</property>
+                    <text-property name="displayName">payment_type</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["payment_type"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
             </list-property>
             <column id="1122">
                 <property name="width">0.8229166666666666in</property>
@@ -1758,6 +1751,9 @@ order by date_invoice,sale_team,customer]]></xml-property>
                 <property name="width">0.8125in</property>
             </column>
             <column id="1107">
+                <property name="width">0.8125in</property>
+            </column>
+            <column id="1176">
                 <property name="width">0.8125in</property>
             </column>
             <column id="1127">
@@ -1847,6 +1843,20 @@ order by date_invoice,sale_team,customer]]></xml-property>
                         <label id="1047">
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Account Description</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1173">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="1177">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">Payment Type</text-property>
                         </label>
                     </cell>
                     <cell id="1124">
@@ -2110,6 +2120,21 @@ order by date_invoice,sale_team,customer]]></xml-property>
                             <property name="resultSetColumn">account_desc</property>
                         </data>
                     </cell>
+                    <cell id="1174">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="1178">
+                            <property name="fontWeight">normal</property>
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">payment_type</property>
+                        </data>
+                    </cell>
                     <cell id="1125">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2365,7 +2390,7 @@ order by date_invoice,sale_team,customer]]></xml-property>
             <footer>
                 <row id="1093">
                     <cell id="1121">
-                        <property name="colSpan">12</property>
+                        <property name="colSpan">13</property>
                         <property name="rowSpan">1</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
