@@ -243,16 +243,18 @@ class sale_order(osv.osv):
                 'amount_total': 0.0,
             }
             
-            val = val1 = 0.0
+            val = val1 =subtotal= 0.0
             cur = order.pricelist_id.currency_id
             for line in order.order_line:
                 print 'line.net_total',line.net_total
                 val1 += line.net_total
+                subtotal += line.price_subtotal
                 val += self._amount_line_tax(cr, uid, line, context=context)
             res[order.id]['amount_tax'] = cur_obj.round(cr, uid, cur, val)
             res[order.id]['amount_untaxed'] = cur_obj.round(cr, uid, cur, val1)
+            res[order.id]['grand_total'] = cur_obj.round(cr, uid, cur, subtotal)
             res[order.id]['amount_total'] = res[order.id]['amount_untaxed'] + res[order.id]['amount_tax']
-            res[order.id]['grand_total'] = res[order.id]['amount_untaxed'] + res[order.id]['amount_tax']
+            res[order.id]['grand_total'] =res[order.id]['grand_total'] + res[order.id]['amount_tax']
         return res
 
     def _get_order(self, cr, uid, ids, context=None):
