@@ -155,7 +155,7 @@ class PromotionsRules(osv.Model):
                 
         'code':fields.char('Promo Code', readonly=True, copy=False),
         'name':fields.char('Promo Name', required=True),
-        'description':fields.text('Description'),
+        'description':fields.char('Description'),
         'active':fields.boolean('Active'),
         
         'special':fields.boolean('Special'),

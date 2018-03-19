@@ -112,9 +112,9 @@ class account_invoice(models.Model):
             township= p.township and p.township.id or False
         result = {'value': {
             'account_id': account_id,
-            'payment_term': payment_term_id,
+          #  'payment_term': payment_term_id,
             'fiscal_position': fiscal_position,
-            'payment_type':payment_type,
+          #  'payment_type':payment_type,
             'code':code,
             'street': street,
             'street2': street2,
