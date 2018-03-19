@@ -41,5 +41,7 @@ class sale_plan_day_line(osv.osv):
                 'class_id' : fields.many2one('sale.class',string="Class"),
                 'delivery_team_id': fields.many2one('crm.case.section',string="Delivery Team"),
                 }
-    
+    _defaults = {
+               'sequence':1,
+    }      
 sale_plan_day_line()

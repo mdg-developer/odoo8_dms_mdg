@@ -3267,7 +3267,7 @@ class mobile_sale_order(osv.osv):
                      A.city_id,A.township_id,A.country_id,A.state_id,A.unit,A.class_id,A.chiller,A.frequency_id,A.temp_customer,
                      A.is_consignment,A.hamper,A.is_bank,A.is_cheque
                      from (
-                     select RP.id,RP.name,'' as image,RP.is_company,RPS.sale_plan_day_id,
+                     select RP.id,RP.name,'' as image,RP.is_company,RPS.line_id as sale_plan_day_id,
                      '' as image_small,RP.street,RP.street2,RC.name as city,RP.website,
                      RP.phone,RT.name as township,RP.mobile,RP.email,RP.company_id,RP.customer, 
                      RP.customer_code,RP.mobile_customer,OT.name as shop_name,RP.address,RP.zip ,RP.partner_latitude,RP.partner_longitude,RS.name as state_name,
@@ -3276,16 +3276,18 @@ class mobile_sale_order(osv.osv):
                      RP.country_id,RP.state_id,RP.unit,RP.class_id,RP.chiller,RP.frequency_id,RP.temp_customer,RP.is_consignment,RP.hamper,
                      RP.is_bank,RP.is_cheque
                      from sale_plan_day SPD ,outlettype_outlettype OT,
-                                            res_partner_sale_plan_day_rel RPS , res_partner RP ,res_country_state RS, res_city RC,res_township RT
-                                            where SPD.id = RPS.sale_plan_day_id 
+                                            sale_plan_day_line RPS , res_partner RP ,res_country_state RS, res_city RC,res_township RT
+                                            where SPD.id = RPS.line_id 
                                             and  RS.id = RP.state_id
                                             and RP.township =RT.id
                                             and RP.city = RC.id
                                             and RP.active = true
                                             and RP.outlet_type = OT.id
                                             and RPS.partner_id = RP.id 
-                                            and SPD.sale_team = %s                                        
-                                            and RPS.sale_plan_day_id = %s                                                                                                                        
+                                            and SPD.sale_team = %s          
+                                            and RPS.line_id = %s       
+                                            order by  RPS.sequence asc                         
+                                                                                                                 
                         )A 
                         where A.customer_code is not null
             ''', (section_id, day_id,))
@@ -3341,11 +3343,12 @@ class mobile_sale_order(osv.osv):
     
     def get_partner_category_rel(self, cr, uid, section_id , context=None):        
         cr.execute('''select a.* from res_partner_res_partner_category_rel a,
-                 res_partner_sale_plan_day_rel b
+                 sale_plan_day_line b
                  , sale_plan_day p
                 where a.partner_id = b.partner_id
-                and b.sale_plan_day_id = p.id
+                and b.line_id = p.id
                 and p.sale_team = %s
+                order by b.sequence asc
                 ''', (section_id,))
         datas = cr.fetchall()        
         return datas
