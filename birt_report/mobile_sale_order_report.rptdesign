@@ -318,7 +318,7 @@
                     <structure>
                         <property name="position">18</property>
                         <property name="name">additional_discount</property>
-                        <property name="dataType">float</property>
+                        <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">19</property>
@@ -507,8 +507,8 @@
                     <property name="position">18</property>
                     <property name="name">additional_discount</property>
                     <property name="nativeName">additional_discount</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
                     <property name="position">19</property>
@@ -609,7 +609,7 @@ b.name branch,mg.name brand,h.partner_id as sale_parner_id,
 p.default_code ||' '|| p.name_template description,pt.id as product_tem_id,
 u.name uom,d.product_uos_qty qty,d.discount discount_amt,d.price_unit unit_price,d.sub_total amount , --psi.product_code gold_code,
 (CASE WHEN v.isexclusive = true THEN ( d.price_unit / 1.05) ELSE 0 END) as exclusive_price,
-v.isexclusive,h.deduction_amount,h.additional_discount,h.amount_total,(h.amount_total*h.additional_discount) as add_disc,
+v.isexclusive,h.deduction_amount,round(h.additional_discount::numeric,2) additional_discount,h.amount_total,(h.amount_total*h.additional_discount) as add_disc,
 (CASE WHEN v.isexclusive = true THEN 'Exclusive' ELSE 'Inclusive' END) as tax_type,v.ctax_registration_no
 
 FROM mobile_sale_order h
@@ -2424,7 +2424,7 @@ row["Aggregation_2"] - dataSetRow["deduction_amount"] - dataSetRow["add_disc"]&#
                 <structure>
                     <property name="name">additional_discount</property>
                     <text-property name="displayName">additional_discount</text-property>
-                    <expression name="expression" type="javascript">(dataSetRow["additional_discount"] * 100) + ' %'</expression>
+                    <expression name="expression" type="javascript">(dataSetRow["additional_discount"]) + ' %'</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
@@ -2974,6 +2974,9 @@ false&#13;
                         <data id="535">
                             <property name="fontSize">8pt</property>
                             <property name="paddingRight">2pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Unformatted</property>
+                            </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">additional_discount</property>
                         </data>
