@@ -1113,7 +1113,7 @@ class mobile_sale_order(osv.osv):
         return datas
     
     def get_promos_act_datas(self, cr, uid , branch_id, promo_id, context=None, **kwargs):
-        cr.execute('''select act.id,act.promotion,act.sequence as act_seq ,act.arguments,act.action_type,act.product_code
+        cr.execute('''select act.id,act.promotion,act.sequence as act_seq ,act.arguments,act.action_type,act.product_code,act.discount_product_code
                             from promos_rules r ,promos_rules_actions act,promos_rules_res_branch_rel pro_br_rel
                             where r.id = act.promotion
                             and r.active = 't'                            
@@ -1932,7 +1932,7 @@ class mobile_sale_order(osv.osv):
     
     def get_stockcheck(self, cr, uid, sale_team_id , context=None, **kwargs):
         cr.execute('''            
-                  select scl.id ,sc.outlet_type,scl.product_id,scl.product_uom_qty as quantity,scl.available,scl.facing  from stock_check_setting sc ,stock_check_setting_line scl where sc.id=scl.stock_setting_ids
+                  select scl.id ,sc.outlet_type,scl.product_id,scl.product_uom_qty as quantity,scl.available,scl.facing, scl.chiller from stock_check_setting sc ,stock_check_setting_line scl where sc.id=scl.stock_setting_ids
          ''')
         datas = cr.fetchall()
         return datas            
@@ -2555,14 +2555,18 @@ class mobile_sale_order(osv.osv):
                         township_id = None
                         outlet_type= None
                     
-                           
+                    if  sr['date']:
+                        check_date_time =sr['date'].replace('\\', '').replace('\\', '').replace('/','-')
+                        date = datetime.strptime(check_date_time, '%Y-%m-%d %H:%M:%S')
+                        check_date = date.date()
                     mso_result = {
                         'partner_id':customer_id,
                         'sale_team_id':sr['sale_team_id'] ,
                          'user_id':sr['user_id'] ,
                         'township_id': township_id,
                         'outlet_type':outlet_type,
-                        'date':sr['date'],
+                        'date':check_date,
+                        'check_datetime':check_date_time,                        
                         'customer_code':sr['customer_code'],
                         'branch_id':sr['branch'],
                     }
@@ -2587,7 +2591,7 @@ class mobile_sale_order(osv.osv):
                                       'facing':(srl['facing']),
                                       'chiller':(srl['chiller']),
                                       }
-                        stock_check_line_obj.create(cursor, user, mso_line_res, context=context)
+                            stock_check_line_obj.create(cursor, user, mso_line_res, context=context)
             print 'True'
             return True       
         except Exception, e:

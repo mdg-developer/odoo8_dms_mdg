@@ -1635,6 +1635,8 @@ class PromotionsRulesActions(osv.Model):
         'product_code':fields.char('Product Code'),
         'arguments':fields.char('Arguments', size=100),
         'promotion':fields.many2one('promos.rules', 'Promotion'),
+        'discount_product_code':fields.char('Discount Product Code', size=100),
+
     }
  
     def clear_existing_promotion_lines(self, cursor, user,

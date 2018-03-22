@@ -67,10 +67,17 @@ class sale_order_line(osv.osv):
                     cur = line.order_id.pricelist_id.currency_id
                     res[line.id] = cur_obj.round(cr, uid, cur, taxes['total']-line.discount_amt) 
             else:
-                price = line.price_unit
-                taxes = tax_obj.compute_all(cr, uid, line.tax_id, price, line.product_uom_qty, line.product_id, line.order_id.partner_id)
-                cur = line.order_id.pricelist_id.currency_id
-                res[line.id] = cur_obj.round(cr, uid, cur,taxes['total'] )              
+                if line.sale_foc !=True:
+
+                    price = line.price_unit
+                    taxes = tax_obj.compute_all(cr, uid, line.tax_id, price, line.product_uom_qty, line.product_id, line.order_id.partner_id)
+                    cur = line.order_id.pricelist_id.currency_id
+                    res[line.id] = cur_obj.round(cr, uid, cur,taxes['total'] )              
+
+                else:
+                    res[line.id] = 0             
+
+                    
         return res
         
         
@@ -83,13 +90,19 @@ class sale_order_line(osv.osv):
         if context is None:
             context = {}
         for line in self.browse(cr, uid, ids, context=context):
-            
-            price = line.price_unit
-            qty=line.product_uom_qty
-            amount=price*qty
-            taxes = tax_obj.compute_all(cr, uid, line.tax_id, price, line.product_uom_qty, line.product_id, line.order_id.partner_id)
-            cur = line.order_id.pricelist_id.currency_id
-            res[line.id] = cur_obj.round(cr, uid, cur, amount)
+            if line.sale_foc !=True:
+                price = line.price_unit
+                qty=line.product_uom_qty
+                amount=price*qty
+                taxes = tax_obj.compute_all(cr, uid, line.tax_id, price, line.product_uom_qty, line.product_id, line.order_id.partner_id)
+                cur = line.order_id.pricelist_id.currency_id
+                res[line.id] = cur_obj.round(cr, uid, cur, amount)
+
+            else:
+                cr.execute("update sale_order_line set price_unit=0 where id =%s",(line.id,))
+                amount=0
+                res[line.id] = 0
+                
         return res
 		
     def _get_price_reduce(self, cr, uid, ids, field_name, arg, context=None):
@@ -128,6 +141,7 @@ class sale_order_line(osv.osv):
             result['name'] = 'FOC'
             result['price_unit'] = 0
             result['price_subtotal'] = 0
+            result['net_total'] = 0
             result['discount'] = 0.0
             result['discount_amt'] = 0.0
 
@@ -139,7 +153,7 @@ class sale_order_line(osv.osv):
                'price_subtotal': fields.function(_amount_line1, string='Subtotal'),
                'net_total':fields.function(_amount_line, string='Total', digits_compute= dp.get_precision('Account')),
                'service_product' : fields.boolean('Service Product',default=False),
-               'discount':fields.float('Discount (%)',store=True),
+               'discount':fields.float('Discount (%)',store=True,readonly=True),
                'discount_amt':fields.float('Discount (amt)',store=True, readonly=True),
                'sale_foc':fields.boolean('FOC', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
               # 'show_amt':fields.function(_amount_line2,string='Total Discount(-)',readonly=True)

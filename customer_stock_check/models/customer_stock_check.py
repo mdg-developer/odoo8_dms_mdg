@@ -11,6 +11,7 @@ class customer_stock_check(osv.osv):
                 'township_id':fields.many2one('res.township','Township'),  
                 'outlet_type': fields.many2one('outlettype.outlettype', 'Outlet Type'), 
                 'date': fields.date('Checked Date'),   
+                'check_datetime': fields.datetime('Checked Date Time'),   
                 'customer_code':fields.char('Customer Code'),  
                 'branch_id' :fields.many2one('res.branch', 'Branch'),
                 'stock_check_line':fields.one2many('partner.stock.check.line', 'stock_check_ids', string='Product'),

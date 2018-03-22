@@ -15,7 +15,7 @@ class customer_stock_check(osv.osv):
         if ids:
             cr.execute("""select pp.id,pp.sequence from product_product pp,product_template pt
                 where pp.product_tmpl_id = pt.id and pt.type!='service' and pt.active='True'
-                and pp.active='True' order by pp.sequence asc""")
+                and pp.active='True' and pp.id not in (select product_id from stock_check_setting_line where stock_setting_ids =%s) order by pp.sequence asc""",(ids[0],))
             product_data = cr.fetchall()
             for p_line in product_data:
                 if p_line:
