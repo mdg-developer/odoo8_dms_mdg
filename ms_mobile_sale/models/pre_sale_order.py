@@ -85,7 +85,7 @@ class pre_sale_order(osv.osv):
 
         sale_order_name_list = []
         try : 
-            saleManId = branch_id = None
+            saleManId = branch_id = promotion_id=None
             mobile_sale_order_obj = self.pool.get('pre.sale.order')
             mobile_sale_order_line_obj = self.pool.get('pre.sale.order.line')
             str = "{" + vals + "}"
@@ -171,18 +171,30 @@ class pre_sale_order(osv.osv):
                                 if sol['manual_foc'] == 'T':
                                     manual_foc = True
                                 else:
-                                    manual_foc = False                                         			
+                                    manual_foc = False       
+                                if sol['promotion_action']:
+                                    cursor.execute("select promotion from promos_rules_actions where id =%s",(sol['promotion_action'],))
+                                    promotion_id = cursor.fetchone()[0]
+                                price =sol['price_unit']
+                                if  float(price) < 0:
+                                    product_price= 0
+                                    discount_amt =-1 * float(price)
+                                else:
+                                    product_price=sol['price_unit']
+                                    discount_amt=sol['discount_amt']
+                                                                      			
                                 mso_line_res = {                                                            
                                   'order_id':s_order_id,
                                   'product_id':productId,
-                                  'price_unit':sol['price_unit'],
+                                  'price_unit':product_price,
 								  'foc':foc_val,
                                   'product_uos_qty':sol['product_uos_qty'],
                                   'discount':sol['discount'],
-                                  'discount_amt':sol['discount_amt'],
+                                  'discount_amt':discount_amt,
                                   'sub_total':sol['sub_total'],
                                   'uom_id':sol['uom_id'],
-                                'manual_foc':manual_foc,
+                                  'manual_foc':manual_foc,
+                                   'promotion_id':promotion_id,
                                 }
                                 mobile_sale_order_line_obj.create(cursor, user, mso_line_res, context=context) 
                                 print 'Create Order line', sol['so_name']                     
@@ -305,7 +317,8 @@ class pre_sale_order(osv.osv):
                                                         'discount_amt':line_id.discount_amt,
                                                         'sale_foc':sale_foc,
                                                         'price_unit':priceUnit,
-                                                        'company_id':company_id,  # company_id,
+                                                        'company_id':company_id,  
+                                                         'promotion_id':line_id.promotion_id.id,# company_id,
                                                         }   
                                 saleOrderLineObj.create(cr, uid, detailResult, context=context)
                     if so_id:

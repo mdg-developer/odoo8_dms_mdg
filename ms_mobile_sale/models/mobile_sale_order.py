@@ -5,6 +5,7 @@ from openerp.tools.translate import _
 import ast
 import time
 from openerp import netsvc
+import pytz
 DEFAULT_SERVER_DATE_FORMAT = "%Y-%m-%d"
 from openerp.http import request
 from openerp.addons.connector.queue.job import job, related_action
@@ -217,19 +218,32 @@ class mobile_sale_order(osv.osv):
                                 if sol['manual_foc'] == 'T':
                                     manual_foc = True
                                 else:
-                                    manual_foc = False                                    
+                                    manual_foc = False                 
+                                if sol['promotion_action']:
+                                    cursor.execute("select promotion from promos_rules_actions where id =%s",(sol['promotion_action'],))
+                                    promotion_id = cursor.fetchone()[0]  
+                                else:
+                                    promotion_id=None      
+                                price =sol['price_unit']
+                                if  float(price) < 0:
+                                    product_price= 0
+                                    discount_amt =-1 * float(price)
+                                else:
+                                    product_price=sol['price_unit']
+                                    discount_amt=sol['discount_amt']                                          
                                 mso_line_res = {                                                            
                                   'order_id':s_order_id,
                                   'product_type':product_type,
                                   'product_id':productId,
-                                  'price_unit':sol['price_unit'],
+                                  'price_unit':product_price,
                                   'product_uos_qty':sol['product_uos_qty'],
                                   'foc': foc_val,
                                   'discount':sol['discount'],
-                                  'discount_amt':sol['discount_amt'],
+                                  'discount_amt':discount_amt,
                                   'sub_total':sol['sub_total'],
                                   'uom_id':sol['uom_id'],
                                   'manual_foc':manual_foc,
+                                  'promotion_id':promotion_id,
                                 }
                                 mobile_sale_order_line_obj.create(cursor, user, mso_line_res, context=context) 
                     # convertintablet(KM)
@@ -642,7 +656,9 @@ class mobile_sale_order(osv.osv):
                                               'company_id':company_id,  # company_id,
                                               'state':'draft',
                                               'net_total':line_id.sub_total,
-                                              'sale_foc':foc
+                                              'sale_foc':foc,
+                                             'promotion_id':line_id.promotion_id.id,
+
                                            }
                                 
                                 solObj.create(cr, uid, solResult, context=context)
@@ -2557,8 +2573,9 @@ class mobile_sale_order(osv.osv):
                     
                     if  sr['date']:
                         check_date_time =sr['date'].replace('\\', '').replace('\\', '').replace('/','-')
-                        date = datetime.strptime(check_date_time, '%Y-%m-%d %H:%M:%S')
+                        date = datetime.strptime(check_date_time, '%Y-%m-%d %H:%M:%S')- timedelta(hours=6,minutes=30)
                         check_date = date.date()
+                    cursor.execute("delete from partner_stock_check where check_datetime =%s and partner_id=%s",(date,customer_id,))
                     mso_result = {
                         'partner_id':customer_id,
                         'sale_team_id':sr['sale_team_id'] ,
@@ -2566,7 +2583,7 @@ class mobile_sale_order(osv.osv):
                         'township_id': township_id,
                         'outlet_type':outlet_type,
                         'date':check_date,
-                        'check_datetime':check_date_time,                        
+                        'check_datetime':date,                        
                         'customer_code':sr['customer_code'],
                         'branch_id':sr['branch'],
                     }
@@ -2580,13 +2597,17 @@ class mobile_sale_order(osv.osv):
                                 sequence = product_data[0]
                             else:
                                 sequence=None
-                                
+                            if srl['avail']=='false':
+                                avaliable=False
+                            else:
+                                avaliable=True
+                        
                             mso_line_res = {                                                            
                                       'stock_check_ids':stock_id,
                                       'sequence':sequence,
                                       'product_id':(srl['product_id']),
                                       'product_uom':int(srl['uom_id']),
-                                      'available':(srl['avail']),
+                                      'available':avaliable,
                                       'product_uom_qty':(srl['qty']),
                                       'facing':(srl['facing']),
                                       'chiller':(srl['chiller']),
