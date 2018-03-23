@@ -28,7 +28,7 @@
 					<group>
 						<group>
 							<field name="name" />
-							<field name="township_id" />
+							<field name="township_id" widget="many2many_tags" />
 							<field name="monday" />
 							<field name="tuesday" />
 							<field name="wednesday" />
