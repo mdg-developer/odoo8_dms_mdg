@@ -151,6 +151,7 @@ class account_voucher(osv.osv):
             return False
         journal_pool = self.pool.get('account.journal')
         journal = journal_pool.browse(cr, uid, journal_id, context=context)
+        
         if ttype in ('sale', 'receipt'):
             account_id = journal.default_debit_account_id
         elif ttype in ('purchase', 'payment'):
@@ -207,7 +208,9 @@ class account_voucher(osv.osv):
         #without seeing that the amount is expressed in the journal currency, and not in the invoice currency. So to avoid
         #this common mistake, we simply reset the amount to 0 if the currency is not the invoice currency.
         if context.get('payment_expected_currency') and currency_id != context.get('payment_expected_currency'):
-            vals['value']['amount'] = 0
+            second_rate = self.get_rate(cr, uid, ids, context.get('payment_expected_currency'), date, context=context)
+            second_rate = float(format(second_rate, '.2f'))   
+            vals['value']['amount'] = second_rate*amount
             amount = 0
         if partner_id:
             res = self.onchange_partner_id(cr, uid, ids, partner_id, journal_id, amount, currency_id, ttype, date, context)
