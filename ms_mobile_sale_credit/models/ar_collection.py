@@ -13,7 +13,29 @@ class ar_payment(osv.osv):
                    'sale_team_id':fields.many2one('crm.case.section', 'Sale Team'),
                    'payment_code':fields.char('Payment Code'),
         }    
-    
+    def on_change_journal_id(self, cr, uid, ids, journal_id, ref_no, context=None):
+        values = {}
+        journal_obj = self.pool.get('account.journal')
+        print 'ref_no>>>',ref_no
+        if journal_id:
+            journal = journal_obj.browse(cr, uid, journal_id, context=context)
+            if journal.name =='Cash':
+                values = {
+                    'payment_code':'CASH',
+                    'notes':ref_no,
+                    
+                }
+            elif journal.name =='Bank':
+                values = {
+                    'payment_code':'BNK',
+                    'notes':ref_no,
+                }
+            elif journal.name =='Cheque':
+                values = {
+                    'payment_code':'CHEQ',
+                    'notes':ref_no,
+                }
+        return {'value': values}    
 class mobile_ar_collection(osv.osv):
     _name = "mobile.ar.collection"
     _description = "AR Collections"
@@ -71,7 +93,24 @@ class mobile_ar_collection(osv.osv):
 #         datas = cr.fetchall()
 #         cr.execute
 #         return datas
-     
+    def on_change_invoice_id(self, cr, uid, ids, invoice_id, context=None):
+        values = {}
+        invoice_obj = self.pool.get('account.invoice')
+        if invoice_id:
+            invoice = invoice_obj.browse(cr, uid, invoice_id, context=context)
+            values = {
+                'ref_no': invoice.number,
+                'partner_id': invoice.partner_id.id,
+                'invoice_date':invoice.date_invoice,
+                'payment_term':invoice.payment_term.id,
+                'sale_team_id':invoice.section_id.id,
+                'user_id':invoice.user_id.id,
+                'branch_id':invoice.branch_id.id,
+                'due_date':invoice.date_due,
+                'so_amount':invoice.amount_total,
+                'credit_limit':invoice.partner_id.credit_limit,
+            }
+        return {'value': values}     
 mobile_ar_collection()
 
 
