@@ -28,8 +28,7 @@
 									<field name="date" attrs="{'readonly':[('state','=','done')]}" />
 									<field name="sale_team_id" on_change="onchange_sale_team_id(sale_team_id)"
 										attrs="{'readonly':[('state','=','done')]}" />
-									<field name="user_id" 
-										attrs="{'readonly':[('state','=','done')]}" />
+									<field name="user_id" attrs="{'readonly':[('state','=','done')]}" />
 								</group>
 								<group>
 									<field name="write_date" readonly="1" />
@@ -40,6 +39,10 @@
 									<field name="approve_by" readonly="1" />
 									<field name="approve_date" readonly="1" />
 								</group>
+							</group>
+							<group>
+								<field name="account_id" domain="[('type','&lt;&gt;','view')]" class="oe_inline"/>
+								<field name="journal_id"  class="oe_inline"/>
 							</group>
 							<group>
 								<button name="action_generate" string="Show"
@@ -153,6 +156,13 @@
 										<label string="Total Net" class="oe_inline" />
 
 										<field name="total" nolabel="1" class="oe_inline" />
+										<label string="Denomination Total" class="oe_inline" />
+
+										<field name="denomaination_total" nolabel="1" class="oe_inline" />
+										<label string="Different Amount" class="oe_inline" />
+
+										<field name="sign_diff_amount" nolabel="1" class="oe_inline" />
+										<field name="diff_amount" />
 										<div class="oe_subtotal_footer_separator oe_inline">
 											<!-- <label for="total"/> -->
 											<button name="button_dummy" string="(update)" type="object"
@@ -264,8 +274,7 @@
 		</record>
 
 		<menuitem id="menu_manual_cashier_approval" action="action_manual_cashier_approval_view"
-			parent="account.menu_finance_bank_and_cash"
-			sequence="14" />
+			parent="account.menu_finance_bank_and_cash" sequence="14" />
 
 	</data>
 </openerp>

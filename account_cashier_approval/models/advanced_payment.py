@@ -2,6 +2,14 @@ from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 from datetime import datetime
 import locale
+
+class crm_case_section(osv.osv):
+    _inherit = "crm.case.section"
+    _description = "Sales Denomination"         
+    _columns = {
+        'team_partner_id':fields.many2one('res.partner', 'Partner ID' , required=True),
+        }
+    
 class manual_sale_denomination(osv.osv):
     
     _name = "manual.sales.denomination"
@@ -36,7 +44,7 @@ class manual_sale_denomination(osv.osv):
         sign = ""
         for order in self.browse(cr, uid, ids, context=context):
 
-            val1=dssr_deno_amount-order.invoice_total
+            val1=order.invoice_total - dssr_deno_amount
             sign = str(val1)
             if val1 > 0:
 
