@@ -27,7 +27,8 @@ from datetime import datetime
 import base64
 import logging
 _logger = logging.getLogger(__name__)
-header_fields = ['default_code', 'product_name', 'public_price', 'uom', 'balance_qty', 'cost_price']
+#header_fields = ['default_code', 'product_name', 'public_price', 'uom', 'balance_qty', 'cost_price']
+header_fields = ['product',  'uom', 'real quantity', 'serial number','theoretical quantity','location','pack','serial']
 
 class sl_import(orm.TransientModel):
     _name = 'stock.line.import'
@@ -74,17 +75,11 @@ class sl_import(orm.TransientModel):
             vals.append(product_line)
         return vals   
     
-  
     def excel_import(self, cr, uid, ids, context=None):
         
         uom_obj = self.pool.get('product.uom')
-        product_template_obj = self.pool.get('product.template')
-        fields_obj = self.pool.get('ir.model.fields')
-        property_obj = self.pool.get('ir.property')
         stock_move_line_obj = self.pool.get('stock.inventory.line')
-        company_id = context['company_id']
         move_id = context['move_id']
-
         location_id = context['location_id']
         data = self.browse(cr, uid, ids)[0]
         import_file = data.sl_data
@@ -131,7 +126,7 @@ class sl_import(orm.TransientModel):
                                 count = count + 1
                                 val = count     
                     header_line = True
-                    default_code_i = product_name_i = public_price_i = uom_i = balance_qty_i = cost_price_i = None
+                    default_code_i =   uom_i = real_qty_i = theoretical_qty_i = serial_number_i =  None
                     column_cnt = 0
                     for cnt in range(len(ln)):
                         if ln[cnt] == '':
@@ -146,19 +141,18 @@ class sl_import(orm.TransientModel):
                         if header_field not in header_fields:
                             err_log += '\n' + _("Invalid CSV File, Header Field '%s' is not supported !") % ln[i]
                         # required header fields : account, debit, credit
-                        elif header_field == 'default_code':
+                        elif header_field == 'product':
                             default_code_i = i
-                        elif header_field == 'product_name':
-                            product_name_i = i
+                        
                         elif header_field == 'uom':
                             uom_i = i
-                        elif header_field == 'balance_qty':
-                            balance_qty_i = i
-                        elif header_field == 'cost_price':
-                            cost_price_i = i
-                        elif header_field == 'public_price':
-                            public_price_i = i
-                    for f in [(default_code_i, 'default_code'), (public_price_i, 'public_price'), (uom_i, 'uom'), (product_name_i, 'product_name'), (balance_qty_i, 'balance_qty'), (cost_price_i, 'cost_price')]:
+                        elif header_field == 'real quantity':
+                            real_qty_i = i
+                        elif header_field == 'serial number':
+                            serial_number_i = i
+                        elif header_field == 'theoretical quantity':
+                            theoretical_qty_i = i
+                    for f in [(default_code_i, 'product'), (theoretical_qty_i, 'theoretical quantity'), (uom_i, 'uom'), (real_qty_i, 'real quantity')]:
                         if not isinstance(f[0], int):
                             err_log += '\n' + _("Invalid CSV file, Header '%s' is missing !") % f[1]
                          
@@ -174,14 +168,13 @@ class sl_import(orm.TransientModel):
                         import_vals['default_code'] = ln[default_code_i]
                     if uom_i > -1: 
                         import_vals['uom'] = ln[uom_i]
-                    if product_name_i > -1: 
-                        import_vals['product_name'] = ln[product_name_i]
-                    if public_price_i > -1: 
-                        import_vals['public_price'] = ln[public_price_i]
-                    if balance_qty_i > -1: 
-                        import_vals['balance_qty'] = ln[balance_qty_i]
-                    if cost_price_i > -1: 
-                        import_vals['cost_price'] = ln[cost_price_i]
+                   
+                        import_vals['balance_qty'] = ln[real_qty_i]
+                    if theoretical_qty_i > -1: 
+                        import_vals['theoretical_qty'] = ln[theoretical_qty_i]
+                    
+                    if serial_number_i > -1: 
+                        import_vals['serial_number'] = ln[serial_number_i]    
                     amls.append(import_vals)
                    
         if err_log:
@@ -189,77 +182,75 @@ class sl_import(orm.TransientModel):
             self.write(cr, uid, ids[0], {'state': 'failed'})
         else:
             for aml in amls:
-                default_code = uom_ids = uom_id = product_id = product_template_id = uom_name = product_name = product_qty = price = public_price = None
+                default_code = uom_ids = uom_id = product_id = product_template_id = uom_name = theoretical_qty = product_qty = serial_number =  None
                 value = []
-                if aml['default_code']:
-                    default_code = str(aml['default_code']).strip()
-                    
-                if aml['uom']:
-                    uom_name = str(aml['uom']).strip()
-                else:
-                    uom_name = 'Unit(s)'  # default uom
-                if aml['product_name']:
-                    product_name = str(aml['product_name']).strip()
-                    
-                if aml['balance_qty']:
-                    product_qty = aml['balance_qty']
-                    
-                if aml['cost_price']:
-                    price = aml['cost_price']
-                    
-                if aml['public_price']:
-                    public_price = aml['public_price']
-                    
-                if uom_name:
-                    uom_id = uom_obj.search(cr, uid, [('name', '=', uom_name)])
-                    if not uom_id:
-                        raise osv.except_osv(_('Error!'), _("UOM is not exist!"))
-                        uom_ids = 'not contain'
+                try:                                                   
+                    if aml['default_code']:                        
+                        default_code = aml['default_code']    
+                                      
+                    if aml['uom']:
+                        uom_name = str(aml['uom']).strip()
                     else:
-                        uom_ids = uom_id[0]
-                        # print uom_ids
-                if default_code:
-                    cr.execute("""select id from product_product where lower(default_code) like %s """, (default_code.lower(),))
-                    data = cr.fetchall()
-                    if data:
-                        product_id = data[0][0]
-                    else:
-                        product_id = None
-                    if product_id:
-                        cr.execute('select product_tmpl_id from product_product where id = %s', (product_id,))
-                        product_template_id = cr.fetchone()
-                        if uom_ids and product_id:
-                            print 'inventory_id', move_id
-                        if move_id:
-                            cr.execute('select id from stock_inventory_line where inventory_id = %s and product_id = %s', (move_id, product_id,))
-                            
-                            exist = cr.fetchone()
-                            # print 'exist ',exist
-                            if not exist:
-                                value = {'inventory_id':move_id, 'product_uom_id':uom_ids, 'product_id':product_id, 'location_id':location_id, 'product_qty':product_qty, 'product_name':product_name}
-                                stock_move_line_obj.create(cr, uid, value, context=context)
-                            else:
-                                value = {'product_qty':product_qty}
-                                stock_move_line_obj.write(cr, uid, exist, value)
-                            res_id = 'product.template,'
-                            res_id += str(product_template_id[0])
-                            if product_template_id:
-                                product_template_obj.write(cr, uid, product_template_id, {'list_price':public_price})
-                                if price:
-                                    standard_field_id = fields_obj.search(cr, uid, [('name', '=', 'standard_price')])
-                                    if standard_field_id:
-                                        # print 'standard_field',standard_field_id[0]
-                                        res = {'res_id':res_id,
-                                             'value_float':price,
-                                             'type':'float',
-                                             'company_id':company_id,
-                                             'fields_id':standard_field_id[0]}
-                                        property_obj.create(cr, uid, res, context)
-                                        # print 'this is product.template standard_price',price 
+                        uom_name = 'Unit(s)'  # default uom
+                    if aml['theoretical_qty']:
+                        theoretical_qty = aml['theoretical_qty']
                         
+                    if aml['balance_qty']:
+                        product_qty = aml['balance_qty']
+                        
+                    if aml['serial_number']:
+                        serial_number = str(aml['serial_number']).strip() #aml['serial_number']
+                        
+                    
+                        
+                    if uom_name:
+                        uom_id = uom_obj.search(cr, uid, [('name', '=', uom_name)])
+                        if not uom_id:
+                            raise osv.except_osv(_('Error!'), _("UOM is not exist!"))
+                            uom_ids = 'not contain'
+                        else:
+                            uom_ids = uom_id[0]
+                            # print uom_ids                    
+                    if default_code:
+                        product_code = None
+                        #first = default_code.index("[") + 1
+                        #second = default_code.index("]")
+                        #product_code = default_code[first:second]
+                        cr.execute("""select id from product_product where lower(default_code) like %s """, (default_code.lower(),))
+                        data = cr.fetchall()
+                        if data:
+                            product_id = data[0][0]
+                        else:
+                            product_id = None
+                        serial = None    
+                        if product_id:
+                            cr.execute('select product_tmpl_id from product_product where id = %s', (product_id,))
+                            product_template_id = cr.fetchone()
+                            if move_id:
+                                #cr.execute('select id from stock_inventory_line where inventory_id = %s and product_id = %s', (move_id, product_id,))
+                                if serial_number:
+                                    cr.execute("select id from stock_production_lot where name=%s and product_id = %s",(str(serial_number),product_id,))
+                                    serial = cr.fetchone()
+                                    cr.execute('select id from stock_inventory_line where inventory_id = %s and product_id = %s and prod_lot_id=%s', (move_id, product_id,serial,))
+                                else:
+                                    cr.execute('select id from stock_inventory_line where inventory_id = %s and product_id = %s and prod_lot_id is null', (move_id, product_id,))
+                                        
+                                exist = cr.fetchone()
+                                # print 'exist ',exist
+                                if not exist:
+                                    value = {'inventory_id':move_id, 'product_uom_id':uom_ids, 'product_id':product_id, 'location_id':location_id, 'theoretical_qty': theoretical_qty , 'product_qty':product_qty}
+#                                     stock_move_line_obj.create(cr, uid, value, context=context)
+                                    cr.execute('insert into stock_inventory_line(inventory_id,product_uom_id,product_id,location_id,theoretical_qty,product_qty) \
+                                                values(%s,%s,%s,%s,%s,%s)', (move_id,uom_ids,product_id,location_id,theoretical_qty,product_qty,))
+                                else:
+                                    value = {'theoretical_qty': theoretical_qty , 'product_qty':product_qty}
+                                    stock_move_line_obj.write(cr, uid, exist, value)
+                                res_id = 'product.template,'
+                                res_id += str(product_template_id[0])
+ 
+                except Exception, e:                    
+                    continue        
                     
                 
             self.write(cr, uid, ids[0], {'state': 'completed'})
-        print 'this is aml', amls
-                     
-                         
+  
