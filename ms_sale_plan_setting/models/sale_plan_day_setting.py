@@ -18,11 +18,11 @@ class sale_plan_for_day_setting(osv.osv):
         team_data = sale_team_obj.browse(cr, uid, sale_team, context=context)
         main_group = team_data.main_group_id
         branch_id = team_data.branch_id.id
-        print 'dddddddddd', branch_id, main_group
+        print 'dddddddddd', branch_id, main_group ,township_id[0][2]
         values = {}
         data_line = []
         if sale_team_id:            
-            partner_ids = customer_obj.search(cr, uid, [('section_id', '=', sale_team_id), ('township', '=', township_id), ('mobile_customer', '!=', True), ('active', '=', True)], context=context)
+            partner_ids = customer_obj.search(cr, uid, [('section_id', '=', sale_team_id), ('township', 'in', township_id[0][2]), ('mobile_customer', '!=', True), ('active', '=', True)], context=context)
             if  partner_ids:                
                 for line in partner_ids:
                     print ' line', line
@@ -344,7 +344,7 @@ class sale_plan_for_day_setting(osv.osv):
     _columns = {
                 'name': fields.char('Description', required=True),
                 'sale_team_id':fields.many2one('crm.case.section', 'Sale Team', required=True),
-                'township_id':fields.many2one('res.township', 'Township', required=True),
+                'township_id':fields.many2many('res.township','sale_plan_township_rel', 'plan_id','township_id',required=True,string='Township'),
                 'monday':fields.boolean('Monday', default=False),
                 'tuesday':fields.boolean('Tuesday', default=False),
                 'wednesday':fields.boolean('Wednesday', default=False),
@@ -973,18 +973,23 @@ class sale_plan_for_day_setting(osv.osv):
         data_line = []
         res = []
         customer_obj = self.pool.get('res.partner')
+        township_obj = self.pool.get('res.township')
+        
         sale_plan_obj = self.pool.get('sale.plan.day.setting')       
         plan_obj = self.pool.get('sale.plan.day.setting.line')
         plan = self.browse(cr, uid, ids, context=context)
         partner_count = plan.partner_count
         plan_line = plan.plan_line
+        township_id = plan.township_id
+        township_ids = [(township.id) for township in township_id]
+
         for plan_line_id in plan_line:
             partner_id = plan_line_id.partner_id.id
             partner_code = plan_line_id.partner_id.customer_code
             cr.execute("update sale_plan_day_setting_line set code =%s where partner_id=%s and id = %s", (partner_code, partner_id, plan_line_id.id,))
             data_line.append(partner_id)
         sale_team_id = plan.sale_team_id.id
-        partner_ids = customer_obj.search(cr, uid, [('section_id', '=', sale_team_id), ('id', 'not in', data_line), ('mobile_customer', '!=', True), ('active', '=', True)], context=context)
+        partner_ids = customer_obj.search(cr, uid, [('section_id', '=', sale_team_id),('township','in',township_ids), ('id', 'not in', data_line), ('mobile_customer', '!=', True), ('active', '=', True)], context=context)
         if  partner_ids:
                 count = len(partner_ids)                
                 for line in partner_ids:
