@@ -19,7 +19,7 @@
                 <scalar-parameter name="maingroup_id" id="11">
                     <text-property name="promptText">Main Group</text-property>
                     <property name="valueType">dynamic</property>
-                    <property name="isRequired">true</property>
+                    <property name="isRequired">false</property>
                     <property name="dataSetName">maingroup</property>
                     <expression name="valueExpr">row["id"]</expression>
                     <expression name="labelExpr">row["name"]</expression>
@@ -38,7 +38,7 @@
                 <scalar-parameter name="categ_id" id="12">
                     <text-property name="promptText">Category</text-property>
                     <property name="valueType">dynamic</property>
-                    <property name="isRequired">true</property>
+                    <property name="isRequired">false</property>
                     <property name="dataSetName">category</property>
                     <expression name="valueExpr">row["id"]</expression>
                     <expression name="labelExpr">row["name"]</expression>
