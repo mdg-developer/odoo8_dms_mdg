@@ -1246,7 +1246,7 @@ class mobile_sale_order(osv.osv):
 
     def get_product_uoms(self, cr, uid , saleteam_id, last_date, context=None, **kwargs):
         cr.execute('''
-                select distinct uom_id,uom_name,ratio,template_id,product_id from(
+                select uom_id,uom_name,ratio,template_id,product_id from(
                 select  pu.id as uom_id,pu.name as uom_name ,floor(round(1/factor,2)) as ratio,
                 pur.product_template_id as template_id,pp.id as product_id
                 from product_uom pu , product_template_product_uom_rel pur ,
