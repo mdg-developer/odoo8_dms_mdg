@@ -126,6 +126,14 @@
 							<span t-field="o.approve_by" />
 						</td>
 					</tr>
+					<tr>
+						<td style="border:0pt;font-size:10pt;">
+							<strong>Vehicle No:</strong>
+						</td>
+						<td style="border:0pt;font-size:10pt;">
+							<span t-field="o.vehicle_id" />
+						</td>
+					</tr>
 				</table>
 
 				<table class="table table-condensed">

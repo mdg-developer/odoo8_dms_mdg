@@ -249,7 +249,7 @@ class stock_requisition(osv.osv):
             request_by = req_value.request_by.id
             to_location_id = req_value.to_location_id.id
             from_location_id = req_value.from_location_id.id
-            #vehicle_no = req_value.vehicle_id.id
+            vehicle_no = req_value.vehicle_id.id
             sale_team_id = req_value.sale_team_id.id
             branch_id = req_value.branch_id.id
             receiver = req_value.sale_team_id.receiver
@@ -264,6 +264,7 @@ class stock_requisition(osv.osv):
                                           'request_by':request_by,
                                           'to_location_id':to_location_id,
                                           'from_location_id':from_location_id,
+                                          'vehicle_id':vehicle_no,
                                           'receiver':receiver,
                                           'branch_id':branch_id}, context=context)
             

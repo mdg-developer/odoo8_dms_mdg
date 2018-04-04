@@ -32,7 +32,7 @@ from openerp import workflow
 from openerp.exceptions import except_orm, Warning, RedirectWarning
 from openerp.tools import float_compare
 import openerp.addons.decimal_precision as dp
-from celery.worker.strategy import default
+#from celery.worker.strategy import default
 class sale_order_line(osv.osv):
 
     _inherit='sale.order.line'

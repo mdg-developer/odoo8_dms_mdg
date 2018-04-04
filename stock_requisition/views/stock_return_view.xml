@@ -37,6 +37,7 @@
 								<field name="wh_receiver" attrs="{'readonly':[('state','=','received')]}" />
 								<field name="company_id" attrs="{'readonly':[('state','=','received')]}"
 									invisible="1" />
+								<field name="vehicle_id"/>
 							</group>
 						</group>
 						<group>
