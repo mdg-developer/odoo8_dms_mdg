@@ -6,7 +6,11 @@ from openerp.exceptions import except_orm, Warning, RedirectWarning
 from openerp.tools import float_compare
 import openerp.addons.decimal_precision as dp
 
-
+class account_invoice_line(models.Model):
+    _inherit = "account.invoice.line"
+    
+    line_paid= fields.Boolean('Paid',default=False)   
+    
 class account_invoice(models.Model):
     _inherit = "account.invoice"
     
@@ -287,12 +291,13 @@ class account_invoice(models.Model):
                 print 'product>>>', product.id
                 print 'line.get>>>', line.get('product_id', False)
                 if origin and line['is_discount'] == False:
-                    cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s", (origin, product.id,))
+                    cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s and avl.line_paid!=True", (origin, product.id,))
                     dis_amt = cr.fetchall()
                     if dis_amt:     
                         for amt in dis_amt:
                             discount_amt = discount_amt + amt[0];
                         line['price'] = line['price'] + discount_amt        
+                    cr.execute("UPDATE account_invoice_line SET line_paid =True FROM account_invoice  WHERE account_invoice_line.invoice_id = account_invoice.id AND account_invoice.origin = %s and   account_invoice_line.product_id=%s ", (origin, product.id,))
                 if  line['is_discount'] == True:
                     account_id = product.product_tmpl_id.main_group.property_account_discount.id
                 else:
@@ -335,12 +340,13 @@ class account_invoice(models.Model):
                 print 'product>>>', product.id
                 print 'line.get>>>', line.get('product_id', False)
                 if origin and line['is_discount'] == False:
-                    cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s", (origin, product.id,))
+                    cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s and avl.line_paid!=True", (origin, product.id,))
                     dis_amt = cr.fetchall()
                     if dis_amt:     
                         for amt in dis_amt:
                             discount_amt = discount_amt + amt[0];
-                        line['price'] = line['price'] + discount_amt                
+                        line['price'] = line['price'] + discount_amt         
+                    cr.execute("UPDATE account_invoice_line SET line_paid =True FROM account_invoice  WHERE account_invoice_line.invoice_id = account_invoice.id AND account_invoice.origin = %s and   account_invoice_line.product_id=%s ", (origin, product.id,))
                 if  line['is_discount'] == True:
                     account_id = product.product_tmpl_id.main_group.property_account_discount.id
                 else:
@@ -383,12 +389,13 @@ class account_invoice(models.Model):
                 print 'product>>>', product.id
                 print 'line.get>>>', line.get('product_id', False)
                 if origin and line['is_discount'] == False:
-                    cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s", (origin, product.id,))
+                    cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s and avl.line_paid!=True", (origin, product.id,))
                     dis_amt = cr.fetchall()
                     if dis_amt:     
                         for amt in dis_amt:
                             discount_amt = discount_amt + amt[0];
-                        line['price'] = line['price']  - discount_amt       
+                        line['price'] = line['price']  - discount_amt     
+                    cr.execute("UPDATE account_invoice_line SET line_paid =True FROM account_invoice  WHERE account_invoice_line.invoice_id = account_invoice.id AND account_invoice.origin = %s and   account_invoice_line.product_id=%s ", (origin, product.id,))
                 if  line['is_discount'] == True:
                     account_id = product.product_tmpl_id.main_group.property_account_discount.id
                     line['price'] = -1 * line['price']
@@ -432,12 +439,13 @@ class account_invoice(models.Model):
                 print 'product>>>', product.id
                 print 'line.get>>>', line.get('product_id', False)
                 if origin and line['is_discount'] == False:
-                    cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s", (origin, product.id,))
+                    cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s and avl.line_paid!=True", (origin, product.id,))
                     dis_amt = cr.fetchall()
                     if dis_amt:     
                         for amt in dis_amt:
                             discount_amt = discount_amt + amt[0];
-                        line['price'] = line['price'] - discount_amt       
+                        line['price'] = line['price'] - discount_amt     
+                    cr.execute("UPDATE account_invoice_line SET line_paid =True FROM account_invoice  WHERE account_invoice_line.invoice_id = account_invoice.id AND account_invoice.origin = %s and   account_invoice_line.product_id=%s ", (origin, product.id,))
                 if  line['is_discount'] == True:
                     account_id = product.product_tmpl_id.main_group.property_account_discount.id
                     line['price'] = -1 * line['price']

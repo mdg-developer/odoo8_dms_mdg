@@ -488,7 +488,7 @@ class manual_cashier_approval(osv.osv):
             
        
                 
-        if journal_id is not None:
+        if journal_id is not None and amount!=0:
              
             cr.execute("select * from account_period where %s >=date_start and %s <=date_stop",(date,date,))         
             period_id=cr.fetchone()[0]
@@ -573,7 +573,7 @@ class manual_cashier_approval(osv.osv):
             self.generte_ar(cr, uid, ids, context=context)
             self.generte_cr(cr, uid, ids, context=context) 
             self.generate_denomination(cr, uid, ids, context=context)   
-            self.generate_denomination_product(cr, uid, ids, context=context)
+          #  self.generate_denomination_product(cr, uid, ids, context=context)
             self.generate_payment(cr, uid, ids, context=context)
 #            self.generate_payment_pre_so(cr, uid, ids, context=context)     
             self.generate_payment_ar(cr, uid, ids, context=context)
