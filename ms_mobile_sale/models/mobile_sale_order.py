@@ -219,11 +219,12 @@ class mobile_sale_order(osv.osv):
                                     manual_foc = True
                                 else:
                                     manual_foc = False                 
-                                if sol['promotion_action']:
+                                if sol['promotion_action'] and sol['promotion_action']!='null':
                                     cursor.execute("select promotion from promos_rules_actions where id =%s",(sol['promotion_action'],))
                                     promotion_id = cursor.fetchone()[0]  
                                 else:
-                                    promotion_id=None      
+                                    promotion_id=None   
+                                       
                                 price =sol['price_unit']
                                 if  float(price) < 0:
                                     product_price= 0
@@ -2979,7 +2980,7 @@ class mobile_sale_order(osv.osv):
         except Exception, e:
             return False
     
-    def get_credit_invoice(self, cr, uid, partner_list, branch_id , invoiceList, context=None):    
+    def get_credit_invoice(self, cr, uid, partner_list, branch_id , invoiceList, sale_team_id, context=None):    
         data_line = []
         if partner_list:
             partner_list = str(tuple(partner_list))
@@ -3002,8 +3003,9 @@ class mobile_sale_order(osv.osv):
                     and inv.partner_id = rp.id
                     and inv.section_id = crm.id
                     and inv.partner_id in %s
-                    and inv.id NOT IN %s'''         
-                    , (branch_id, partner_list, invoiceList ,))
+                    and inv.id NOT IN %s        
+                    and inv.section_id = %s'''
+                    , (branch_id, partner_list, invoiceList,sale_team_id,))
             else:
                 cr.execute(''' 
                     select inv.id,inv.number,inv.partner_id,rp.name customer_name,
@@ -3019,8 +3021,8 @@ class mobile_sale_order(osv.osv):
                     and inv.partner_id = rp.id
                     and inv.section_id = crm.id
                     and inv.partner_id in %s
-                    '''         
-                    , (branch_id, partner_list,))            
+                    and inv.section_id = %s'''
+                    , (branch_id, partner_list,sale_team_id,))            
             data_line = cr.fetchall()                    
         print 'data_lineeeeeeeeeeeeeee', data_line        
         return data_line

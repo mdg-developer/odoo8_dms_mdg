@@ -172,9 +172,11 @@ class pre_sale_order(osv.osv):
                                     manual_foc = True
                                 else:
                                     manual_foc = False       
-                                if sol['promotion_action']:
+                                if sol['promotion_action'] and  sol['promotion_action']!='null':
                                     cursor.execute("select promotion from promos_rules_actions where id =%s",(sol['promotion_action'],))
                                     promotion_id = cursor.fetchone()[0]
+                                else:
+                                    promotion_id=False
                                 price =sol['price_unit']
                                 if  float(price) < 0:
                                     product_price= 0

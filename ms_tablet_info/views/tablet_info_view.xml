@@ -49,6 +49,7 @@
 					<field name="date" />
 					<field name="hotline" />
 					<field name="branch_id" />
+					<field name="device_id" />
 				</tree>
 
 			</field>
@@ -75,6 +76,9 @@
 								<field name="date" />
 								<field name="storage_day" />
 								<field name="hotline" />
+								<field name="device_id" />
+								
+								
 							</group>
 						</group>
 						<field name="note" placeholder="Other Informations...." />

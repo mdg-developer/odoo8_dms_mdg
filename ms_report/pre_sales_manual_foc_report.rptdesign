@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
     <property name="units">in</property>
     <method name="initialize"><![CDATA[branchList = params["branch_id"].value.join(",");
 teamList = params["sales_team_id"].value.join(",");]]></method>
@@ -315,7 +315,7 @@ and pp.id=psol.product_id
 and psol.uom_id=uom.id
 --and pso.id not in (select promo_line_id from pre_promotion_line where promo_line_id is not null)
 and void_flag='none'
-and foc='true'
+and manual_foc='true'
 and ((pso.date at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
 --$branch$
 --$sales_team$

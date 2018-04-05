@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
     <property name="units">in</property>
     <method name="initialize"><![CDATA[branchList = params["branch_id"].value.join(",");
 teamList = params["sales_team_id"].value.join(",");]]></method>
@@ -174,7 +174,7 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <structure>
                         <property name="position">8</property>
                         <property name="name">total_amt</property>
-                        <property name="dataType">float</property>
+                        <property name="dataType">decimal</property>
                     </structure>
                 </list-property>
             </structure>
@@ -190,7 +190,7 @@ if (params["branch_id"].value == null ){
 }
 else
 {     
-   this.queryText =this.queryText.replace("--$branch$", "and mso.branch_id in ("+params["branch_id"].value.join(",")+")")
+   this.queryText =this.queryText.replace("--$branch$", "and ai.branch_id in ("+params["branch_id"].value.join(",")+")")
 }]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
@@ -247,30 +247,21 @@ else
                     <property name="position">8</property>
                     <property name="name">total_amt</property>
                     <property name="nativeName">total_amt</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select ai.number as name,rp.name customer_name,cc.name as team,mso.customer_code,((mso.date at time zone 'utc' )at time zone 'asia/rangoon')::date date,res.login,pp.name_template,abs(msol.price_unit) total_amt
-from mobile_sale_order mso,mobile_sale_order_line msol,res_partner rp,res_users res,product_product pp,crm_case_section cc,sale_order so, sale_order_line sol,account_invoice ai,account_invoice_line ail
-where mso.id=msol.order_id
-and so.id=sol.order_id
-and ai.id=ail.invoice_id
-and mso.name=so.tb_ref_no
-and so.name=ai.origin
-and mso.partner_id=rp.id
-and so.partner_id=mso.partner_id
-and ai.partner_id=so.partner_id
-and mso.user_id=res.id
-and so.user_id=mso.user_id
-and ai.user_id=so.user_id
-and pp.id=msol.product_id
-and pp.id=sol.product_id
+            <xml-property name="queryText"><![CDATA[select ai.number as name,rp.name customer_name,cc.name as team,rp.customer_code,ai.date_invoice date,res.login,pp.name_template,abs(ail.price_subtotal) total_amt
+from res_partner rp,res_users res,product_product pp,crm_case_section cc,account_invoice ai,account_invoice_line ail
+where ai.id=ail.invoice_id
+and ai.partner_id=rp.id
+and ai.user_id=res.id
 and pp.id=ail.product_id
-and cc.id=mso.sale_team
-and msol.price_unit<0
-and void_flag='none'
-and ((mso.date at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+and cc.id=ai.section_id
+and ail.price_subtotal<0
+and ai.pre_order != True
+and ai.state not in ('draft','cancel')
+and ai.date_invoice between ? and  ?
 --$branch$
 --$sales_team$
 order by ai.number]]></xml-property>
@@ -1175,6 +1166,10 @@ and date_invoice between ? and ?
                             <property name="fontSize">11pt</property>
                             <property name="fontWeight">bold</property>
                             <property name="paddingRight">3pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
+                            </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">Aggregation</property>
                         </data>

@@ -7,7 +7,7 @@ class crm_case_section(osv.osv):
     _inherit = "crm.case.section"
     _description = "Sales Denomination"         
     _columns = {
-        'team_partner_id':fields.many2one('res.partner', 'Partner ID' , required=True),
+        'team_partner_id':fields.many2one('res.partner', 'Partner ID' , required=False),
         }
     
 class manual_sale_denomination(osv.osv):
