@@ -37,6 +37,7 @@ class stock_return(osv.osv):
                 'vehicle_id': team.vehicle_id and team.vehicle_id.id or False,
                 'from_location':team.location_id,
                 'to_location':team.issue_location_id,
+                'vehicle_id':team.vehicle_id,
                 'returner':team.receiver,
             }
         return {'value': values}

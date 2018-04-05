@@ -33,6 +33,7 @@
 								<field name="company_id" attrs="{'readonly':[('state','=','approve')]}" invisible="1"/>
 								<field name="pre_order" invisible="1" />
 								<field name="good_issue_id" invisible="0" />
+								<field name="vehicle_id" attrs="{'readonly':[('state','=','approve')]}" />
 							</group>
 							<group>
 								<field name="issue_to" attrs="{'readonly':[('state','=','approve')]}" />
