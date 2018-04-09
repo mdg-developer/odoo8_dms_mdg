@@ -329,11 +329,7 @@ class sale_order(osv.osv):
             },
             multi='sums', help="The total amount."),
         'grand_total': fields.function(_amount_all_wrapper, digits_compute=dp.get_precision('Account'), string='Grand Total',
-            store={
-                'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
-                'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
-            },
-            multi='sums', help="The amount without tax.", track_visibility='always'),      
+            multi='sums', help="The amount without tax.", track_visibility='always',store=True),      
         'amount_untaxed': fields.function(_amount_all_wrapper, digits_compute=dp.get_precision('Account'), string='Untaxed Amount',
             store={
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),

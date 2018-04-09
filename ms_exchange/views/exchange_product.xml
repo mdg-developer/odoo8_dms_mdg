@@ -42,7 +42,7 @@
 								</h2>
 								<field name="customer_id" on_change='onchange_customer_id(customer_id)' />
 								<field name="customer_code" />
-								<field name="team_id" />
+								<field name="team_id"  on_change='onchange_team_id(team_id)' />
 								<field name="note" />
 							</group>
 							<group>
@@ -62,7 +62,7 @@
 												<field name="product_id" />
 												<field name="uom_id" />
 												<field name="product_qty" />
-												<field name="batchno" invisible="1" />
+												<field name="batchno" invisible="0" />
 												<field name="exp_date" />
 												<field name="trans_type" />
 												<field name="note" />
@@ -71,10 +71,10 @@
 									</form>
 									<tree string="Item Lines" editable="bottom">
 										<field name="so_No" />
-										<field name="product_id" />
+										<field name="product_id" on_change="onchange_product_id(product_id,uom_id,context)" />
 										<field name="uom_id" />
 										<field name="product_qty" />
-										<field name="batchno" invisible="1" />
+										<field name="batchno" invisible="0" />
 										<field name="exp_date" />
 										<field name="trans_type" />
 										<field name="note" />

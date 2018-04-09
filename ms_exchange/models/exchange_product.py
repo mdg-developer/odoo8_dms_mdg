@@ -34,6 +34,15 @@ class exchange_product(osv.osv):
         if datas:
             result.update({'customer_code':datas['customer_code']})            
         return {'value':result} 
+    
+    def onchange_team_id(self, cr, uid, ids, team_id, context=None):
+        
+        result = {}
+        section = self.pool.get('crm.case.section')
+        datas = section.read(cr, uid, team_id, ['location_id'], context=context)
+        if datas:
+            result.update({'location_id':datas['location_id']})            
+        return {'value':result}     
          
 #     def action_convert_ep(self, cr, uid, ids, context=None):
 #         product_line_obj = self.pool.get('product.transactions.line')
@@ -112,5 +121,24 @@ class exchange_product_line_item(osv.osv):
                 'exp_date':fields.date('Expired Date'),
                 'batchno':fields.char('Batch No'),
                 }
+
+    def onchange_product_id(self, cr, uid, ids, product_id, uom_id,context=None):
+        """ Changes UoM and name if product_id changes.
+        @param name: Name of the field
+        @param product_id: Changed product_id
+        @return:  Dictionary of changed values
+        """
+        #global prod_uom_ids
+        prod_uom_ids=[]
+        value = {'uom_id': []}
+        domain = {'uom_id': []}
+        if product_id:
+            prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+            cr.execute("select product_uom_id from product_template_product_uom_rel where product_template_id=%s", (prod.product_tmpl_id.id,))
+            prod_uom_ids = cr.fetchall()
+            value = {'uom_id': prod_uom_ids}
+            domain = {'uom_id': [('id', 'in', prod_uom_ids)]}
+        return {'value': value, 'domain': domain}
     
+        
 exchange_product_line_item()

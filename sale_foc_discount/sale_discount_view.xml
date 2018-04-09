@@ -10,7 +10,7 @@
 			<field name="arch" type="xml">
 			    
 			    <xpath expr="//field[@name='amount_untaxed']" position="replace">
-					<field name="amount_untaxed"  invisible="1"/>
+					<field name="amount_untaxed"  invisible="0"/>
 					<field name="grand_total" />
 				</xpath>
 				
