@@ -503,7 +503,7 @@ class manual_cashier_approval(osv.osv):
                             'period_id':period_id,
                             }
             move_id = move_Obj.create(cr, uid, account_move, context=context)
-          #  move_Obj.write(cr, uid,{'partner_id': partner_id,'ref':name},context=context)
+            #  move_Obj.write(cr, uid,{'partner_id': partner_id,'ref':name},context=context)
             cr.execute("update account_move set partner_id=%s,ref=%s where id=%s",(partner_id,name,move_id,))
 
             cr_account = dr_account = None                                           
@@ -511,13 +511,22 @@ class manual_cashier_approval(osv.osv):
             cr_account = cash_account_id      
             if amount <0 :
                 amount=-1*amount;    
+                
+                cr.execute("""insert into account_move_line (partner_id,name,account_id,date_maturity,move_id,credit,debit,journal_id,date,company_id,period_id) 
+                values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s),
+                      (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""", 
+                      (partner_id, name , cr_account, date, move_id, 0.0,amount, journal_id, date,company_id,period_id,
+                      partner_id,name, dr_account, date, move_id, amount, 0.0, journal_id, date, company_id,period_id,))
+ 
+            else:
 
-            cr.execute("""insert into account_move_line (partner_id,name,account_id,date_maturity,move_id,credit,debit,journal_id,date,company_id,period_id) 
-            values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s),
-                  (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""", 
-                  (partner_id, name , dr_account, date, move_id, 0.0,amount, journal_id, date,company_id,period_id,
-                  partner_id,name, cr_account, date, move_id, amount, 0.0, journal_id, date, company_id,period_id,))
-                   
+                cr.execute("""insert into account_move_line (partner_id,name,account_id,date_maturity,move_id,credit,debit,journal_id,date,company_id,period_id) 
+                values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s),
+                      (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""", 
+                      (partner_id, name , dr_account, date, move_id, 0.0,amount, journal_id, date,company_id,period_id,
+                      partner_id,name, cr_account, date, move_id, amount, 0.0, journal_id, date, company_id,period_id,))
+ 
+                         
             cr.execute("""UPDATE account_move as m set state='posted' where m.id=%s                            
                             """,(move_id,))    
 
