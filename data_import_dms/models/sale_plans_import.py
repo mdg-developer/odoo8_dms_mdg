@@ -78,7 +78,7 @@ class sale_plans_import(osv.osv):
         data = self.browse(cr, uid, ids)[0]
         import_file = data.import_file
         err_log = ''
-        header_line = False
+        header_line = False        
         lines = base64.decodestring(import_file)
         wb = open_workbook(file_contents=lines)
         excel_rows = []
@@ -96,6 +96,7 @@ class sale_plans_import(osv.osv):
                     values.append(s.cell(row, col).value)
                 excel_rows.append(values)
         con_ls = []
+        customer_id_list=[]
         amls = []
         count = val = head_count = 0
         for ln in excel_rows:
@@ -276,6 +277,10 @@ class sale_plans_import(osv.osv):
                                                                                             'active':True,
                                                                                             'week':0}, context=context)
                                 if plan_id:
+                                    if customer_id:
+                                        customer_id_list.append(customer_id[0])
+                                        #delete related data with plan_id from res_partner_sale_plan_day_rel
+                                        cr.execute("delete from res_partner_sale_plan_day_rel where sale_plan_day_id =%s and partner_id not in %s ", (plan_id,tuple(customer_id_list),))
                                     # customer link
                                     cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id =%s ", (plan_id,))
                                     res_ids = cr.fetchall()
@@ -303,6 +308,11 @@ class sale_plans_import(osv.osv):
                                                                                             'branch_id':branch_id,
                                                                                             'active':True,
                                                                                             'week':0}, context=context)
+                                if customer_id:
+                                    customer_id_list.append(customer_id[0])
+                                #delete related data with plan_id from res_partner_sale_plan_day_rel
+                                cr.execute("delete from res_partner_sale_plan_day_rel where sale_plan_day_id =%s and partner_id not in %s ", (plan_id,tuple(customer_id_list),))
+                                    
                                 cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id =%s ", (plan_id,))
                                 res_ids = cr.fetchall()
                                 if res_ids and customer_id:
