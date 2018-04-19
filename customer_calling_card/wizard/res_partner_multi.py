@@ -32,7 +32,22 @@ class res_partner_multi(osv.osv_memory):
     _defaults = {
          'date': fields.datetime.now(),         
     }
-
+    
+    def automation_partner_sale_target(self, cr, uid,context=None):
+        customer_target_obj = self.pool.get('customer.target')
+        partner_obj = self.pool.get('res.partner')
+        invoice_obj = self.pool.get('account.invoice')
+        #target_list= customer_target_obj.search(cr,uid,[('partner_id','!=',None)],order='id desc')
+        date=fields.datetime.now()
+        partner_ids= invoice_obj.search(cr,uid,[('date_invoice','=',date),('state','=','open')],order='id desc')
+        for partner_id in partner_ids: 
+            target_id = self.pool.get('customer.target').search(cr,uid,[('partner_id','=',partner_id)],limit=1,order='id desc')
+            if target_id:
+                data = customer_target_obj.browse(cr, uid, target_id)[0]
+                customer_target_obj.get_so_qty(cr, uid, [target_id], date,data.partner_id.id,data.outlet_type,context=None)
+                customer_target_obj.write(cr, uid, target_id, {'updated_by':uid,'updated_time':fields.datetime.now()}, context=context)    
+        return True
+    
     def print_report(self, cr, uid, ids, context=None):
         data = self.read(cr, uid, ids, context=context)[0]
         customer_target_obj = self.pool.get('customer.target')

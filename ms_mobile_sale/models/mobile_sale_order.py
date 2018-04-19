@@ -638,7 +638,7 @@ class mobile_sale_order(osv.osv):
                                         else:
                                             product_name = line_id.product_id.name
                                         # FOC with price_unit or foc true, false
-                                    if line_id.price_unit == 0.0 or line_id.foc:
+                                    if line_id.sub_total == 0.0 or line_id.foc:
                                         foc = True
                                         product_name = 'FOC'
                                         price_unit = 0.0
