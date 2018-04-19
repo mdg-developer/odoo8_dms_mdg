@@ -1070,7 +1070,7 @@ class mobile_sale_order(osv.osv):
     def get_product_uoms(self, cr, uid , saleteam_id, context=None, **kwargs):
         cr.execute('''
                 select distinct uom_id,uom_name,ratio,template_id,product_id from(
-                select  pu.id as uom_id,pu.name as uom_name ,1/pu.factor as ratio,
+                select  pu.id as uom_id,pu.name as uom_name ,floor(round(1/factor,2)) as ratio,
                 pur.product_template_id as template_id,pp.id as product_id
                 from product_uom pu , product_template_product_uom_rel pur ,
                 product_product pp,
@@ -1688,7 +1688,7 @@ class mobile_sale_order(osv.osv):
         return datas
 
     def get_uom(self, cr, uid, context=None, **kwargs):
-        cr.execute("""select id,name,floor(1/factor) as ratio from product_uom where active = true""")
+        cr.execute("""select id,name,floor(round(1/factor,2))  as ratio from product_uom where active = true""")
         datas = cr.fetchall()
         print 'Product UOM', datas
         return datas
