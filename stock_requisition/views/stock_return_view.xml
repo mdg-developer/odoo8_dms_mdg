@@ -15,9 +15,8 @@
 						<button name="received" string="Received" class="oe_highlight"
 							type="object" states="draft"
 							groups="stock.group_stock_manager,stock.group_stock_user" />
-						<button name="cancel" string="Cancel" class="oe_highlight"
-							type="object" states="draft"
-							groups="stock.group_stock_manager" />
+                        <button name="cancel" string="Cancel" class="oe_highlight"
+                              type="object" states="draft" groups="stock.group_stock_manager" />
 						<field name="state" widget="statusbar" />
 					</header>
 					<sheet>
@@ -37,6 +36,27 @@
 								<field name="wh_receiver" attrs="{'readonly':[('state','=','received')]}" />
 								<field name="company_id" attrs="{'readonly':[('state','=','received')]}"
 									invisible="1" />
+                                <field name="from_wh_normal_return_location_id" readonly="1"
+                                    invisible="1" />
+                                <field name="from_wh_exp_location_id" readonly="1"
+                                    invisible="1" />
+                                <field name="from_wh_near_exp_location_id" readonly="1"
+                                    invisible="1" />
+                                <field name="from_wh_damage_location_id" readonly="1"
+                                    invisible="1" />
+                                <field name="from_wh_fresh_stock_not_good_location_id"
+                                    readonly="1" invisible="1" />
+                                <field name="to_wh_normal_return_location_id" readonly="1"
+                                    invisible="1" />
+                                <field name="to_wh_exp_location_id" readonly="1"
+                                    invisible="1" />
+                                <field name="to_wh_near_exp_location_id" readonly="1"
+                                    invisible="1" />
+                                <field name="to_wh_damage_location_id" readonly="1"
+                                    invisible="1" />
+                                <field name="to_wh_fresh_stock_not_good_location_id"
+                                    invisible="1" readonly="1" />
+																
 								<field name="vehicle_id"/>
 							</group>
 						</group>
@@ -53,27 +73,40 @@
 						<group>
 							<notebook>
 								<page string="Stock List">
-									<field name="p_line"   attrs="{'readonly':[('state','=','received')]}">
+									<field name="p_line" attrs="{'readonly':[('state','=','received')]}">
 										<tree string="Stock Return Line" editable="bottom"
 											default_order="sequence asc">
 											<field name="sequence" invisible="1" />
 											<field name="product_id" attrs="{'readonly':True}" />
-											<field name="receive_quantity" string="Issued Qty"
-												attrs="{'readonly':True}" />
-											<field name="sale_quantity" string="Sales Qty" attrs="{'readonly':True}" />
-											<field name="foc_quantity" string="FOC Qty" attrs="{'readonly':True}" />
+											<!--<field name="receive_quantity" string="Issued Qty" attrs="{'readonly':True}" 
+												/> -->
+											<!--<field name="foc_quantity" string="FOC Qty" attrs="{'readonly':True}" 
+												/> -->
 											<!-- <field name="exchange_quantity" attrs="{'readonly':True}" 
 												/> -->
-											<field name="return_quantity_big" string="Return Qty(B)"
-												attrs="{'readonly':True}" />
-											<field name="return_quantity" string="Return Qty(S)"
-												attrs="{'readonly':True}" />
-											<field name="product_uom" invisible="1" />
-											<field name="uom_ratio" invisible="1" />
+											<!-- <field name="return_quantity_big" string="Return Qty(B)" 
+												attrs="{'readonly':True}" /> -->
+											<!--<field name="return_quantity" string="Return Qty(S)" attrs="{'readonly':True}" 
+												/> -->
+
+											<!--<field name="uom_ratio" invisible="1" /> -->
 											<!-- <field name="qty_by_wh" /> -->
-											<field name="rec_big_quantity" string="Received Qty(B)" />
-											<field name="rec_small_quantity" string="Received Qty(S)" />
-											<field name="different_qty" invisible="1"/>
+											<!--<field name="rec_big_quantity" string="Received Qty(B)" /> -->
+											<!--<field name="rec_small_quantity" string="Received Qty(S)" 
+												/> -->
+											<field name="from_location_id" />
+											<field name="to_location_id" />
+											<field name="product_uom" string="UOM" invisible="0" />
+											<field name="status" string="Status" />
+											<field name="opening_stock_qty" string="Opening Stock Qty" />
+											<field name="sale_quantity" string="Sales Qty" />
+											<field name="return_quantity" string="Return Qty" />
+											<field name="onground_quantity" string="On Ground Qty"
+												on_change="on_change_ground_quantity(onground_quantity,actual_return_quantity)" />
+											<field name="actual_return_quantity" string="Actual Return Qty"
+												on_change="on_change_return_quantity(onground_quantity,actual_return_quantity)" />
+											<field name="closing_stock_qty" string="Closing Stock Qty" />
+											<field name="different_qty" invisible="1" />
 											<field name="expiry_date" string="Expiry" />
 											<field name="remark" string="Remark" />
 										</tree>
@@ -103,7 +136,7 @@
 						<filter string="Sales Team" icon="terp-partner" domain="[]"
 							context="{'group_by':'sale_team_id'}" />
 						<filter string="Return From" icon="terp-partner" domain="[]"
-							context="{'group_by':'return_from'}" />
+                            context="{'group_by':'returner'}" />
 						<filter string="Date of Return" icon="terp-partner" domain="[]"
 							context="{'group_by':'return_date'}" />
 						<filter string="Pending" domain="[('state','=','draft')]"
@@ -121,9 +154,7 @@
 				<tree string="Contents">
 					<field name="sale_team_id" />
 					<field name="name" />
-					<field name="note_id" />
-					<field name="return_from" />
-					<field name="so_no" />
+                    <field name="returner" />
 					<field name="return_date" />
 					<field name="vehicle_id" />
 					<field name="state" />

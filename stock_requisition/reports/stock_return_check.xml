@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data>
-		<template id="stock_return_note_document">
+		<template id="stock_return_check_note_document">
 			<div class="page">
 				<div class="row">
 					<div class="col-xs-3">
@@ -32,7 +32,7 @@
 				</div>
 				<h4>
 					<strong>
-						Stock Return Note
+						Stock Return Check
 					</strong>
 				</h4>
 
@@ -46,11 +46,17 @@
 						</td>
 
 						<td style="border:0pt;font-size:10pt;">
-							<strong>Returned By:</strong>
+							<strong>Date of Return:</strong>
 						</td>
 						<td style="border:0pt;font-size:10pt;">
-							<span t-field="o.returner"></span>
+							<span t-field="o.return_date" />
 						</td>
+<!-- 						<td style="border:0pt;font-size:10pt;"> -->
+<!-- 							<strong>Approved By:</strong> -->
+<!-- 						</td> -->
+<!-- 						<td style="border:0pt;font-size:10pt;"> -->
+<!-- 							<span t-field="o.approve_by" /> -->
+<!-- 						</td> -->
 					</tr>
 
 					<tr>
@@ -60,44 +66,6 @@
 						<td style="border:0pt;font-size:10pt;">
 							<span t-field="o.sale_team_id.name" />
 						</td>
-
-						<td style="border:0pt;font-size:10pt;">
-							<strong>WH Receiver:</strong>
-						</td>
-						<td style="border:0pt;font-size:10pt;">
-							<span t-field="o.wh_receiver" />
-						</td>
-					</tr>
-
-					<tr>
-						<td style="border:0pt;font-size:10pt;">
-							<strong>From Location:</strong>
-						</td>
-						<td style="border:0pt;font-size:10pt;">
-							<span t-field="o.from_location" />
-						</td>
-
-						<td style="border:0pt;font-size:10pt;">
-							<strong>To Warehouse:</strong>
-						</td>
-						<td style="border:0pt;font-size:10pt;">
-							<span t-field="o.to_location" />
-						</td>
-						<td style="border:0pt;font-size:10pt;">
-							<strong>Vehicle No:</strong>
-						</td>
-						<td style="border:0pt;font-size:10pt;">
-							<span t-field="o.vehicle_id" />
-						</td>
-					</tr>
-
-					<tr>
-						<td style="border:0pt;font-size:10pt;">
-							<strong>Date of Return:</strong>
-						</td>
-						<td style="border:0pt;font-size:10pt;">
-							<span t-field="o.return_date" />
-						</td>
 						<td style="border:0pt;font-size:10pt;">
 							<strong>Branch:</strong>
 						</td>
@@ -105,73 +73,56 @@
 							<span t-field="o.branch_id" />
 						</td>
 						<td style="border:0pt;font-size:10pt;">
+							<strong>Received By:</strong>
+						</td>
+						<td style="border:0pt;font-size:10pt;">
+							<span t-field="o.receive_by" />
+						</td>
+					</tr>
+					<tr>
+						<td style="border:0pt;font-size:10pt;">
 							<strong>Last Updated on:</strong>
 						</td>
 						<td style="border:0pt;font-size:10pt;">
 							<span t-field="o.write_date" />
 						</td>
 					</tr>
-
 				</table>
 
 				<table class="table table-condensed">
 					<thead>
 						<tr>
 							<th>Product</th>
-							<th class="text-right">From Location</th>
-							<th class="text-right">To Location</th>
+							<th class="text-right">Current Location</th>
+							<th class="text-right">Current Qty</th>
 							<th class="text-right">UOM</th>
-							<th class="text-right">Status</th>
-							<th class="text-right">Opening Stock Qty</th>
-							<th class="text-right">Sales Qty</th>
-							<th class="text-right">Return Qty</th>
-							<th class="text-right">On Ground Qty</th>
-							<th class="text-right">Actual Return Qty</th>
-							<th class="text-right">Closing Stock Qty</th>
-							<th>Expiry</th>
-							<th>Remark</th>
+							<th class="text-right">To Location</th>
+							<th class="text-right">Qty</th>
+							<th class="text-right">UOM</th>
 						</tr>
 					</thead>
 					<tbody class="invoice_tbody">
-						<tr t-foreach="o.p_line.sorted(key=lambda b: b.sequence)" t-as="l">
+						<tr t-foreach="o.s_line.sorted(key=lambda b: b.sequence)" t-as="l">
 							<td>
 								<span t-field="l.product_id" />
 							</td>
 							<td class="text-right">
-								<span t-field="l.from_location_id" />
+								<span t-field="l.current_location" />
 							</td>
 							<td class="text-right">
-								<span t-field="l.to_location_id" />
+								<span t-field="l.current_qty" />
 							</td>
 							<td class="text-right">
-								<span t-field="l.product_uom" />
+								<span t-field="l.current_product_uom" />
 							</td>
 							<td class="text-right">
-								<span t-field="l.status" />
+								<span t-field="l.to_location" />
 							</td>
 							<td class="text-right">
-								<span t-field="l.opening_stock_qty" />
+								<span t-field="l.to_qty" />
 							</td>
 							<td class="text-right">
-								<span t-field="l.sale_quantity" />
-							</td>
-							<td class="text-right">
-								<span t-field="l.return_quantity" />
-							</td>
-							<td align="text-right">
-								<span t-field="l.onground_quantity" />
-							</td>
-							<td align="text-right">
-								<span t-field="l.actual_return_quantity" />
-							</td>
-							<td align="text-right">
-								<span t-field="l.closing_stock_qty" />
-							</td>
-							<td align="center">
-								<span t-field="l.expiry_date" />
-							</td>
-							<td align="center">
-								<span t-field="l.remark" />
+								<span t-field="l.to_product_uom" />
 							</td>
 						</tr>
 					</tbody>
@@ -217,11 +168,11 @@
 			</div>
 		</template>
 
-		<template id="stock_return_note">
+		<template id="stock_return_check_note">
 			<t t-call="report.html_container">
 				<t t-foreach="doc_ids" t-as="doc_id">
 					<t
-						t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', 'stock_requisition.stock_return_note_document')" />
+						t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', 'stock_requisition.stock_return_check_note_document')" />
 				</t>
 			</t>
 		</template>
