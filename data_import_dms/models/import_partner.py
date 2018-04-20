@@ -296,7 +296,7 @@ class partner(osv.osv):
                 
                 if aml['credit allow']:
                     try:
-                        if str(aml['credit allow']).strip() == '1':
+                        if str(aml['credit allow'].lower()).strip() == 'true':
                             credit_allow = True
                         else:
                             credit_allow = False
@@ -308,7 +308,7 @@ class partner(osv.osv):
                     ctax_registration_no = str(aml['ctax no'])
                 if aml['exclusive']:
                     try:
-                        if str(aml['exclusive']).strip() == '1':
+                        if str(aml['exclusive'].lower()).strip() == 'true':
                             exclusive = True
                         else:
                             exclusive = False
@@ -316,7 +316,7 @@ class partner(osv.osv):
                         credit_allow = False
                 if aml['customer']:
                     try:
-                        if str(aml['customer']).strip() == '1':
+                        if str(aml['customer'].lower()).strip() == 'true':
                             customer = True
                         else:
                             customer = False
@@ -324,7 +324,7 @@ class partner(osv.osv):
                         customer = False
                 if aml['supplier']:
                     try:
-                        if str(aml['supplier']).strip() == '1':
+                        if str(aml['supplier'].lower()).strip() == 'true':
                             supplier = True
                         else:
                             supplier = False
