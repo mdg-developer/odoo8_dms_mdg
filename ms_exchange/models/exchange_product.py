@@ -9,7 +9,7 @@ class exchange_product(osv.osv):
     _columns = {
                 'transaction_id':fields.char('ID'),
                 'customer_id':fields.many2one('res.partner', 'Customer Name'),
-                'customer_code':fields.char('Customer Code',readonly=True),
+                'customer_code':fields.char('Customer Code', readonly=True),
                 'team_id'  : fields.many2one('crm.case.section', 'Sale Team'),
                 'date':fields.date('Date'),
               'exchange_type':fields.selection([('Exchange', 'Exchange'), ('Color Change', 'Color Change'), ('Sale Return', 'Sale Return'), ], 'Type'),
@@ -43,7 +43,66 @@ class exchange_product(osv.osv):
         if datas:
             result.update({'location_id':datas['location_id']})            
         return {'value':result}     
-         
+
+    def action_convert_ep(self, cr, uid, ids, context=None):
+        product_line_obj = self.pool.get('product.transactions.line')
+        product_obj = self.pool.get('product.transactions')
+        move_obj = self.pool.get('stock.move')
+        if ids:
+            product_value = product_obj.browse(cr, uid, ids[0], context=context)
+            location_id = product_value.customer_id.property_stock_customer.id
+            payment_type = product_value.location_type
+            if payment_type == 'Normal return':
+                from_location_id = product_value.team_id.normal_return_location_id.id
+            elif payment_type == 'Expired':
+                from_location_id = product_value.team_id.exp_location_id.id
+            elif payment_type == 'Near expiry':
+                from_location_id = product_value.team_id.near_exp_location_id.id
+            elif payment_type == 'Fresh stock not good':
+                from_location_id = product_value.team_id.fresh_stock_not_good_location_id.id
+            elif payment_type == 'Damaged':
+                from_location_id = product_value.team_id.damage_location_id.id            
+            
+            #from_location_id = product_value.team_id.return_location_id.id
+            car_location_id = product_value.team_id.location_id.id
+            origin = product_value.transaction_id
+            product_line_id = product_line_obj.search(cr, uid, [('transaction_id', '=', ids[0])], context=context)
+            if product_line_id:
+                for line_id in product_line_id:
+                    product_line_value = product_line_obj.browse(cr, uid, line_id, context=context)
+                    product_id = product_line_value.product_id.id
+                    name = product_line_value.product_id.name_template
+                    product_uom = product_line_value.uom_id.id
+                    origin = origin
+                    quantity = product_line_value.product_qty
+                    trans_type = product_line_value.trans_type
+                    if trans_type == 'In':
+                        move_id = move_obj.create(cr, uid, {
+                                              'product_id': product_id,
+                                              'product_uom_qty': quantity,
+                                              'product_uos_qty': quantity,
+                                              'product_uom':product_uom,
+                                              'location_id':location_id,
+                                              'location_dest_id':from_location_id,
+                                              'name':name,
+                                               'origin':origin,
+                                              'state':'confirmed'}, context=context)     
+                    if trans_type == 'Out'  :
+                        move_id = move_obj.create(cr, uid, {
+                                              'product_id': product_id,
+                                              'product_uom_qty': quantity,
+                                              'product_uos_qty': quantity,
+                                              'product_uom':product_uom,
+                                              'location_id':car_location_id,
+                                              'location_dest_id':location_id,
+                                              'name':name,
+                                               'origin':origin,
+                                              'state':'confirmed'}, context=context)     
+                    move_obj.action_done(cr, uid, move_id, context=context)                            
+                return self.write(cr, uid, ids, {'e_status':'done'})          
+            
+            
+                     
 #     def action_convert_ep(self, cr, uid, ids, context=None):
 #         product_line_obj = self.pool.get('product.transactions.line')
 #         product_obj = self.pool.get('product.transactions')

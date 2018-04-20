@@ -256,6 +256,11 @@ class crm_case_section(osv.osv):
                'allow_foc':fields.boolean('Allow FOC'),
              'allow_tax':fields.boolean('Allow Tax'),
             'default_division':fields.many2one('res.country.state','Division'),
+               'normal_return_location_id': fields.many2one('stock.location', 'Normal Return location', required=True),
+                'exp_location_id': fields.many2one('stock.location', 'Expiry location', required=True),
+                'near_exp_location_id': fields.many2one('stock.location', 'Near Expiry location', required=True),
+                'damage_location_id': fields.many2one('stock.location', 'Damage location', required=True),
+                'fresh_stock_not_good_location_id': fields.many2one('stock.location', 'Fresh Stock Not Good location', required=True),
             
         }
     _sql_constraints = [
