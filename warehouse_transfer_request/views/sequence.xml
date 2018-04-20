@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="stock_transfer_request_sequence" model="ir.sequence.type">
+			<field name="name">Stock Transfer Request Sequence</field>
+			<field name="code">stock.transfer.request.code</field>
+		</record>
+
+		<record id="stock_transfer_request_seq" model="ir.sequence">
+			<field name="name">Stock Transfer Request Sequence</field>
+			<field name="code">stock.transfer.request.code</field>
+			<field name="prefix">TR/%(year)s/</field>
+			<field name="padding">7</field>
+		</record>
+
+	</data>
+</openerp>
