@@ -36,8 +36,12 @@ With this module for discount making.
     'data' : [
         
         'views/product_maingroup_view.xml',
-        #'views/account_invoice.xml',
+        'views/product_category_view.xml',
+        'views/account_inovice.xml',
+        'views/sale_order_view.xml',
+        'views/res_partner_inherit_view.xml',
         #'views/res_partner_view.xml.xml',
+
     ],
     'demo': [],
     'installable': True,

@@ -14,6 +14,136 @@ class account_invoice_line(models.Model):
 class account_invoice(models.Model):
     _inherit = "account.invoice"
     
+    def cancel_credit(self, cr, uid, ids, context=None):
+        invoice_obj = self.pool.get('account.invoice')
+        #invoice_obj.action_cancel(cr, uid, ids, context=context)
+        #action_invoice_cancel
+        invoice = self.browse(cr, uid, ids[0], context=context)
+        invoice.signal_workflow('invoice_cancel')
+        order_no=invoice.origin
+        cr.execute("update sale_order set  credit_to_cash =True where name=%s",(order_no,))
+        
+        return True            
+        
+    
+    @api.multi
+    def action_cancel(self):
+        moves = self.env['account.move']
+        obj_move_line = self.pool.get('account.move.line')
+        move_obj = self.pool.get('account.move')
+       
+        cr = self._cr
+        uid = self._uid
+        context=self._context
+        unreconcile_id=[]        
+        
+        for inv in self:
+            if inv.move_id:
+                if inv.payment_type =='credit':
+                    move_data = move_obj.browse(cr, uid,inv.move_id.id,context=context)
+                    print 'move_data',move_data
+                    
+                    for moveline in move_data.line_id:
+                        if moveline.name=="/" or moveline.name=='Control':  
+                            unreconcile_id.append(moveline.id)          
+                    obj_move_line._remove_move_reconcile(cr, uid, unreconcile_id,context=context)
+                moves += inv.move_id
+            if inv.payment_ids:
+                for move_line in inv.payment_ids:
+                    if move_line.reconcile_partial_id.line_partial_ids:
+                        raise except_orm(_('Error!'), _('You cannot cancel an invoice which is partially paid. You need to unreconcile related payment entries first.'))
+
+        # First, set the invoices as cancelled and detach the move ids
+        self.write({'state': 'cancel', 'move_id': False})
+        if moves:
+            # second, invalidate the move(s)
+            moves.button_cancel()
+            # delete the move this invoice was pointing to
+            # Note that the corresponding move_lines and move_reconciles
+            # will be automatically deleted too
+            moves.unlink()
+        self._log_event(-1.0, 'Cancel Invoice')
+        return True
+    
+    def credit_approve(self, cr, uid, ids, context=None):
+        invoice_obj = self.pool.get('account.invoice')
+        move_obj =self.pool.get('account.move')
+        move_line_obj=self.pool.get('account.move.line')
+        period_obj = self.pool.get('account.period')
+        date = False
+        period_id = False
+        journal_id= False
+        account_id = False
+
+        if context is None:
+            context = {}
+
+        date = time.strftime('%Y-%m-%d')
+        period_ids = period_obj.find(cr, uid, dt=date, context=context)
+        if period_ids:
+            period_id = period_ids[0]            
+        line_id=[]
+
+        if ids:
+            invoice = self.browse(cr, uid, ids[0], context=context)
+            move_id=invoice.move_id.id
+            move = move_obj.browse(cr, uid,move_id, context=context)
+            for moveline in move.line_id:
+                if moveline.name=="/":
+                    line_id=[]
+                    control_account_id =moveline.account_id.id
+                    cr.execute("select property_account_receivable_clearing from product_maingroup where property_account_receivable_control =%s",(control_account_id,) )
+                    clearing_account_id=cr.fetchone()[0]
+                    line_id.append(moveline.id)
+                    vals = {
+                                'move_id':move_id,
+                                'date_maturity': moveline.date_maturity,
+                                'partner_id': moveline.partner_id.id,
+                                'name': 'Control',
+                                'date': moveline.date,
+                                'debit': moveline.credit,
+                                'credit': moveline.debit,
+                                'account_id': moveline.account_id.id,
+                                'analytic_lines': moveline.analytic_lines,
+                                'amount_currency': moveline.amount_currency,
+                                'currency_id': moveline.currency_id,
+                                'tax_code_id': moveline.tax_code_id,
+                                'tax_amount': moveline.tax_amount,
+                                'ref': moveline.ref,
+                                'quantity': moveline.quantity,
+                                'product_id': moveline.product_id.id,
+                                'product_uom_id': moveline.product_uom_id.id,
+                                'analytic_account_id': moveline.analytic_account_id.id,
+                            }
+                    move_line_id =move_line_obj.create(cr, uid, vals)
+                    line_id.append(move_line_id)          
+                
+                    vals_1 = {
+                                'move_id':move_id,
+                                'date_maturity': moveline.date_maturity,
+                                'partner_id': moveline.partner_id.id,
+                                'name': 'Clearing',
+                                'date': moveline.date,
+                                'debit': moveline.debit,
+                                'credit': 0,
+                                'account_id': clearing_account_id,
+                                'analytic_lines': moveline.analytic_lines,
+                                'amount_currency': moveline.amount_currency,
+                                'currency_id': moveline.currency_id,
+                                'tax_code_id': moveline.tax_code_id,
+                                'tax_amount': moveline.tax_amount,
+                                'ref': moveline.ref,
+                                'quantity': moveline.quantity,
+                                'product_id': moveline.product_id.id,
+                                'product_uom_id': moveline.product_uom_id.id,
+                                'analytic_account_id': moveline.analytic_account_id.id,
+                            }
+                    move_line_obj.create(cr, uid, vals_1) 
+                    move_line_obj.reconcile(cr, uid, line_id, 'manual', account_id,
+                                        period_id, journal_id, context=context) 
+            self.write(cr, uid, ids, {'state':'open' , 'credit_approve_by':uid,'credit_control':True})   
+        return True      
+      
     def _compute_payments(self):
         partial_lines = lines = self.env['account.move.line']
         cr = self._cr
@@ -36,7 +166,12 @@ class account_invoice(models.Model):
                     cr.execute("update sale_order set state='done' where shipped=True and invoiced=True and name=%s", (self.origin,)) 
             if self.residual != 0.0:
                 if self.origin:
-                    cr.execute("update account_invoice set state='open' where id=%s", (self.id,))        
+                    if self.payment_type =='credit' and self.type=='out_invoice':
+                        print ' self.type',self.type,self.id
+                        cr.execute("update account_invoice set state='credit_state' where credit_control !=True and  id=%s", (self.id,)) 
+                    else:
+                        cr.execute("update account_invoice set state='open' where id=%s", (self.id,)) 
+                           
         self.payment_ids = (lines - partial_lines).sorted()
         
 #     account_id = fields.Many2one('account.account', string='Account',
@@ -113,20 +248,25 @@ class account_invoice(models.Model):
             }
     
     def line_get_convert_new(self, line, part, date):
-        account_id = None
+        account_id = property_account_payable  = property_account_payable_clearing = None
         cr = self._cr
         type = 'out_invoice' 
         print 'line_get_convert_newline_get_convert_new', line, part
         origin = line.get('ref', False)
         is_discount = line.get('is_discount', False)
+        for inv in self:
+            property_account_payable = inv.partner_id.property_account_payable.id
+            property_account_payable_clearing = inv.partner_id.property_account_payable_clearing.id        
         print 'originoriginorigin', origin, is_discount
         if origin:
-            cr.execute("select type from account_invoice where origin=%s", (origin,))
-            type = cr.fetchone()
-            if type:
-                type = type[0]
+            cr.execute("select type,payment_type from account_invoice where origin=%s and state!='cancel' ", (origin,))
+            type_data = cr.fetchone()
+            if type_data:
+                type = type_data[0]
+                payment_type=type_data[1]
             else:
                 type = None
+                payment_type=None
         print 'typeeeeeeeee', type
         if type == 'out_invoice' :
             if line['price'] < 0:
@@ -134,11 +274,16 @@ class account_invoice(models.Model):
                 print 'product>>>', product.id
                 print 'line.get>>>', line.get('product_id', False)
                 if  line['is_discount'] == True:
-                    account_id = product.product_tmpl_id.main_group.property_account_discount.id
+                    if payment_type=='credit':
+                        account_id = product.product_tmpl_id.categ_id.property_account_discount_credit.id
+                    else:
+                        account_id = product.product_tmpl_id.categ_id.property_account_discount_cash.id
                     line['price'] = -1 * line['price']
                 else:
-                    account_id = product.product_tmpl_id.main_group.property_account_receivable.id
-                                    # acount_id= product.product_tmpl_id.main_group.property_account_payable.id
+                    if payment_type=='credit':
+                        account_id = product.product_tmpl_id.main_group.property_account_receivable_control.id
+                    else:
+                        account_id = product.product_tmpl_id.main_group.property_account_receivable.id
                 print 'account_id>>>', account_id        
     
                 print 'line>>>', line
@@ -170,8 +315,10 @@ class account_invoice(models.Model):
                 product = self.env['product.product'].browse(line.get('product_id', False))
                 print 'product>>>', product.id
                 print 'line.get>>>', line.get('product_id', False)
-                account_id = product.product_tmpl_id.main_group.property_account_payable.id
-                # acount_id= product.product_tmpl_id.main_group.property_account_payable.id
+                #account_id = product.product_tmpl_id.main_group.property_account_payable.id
+                account_id = property_account_payable
+                if account_id is None:
+                    raise except_orm(_('Warning!'), _('Please define payable control account.'))
                 print 'account_id>>>', account_id        
     
                 print 'line>>>', line
@@ -206,9 +353,15 @@ class account_invoice(models.Model):
                 print 'product>>>', product.id
                 print 'line.get>>>', line.get('product_id', False)
                 if  line['is_discount'] == True:
-                    account_id = product.product_tmpl_id.main_group.property_account_discount.id
+                    if payment_type=='credit':
+                        account_id = product.product_tmpl_id.categ_id.property_account_discount_credit.id
+                    else:
+                        account_id = product.product_tmpl_id.categ_id.property_account_discount_cash.id                
                 else:
-                    account_id = product.product_tmpl_id.main_group.property_account_receivable.id
+                    if payment_type=='credit':
+                        account_id = product.product_tmpl_id.main_group.property_account_receivable_control.id
+                    else:
+                        account_id = product.product_tmpl_id.main_group.property_account_receivable.id          
                 res = {
                     'date_maturity': line.get('date_maturity', False),
                     'partner_id': part,
@@ -238,10 +391,16 @@ class account_invoice(models.Model):
                 product = self.env['product.product'].browse(line.get('product_id', False))
                 print 'product>>>', product.id
                 print 'line.get>>>', line.get('product_id', False)
-                if  line['is_discount'] == True:
-                    account_id = product.product_tmpl_id.main_group.property_account_discount.id
+                if line.get('is_discount') == True:
+                    if payment_type=='credit':
+                        account_id = product.product_tmpl_id.categ_id.property_account_discount_credit.id
+                    else:
+                        account_id = product.product_tmpl_id.categ_id.property_account_discount_cash.id
                 else:
-                    account_id = product.product_tmpl_id.main_group.property_account_payable.id                
+                    #account_id = product.product_tmpl_id.main_group.property_account_payable.id                
+                    account_id = property_account_payable
+                    if account_id is None:
+                        raise except_orm(_('Warning!'), _('Please define payable control account.'))
 
                 res = {
                     'date_maturity': line.get('date_maturity', False),
@@ -269,19 +428,25 @@ class account_invoice(models.Model):
                 return res    
             
     def line_get_convert_dr(self, line, part, date):
-        account_id = None
+        account_id = property_account_payable = property_account_payable_clearing = None
         cr = self._cr
         type = 'out_invoice' 
         discount_amt=0
         print 'line_get_convert_newline_get_convert_new', line, part, self.id
         origin = line.get('ref', False)
+        for inv in self:
+            property_account_payable = inv.partner_id.property_account_payable.id
+            property_account_payable_clearing = inv.partner_id.property_account_payable_clearing.id
+                    
         if origin:
-            cr.execute("select type from account_invoice where origin=%s", (origin,))
-            type = cr.fetchone()
-            if type:
-                type = type[0]
+            cr.execute("select type,payment_type from account_invoice where origin=%s and state!='cancel' ", (origin,))
+            type_data = cr.fetchone()
+            if type_data:
+                type = type_data[0]
+                payment_type=type_data[1]
             else:
                 type = None
+                payment_type=None
         if type == 'out_invoice'  :
             product = self.env['product.product'].browse(line.get('product_id', False))
             product_code = product.default_code
@@ -291,7 +456,7 @@ class account_invoice(models.Model):
                 print 'product>>>', product.id
                 print 'line.get>>>', line.get('product_id', False)
                 if origin and line['is_discount'] == False:
-                    cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s and avl.line_paid!=True", (origin, product.id,))
+                    cr.execute("select COALESCE( avl.discount_amt , 0 ) from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s and av.state!='cancel' ", (origin, product.id,))
                     dis_amt = cr.fetchall()
                     if dis_amt:     
                         for amt in dis_amt:
@@ -299,9 +464,15 @@ class account_invoice(models.Model):
                         line['price'] = line['price'] + discount_amt        
                     cr.execute("UPDATE account_invoice_line SET line_paid =True FROM account_invoice  WHERE account_invoice_line.invoice_id = account_invoice.id AND account_invoice.origin = %s and   account_invoice_line.product_id=%s ", (origin, product.id,))
                 if  line['is_discount'] == True:
-                    account_id = product.product_tmpl_id.main_group.property_account_discount.id
+                    if payment_type=='credit':
+                        account_id = product.product_tmpl_id.categ_id.property_account_discount_credit.id
+                    else:
+                        account_id = product.product_tmpl_id.categ_id.property_account_discount_cash.id
                 else:
-                    account_id = product.product_tmpl_id.main_group.property_account_receivable.id
+                    if payment_type=='credit':
+                        account_id = product.product_tmpl_id.main_group.property_account_receivable_control.id
+                    else:
+                        account_id = product.product_tmpl_id.main_group.property_account_receivable.id                    
                 print 'account_id>>>', account_id        
     
                 print 'line>>>', line
@@ -348,9 +519,15 @@ class account_invoice(models.Model):
                         line['price'] = line['price'] + discount_amt         
                     cr.execute("UPDATE account_invoice_line SET line_paid =True FROM account_invoice  WHERE account_invoice_line.invoice_id = account_invoice.id AND account_invoice.origin = %s and   account_invoice_line.product_id=%s ", (origin, product.id,))
                 if  line['is_discount'] == True:
-                    account_id = product.product_tmpl_id.main_group.property_account_discount.id
+                    if payment_type=='credit':
+                        account_id = product.product_tmpl_id.categ_id.property_account_discount_credit.id
+                    else:
+                        account_id = product.product_tmpl_id.categ_id.property_account_discount_cash.id
                 else:
-                    account_id = product.product_tmpl_id.main_group.property_account_payable.id                
+                    #account_id = product.product_tmpl_id.main_group.property_account_payable.id
+                    account_id = property_account_payable
+                    if account_id is None:
+                        raise except_orm(_('Warning!'), _('Please define payable control account.'))                
                 print 'account_id>>>', account_id        
                 print 'line>>>', line
                 print 'line[price]', line['price']
@@ -397,10 +574,17 @@ class account_invoice(models.Model):
                         line['price'] = line['price']  - discount_amt     
                     cr.execute("UPDATE account_invoice_line SET line_paid =True FROM account_invoice  WHERE account_invoice_line.invoice_id = account_invoice.id AND account_invoice.origin = %s and   account_invoice_line.product_id=%s ", (origin, product.id,))
                 if  line['is_discount'] == True:
-                    account_id = product.product_tmpl_id.main_group.property_account_discount.id
+                    if payment_type=='credit':
+                        account_id = product.product_tmpl_id.categ_id.property_account_discount_credit.id
+                    else:
+                        account_id = product.product_tmpl_id.categ_id.property_account_discount_cash.id                    
                     line['price'] = -1 * line['price']
                 else:
-                    account_id = product.product_tmpl_id.main_group.property_account_receivable.id
+                    if payment_type=='credit':
+                        account_id = product.product_tmpl_id.main_group.property_account_receivable_control.id
+                    else:
+                        account_id = product.product_tmpl_id.main_group.property_account_receivable.id                    
+                    #account_id = product.product_tmpl_id.main_group.property_account_receivable.id
                 print 'account_id>>>', account_id        
                 print 'line>>>', line
                 print 'line[price]', line['price']
@@ -438,19 +622,29 @@ class account_invoice(models.Model):
                 product = self.env['product.product'].browse(line.get('product_id', False))
                 print 'product>>>', product.id
                 print 'line.get>>>', line.get('product_id', False)
-                if origin and line['is_discount'] == False:
+                #if origin and line['is_discount'] == False:
+                if origin and line.get('is_discount') == False:
                     cr.execute("select avl.discount_amt from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s and avl.line_paid!=True", (origin, product.id,))
                     dis_amt = cr.fetchall()
                     if dis_amt:     
-                        for amt in dis_amt:
+                        if amt[0] is not None:
                             discount_amt = discount_amt + amt[0];
+
                         line['price'] = line['price'] - discount_amt     
                     cr.execute("UPDATE account_invoice_line SET line_paid =True FROM account_invoice  WHERE account_invoice_line.invoice_id = account_invoice.id AND account_invoice.origin = %s and   account_invoice_line.product_id=%s ", (origin, product.id,))
-                if  line['is_discount'] == True:
-                    account_id = product.product_tmpl_id.main_group.property_account_discount.id
+                #if  line['is_discount'] == True:
+                if  line.get('is_discount') == True:
+                    #account_id = product.product_tmpl_id.main_group.property_account_discount.id
+                    if payment_type=='credit':
+                        account_id = product.product_tmpl_id.categ_id.property_account_discount_credit.id
+                    else:
+                        account_id = product.product_tmpl_id.categ_id.property_account_discount_cash.id                    
                     line['price'] = -1 * line['price']
                 else:
-                    account_id = product.product_tmpl_id.main_group.property_account_payable.id                
+                    #account_id = product.product_tmpl_id.main_group.property_account_payable.id
+                    account_id = property_account_payable
+                    if account_id is None:
+                        raise except_orm(_('Warning!'), _('Please define payable control account.'))                
                 print 'account_id>>>', account_id        
                 print 'line>>>', line
                 print 'line[price]', line['price']
@@ -581,7 +775,8 @@ class account_invoice(models.Model):
             result = [a for a in list_one if a is not None and a['main_group'] == v]
             print 'result>>>', result
             cr = self._cr
-            for res in result:
+            tmp_currency =0
+            for res in result:                
                 origin = res['ref']
                 product = self.env['product.product'].browse(res.get('product_id', False))
                 product_code = product.default_code                
@@ -597,19 +792,23 @@ class account_invoice(models.Model):
                         type = None   
                 if type == 'out_invoice':
                     debit += res['debit']
+                    tmp_currency = res['amount_currency']                    
                 if type == 'in_invoice':             
                     credit += res['credit']    
+                    tmp_currency +=  -1 * res['amount_currency']
                 if type == 'out_refund':             
                     credit += res['credit']       
+                    tmp_currency = res['amount_currency']                          
                 if type == 'in_refund':             
-                    debit += res['debit']                                             
+                    debit += res['debit']
+                    tmp_currency += res['amount_currency']                                                                 
                 date_maturity = res['date_maturity']
                 partner_id = res['partner_id']
                 name = res['name']
                 date = res['date']
                 account_id = res['main_group']  # replace with product principle AR account
                 analytic_lines = res['analytic_lines']
-                amount_currency = res['amount_currency']
+                amount_currency = tmp_currency#res['amount_currency']
                 currency_id = res['currency_id']
                 tax_code_id = res['tax_code_id']
                 tax_amount = res['tax_amount']
@@ -955,10 +1154,39 @@ class account_invoice(models.Model):
             move.post()
         self._log_event()
         return True
-    
+    @api.multi
+    def invoice_validate(self):
+        state='open'
+        if self.type=='out_invoice' or self.type =='out_refund':
+            if self.payment_type=='credit':
+                state='credit_state'
+            else:
+                state='open'      
+        print 'statestatestatestatestatestatestatestate',state
+        return self.write({'state': state})    
+        
     account_id = fields.Many2one('account.account', string='Account',
         required=False, readonly=True, states={'draft': [('readonly', False)]},
         help="The partner account used for this invoice.")
     
+    credit_approve_by = fields.Many2one('res.users','Credit Approve By',readonly=True)    
+    
+    credit_control = fields.Boolean('Credit Control',default='False',)    
+    
+    state = fields.Selection([
+                    ('draft','Draft'),
+                    ('proforma','Pro-forma'),
+                    ('proforma2','Pro-forma'),
+                    ('credit_state','Allow To Credit'),
+                    ('open','Open'),
+                    ('paid','Paid'),
+                    ('cancel','Cancelled'),
+                ], string='Status', index=True, readonly=True, default='draft',
+                track_visibility='onchange', copy=False,
+                help=" * The 'Draft' status is used when a user is encoding a new and unconfirmed Invoice.\n"
+                     " * The 'Pro-forma' when invoice is in Pro-forma status,invoice does not have an invoice number.\n"
+                     " * The 'Open' status is used when user create invoice,a invoice number is generated.Its in open status till user does not pay invoice.\n"
+                     " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
+                     " * The 'Cancelled' status is used when user cancel invoice.")
 
     

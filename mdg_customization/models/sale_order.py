@@ -116,6 +116,7 @@ class sale_order_line(osv.osv):
                 result['product_uos'] = False
                 result['product_uos_qty'] = qty
             result['th_weight'] = q * product_obj.weight        # Round the quantity up
+            result['product_type'] = product_obj.product_tmpl_id.type            
 
         if not uom2:
             uom2 = product_obj.uom_id

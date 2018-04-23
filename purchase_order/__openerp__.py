@@ -32,9 +32,11 @@ Purchase Order
 """,
     'author': 'Seventh Computing',
     'website': 'http://www.7thcomputing.com',
-    'depends': ['base','purchase'
+    'depends': ['base','purchase' ,'stock_account'
     ],
-    'data': [        
+    'data': [ 
+             'views/stock_picking_view.xml',       
+             'views/res_partner_inherit_view.xml',
     ],
     'installable': True,
     'auto_install': False,

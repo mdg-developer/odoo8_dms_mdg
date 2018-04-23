@@ -640,9 +640,25 @@
 		<record model="ir.ui.menu" id="crm_management.config_sale_order">
 			<field name="groups_id" eval="[(6,0,[ref('make_invisible')])]" />
 		</record>
+	<!-- Product Category Sale-->
+        
+        <menuitem id="product_menu_sale" name="Products Configuration"
+            parent="base.menu_base_config" sequence="2" />
+        
+        <menuitem action="product.product_category_action_form"
+            groups="base.group_no_one" id="menu_product_category_action_form_sale"
+            parent="product_menu_sale" sequence="1" />
+        
+        <menuitem id="product_maingroup_menu_sale" parent="product_menu_sale"
+            name="Product Principle" action="product_product.action_product_maingroup_view"
+            sequence="50" groups="base.group_system" />
+        
+        <menuitem id="product_group_menu_sale" parent="product_menu_sale"
+            name="Product Sub Group" action="product_product.action_product_group_view" groups="base.group_system" />
+		
 		<!-- Product Category -->
 		<menuitem id="product_product.product_menu" name="Products Configuration"
-			parent="base.menu_base_config" sequence="2" />
+            parent="account.menu_finance_configuration" sequence="2" />    
 		<menuitem action="product.product_category_action_form"
 			groups="base.group_no_one" id="product.menu_product_category_action_form"
 			parent="product_product.product_menu" sequence="1" />
