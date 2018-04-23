@@ -31,8 +31,8 @@
 
 				<xpath expr="//form/sheet/notebook/page/field/tree/field[@name='name']"
 					position="before">
-					<field name="account_id"
-						domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" />
+					<field name="account_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" />
+					<field name="analytic_account_id" string="Analytic Account" />
 
 				</xpath>
 				<xpath expr="//form/sheet/notebook/page/field/tree/field[@name='date']"
@@ -76,6 +76,24 @@
 							nolabel="1" widget="monetary" class="oe_subtotal_footer_separator oe_open_balance"
 							options="{'currency_field': 'currency'}" help="Total of opening cash control lines" />
 					</group>
+				</xpath>
+
+			</field>
+		</record>
+		
+		<record id="inherit_view_bank_statement_form_branch" model="ir.ui.view">
+			<field name="name">account.bank.statement.form</field>
+			<field name="model">account.bank.statement</field>
+			<field name="inherit_id" ref="account.view_bank_statement_form" />
+			<field name="arch" type="xml">
+
+				
+				
+				<xpath expr="//form/sheet/group/group/field[@name='company_id']"
+					position="after">
+					<field name="brand_id" domain="[('res_company_id', '=', company_id)]" />
+
+					
 				</xpath>
 
 			</field>
