@@ -7,9 +7,33 @@
 			<field name="inherit_id" ref="stock.view_picking_form" />
 			<field name="arch" type="xml">
 				<field name="partner_id" position="after">
+					<field name="township_id" />
 					<field name="section_id" />
 					<field name="user_id" />
 				</field>
+			</field>
+		</record>
+		
+        <record id="view_picking_inherit_township" model="ir.ui.view">
+            <field name="name">stock.picking.tree.inherit</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.vpicktree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="township_id"/>
+                </xpath>
+            </field>
+        </record>
+        
+		<record id="view_township_in_search_picking_inherit" model="ir.ui.view">
+			<field name="name">stock.picking.in.search.inherit</field>
+			<field name="model">stock.picking</field>
+			<field name="inherit_id" ref="stock.view_picking_internal_search" />
+			<field name="arch" type="xml">
+				<xpath expr="//filter[@string='Origin']" position="after">
+					<filter string="Township" domain="[]"
+						context="{'group_by':'township_id'}" />
+				</xpath>
 			</field>
 		</record>
 	</data>

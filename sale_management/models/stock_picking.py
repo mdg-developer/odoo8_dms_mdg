@@ -54,7 +54,24 @@ class stock_picking(osv.osv):
                 result[rec.id] = None
         return result      
     
+    def _get_township_id(self, cr, uid, ids, field_name, arg, context=None):
+        result = {}
+        township_id = None
+        for rec in self.browse(cr, uid, ids, context=context):
+            if rec.partner_id:
+                cr.execute("""select township from res_partner where id=%s""", (rec.partner_id.id,))
+                data = cr.fetchall()
+                if data:
+                    township_id = data[0]
+                print 'order_id >>> ', township_id
+                result[rec.id] = township_id
+            else:
+                result[rec.id] = None
+        return result          
+    
     _columns = {
               'section_id':fields.function(_get_corresponding_team, type='many2one', relation='crm.case.section', string='Sales Team', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, copy=False),
               'user_id':fields.function(_get_corresponding_user, type='many2one', relation='res.users', string='Salesperson', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, copy=False),
+              'township_id':fields.function(_get_township_id, type='many2one', relation='res.township', string='Township', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, copy=False,store=True),
+
               }
