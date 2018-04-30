@@ -217,7 +217,7 @@ class stock_return(osv.osv):
                                                 'opening_stock_qty':opening_qty,
                                                'sequence':sequence,
                                               'product_id': product_id,
-                                              'product_uom': small_uom_id,
+                                              'product_uom': product.product_tmpl_id.uom_id.id,
                                               'receive_quantity':0,
                                               'return_quantity':return_quantity,
                                               'sale_quantity':sale_quantity,
