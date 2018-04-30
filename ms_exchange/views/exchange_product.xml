@@ -54,6 +54,7 @@
 							<group>
 								<field name="date" />
 								<field name="exchange_type" />
+							    <field name="location_type" />
 								<field name="void_flag" />
 								<field name="location_id" />
 							</group>

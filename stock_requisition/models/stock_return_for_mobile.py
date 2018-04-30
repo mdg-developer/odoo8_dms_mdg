@@ -58,20 +58,29 @@ class stock_return_from_mobile(osv.osv):
                      _('Please Check Your GIN Record'))     
             for note_line in p_line:
                 product_id = note_line[1]
-                big_uom_id = note_line[2]
-                big_issue_quantity = note_line[3]
+                #big_uom_id = note_line[2]
+                #big_issue_quantity = note_line[3]
                 small_issue_quantity = note_line[4]
                 small_uom_id=note_line[5]
-                cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (big_uom_id,))
-                bigger_qty = cr.fetchone()[0]
-                receive_qty = (big_issue_quantity * bigger_qty) + small_issue_quantity
-                stock_return_obj.create(cr, uid, {'line_id': ids[0],
-                              'product_id': product_id,
-                              'return_quantity':receive_qty,
-                              'sale_quantity':0,
-                              'foc_quantity':0,
-                              'product_uom': small_uom_id ,
-                        }, context=context)
+                receive_qty=small_issue_quantity
+
+                product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+                if small_uom_id != product.product_tmpl_id.uom_id.id:                                                                          
+                    cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (small_uom_id,))
+                    bigger_qty = cr.fetchone()[0]
+                    receive_qty = (small_issue_quantity * bigger_qty)
+                  
+                return_ids = stock_return_obj.search(cr, uid, [('product_id', '=', product_id),('line_id','=',ids[0])], context=context) 
+                if return_ids:
+                    cr.execute("update stock_return_mobile_line set return_quantity=return_quantity+%s where product_id=%s and line_id =%s",(receive_qty,product_id,ids[0],)) 
+                else:
+                    stock_return_obj.create(cr, uid, {'line_id': ids[0],
+                                  'product_id': product_id,
+                                  'return_quantity':receive_qty,
+                                  'sale_quantity':0,
+                                  'foc_quantity':0,
+                                  'product_uom': small_uom_id ,
+                            }, context=context)
             order_ids = account_inv_obj.search(cr, uid, [('section_id', '=', sale_team_id),('user_id','=',user_id), ('state', '=', 'open'),('date_invoice','=',return_date)], context=context) 
             order_list = str(tuple(order_ids))
             order_list = eval(order_list)
@@ -84,8 +93,8 @@ class stock_return_from_mobile(osv.osv):
                         sale_qty = int(sale_data[1])
                         sale_product_uom = int(sale_data[2])
                         product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-                        if sale_product_uom == product.product_tmpl_id.big_uom_id.id:                                                                          
-                            cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (product.product_tmpl_id.big_uom_id.id,))
+                        if sale_product_uom != product.product_tmpl_id.uom_id.id:                                                                          
+                            cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (sale_product_uom,))
                             bigger_qty = cr.fetchone()[0]
                             bigger_qty = int(bigger_qty)
                             sale_qty = bigger_qty * sale_qty
@@ -98,8 +107,8 @@ class stock_return_from_mobile(osv.osv):
                         foc_qty = int(foc_data[1])
                         foc_product_uom = int(foc_data[2])
                         product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-                        if foc_product_uom == product.product_tmpl_id.big_uom_id.id:                                                                          
-                            cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (product.product_tmpl_id.big_uom_id.id,))
+                        if foc_product_uom != product.product_tmpl_id.uom_id.id:                                                                          
+                            cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (foc_product_uom,))
                             bigger_qty = cr.fetchone()[0]
                             bigger_qty = int(bigger_qty)
                             foc_qty = bigger_qty * foc_qty

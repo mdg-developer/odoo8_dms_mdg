@@ -298,12 +298,65 @@ class stock_requisition(osv.osv):
                             small_qty = big_req_quantity * bigger_qty
                             ori_small_qty = quantity
                             total = small_qty + ori_small_qty
+                        cr.execute('''select  transfer_in.qty - transfer_out.qty as opening
+                                from
+                                (
+                                    select distinct aa.location_id, aa.product_id 
+                                    from (
+                                        select s.location_id, s.product_id
+                                        from stock_move s
+                                        where s.state='done'        
+                                        and  s.location_id=%s        
+                                        and s.product_id =%s
+                                        union
+                                        select s.location_dest_id as location_id,s.product_id 
+                                        from stock_move s
+                                        where s.state='done'        
+                                        and  s.location_dest_id=%s
+                                        and s.product_id =%s
+                                         )aa
+                                 )tmp
+                                left join 
+                                (select s.product_id,s.location_dest_id,greatest(0,sum(s.product_qty)) as qty
+                                from stock_move s,
+                                stock_location fl,
+                                stock_location tl
+                                where s.state='done'
+                                and s.location_dest_id=tl.id
+                                and s.location_id=fl.id
+                                and date_trunc('day', s.date::date) < %s
+                                and  s.location_dest_id=%s
+                                and s.product_id =%s
+                                group by s.location_dest_id, s.product_id
+                                ) transfer_in on transfer_in.product_id=tmp.product_id and transfer_in.location_dest_id=tmp.location_id
+                                left join
+                                (
+                                select s.product_id,s.location_id,greatest(0,sum(s.product_qty)) as qty
+                                from stock_move s,
+                                stock_location fl,
+                                stock_location tl
+                                where s.state='done'
+                                and s.location_dest_id=tl.id
+                                and s.location_id=fl.id
+                                and date_trunc('day', s.date::date) < %s
+                                and  s.location_id=%s
+                                and s.product_id =%s
+                                group by s.location_id, s.product_id
+                                ) transfer_out on transfer_out.product_id=tmp.product_id and transfer_out.location_id=tmp.location_id'''
+                          ,(from_location_id,product_id,from_location_id,product_id,request_date,from_location_id,product_id,request_date,from_location_id,product_id,))                
+                        opening_data=cr.fetchone()
+                        if opening_data:
+                            if opening_data is not None:
+                                opening_qty=opening_data[0]
+                            else:
+                                opening_qty=0
                         if total > qty_on_hand:
                             raise osv.except_osv(_('Warning'),
                                      _('Please Check Qty On Hand For (%s)') % (product.name_template,))
                         else:          
                             good_line_obj.create(cr, uid, {'line_id': good_id,
                                                   'product_id': product_id,
+                                                  'opening_qty': opening_qty,
                                                   'product_uom': product_uom,
                                                   'uom_ratio':uom_ratio,
                                                  'big_uom_id':big_uom_id,

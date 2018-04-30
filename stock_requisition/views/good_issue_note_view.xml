@@ -65,6 +65,7 @@
 											<field name="product_id" on_change="on_change_product_id(product_id)" />
                                             <field name="big_issue_quantity" string="Qty (B)" invisible="1" />
 											<field name="big_uom_id" invisible="1"/>
+											<field name="opening_qty"/>
                                             <field name="issue_quantity" string="Qty"/>
                                             <field name="product_uom"  string="UOM"/>
 											<field name="uom_ratio" invisible="1" />

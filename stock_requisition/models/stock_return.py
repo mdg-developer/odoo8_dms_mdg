@@ -523,198 +523,69 @@ class stock_return(osv.osv):
         return self.write(cr, uid, ids, {'state': 'cancel', })
     
     def received(self, cr, uid, ids, context=None):
-        partner_obj=self.pool.get('res.partner')
-        picking_obj = self.pool.get('stock.picking')
-        move_obj = self.pool.get('stock.move')           
-        note_obj = self.pool.get('good.issue.note') 
+        move_obj = self.pool.get('stock.move')     
+        location_obj = self.pool.get('stock.location')     
         return_obj = self.browse(cr, uid, ids, context=context)    
-        team_location_id=return_obj.sale_team_id.location_id.id
-        tmp_location_id=return_obj.sale_team_id.temp_location_id.id
+        tmp_location_id = return_obj.sale_team_id.temp_location_id.id
         origin = return_obj.name
-        return_date = return_obj.return_date   
-        main_location_id = return_obj.to_location.id    
-        ven_location_id = return_obj.from_location.id    
-        note_id = return_obj.note_id
-        if  ven_location_id !=team_location_id :
-            raise osv.except_osv(_('Warning'),
-                     _('Please Check Your Sales Team Location'))
-        cr.execute("select SUM(COALESCE(rec_small_quantity,0) +COALESCE(rec_big_quantity,0) ) as total  from stock_return_line where line_id=%s  group by line_id",(ids[0],)) 
-        total_qty=cr.fetchone()[0]
-#        if total_qty==0.0 or total_qty is None   :
-#            return self.write(cr, uid, ids, {'state':'received'})  
-        cr.execute('select id from stock_picking_type where default_location_dest_id=%s and name like %s', (main_location_id, '%Internal Transfer%',))
-        price_rec = cr.fetchone()
-        if price_rec: 
-            picking_type_id = price_rec[0] 
-        else:
-            raise osv.except_osv(_('Warning'),
-                                 _('Picking Type has not for this transition'))
-        picking_id = picking_obj.create(cr, uid, {
-                                      'date': return_date,
-                                      'origin':origin,
-                                      'picking_type_id':picking_type_id}, context=context)
         for line in return_obj.p_line:
+            from_location_id =line.from_location_id.id
+            to_location_id = line.to_location_id.id
             product_id = line.product_id.id
-            name = line.product_id.name_template                                                                               
-            rec_big_uom_id = line.rec_big_uom_id.id
-            rec_big_quantity = line.rec_big_quantity
-            rec_small_quantity = line.rec_small_quantity
-            rec_small_uom_id = line.rec_small_uom_id.id    
-            ex_return_id =    line.ex_return_id.id    
-            big_return_quantity=line.return_quantity_big
-            return_quantity=line.return_quantity
-            different_qty=0
-            cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (rec_big_uom_id,))
-            big_qty = cr.fetchone()
-            if big_qty:
-                bigger_qty = big_qty[0] * rec_big_quantity      
-                return_big_qty = big_qty[0] * big_return_quantity 
-                total_return_qty=  return_big_qty +  return_quantity        
-                total_rec_qty=  bigger_qty +  rec_small_quantity        
-#                         if total_return_qty < total_rec_qty:
-#                             raise osv.except_osv(_('Warning'),
-#                                 _('Please Check Receive Qty (%s)') % (name,))    
-#                         if  total_return_qty > total_rec_qty:
-                if ex_return_id is False:
-                    different_qty   = total_return_qty - total_rec_qty
-                    cr.execute("update stock_return_line set different_qty= %s where id=%s",(different_qty,line.id,))            
+            name = line.product_id.name_template          
+            onground_quantity = line.onground_quantity
+            return_quantity = line.return_quantity
+            actual_return_quantity = line.actual_return_quantity
+            uom_id = line.product_uom.id
+            if  line.status and onground_quantity >0:
+                different_qty = 0
+                different_qty =  return_quantity -onground_quantity
+                cr.execute("update stock_return_line set different_qty= %s where id=%s", (different_qty, line.id,))            
                 if different_qty:
-                    if different_qty <0:
+                    if different_qty < 0:
                         # Tmp===> Car
+                        inventory_location_id = location_obj.search(cr, uid, [('name', '=', 'Inventory loss')])
                         move_id = move_obj.create(cr, uid, {
                                               'product_id': product_id,
-                                              'product_uom_qty': -1* different_qty ,
-                                              'product_uos_qty':  -1* different_qty,
-                                              'product_uom':rec_small_uom_id,
-                                              'location_id':tmp_location_id,
-                                              'location_dest_id':team_location_id,
+                                              'product_uom_qty':-1 * different_qty ,
+                                              'product_uos_qty':-1 * different_qty,
+                                              'product_uom':uom_id,
+                                              'location_id':inventory_location_id[0],
+                                              'location_dest_id':from_location_id,
                                               'name':name,
                                                'origin':origin,
                                                'manual':True,
                                               'state':'confirmed'}, context=context)     
                         move_obj.action_done(cr, uid, move_id, context=context)
-                    if different_qty >0:
-    #                         Car===> tmp                    
+                    if different_qty > 0:
+    #                 Car===> tmp                    
                         move_id = move_obj.create(cr, uid, {
                                               'product_id': product_id,
                                               'product_uom_qty':  different_qty ,
                                               'product_uos_qty':  different_qty,
-                                              'product_uom':rec_small_uom_id,
-                                              'location_id':team_location_id,
+                                              'product_uom':uom_id,
+                                              'location_id':from_location_id,
                                               'location_dest_id':tmp_location_id,
                                               'name':name,
                                                'origin':origin,
                                              'manual':True,
                                               'state':'confirmed'}, context=context)     
                         move_obj.action_done(cr, uid, move_id, context=context)        
-                                
-            if (rec_small_quantity + rec_big_quantity > 0) and ex_return_id is False:
-                product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)       
-                name = line.product_id.name_template                                                                               
-                cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (rec_big_uom_id,))
-                big_qty = cr.fetchone()
-                if big_qty:
-                        bigger_qty = big_qty[0] * rec_big_quantity      
-                        return_big_qty = big_qty[0] * big_return_quantity 
-                        total_return_qty=  return_big_qty +  return_quantity        
-                        total_rec_qty=  bigger_qty +  rec_small_quantity        
-#                         if total_return_qty < total_rec_qty:
-#                             raise osv.except_osv(_('Warning'),
-#                                 _('Please Check Receive Qty (%s)') % (name,))    
-#                         if  total_return_qty > total_rec_qty:
-#                         different_qty   = total_return_qty - total_rec_qty
-#                         cr.execute("update stock_return_line set different_qty= %s where id=%s",(different_qty,line.id,))
-                        move_id = move_obj.create(cr, uid, {'picking_id': picking_id,
-                                                  'picking_type_id':picking_type_id,
-                                                #  'restrict_lot_id':lot_id,
+                if actual_return_quantity > 0:
+                    #Car===> To Location                    
+                        move_id = move_obj.create(cr, uid, {
                                               'product_id': product_id,
-                                              'product_uom_qty': rec_small_quantity + bigger_qty,
-                                              'product_uos_qty': rec_small_quantity + bigger_qty,
-                                              'product_uom':rec_small_uom_id,
-                                              'location_id':ven_location_id,
-                                              'location_dest_id':main_location_id,
-                                              'name':name,
-                                               'origin':origin,
-                                              'state':'confirmed'}, context=context)     
-                        move_id = move_obj.action_done(cr, uid, move_id, context=context)
-            print ' ex_return_id ,return_quantity',ex_return_id ,return_quantity
-            if ex_return_id:
-                product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)       
-                name = line.product_id.name_template     
-                cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (rec_big_uom_id,))
-                big_qty = cr.fetchone()
-                if big_qty:
-                        bigger_qty = big_qty[0] * rec_big_quantity      
-                        return_big_qty = big_qty[0] * big_return_quantity 
-                        total_return_qty=  return_big_qty +  return_quantity        
-                        total_rec_qty=  bigger_qty +  rec_small_quantity        
-                cr.execute("select customer_id from product_transactions where  id =%s  ",(ex_return_id,))
-                partner_id=cr.fetchone()[0]
-                partner_data = partner_obj.browse(cr, uid, partner_id, context=context) 
-                if return_quantity < 0:   
-                    location_id = partner_data.property_stock_customer.id
-                    from_location_id = ven_location_id
-                    quantity = -1 * total_return_qty
-                    cr.execute('select id from stock_picking_type where default_location_src_id=%s and name like %s', (from_location_id, '%Internal Transfer%',))
-                    price_rec = cr.fetchone()
-                    if price_rec: 
-                        picking_type_id = price_rec[0] 
-                    else:
-                        raise osv.except_osv(_('Warning'),
-                                             _('Picking Type has not for this transition'))     
-                else:
-                    from_location_id = ven_location_id
-                    location_id =main_location_id
-                    cus_location_id =  partner_data.property_stock_customer.id
-                    quantity =total_rec_qty
-                    cr.execute("select id from stock_picking_type where default_location_dest_id=%s and name like %s ", (from_location_id, '%Internal Transfer%',))
-                    price_rec = cr.fetchone()
-                    if price_rec: 
-                        customer_type_id = price_rec[0] 
-                    else:
-                        raise osv.except_osv(_('Warning'),
-                                             _('Picking Type has not for this transition'))
-                    picking_id = picking_obj.create(cr, uid, {
-                                                  'date': return_date,
-                                                  'origin':origin,
-                                                  'picking_type_id':customer_type_id}, context=context) 
-                    move_id=move_obj.create(cr, uid, {'picking_id': picking_id,
-                                                 'picking_type_id':customer_type_id,
-                                                  'product_id': product_id,
-                                                  'product_uom_qty': quantity,
-                                                  'product_uos_qty': quantity,
-                                                  'product_uom':rec_small_uom_id,
-                                                  'location_id':cus_location_id,
-                                                  'location_dest_id':from_location_id,
-                                                  'name':name,
-                                                   'origin':origin,
-                                                  'state':'confirmed'}, context=context)
-                    move_obj.action_done(cr, uid, move_id, context=context)             
-                             
-                    cr.execute('select id from stock_picking_type where default_location_dest_id=%s and name like %s', (main_location_id, '%Internal Transfer%',))
-                    price_rec = cr.fetchone()
-                    if price_rec: 
-                        picking_type_id = price_rec[0] 
-                    else:
-                        raise osv.except_osv(_('Warning'),
-                                             _('Picking Type has not for this transition'))                        
-                picking_id = picking_obj.create(cr, uid, {
-                                              'date': return_date,
-                                              'origin':origin,
-                                              'picking_type_id':picking_type_id}, context=context) 
-                move_id=move_obj.create(cr, uid, {'picking_id': picking_id,
-                                             'picking_type_id':picking_type_id,
-                                              'product_id': product_id,
-                                              'product_uom_qty': quantity,
-                                              'product_uos_qty': quantity,
-                                              'product_uom':rec_small_uom_id,
+                                              'product_uom_qty':  actual_return_quantity ,
+                                              'product_uos_qty':  actual_return_quantity,
+                                              'product_uom':uom_id,
                                               'location_id':from_location_id,
-                                              'location_dest_id':location_id,
+                                              'location_dest_id':to_location_id,
                                               'name':name,
-                                               'origin':origin,
+                                              'origin':origin,
+                                             'manual':False,
                                               'state':'confirmed'}, context=context)     
-                move_obj.action_done(cr, uid, move_id, context=context)             
-        return self.write(cr, uid, ids, {'state':'received'})    
+                        move_obj.action_done(cr, uid, move_id, context=context)                     
+        return self.write(cr, uid, ids, {'state':'received'})      
 
             
 class stock_return_line(osv.osv):  # #prod_pricelist_update_line

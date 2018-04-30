@@ -1397,7 +1397,7 @@ class mobile_sale_order(osv.osv):
             select id,password
             from tablet_logout_auth       
             where password = %s
-            ''', (password,))
+            ''', (str(password),))
         datas = cr.fetchall()        
         return datas
         

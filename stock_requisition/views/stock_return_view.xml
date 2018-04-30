@@ -36,26 +36,26 @@
 								<field name="wh_receiver" attrs="{'readonly':[('state','=','received')]}" />
 								<field name="company_id" attrs="{'readonly':[('state','=','received')]}"
 									invisible="1" />
-                                <field name="from_wh_normal_return_location_id" readonly="1"
+                                <field name="from_wh_normal_return_location_id" 
                                     invisible="1" />
-                                <field name="from_wh_exp_location_id" readonly="1"
+                                <field name="from_wh_exp_location_id" 
                                     invisible="1" />
-                                <field name="from_wh_near_exp_location_id" readonly="1"
+                                <field name="from_wh_near_exp_location_id" 
                                     invisible="1" />
-                                <field name="from_wh_damage_location_id" readonly="1"
+                                <field name="from_wh_damage_location_id" 
                                     invisible="1" />
                                 <field name="from_wh_fresh_stock_not_good_location_id"
-                                    readonly="1" invisible="1" />
-                                <field name="to_wh_normal_return_location_id" readonly="1"
+                                     invisible="1" />
+                                <field name="to_wh_normal_return_location_id" 
                                     invisible="1" />
-                                <field name="to_wh_exp_location_id" readonly="1"
+                                <field name="to_wh_exp_location_id" 
                                     invisible="1" />
-                                <field name="to_wh_near_exp_location_id" readonly="1"
+                                <field name="to_wh_near_exp_location_id" 
                                     invisible="1" />
-                                <field name="to_wh_damage_location_id" readonly="1"
+                                <field name="to_wh_damage_location_id" 
                                     invisible="1" />
                                 <field name="to_wh_fresh_stock_not_good_location_id"
-                                    invisible="1" readonly="1" />
+                                    invisible="1" />
 																
 								<field name="vehicle_id"/>
 							</group>
