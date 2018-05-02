@@ -12,6 +12,12 @@
 						<group string="Allowed Branches">
 							<field name="branch_ids" nolabel="1" widget="many2many_tags" />
 						</group>
+						<group string="Allowed Sale Teams">
+							<field name="sale_team_ids" nolabel="1" widget="many2many_tags" />
+						</group>
+						<group string="Allowed Main Groups">
+							<field name="main_group_ids" nolabel="1" widget="many2many_tags" />
+						</group>
 					</xpath>
 				</data>
 			</field>

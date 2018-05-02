@@ -16,5 +16,7 @@ class res_users(osv.osv):
     
     _columns = {
         'branch_ids':fields.many2many('res.branch','res_branch_users_rel','user_id','bid','Branches',required=True),
+        'sale_team_ids':fields.many2many('crm.case.section','res_sale_teams_rel','user_id','team_id','Sale Teams',required=True),
+        'main_group_ids':fields.many2many('product.maingroup','res_main_group_rel','user_id','main_group','Main Groups',required=True),
     }
 res_users()
