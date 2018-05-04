@@ -2,6 +2,7 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 from openerp.exceptions import except_orm, Warning, RedirectWarning
+
 class account_bank_statement_line(osv.osv):
     _inherit = 'account.bank.statement.line'
     
@@ -34,19 +35,19 @@ class account_voucher(osv.osv):
         :rtype: tuple of dict
         '''
         if amount_residual > 0:
-            account_id = line.voucher_id.partner_id.gain_account_id.id
-           # account_id = line.voucher_id.company_id.expense_currency_exchange_account_id
+           # account_id = line.voucher_id.partner_id.gain_account_id.id
+            account_id = line.voucher_id.company_id.expense_currency_exchange_account_id
             if not account_id:
                 model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'account', 'action_account_form')
                 msg = _("You should configure the 'Loss Exchange Rate Account' to manage automatically the booking of accounting entries related to differences between exchange rates.")
-                raise openerp.exceptions.RedirectWarning(msg, action_id, _('Go to the configuration panel'))
+                raise RedirectWarning(msg, action_id, _('Go to the configuration panel'))
         else:
-            account_id = line.voucher_id.partner_id.loss_account_id.id
-            # account_id = line.voucher_id.company_id.income_currency_exchange_account_id
+            #account_id = line.voucher_id.partner_id.loss_account_id.id
+            account_id = line.voucher_id.company_id.income_currency_exchange_account_id
             if not account_id:
                 model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'account', 'action_account_form')
                 msg = _("You should configure the 'Gain Exchange Rate Account' to manage automatically the booking of accounting entries related to differences between exchange rates.")
-                raise openerp.exceptions.RedirectWarning(msg, action_id, _('Go to the configuration panel'))
+                raise RedirectWarning(msg, action_id, _('Go to the configuration panel'))
         # Even if the amount_currency is never filled, we need to pass the foreign currency because otherwise
         # the receivable/payable account may have a secondary currency, which render this field mandatory
         if line.account_id.currency_id:
