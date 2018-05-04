@@ -7,4 +7,4 @@ import account_journal
 import sale_order
 import account_invoice
 import stock
-import stock_valuation_history
+#import stock_valuation_history
