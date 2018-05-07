@@ -64,6 +64,7 @@ class SaleOrderLine(osv.osv):
     _inherit = 'sale.order.line'    
     _columns = {
         'promotion_id': fields.many2one('promos.rules', 'Promotion', readonly=True, states={'draft':[('readonly',False)]})  ,
+         'main_group' : fields.many2one('product.maingroup','Main Group'),
 
     }  
     

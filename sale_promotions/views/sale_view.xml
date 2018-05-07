@@ -24,7 +24,11 @@
 				<xpath
 					expr="//form/sheet/notebook/page/field/tree/field[@name='price_subtotal']"
 					position="after">
-					<field name="promotion_id" />
+					<field name="main_group" invisible="1" />
+					<field name="promotion_id"
+						attrs="{'required':['|',('sale_foc','=',True),('service_product','=',True)]}"
+						domain="[('from_date','&lt;=',parent.date_order),('to_date','&gt;=',parent.date_order),('main_group','=',main_group),('state','=','approve')]" />
+
 				</xpath>
 			</field>
 		</record>

@@ -118,6 +118,22 @@ class sale_order(osv.osv):
         return [('id', 'in', [x[0] for x in res])]
       
     _columns = {
+             'state': fields.selection([
+                        ('draft', 'Draft Quotation'),
+                        ('sent', 'Quotation Sent'),
+                        ('cancel', 'Cancelled'),
+                        ('reversed', 'Reversed'),
+                        ('waiting_date', 'Waiting Schedule'),
+                        ('progress', 'Invoiced'),
+                        ('manual', 'Pending Invoice'),
+                        ('shipping_except', 'Shipping Exception'),
+                        ('invoice_except', 'Invoice Exception'),
+                        ('done', 'Done'),
+                        ], 'Status', readonly=True, copy=False, help="Gives the status of the quotation or sales order.\
+                          \nThe exception status is automatically set when a cancel operation occurs \
+                          in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\nThe 'Waiting Schedule' status is set when the invoice is confirmed\
+                           but waiting for the scheduler to run on the order date.", select=True),                
+                
                'tb_ref_no':fields.char('Order Reference'),
                'payment_type':fields.selection([
                     ('credit', 'Credit'),
@@ -157,7 +173,62 @@ class sale_order(osv.osv):
         'is_entry': fields.boolean('Is Entry Data',default=False),
 
                }
-    
+
+    def action_reverse(self, cr, uid, ids, context=None):
+        pick_obj = self.pool.get('stock.picking')
+        invoice_obj = self.pool.get('account.invoice')
+        move_obj = self.pool.get('stock.move')
+        stockDetailObj = self.pool.get('stock.transfer_details')
+        detailObj = None
+        so_value = self.browse(cr, uid, ids[0], context=context)
+        so_no=so_value.name
+        pick_ids = []
+        pick_ids = pick_obj.search(cr, uid, [('origin', '=', so_no),('state','=','done')], context=context)
+        invoice_ids = invoice_obj.search(cr, uid, [('origin', '=', so_no),('state','=','open')], context=context)
+        #choose the view_mode accordingly
+        for pick_id in pick_ids:
+            pick = pick_obj.browse(cr, uid, pick_id, context=context)                
+            #Create new picking for returned products
+            pick_type_id = pick.picking_type_id.return_picking_type_id and pick.picking_type_id.return_picking_type_id.id or pick.picking_type_id.id
+            new_picking = pick_obj.copy(cr, uid, pick.id, {
+                'move_lines': [],
+                'picking_type_id': pick_type_id,
+                'state': 'draft',
+                'origin': pick.name,
+            }, context=context)
+            for move in pick.move_lines:
+                if move.origin_returned_move_id.move_dest_id.id and move.origin_returned_move_id.move_dest_id.state != 'cancel':
+                    move_dest_id = move.origin_returned_move_id.move_dest_id.id
+                else:
+                    move_dest_id = False
+                if move.product_uom_qty >0:
+                    move_obj.copy(cr, uid, move.id, {
+                                        'product_id': move.product_id.id,
+                                        'product_uom_qty': move.product_uom_qty,
+                                        'product_uos_qty': move.product_uom_qty * move.product_uos_qty / move.product_uom_qty,
+                                        'picking_id': new_picking,
+                                        'state': 'draft',
+                                        'location_id': move.location_dest_id.id,
+                                        'location_dest_id': move.location_id.id,
+                                        'picking_type_id': pick_type_id,
+                                        'warehouse_id': pick.picking_type_id.warehouse_id.id,
+                                        'origin_returned_move_id': move.id,
+                                        'procure_method': 'make_to_stock',
+                                      #  'restrict_lot_id': data_get.lot_id.id,
+                                        'move_dest_id': move_dest_id,
+                                })
+            pick_obj.action_confirm(cr, uid, [new_picking], context=context)
+            pick_obj.force_assign(cr, uid, [new_picking], context)  
+            wizResult = pick_obj.do_enter_transfer_details(cr, uid, [new_picking], context=context)
+            # pop up wizard form => wizResult
+            detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
+            if detailObj:
+                detailObj.do_detailed_transfer()
+        for invoice_id in invoice_ids:
+            invoice = invoice_obj.browse(cr, uid, invoice_id, context=context)                
+            invoice.signal_workflow('invoice_cancel')
+        return self.write(cr, uid, ids, {'state':'reversed'})    
+            
     def on_change_payment_type(self, cr, uid, ids, partner_id, payment_type, context=None):
         values = {}
         print 'payment_type', payment_type
