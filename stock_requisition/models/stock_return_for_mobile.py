@@ -79,7 +79,7 @@ class stock_return_from_mobile(osv.osv):
                                   'return_quantity':receive_qty,
                                   'sale_quantity':0,
                                   'foc_quantity':0,
-                                  'product_uom': small_uom_id ,
+                                  'product_uom':  product.product_tmpl_id.uom_id.id ,
                             }, context=context)
             order_ids = account_inv_obj.search(cr, uid, [('section_id', '=', sale_team_id),('user_id','=',user_id), ('state', '=', 'open'),('date_invoice','=',return_date)], context=context) 
             order_list = str(tuple(order_ids))

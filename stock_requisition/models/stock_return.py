@@ -473,7 +473,8 @@ class stock_return(osv.osv):
          'state': fields.selection([
             ('draft', 'Pending'),
             ('received', 'Received'),
-            ('cancel','Cancel')
+            ('cancel','Cancel'),
+            ('reversed', 'Reversed'),
             ], 'Status', readonly=True, copy=False, help="Gives the status of the quotation or sales order.\
               \nThe exception status is automatically set when a cancel operation occurs \
               in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\nThe 'Waiting Schedule' status is set when the invoice is confirmed\
@@ -521,7 +522,57 @@ class stock_return(osv.osv):
     
     def cancel(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'cancel', })
-    
+
+    def reversed(self, cr, uid, ids, context=None):
+        pick_obj = self.pool.get('stock.picking')
+        move_obj = self.pool.get('stock.move')
+        stockDetailObj = self.pool.get('stock.transfer_details')
+        detailObj = None
+        srn_value = self.browse(cr, uid, ids[0], context=context)
+        srn_no=srn_value.name
+        pick_ids = []
+        pick_ids = pick_obj.search(cr, uid, [('origin', '=', srn_no)], context=context)
+        #choose the view_mode accordingly
+        for pick_id in pick_ids:
+            pick = pick_obj.browse(cr, uid, pick_id, context=context)                
+            #Create new picking for returned products
+            pick_type_id = pick.picking_type_id.return_picking_type_id and pick.picking_type_id.return_picking_type_id.id or pick.picking_type_id.id
+            new_picking = pick_obj.copy(cr, uid, pick.id, {
+                'move_lines': [],
+                'picking_type_id': pick_type_id,
+                'state': 'draft',
+                'origin': pick.name,
+            }, context=context)
+            for move in pick.move_lines:
+                if move.origin_returned_move_id.move_dest_id.id and move.origin_returned_move_id.move_dest_id.state != 'cancel':
+                    move_dest_id = move.origin_returned_move_id.move_dest_id.id
+                else:
+                    move_dest_id = False
+                if move.product_uom_qty >0:
+                    move_obj.copy(cr, uid, move.id, {
+                                        'product_id': move.product_id.id,
+                                        'product_uom_qty': move.product_uom_qty,
+                                        'product_uos_qty': move.product_uom_qty * move.product_uos_qty / move.product_uom_qty,
+                                        'picking_id': new_picking,
+                                        'state': 'draft',
+                                        'location_id': move.location_dest_id.id,
+                                        'location_dest_id': move.location_id.id,
+                                        'picking_type_id': pick_type_id,
+                                        'warehouse_id': pick.picking_type_id.warehouse_id.id,
+                                        'origin_returned_move_id': move.id,
+                                        'procure_method': 'make_to_stock',
+                                      #  'restrict_lot_id': data_get.lot_id.id,
+                                        'move_dest_id': move_dest_id,
+                                })
+            pick_obj.action_confirm(cr, uid, [new_picking], context=context)
+            pick_obj.force_assign(cr, uid, [new_picking], context)  
+            wizResult = pick_obj.do_enter_transfer_details(cr, uid, [new_picking], context=context)
+            # pop up wizard form => wizResult
+            detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
+            if detailObj:
+                detailObj.do_detailed_transfer()        
+        return self.write(cr, uid, ids, {'state': 'reversed', })    
+        
     def received(self, cr, uid, ids, context=None):
         move_obj = self.pool.get('stock.move')     
         location_obj = self.pool.get('stock.location')     

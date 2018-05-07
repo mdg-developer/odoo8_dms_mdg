@@ -115,6 +115,7 @@ class stock_requisition(osv.osv):
             ('draft', 'Draft'),
             ('approve', 'Approved'),
             ('cancel', 'Cancel'),
+            ('reversed', 'Reversed'),
             ], 'Status', readonly=True, copy=False, help="Gives the status of the quotation or sales order.\
               \nThe exception status is automatically set when a cancel operation occurs \
               in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\nThe 'Waiting Schedule' status is set when the invoice is confirmed\
