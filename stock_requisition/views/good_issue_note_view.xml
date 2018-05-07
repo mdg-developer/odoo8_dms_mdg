@@ -20,9 +20,9 @@
 						<button name="cancel" string="Cancel" class="oe_highlight"
 							type="object" states="draft,approve"
 							groups="stock.group_stock_manager,stock.group_stock_user" />
-						<!-- <button name="cancel" string="Cancel" class="oe_highlight" -->
-						<!-- type="object" states="confirm" groups="stock.group_stock_manager" 
-							/> -->
+						<button name="reversed" string="Reversed" class="oe_highlight"
+							type="object" states="issue"
+							groups="stock.group_stock_manager,stock.group_stock_user" />
 						<field name="state" widget="statusbar" />
 					</header>
 					<sheet>
@@ -33,23 +33,23 @@
 						<group>
 							<group>
 								<field name="name" />
-								<field name="sale_team_id" attrs="{'readonly':[('state','=','issue')]}"  widget="selection" />
-								<field name="to_location_id"  readonly="1"
-									/>
-								<field name="request_by"  readonly="1"
+								<field name="sale_team_id" attrs="{'readonly':[('state','=','issue')]}"
 									widget="selection" />
+								<field name="to_location_id" readonly="1" />
+								<field name="request_by" readonly="1" widget="selection" />
 								<field name="issue_date" attrs="{'readonly':[('state','=','issue')]}" />
 								<field name="write_date" attrs="{'readonly':[('state','=','issue')]}" />
-<!-- 								<field name="branch_id"  widget="selection"  attrs="{'readonly':[('state','=','issue')]}"/> -->
+								<!-- <field name="branch_id" widget="selection" attrs="{'readonly':[('state','=','issue')]}"/> -->
 							</group>
 							<group>
 								<field name="request_id" />
-								<field name="from_location_id"  readonly="1" />
-								<field name="vehicle_id"  readonly="1" />
-								<field name="approve_by"  readonly="1"
-									widget="selection" />
-								<field name="issue_by" attrs="{'readonly':[('state','=','issue')],'required':[('state','=','approve')]}"/>
-								<field name="receiver" attrs="{'readonly':[('state','=','issue')],'required':[('state','=','approve')]}"/>
+								<field name="from_location_id" readonly="1" />
+								<field name="vehicle_id" readonly="1" />
+								<field name="approve_by" readonly="1" widget="selection" />
+								<field name="issue_by"
+									attrs="{'readonly':[('state','=','issue')],'required':[('state','=','approve')]}" />
+								<field name="receiver"
+									attrs="{'readonly':[('state','=','issue')],'required':[('state','=','approve')]}" />
 								<field name="company_id" attrs="{'readonly':[('state','=','issue')]}"
 									invisible="1" />
 								<field name="is_return" invisible="1" />
@@ -57,17 +57,18 @@
 						</group>
 						<group>
 							<notebook>
-								<page string="Stock List"  attrs="{'readonly':[('state','=','issue')]}">
+								<page string="Stock List" attrs="{'readonly':[('state','=','issue')]}">
 									<field name="p_line" attrs="{'readonly':[('state','=','issue')]}">
 										<tree string="Good Issue Note Line" editable="bottom"
-											default_order="sequence asc"  attrs="{'readonly':[('state','=','issue')]}">
+											default_order="sequence asc" attrs="{'readonly':[('state','=','issue')]}">
 											<field name="sequence" invisible="1" />
 											<field name="product_id" on_change="on_change_product_id(product_id)" />
-                                            <field name="big_issue_quantity" string="Qty (B)" invisible="1" />
-											<field name="big_uom_id" invisible="1"/>
-											<field name="opening_qty"/>
-                                            <field name="issue_quantity" string="Qty"/>
-                                            <field name="product_uom"  string="UOM"/>
+											<field name="big_issue_quantity" string="Qty (B)"
+												invisible="1" />
+											<field name="big_uom_id" invisible="1" />
+											<field name="opening_qty" />
+											<field name="issue_quantity" string="Qty" />
+											<field name="product_uom" string="UOM" />
 											<field name="uom_ratio" invisible="1" />
 											<field name="batch_no" domain="[('product_id', '=',product_id)]"
 												on_change="on_change_expired_date(batch_no)" />
