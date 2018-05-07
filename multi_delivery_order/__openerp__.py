@@ -41,7 +41,8 @@ Welcome to Multi Delivery Order Transfer Module.
                 
                 
     'data' : [
-              'wizard/delivery_order_view.xml'
+              'wizard/delivery_order_view.xml',
+              'wizard/delivery_invoice_view.xml',
     ],
              
     'demo': [],

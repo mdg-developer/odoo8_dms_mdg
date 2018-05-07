@@ -20,10 +20,12 @@
 ##############################################################################
 import time
 from openerp.osv import fields, osv
+from datetime import datetime, timedelta
 
-class sale_order_delivery_transfer(osv.osv_memory):
-    _name = 'order.delivery.transfer'
-    _description = 'Order Delivery Transfer'
+class sale_order_invoice_delivery_transfer(osv.osv_memory):
+    
+    _name = 'invoice.delivery.transfer'
+    _description = 'Invoice Delivery Transfer'
     _columns = {
         'confirm':fields.boolean('Complete State' ,readonly=True),
     }
@@ -44,7 +46,8 @@ class sale_order_delivery_transfer(osv.osv_memory):
         for order in order_ids: 
             order_data=order_obj.browse(cr,uid,order,context=context)
             shipped=order_data.shipped
-            if shipped!=True:
+            invoiced=order_data.invoiced
+            if shipped!=True and invoiced!=True :
                 self.transfer_order_delivery(cr, uid, [order], context=context)       
                 
     def transfer_order_delivery(self, cr, uid, ids, context=None):
@@ -52,11 +55,15 @@ class sale_order_delivery_transfer(osv.osv_memory):
         soObj = self.pool.get('sale.order')        
         stockPickingObj = self.pool.get('stock.picking')
         stockDetailObj = self.pool.get('stock.transfer_details')        
+        invoiceObj = self.pool.get('account.invoice')     
+        mobile_obj = self.pool.get('mobile.sale.order')        
         solist=[]
         if ids:
             for so_data in soObj.browse(cr, uid, ids, context=context):
                 if so_data:
                         So_id=so_data.id
+                        solist =so_data.id  
+                        
                         stockViewResult = soObj.action_view_delivery(cr, uid, So_id, context=context)    
                         if stockViewResult:
                             # stockViewResult is form result
@@ -72,11 +79,20 @@ class sale_order_delivery_transfer(osv.osv_memory):
                             # pop up wizard form => wizResult
                             detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
                             if detailObj:
-                                detailObj.do_detailed_transfer()    
-                                           
+                                detailObj.do_detailed_transfer()  
+                        branch_id=so_data.branch_id.id
+                        delivery_remark=so_data.delivery_remark
+                        payment_type=so_data.payment_type
+                        date = datetime.strptime(so_data.date_order, '%Y-%m-%d %H:%M:%S')
+                        de_date = date.date()                                      
+                        invoice_id = mobile_obj.create_invoices(cr, uid,  [solist], context=context)
+                        cr.execute('update account_invoice set payment_type=%s ,branch_id =%s,delivery_remark =%s,date_invoice=%s where id =%s', (payment_type,branch_id, delivery_remark, de_date, invoice_id,))                            
+                        if invoice_id:
+                            invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
+                            invoiceObj.signal_workflow(cr, uid, [invoice_id], 'invoice_open')                                           
         return True          
             
                
-
+sale_order_invoice_delivery_transfer()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
