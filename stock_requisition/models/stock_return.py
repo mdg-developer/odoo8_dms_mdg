@@ -530,47 +530,44 @@ class stock_return(osv.osv):
         detailObj = None
         srn_value = self.browse(cr, uid, ids[0], context=context)
         srn_no=srn_value.name
-        pick_ids = []
-        pick_ids = pick_obj.search(cr, uid, [('origin', '=', srn_no)], context=context)
+        move_ids = []
+        move_ids = move_obj.search(cr, uid, [('origin', '=', srn_no),('state','=','done')], context=context)
         #choose the view_mode accordingly
-        for pick_id in pick_ids:
-            pick = pick_obj.browse(cr, uid, pick_id, context=context)                
-            #Create new picking for returned products
-            pick_type_id = pick.picking_type_id.return_picking_type_id and pick.picking_type_id.return_picking_type_id.id or pick.picking_type_id.id
-            new_picking = pick_obj.copy(cr, uid, pick.id, {
-                'move_lines': [],
-                'picking_type_id': pick_type_id,
-                'state': 'draft',
-                'origin': pick.name,
-            }, context=context)
-            for move in pick.move_lines:
-                if move.origin_returned_move_id.move_dest_id.id and move.origin_returned_move_id.move_dest_id.state != 'cancel':
-                    move_dest_id = move.origin_returned_move_id.move_dest_id.id
-                else:
-                    move_dest_id = False
-                if move.product_uom_qty >0:
-                    move_obj.copy(cr, uid, move.id, {
-                                        'product_id': move.product_id.id,
-                                        'product_uom_qty': move.product_uom_qty,
-                                        'product_uos_qty': move.product_uom_qty * move.product_uos_qty / move.product_uom_qty,
-                                        'picking_id': new_picking,
-                                        'state': 'draft',
-                                        'location_id': move.location_dest_id.id,
-                                        'location_dest_id': move.location_id.id,
-                                        'picking_type_id': pick_type_id,
-                                        'warehouse_id': pick.picking_type_id.warehouse_id.id,
-                                        'origin_returned_move_id': move.id,
-                                        'procure_method': 'make_to_stock',
-                                      #  'restrict_lot_id': data_get.lot_id.id,
-                                        'move_dest_id': move_dest_id,
-                                })
-            pick_obj.action_confirm(cr, uid, [new_picking], context=context)
-            pick_obj.force_assign(cr, uid, [new_picking], context)  
-            wizResult = pick_obj.do_enter_transfer_details(cr, uid, [new_picking], context=context)
-            # pop up wizard form => wizResult
-            detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
-            if detailObj:
-                detailObj.do_detailed_transfer()        
+        for move_id in move_ids:
+            move = move_obj.browse(cr, uid, move_id, context=context)                
+#             #Create new picking for returned products
+#             pick_type_id = pick.picking_type_id.return_picking_type_id and pick.picking_type_id.return_picking_type_id.id or pick.picking_type_id.id
+#             new_picking = pick_obj.copy(cr, uid, pick.id, {
+#                 'move_lines': [],
+#                 'picking_type_id': pick_type_id,
+#                 'state': 'draft',
+#                 'origin': pick.name,
+#             }, context=context)
+#             for move in pick.move_lines:
+            if move.origin_returned_move_id.move_dest_id.id and move.origin_returned_move_id.move_dest_id.state != 'cancel':
+                move_dest_id = move.origin_returned_move_id.move_dest_id.id
+            else:
+                move_dest_id = False
+            if move.product_uom_qty >0:
+                move_new_id=move_obj.copy(cr, uid, move.id, {
+                                    'product_id': move.product_id.id,
+                                    'product_uom_qty': move.product_uom_qty,
+                                    'product_uos_qty': move.product_uom_qty * move.product_uos_qty / move.product_uom_qty,
+                                    #'picking_id': new_picking,
+                                    'state': 'draft',
+                                    'location_id': move.location_dest_id.id,
+                                    'location_dest_id': move.location_id.id,
+                                 #   'picking_type_id': pick_type_id,
+                                  #  'warehouse_id': pick.picking_type_id.warehouse_id.id,
+                                    'origin_returned_move_id': move.id,
+                                    'procure_method': 'make_to_stock',
+                                  #  'restrict_lot_id': data_get.lot_id.id,
+                                    'origin':'Reverse '+move.origin,
+
+                                    'move_dest_id': move_dest_id,
+                            })
+                move_obj.action_done(cr, uid, move_new_id, context=context)
+
         return self.write(cr, uid, ids, {'state': 'reversed', })    
         
     def received(self, cr, uid, ids, context=None):
