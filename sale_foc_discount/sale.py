@@ -80,8 +80,6 @@ class sale_order_line(osv.osv):
                     
         return res
         
-        
-
 ## customize_model       
     def _amount_line1(self, cr, uid, ids, field_name, arg, context=None):
         tax_obj = self.pool.get('account.tax')
@@ -288,7 +286,7 @@ class sale_order(osv.osv):
             res[order.id]['amount_untaxed'] = cur_obj.round(cr, uid, cur, val1)
             res[order.id]['grand_total'] = cur_obj.round(cr, uid, cur, subtotal)
             res[order.id]['amount_total'] = res[order.id]['amount_untaxed'] + res[order.id]['amount_tax']
-            res[order.id]['grand_total'] =res[order.id]['grand_total'] + res[order.id]['amount_tax']
+            cr.execute("update sale_order set grand_total=%s where id =%s",(cur_obj.round(cr, uid, cur, subtotal),ids[0],))
         return res
 
     def _get_order(self, cr, uid, ids, context=None):
