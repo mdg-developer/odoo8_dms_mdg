@@ -266,8 +266,8 @@ class sale_plans_import(osv.osv):
                         print 'principal_id>>>', principal_id
                         print 'branch>>>',branch_id
                         if day_plan and sale_team_id and branch_id:
-                            cr.execute('select id from sale_plan_day where lower(name) = %s and sale_team= %s and branch_id= %s ', (day_plan.lower(), sale_team_id[0], branch_id[0],))
-                            result = cr.fetchall()
+                            cr.execute('select * from sale_plan_day where lower(name) = %s and sale_team= %s and branch_id= %s ', (day_plan.lower(), sale_team_id[0], branch_id[0],))
+                            result = cr.dictfetchall()
                             if not result:
                                 plan_id = sale_plan_day_obj.create(cr, uid, {'name': day_plan,
                                                                                             'sale_team':sale_team_id,
@@ -277,10 +277,10 @@ class sale_plans_import(osv.osv):
                                                                                             'active':True,
                                                                                             'week':0}, context=context)
                                 if plan_id:
-                                    if customer_id:
-                                        customer_id_list.append(customer_id[0])
-                                        #delete related data with plan_id from res_partner_sale_plan_day_rel
-                                        cr.execute("delete from res_partner_sale_plan_day_rel where sale_plan_day_id =%s and partner_id not in %s ", (plan_id,tuple(customer_id_list),))
+#                                    if customer_id:
+#                                        customer_id_list.append(customer_id[0])
+#                                        #delete related data with plan_id from res_partner_sale_plan_day_rel
+#                                        cr.execute("delete from res_partner_sale_plan_day_rel where sale_plan_day_id =%s and partner_id not in %s ", (plan_id,tuple(customer_id_list),))
                                     # customer link
                                     cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id =%s ", (plan_id,))
                                     res_ids = cr.fetchall()
@@ -300,7 +300,12 @@ class sale_plans_import(osv.osv):
                                         if main_group_id:
                                             cr.execute("insert into product_maingroup_sale_plan_day_rel(sale_plan_day_id,product_maingroup_id) values(%s,%s)", (plan_id, main_group_id,))
                             else:
-                                plan_id = result[0][0]
+                                plan_id = result[0].get('id')
+                                if result[0].get('active')==False:                                    
+                                    if customer_id:
+                                        customer_id_list.append(customer_id[0])
+                                        #delete related data with plan_id from res_partner_sale_plan_day_rel
+                                        cr.execute("delete from res_partner_sale_plan_day_rel where sale_plan_day_id =%s and partner_id not in %s ", (plan_id,tuple(customer_id_list),))
                                 sale_plan_day_obj.write(cr, uid, plan_id, {'name': day_plan,
                                                                                             'sale_team':sale_team_id,
                                                                                             'date':date_data,
@@ -308,10 +313,6 @@ class sale_plans_import(osv.osv):
                                                                                             'branch_id':branch_id,
                                                                                             'active':True,
                                                                                             'week':0}, context=context)
-                                if customer_id:
-                                    customer_id_list.append(customer_id[0])
-                                #delete related data with plan_id from res_partner_sale_plan_day_rel
-                                cr.execute("delete from res_partner_sale_plan_day_rel where sale_plan_day_id =%s and partner_id not in %s ", (plan_id,tuple(customer_id_list),))
                                     
                                 cr.execute("select partner_id from res_partner_sale_plan_day_rel where sale_plan_day_id =%s ", (plan_id,))
                                 res_ids = cr.fetchall()
