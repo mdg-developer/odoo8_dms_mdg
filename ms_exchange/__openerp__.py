@@ -36,6 +36,8 @@ Exchange Product
     ],
     'data': [
         'views/exchange_product.xml',
+        'reports/qweb_view.xml',
+        'reports/report_exchange_return.xml',
     ],
     'installable': True,
     'auto_install': False,

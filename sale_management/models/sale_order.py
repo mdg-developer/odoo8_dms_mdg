@@ -184,7 +184,7 @@ class sale_order(osv.osv):
         so_no=so_value.name
         pick_ids = []
         pick_ids = pick_obj.search(cr, uid, [('origin', '=', so_no),('state','=','done')], context=context)
-        invoice_ids = invoice_obj.search(cr, uid, [('origin', '=', so_no),('state','=','open')], context=context)
+        invoice_ids = invoice_obj.search(cr, uid, [('origin', '=', so_no),('state','in',('open','credit_state'))], context=context)
         #choose the view_mode accordingly
         for pick_id in pick_ids:
             pick = pick_obj.browse(cr, uid, pick_id, context=context)                
@@ -201,13 +201,14 @@ class sale_order(osv.osv):
                     move_dest_id = move.origin_returned_move_id.move_dest_id.id
                 else:
                     move_dest_id = False
-                if move.product_uom_qty >0:
-                    move_obj.copy(cr, uid, move.id, {
+                if move.product_uom_qty >0:                      
+                    
+                    move_id=move_obj.copy(cr, uid, move.id, {
                                         'product_id': move.product_id.id,
                                         'product_uom_qty': move.product_uom_qty,
                                         'product_uos_qty': move.product_uom_qty * move.product_uos_qty / move.product_uom_qty,
                                         'picking_id': new_picking,
-                                        'state': 'draft',
+                                        'state': 'confirmed',
                                         'location_id': move.location_dest_id.id,
                                         'location_dest_id': move.location_id.id,
                                         'picking_type_id': pick_type_id,
@@ -217,16 +218,21 @@ class sale_order(osv.osv):
                                       #  'restrict_lot_id': data_get.lot_id.id,
                                         'move_dest_id': move_dest_id,
                                 })
-            pick_obj.action_confirm(cr, uid, [new_picking], context=context)
-            pick_obj.force_assign(cr, uid, [new_picking], context)  
-            wizResult = pick_obj.do_enter_transfer_details(cr, uid, [new_picking], context=context)
+                    move_obj.action_done(cr, uid, move_id, context=context)  
+
+         #   pick_obj.action_confirm(cr, uid, [new_picking], context=context)
+          #  pick_obj.force_assign(cr, uid, [new_picking], context)  
+            #wizResult = pick_obj.do_enter_transfer_details(cr, uid, [new_picking], context=context)
             # pop up wizard form => wizResult
-            detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
-            if detailObj:
-                detailObj.do_detailed_transfer()
+            #detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
+            #if detailObj:
+                #detailObj.do_detailed_transfer()
         for invoice_id in invoice_ids:
-            invoice = invoice_obj.browse(cr, uid, invoice_id, context=context)                
-            invoice.signal_workflow('invoice_cancel')
+            invoice = invoice_obj.browse(cr, uid, invoice_id, context=context)  
+            if invoice.payment_type=='credit': 
+                invoice_obj.cancel_credit(cr, uid, [invoice_id], context=context) 
+            else:    
+                invoice.signal_workflow('invoice_cancel')
         return self.write(cr, uid, ids, {'state':'reversed'})    
             
     def on_change_payment_type(self, cr, uid, ids, partner_id, payment_type, context=None):

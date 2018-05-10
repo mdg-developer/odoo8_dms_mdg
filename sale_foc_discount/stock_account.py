@@ -160,7 +160,8 @@ class stock_quant(osv.osv):
         valuation_amount = currency_obj.round(cr, uid, move.company_id.currency_id, valuation_amount * qty)
         partner_id = (move.picking_id.partner_id and self.pool.get('res.partner')._find_accounting_partner(move.picking_id.partner_id).id) or False
         if move.foc:
-            type = self.get_foc_cashorcredit(cr, uid, move, context)
+            #type = self.get_foc_cashorcredit(cr, uid, move, context)
+            type='cash'
             if type == 'cash':
                 credit_account_id_1 = move.product_id.categ_id.property_account_foc_cash.id 
                 debit_account_id_1 =move.product_id.categ_id.property_account_foc_principle_receivable.id

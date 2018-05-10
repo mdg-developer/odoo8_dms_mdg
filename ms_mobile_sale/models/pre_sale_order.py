@@ -308,9 +308,15 @@ class pre_sale_order(osv.osv):
                                     sale_foc = line_id.foc
                                     priceUnit = line_id.price_unit
                                     productName = line_id.product_id.name
-                                product_data = self.pool.get('product.product').browse(cr, uid,line_id.product_id.id, context=context)   
+                                product_data = self.pool.get('product.product').browse(cr, uid,line_id.product_id.id, context=context) 
+                                tax_data=False    
+                                taxes = product_data.taxes_id
+                                if taxes:
+                                    fpos = preObj_ids.partner_id.property_account_position or False
+                                    tax_id = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxes, context=context)                           
+                                    tax_data=[[6, 0, tax_id]]
                                 detailResult = {'order_id':so_id,
-                                                        'product_type':product_data.product_tmpl_id.type,
+                                                      #  'product_type':product_data.product_tmpl_id.type,
                                                         'product_id':line_id.product_id.id,
                                                         'name':productName,
                                                         'product_uom':line_id.uom_id.id,
@@ -318,6 +324,7 @@ class pre_sale_order(osv.osv):
                                                         'discount':line_id.discount,
                                                         'discount_amt':line_id.discount_amt,
                                                         'sale_foc':sale_foc,
+                                                        'tax_id':tax_data,
                                                         'price_unit':priceUnit,
                                                         'company_id':company_id,  
                                                          'promotion_id':line_id.promotion_id.id,# company_id,
