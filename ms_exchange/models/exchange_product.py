@@ -19,6 +19,7 @@ class exchange_product(osv.osv):
                 'e_status':fields.char('Status'),
                 'note':fields.text('Note'),
                 'location_type':fields.char('Location Type', readonly=True),
+                'partner_id':fields.many2one('res.partner', string='Partner'),
     }
     
     _defaults = {        
