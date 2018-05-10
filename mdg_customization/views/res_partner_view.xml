@@ -271,6 +271,11 @@
 						position="after">
 						<field name="contact_note" />
 					</xpath>
+					<xpath
+						expr="//page[@name='sales_purchases']/group/group/field[@name='supplier']"
+						position="after">
+						<field name="is_exclusive"/>
+					</xpath>
 				</data>
 			</field>
 		</record>
