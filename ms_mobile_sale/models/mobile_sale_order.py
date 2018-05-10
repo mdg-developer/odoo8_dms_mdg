@@ -548,6 +548,7 @@ class mobile_sale_order(osv.osv):
         msoPromoLineObj = self.pool.get('sale.order.promotion.line')
         mso_promotion_line_obj = self.pool.get('mso.promotion.line')
         mso_inv_PromoLineObj = self.pool.get('account.invoice.promotion.line')        
+        product_obj=self.pool.get('product.product')
         soResult = {}
         solResult = {}
         accountVResult = {}
@@ -651,6 +652,13 @@ class mobile_sale_order(osv.osv):
                                             product_name = line_id.product_id.name
                                         else:
                                             product_name = line_id.product_id.name
+                                        product_data=product_obj.browse(cr, uid, line_id.product_id.id, context=context)
+                                        tax_data=False    
+                                        taxes = product_data.taxes_id
+                                        if taxes:
+                                            fpos = ms_ids.partner_id.property_account_position or False
+                                            tax_id = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxes, context=context)
+                                            tax_data=[[6, 0, tax_id]]
                                         # FOC with price_unit or foc true, false
                                     if line_id.sub_total == 0.0 or line_id.foc:
                                         foc = True
@@ -668,6 +676,7 @@ class mobile_sale_order(osv.osv):
                                               'product_uom_qty':line_id.product_uos_qty,
                                               'discount':line_id.discount,
                                               'discount_amt':line_id.discount_amt,
+                                              'tax_id': tax_data,
                                               'company_id':company_id,  # company_id,
                                               'state':'draft',
                                               'net_total':line_id.sub_total,
