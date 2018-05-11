@@ -572,6 +572,12 @@ and pp.id in (select product_product_id from crm_case_section_product_product_re
                     <text-property name="displayName">foc</text-property>
                     <text-property name="heading">foc</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">main_group</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">main_group</text-property>
+                    <text-property name="heading">main_group</text-property>
+                </structure>
             </list-property>
             <list-property name="parameters">
                 <structure>
@@ -695,6 +701,11 @@ and pp.id in (select product_product_id from crm_case_section_product_product_re
                     <structure>
                         <property name="position">20</property>
                         <property name="name">foc</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">21</property>
+                        <property name="name">main_group</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
@@ -844,6 +855,13 @@ this.queryText =this.queryText.replace("--$product_id$", "and avl.product_id in 
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
+                <structure>
+                    <property name="position">21</property>
+                    <property name="name">main_group</property>
+                    <property name="nativeName">main_group</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select avl.id,date_invoice,acc.code as account_name,acc.name as account_desc,
 CASE
@@ -860,7 +878,11 @@ CASE
 CASE
   WHEN avl.foc = true THEN 'Y'::text
   ELSE 'N'::text
-END AS foc
+END AS foc,
+CASE
+    WHEN rule.id is not null THEN (select name from product_maingroup where id  = rule.main_group)
+    ELSE (select name from product_maingroup where id  = pt.main_group)
+END AS main_group
 from account_invoice av ,account_invoice_line avl left join promos_rules rule on avl.promotion_id = rule.id
 ,account_account acc ,res_partner rp,crm_case_section cc,product_product pp,product_template pt,product_uom uom
 where av.id =avl.invoice_id
@@ -1751,6 +1773,12 @@ ORDER BY av.date_invoice,cc.name,rp.name ,pp.sequence
                     <expression name="expression" type="javascript">dataSetRow["payment_type"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">main_group</property>
+                    <text-property name="displayName">main_group</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["main_group"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
             </list-property>
             <column id="1122">
                 <property name="width">0.8229166666666666in</property>
@@ -1807,6 +1835,9 @@ ORDER BY av.date_invoice,cc.name,rp.name ,pp.sequence
                 <property name="width">0.8125in</property>
             </column>
             <column id="1116">
+                <property name="width">0.8125in</property>
+            </column>
+            <column id="1187">
                 <property name="width">0.8125in</property>
             </column>
             <header>
@@ -2075,6 +2106,20 @@ ORDER BY av.date_invoice,cc.name,rp.name ,pp.sequence
                         <label id="1065">
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Promotion</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1184">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="1188">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">Principle Name</text-property>
                         </label>
                     </cell>
                 </row>
@@ -2393,6 +2438,19 @@ ORDER BY av.date_invoice,cc.name,rp.name ,pp.sequence
                             <property name="resultSetColumn">promotion</property>
                         </data>
                     </cell>
+                    <cell id="1185">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="1189">
+                            <property name="resultSetColumn">main_group</property>
+                        </data>
+                    </cell>
                 </row>
             </detail>
             <footer>
@@ -2499,6 +2557,16 @@ ORDER BY av.date_invoice,cc.name,rp.name ,pp.sequence
                         </data>
                     </cell>
                     <cell id="1104">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                    </cell>
+                    <cell id="1186">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
