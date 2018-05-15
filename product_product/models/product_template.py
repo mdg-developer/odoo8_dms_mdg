@@ -106,11 +106,12 @@ class product_uom_price(osv.osv):
     
     
     _columns = {
+        'uom_ratio':fields.char('Packing Size'),
         'product_id': fields.many2one('product.template', 'Product'),
         'name': fields.many2one('product.uom', 'Unit of Measure', required=True),
         'category_id': fields.many2one('product.uom.categ', 'UoM Category', required=True, ondelete='cascade',
             help="Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."),
-        'factor': fields.float('Ratio', required=True, digits=0, # force NUMERIC with unlimited precision
+        'factor': fields.float('Ratio', required=True,readonly=True, digits=0, # force NUMERIC with unlimited precision
             help='How much bigger or smaller this unit is compared to the reference Unit of Measure for this category:\n'\
                     '1 * (reference unit) = ratio * (this unit)'),
         'factor_inv': fields.function(_factor_inv, digits=0, # force NUMERIC with unlimited precision
@@ -126,6 +127,10 @@ class product_uom_price(osv.osv):
                                       ('reference','Reference Unit of Measure for this category'),
                                       ('smaller','Smaller than the reference Unit of Measure')],'Type', required=1),
         'price': fields.float('Price', digits=0, required=True),
+        'weight': fields.float('Weight(Viss)', required=True),
+        'length': fields.float('Length', required=True),
+        'width': fields.float('Width', required=True),
+        'height': fields.float('Height', required=True),
     }
 
     _defaults = {

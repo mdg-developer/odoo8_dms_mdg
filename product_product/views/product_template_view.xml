@@ -24,6 +24,11 @@
 									<field name="category_id" />
 									<field name="factor" />
 									<field name="price" />
+									<field name="uom_ratio" />
+									<field name="weight" />
+									<field name="length" />
+									<field name="width" />
+									<field name="height" />
 								</group>
 							</form>
 							<tree string="UOM Price Lines" editable="bottom">
@@ -31,6 +36,11 @@
 								<field name="category_id" />
 								<field name="factor" />
 								<field name="price" />
+								<field name="uom_ratio" />
+								<field name="weight" />
+								<field name="length" />
+								<field name="width" />
+								<field name="height" />
 							</tree>
 						</field>
 					</page>
