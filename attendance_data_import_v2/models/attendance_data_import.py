@@ -14,7 +14,8 @@ class attendance_data_import(osv.osv):
         'fingerprint_id': fields.char('Emp No'),
         'auto_assign': fields.char('Auto Assign'),
         'date': fields.date('Date'),        
-        'timetable': fields.many2one('shift.timetable', 'Timetable'),
+        #'timetable': fields.many2one('shift.timetable', 'Timetable'),
+        'timetable': fields.char('Timetables'),
         'onduty': fields.char('On duty'),
         'offduty': fields.char('Off duty'),
         'clockin': fields.char('Clock In'),
@@ -78,20 +79,20 @@ class attendance_data_import(osv.osv):
                      } 
                            
             return {'value':result}
-    def timetable_on_change(self,cr,uid, ids,timetable, context=None):
-        result = {}
-        if timetable:
-            timetable_obj = self.pool.get('shift.timetable')
-            timetable_data = timetable_obj.browse(cr,uid,timetable,context=context)
-            if timetable_data:
-                    result = {'onduty': timetable_data.onduty,
-                              'offduty': timetable_data.offduty,  
-                              'clockin': timetable_data.clockin,
-                              'clockout': timetable_data.clockout,  
-                              'normal': timetable_data.normal, 
-                              'ot_time': timetable_data.ot_time                  
-                         }               
-            return {'value':result}
+#     def timetable_on_change(self,cr,uid, ids,timetable, context=None):
+#         result = {}
+#         if timetable:
+#             timetable_obj = self.pool.get('shift.timetable')
+#             timetable_data = timetable_obj.browse(cr,uid,timetable,context=context)
+#             if timetable_data:
+#                     result = {'onduty': timetable_data.onduty,
+#                               'offduty': timetable_data.offduty,  
+#                               'clockin': timetable_data.clockin,
+#                               'clockout': timetable_data.clockout,  
+#                               'normal': timetable_data.normal, 
+#                               'ot_time': timetable_data.ot_time                  
+#                          }               
+#             return {'value':result}
     def calculate_on_change(self,cr,uid, ids,timetable,on_duty,off_duty,clock_in, clock_out, context=None):
         result = {}
         start_time = end_time =  None

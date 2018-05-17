@@ -206,8 +206,8 @@ class data_import_attendance(osv.osv):
                     import_vals['ot_time'] = ln[ot_time_i].strip()
                     import_vals['work_time'] = ln[work_time_i].strip()
                     import_vals['exception'] = ln[exception_i]
-                    import_vals['must_c_in'] = ln[must_c_in_i]
-                    import_vals['must_c_out'] = ln[must_c_out_i]
+                    import_vals['must_c_in'] = ln[must_c_in_i].strip()
+                    import_vals['must_c_out'] = ln[must_c_out_i].strip()
                     import_vals['department'] =ln[department_i]
                     import_vals['ndays'] = ln[ndays_i].strip()
 
