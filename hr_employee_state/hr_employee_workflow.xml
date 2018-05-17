@@ -60,7 +60,7 @@
             <field name="act_from" ref="act_new"/>
             <field name="act_to" ref="act_onboarding"/>
             <field name="signal">signal_confirm</field>
-            <field name="group_id" ref="base.group_hr_manager"/>
+            <field name="group_id" ref="base.group_hr_user"/>
         </record>
         
         <record id="onboarding2active" model="workflow.transition">
@@ -68,7 +68,7 @@
             <field name="act_to" ref="act_active"/>
             <field name="condition">condition_finished_onboarding() == True</field>
             <field name="signal">signal_active</field>
-            <field name="group_id" ref="base.group_hr_manager"/>
+            <field name="group_id" ref="base.group_hr_user"/>
         </record>
         
         <record id="new2pendinginactive" model="workflow.transition">
@@ -103,21 +103,21 @@
             <field name="act_from" ref="act_pending_inactive"/>
             <field name="act_to" ref="act_inactive"/>
             <field name="signal">signal_inactive</field>
-            <field name="group_id" ref="base.group_hr_manager"/>
+            <field name="group_id" ref="base.group_hr_user"/>
         </record>
         
         <record id="inactive2reactivated" model="workflow.transition">
             <field name="act_from" ref="act_inactive"/>
             <field name="act_to" ref="act_reactivated"/>
             <field name="signal">signal_reactivate</field>
-            <field name="group_id" ref="base.group_hr_manager"/>
+            <field name="group_id" ref="base.group_hr_user"/>
         </record>
         
         <record id="reactivated2onboarding" model="workflow.transition">
             <field name="act_from" ref="act_reactivated"/>
             <field name="act_to" ref="act_onboarding"/>
             <field name="signal">signal_confirm_reactivate</field>
-            <field name="group_id" ref="base.group_hr_manager"/>
+            <field name="group_id" ref="base.group_hr_user"/>
         </record>
         
     </data>

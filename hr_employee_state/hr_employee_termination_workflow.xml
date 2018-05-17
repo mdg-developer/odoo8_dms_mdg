@@ -17,6 +17,7 @@
             <field name="name">draft</field>
             <field name="kind">function</field>
             <field name="action">state_draft()</field>
+            <field name="flow_start">True</field>
         </record>
         
         <record id="act_confirm" model="workflow.activity">
@@ -55,26 +56,26 @@
             <field name="act_from" ref="act_confirm"/>
             <field name="act_to" ref="act_cancel"/>
             <field name="signal">signal_cancel</field>
-            <field name="group_id" ref="base.group_hr_manager"/>
+            <field name="group_id" ref="base.group_hr_user"/>
         </record>
         
         <record id="confirm2done" model="workflow.transition">
             <field name="act_from" ref="act_confirm"/>
             <field name="act_to" ref="act_done"/>
             <field name="signal">signal_done</field>
-            <field name="group_id" ref="base.group_hr_manager"/>
+            <field name="group_id" ref="base.group_hr_user"/>
         </record>
         <record id="done2draft" model="workflow.transition">
             <field name="act_from" ref="act_done"/>
             <field name="act_to" ref="act_draft"/>
             <field name="signal">signal_draft</field>
-            <field name="group_id" ref="base.group_hr_manager"/>
+            <field name="group_id" ref="base.group_hr_user"/>
         </record>
         <record id="cancel2draft" model="workflow.transition">
             <field name="act_from" ref="act_cancel"/>
             <field name="act_to" ref="act_draft"/>
             <field name="signal">signal_draft</field>
-            <field name="group_id" ref="base.group_hr_manager"/>
+            <field name="group_id" ref="base.group_hr_user"/>
         </record>
 
     </data>
