@@ -1162,7 +1162,7 @@ CREATE OR REPLACE VIEW account_tree AS
             tn.parent_left,
             tn.parent_right
            FROM account_account tn
-          WHERE tn.id = 1
+          --WHERE tn.id = 1
         UNION ALL
          SELECT c.id,
             c.name,
