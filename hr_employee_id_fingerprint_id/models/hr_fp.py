@@ -33,28 +33,10 @@ class hr_employee(osv.osv):
     }
     
     def create(self, cr, uid, vals, context=None):
-        txnCode = section_code = None
-        if vals:
-#             txnCode = self.pool.get('ir.sequence').get(cr, uid,
-#                 'hr.employee.code') or '/'
-            txnCode = self.pool.get('ir.sequence').get(cr, uid,
-                                                       'hr.employee.prefix') or '/'
-            print 'txnCode>>>', txnCode
-            if txnCode is not None:
-                txnCode = txnCode[2:]
-                
-            section_obj = self.pool.get('hr.section') 
-            if vals['section_id']:
-                section = vals['section_id']
-                section_id = section_obj.browse(cr,uid,section,context=context)
-                if section_id:
-                    section_code = section_id.parent_section_id.code or section_id.code
-                   # vals['employee_id'] = section_code +'-'+ txnCode
-                    vals['employee_id'] =  txnCode
-                   
-                    vals['fingerprint_id'] = txnCode   
-              
+        if vals['fingerprint_id']:
+            vals['employee_id'] =vals['fingerprint_id']
+        else:
+            vals['employee_id'] = ""                  
         new_id = super(hr_employee, self).create(cr, uid, vals, context=context)
-        print 'new_id>>>', new_id
         return new_id
 hr_employee()

@@ -193,8 +193,8 @@ class hr_employee(osv.osv):
         'ssb_effective_date': fields.date('SSB Effective Date'),
         'labour_referenceno': fields.char('Labour Reference No'),
         'labour_card_release_date': fields.date('Labour Card Release Date'),
-        'gender': fields.selection([('male', 'Male'), ('female', 'Female')], 'Gender',required=True),
-        'marital': fields.selection([('single', 'Single'), ('married', 'Married'), ('widower', 'Widower'), ('divorced', 'Divorced')], 'Marital Status',required=True),
+        'gender': fields.selection([('male', 'Male'), ('female', 'Female')], 'Gender'),
+        'marital': fields.selection([('single', 'Single'), ('married', 'Married'), ('widower', 'Widower'), ('divorced', 'Divorced')], 'Marital Status'),
         'length_of_service': fields.function(_get_employed_months, type='float', method=True, 
                                              groups=False,
                                              string='Length of Service',store=True),
@@ -280,14 +280,15 @@ class hr_employee(osv.osv):
         return res
     
     def write(self, cr, uid, ids, vals, context=None):
-        print 'vals>>>>',vals   
-        changes = ''  
-        print 'len>>', len(changes)          
+        changes = ''           
         if vals.get('employee_id'):
             changes = ' Badge ID,'
             
-        if vals.get('fingerprint_id'):
+        if vals.get('fingerprint_id'):        
             changes += ' FingerPrint ID,'
+            if ids:
+                emp = self.browse(cr, uid, ids, context=context)
+                vals['employee_id']=vals['fingerprint_id']
             
         if vals.get('name'):
             changes += ' Name,'

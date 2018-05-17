@@ -68,17 +68,17 @@ class hr_contract_end(models.Model):
     @api.model
     def default_get(self, fields):
         res = super(hr_contract_end, self).default_get(fields)
-        employee_ids = self.env.context.get('active_ids', [])
-        if not employee_ids:
+        employee_id = self.env.context.get('active_ids', [])
+        if not employee_id:
             return res
         values = {}
-        if employee_ids: 
-            employee_obj = self.env['hr.employee']
-            employees = employee_obj.browse(employee_ids)
+        if employee_id: 
+            contract_obj = self.env['hr.contract']
+            contracts = contract_obj.browse(res['contract_id'])
             items = []
-            for employee in employees:
+            for contract in contracts:
                 values = {
-                    'badge_id': employee.employee_id,
+                    'badge_id': contract.employee_id.employee_id,
                 }
         res.update(values)
         return res

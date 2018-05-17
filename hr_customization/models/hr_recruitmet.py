@@ -107,6 +107,7 @@ class hr_applicant_inherit(osv.osv):
                 create_ctx = dict(context, mail_broadcast=True)
                 emp_id = hr_employee.create(cr, uid, {'name': applicant.partner_name or contact_name,
                                                      'job_id': applicant.job_id.id,
+                                                     'fingerprint_id': applicant.partner_name,
                                                      'address_home_id': address_id,
                                                      'department_id': applicant.department_id.id or False,
                                                      'section_id': applicant.section_id.id or False,
