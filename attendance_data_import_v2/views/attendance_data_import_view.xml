@@ -106,7 +106,7 @@
 							</group>
 							<group>
 								<field name="date" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>
-								<field name="timetable" on_change="timetable_on_change(timetable)" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>
+								<field name="timetable" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>
 								<field name="ndays" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>
 								<field name="offduty" on_change="calculate_on_change(timetable,onduty,offduty,clockin, clockout)" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>
 								<field name="clockout" on_change="calculate_on_change(timetable,onduty,offduty,clockin, clockout)" attrs="{'readonly':[('state','in',('approve','decline'))]}"/>
