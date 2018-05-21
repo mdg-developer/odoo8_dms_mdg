@@ -9,7 +9,7 @@ productList = params["product_id"].value.join(",");]]></method>
     <property name="imageDPI">96</property>
     <list-property name="libraries">
         <structure>
-            <property name="fileName">ms_report/birt_report/report_library.rptlibrary</property>
+            <property name="fileName">birt_report/report_library.rptlibrary</property>
             <property name="namespace">report_library</property>
         </structure>
     </list-property>
@@ -306,138 +306,161 @@ where pp.product_tmpl_id = pt.id
                     <property name="columnName">x_id</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">x_id</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">x_id</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">x_warehouse</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">x_warehouse</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">x_warehouse</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">time</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">time</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">time</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">date</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">date</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">date</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">x_location</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">x_location</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">x_location</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">x_location_id</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">x_location_id</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">x_location_id</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">x_branch</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">x_branch</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">x_branch</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">x_product</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">x_product</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">x_product</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">x_product_id</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">x_product_id</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">x_product_id</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">x_product_code</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">x_product_code</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">x_product_code</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">x_product_category</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">x_product_category</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">x_product_category</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">x_product_maingroup</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">x_product_maingroup</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">x_product_maingroup</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">x_product_group</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">x_product_group</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">x_product_group</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">x_source</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">x_source</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">x_source</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">x_move_type</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">x_move_type</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">x_move_type</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">x_opening</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">x_opening</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">x_opening</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">x_qty</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">x_qty</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">x_qty</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">x_closing</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">x_closing</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">x_closing</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">sales</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">sales</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">sales</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">purchase</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">purchase</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">purchase</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">transfer_in</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">transfer_in</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">transfer_in</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">transfer_out</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">transfer_out</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">transfer_out</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">adjustment</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">adjustment</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">adjustment</text-property>
                 </structure>
             </list-property>
@@ -449,6 +472,7 @@ where pp.product_tmpl_id = pt.id
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">1</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -459,6 +483,7 @@ where pp.product_tmpl_id = pt.id
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">2</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -469,6 +494,7 @@ where pp.product_tmpl_id = pt.id
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                     <property name="position">3</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -768,8 +794,8 @@ case when f.x_move_type like '%adjustment%' then f.x_qty end as adjustment
 (
 select m.x_id,
 w.name as x_warehouse,
-m.x_date as time,
-m.x_date::date as date,
+((m.x_date at time zone 'utc') at time zone 'asia/rangoon') as time,
+((m.x_date at time zone 'utc') at time zone 'asia/rangoon')::date as date,
 -- m.x_date::time,
 -- extract('hour' from m.x_date)||':'||extract('min' from m.x_date)||':'||extract('sec' from m.x_date) x_time,
 ll.complete_name as x_location,
@@ -840,6 +866,9 @@ and x_location_id =?
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
         </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes/>
+        </design:inputAttributes>
       </design:ParameterDefinition>
     </parameter>
     <parameter>
@@ -855,6 +884,9 @@ and x_location_id =?
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
         </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes/>
+        </design:inputAttributes>
       </design:ParameterDefinition>
     </parameter>
     <parameter>
@@ -870,6 +902,9 @@ and x_location_id =?
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
         </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes/>
+        </design:inputAttributes>
       </design:ParameterDefinition>
     </parameter>
   </DataSetParameters>
@@ -1780,7 +1815,7 @@ and x_location_id =?
                         <data id="723">
                             <structure name="dateTimeFormat">
                                 <property name="category">Custom</property>
-                                <property name="pattern">dd/MM/yyyy hh:mm:ss</property>
+                                <property name="pattern">dd/MM/yyyy HH:mm:ss</property>
                             </structure>
                             <property name="resultSetColumn">time</property>
                         </data>
