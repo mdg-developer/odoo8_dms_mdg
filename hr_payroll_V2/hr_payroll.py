@@ -252,8 +252,8 @@ class hr_payslip_customize(osv.osv):
         else:
             sun_holiday_ot_min = 0
         cr.execute("""select count(*)*4 from attendance_data_import where 
-            timetable in (select id from shift_timetable where upper(shift_name) !='OT') 
-            and absent='false' and ot_time = 0 and date between %s and  %s and  employee_id=%s""", (date_from, date_to,employee_id,))
+            --timetable in (select id from shift_timetable where upper(shift_name) !='OT') and
+             absent='false' and ot_time = 0 and date between %s and  %s and  employee_id=%s""", (date_from, date_to,employee_id,))
         actual_working_data = cr.fetchone()
         if actual_working_data:
             actual_working_hour = actual_working_data[0]
@@ -279,8 +279,9 @@ class hr_payslip_customize(osv.osv):
         leave_half_count =cr.fetchone()[0]
         if leave_half_count is None:
             leave_half_count=0
-        cr.execute("""select COALESCE( sum(normal),0) from attendance_data_import 
-            where timetable in (select id from shift_timetable where shift_name='Afternoon') and absent =true
+        cr.execute("""select COALESCE( sum(normal),0) from attendance_data_import where
+             --timetable in (select id from shift_timetable where shift_name='Afternoon') and 
+             absent =true
             and extract('ISODOW' FROM date)= 6 and employee_id=%s and date between %s and %s""",(employee_id,date_from, date_to,))        
         sat_data =cr.fetchone()[0]
         if present_data:
