@@ -2,7 +2,7 @@
 <openerp>
 	<data>
 	    		
-		<record id="view_employee_import_form" model="ir.ui.view">
+		<!-- <record id="view_employee_import_form" model="ir.ui.view">
 			<field name="name">Employee Import Form</field>
 			<field name="model">data_import.employee</field>
 			<field name="arch" type="xml">
@@ -41,7 +41,7 @@
 			</field>
 		</record>
 
-		<!-- Action -->
+		Action
 		<record id="action_employee_import" model="ir.actions.act_window">
 			<field name="name">Employee Import</field>
 			<field name="type">ir.actions.act_window</field>
@@ -53,7 +53,7 @@
 
 			<menuitem action="data_import_dms.action_employee_import"
 			id="menu_data_import_employee_plan" parent="menu_data_import_config"
-			sequence="19" />
+			sequence="19" />  -->
 		
 	</data>
 </openerp>

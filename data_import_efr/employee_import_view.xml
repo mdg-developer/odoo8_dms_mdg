@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data>
-		<menuitem id="menu_data_import_config" name="Data Import"
-			parent="base.menu_custom" sequence="31" />
+		<!-- <menuitem id="menu_data_import_config" name="Data Import"
+			parent="base.menu_custom" sequence="31" /> -->
 		
 		<record id="view_employee_import_form" model="ir.ui.view">
 			<field name="name">Employee Import Form</field>
@@ -54,8 +54,13 @@
 		</record>
 
 		<!-- First level menu -->
-		<menuitem id="menu_employee_import" name="Employee Import Files"
-			action="action_employee_import" parent="menu_data_import_config" />
+<!-- 		<menuitem id="menu_employee_import" name="Employee Import Files"
+			action="action_employee_import" parent="menu_data_import_config" /> -->
+		
+		<menuitem action="data_import_efr.action_employee_import"
+			id="menu_data_import_employee_plan" parent="data_import_dms.menu_data_import_config"
+			sequence="19" />
+		
 		
 	</data>
 </openerp>

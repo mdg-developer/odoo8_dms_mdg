@@ -52,7 +52,7 @@ class employee(osv.osv):
         hr_nrc_prefix_obj=self.pool.get('hr.nrc.prefix')
         data = self.browse(cr,uid,ids)[0]
         import_file = data.import_file
-        company_id=data.company_id
+        company_id=data.company_id.id
         count=0
         err_log = ''
         header_line = False
@@ -162,7 +162,6 @@ class employee(osv.osv):
                         
                         import_vals = {}
                         try:
-                            print 'ln[name_i]>>',ln[name_i]
                             import_vals['name'] =  ln[name_i]
                             import_vals['gender'] = ln[gender_i]
                             import_vals['marital'] = ln[marital_i]
@@ -174,11 +173,8 @@ class employee(osv.osv):
                             import_vals['father_name']  = ln[father_name_i]
                             if ln[fingerprint_id_i]:
                                 import_vals['fingerprint_id'] = str(int(ln[fingerprint_id_i])).strip()
-                                print 'ln[fingerprint_id]',ln[fingerprint_id_i]
-                                print 'this is fingerprint id contain'
                             else:
                                 import_vals['fingerprint_id']=''
-                                print 'no fingerprint id '
 #                            import_vals['fingerprint_id']=ln['fingerprint_id_i'].strip()
                             import_vals['job'] = ln[job_i]
                             import_vals['department'] = ln[department_i]
@@ -208,7 +204,7 @@ class employee(osv.osv):
         else:
             for aml in amls:
                 try:
-                    company_name_id = job_name_id = dept_name_id = None
+                    company_name_id = job_name_id = dept_name_id = schedule_id=None
                     err_log =''
                     value={}
                     date_data1=datedata2=date_data3=None
@@ -231,10 +227,10 @@ class employee(osv.osv):
                         company_names=company_obj.search(cr,uid,[('name','=',company_name)])
                         com_value = {
                                      'name':company_name,
-                                     'parent_id':company_id                                                                       
-                                 
+                                     #'parent_id':company_id                                                                       
+                                  
                           }
-                        
+                         
                         if not company_names:
                             company_name_id = company_obj.create(cr,uid,com_value, context)
                         else:
@@ -320,14 +316,14 @@ class employee(osv.osv):
                             data_time = float(birthday)
                             result= xlrd.xldate.xldate_as_tuple(data_time,0)
                             a= str(result[1])+'/'+str(result[2])+'/'+str(result[0])+' '+str(result[3])+':'+str(result[4])+':'+str(result[5])
-                    
-                            date_data1 = datetime.strptime(a, '%m/%d/%Y %H:%M:%S')
+                     
+                            date_data1 = datetime.strptime(a, '%m/%d/%Y %H:%M:%S').date()
                         except Exception, e:
                             try:
                                 date_data1=datetime.today()
                             except Exception, e:
                                 raise orm.except_orm(_('Error :'), _("Error while processing Excel Columns. \n\nPlease check your Birthday!"))
-
+                    join_date = None 
                     if joining_date:
                         try:
                             data_time = float(joining_date)
@@ -355,8 +351,10 @@ class employee(osv.osv):
                                 raise orm.except_orm(_('Error :'), _("Error while processing Excel Columns. \n\nPlease check your permanent date!"))
                     value={'name':aml['name'],
                               'birthday_month':aml['birthday_month']}
-                    if date_data1:                       
-                        value['birthday']=date_data1
+                    if birthday:                  
+                        value['birthday']=str(date_data1)
+                    else:
+                        value['birthday']=None
 
                     if company_name:value['company_id'] = company_name_id
                     if job_name_id:value['job_id'] = job_name_id
@@ -379,6 +377,7 @@ class employee(osv.osv):
                     value['father_name']=aml['father_name']
                     value['blood_group']=aml['blood_group']
                     value['labour_card']=aml['labour_card']
+                    value['initial_employment_date']=datetime.today()
                     if len(fingerprint_id)>0:
                         value['fingerprint_id']=fingerprint_id
                    
@@ -387,7 +386,6 @@ class employee(osv.osv):
                                                                      
                                                                           ]) 
                         if not employee_ids:
-                            print 'value>>>',value  
                             emp_id = hr_employee_obj.create(cr,uid,value ,context=context)
                             count+=1
                         else:    
@@ -415,13 +413,19 @@ class employee(osv.osv):
                             struct_id = self.pool.get('hr.payroll.structure').create(cr,uid,{'name':'Base for new structures','code':'BASE','company_id':company_name_id},context)
                         else:
                             struct_id=struct_ids[0]
+                        schedule_ids =self.pool.get('resource.calendar').search(cr,uid,[('name','=','Working Schedule')])
+                        if not schedule_ids:
+                            schedule_id = self.pool.get('resource.calendar').create(cr,uid,{'name':'Working Schedule','company_id':company_name_id},context)
+                        else:
+                            schedule_id=schedule_ids[0]
                         contract_value={'name':emp_name,
                                         'employee_id':emp_id,
                                         'type_id':type_id,
                                         'job_id':job_name_id,
                                         'struct_id':struct_id,
-                                        'wage':aml['contract_wage']
-                                       
+                                        'working_hours':schedule_id,
+                                        'wage':aml['contract_wage'],
+                                        'effective_date':datetime.today()
                                         } 
                         if join_date:
                             contract_value['joining_date']=join_date

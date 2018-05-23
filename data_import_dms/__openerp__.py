@@ -42,7 +42,7 @@ for following data
               'views/data_import_view.xml',
               'views/sale_plans_import_view.xml',
               'views/stock_move_import_view.xml',
-              'views/hr_employee_import_view.xml',
+              #'views/hr_employee_import_view.xml',
               'views/price_list_view.xml',
               'wizard/pricelist_import_view.xml'
     ],
