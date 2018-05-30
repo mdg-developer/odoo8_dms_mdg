@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
     <property name="units">in</property>
     <method name="initialize"><![CDATA[branchList = params["branch_id"].value.join(",");
 teamList = params["sales_team_id"].value.join(",");]]></method>
@@ -412,81 +412,86 @@ from res_company
                     </structure>
                     <structure>
                         <property name="position">21</property>
-                        <property name="name">receivable_account</property>
+                        <property name="name">comment</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">22</property>
+                        <property name="name">receivable_account</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">23</property>
                         <property name="name">stocking_qty</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">23</property>
+                        <property name="position">24</property>
                         <property name="name">stocking_unit_price</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">24</property>
+                        <property name="position">25</property>
                         <property name="name">sub_total</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">25</property>
+                        <property name="position">26</property>
                         <property name="name">partner_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">26</property>
+                        <property name="position">27</property>
                         <property name="name">ship_to_name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">27</property>
+                        <property name="position">28</property>
                         <property name="name">ship_address</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">28</property>
+                        <property name="position">29</property>
                         <property name="name">ship_via</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">29</property>
+                        <property name="position">30</property>
                         <property name="name">gl_account</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">30</property>
+                        <property name="position">31</property>
                         <property name="name">tax_type</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">31</property>
+                        <property name="position">32</property>
                         <property name="name">product_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">32</property>
+                        <property name="position">33</property>
                         <property name="name">id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">33</property>
+                        <property name="position">34</property>
                         <property name="name">saleman_name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">34</property>
+                        <property name="position">35</property>
                         <property name="name">no_of_distribution</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">35</property>
+                        <property name="position">36</property>
                         <property name="name">amount</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">36</property>
+                        <property name="position">37</property>
                         <property name="name">so_propo_dis</property>
                         <property name="dataType">integer</property>
                     </structure>
@@ -637,96 +642,102 @@ else
                 </structure>
                 <structure>
                     <property name="position">21</property>
+                    <property name="name">comment</property>
+                    <property name="nativeName">comment</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">22</property>
                     <property name="name">receivable_account</property>
                     <property name="nativeName">receivable_account</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">22</property>
+                    <property name="position">23</property>
                     <property name="name">stocking_qty</property>
                     <property name="nativeName">stocking_qty</property>
                     <property name="dataType">integer</property>
                 </structure>
                 <structure>
-                    <property name="position">23</property>
+                    <property name="position">24</property>
                     <property name="name">stocking_unit_price</property>
                     <property name="nativeName">stocking_unit_price</property>
                     <property name="dataType">decimal</property>
                 </structure>
                 <structure>
-                    <property name="position">24</property>
+                    <property name="position">25</property>
                     <property name="name">sub_total</property>
                     <property name="nativeName">sub_total</property>
                     <property name="dataType">decimal</property>
                 </structure>
                 <structure>
-                    <property name="position">25</property>
+                    <property name="position">26</property>
                     <property name="name">partner_id</property>
                     <property name="nativeName">partner_id</property>
                     <property name="dataType">integer</property>
                 </structure>
                 <structure>
-                    <property name="position">26</property>
+                    <property name="position">27</property>
                     <property name="name">ship_to_name</property>
                     <property name="nativeName">ship_to_name</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">27</property>
+                    <property name="position">28</property>
                     <property name="name">ship_address</property>
                     <property name="nativeName">ship_address</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">28</property>
+                    <property name="position">29</property>
                     <property name="name">ship_via</property>
                     <property name="nativeName">ship_via</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">29</property>
+                    <property name="position">30</property>
                     <property name="name">gl_account</property>
                     <property name="nativeName">gl_account</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">30</property>
+                    <property name="position">31</property>
                     <property name="name">tax_type</property>
                     <property name="nativeName">tax_type</property>
                     <property name="dataType">integer</property>
                 </structure>
                 <structure>
-                    <property name="position">31</property>
+                    <property name="position">32</property>
                     <property name="name">product_id</property>
                     <property name="nativeName">product_id</property>
                     <property name="dataType">integer</property>
                 </structure>
                 <structure>
-                    <property name="position">32</property>
+                    <property name="position">33</property>
                     <property name="name">id</property>
                     <property name="nativeName">id</property>
                     <property name="dataType">integer</property>
                 </structure>
                 <structure>
-                    <property name="position">33</property>
+                    <property name="position">34</property>
                     <property name="name">saleman_name</property>
                     <property name="nativeName">saleman_name</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">34</property>
+                    <property name="position">35</property>
                     <property name="name">no_of_distribution</property>
                     <property name="nativeName">no_of_distribution</property>
                     <property name="dataType">decimal</property>
                 </structure>
                 <structure>
-                    <property name="position">35</property>
+                    <property name="position">36</property>
                     <property name="name">amount</property>
                     <property name="nativeName">amount</property>
                     <property name="dataType">float</property>
                 </structure>
                 <structure>
-                    <property name="position">36</property>
+                    <property name="position">37</property>
                     <property name="name">so_propo_dis</property>
                     <property name="nativeName">so_propo_dis</property>
                     <property name="dataType">integer</property>
@@ -738,7 +749,7 @@ from (select ms.section_id as section_id,ms.payment_type ,ms.branch_id as branch
 get_smaller_qty(msl.uos_id,msl.quantity,msl.product_id) product_uos_qty,
 crm.code as team_code,Cast((select case when substr(name,0,2) ~ '^([0-9]+\.?[0-9]*|\.[0-9]+)$' then substr(name,4) else name end as name from crm_case_section where id=crm.id) || '-' || pp.name_template as character varying) as product_name,term.name as payment_term,pt.list_price as price_unit,
 uom.name as uom,pt.description_sale description,rp.comment as internal_note,
-ms.number as invoice,
+ms.number as invoice,ms.comment,
 (select aa.code receivable_account from product_product pp left join product_template pt on (pp.product_tmpl_id=pt.id) left join product_maingroup pg on (pt.main_group=pg.id) left join account_account aa 
 on (aa.id=pg.property_account_receivable) where pp.id=product_id),get_smaller_qty(msl.uos_id,msl.quantity,msl.product_id) stocking_qty
 ,CASE WHEN msl.price_unit=0 THEN 0
@@ -778,7 +789,7 @@ where A.date::date between  ? and  ?
 --$sales_team$
 --$branch_id$
 --$payment_type$
-group by customer_code,payment_type,section_id,branch_id,sub_total,ms_id,msl_id,a.name,a.team_code,a.date,due_date,discount,discount_amt,product_uos_qty,product_name,payment_term,price_unit,uom,description,internal_note,invoice,receivable_account,stocking_qty,stocking_unit_price,partner_id,ship_to_name,ship_address,ship_via,gl_account,tax_type,product_id,id,saleman_name
+group by customer_code,payment_type,section_id,branch_id,sub_total,ms_id,msl_id,a.name,a.team_code,a.date,due_date,discount,discount_amt,product_uos_qty,product_name,payment_term,price_unit,uom,description,internal_note,invoice,comment,receivable_account,stocking_qty,stocking_unit_price,partner_id,ship_to_name,ship_address,ship_via,gl_account,tax_type,product_id,id,saleman_name
 order by A.name,A.msl_id,A.date]]></xml-property>
         </oda-data-set>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="branch" id="3168"
@@ -1309,6 +1320,12 @@ where ccs.id=rel.section_id
                     <expression name="expression" type="javascript">dataSetRow["team_code"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">comment</property>
+                    <text-property name="displayName">comment</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["comment"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
             </list-property>
             <column id="2659">
                 <property name="width">2.2416666666666667in</property>
@@ -1379,6 +1396,9 @@ where ccs.id=rel.section_id
                 <property name="width">1.667in</property>
             </column>
             <column id="3068">
+                <property name="width">1.667in</property>
+            </column>
+            <column id="3187">
                 <property name="width">1.667in</property>
             </column>
             <column id="3072">
@@ -1795,6 +1815,19 @@ where ccs.id=rel.section_id
                         <property name="borderTopWidth">thin</property>
                         <label id="3069">
                             <text-property name="text">Date Due</text-property>
+                        </label>
+                    </cell>
+                    <cell id="3185">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="3188">
+                            <text-property name="text">Additional Information</text-property>
                         </label>
                     </cell>
                     <cell id="3070">
@@ -2601,6 +2634,19 @@ where ccs.id=rel.section_id
                                 <property name="pattern">MM/dd/yyyy</property>
                             </structure>
                             <property name="resultSetColumn">due_date</property>
+                        </data>
+                    </cell>
+                    <cell id="3186">
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="3189">
+                            <property name="resultSetColumn">comment</property>
                         </data>
                     </cell>
                     <cell id="3071">

@@ -2160,7 +2160,7 @@ ORDER BY av.date_invoice,cc.name,rp.name ,pp.sequence
                         <property name="borderTopWidth">thin</property>
                         <label id="1194">
                             <property name="fontWeight">bold</property>
-                            <text-property name="text">Comment</text-property>
+                            <text-property name="text">Additional Information</text-property>
                         </label>
                     </cell>
                 </row>
