@@ -522,6 +522,7 @@ class account_invoice(models.Model):
         cr = self._cr
         type = 'out_invoice' 
         discount_amt=0
+        tax_amt=0
         print 'line_get_convert_newline_get_convert_new', line, part, self.id
         origin = line.get('ref', False)
         for inv in self:

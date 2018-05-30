@@ -15,13 +15,51 @@ from openerp.tools.float_utils import float_compare
 class purchase_order(osv.osv):
     _inherit = 'purchase.order'
     _columns = {
-          'incoterm_id': fields.many2one('stock.incoterms', 'Incoterm', help="International Commercial Terms are a series of predefined commercial terms used in international transactions.",required=True),
-          'payment_term_id': fields.many2one('account.payment.term', 'Payment Term',required=True),
-        }
+          'incoterm_id': fields.many2one('stock.incoterms', 'Incoterm', help="International Commercial Terms are a series of predefined commercial terms used in international transactions.", required=True),
+          'payment_term_id': fields.many2one('account.payment.term', 'Payment Term', required=True),
+          'is_agreed': fields.boolean('Agreed Price', states={'confirmed':[('readonly', True)],
+                                                                 'approved':[('readonly', True)],
+                                                                 'done':[('readonly', True)]},),
+            'is_margin': fields.boolean('Margin', states={'confirmed':[('readonly', True)],
+                                                                 'approved':[('readonly', True)],
+                                                                 'done':[('readonly', True)]},),
+      
 
+ }
+    _defaults = {
+        'is_agreed': False,
+        'is_margin':False,
+        }
+    
 class purchase_order_line(osv.osv): 
     _inherit = 'purchase.order.line'
-     
+    
+    def _amount_margin(self, cr, uid, ids, prop, arg, context=None):
+        res = {}
+        cur_obj = self.pool.get('res.currency')
+        # tax_obj = self.pool.get('account.tax')
+        for line in self.browse(cr, uid, ids, context=context):
+            product_uom = line.product_uom.id
+            product_id = line.product_id.id
+            product_qty = line.product_qty
+            print 'product_id', product_id, product_uom
+            cr.execute("select   COALESCE(sum(price),0) from product_uom_price where product_id = %s and name = %s", (product_id, product_uom,))
+            sale_price = cr.fetchone()[0]
+            print 'sale_price', sale_price
+            total = sale_price * product_qty
+            cur = line.order_id.pricelist_id.currency_id
+            total_price = cur_obj.round(cr, uid, cur, total)
+            purchase_price = line.product_qty * line.price_unit
+            res[line.id] = total_price - purchase_price
+        return res    
+    
+    _columns = {
+                'is_agreed': fields.related('order_id', 'is_agreed', type='boolean', string='Agreed', store=True, readonly=True),
+                'is_margin': fields.related('order_id', 'is_margin', type='boolean', string='Margin', store=True, readonly=True),
+                'agreed_price': fields.float('Agreed Price', required=True, digits_compute=dp.get_precision('Product Price')),
+                'gross_margin': fields.function(_amount_margin, string='Gross Margin', digits_compute=dp.get_precision('Account'), store=True),
+                }     
+    
     def onchange_product_id(self, cr, uid, ids, pricelist_id, product_id, qty, uom_id,
             partner_id, date_order=False, fiscal_position_id=False, date_planned=False,
             name=False, price_unit=False, state='draft', context=None):
@@ -43,25 +81,25 @@ class purchase_order_line(osv.osv):
         account_tax = self.pool.get('account.tax')
 
         # - check for the presence of partner_id and pricelist_id
-        #if not partner_id:
+        # if not partner_id:
         #    raise osv.except_osv(_('No Partner!'), _('Select a partner in purchase order to choose a product.'))
-        #if not pricelist_id:
+        # if not pricelist_id:
         #    raise osv.except_osv(_('No Pricelist !'), _('Select a price list in the purchase order form before choosing a product.'))
 
         # - determine name and notes based on product in partner lang.
         context_partner = context.copy()
         if partner_id:
             lang = res_partner.browse(cr, uid, partner_id).lang
-            context_partner.update( {'lang': lang, 'partner_id': partner_id} )
+            context_partner.update({'lang': lang, 'partner_id': partner_id})
         product = product_product.browse(cr, uid, product_id, context=context_partner)
-        #call name_get() with partner in the context to eventually match name and description in the seller_ids field
+        # call name_get() with partner in the context to eventually match name and description in the seller_ids field
         dummy, name = product_product.name_get(cr, uid, product_id, context=context_partner)[0]
         if product.description_purchase:
             name += '\n' + product.description_purchase
         res['value'].update({'name': name})
 
         # - set a domain on product_uom
-        res['domain'] = {'product_uom': [('category_id','=',product.uom_id.category_id.id)]}
+        res['domain'] = {'product_uom': [('category_id', '=', product.uom_id.category_id.id)]}
 
         # - check that uom and product uom belong to the same category
         product_uom_po_id = product.uom_po_id.id
@@ -88,7 +126,7 @@ class purchase_order_line(osv.osv):
                 if supplierinfo.product_uom.id != uom_id:
                     res['warning'] = {'title': _('Warning!'), 'message': _('The selected supplier only sells this product by %s') % supplierinfo.product_uom.name }
                 min_qty = product_uom._compute_qty(cr, uid, supplierinfo.product_uom.id, supplierinfo.min_qty, to_uom_id=uom_id)
-                if float_compare(min_qty , qty, precision_digits=precision) == 1: # If the supplier quantity is greater than entered from user, set minimal.
+                if float_compare(min_qty , qty, precision_digits=precision) == 1:  # If the supplier quantity is greater than entered from user, set minimal.
                     if qty:
                         res['warning'] = {'title': _('Warning!'), 'message': _('The selected supplier has a minimal quantity set to %s %s, you should not purchase less.') % (supplierinfo.min_qty, supplierinfo.product_uom.name)}
                     qty = min_qty
@@ -111,7 +149,7 @@ class purchase_order_line(osv.osv):
         taxes = account_tax.browse(cr, uid, map(lambda x: x.id, product.supplier_taxes_id))
         fpos = fiscal_position_id and account_fiscal_position.browse(cr, uid, fiscal_position_id, context=context) or False
         taxes_ids = account_fiscal_position.map_tax(cr, uid, fpos, taxes)
-        res['value'].update({'price_unit': price, 'taxes_id': taxes_ids, 'price_subtotal':price * qty})
+        res['value'].update({'price_unit': price, 'agreed_price': price, 'taxes_id': taxes_ids, 'price_subtotal':price * qty})
 
         return res
     

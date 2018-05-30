@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+		<!-- Purchase Form View -->
+		<record id="view_purchase_form_inherit_ext" model="ir.ui.view">
+			<field name="name">view.purchase.form.inherit.ext</field>
+			<field name="model">purchase.order</field>
+			<field name="inherit_id" ref="purchase.purchase_order_form" />
+			<field name="arch" type="xml">
+
+				<xpath expr="//field[@name='incoterm_id']" position="replace">
+				</xpath>
+
+				<xpath expr="//field[@name='picking_type_id']" position="after">
+					<field name="incoterm_id" />
+					<field name="is_agreed" />
+					<field name="is_margin" />
+				</xpath>
+				<xpath expr="//field[@name='price_subtotal']" position="after">
+					<field name="is_agreed" invisible="1" />
+					<field name="is_margin" invisible="1" />
+					<field name="agreed_price" attrs="{'invisible': [('is_agreed','!=',True)]}" />
+					<field name="gross_margin" attrs="{'invisible': [('is_margin','!=',True)]}" />
+				</xpath>
+
+			</field>
+		</record>
+
+
+
+
+	</data>
+</openerp>
