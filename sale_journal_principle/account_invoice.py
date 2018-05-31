@@ -472,7 +472,7 @@ class account_invoice(models.Model):
                     'product_uom_id': line.get('uos_id', False),
                     'analytic_account_id': line.get('account_analytic_id', False),
                     'main_group': account_id,
-                                        'is_discount': line.get('is_discount', False),
+                    'is_discount': line.get('is_discount', False),
 
                 }
                 return res    
@@ -491,7 +491,16 @@ class account_invoice(models.Model):
                     account_id = property_account_payable
                     if account_id is None:
                         raise except_orm(_('Warning!'), _('Please define payable control account.'))
-
+                    
+                if line['ref'][:2]=='PO':
+                    cr.execute("select avl.id from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s and avl.foc!=true", (origin, product.id,))
+                    invoice_line_id = cr.fetchone()
+                    if invoice_line_id:
+                        invoice_line_data = self.env['account.invoice.line'].browse(invoice_line_id)                    
+                    gross_margin =invoice_line_data.gross_margin
+                    different_id=invoice_line_data.product_id.product_tmpl_id.main_group.property_account_difference.id
+                    if different_id!=line['account_id']:
+                        line['price'] = line['price'] +gross_margin
                 res = {
                     'date_maturity': line.get('date_maturity', False),
                     'partner_id': part,
@@ -512,7 +521,7 @@ class account_invoice(models.Model):
                     'product_uom_id': line.get('uos_id', False),
                     'analytic_account_id': line.get('account_analytic_id', False),
                     'main_group': account_id,
-                                        'is_discount': line.get('is_discount', False),
+                     'is_discount': line.get('is_discount', False),
 
                 }
                 return res    
@@ -640,6 +649,12 @@ class account_invoice(models.Model):
                 print 'account_id>>>', account_id        
                 print 'line>>>', line
                 print 'line[price]', line['price']
+                
+                if line['ref'][:2]=='PO':
+                    gross_margin =invoice_line_data.gross_margin
+                    different_id=invoice_line_data.product_tmpl_id.main_group.property_account_difference.id
+                    if different_id!=line['account_id']:
+                        line['price'] = line['price'] + gross_margin
                 if line['price'] < 0:
                     line['price'] = -line['price']
                 print 'after>>>', line['price']
@@ -765,7 +780,13 @@ class account_invoice(models.Model):
                             if tax_value > 0:
                                 tax_amt = tax_value                    
                     if line['ref'][:2]=='PO':
-                        line['price'] = line['price'] - discount_amt + tax_amt
+                        gross_margin =invoice_line_data.gross_margin
+                        different_id=invoice_line_data.product_id.product_tmpl_id.main_group.property_account_difference.id
+                        if different_id!=line['account_id']:
+                            line['price'] = line['price'] - discount_amt + tax_amt - gross_margin
+                        else:
+                            line['price'] =0
+
                     if line['ref'][:2]=='SO':
                         line['price'] = line['price'] - discount_amt + total_tax_amt                        
                     cr.execute("UPDATE account_invoice_line SET line_paid =True FROM account_invoice  WHERE account_invoice_line.invoice_id = account_invoice.id AND account_invoice.origin = %s and   account_invoice_line.product_id=%s ", (origin, product.id,))

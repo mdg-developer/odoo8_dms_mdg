@@ -14,19 +14,29 @@
 
 				<xpath expr="//field[@name='picking_type_id']" position="after">
 					<field name="incoterm_id" />
-					<field name="is_agreed" />
-					<field name="is_margin" />
+					<!-- <field name="is_agreed" /> -->
+					<!-- <field name="is_margin" /> -->
 				</xpath>
 				<xpath expr="//field[@name='price_subtotal']" position="after">
-					<field name="is_agreed" invisible="1" />
-					<field name="is_margin" invisible="1" />
-					<field name="agreed_price" attrs="{'invisible': [('is_agreed','!=',True)]}" />
-					<field name="gross_margin" attrs="{'invisible': [('is_margin','!=',True)]}" />
+					<!-- <field name="is_agreed" invisible="1" /> -->
+					<!-- <field name="is_margin" invisible="1" /> -->
+					<field name="agreed_price" />
+					<field name="gross_margin" />
 				</xpath>
 
 			</field>
 		</record>
-
+		<record id="inherit_account_invoice_supplier_agreed" model="ir.ui.view">
+			<field name="name">account.invoice.form</field>
+			<field name="model">account.invoice</field>
+			<field name="inherit_id" ref="account.invoice_supplier_form" />
+			<field name="arch" type="xml">
+				<field name="price_subtotal" position="after">
+					<field name="agreed_price" />
+					<field name="gross_margin" />
+				</field>
+			</field>
+		</record>
 
 
 

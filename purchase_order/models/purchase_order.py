@@ -14,48 +14,63 @@ from openerp.tools.float_utils import float_compare
   
 class purchase_order(osv.osv):
     _inherit = 'purchase.order'
+
+
+    def _prepare_inv_line(self, cr, uid, account_id, order_line, context=None):
+        """Collects require data from purchase order line that is used to create invoice line
+        for that purchase order line
+        :param account_id: Expense account of the product of PO line if any.
+        :param browse_record order_line: Purchase order line browse record
+        :return: Value for fields of invoice lines.
+        :rtype: dict
+        """
+        return {
+            'name': order_line.name,
+            'account_id': account_id,
+            'price_unit': order_line.price_unit or 0.0,
+            'quantity': order_line.product_qty,
+            'product_id': order_line.product_id.id or False,
+            'uos_id': order_line.product_uom.id or False,
+            'invoice_line_tax_id': [(6, 0, [x.id for x in order_line.taxes_id])],
+            'account_analytic_id': order_line.account_analytic_id.id or False,
+            'purchase_line_id': order_line.id,
+            'agreed_price':order_line.agreed_price,
+            'gross_margin':order_line.gross_margin,
+        }
+    
     _columns = {
           'incoterm_id': fields.many2one('stock.incoterms', 'Incoterm', help="International Commercial Terms are a series of predefined commercial terms used in international transactions.", required=True),
           'payment_term_id': fields.many2one('account.payment.term', 'Payment Term', required=True),
-          'is_agreed': fields.boolean('Agreed Price', states={'confirmed':[('readonly', True)],
-                                                                 'approved':[('readonly', True)],
-                                                                 'done':[('readonly', True)]},),
-            'is_margin': fields.boolean('Margin', states={'confirmed':[('readonly', True)],
-                                                                 'approved':[('readonly', True)],
-                                                                 'done':[('readonly', True)]},),
+#           'is_agreed': fields.boolean('Agreed Price', states={'confirmed':[('readonly', True)],
+#                                                                  'approved':[('readonly', True)],
+#                                                                  'done':[('readonly', True)]},),
+#             'is_margin': fields.boolean('Margin', states={'confirmed':[('readonly', True)],
+#                                                                  'approved':[('readonly', True)],
+#                                                                  'done':[('readonly', True)]},),
       
 
  }
-    _defaults = {
-        'is_agreed': False,
-        'is_margin':False,
-        }
-    
+#     _defaults = {
+#         'is_agreed': False,
+#         'is_margin':False,
+#         }
+#     
 class purchase_order_line(osv.osv): 
     _inherit = 'purchase.order.line'
     
     def _amount_margin(self, cr, uid, ids, prop, arg, context=None):
         res = {}
-        cur_obj = self.pool.get('res.currency')
-        # tax_obj = self.pool.get('account.tax')
         for line in self.browse(cr, uid, ids, context=context):
-            product_uom = line.product_uom.id
-            product_id = line.product_id.id
             product_qty = line.product_qty
-            print 'product_id', product_id, product_uom
-            cr.execute("select   COALESCE(sum(price),0) from product_uom_price where product_id = %s and name = %s", (product_id, product_uom,))
-            sale_price = cr.fetchone()[0]
-            print 'sale_price', sale_price
-            total = sale_price * product_qty
-            cur = line.order_id.pricelist_id.currency_id
-            total_price = cur_obj.round(cr, uid, cur, total)
-            purchase_price = line.product_qty * line.price_unit
-            res[line.id] = total_price - purchase_price
+            price_unit = line.price_unit
+            sale_price = price_unit * product_qty
+            agreed_price = product_qty * line.agreed_price
+            res[line.id] = agreed_price -sale_price
         return res    
     
     _columns = {
-                'is_agreed': fields.related('order_id', 'is_agreed', type='boolean', string='Agreed', store=True, readonly=True),
-                'is_margin': fields.related('order_id', 'is_margin', type='boolean', string='Margin', store=True, readonly=True),
+#                 'is_agreed': fields.related('order_id', 'is_agreed', type='boolean', string='Agreed', store=True, readonly=True),
+#                 'is_margin': fields.related('order_id', 'is_margin', type='boolean', string='Margin', store=True, readonly=True),
                 'agreed_price': fields.float('Agreed Price', required=True, digits_compute=dp.get_precision('Product Price')),
                 'gross_margin': fields.function(_amount_margin, string='Gross Margin', digits_compute=dp.get_precision('Account'), store=True),
                 }     
@@ -152,4 +167,9 @@ class purchase_order_line(osv.osv):
         res['value'].update({'price_unit': price, 'agreed_price': price, 'taxes_id': taxes_ids, 'price_subtotal':price * qty})
 
         return res
-    
+class account_invoice_line(osv.osv): 
+    _inherit = 'account.invoice.line'    
+    _columns = {
+                'agreed_price': fields.float('Agreed Price', required=True, digits_compute=dp.get_precision('Product Price')),
+                'gross_margin': fields.float('Gross Margin', required=True, digits_compute=dp.get_precision('Product Price')),
+                }   

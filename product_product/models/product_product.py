@@ -6,7 +6,7 @@ class product_product(osv.osv):
     _inherit = "product.product"
     _columns = {
         'sequence': fields.integer('Sequence', size=3, default=0),
-          'default_code' : fields.char('Internal Reference', select=True),
+        'default_code' : fields.char('Internal Reference', select=True),
 
         }    
     _sql_constraints = [('default_code_uniq', 'unique(default_code)',

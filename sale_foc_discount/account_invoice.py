@@ -29,7 +29,7 @@ from openerp.tools import float_compare
 import openerp.addons.decimal_precision as dp
 
 class account(osv.osv):
-    _inherit='account.invoice.line'
+    _inherit = 'account.invoice.line'
 # # customize_model       
     def _net_total(self, cr, uid, ids, field_name, arg, context=None):
         tax_obj = self.pool.get('account.tax')
@@ -45,19 +45,19 @@ class account(osv.osv):
             cur = line.invoice_id.currency_id
             res[line.id] = cur_obj.round(cr, uid, cur, amount)
         return res    
-    _columns={
+    _columns = {
                'net_total': fields.function(_net_total, string='Subtotal', type='float'),
               'discount_amt':fields.float('Dis(amt)'),
               'discount':fields.float('Dis(%)'),
              'foc':fields.boolean('FOC')
               } 
 class account_invoice_line(models.Model):
-    _inherit='account.invoice.line'
+    _inherit = 'account.invoice.line'
     
-    def onchange_discount_percent(self, cr, uid, ids, discount,quantity, price_unit,context=None):
+    def onchange_discount_percent(self, cr, uid, ids, discount, quantity, price_unit, context=None):
         val = {'discount_amt': 0.0}
         if price_unit:
-            discount_amt =float(discount) *(float(price_unit*quantity)) / 100
+            discount_amt = float(discount) * (float(price_unit * quantity)) / 100
             val['discount_amt'] = discount_amt
         return {'value': val}         
     
@@ -81,15 +81,15 @@ class account_invoice_line(models.Model):
         return {'value': result, 'domain': domain}  
 # ## customize_model
     @api.one
-    @api.depends('price_unit', 'discount','discount_amt', 'invoice_line_tax_id', 'quantity',
+    @api.depends('price_unit', 'discount', 'discount_amt', 'invoice_line_tax_id', 'quantity',
         'product_id', 'invoice_id.partner_id', 'invoice_id.currency_id')
     def _compute_price(self):
-        price=show=0.0
-        if self.discount_amt>0:
-            show=self.discount_amt
+        price = show = 0.0
+        if self.discount_amt > 0:
+            show = self.discount_amt
             price = self.price_unit
             taxes = self.invoice_line_tax_id.compute_all(price, self.quantity, product=self.product_id, partner=self.invoice_id.partner_id)
-            self.price_subtotal = taxes['total']-self.discount_amt
+            self.price_subtotal = taxes['total'] - self.discount_amt
 #         if self.discount>0:
 #             show=(self.price_unit) *(self.discount / 100.0)
 #             price=self.price_unit * (1 - (self.discount or 0.0) / 100.0)
@@ -101,8 +101,8 @@ class account_invoice_line(models.Model):
 #             price = (self.price_unit * (1 - (self.discount or 0.0) / 100.0))
 #             taxes = self.invoice_line_tax_id.compute_all(price, self.quantity, product=self.product_id, partner=self.invoice_id.partner_id)
 #             self.price_subtotal = taxes['total']-self.discount_amt
-        if self.discount<=0 and self.discount_amt<=0:
-            show=0.0
+        if self.discount <= 0 and self.discount_amt <= 0:
+            show = 0.0
             price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
             taxes = self.invoice_line_tax_id.compute_all(price, self.quantity, product=self.product_id, partner=self.invoice_id.partner_id)
             self.price_subtotal = taxes['total']
@@ -147,7 +147,7 @@ class account_invoice_line(models.Model):
             'name': line.name.split('\n')[0][:64],
             'price_unit': line.price_unit,
             'quantity': line.quantity,
-            'price': line.price_subtotal+line.discount_amt,
+            'price': line.price_subtotal + line.discount_amt,
             'account_id': line.account_id.id,
             'product_id': line.product_id.id,
             'uos_id': line.uos_id.id,
@@ -157,29 +157,29 @@ class account_invoice_line(models.Model):
         }   
 
     @api.model
-    def move_line_get(self,invoice_id):
+    def move_line_get(self, invoice_id):
         inv = self.env['account.invoice'].browse(invoice_id)
         currency = inv.currency_id.with_context(date=inv.date_invoice)
         company_currency = inv.company_id.currency_id
-        discount_account_id=discount_cash_account_id=None
+        discount_account_id = discount_cash_account_id = None
         
-        dis_per=dis_amt=deduct_amt=total=additional_discount=0.0
-        discount_cash_account_id=inv.company_id.discount_cash_account_id.id
-        discount_account_id=inv.company_id.discount_account_id.id
-        if discount_cash_account_id and discount_account_id==None:
+        dis_per = dis_amt = deduct_amt = total = additional_discount = 0.0
+        discount_cash_account_id = inv.company_id.discount_cash_account_id.id
+        discount_account_id = inv.company_id.discount_account_id.id
+        if discount_cash_account_id and discount_account_id == None:
             raise orm.except_orm(_('Error :'), _("Please select the Discount code and Cash Discount Code in Sale setting!"))
         res = []
-        deduct_amt=inv.deduct_amt
-        additional_discount=(inv.amount_untaxed * (inv.additional_discount/100))
-        discount_total=inv.discount_total
-        ref=inv.origin
+        deduct_amt = inv.deduct_amt
+        additional_discount = (inv.amount_untaxed * (inv.additional_discount / 100))
+        discount_total = inv.discount_total
+        ref = inv.origin
         for line in inv.invoice_line:
             
             mres = self.move_line_get_item(line)
-            mres['ref']=ref
-            mres['is_discount']=False
+            mres['ref'] = ref
+            mres['is_discount'] = False
             product = self.env['product.product'].browse(mres.get('product_id', False))
-            print 'mres',mres,ref,product.default_code
+            print 'mres', mres, ref, product.default_code
             if not mres:
                 continue
             res.append(mres)
@@ -207,8 +207,8 @@ class account_invoice_line(models.Model):
 
                 res[-1]['tax_code_id'] = tax_code_id
                 res[-1]['tax_amount'] = currency.compute(tax_amount, company_currency)
-            if line.net_total <0:
-                val1={'type': 'src',
+            if line.net_total < 0:
+                val1 = {'type': 'src',
                         'name': line.product_id.name_template,
                         'price_unit':line.net_total,
                         'quantity': 1,
@@ -222,13 +222,13 @@ class account_invoice_line(models.Model):
                         'taxes': False,
                         }
                 res.append(val1)                
-            total=line.discount_amt
+            total = line.discount_amt
 
-            val1={'type': 'src',
+            val1 = {'type': 'src',
                     'name': line.product_id.name_template,
                     'price_unit': total,
                     'quantity': 1,
-                    'price':-1* total,
+                    'price':-1 * total,
                     'account_id': discount_account_id,
                     'product_id':  line.product_id.id,
                     'is_discount':True,
@@ -237,14 +237,14 @@ class account_invoice_line(models.Model):
                     'account_analytic_id': inv.invoice_line[0].account_analytic_id.id,
                     'taxes': False,
                     }
-            if total>0:
+            if total > 0:
                 res.append(val1)
-        if deduct_amt+additional_discount>0:
-                val2={'type': 'src',
+        if deduct_amt + additional_discount > 0:
+                val2 = {'type': 'src',
                             'name': 'Cash Discount',
-                            'price_unit': deduct_amt+additional_discount,
+                            'price_unit': deduct_amt + additional_discount,
                             'quantity': 1,
-                            'price':-1*(deduct_amt+additional_discount),
+                            'price':-1 * (deduct_amt + additional_discount),
                             'account_id': discount_cash_account_id,
                             'product_id': False,
                             'ref':ref,
@@ -254,7 +254,42 @@ class account_invoice_line(models.Model):
                             'taxes': False,
                             }
                 res.append(val2)
-
+        if inv.type in ('in_invoice', 'in_refund'):
+            for i_line in inv.invoice_line:
+                gross_margin=i_line.gross_margin
+                different_id=line.product_id.product_tmpl_id.main_group.property_account_difference.id
+                if gross_margin < 0:
+                    margin = {'type': 'src',
+                        'name': line.product_id.name_template,
+                        'price_unit':gross_margin,
+                        'quantity': 1,
+                        'price':-1 *gross_margin,
+                        'account_id': different_id,
+                        'product_id':  line.product_id.id,
+                        'is_discount':False,
+                        'ref':'Difference',
+                         'foc':False,
+                        'account_analytic_id': inv.invoice_line[0].account_analytic_id.id,
+                        'taxes': False,
+                        }
+                if gross_margin > 0:
+                    margin = {'type': 'src',
+                        'name': line.product_id.name_template,
+                        'price_unit': -1 *gross_margin,
+                        'quantity': 1,
+                        'price': -1 * gross_margin,
+                        'account_id': different_id,
+                        'product_id':  line.product_id.id,
+                        'is_discount':False,
+                        'ref':'Difference',
+                         'foc':False,
+                        'account_analytic_id': inv.invoice_line[0].account_analytic_id.id,
+                        'taxes': False,
+                        }
+                res.append(margin)                         
+                res.append(margin)     
+                
+                print 'True'
         return res
 
 # class account_account_invoice(osv.osv):
@@ -264,24 +299,24 @@ class account_invoice_line(models.Model):
 #               'discount_total':fields.float('Discount Total',readonly=True)}
 #     
 class account_invoice(models.Model):
-    _inherit='account.invoice'
-    @api.depends('invoice_line.price_subtotal', 'invoice_line.discount_amt','tax_line.amount','deduct_amt','additional_discount')
+    _inherit = 'account.invoice'
+    @api.depends('invoice_line.price_subtotal', 'invoice_line.discount_amt', 'tax_line.amount', 'deduct_amt', 'additional_discount')
 
     def _compute_amount(self):
         self.amount_untaxed = sum(line.price_subtotal for line in self.invoice_line)
         self.amount_tax = sum(line.amount for line in self.tax_line)
-        total_discount_amt=sum(line.discount_amt for line in self.invoice_line)
-        self.discount_total =total_discount_amt
-        self.amount_total = self.amount_untaxed + self.amount_tax - self.deduct_amt -(self.amount_untaxed *(self.additional_discount/100))
+        total_discount_amt = sum(line.discount_amt for line in self.invoice_line)
+        self.discount_total = total_discount_amt
+        self.amount_total = self.amount_untaxed + self.amount_tax - self.deduct_amt - (self.amount_untaxed * (self.additional_discount / 100))
          
-    _columns={'deduct_amt':fields.float('Discount Amount'),
+    _columns = {'deduct_amt':fields.float('Discount Amount'),
                      'additional_discount':fields.float('Additional Discount'),
-                  'discount_total':fields.float('Discount Total' ,digits=dp.get_precision('Account'),store=True, readonly=True, compute='_compute_amount', track_visibility='always'),
+                  'discount_total':fields.float('Discount Total' , digits=dp.get_precision('Account'), store=True, readonly=True, compute='_compute_amount', track_visibility='always'),
                     
                   }
     
 class account_move_line(osv.osv):
-    _inherit='account.move.line'
-    _columns={
-    'is_discount':fields.boolean(string='Is Discount',_default=False),
+    _inherit = 'account.move.line'
+    _columns = {
+    'is_discount':fields.boolean(string='Is Discount', _default=False),
       }

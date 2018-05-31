@@ -16,5 +16,26 @@ class product_maingroup(osv.osv):
 #                 'property_account_foc_credit': fields.many2one('account.account', 'Foc Credit Account' , domain="[('type', '=', 'other')]",  required=True),
 #                 'property_account_discount_cash': fields.many2one('account.account', 'Discount Cash Account' , domain="[('type', '=', 'other')]",  required=True),
 #                 'property_account_discount_credit': fields.many2one('account.account', 'Discount Credit Account' , domain="[('type', '=', 'other')]",  required=True),
-                }
+            'property_account_difference': fields.property(
+                type='many2one',
+                relation='account.account',
+                string="Price Difference Account",
+                help="This account will be used to value price difference between purchase price and cost price."),
+            'property_donation_account': fields.property(
+                type='many2one',
+                relation='account.account',
+                string="Donation Account",
+                help="This account will be used to value price difference between purchase price and cost price."),
+            'property_sampling_account': fields.property(
+                type='many2one',
+                relation='account.account',
+                string="Sampling Account",
+                help="This account will be used to value price difference between purchase price and cost price."),
+            'property_uses_account': fields.property(
+                type='many2one',
+                relation='account.account',
+                string="Uses Account",
+                help="This account will be used to value price difference between purchase price and cost price."),
+                                                                                
+                    }
 product_maingroup()
