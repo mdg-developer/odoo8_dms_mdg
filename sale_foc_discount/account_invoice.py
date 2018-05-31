@@ -280,14 +280,13 @@ class account_invoice_line(models.Model):
                         'price': -1 * gross_margin,
                         'account_id': different_id,
                         'product_id':  line.product_id.id,
-                        'is_discount':False,
+                        'is_discount':True,
                         'ref':'Difference',
                          'foc':False,
                         'account_analytic_id': inv.invoice_line[0].account_analytic_id.id,
                         'taxes': False,
                         }
                 res.append(margin)                         
-                res.append(margin)     
                 
                 print 'True'
         return res
