@@ -16,6 +16,8 @@
 						<!-- <field name="property_account_payable" /> -->
 						<field name="property_account_receivable_clearing" />
 						<field name="property_account_difference" />
+						<field name="property_difference_receivable_account" />
+						<field name="property_difference_payable_account" />
 						<field name="property_donation_account" />
 						<field name="property_sampling_account" />
 						<field name="property_uses_account" />
