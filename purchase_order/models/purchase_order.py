@@ -169,7 +169,18 @@ class purchase_order_line(osv.osv):
         return res
 class account_invoice_line(osv.osv): 
     _inherit = 'account.invoice.line'    
+    
+    def _amount_margin(self, cr, uid, ids, prop, arg, context=None):
+        res = {}
+        for line in self.browse(cr, uid, ids, context=context):
+            product_qty = line.quantity
+            price_unit = line.price_unit
+            sale_price = price_unit * product_qty
+            agreed_price = product_qty * line.agreed_price
+            res[line.id] = agreed_price -sale_price
+        return res    
+        
     _columns = {
                 'agreed_price': fields.float('Agreed Price', required=True, digits_compute=dp.get_precision('Product Price')),
-                'gross_margin': fields.float('Gross Margin', required=True, digits_compute=dp.get_precision('Product Price')),
+                'gross_margin': fields.function(_amount_margin, string='Gross Margin', digits_compute=dp.get_precision('Account'), store=True),
                 }   
