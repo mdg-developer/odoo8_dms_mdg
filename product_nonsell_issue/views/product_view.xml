@@ -1,0 +1,109 @@
+<openerp>
+	<data>
+
+		<!-- tree -->
+		<record model="ir.ui.view" id="view_product_nonsell_issue_tree">
+			<field name="name">product.nonsell.issue.tree</field>
+			<field name="model">product.nonsell.issue</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Product Nonsell Issue">
+					<field name="name" />
+					<field name="date" />
+					<field name="location_id" />
+					<field name="user_id" />
+					<field name="branch_id" />
+					<field name="warehouse_id" />
+					<field name="journal_id" />
+					<field name="pricelist_id" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+		<!-- form -->
+		<record model="ir.ui.view" id="view_product_nonsell_issue_form">
+			<field name="name">product.nonsell.issue.form</field>
+			<field name="model">product.nonsell.issue</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form>
+					<header>
+						<button name="approve" string="Approve" class="oe_highlight"
+							type="object" states="draft"
+							groups="stock.group_stock_manager,stock.group_stock_user" />
+						<button name="sumit" string="Issue" class="oe_highlight"
+							type="object" states="approve"
+							groups="stock.group_stock_manager,stock.group_stock_user" />
+						<button name="cancel" string="Cancel" class="oe_highlight"
+							type="object" states="draft,approve"
+							groups="stock.group_stock_manager,stock.group_stock_user" />
+
+						<field name="state" widget="statusbar" />
+					</header>
+					<sheet>
+						<group>
+							<group>
+								<field name="name" />
+								<field name="user_id" />
+								<field name="branch_id" />
+								<field name="warehouse_id" />
+								<field name="location_id" />
+								<field name="is_claim_attachment" />
+								<field name="claim_attachment" />
+							</group>
+							<group>
+								<field name="issue_type" />
+								<field name="is_claim" />
+								<field name="principle_id"
+									attrs="{'required':[('is_claim','=',True)],'invisible':[('is_claim','!=',True)]}" />
+								<field name="principle_support" placeholder="1-100"
+									attrs="{'required':[('is_claim','=',True)],'invisible':[('is_claim','!=',True)]}" />
+
+								<field name="date" />
+								<field name="picking_id" />
+								<field name="debit_note" />
+								<field name="receive_date" />
+
+								<field name="journal_id" />
+								<field name="pricelist_id" domain="[('type','=','sale')]" />
+							</group>
+						</group>
+						<group>
+							<notebook>
+								<page string="Stock">
+									<field name="product_lines">
+										<tree string="Product Line" editable="bottom"
+											default_order="sequence asc">
+											<field name="sequence" invisible="1" />
+											<field name="product_id"
+												on_change="on_change_product_id(product_id,parent.pricelist_id)" />
+											<field name="uom_id"
+												on_change="on_change_product_uom(product_id,parent.pricelist_id,uom_id,quantity)" />
+											<field name="quantity" />
+											<field name="price_unit" />
+											<field name="sub_total" sum="Total Amount" />
+										</tree>
+									</field>
+								</page>
+							</notebook>
+
+						</group>
+						<field name="note" placeholder="Remark......................" />
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- Menu -->
+		<record model="ir.actions.act_window" id="open_view_product_nonsell_issue_form">
+			<field name="name">Product Nonsell Issue</field>
+			<field name="res_model">product.nonsell.issue</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem parent="stock.menu_stock_configuration" id="menu_open_view_product_nonsell_issue_form"
+			action="open_view_product_nonsell_issue_form" sequence="7" />
+
+	</data>
+</openerp>
