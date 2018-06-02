@@ -43,11 +43,11 @@ class stock_quant(osv.osv):
 #         journal_id = accounts['stock_journal']
 #         return journal_id, acc_src, acc_dest, acc_valuation
     
-    def get_foc_cashorcredit(self,cr,uid,move,context=None):
+    def get_foc_cashorcredit(self, cr, uid, move, context=None):
         type = None
         if move.picking_id.origin:
-            if len(move.picking_id.origin)>0:
-                cr.execute("""select payment_type from sale_order where name=%s""",(move.picking_id.origin,))
+            if len(move.picking_id.origin) > 0:
+                cr.execute("""select payment_type from sale_order where name=%s""", (move.picking_id.origin,))
                 type_data = cr.fetchall()
                 if type_data:
                     type = type_data[0][0]
@@ -72,22 +72,22 @@ class stock_quant(osv.osv):
             return False
         for q in quants:
             if q.owner_id:
-                #if the quant isn't owned by the company, we don't make any valuation entry
+                # if the quant isn't owned by the company, we don't make any valuation entry
                 return False
             if q.qty <= 0:
-                #we don't make any stock valuation for negative quants because the valuation is already made for the counterpart.
-                #At that time the valuation will be made at the product cost price and afterward there will be new accounting entries
-                #to make the adjustments when we know the real cost price.
+                # we don't make any stock valuation for negative quants because the valuation is already made for the counterpart.
+                # At that time the valuation will be made at the product cost price and afterward there will be new accounting entries
+                # to make the adjustments when we know the real cost price.
                 return False
 
-        #in case of routes making the link between several warehouse of the same company, the transit location belongs to this company, so we don't need to create accounting entries
+        # in case of routes making the link between several warehouse of the same company, the transit location belongs to this company, so we don't need to create accounting entries
         # Create Journal Entry for products arriving in the company
         if company_to and (move.location_id.usage not in ('internal', 'transit') and move.location_dest_id.usage == 'internal' or company_from != company_to):
             ctx = context.copy()
             ctx['force_company'] = company_to.id
             journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation(cr, uid, move, context=ctx)
             if location_from and location_from.usage == 'customer':
-                #goods returned from customer
+                # goods returned from customer
                 self._create_account_move_line(cr, uid, quants, move, acc_dest, acc_valuation, journal_id, context=ctx)
             else:
                 self._create_account_move_line(cr, uid, quants, move, acc_src, acc_valuation, journal_id, context=ctx)
@@ -98,7 +98,7 @@ class stock_quant(osv.osv):
             ctx['force_company'] = company_from.id
             journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation(cr, uid, move, context=ctx)
             if location_to and location_to.usage == 'supplier':
-                #goods returned to supplier
+                # goods returned to supplier
                 self._create_account_move_line(cr, uid, quants, move, acc_valuation, acc_src, journal_id, context=ctx)
             else:
                 self._create_account_move_line(cr, uid, quants, move, acc_valuation, acc_dest, journal_id, context=ctx)
@@ -114,7 +114,7 @@ class stock_quant(osv.osv):
         """
         product_obj = self.pool.get('product.template')
         accounts = product_obj.get_product_accounts(cr, uid, move.product_id.product_tmpl_id.id, context)
-        foc_account_id=move.company_id.foc_account_id.id
+        foc_account_id = move.company_id.foc_account_id.id
         if foc_account_id is False:
             raise orm.except_orm(_('Error :'), _("Please select Sale FOC Account in Account setting!"))            
         if move.location_id.valuation_out_account_id:
@@ -139,7 +139,7 @@ class stock_quant(osv.osv):
 
         return journal_id, acc_src, acc_dest, acc_valuation 
 
-    #cutomize stock journal clearance
+    # cutomize stock journal clearance
     def _prepare_account_move_line(self, cr, uid, move, qty, cost, credit_account_id, debit_account_id, context=None):
         """
         Generate the account.move.line values to post to track the stock valuation difference due to the
@@ -155,16 +155,16 @@ class stock_quant(osv.osv):
                 valuation_amount = cost if move.location_id.usage != 'internal' and move.location_dest_id.usage == 'internal' else move.product_id.standard_price
             else:
                 valuation_amount = cost if move.product_id.cost_method == 'real' else move.product_id.standard_price
-        #the standard_price of the product may be in another decimal precision, or not compatible with the coinage of
-        #the company currency... so we need to use round() before creating the accounting entries.
+        # the standard_price of the product may be in another decimal precision, or not compatible with the coinage of
+        # the company currency... so we need to use round() before creating the accounting entries.
         valuation_amount = currency_obj.round(cr, uid, move.company_id.currency_id, valuation_amount * qty)
         partner_id = (move.picking_id.partner_id and self.pool.get('res.partner')._find_accounting_partner(move.picking_id.partner_id).id) or False
         if move.foc:
-            #type = self.get_foc_cashorcredit(cr, uid, move, context)
-            type='cash'
+            # type = self.get_foc_cashorcredit(cr, uid, move, context)
+            type = 'cash'
             if type == 'cash':
                 credit_account_id_1 = move.product_id.categ_id.property_account_foc_cash.id 
-                debit_account_id_1 =move.product_id.categ_id.property_account_foc_principle_receivable.id
+                debit_account_id_1 = move.product_id.categ_id.property_account_foc_principle_receivable.id
                 if credit_account_id_1 is False:
                     raise orm.except_orm(_('Error :'), _("Please select FOC Cash Account in Product Category %s!")) % move.product_id.categ_id.name 
                 
@@ -231,7 +231,7 @@ class stock_quant(osv.osv):
                     'debit': valuation_amount < 0 and -valuation_amount or 0,
                     'account_id': credit_account_id_1,
             }
-            return [(0, 0, debit_line_vals), (0, 0, credit_line_vals),(0, 0, debit_line_vals1), (0, 0, credit_line_vals1)]    
+            return [(0, 0, debit_line_vals), (0, 0, credit_line_vals), (0, 0, debit_line_vals1), (0, 0, credit_line_vals1)]    
         else:
             debit_line_vals = {
                         'name': move.name,
@@ -273,7 +273,8 @@ class stock_quant(osv.osv):
         """
         product_obj = self.pool.get('product.template')
         accounts = product_obj.get_product_accounts(cr, uid, move.product_id.product_tmpl_id.id, context)
-        foc_account_id=move.company_id.foc_account_id.id
+        foc_account_id = move.company_id.foc_account_id.id
+            
         if foc_account_id is False:
             raise orm.except_orm(_('Error :'), _("Please select Sale FOC Account in Account setting!"))            
         if move.location_id.valuation_out_account_id:
@@ -283,25 +284,33 @@ class stock_quant(osv.osv):
 
         if move.location_dest_id.valuation_in_account_id:
             acc_dest = move.location_dest_id.valuation_in_account_id.id
-        else:
+        else:         
             if move.foc:
-                journal_id =None
+                journal_id = None
                 cr.execute("""select id from account_journal where lower(name) like '%miscellaneous%'""")
                 journal_data = cr.fetchall()
                 if journal_data:
                     journal_id = journal_data[0][0]
                     
                 acc_dest = foc_account_id
-                print 'quant>>>',move.quant_ids
+                print 'quant>>>', move.quant_ids
                 type = self.get_foc_cashorcredit(cr, uid, move, context)
                 if type == 'cash':
                     acc_dest = move.product_id.categ_id.property_account_foc_cash.id
-                    #self._create_account_move_line(cr, uid, move.quant_ids, move, move.product_id.categ_id.property_account_foc_cash.id, move.product_id.categ_id.property_account_foc_principle_receivable.id, journal_id, context)
+                    # self._create_account_move_line(cr, uid, move.quant_ids, move, move.product_id.categ_id.property_account_foc_cash.id, move.product_id.categ_id.property_account_foc_principle_receivable.id, journal_id, context)
                 elif type == 'credit':
                     acc_dest = move.product_id.categ_id.property_account_foc_credit.id    
-                    #self._create_account_move_line(cr, uid, move.quant_ids, move, move.product_id.categ_id.property_account_foc_credit.id, move.product_id.categ_id.property_account_foc_principle_receivable.id, journal_id, context)
+                    # self._create_account_move_line(cr, uid, move.quant_ids, move, move.product_id.categ_id.property_account_foc_credit.id, move.product_id.categ_id.property_account_foc_principle_receivable.id, journal_id, context)
             else:
-                acc_dest = accounts['stock_account_output']
+                if  move.issue_type == 'donation':
+                    acc_dest = move.product_id.product_tmpl_id.main_group.property_donation_account.id
+                elif  move.issue_type == 'sampling':
+                    acc_dest = move.product_id.product_tmpl_id.main_group.property_sampling_account.id           
+                elif  move.issue_type == 'other':
+                    acc_dest = move.product_id.product_tmpl_id.main_group.property_uses_account.id
+                else:                      
+                    acc_dest = accounts['stock_account_output']
+                
         acc_valuation = accounts.get('property_stock_valuation_account_id', False)
         journal_id = accounts['stock_journal']
 
