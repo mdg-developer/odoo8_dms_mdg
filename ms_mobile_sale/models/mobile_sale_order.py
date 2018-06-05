@@ -464,6 +464,63 @@ class mobile_sale_order(osv.osv):
             print 'False'
             return False
     
+    def create_mo(self, cursor, user, vals, context=None):
+        print 'vals', vals
+        try : 
+            product_mo_obj = self.pool.get('product.disassembly')
+            product_mo_line_obj = self.pool.get('product.disassembly.line')
+            str = "{" + vals + "}"
+            str = str.replace(":''", ":'")  # change Order_id
+            str = str.replace("'',", "',")  # null
+            str = str.replace(":',", ":'',")  # due to order_id
+            str = str.replace(":'}", ":''}")
+            str = str.replace("}{", "}|{")
+            
+            new_arr = str.split('|')
+            result = []
+            for data in new_arr:
+                x = ast.literal_eval(data)
+                result.append(x)
+            product_mo = []
+            product_mo_line = []
+            for r in result:
+                print "length", len(r)
+                if len(r) >= 7:
+                    product_mo_line.append(r)                   
+                else:
+                    product_mo.append(r)
+            
+            if product_mo:
+                for pm in product_mo:
+                    mso_result = {
+                        'date':pm['date'],
+                        'location_id':pm['location_id'],
+                        'user_id':pm['user_id'] ,
+                        'product_lines':pm['mo_id'],
+                    }
+                    mo_id = product_mo_obj.create(cursor, user, mso_result, context=context)
+                    
+                    for mol in product_mo_line:
+                        if mol['line_id'] == pm['mo_id']:
+                                mo_line_res = {                                                            
+                                  'line_id':mo_id,
+                                  'product_id':mol['product_id'],
+                                  'big_uom_id':mol['bigUom_id'],
+                                  'big_quantity':mol['Qty'],
+                                  'to_product_id':mol['toProduct_id'],
+                                  'uom_id':mol['toUoM_id'],
+                                  'quantity':mol['toQty'],
+                                }
+                                product_mo_line_obj.create(cursor, user, mo_line_res, context=context)
+#                         product_trans_obj.action_convert_ep(cursor, user, [s_order_id], context=context)
+
+                                    
+            print 'Truwwwwwwwwwwwwwwwwwwwwwe'
+            return True       
+        except Exception, e:
+            print 'False'
+            return False  
+        
     def create_visit(self, cursor, user, vals, context=None):
         
         try:
@@ -2828,7 +2885,11 @@ class mobile_sale_order(osv.osv):
         except Exception, e:
             print 'False'
             return False  
-    
+    def get_bom(self, cr, uid , context=None):        
+        cr.execute('''select mbl.product_id as product,mbl.product_qty as from_qty,mbl.product_uom  as from_uom_id,mb.product_id as to_product,mb.product_qty,mb.product_uom from mrp_bom mb ,mrp_bom_line mbl
+                    where mb.id=mbl.bom_id''')
+        datas = cr.fetchall()        
+        return datas   
     def get_country(self, cr, uid , context=None):        
         cr.execute('''select id,code,name from res_country where id between 146 and 160''')
         datas = cr.fetchall()        
