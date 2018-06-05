@@ -31,6 +31,17 @@ class product_nonsell_issue(osv.osv):
         if not branch_id:
             raise osv.except_osv(_('Error!'), _('There is no default branch for the current user!'))
         return branch_id        
+    
+    def on_change_warehouse_id(self, cr, uid, ids, warehouse_id, context=None):
+        values = {}
+        if warehouse_id:
+            warehouse = self.pool.get('stock.warehouse').browse(cr, uid, warehouse_id, context=context)
+            location_id=warehouse.out_type_id.default_location_src_id.id
+            values = {
+                'location_id':location_id,
+                
+            }
+        return {'value': values}        
     _columns = {
         'name': fields.char('Ref ID', readonly=True),
         'date': fields.date('Request Date', required=True),
@@ -47,12 +58,13 @@ class product_nonsell_issue(osv.osv):
             ('other', 'Others'),
             ], 'Issue Type'),
           'is_claim': fields.boolean('Is Claim?'),
-          'principle_id': fields.many2one('product.maingroup', 'Principle'),
+          #'principle_id': fields.many2one('product.maingroup', 'Principle'),
+          'principle_id'  : fields.many2one('res.partner', 'Principle' , domain=[('supplier', '=', True)]),
           'principle_support': fields.float('Principle Support'),
           'picking_id': fields.many2one('stock.picking', 'Do Ref No', readonly=True),
-         'debit_note':fields.char('Debit Note Ref No'),
+         'debit_note':fields.many2one('account.invoice','Debit Note Ref No'),
          'receive_date': fields.date('Receive Date', required=True),
-        'journal_id': fields.many2one('account.journal', 'Journal', required=True),
+        'journal_id': fields.many2one('account.journal', 'Journal', required=False),
         'pricelist_id': fields.many2one('product.pricelist', 'Price list', required=True),
         'note': fields.text('Remark'),
          'state': fields.selection([
@@ -132,15 +144,78 @@ class product_nonsell_issue(osv.osv):
                                        'issue_type':sell_data.issue_type,
                                       'state':'confirmed'}, context=context)     
                 # move_obj.action_done(cr, uid, move_id, context=context)          
-        return self.write(cr, uid, ids, {'state': 'approve','picking_id':picking_id})    
+        return self.write(cr, uid, ids, {'state': 'approve', 'picking_id':picking_id})    
     
     def sumit(self, cr, uid, ids, context=None):
-        
-        return self.write(cr, uid, ids, {'state': 'done'})        
+        sell_data = self.browse(cr, uid, ids, context=context)
+        name=sell_data.name
+        journal_id=sell_data.journal_id.id
+        partner_id=sell_data.principle_id.id
+        note =sell_data.note
+        issue_type=sell_data.issue_type
+        product_line_obj = self.pool.get('product.nonsell.issue.line')
+        invoice_obj = self.pool.get('account.invoice')   
+        invoice_line_obj = self.pool.get('account.invoice.line')   
+        payment_obj = self.pool.get('account.payment.term')   
+        currency_obj = self.pool.get('res.currency')   
+        payment_id = payment_obj.search(cr, uid, [('name', '=', 'Immediate Payment')], context=context)
+        currency_id = currency_obj.search(cr, uid, [('name', '=', 'MMK')], context=context)
+        inv = {
+            'name': name,
+            'origin': name,
+            'type': 'in_refund',
+            'journal_id': journal_id,
+            'reference': name,
+         #   'account_id': a,
+            'partner_id': partner_id,
+            #'invoice_line': [(6, 0, lines_ids)],
+            'currency_id': currency_id[0],
+            'comment': note,
+            'payment_term': payment_id[0],
+            'fiscal_position': sell_data.principle_id.property_account_position.id
+        }
+        inv_id=invoice_obj.create(cr, uid, inv, context=context)
+        product_line_ids = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
+        if product_line_ids and inv_id:
+            for product_line_id in product_line_ids:  
+                invoice_line = product_line_obj.browse(cr, uid, product_line_id, context=context)
+
+                if  issue_type == 'donation':
+                    account_id = invoice_line.product_id.product_tmpl_id.main_group.property_donation_account.id
+                if  issue_type == 'sampling':
+                    account_id = invoice_line.product_id.product_tmpl_id.main_group.property_sampling_account.id           
+                if  issue_type == 'other':
+                    account_id = invoice_line.product_id.product_tmpl_id.main_group.property_uses_account.id
+
+                inv_line = {'name': invoice_line.product_id.name,
+                            'invoice_id':inv_id,
+                    'account_id': account_id,
+                    'price_unit': invoice_line.claim_price or 0.0,
+                    'quantity': invoice_line.quantity,
+                    'product_id': invoice_line.product_id.id or False,
+                    'uos_id': invoice_line.uom_id.id or False,
+                    'agreed_price':invoice_line.claim_price or 0.0,
+                    }
+                invoice_line_obj.create(cr, uid, inv_line, context=context)
+        return self.write(cr, uid, ids, {'state': 'done','debit_note':inv_id,})        
     
     def cancel(self, cr, uid, ids, context=None):
         
-        return self.write(cr, uid, ids, {'state': 'cancel'})           
+        return self.write(cr, uid, ids, {'state': 'cancel'})        \
+            
+    def show_claim_price(self, cr, uid, ids, context=None):
+        sell_data = self.browse(cr, uid, ids, context=context)
+        principle_support=sell_data.principle_support
+        sell_line_obj = self.pool.get('product.nonsell.issue.line')
+        for line_data in sell_data.product_lines:
+            if principle_support >0:
+                product_qty = line_data.quantity
+                price_unit = line_data.price_unit
+                total_price = price_unit * product_qty
+                claim_price=price_unit*(principle_support/100)
+                total_claim= total_price * (principle_support/100)
+                cr.execute("update product_nonsell_issue_line set claim_price =%s,claim_total=%s where id =%s",(claim_price,total_claim,line_data.id,))
+        return True               
     
 product_nonsell_issue()   
 
@@ -164,6 +239,8 @@ class product_nonsell_issue_line(osv.osv):
         'quantity': fields.float('Qty', required=True),
         'price_unit': fields.float('Unit Price', required=True),
         'sub_total':fields.function(_amount_total, string='Sub Total', store=True),
+        'claim_price':fields.float('Claim Price' ,readonly=True),
+        'claim_total':fields.float('Claim Total' ,readonly=True),
         'sequence':fields.integer('Sequence'),
     }
     

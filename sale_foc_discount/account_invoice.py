@@ -272,6 +272,7 @@ class account_invoice_line(models.Model):
                         'account_analytic_id': inv.invoice_line[0].account_analytic_id.id,
                         'taxes': False,
                         }
+                    res.append(margin)   
                 if gross_margin > 0:
                     margin = {'type': 'src',
                         'name': line.product_id.name_template,
@@ -286,7 +287,7 @@ class account_invoice_line(models.Model):
                         'account_analytic_id': inv.invoice_line[0].account_analytic_id.id,
                         'taxes': False,
                         }
-                res.append(margin)                         
+                    res.append(margin)                         
                 
                 print 'True'
         return res

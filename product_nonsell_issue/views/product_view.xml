@@ -55,7 +55,7 @@
 						<button name="approve" string="Approve" class="oe_highlight"
 							type="object" states="draft"
 							groups="stock.group_stock_manager,stock.group_stock_user" />
-						<button name="sumit" string="Issue" class="oe_highlight"
+						<button name="sumit" string="Submit Claim" class="oe_highlight"
 							type="object" states="approve"
 							groups="stock.group_stock_manager,stock.group_stock_user" />
 						<button name="cancel" string="Cancel" class="oe_highlight"
@@ -68,34 +68,42 @@
 						<group>
 							<group>
 								<field name="name" />
-								<field name="user_id" />
-								<field name="branch_id" />
-								<field name="warehouse_id" />
-								<field name="location_id" />
-								<field name="is_claim_attachment" />
-								<field name="claim_attachment" />
+								<field name="user_id" attrs="{'readonly':[('state','!=','draft')]}" />
+								<field name="branch_id" attrs="{'readonly':[('state','!=','draft')]}" />
+								<field name="warehouse_id" attrs="{'readonly':[('state','!=','draft')]}"
+									on_change="on_change_warehouse_id(warehouse_id)" />
+								<field name="location_id" attrs="{'readonly':[('state','!=','draft')]}" />
+								<field name="is_claim_attachment" attrs="{'readonly':[('state','!=','draft')]}" />
+								<field name="claim_attachment" attrs="{'readonly':[('state','!=','draft')]}" />
 							</group>
 							<group>
-								<field name="issue_type" />
-								<field name="is_claim" />
+								<field name="issue_type" attrs="{'readonly':[('state','!=','draft')]}" />
+								<field name="is_claim" attrs="{'readonly':[('state','=','done')]}" />
 								<field name="principle_id"
-									attrs="{'required':[('is_claim','=',True)],'invisible':[('is_claim','!=',True)]}" />
-								<field name="principle_support" placeholder="1-100"
-									attrs="{'required':[('is_claim','=',True)],'invisible':[('is_claim','!=',True)]}" />
-
-								<field name="date" />
-								<field name="picking_id" />
-								<field name="debit_note" />
-								<field name="receive_date" />
-
-								<field name="journal_id" />
-								<field name="pricelist_id" domain="[('type','=','sale')]" />
+									attrs="{'required':[('is_claim','=',True)],'invisible':[('is_claim','!=',True)],'readonly':[('state','=','done')]}" />
+								<label for="principle_support"
+									attrs="{'required':[('is_claim','=',True)],'invisible':[('is_claim','!=',True)],'readonly':[('state','=','done')]}" />
+								<div class="oe_clear">
+									<field name="principle_support" placeholder="1-100"
+										attrs="{'required':[('is_claim','=',True)],'invisible':[('is_claim','!=',True)],'readonly':[('state','=','done')]}" />
+									<button name="show_claim_price" string="Show Claim Price"
+										type="object" icon="terp-gtk-jump-to-ltr"
+										attrs="{'invisible':['|',('is_claim','!=',True),('state','=','done')]}" />
+								</div>
+								<field name="date" attrs="{'readonly':[('state','!=','draft')]}" />
+								<field name="picking_id" attrs="{'readonly':[('state','!=','draft')]}" />
+								<field name="debit_note" readonly="1" />
+								<field name="receive_date" attrs="{'readonly':[('state','!=','draft')]}" />
+								<field name="journal_id"
+									attrs="{'required':[('is_claim','=',True)],'invisible':[('is_claim','!=',True)],'readonly':[('state','=','done')]}" />
+								<field name="pricelist_id" domain="[('type','=','sale')]"
+									attrs="{'readonly':[('state','!=','draft')]}" />
 							</group>
 						</group>
 						<group>
 							<notebook>
-								<page string="Stock">
-									<field name="product_lines">
+								<page string="Stock" attrs="{'readonly':[('state','!=','draft')]}">
+									<field name="product_lines" attrs="{'readonly':[('state','!=','draft')]}">
 										<tree string="Product Line" editable="bottom"
 											default_order="sequence asc">
 											<field name="sequence" invisible="1" />
@@ -106,6 +114,8 @@
 											<field name="quantity" />
 											<field name="price_unit" />
 											<field name="sub_total" sum="Total Amount" />
+											<field name="claim_price" />
+											<field name="claim_total" sum="Total Price" />
 										</tree>
 									</field>
 								</page>
