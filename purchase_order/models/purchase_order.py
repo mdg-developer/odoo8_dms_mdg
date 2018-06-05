@@ -71,7 +71,7 @@ class purchase_order_line(osv.osv):
     _columns = {
 #                 'is_agreed': fields.related('order_id', 'is_agreed', type='boolean', string='Agreed', store=True, readonly=True),
 #                 'is_margin': fields.related('order_id', 'is_margin', type='boolean', string='Margin', store=True, readonly=True),
-                'agreed_price': fields.float('Agreed Price', required=True, digits_compute=dp.get_precision('Product Price')),
+                'agreed_price': fields.float('Agreed Price', required=False, digits_compute=dp.get_precision('Product Price')),
                 'gross_margin': fields.function(_amount_margin, string='Gross Margin', digits_compute=dp.get_precision('Account'), store=True),
                 }     
     
@@ -181,6 +181,6 @@ class account_invoice_line(osv.osv):
         return res    
         
     _columns = {
-                'agreed_price': fields.float('Agreed Price', required=True, digits_compute=dp.get_precision('Product Price')),
+                'agreed_price': fields.float('Agreed Price', required=False, digits_compute=dp.get_precision('Product Price')),
                 'gross_margin': fields.function(_amount_margin, string='Gross Margin', digits_compute=dp.get_precision('Account'), store=True),
                 }   

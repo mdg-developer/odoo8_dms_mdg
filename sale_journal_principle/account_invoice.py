@@ -584,6 +584,16 @@ class account_invoice(models.Model):
                     line['price'] = line['price'] + discount_amt - total_tax_amt                            
                     cr.execute("UPDATE account_invoice_line SET line_paid =True FROM account_invoice  WHERE account_invoice_line.invoice_id = account_invoice.id AND account_invoice.origin = %s and   account_invoice_line.product_id=%s ", (origin, product.id,))
                 if  line['is_discount'] == True:
+                    if product_code == 'disc-cash-mayora' or  product_code == 'disc-cash-nesfnb' or product_code == 'disc-cash-nesnt' or  product_code == 'disc-cash-mbc' or  product_code == 'disc-cash-mlion' or  product_code == 'disc-cash-otsuka' :
+                        cr.execute("select avl.id from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s and avl.foc!=true", (origin, product.id,))
+                        invoice_line_id = cr.fetchone()
+                        if invoice_line_id:
+                            invoice_line_data = self.env['account.invoice.line'].browse(invoice_line_id)
+                            net_total = invoice_line_data.net_total
+                            discount_amt = invoice_line_data.discount_amt
+                            price_sub_total = invoice_line_data.price_subtotal
+                            total_tax_amt = (net_total - discount_amt) - price_sub_total
+                        line['price'] = line['price'] + discount_amt + total_tax_amt                         
                     if payment_type == 'credit':
                         account_id = product.product_tmpl_id.categ_id.property_account_discount_credit.id
                     else:
@@ -731,6 +741,16 @@ class account_invoice(models.Model):
                     line['price'] = line['price'] - discount_amt + total_tax_amt                            
                     cr.execute("UPDATE account_invoice_line SET line_paid =True FROM account_invoice  WHERE account_invoice_line.invoice_id = account_invoice.id AND account_invoice.origin = %s and   account_invoice_line.product_id=%s ", (origin, product.id,))
                 if  line['is_discount'] == True:
+                    if product_code == 'disc-cash-mayora' or  product_code == 'disc-cash-nesfnb' or product_code == 'disc-cash-nesnt' or  product_code == 'disc-cash-mbc' or  product_code == 'disc-cash-mlion' or  product_code == 'disc-cash-otsuka' :
+                        cr.execute("select avl.id from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s and avl.foc!=true", (origin, product.id,))
+                        invoice_line_id = cr.fetchone()
+                        if invoice_line_id:
+                            invoice_line_data = self.env['account.invoice.line'].browse(invoice_line_id)
+                            net_total = invoice_line_data.net_total
+                            discount_amt = invoice_line_data.discount_amt
+                            price_sub_total = invoice_line_data.price_subtotal
+                            total_tax_amt = (net_total - discount_amt) - price_sub_total
+                        line['price'] = line['price'] + discount_amt -total_tax_amt                         
                     if payment_type == 'credit':
                         account_id = product.product_tmpl_id.categ_id.property_account_discount_credit.id
                     else:
