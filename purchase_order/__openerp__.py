@@ -38,6 +38,7 @@ Purchase Order
              'views/stock_picking_view.xml',
              'views/res_partner_inherit_view.xml',
             'views/purchase_view.xml',
+            'views/report_purchaseorder.xml',
 
     ],
     'installable': True,

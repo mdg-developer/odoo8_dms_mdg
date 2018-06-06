@@ -185,12 +185,12 @@ class pre_sale_order(osv.osv):
                                 if sol['manual_promotion'] and sol['manual_promotion'] != 'null':
                                     promotion_id = sol['manual_promotion']  
                                 price =sol['price_unit']
-                                if  float(price) < 0:
-                                    product_price= 0
-                                    discount_amt =-1 * float(price)
-                                else:
-                                    product_price=sol['price_unit']
-                                    discount_amt=sol['discount_amt']
+#                                 if  float(price) < 0:
+#                                     product_price= 0
+#                                     discount_amt =-1 * float(price)
+#                                 else:
+                                product_price=sol['price_unit']
+                                discount_amt=sol['discount_amt']
                                                                       			
                                 mso_line_res = {                                                            
                                   'order_id':s_order_id,
@@ -203,7 +203,7 @@ class pre_sale_order(osv.osv):
                                   'sub_total':sol['sub_total'],
                                   'uom_id':sol['uom_id'],
                                   'manual_foc':manual_foc,
-                                   'promotion_id':promotion_id,
+                                  'promotion_id':promotion_id,
                                 }
                                 mobile_sale_order_line_obj.create(cursor, user, mso_line_res, context=context) 
                                 print 'Create Order line', sol['so_name']                     
