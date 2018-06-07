@@ -154,8 +154,12 @@ class mobile_sale_order(osv.osv):
                     if so['order_saleteam'] != 'null':
                         cursor.execute('select id from crm_case_section where name=%s', (so['order_saleteam'],))
                         order_team = cursor.fetchone()[0]
+                        so['sale_team']=order_team
                     else:
                         order_team = None
+                    if so['order_saleperson']: 
+                        so['user_id']=so['order_saleperson']
+                        
                     cursor.execute('select branch_id from crm_case_section where id=%s', (so['sale_team'],))
                     branch_id = cursor.fetchone()[0]     
                     cursor.execute('select id From res_partner where customer_code  = %s ', (so['customer_code'],))
