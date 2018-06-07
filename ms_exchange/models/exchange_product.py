@@ -11,7 +11,7 @@ class exchange_product(osv.osv):
                 'customer_id':fields.many2one('res.partner', 'Customer Name'),
                 'customer_code':fields.char('Customer Code', readonly=True),
                 'team_id'  : fields.many2one('crm.case.section', 'Sale Team'),
-                'date':fields.date('Date'),
+                'date':fields.datetime('Date'),
               'exchange_type':fields.selection([('Exchange', 'Exchange'), ('Color Change', 'Color Change'), ('Sale Return', 'Sale Return'), ], 'Type'),
                 'item_line': fields.one2many('product.transactions.line', 'transaction_id', 'Items Lines', copy=True),
                 'void_flag':fields.selection([('none', 'Unvoid'), ('voided', 'Voided')], 'Void Status'),

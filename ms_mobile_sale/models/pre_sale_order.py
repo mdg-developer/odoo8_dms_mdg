@@ -71,6 +71,7 @@ class pre_sale_order(osv.osv):
             ], 'Void'),
       'is_convert':fields.boolean('Is Convert',readonly=True),
       'print_count':fields.integer('RePrint Count'),
+      'rebate_later':fields.boolean('Rebate Later'),
     }
     _order = 'id desc'
     _defaults = {
@@ -127,7 +128,10 @@ class pre_sale_order(osv.osv):
                        
                     else:
                         partner_id = None
-
+                    if so['rebate'] == 'T':
+                        rebate = True
+                    else:
+                        rebate = False
                     mso_result = {
                         'customer_code':so['customer_code'],
                         'paid': True,
@@ -152,6 +156,7 @@ class pre_sale_order(osv.osv):
                         'pricelist_id':so['pricelist_id'],
                         'branch_id':branch_id,
                         'print_count':so['print_count'],
+                        'rebate_later':rebate,
                     }
                     s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
                     so_ids.append(s_order_id)
@@ -177,6 +182,8 @@ class pre_sale_order(osv.osv):
                                     promotion_id = cursor.fetchone()[0]
                                 else:
                                     promotion_id=False
+                                if sol['manual_promotion'] and sol['manual_promotion'] != 'null':
+                                    promotion_id = sol['manual_promotion']  
                                 price =sol['price_unit']
 #                                 if  float(price) < 0:
 #                                     product_price= 0

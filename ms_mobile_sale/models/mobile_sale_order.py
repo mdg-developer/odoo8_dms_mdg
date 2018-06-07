@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from openerp.tools.translate import _
 import ast
 import time
+import urllib
 from openerp import netsvc
 import pytz
 DEFAULT_SERVER_DATE_FORMAT = "%Y-%m-%d"
@@ -107,6 +108,8 @@ class mobile_sale_order(osv.osv):
       'branch_id': fields.many2one('res.branch', 'Branch', required=True),
       'is_convert':fields.boolean('Is Convert', readonly=True),
       'print_count':fields.integer('RePrint Count'),
+      'order_team':fields.many2one('crm.case.section', 'Order Team'),
+      'rebate_later':fields.boolean('Rebate Later', readonly=True),
    #     'journal_id'  : fields.many2one('account.journal', 'Journal' ,domain=[('type','in',('cash','bank'))]),   
     }
     _order = 'id desc'
@@ -147,6 +150,11 @@ class mobile_sale_order(osv.osv):
             
             if sale_order:
                 for so in sale_order:
+                    if so['order_saleteam'] != 'null':
+                        cursor.execute('select id from crm_case_section where name=%s', (so['order_saleteam'],))
+                        order_team = cursor.fetchone()[0]
+                    else:
+                        order_team = None
                     cursor.execute('select branch_id from crm_case_section where id=%s', (so['sale_team'],))
                     branch_id = cursor.fetchone()[0]     
                     cursor.execute('select id From res_partner where customer_code  = %s ', (so['customer_code'],))
@@ -161,6 +169,11 @@ class mobile_sale_order(osv.osv):
                     else:
                         paid = False
                         
+                    if so['rebate'] == 'T':
+                        rebate = True
+                    else:
+                        rebate = False
+                            
                     mso_result = {
                         'customer_code':so['customer_code'],
                         'sale_plan_day_id':so['sale_plan_day_id'],
@@ -195,6 +208,8 @@ class mobile_sale_order(osv.osv):
                         'branch_id':branch_id,
                         'note':so['note'],
                         'print_count':so['print_count'],
+                        'order_team':order_team,
+                        'rebate_later':rebate,
                     }
                     s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
                     so_ids.append(s_order_id);
@@ -224,14 +239,15 @@ class mobile_sale_order(osv.osv):
                                     promotion_id = cursor.fetchone()[0]  
                                 else:
                                     promotion_id=None   
-                                       
-#                                 price =sol['price_unit']
-#                                 if  float(price) < 0:
-#                                     product_price= 0
-#                                     discount_amt =-1 * float(price)
-#                                 else:
-                                product_price=sol['price_unit']
-                                discount_amt=sol['discount_amt']                                          
+                                if sol['manual_promotion'] and sol['manual_promotion'] != 'null':
+                                    promotion_id = sol['manual_promotion']                                           
+                                price =sol['price_unit']
+                                if  float(price) < 0:
+                                    product_price= 0
+                                    discount_amt =-1 * float(price)
+                                else:
+                                    product_price=sol['price_unit']
+                                    discount_amt=sol['discount_amt']                                          
                                 mso_line_res = {                                                            
                                   'order_id':s_order_id,
                                   'product_type':product_type,
@@ -295,7 +311,40 @@ class mobile_sale_order(osv.osv):
                 return True
              except Exception, e:
                 return False        
-            
+    def create_customer_feedback(self, cursor, user, vals, context=None):
+             try :
+                sync_obj = self.pool.get('customer.feedback')
+                str = "{" + vals + "}"
+                str = str.replace("'',", "',")  # null
+                str = str.replace(":',", ":'',")  # due to order_id
+                str = str.replace("}{", "}|{")
+                new_arr = str.split('|')
+                result = []           
+                for data in new_arr:
+                    x = ast.literal_eval(data)
+                    result.append(x)
+                feedback_line = []
+                for r in result:                
+                   feedback_line.append(r)  
+                if feedback_line:
+                    for sync_log in feedback_line:
+                        cursor.execute('select branch_id from crm_case_section where id=%s', (sync_log['saleteam_id'],))
+                        branch_id = cursor.fetchone()[0]
+                        print_result = {
+                            'sale_team_id':sync_log['saleteam_id'],
+                            'date':sync_log['date'],
+                            'customer_id':sync_log['customer_id'],
+                            'customer_code':sync_log['customer_code'],
+                            'feedback_type':sync_log['feedback_type'],
+                            'contents':urllib.unquote(urllib.unquote(sync_log['contents'])),
+                            'branch_id':branch_id,
+                            'maingroup_id':sync_log['maingroup_id']
+                            }
+                        sync_obj.create(cursor, user, print_result, context=context)
+                return True
+             except Exception, e:
+                return False
+                    
     def create_tablet_logout_time(self, cursor, user, vals, context=None):
         try :
                 sync_obj = self.pool.get('tablet.logout.time')
@@ -1176,7 +1225,7 @@ class mobile_sale_order(osv.osv):
             status = 'approve'
             cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,
                         logic ,expected_logic_result ,special, special1, special2, special3 ,description,
-                        pr.promotion_count, pr.monthly_promotion ,code as p_code,manual 
+                        pr.promotion_count, pr.monthly_promotion ,code as p_code,manual,main_group
                         from promos_rules pr ,promos_rules_res_branch_rel pro_br_rel
                         where pr.active = true                     
                         and pr.id = pro_br_rel.promos_rules_id
@@ -1194,7 +1243,7 @@ class mobile_sale_order(osv.osv):
             status = 'draft'            
             cr.execute('''select id,sequence as seq,from_date ,to_date,active,name as p_name,
                         logic ,expected_logic_result ,special, special1, special2, special3 ,description,
-                        pr.promotion_count, pr.monthly_promotion,code as p_code,manual
+                        pr.promotion_count, pr.monthly_promotion,code as p_code,manual,main_group
                         from promos_rules pr ,promos_rules_res_branch_rel pro_br_rel
                         where pr.active = true                     
                         and pr.id = pro_br_rel.promos_rules_id
