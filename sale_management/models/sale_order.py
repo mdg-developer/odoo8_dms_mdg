@@ -171,6 +171,7 @@ class sale_order(osv.osv):
          'promos_line_ids':fields.one2many('sale.order.promotion.line', 'promo_line_id', 'Promotion Lines'),
         'cancel_user_id': fields.many2one('res.users', 'Cancel By'),
         'is_entry': fields.boolean('Is Entry Data',default=False),
+        'rebate_later': fields.boolean("Rebate Later" , default=False,readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
 
                }
 

@@ -681,6 +681,8 @@ class mobile_sale_order(osv.osv):
                                             'customer_code':ms_ids.customer_code,
                                             'branch_id':ms_ids.branch_id.id,
                                              'note':ms_ids.note,
+                                            'rebate_later':ms_ids.rebate_later,
+
 
                                         }
                     soId = soObj.create(cr, uid, soResult, context=context)

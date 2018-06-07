@@ -135,6 +135,7 @@ class account_invoice(osv.osv):
              "The payment term may compute several due dates, for example 50% now, 50% in one month."),
         'paid_amount': fields.function(_get_paid_amount, type='char', string='Paid Amount',digits_compute= dp.get_precision('Product Price')),     
         'is_entry':fields.boolean('Is Entry'),
+        'rebate_later': fields.boolean('Rebate Later', default=False, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
 
 }
         

@@ -289,6 +289,7 @@ class pre_sale_order(osv.osv):
                                                          'payment_type':preObj_ids.type,
                                                         'pricelist_id':preObj_ids.pricelist_id.id,
                                                         'pre_order':True,
+                                                        'rebate_later':preObj_ids.rebate_later,
                                                         'delivery_id':delivery_id,
                                                         'branch_id':preObj_ids.branch_id.id,
                                                         'company_id':company_id,

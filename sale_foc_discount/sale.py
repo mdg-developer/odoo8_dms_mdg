@@ -448,6 +448,7 @@ class sale_order(osv.osv):
             'additional_discount':order.additional_discount,
             'discount_total':order.total_dis,
             'is_entry':order.is_entry,
+            'rebate_later':order.rebate_later,
         }
 
         # Care for deprecated _inv_get() hook - FIXME: to be removed after 6.1

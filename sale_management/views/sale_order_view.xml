@@ -52,10 +52,11 @@
 						domain="[('payment_type','=','credit'),('due_date','&gt;=',current_date),('due_date','&lt;=',(context_today() + relativedelta(days = 15)).strftime('%Y-%m-%d'))]" />
 					<filter name="overdue" string="Overdue Customer"
 						domain="[('payment_type','=','credit'),('invoiced','=',False),('due_date','&lt;',current_date)]" />
-                    <filter name="shipped" string="Delivered" domain="[('shipped','=',True)]" />
-                    <filter name="invoiced" string="Invoiced" domain="[('state','=','progress')]" />
-                    <filter name="pending_invoice" string="Pending Invoice" domain="[('state','=','manual')]" />
-                    <filter name="is_entry" string="Is Entry Data" domain="[('is_entry','=',True)]" />
+					<filter name="shipped" string="Delivered" domain="[('shipped','=',True)]" />
+					<filter name="invoiced" string="Invoiced" domain="[('state','=','progress')]" />
+					<filter name="pending_invoice" string="Pending Invoice"
+						domain="[('state','=','manual')]" />
+					<filter name="is_entry" string="Is Entry Data" domain="[('is_entry','=',True)]" />
 				</xpath>
 				<xpath expr="//search/group/filter[@string='Order Month']"
 					position="before">
@@ -70,10 +71,9 @@
 				<xpath expr="//search/group/filter[@string='Salesperson']"
 					position="replace">
 					<filter string="Salesman Name" domain="[]"
-						context="{'group_by':'user_id'}" />        
-                    <filter string="Status" domain="[]"
-                        context="{'group_by':'state'}" />                                           
-										
+						context="{'group_by':'user_id'}" />
+					<filter string="Status" domain="[]" context="{'group_by':'state'}" />
+
 				</xpath>
 			</field>
 		</record>
@@ -89,12 +89,12 @@
 					<button name="is_generate_RFI" string="Missed Order" type="object"
 						class="oe_highlight" states="manual" groups="base.group_user" />
 				</xpath>
-                <xpath expr="//button[@name='action_cancel']"
-                    position="after">
-                     <button name="action_reverse" states="manual,progress" string="Reverse Order" type="object" groups="base.group_user"/>
-                </xpath>                
+				<xpath expr="//button[@name='action_cancel']" position="after">
+					<button name="action_reverse" states="manual,progress"
+						string="Reverse Order" type="object" groups="base.group_user" />
+				</xpath>
 
-								
+
 				<xpath expr="//form/sheet/notebook/page/field/tree/field[@name='name']"
 					position="replace">
 					<field name="name" invisible="1" />
@@ -107,10 +107,11 @@
 				<field name="pricelist_id" position="after">
 					<field name="tb_ref_no" attrs="{'readonly':[('state','!=','draft')]}"></field>
 					<field name="delivery_remark" />
+					<field name="rebate_later" />
+					
 				</field>
 				<field name="date_order" position="after">
-					<field name="payment_type" on_change="on_change_payment_type(partner_id,payment_type)"
-						/>
+					<field name="payment_type" on_change="on_change_payment_type(partner_id,payment_type)" />
 					<field name="payment_term" options="{'no_create': True}" />
 					<field name="due_date"></field>
 				</field>
@@ -160,13 +161,17 @@
 						required="1" attrs="{'readonly':[('state','!=','draft')]}"
 						context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'account.group_account_invoice', 'base.group_sale_salesman_all_leads']}" />
 					<field name="delivery_id" attrs="{'readonly':[('state','!=','draft')]}"></field>
-					<field name="create_uid" readonly="1" string ="Entry By" attrs="{'invisible':[('is_entry','!=',True)]}"/>
-					<field name="write_uid" readonly="1" attrs="{'invisible':[('is_entry','!=',True)]}"/>
-					<field name="cancel_user_id" attrs="{'readonly':[('state','=','cancel')],'invisible':[('state','not in',('cancel'))]}"></field>
+					<field name="create_uid" readonly="1" string="Entry By"
+						attrs="{'invisible':[('is_entry','!=',True)]}" />
+					<field name="write_uid" readonly="1"
+						attrs="{'invisible':[('is_entry','!=',True)]}" />
+					<field name="cancel_user_id"
+						attrs="{'readonly':[('state','=','cancel')],'invisible':[('state','not in',('cancel'))]}"></field>
 				</field>
 				<field name="invoiced" position="before">
+
 					<field name="pre_order" />
-					<field name="is_entry" readonly="1"/>										
+					<field name="is_entry" readonly="1" />
 					<field name="is_generate" />
 				</field>
 				<xpath expr="/form/sheet/notebook/page[@string='Order Lines']"
@@ -184,12 +189,12 @@
 										<field name="is_discount" />
 										<field name="foc_qty" />
 										<field name="discount_amount" />
-										<field name="discount_percent" />										
+										<field name="discount_percent" />
 										<field name="manual" />
 									</group>
 								</group>
 							</form>
-							<tree string="Promotion Lines" editable="bottom" >
+							<tree string="Promotion Lines" editable="bottom">
 								<field name="pro_id" on_change="onchange_promo_id(pro_id)" />
 								<field name="from_date" />
 								<field name="to_date" />
@@ -198,7 +203,7 @@
 								<field name="is_discount" />
 								<field name="foc_qty" />
 								<field name="discount_amount" />
-								<field name="discount_percent" />														
+								<field name="discount_percent" />
 								<field name="manual" />
 							</tree>
 						</field>
@@ -216,27 +221,27 @@
 			<field name="arch" type="xml">
 
 				<xpath expr="//field[@name='user_id']" position="replace">
-                    <field name="user_id" string="Salesman Name" />
-                    <field name="shipped" string="Delivered" />
-                    <field name="is_entry" string="Is Entry Data" />
+					<field name="user_id" string="Salesman Name" />
+					<field name="shipped" string="Delivered" />
+					<field name="is_entry" string="Is Entry Data" />
 				</xpath>
 			</field>
 		</record>
-		
-        <record id="inherit_entry_view_order_tree" model="ir.ui.view">
-            <field name="name">sale.order.form</field>
-            <field name="model">sale.order</field>
-            <field name="inherit_id" ref="sale.view_order_tree" />
-            <field name="arch" type="xml">
 
-                <xpath expr="//field[@name='state']" position="after">
-                    <field name="user_id" string="Salesman Name" />
-                    <field name="shipped" string="Delivered" />
-                    <field name="is_entry" string="Is Entry Data" />
-                </xpath>
-            </field>
-        </record>        
-		
+		<record id="inherit_entry_view_order_tree" model="ir.ui.view">
+			<field name="name">sale.order.form</field>
+			<field name="model">sale.order</field>
+			<field name="inherit_id" ref="sale.view_order_tree" />
+			<field name="arch" type="xml">
+
+				<xpath expr="//field[@name='state']" position="after">
+					<field name="user_id" string="Salesman Name" />
+					<field name="shipped" string="Delivered" />
+					<field name="is_entry" string="Is Entry Data" />
+				</xpath>
+			</field>
+		</record>
+
 		<record model="ir.ui.view" id="sale_view_inherit123">
 			<field name="name">sale.order.inherit</field>
 			<field name="model">sale.order</field>
