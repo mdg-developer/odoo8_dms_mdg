@@ -66,6 +66,8 @@
 								<field name="balance" readonly="1" />
 								<field name="is_convert" />
 								<field name="print_count" />
+								<field name="rebate_later" />
+								
 							</group>
 						</group>
 
