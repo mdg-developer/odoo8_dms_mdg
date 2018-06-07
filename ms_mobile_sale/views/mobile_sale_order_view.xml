@@ -44,6 +44,7 @@
 								<field name="pricelist_id" readonly="1" />
 								<field name="mso_latitude" digits="(14,15)" readonly="0" />
 								<field name="mso_longitude" digits="(14,15)" readonly="0" />
+								<field name="order_saleperson" readonly="1" />
 								<field name="note" class="oe_inline" placeholder="Terms and conditions..."
 									readonly="1" />
 							</group>
