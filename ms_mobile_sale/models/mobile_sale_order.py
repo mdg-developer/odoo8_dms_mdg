@@ -110,6 +110,7 @@ class mobile_sale_order(osv.osv):
       'print_count':fields.integer('RePrint Count'),
       'order_team':fields.many2one('crm.case.section', 'Order Team'),
       'rebate_later':fields.boolean('Rebate Later', readonly=True),
+      'order_saleperson': fields.many2one('res.users', 'Order Saleperson'),
    #     'journal_id'  : fields.many2one('account.journal', 'Journal' ,domain=[('type','in',('cash','bank'))]),   
     }
     _order = 'id desc'
@@ -211,6 +212,7 @@ class mobile_sale_order(osv.osv):
                         'print_count':so['print_count'],
                         'order_team':order_team,
                         'rebate_later':rebate,
+                        'order_saleperson':so['order_saleperson'],
                     }
                     s_order_id = mobile_sale_order_obj.create(cursor, user, mso_result, context=context)
                     so_ids.append(s_order_id);
