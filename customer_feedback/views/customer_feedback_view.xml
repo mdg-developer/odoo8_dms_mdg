@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record id="view_customer_feedback_form" model="ir.ui.view">
+			<field name="name">Customer Feedback Form</field>
+			<field name="model">customer.feedback</field>
+			<field name="arch" type="xml">
+				<form string="Customer Feedback" version="7.0">
+					<header>
+						<button name="action_assign" string="Approve"
+							type="object" class="oe_highlight" groups="base.group_user"
+							attrs="{'invisible':[('m_status', 'in', ('resolve','open'))]}">
+						</button>
+						<button name="action_done" string="Assign"
+							type="object" class="oe_highlight" groups="base.group_user"
+							attrs="{'invisible':[('m_status', '!=', 'open')]}">
+						</button>						
+						
+						<field name="m_status" widget="statusbar" statusbar_visible="draft,open,resolve"
+							statusbar_colors='{"draft":"red","open":"blue","resolve":"blue"}' />
+					</header>
+					<sheet>
+						<group>
+							<group>
+								<field name="date" />	
+								<field name="sale_team_id" class="oe_inline" />											
+								<field name="customer_id" />					
+								<field name="customer_code" />
+								<field name="feedback_type" />
+								<field name="maingroup_id" class="oe_inline" />
+								<field name="contents" />
+							</group>
+							<group>						
+								<field name="assignby" />	
+								<field name="assignto" class="oe_inline" />																			
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="view_customer_feedback_tree" model="ir.ui.view">
+			<field name="name">Customer Feedback Tree</field>
+			<field name="model">customer.feedback</field>
+			<field name="arch" type="xml">
+				<tree string="Customer Feedback" default_order="date desc">
+					<field name="date" />	
+					<field name="sale_team_id" class="oe_inline" />		
+					<field name="customer_id" class="oe_inline"/>																			
+					<field name="customer_code" />
+					<field name="m_status" />
+					<field name="feedback_type" />		
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_customer_feedback_filter" model="ir.ui.view">
+			<field name="name">Customer Feedback</field>
+			<field name="model">customer.feedback</field>
+			<field name="arch" type="xml">
+				<search string="Search Customer Feedback">
+					<group expand="0" string="Group By...">
+						<filter string="Sales Team" icon="terp-partner" domain="[]"
+							context="{'group_by':'sale_team_id'}" />
+						<filter string="Branch" icon="terp-partner" domain="[]" context="{'group_by':'branch_id'}" /> 
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<!-- Action -->
+		<record id="action_customer-feedback" model="ir.actions.act_window">
+			<field name="name">Customer Feedback</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">customer.feedback</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_customer_feedback_tree" />
+			<field name="search_view_id" ref="view_customer_feedback_filter" />
+		</record>
+
+		<!-- First level menu -->
+		<menuitem id="menu_customer_feedback" name="Customer Feedback"
+			action="action_customer-feedback" sequence="5"
+			parent="menu_customization.menu_sale_team_menu" />
+
+	</data>
+</openerp>

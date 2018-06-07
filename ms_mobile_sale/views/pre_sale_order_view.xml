@@ -53,7 +53,8 @@
 								<field name="note" class="oe_inline" placeholder="Terms and conditions..."
 									readonly="1" />
 								<field name="print_count" />
-
+								<field name="rebate_later" />
+								
 							</group>
 						</group>
 						<notebook>
