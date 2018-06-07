@@ -29,7 +29,8 @@ class customer_visit(osv.osv):
                 ('no_authorized_person', 'No Authorized Person'),
                 ('products_already_existed', 'Products Already Existed'),
                  ('sold_other_people_products', 'Sold Other People Products'),
-                 ('other_reason', 'Other Reasons')
+                 ('other_reason', 'Other Reasons'),
+                 ('Sold', 'Sold')
             ], 'Reason'),
                 'other_reason':fields.text('Remark'),
         'm_status':fields.selection([('pending', 'Pending'), ('approved', 'Approved'),
