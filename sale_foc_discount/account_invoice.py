@@ -305,7 +305,7 @@ class account_invoice(models.Model):
     def _compute_amount(self):
         self.amount_untaxed = sum(line.price_subtotal for line in self.invoice_line)
         self.amount_tax = sum(line.amount for line in self.tax_line)
-        total_discount_amt = sum(line.discount_amt for line in self.invoice_line)
+        total_discount_amt = sum(line.discount_amt for line in self.invoice_line) - sum(line.price_subtotal for line in self.invoice_line if line.price_subtotal<0)
         self.discount_total = total_discount_amt
         self.amount_total = self.amount_untaxed + self.amount_tax - self.deduct_amt - (self.amount_untaxed * (self.additional_discount / 100))
          

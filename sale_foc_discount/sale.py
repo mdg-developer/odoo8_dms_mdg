@@ -374,6 +374,9 @@ class sale_order(osv.osv):
             if (type(ids)==int):
                 cr.execute('select sum(discount_amt) from sale_order_line where order_id=%s',(ids,))
                 total_dis_amt=cr.fetchall()[0]
+                cr.execute('select  COALESCE(sum(price_unit),0.0) from sale_order_line where price_unit <0 and order_id=%s',(ids,))
+                product_dis_amt=cr.fetchall()[0]
+                total_dis_amt =total_dis_amt - product_dis_amt               
                 cr.execute('select deduct_amt,amount_untaxed,amount_tax,additional_discount from sale_order where id=%s',(ids,))
                 result=cr.fetchall()[0]
                 deduct=result[0]
@@ -389,14 +392,17 @@ class sale_order(osv.osv):
                 cr.execute('update sale_order so set amount_total=%s,total_dis=%s,deduct_amt=%s,additional_discount=%s where so.id=%s',(total,total_dis_amt,deduct,additional_discount,ids))
             else:
                 cr.execute('select sum(discount_amt) from sale_order_line where order_id=%s',(ids[0],))
-                total_dis_amt=cr.fetchall()[0]
+                total_dis_amt=cr.fetchone()[0]
+                cr.execute('select  COALESCE(sum(price_unit),0.0) from sale_order_line where price_unit <0 and order_id=%s',(ids[0],))
+                product_dis_amt=cr.fetchone()[0]
+                total_dis_amt =total_dis_amt - product_dis_amt                 
                 cr.execute('select deduct_amt,amount_untaxed,amount_tax,additional_discount from sale_order where id=%s',(ids[0],))
                 result=cr.fetchall()[0]
                 deduct=result[0]
                 untax=result[1]
                 amount_tax=result[2]
                 additional_discount=result[3]
-                print result,'result and deduction',deduct,total_dis_amt,additional_discount
+                print result,'result and deduction',ids[0],deduct,total_dis_amt,additional_discount
                 if deduct is None:
                     deduct=0.0
                 if amount_tax is None:
