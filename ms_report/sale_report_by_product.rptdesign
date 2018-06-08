@@ -798,6 +798,9 @@ and pp.id in (select product_product_id from crm_case_section_product_product_re
                     </structure>
                 </list-property>
             </structure>
+            <method name="beforeOpen"><![CDATA[this.queryText =this.queryText.replace("--$branch_id$", "and branch_id in ("+ params["branch_id"].value.join(",")+")")
+this.queryText =this.queryText.replace("--$sale_team_id$", "and team_id in ("+ params["sales_team_id"].value.join(",")+")")       
+this.queryText =this.queryText.replace("--$product_id$", "and product_id in ("+ params["product_id"].value.join(",")+")")       ]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
                 <structure>
