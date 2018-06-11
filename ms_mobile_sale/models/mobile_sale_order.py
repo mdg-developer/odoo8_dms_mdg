@@ -248,12 +248,12 @@ class mobile_sale_order(osv.osv):
                                 if sol['manual_promotion'] and sol['manual_promotion'] != 'null':
                                     promotion_id = sol['manual_promotion']                                           
                                 price =sol['price_unit']
-                                if  float(price) < 0:
-                                    product_price= 0
-                                    discount_amt =-1 * float(price)
-                                else:
-                                    product_price=sol['price_unit']
-                                    discount_amt=sol['discount_amt']                                          
+#                                 if  float(price) < 0:
+#                                     product_price= 0
+#                                     discount_amt =-1 * float(price)
+#                                 else:
+                                product_price=sol['price_unit']
+                                discount_amt=sol['discount_amt']                                          
                                 mso_line_res = {                                                            
                                   'order_id':s_order_id,
                                   'product_type':product_type,
