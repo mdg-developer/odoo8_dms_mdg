@@ -12,7 +12,12 @@ class stock_move(osv.osv):
                         ('other', 'Others'),
                         ], 'Issue Type'),
                }
-    
+class account_invoice(osv.osv):
+    _inherit = "account.invoice"
+    _columns = {
+              'is_nonsale':fields.boolean('is_nonsale',default=False),
+               }
+        
 class stock_picking(osv.osv):
     _inherit = "stock.picking"
     _columns = {
@@ -41,7 +46,15 @@ class product_nonsell_issue(osv.osv):
                 'location_id':location_id,
                 
             }
-        return {'value': values}        
+        return {'value': values}      
+    
+    def get_issue_date(self, cr, uid, ids, field, arg, context=None):
+        
+        res = {}
+        for data in self.browse(cr, uid, ids, context=context):
+            res[data.id] = len(data.plan_line)
+            print 'res', res
+        return res                
     _columns = {
         'name': fields.char('Ref ID', readonly=True),
         'date': fields.date('Request Date', required=True),
@@ -50,8 +63,9 @@ class product_nonsell_issue(osv.osv):
         'warehouse_id': fields.many2one('stock.warehouse', 'Issue Warehouse', required=True),
         'location_id': fields.many2one('stock.location', 'Issue Location', required=True),
         'product_lines': fields.one2many('product.nonsell.issue.line', 'line_id', 'Items Lines', copy=True),
-         'is_claim_attachment': fields.boolean('Is Claim Attachment'),
+         'is_claim_attachment': fields.boolean('Is Memo Attachment?'),
          'claim_attachment':fields.char('Related Credit Note Attachment'),
+         'memo_refno':fields.char('Memo Ref No'),
          'issue_type':fields.selection([
             ('donation', 'Donation'),
             ('sampling', 'Sampling'),
@@ -61,9 +75,10 @@ class product_nonsell_issue(osv.osv):
           #'principle_id': fields.many2one('product.maingroup', 'Principle'),
           'principle_id'  : fields.many2one('res.partner', 'Principle' , domain=[('supplier', '=', True)]),
           'principle_support': fields.float('Principle Support'),
-          'picking_id': fields.many2one('stock.picking', 'Do Ref No', readonly=True),
-         'debit_note':fields.many2one('account.invoice','Debit Note Ref No'),
-         'receive_date': fields.date('Receive Date', required=True),
+          'picking_id': fields.many2one('stock.picking', 'DO Ref No', readonly=True),
+         'debit_note':fields.many2one('account.invoice','Debit Note Ref No', readonly=True),
+         #'receive_date': fields.function(type='date',string='Issue Date', required=False),
+          'receive_date': fields.related('picking_id', 'date_done', type='datetime', string='Issue Date', store=False, readonly=True),
         'journal_id': fields.many2one('account.journal', 'Journal', required=False),
         'pricelist_id': fields.many2one('product.pricelist', 'Price list', required=True),
         'note': fields.text('Remark'),
@@ -86,7 +101,8 @@ class product_nonsell_issue(osv.osv):
         'receive_date':fields.datetime.now,
                   }    
     
-    
+
+        
     def create(self, cursor, user, vals, context=None):
         id_code = self.pool.get('ir.sequence').get(cursor, user,
                                                 'product.nonsell.issue.code') or '/'
@@ -163,9 +179,10 @@ class product_nonsell_issue(osv.osv):
         inv = {
             'name': name,
             'origin': name,
-            'type': 'in_refund',
+            'type': 'out_invoice',
             'journal_id': journal_id,
             'reference': name,
+            'is_nonsale':True,
          #   'account_id': a,
             'partner_id': partner_id,
             #'invoice_line': [(6, 0, lines_ids)],
@@ -194,7 +211,7 @@ class product_nonsell_issue(osv.osv):
                     'quantity': invoice_line.quantity,
                     'product_id': invoice_line.product_id.id or False,
                     'uos_id': invoice_line.uom_id.id or False,
-                    'agreed_price':invoice_line.claim_price or 0.0,
+                    'agreed_price': 0.0,
                     }
                 invoice_line_obj.create(cr, uid, inv_line, context=context)
         return self.write(cr, uid, ids, {'state': 'done','debit_note':inv_id,})        
@@ -231,13 +248,15 @@ class product_nonsell_issue_line(osv.osv):
             total_price = price_unit * product_qty
             res[line.id] = total_price
         return res    
-        
+    
+
+
     _columns = {
         'line_id': fields.many2one('product.nonsell.issue', 'Master Data'),
         'product_id': fields.many2one('product.product', 'Product Name', required=True),
         'uom_id': fields.many2one('product.uom', 'UoM', required=True),
         'quantity': fields.float('Qty', required=True),
-        'price_unit': fields.float('Unit Price', required=True),
+        'price_unit': fields.float('Unit Price',required=False),
         'sub_total':fields.function(_amount_total, string='Sub Total', store=True),
         'claim_price':fields.float('Claim Price' ,readonly=True),
         'claim_total':fields.float('Claim Total' ,readonly=True),

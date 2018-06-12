@@ -1,6 +1,15 @@
 <openerp>
 	<data>
-
+		<record id="inherit_account_invoice_form_nonsale" model="ir.ui.view">
+			<field name="name">account.invoice.form</field>
+			<field name="model">account.invoice</field>
+			<field name="inherit_id" ref="account.invoice_form" />
+			<field name="arch" type="xml">
+				<field name="user_id" position="after">
+					<field name="is_nonsale" invisible="1"/>
+				</field>
+			</field>
+		</record>
 
 		<record id="view_picking_form_issue_type_inherit" model="ir.ui.view">
 			<field name="name">stock.pricking.form</field>
@@ -73,6 +82,8 @@
 								<field name="warehouse_id" attrs="{'readonly':[('state','!=','draft')]}"
 									on_change="on_change_warehouse_id(warehouse_id)" />
 								<field name="location_id" attrs="{'readonly':[('state','!=','draft')]}" />
+								<field name="memo_refno" attrs="{'readonly':[('state','!=','draft')]}" />
+								<field name="debit_note" readonly="1" />
 								<field name="is_claim_attachment" attrs="{'readonly':[('state','!=','draft')]}" />
 								<field name="claim_attachment" attrs="{'readonly':[('state','!=','draft')]}" />
 							</group>
@@ -91,8 +102,7 @@
 										attrs="{'invisible':['|',('is_claim','!=',True),('state','=','done')]}" />
 								</div>
 								<field name="date" attrs="{'readonly':[('state','!=','draft')]}" />
-								<field name="picking_id" attrs="{'readonly':[('state','!=','draft')]}" />
-								<field name="debit_note" readonly="1" />
+								<field name="picking_id" readonly="1" />
 								<field name="receive_date" attrs="{'readonly':[('state','!=','draft')]}" />
 								<field name="journal_id"
 									attrs="{'required':[('is_claim','=',True)],'invisible':[('is_claim','!=',True)],'readonly':[('state','=','done')]}" />
@@ -112,7 +122,7 @@
 											<field name="uom_id"
 												on_change="on_change_product_uom(product_id,parent.pricelist_id,uom_id,quantity)" />
 											<field name="quantity" />
-											<field name="price_unit" />
+											<field name="price_unit" readonly="False" />
 											<field name="sub_total" sum="Total Amount" />
 											<field name="claim_price" />
 											<field name="claim_total" sum="Total Price" />
@@ -130,7 +140,7 @@
 
 		<!-- Menu -->
 		<record model="ir.actions.act_window" id="open_view_product_nonsell_issue_form">
-			<field name="name">Product Nonsell Issue</field>
+			<field name="name">Product Nonsale Issue</field>
 			<field name="res_model">product.nonsell.issue</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
