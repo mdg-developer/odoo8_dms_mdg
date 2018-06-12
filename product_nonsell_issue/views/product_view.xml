@@ -122,7 +122,7 @@
 											<field name="uom_id"
 												on_change="on_change_product_uom(product_id,parent.pricelist_id,uom_id,quantity)" />
 											<field name="quantity" />
-											<field name="price_unit" readonly="False" />
+											<field name="price_unit" readonly="True" />
 											<field name="sub_total" sum="Total Amount" />
 											<field name="claim_price" />
 											<field name="claim_total" sum="Total Price" />
