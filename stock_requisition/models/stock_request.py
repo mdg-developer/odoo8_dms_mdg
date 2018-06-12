@@ -299,6 +299,7 @@ class stock_requisition(osv.osv):
                             small_qty = big_req_quantity * bigger_qty
                             ori_small_qty = quantity
                             total = small_qty + ori_small_qty
+                        opening_qty=0
                         cr.execute('''select  transfer_in.qty - transfer_out.qty as opening
                                 from
                                 (
@@ -325,7 +326,7 @@ class stock_requisition(osv.osv):
                                 where s.state='done'
                                 and s.location_dest_id=tl.id
                                 and s.location_id=fl.id
-                                and date_trunc('day', s.date::date) < %s
+                                and date_trunc('day', s.date::date) <= %s
                                 and  s.location_dest_id=%s
                                 and s.product_id =%s
                                 group by s.location_dest_id, s.product_id
@@ -339,7 +340,7 @@ class stock_requisition(osv.osv):
                                 where s.state='done'
                                 and s.location_dest_id=tl.id
                                 and s.location_id=fl.id
-                                and date_trunc('day', s.date::date) < %s
+                                and date_trunc('day', s.date::date) <= %s
                                 and  s.location_id=%s
                                 and s.product_id =%s
                                 group by s.location_id, s.product_id
@@ -351,21 +352,21 @@ class stock_requisition(osv.osv):
                                 opening_qty=opening_data[0]
                             else:
                                 opening_qty=0
-                        if total > qty_on_hand:
-                            raise osv.except_osv(_('Warning'),
-                                     _('Please Check Qty On Hand For (%s)') % (product.name_template,))
-                        else:          
-                            good_line_obj.create(cr, uid, {'line_id': good_id,
-                                                  'product_id': product_id,
-                                                  'opening_qty': opening_qty,
-                                                  'product_uom': product_uom,
-                                                  'uom_ratio':uom_ratio,
-                                                 'big_uom_id':big_uom_id,
-                                                  'issue_quantity':quantity,
-                                                  'big_issue_quantity':big_req_quantity,
-                                                  'qty_on_hand':qty_on_hand,
-                                                  'sequence':sequence,
-                                                  }, context=context)
+#                         if total > qty_on_hand:
+#                             raise osv.except_osv(_('Warning'),
+#                                      _('Please Check Qty On Hand For (%s)') % (product.name_template,))
+#                         else:          
+                        good_line_obj.create(cr, uid, {'line_id': good_id,
+                                              'product_id': product_id,
+                                              'opening_qty': opening_qty,
+                                              'product_uom': product_uom,
+                                              'uom_ratio':uom_ratio,
+                                             'big_uom_id':big_uom_id,
+                                              'issue_quantity':quantity,
+                                              'big_issue_quantity':big_req_quantity,
+                                              'qty_on_hand':qty_on_hand,
+                                              'sequence':sequence,
+                                              }, context=context)
         return self.write(cr, uid, ids, {'state':'approve' , 'approve_by':uid,'good_issue_id':good_id})    
     
     def cancel(self, cr, uid, ids, context=None):

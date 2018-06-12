@@ -349,14 +349,16 @@ class account_invoice(models.Model):
             property_account_payable_clearing = inv.partner_id.property_account_payable_clearing.id        
         print 'originoriginorigin', origin, is_discount
         if origin:
-            cr.execute("select type,payment_type from account_invoice where origin=%s and state!='cancel' ", (origin,))
+            cr.execute("select type,payment_type,is_nonsale from account_invoice where origin=%s and state!='cancel' ", (origin,))
             type_data = cr.fetchone()
             if type_data:
                 type = type_data[0]
                 payment_type = type_data[1]
+                is_nonsale= type_data[2]
             else:
                 type = None
                 payment_type = None
+                is_nonsale=None
         print 'typeeeeeeeee', type
         if type == 'out_invoice' :
             if line['price'] < 0:
@@ -374,6 +376,9 @@ class account_invoice(models.Model):
                         account_id = product.product_tmpl_id.main_group.property_account_receivable_control.id
                     else:
                         account_id = product.product_tmpl_id.main_group.property_account_receivable.id
+                    if is_nonsale ==True:
+                        partner_data = self.env['res.partner'].browse(part)
+                        account_id=partner_data.property_account_receivable.id    
                 print 'account_id>>>', account_id        
     
                 print 'line>>>', line
@@ -460,7 +465,10 @@ class account_invoice(models.Model):
                     if payment_type == 'credit':
                         account_id = product.product_tmpl_id.main_group.property_account_receivable_control.id
                     else:
-                        account_id = product.product_tmpl_id.main_group.property_account_receivable.id          
+                        account_id = product.product_tmpl_id.main_group.property_account_receivable.id      
+                    if is_nonsale ==True:
+                        partner_data = self.env['res.partner'].browse(part)
+                        account_id=partner_data.property_account_receivable.id                            
                 res = {
                     'date_maturity': line.get('date_maturity', False),
                     'partner_id': part,
@@ -550,14 +558,16 @@ class account_invoice(models.Model):
             property_account_payable_clearing = inv.partner_id.property_account_payable_clearing.id
                     
         if origin:
-            cr.execute("select type,payment_type from account_invoice where origin=%s and state!='cancel' ", (origin,))
+            cr.execute("select type,payment_type,is_nonsale from account_invoice where origin=%s and state!='cancel' ", (origin,))
             type_data = cr.fetchone()
             if type_data:
                 type = type_data[0]
                 payment_type = type_data[1]
+                is_nonsale=type_data[2]
             else:
                 type = None
                 payment_type = None
+                is_nonsale=None
         if type == 'out_invoice'  and line.get('product_id', False) != False :
             product = self.env['product.product'].browse(line.get('product_id', False))
             product_code = product.default_code
@@ -602,7 +612,10 @@ class account_invoice(models.Model):
                     if payment_type == 'credit':
                         account_id = product.product_tmpl_id.main_group.property_account_receivable_control.id
                     else:
-                        account_id = product.product_tmpl_id.main_group.property_account_receivable.id                    
+                        account_id = product.product_tmpl_id.main_group.property_account_receivable.id   
+                    if is_nonsale ==True:
+                        partner_data = self.env['res.partner'].browse(part)
+                        account_id=partner_data.property_account_receivable.id                                                 
                 print 'account_id>>>', account_id        
     
                 print 'line>>>', line
@@ -760,7 +773,10 @@ class account_invoice(models.Model):
                     if payment_type == 'credit':
                         account_id = product.product_tmpl_id.main_group.property_account_receivable_control.id
                     else:
-                        account_id = product.product_tmpl_id.main_group.property_account_receivable.id                    
+                        account_id = product.product_tmpl_id.main_group.property_account_receivable.id  
+                    if is_nonsale ==True:
+                        partner_data = self.env['res.partner'].browse(part)
+                        account_id=partner_data.property_account_receivable.id                      
                     # account_id = product.product_tmpl_id.main_group.property_account_receivable.id
                 print 'account_id>>>', account_id        
                 print 'line>>>', line

@@ -178,7 +178,7 @@ class stock_return(osv.osv):
                                 where s.state='done'
                                 and s.location_dest_id=tl.id
                                 and s.location_id=fl.id
-                                and date_trunc('day', s.date::date) < %s
+                                and date_trunc('day', s.date::date) <= %s
                                 and  s.location_dest_id=%s
                                 and s.product_id =%s
                                 group by s.location_dest_id, s.product_id
@@ -192,7 +192,7 @@ class stock_return(osv.osv):
                                 where s.state='done'
                                 and s.location_dest_id=tl.id
                                 and s.location_id=fl.id
-                                and date_trunc('day', s.date::date) < %s
+                                and date_trunc('day', s.date::date) <= %s
                                 and  s.location_id=%s
                                 and s.product_id =%s
                                 group by s.location_id, s.product_id
@@ -228,7 +228,7 @@ class stock_return(osv.osv):
                                               'rec_small_uom_id':small_uom_id,
                                               'rec_big_uom_id':big_uom,
                                               }, context=context)
-            trans_ids = product_trans_obj.search(cr, uid, [('date', '=', return_date), ('void_flag', '=', 'none'), ('team_id', '=', sale_team_id)], context=context) 
+            trans_ids = product_trans_obj.search(cr, uid, [('date', '>=', return_date),('date', '<=', return_date), ('void_flag', '=', 'none'), ('team_id', '=', sale_team_id)], context=context), 
             for t_id in trans_ids:
                 #NormalReturn Location
                 if return_data.from_wh_normal_return_location_id:      

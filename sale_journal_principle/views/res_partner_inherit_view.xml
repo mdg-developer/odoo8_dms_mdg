@@ -10,8 +10,11 @@
 							
 				
 				<xpath expr="//field[@name='property_supplier_payment_term']" position="after">		
+					<field name="property_account_receivable"  attrs="{'invisible':[('customer','=',True)], 'required':[('supplier','=',True)]}"/>
+						<field name="credit" />
 					<field name="property_account_payable"  attrs="{'invisible':[('customer','=',True)], 'required':[('supplier','=',True)]}"/>
 					<field name="property_account_payable_clearing" attrs="{'invisible':[('customer','=',True)], 'required':[('supplier','=',True)]}"/>
+				
 				</xpath>
 			</field>
 		</record>
