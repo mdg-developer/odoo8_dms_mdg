@@ -142,7 +142,7 @@
             <list-property name="parameters">
                 <structure>
                     <property name="name">param_1</property>
-                    <property name="paramName">from_date</property>
+                    <property name="paramName">to_date</property>
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
@@ -373,7 +373,7 @@
                 </structure>
                 <structure>
                     <property name="name">param_22</property>
-                    <property name="paramName">to_date</property>
+                    <property name="paramName">from_date</property>
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
@@ -455,28 +455,6 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">29</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_30</property>
-                    <property name="paramName">from_date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">30</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_31</property>
-                    <property name="paramName">from_date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">31</property>
                     <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
@@ -634,7 +612,7 @@
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select abc.x_product_code,abc.x_product_category,abc.x_product_maingroup,abc.x_product_group,abc.x_product,abc.uom_name,abc.price_unit,sum(abc.x_in) x_in,sum(abc.x_out)x_out,
-sum(abc.x_opening)x_opening,sum(abc.x_closing)x_closing,sum(abc.value_qty)value_qty from 
+sum(abc.x_opening)x_opening,(sum(abc.x_opening)+sum(abc.x_closing))x_closing,((sum(abc.x_opening)+sum(abc.x_closing)) * abc.price_unit)value_qty from 
 (select pp.name as x_product,
 pp.default_code as x_product_code,
 pp.categ as x_product_category,
@@ -653,12 +631,10 @@ greatest(0,lm_transfer_in.qty) + greatest(0,lm_purchase_in.qty) + greatest(0,lm_
 ( greatest(0,purchase_in.qty) + greatest(0,sale_return_in.qty) + greatest(0,adjustment.qty)) as x_in,
 ( greatest(0,purchase_return.qty) + greatest(0,sale_out.qty) + greatest(0,scrap.qty) + greatest(0,loss.qty)) as x_out,
 
-(((greatest(0,lm_transfer_in.qty) + greatest(0,lm_purchase_in.qty) + greatest(0,lm_sale_return_in.qty) + 
-greatest(0,transfer_in.qty) + greatest(0,purchase_in.qty) + greatest(0,sale_return_in.qty)) -
-(greatest(0,lm_transfer_out.qty) + greatest(0,lm_purchase_return.qty) + greatest(0,lm_sale_out.qty) +
-greatest(0,transfer_out.qty) + greatest(0,purchase_return.qty) + greatest(0,sale_out.qty)) - 
-(greatest(0,lm_scrap.qty)+greatest(0,lm_loss.qty) + greatest(0,scrap.qty)+greatest(0,loss.qty)) + 
-(greatest(0,lm_adjustment.qty) + greatest(0,adjustment.qty))) * coalesce((select value_float
+(((greatest(0,transfer_in.qty) + greatest(0,purchase_in.qty) + greatest(0,sale_return_in.qty)) -
+(greatest(0,transfer_out.qty) + greatest(0,purchase_return.qty) + greatest(0,sale_out.qty)) - 
+(greatest(0,scrap.qty)+greatest(0,loss.qty)) + 
+(greatest(0,adjustment.qty))) * coalesce((select value_float
 from ir_property ip,ir_model_fields im 
 where im.id=ip.fields_id 
 and model='product.template'  
@@ -675,29 +651,28 @@ greatest(0,scrap.qty) as x_scrap,
 greatest(0,loss.qty) as x_loss,
 greatest(0,adjustment.qty) as x_adjustment,
 
-(greatest(0,lm_transfer_in.qty) + greatest(0,lm_purchase_in.qty) + greatest(0,lm_sale_return_in.qty) + 
-greatest(0,transfer_in.qty) + greatest(0,purchase_in.qty) + greatest(0,sale_return_in.qty)) -
-(greatest(0,lm_transfer_out.qty) + greatest(0,lm_purchase_return.qty) + greatest(0,lm_sale_out.qty) +
-greatest(0,transfer_out.qty) + greatest(0,purchase_return.qty) + greatest(0,sale_out.qty)) - 
-(greatest(0,lm_scrap.qty)+greatest(0,lm_loss.qty) + greatest(0,scrap.qty)+greatest(0,loss.qty)) + 
-(greatest(0,lm_adjustment.qty) + greatest(0,adjustment.qty))
+--(greatest(0,lm_purchase_in.qty))+
+(greatest(0,transfer_in.qty) + greatest(0,purchase_in.qty) + greatest(0,sale_return_in.qty)) -
+(greatest(0,transfer_out.qty) + greatest(0,purchase_return.qty) + greatest(0,sale_out.qty)) - 
+(greatest(0,scrap.qty)+greatest(0,loss.qty)) + 
+(greatest(0,adjustment.qty))
 as x_closing
 from 
 stock_warehouse w,
 (
-	select tmp.location_id,tmp.product_id,tmp.date,tmp.price_unit
+	select tmp.id,tmp.location_id,tmp.product_id,tmp.date,tmp.price_unit
 	from
 	(
-		select location_id,product_id,date_trunc('day', date::date) as date ,price_unit
+		select id,location_id,product_id,date_trunc('day', date::date) as date ,price_unit
 		from stock_move
 		where 
 		state='done' and
-		((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?	
+		((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date <= ?	
 		union
-		select location_dest_id,product_id,date_trunc('day', date::date) as date ,price_unit
+		select id,location_dest_id,product_id,date_trunc('day', date::date) as date ,price_unit
 		from stock_move
 		where state='done'
-		and ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?			
+		and ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date <= ?			
 	)tmp
 )
  s
@@ -723,7 +698,7 @@ from stock_location
 )ll on s.location_id=ll.id
 left join
 (
-select product_id,location_dest_id,greatest(0,sum(product_qty)) as qty, date_trunc('day', date::date) as date
+select product_id,location_dest_id,greatest(0,sum(product_qty)) as qty, date_trunc('day', date::date) as date,stock_move.id
 from stock_move,
 stock_location fl,
 stock_location tl
@@ -732,12 +707,12 @@ and state='done'
 and stock_move.location_dest_id=tl.id
 and stock_move.location_id=fl.id
 and fl.usage='internal' and tl.usage='internal' and tl.scrap_location=false
-group by location_dest_id, product_id, date_trunc('day', date::date)
-) transfer_in on transfer_in.product_id=s.product_id and transfer_in.location_dest_id=s.location_id
+group by location_dest_id, product_id, date_trunc('day', date::date),stock_move.id
+) transfer_in on transfer_in.product_id=s.product_id and transfer_in.location_dest_id=s.location_id and transfer_in.id=s.id
 and transfer_in.date=s.date
 left join
 (
-select product_id,location_dest_id,greatest(0,sum(product_qty)) as qty, date_trunc('day', date::date) as date
+select product_id,location_dest_id,greatest(0,sum(product_qty)) as qty, date_trunc('day', date::date) as date,stock_move.id
 from stock_move,
 stock_location fl,
 stock_location tl
@@ -746,12 +721,12 @@ and state='done'
 and stock_move.location_dest_id=tl.id
 and stock_move.location_id=fl.id
 and fl.usage='supplier' and tl.usage='internal'
-group by location_dest_id, product_id, date_trunc('day', date::date)
-) purchase_in on purchase_in.product_id=s.product_id and purchase_in.location_dest_id=s.location_id
+group by location_dest_id, product_id, date_trunc('day', date::date),stock_move.id
+) purchase_in on purchase_in.product_id=s.product_id and purchase_in.location_dest_id=s.location_id and purchase_in.id=s.id
 and purchase_in.date=s.date
 left join
 (
-select stock_move.product_id,stock_move.location_id,greatest(0,sum(stock_move.product_qty)) as qty, date_trunc('day', date::date) as date
+select stock_move.product_id,stock_move.location_id,greatest(0,sum(stock_move.product_qty)) as qty, date_trunc('day', date::date) as date,stock_move.id
 from stock_move,
 stock_location fl,
 stock_location tl
@@ -760,12 +735,12 @@ and state='done'
 and stock_move.location_dest_id=tl.id
 and stock_move.location_id=fl.id
 and fl.usage='internal' and tl.usage='internal' and tl.scrap_location=false
-group by stock_move.location_id, stock_move.product_id, date_trunc('day', date::date)
-) transfer_out on s.product_id=transfer_out.product_id and s.location_id=transfer_out.location_id
+group by stock_move.location_id, stock_move.product_id, date_trunc('day', date::date),stock_move.id
+) transfer_out on s.product_id=transfer_out.product_id and s.location_id=transfer_out.location_id and transfer_out.id=s.id
 and transfer_out.date=s.date
 left join
 (
-select stock_move.product_id,stock_move.location_id,greatest(0,sum(stock_move.product_qty)) as qty, date_trunc('day', date::date) as date
+select stock_move.product_id,stock_move.location_id,greatest(0,sum(stock_move.product_qty)) as qty, date_trunc('day', date::date) as date,stock_move.id
 from stock_move,
 stock_location fl,
 stock_location tl
@@ -774,12 +749,12 @@ and state='done'
 and stock_move.location_dest_id=tl.id
 and stock_move.location_id=fl.id
 and fl.usage='internal' and tl.usage='customer'
-group by stock_move.location_id, stock_move.product_id, date_trunc('day', date::date)
-) sale_out on s.product_id=sale_out.product_id and s.location_id=sale_out.location_id
+group by stock_move.location_id, stock_move.product_id, date_trunc('day', date::date),stock_move.id
+) sale_out on s.product_id=sale_out.product_id and s.location_id=sale_out.location_id and sale_out.id=s.id
 and sale_out.date=s.date
 left join
 (
-select product_id,location_dest_id,greatest(0,sum(product_qty)) as qty, date_trunc('day', date::date) as date
+select product_id,location_dest_id,greatest(0,sum(product_qty)) as qty, date_trunc('day', date::date) as date,stock_move.id
 from stock_move,
 stock_location fl,
 stock_location tl
@@ -788,12 +763,12 @@ and state='done'
 and stock_move.location_dest_id=tl.id
 and stock_move.location_id=fl.id
 and fl.usage='customer' and tl.usage='internal'
-group by location_dest_id, product_id, date_trunc('day', date::date)
-) sale_return_in on sale_return_in.product_id=s.product_id and sale_return_in.location_dest_id=s.location_id
+group by location_dest_id, product_id, date_trunc('day', date::date),stock_move.id
+) sale_return_in on sale_return_in.product_id=s.product_id and sale_return_in.location_dest_id=s.location_id and sale_return_in.id=s.id
 and sale_return_in.date=s.date
 left join
 (
-select stock_move.product_id,stock_move.location_id,greatest(0,sum(stock_move.product_qty)) as qty, date_trunc('day', date::date) as date
+select stock_move.product_id,stock_move.location_id,greatest(0,sum(stock_move.product_qty)) as qty, date_trunc('day', date::date) as date,stock_move.id
 from stock_move,
 stock_location fl,
 stock_location tl
@@ -802,12 +777,12 @@ and state='done'
 and stock_move.location_dest_id=tl.id
 and stock_move.location_id=fl.id
 and fl.usage='internal' and tl.usage='supplier'
-group by stock_move.location_id, stock_move.product_id, date_trunc('day', date::date)
-) purchase_return on purchase_return.product_id=s.product_id and purchase_return.location_id=s.location_id
+group by stock_move.location_id, stock_move.product_id, date_trunc('day', date::date),stock_move.id
+) purchase_return on purchase_return.product_id=s.product_id and purchase_return.location_id=s.location_id and purchase_return.id=s.id
 and purchase_return.date=s.date
 left join
 (
-select stock_move.product_id,stock_move.location_id,greatest(0,sum(stock_move.product_qty)) as qty, date_trunc('day', date::date) as date
+select stock_move.product_id,stock_move.location_id,greatest(0,sum(stock_move.product_qty)) as qty, date_trunc('day', date::date) as date,stock_move.id
 from stock_move,
 stock_location fl,
 stock_location tl
@@ -816,12 +791,12 @@ and state='done'
 and stock_move.location_dest_id=tl.id
 and stock_move.location_id=fl.id
 and fl.usage='internal' and tl.scrap_location=true
-group by stock_move.location_id, stock_move.product_id, date_trunc('day', date::date)
-) scrap on s.product_id=scrap.product_id and s.location_id=scrap.location_id
+group by stock_move.location_id, stock_move.product_id, date_trunc('day', date::date),stock_move.id
+) scrap on s.product_id=scrap.product_id and s.location_id=scrap.location_id and scrap.id=s.id
 and scrap.date=s.date
 left join
 (
-select stock_move.product_id,stock_move.location_id,greatest(0,sum(stock_move.product_qty)) as qty, date_trunc('day', date::date) as date
+select stock_move.product_id,stock_move.location_id,greatest(0,sum(stock_move.product_qty)) as qty, date_trunc('day', date::date) as date,stock_move.id
 from stock_move,
 stock_location fl,
 stock_location tl
@@ -830,12 +805,12 @@ and state='done'
 and stock_move.location_dest_id=tl.id
 and stock_move.location_id=fl.id
 and fl.usage='internal' and tl.usage='inventory' and tl.name='Inventory loss'
-group by stock_move.location_id, stock_move.product_id, date_trunc('day', date::date)
-) loss on s.product_id=loss.product_id and s.location_id=loss.location_id
+group by stock_move.location_id, stock_move.product_id, date_trunc('day', date::date),stock_move.id
+) loss on s.product_id=loss.product_id and s.location_id=loss.location_id and loss.id=s.id
 and loss.date=s.date
 left join
 (
-select stock_move.product_id,stock_move.location_dest_id,greatest(0,sum(stock_move.product_qty)) as qty, date_trunc('day', date::date) as date
+select stock_move.product_id,stock_move.location_dest_id,greatest(0,sum(stock_move.product_qty)) as qty, date_trunc('day', date::date) as date,stock_move.id
 from stock_move,
 stock_location fl,
 stock_location tl
@@ -844,28 +819,28 @@ and state='done'
 and stock_move.location_dest_id=tl.id
 and stock_move.location_id=fl.id
 and fl.usage='inventory' and fl.name='Inventory loss' and tl.usage='internal' 
-group by stock_move.location_dest_id, stock_move.product_id, date_trunc('day', date::date)
-) adjustment on s.product_id=adjustment.product_id and s.location_id=adjustment.location_dest_id
+group by stock_move.location_dest_id, stock_move.product_id, date_trunc('day', date::date),stock_move.id
+) adjustment on s.product_id=adjustment.product_id and s.location_id=adjustment.location_dest_id and adjustment.id=s.id
 and adjustment.date=s.date
 -- //////////////////////////////////////////////////////////////////////////////////////////////////// --
 -- //////////////////////////////////////////////////////////////////////////////////////////////////// --
 
 left join
 (
-select product_id,location_dest_id,greatest(0,sum(product_qty)) as qty
+select product_id,location_dest_id,greatest(0,sum(product_qty)) as qty,stock_move.id
 from stock_move,
 stock_location fl,
 stock_location tl
-where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? 
+where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date < ?
 and state='done'
 and stock_move.location_dest_id=tl.id
 and stock_move.location_id=fl.id
 and fl.usage='internal' and tl.usage='internal' and tl.scrap_location=false
-group by location_dest_id, product_id
-) lm_transfer_in on lm_transfer_in.product_id=s.product_id and lm_transfer_in.location_dest_id=s.location_id
+group by location_dest_id, product_id,stock_move.id
+) lm_transfer_in on lm_transfer_in.product_id=s.product_id and lm_transfer_in.location_dest_id=s.location_id and lm_transfer_in.id=s.id
 left join
 (
-select product_id,location_dest_id,greatest(0,sum(product_qty)) as qty
+select product_id,location_dest_id,greatest(0,sum(product_qty)) as qty,stock_move.id
 from stock_move,
 stock_location fl,
 stock_location tl
@@ -874,67 +849,67 @@ and state='done'
 and stock_move.location_dest_id=tl.id
 and stock_move.location_id=fl.id
 and fl.usage='supplier' and tl.usage='internal'
-group by location_dest_id, product_id
-) lm_purchase_in on lm_purchase_in.product_id=s.product_id and lm_purchase_in.location_dest_id=s.location_id
+group by location_dest_id, product_id,stock_move.id
+) lm_purchase_in on lm_purchase_in.product_id=s.product_id and lm_purchase_in.location_dest_id=s.location_id and lm_purchase_in.id=s.id
 left join
 (
-select stock_move.product_id,stock_move.location_id,greatest(0,sum(stock_move.product_qty)) as qty
+select stock_move.product_id,stock_move.location_id,greatest(0,sum(stock_move.product_qty)) as qty,stock_move.id
 from stock_move,
 stock_location fl,
 stock_location tl
-where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? 
+where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date < ?
 and state='done'
 and stock_move.location_dest_id=tl.id
 and stock_move.location_id=fl.id
 and fl.usage='internal' and tl.usage='internal' and tl.scrap_location=false
-group by stock_move.location_id, stock_move.product_id
-) lm_transfer_out on s.product_id=lm_transfer_out.product_id and s.location_id=lm_transfer_out.location_id
+group by stock_move.location_id, stock_move.product_id,stock_move.id
+) lm_transfer_out on s.product_id=lm_transfer_out.product_id and s.location_id=lm_transfer_out.location_id and lm_transfer_out.id=s.id
 left join
 (
-select stock_move.product_id,stock_move.location_id,greatest(0,sum(stock_move.product_qty)) as qty
+select stock_move.product_id,stock_move.location_id,greatest(0,sum(stock_move.product_qty)) as qty,stock_move.id
 from stock_move,
 stock_location fl,
 stock_location tl
-where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? 
+where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date < ?
 and state='done'
 and stock_move.location_dest_id=tl.id
 and stock_move.location_id=fl.id
 and fl.usage='internal' and tl.usage='customer'
-group by stock_move.location_id, stock_move.product_id
-) lm_sale_out on s.product_id=lm_sale_out.product_id and s.location_id=lm_sale_out.location_id
+group by stock_move.location_id, stock_move.product_id,stock_move.id
+) lm_sale_out on s.product_id=lm_sale_out.product_id and s.location_id=lm_sale_out.location_id and lm_sale_out.id=s.id
 left join
 (
-select product_id,location_dest_id,greatest(0,sum(product_qty)) as qty
+select product_id,location_dest_id,greatest(0,sum(product_qty)) as qty,stock_move.id
 from stock_move,
 stock_location fl,
 stock_location tl
-where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? 
+where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date < ?
 and state='done'
 and stock_move.location_dest_id=tl.id
 and stock_move.location_id=fl.id
 and fl.usage='customer' and tl.usage='internal'
-group by location_dest_id, product_id
-) lm_sale_return_in on lm_sale_return_in.product_id=s.product_id and lm_sale_return_in.location_dest_id=s.location_id
+group by location_dest_id, product_id,stock_move.id
+) lm_sale_return_in on lm_sale_return_in.product_id=s.product_id and lm_sale_return_in.location_dest_id=s.location_id and lm_sale_return_in.id=s.id
 left join
 (
-select stock_move.product_id,stock_move.location_id,greatest(0,sum(stock_move.product_qty)) as qty
+select stock_move.product_id,stock_move.location_id,greatest(0,sum(stock_move.product_qty)) as qty,stock_move.id
 from stock_move,
 stock_location fl,
 stock_location tl
-where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? 
+where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date < ?
 and state='done'
 and stock_move.location_dest_id=tl.id
 and stock_move.location_id=fl.id
 and fl.usage='internal' and tl.usage='supplier'
-group by stock_move.location_id, stock_move.product_id
-) lm_purchase_return on lm_purchase_return.product_id=s.product_id and lm_purchase_return.location_id=s.location_id
+group by stock_move.location_id, stock_move.product_id,stock_move.id
+) lm_purchase_return on lm_purchase_return.product_id=s.product_id and lm_purchase_return.location_id=s.location_id and lm_purchase_return.id=s.id
 left join
 (
 select stock_move.product_id,stock_move.location_id,greatest(0,sum(stock_move.product_qty)) as qty
 from stock_move,
 stock_location fl,
 stock_location tl
-where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? 
+where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date < ?
 and state='done'
 and stock_move.location_dest_id=tl.id
 and stock_move.location_id=fl.id
@@ -947,7 +922,7 @@ select stock_move.product_id,stock_move.location_id,greatest(0,sum(stock_move.pr
 from stock_move,
 stock_location fl,
 stock_location tl
-where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? 
+where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date < ?
 and state='done'
 and stock_move.location_dest_id=tl.id
 and stock_move.location_id=fl.id
@@ -960,7 +935,7 @@ select stock_move.product_id,stock_move.location_dest_id,greatest(0,sum(stock_mo
 from stock_move,
 stock_location fl,
 stock_location tl
-where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? 
+where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date < ?  
 and state='done'
 and stock_move.location_dest_id=tl.id
 and stock_move.location_id=fl.id
@@ -1402,36 +1377,6 @@ group by abc.x_product_code,abc.x_product,abc.uom_name,abc.price_unit,abc.x_prod
           <design:identifier>
             <design:name></design:name>
             <design:position>29</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>30</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>31</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
