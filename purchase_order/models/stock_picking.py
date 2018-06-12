@@ -29,7 +29,7 @@ class stock_picking(osv.osv):
                 'etd_date':fields.date('ETD Date'),
                 'eta_date':fields.date('ETA Date'),
                 'order_date':fields.date('Order Confirmed Date'),
-
+                'invoice_date':fields.date('Invoice Date'),
                }    
     #def change_location(self,cr,uid,ids,picking_type_id,context=None):
     def change_location(self,cr,uid,ids,context=None):
@@ -86,7 +86,9 @@ class stock_shipping(osv.osv):
                     date_done = datetime.datetime.strptime(picking.date_done,'%Y-%m-%d %H:%M:%S')
                     invoice_date = date_done.date()
                 if base_on_payment =='order_date':
-                    invoice_date = picking.order_date                                    
+                    invoice_date = picking.order_date    
+                if base_on_payment=='invoice_date':
+                    invoice_date =picking.invoice_date                                
             if invoice_date:
                 value['invoice_date']=invoice_date                         
             usage = picking.move_lines[0].location_id.usage if type == 'incoming' else picking.move_lines[0].location_dest_id.usage

@@ -10,6 +10,12 @@
 						<div class="oe_structure" />
 						<div class="row">
 							<div class="col-xs-6">
+								<br />
+								<br />
+								<br />
+								<h3>
+									<strong>Purchase Order</strong>
+								</h3>
 
 							</div>
 
@@ -26,8 +32,8 @@
 									<span t-field="o.name" />
 								</p>
 								<p>
-									<strong>Supplier:</strong>
-									<span t-field="o.partner_id.name" />
+									<strong>Supplier ID:</strong>
+									<span t-field="o.partner_id.customer_code" />
 								</p>
 							</div>
 						</div>
@@ -58,7 +64,7 @@
 								</div>
 								<div t-if="o.company_id.partner_id">
 									<div t-field="o.company_id.partner_id"
-										t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax" ,"email"], "no_marker": true}' />
+										t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax" ], "no_marker": true}' />
 									<strong>Contact Person:</strong>
 									<span t-field="o.company_id.partner_id.temp_customer" />
 									<br />
@@ -73,10 +79,10 @@
 
 								<div>
 									<strong>Destination:</strong>
-									<span t-field="o.location_id.name" />
+									<span t-field="o.location_id.address" />
 									<br />
 									<strong>Trading Terms:</strong>
-									<span t-field="o.partner_id.mobile" />
+									<span t-field="o.incoterm_id.name" />
 								</div>
 							</div>
 							<div class="col-xs-6">
@@ -84,6 +90,8 @@
 
 									<strong>Payment Term:</strong>
 									<span t-field="o.payment_term_id.name" />
+									after
+									<span t-field="o.partner_id.base_on_payment" />
 									<br />
 									<strong>Currency:</strong>
 									<span t-if="o.currency_id" t-field="o.currency_id.name" />
@@ -149,25 +157,27 @@
 						<div class="row">
 							<div class="col-xs-4 pull-right">
 								<table class="table table-condensed">
+									<!-- <tr class="border-black"> -->
+									<!-- <td> -->
+									<!-- <strong>Total Without Taxes</strong> -->
+									<!-- </td> -->
+									<!-- <td class="text-right"> -->
+									<!-- <span t-field="o.amount_untaxed" -->
+									<!-- t-field-options='{"widget": "monetary", "display_currency": 
+										"o.currency_id"}' /> -->
+									<!-- </td> -->
+									<!-- </tr> -->
+									<!-- <tr> -->
+									<!-- <td>Taxes</td> -->
+									<!-- <td class="text-right"> -->
+									<!-- <span t-field="o.amount_tax" -->
+									<!-- t-field-options='{"widget": "monetary", "display_currency": 
+										"o.currency_id"}' /> -->
+									<!-- </td> -->
+									<!-- </tr> -->
 									<tr class="border-black">
 										<td>
-											<strong>Total Without Taxes</strong>
-										</td>
-										<td class="text-right">
-											<span t-field="o.amount_untaxed"
-												t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}' />
-										</td>
-									</tr>
-									<tr>
-										<td>Taxes</td>
-										<td class="text-right">
-											<span t-field="o.amount_tax"
-												t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}' />
-										</td>
-									</tr>
-									<tr class="border-black">
-										<td>
-											<strong>Total</strong>
+											<strong>Subtotal</strong>
 										</td>
 										<td class="text-right">
 											<span t-field="o.amount_total"
@@ -177,7 +187,9 @@
 								</table>
 							</div>
 						</div>
-
+						<strong>Amount In Words:</strong>
+						<p t-field="o.inword" />
+						<div class="oe_structure" />
 						<strong>Remark:</strong>
 						<p t-field="o.notes" />
 						<div class="oe_structure" />

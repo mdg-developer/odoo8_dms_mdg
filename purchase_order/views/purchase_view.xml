@@ -12,9 +12,13 @@
 				<xpath expr="//field[@name='incoterm_id']" position="replace">
 				</xpath>
 
+				<xpath expr="//field[@name='notes']" position="before">
+					<field name="inword" placeholder="Amount In Words" />
+				</xpath>
+
 				<xpath expr="//field[@name='picking_type_id']" position="after">
 					<field name="incoterm_id" />
-					<!-- <field name="is_agreed" /> -->
+					<!-- <field name="inword" /> -->
 					<!-- <field name="is_margin" /> -->
 				</xpath>
 				<xpath expr="//field[@name='price_subtotal']" position="after">
@@ -37,7 +41,19 @@
 				</field>
 			</field>
 		</record>
+		<record id="view_location_form_address" model="ir.ui.view">
+			<field name="name">view.location.form</field>
+			<field name="model">stock.location</field>
+			<field name="inherit_id" ref="stock.view_location_form" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//field[@name='partner_id']" position="after">
 
+						<field name="address" />
+					</xpath>
+				</data>
+			</field>
+		</record>
 
 
 	</data>

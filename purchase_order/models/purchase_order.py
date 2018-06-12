@@ -11,7 +11,11 @@ from openerp.osv.orm import browse_record_list, browse_record, browse_null
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
 from openerp.tools.float_utils import float_compare
   
-  
+class stock_location(osv.osv):
+    _inherit = 'stock.location' 
+    _columns = {
+                'address':fields.char('Address'),
+                }     
 class purchase_order(osv.osv):
     _inherit = 'purchase.order'
 
@@ -39,6 +43,7 @@ class purchase_order(osv.osv):
         }
     
     _columns = {
+           'inword':fields.char('Amount In Words'),     
           'incoterm_id': fields.many2one('stock.incoterms', 'Incoterm', help="International Commercial Terms are a series of predefined commercial terms used in international transactions.", required=True),
           'payment_term_id': fields.many2one('account.payment.term', 'Payment Term', required=True),
 #           'is_agreed': fields.boolean('Agreed Price', states={'confirmed':[('readonly', True)],

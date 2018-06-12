@@ -13,18 +13,14 @@
 					<!-- <field name="picking_type_id" on_change="onchange_picking_type_id(picking_type_id)"/> -->
 				</field>
 				<field name="date_done" position="after">
-				    <field name ="customer" invisible="1"/>
-				    <field name ="supplier" invisible="1"/>
-					<field name="bl_date"
-						attrs="{'invisible':[('customer','=',True)]}" />
-					<field name="staffing_date"
-						attrs="{'invisible':[('customer','=',True)]}" />
-					<field name="etd_date"
-						attrs="{'invisible':[('customer','=',True)]}" />
-					<field name="eta_date"
-						attrs="{'invisible':[('customer','=',True)]}" />
-					<field name="order_date"
-						attrs="{'invisible':[('customer','=',True)]}" />					
+					<field name="customer" invisible="1" />
+					<field name="supplier" invisible="1" />
+					<field name="bl_date" attrs="{'invisible':[('customer','=',True)]}" />
+					<field name="staffing_date" attrs="{'invisible':[('customer','=',True)]}" />
+					<field name="etd_date" attrs="{'invisible':[('customer','=',True)]}" />
+					<field name="eta_date" attrs="{'invisible':[('customer','=',True)]}" />
+					<field name="order_date" attrs="{'invisible':[('customer','=',True)]}" />
+					<field name="invoice_date" attrs="{'invisible':[('customer','=',True)]}" />
 				</field>
 			</field>
 		</record>
@@ -41,5 +37,6 @@
 				</field>
 			</field>
 		</record>
+
 	</data>
 </openerp>	
