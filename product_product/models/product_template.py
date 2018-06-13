@@ -44,6 +44,7 @@ class product_template(osv.osv):
                 'default_code': fields.related('product_variant_ids', 'default_code', type='char', string='Internal Reference'),
                 # new column add
                 'product_principal_ids':fields.many2one('product.principal', 'Product Principal'),
+                
                 #################
                            
                  
@@ -131,6 +132,7 @@ class product_uom_price(osv.osv):
         'length': fields.float('Length', required=True),
         'width': fields.float('Width', required=True),
         'height': fields.float('Height', required=True),
+        'per_pallet':fields.char('Per Pallet', required=True, readonly=False),
     }
 
     _defaults = {
