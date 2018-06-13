@@ -8,6 +8,7 @@ class product_product(osv.osv):
 class product_template(osv.osv):
     _inherit = 'product.template'
     _columns = {
+        'uom_id': fields.many2one('product.uom', 'Base UOM', required=True, help="Default Unit of Measure used for all stock operation."),
         'big_uom_id': fields.many2one('product.uom', 'Bigger UOM', required=True, help="Default Unit of Measure used for all stock operation."),
         'is_foc':fields.boolean('FOC Item'),
         'is_posm':fields.boolean('POSM Item'),
