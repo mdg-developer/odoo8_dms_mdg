@@ -15,7 +15,7 @@ class stock_move(osv.osv):
 class account_invoice(osv.osv):
     _inherit = "account.invoice"
     _columns = {
-              'is_nonsale':fields.boolean('is_nonsale',default=False),
+              'is_nonsale':fields.boolean('Is Claim',default=False),
                }
         
 class stock_picking(osv.osv):
