@@ -29,6 +29,7 @@
 									<field name="length" />
 									<field name="width" />
 									<field name="height" />
+									<field name="per_pallet" />
 								</group>
 							</form>
 							<tree string="UOM Price Lines" editable="bottom">
@@ -41,6 +42,7 @@
 								<field name="length" />
 								<field name="width" />
 								<field name="height" />
+								<field name="per_pallet" />
 							</tree>
 						</field>
 					</page>

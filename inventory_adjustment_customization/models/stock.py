@@ -10,6 +10,8 @@ class stock_inventory(osv.osv):
     _inherit = 'stock.inventory'   
     _columns = {
         'name': fields.char('Inventory Reference', required=False, readonly=True, help="Inventory Name."),
+        'request_by':fields.char('Request By', required=False, readonly=False),
+        'validate_by':fields.many2one('res.users','Validate By', required=False, readonly=True),
 
               }
     
@@ -39,6 +41,7 @@ class stock_inventory(osv.osv):
         #add ref auto name in account move
         if inv.name:
             ctx['ref'] = inv.name           
+        self.write(cr, uid, inv.id, {'validate_by':uid})    
         return super(stock_inventory, self).post_inventory(cr, uid, inv, context=ctx)    
     
 class stock_inventory_line(osv.osv):
@@ -65,6 +68,7 @@ class stock_inventory_line(osv.osv):
             'state': 'confirmed',
             'restrict_lot_id': inventory_line.prod_lot_id.id,
             'restrict_partner_id': inventory_line.partner_id.id,
+            'origin':inventory_line.inventory_id.name,
          }
         inventory_location_id = inventory_line.product_id.property_stock_inventory.id
         if diff < 0:
