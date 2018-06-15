@@ -25,10 +25,10 @@
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="Data Set" id="62">
             <list-property name="columnHints">
                 <structure>
-                    <property name="columnName">branch_name</property>
+                    <property name="columnName">dept_name</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">branch_name</text-property>
-                    <text-property name="heading">branch_name</text-property>
+                    <text-property name="displayName">dept_name</text-property>
+                    <text-property name="heading">dept_name</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">cash</property>
@@ -87,7 +87,7 @@
                 <list-property name="resultSet">
                     <structure>
                         <property name="position">1</property>
-                        <property name="name">branch_name</property>
+                        <property name="name">dept_name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
@@ -121,8 +121,8 @@
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
-                    <property name="name">branch_name</property>
-                    <property name="nativeName">branch_name</property>
+                    <property name="name">dept_name</property>
+                    <property name="nativeName">dept_name</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
@@ -171,12 +171,12 @@
 	     when cash is NULL and bank is NULL then 0.00 end as total
 	 from 
 	(
-		select branch_name,cash,bank,month,year from 
+		select dept_name,cash,bank,month,year from 
 		(
-			select branch_name,month,year ,sum(cash) as cash ,sum(bank) as bank
+			select dept_name,month,year ,sum(cash) as cash ,sum(bank) as bank
 			from
 			(
-				select rb.name as branch_name,
+				select hd.name as dept_name,
 				case when he.bank_account_id  is NULL then sum(hpl.total) end as cash,
 				case when he.bank_account_id is not NULL then sum(hpl.total) end as bank,
 				extract(month from hp.date_to) as month,
@@ -189,12 +189,12 @@
 				and hpl.code='NET'
 				and hp.date_from=?
 				and hp.date_to=?
-				group by bank_account_id,rb.name,date_to
+				group by bank_account_id,hd.name,date_to
 			)sub
-			group by sub.branch_name,month,year
+			group by sub.dept_name,month,year
 		)child
 	)parent 
-	group by parent.branch_name,parent.cash,parent.bank,month,year
+	group by parent.dept_name,parent.cash,parent.bank,month,year
 ) A
 
 
@@ -237,27 +237,6 @@
   <design:ResultSets derivedMetaData="true">
     <design:resultSetDefinitions>
       <design:resultSetColumns>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>branch_name</design:name>
-              <design:position>2</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
-            <design:precision>2147483647</design:precision>
-            <design:scale>0</design:scale>
-            <design:nullability>NotNullable</design:nullability>
-            <design:uiHints>
-              <design:displayName>branch_name</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>branch_name</design:label>
-            <design:formattingHints>
-              <design:displaySize>2147483647</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
             <design:identifier>
@@ -417,7 +396,7 @@ month[dataSetRow["month"]-1];</expression>
                     <label id="130">
                         <property name="fontWeight">bold</property>
                         <property name="textAlign">left</property>
-                        <text-property name="text">Pay Summary By Branch</text-property>
+                        <text-property name="text">Pay Summary By Department</text-property>
                     </label>
                 </cell>
             </row>
@@ -440,12 +419,6 @@ month[dataSetRow["month"]-1];</expression>
                         </structure>
                     </list-property>
                     <property name="allowExport">true</property>
-                </structure>
-                <structure>
-                    <property name="name">branch_name</property>
-                    <text-property name="displayName">branch_name</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["branch_name"]</expression>
-                    <property name="dataType">string</property>
                 </structure>
                 <structure>
                     <property name="name">bank</property>
@@ -596,6 +569,12 @@ month[dataSetRow["month"]-1];</expression>
                     </list-property>
                     <property name="allowExport">true</property>
                 </structure>
+                <structure>
+                    <property name="name">dept_name</property>
+                    <text-property name="displayName">dept_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["dept_name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
             </list-property>
             <column id="34">
                 <property name="width">0.7083333333333334in</property>
@@ -641,7 +620,7 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">none</property>
                         <label id="42">
                             <property name="fontWeight">bold</property>
-                            <text-property name="text">Branch</text-property>
+                            <text-property name="text">Department</text-property>
                         </label>
                     </cell>
                     <cell id="17">
@@ -678,59 +657,6 @@ month[dataSetRow["month"]-1];</expression>
                     </cell>
                 </row>
             </header>
-            <group id="145">
-                <property name="groupName">NewTableGroup1</property>
-                <expression name="keyExpr" type="javascript">row["branch_name"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["branch_name"]</expression>
-                </structure>
-                <property name="hideDetail">false</property>
-                <header>
-                    <row id="146">
-                        <property name="borderBottomStyle">none</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">none</property>
-                        <cell id="147">
-                            <property name="borderBottomStyle">none</property>
-                            <property name="borderLeftStyle">none</property>
-                            <property name="borderRightStyle">solid</property>
-                            <property name="borderRightWidth">thin</property>
-                            <property name="borderTopStyle">none</property>
-                        </cell>
-                        <cell id="148">
-                            <property name="borderBottomStyle">none</property>
-                            <property name="borderLeftStyle">none</property>
-                            <property name="borderRightStyle">none</property>
-                            <property name="borderTopStyle">none</property>
-                        </cell>
-                        <cell id="149">
-                            <property name="borderBottomStyle">none</property>
-                            <property name="borderLeftStyle">solid</property>
-                            <property name="borderLeftWidth">thin</property>
-                            <property name="borderRightStyle">solid</property>
-                            <property name="borderRightWidth">thin</property>
-                            <property name="borderTopStyle">none</property>
-                        </cell>
-                        <cell id="150">
-                            <property name="borderBottomStyle">none</property>
-                            <property name="borderLeftStyle">solid</property>
-                            <property name="borderLeftWidth">thin</property>
-                            <property name="borderRightStyle">solid</property>
-                            <property name="borderRightWidth">thin</property>
-                            <property name="borderTopStyle">none</property>
-                        </cell>
-                        <cell id="151">
-                            <property name="borderBottomStyle">none</property>
-                            <property name="borderLeftStyle">none</property>
-                            <property name="borderRightStyle">none</property>
-                            <property name="borderTopStyle">none</property>
-                        </cell>
-                    </row>
-                </header>
-            </group>
             <detail>
                 <row id="20">
                     <property name="borderBottomStyle">solid</property>
@@ -756,8 +682,8 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderLeftStyle">none</property>
                         <property name="borderRightStyle">none</property>
                         <property name="borderTopStyle">none</property>
-                        <data id="158">
-                            <property name="resultSetColumn">branch_name</property>
+                        <data id="152">
+                            <property name="resultSetColumn">dept_name</property>
                         </data>
                     </cell>
                     <cell id="24">
