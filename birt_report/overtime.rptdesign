@@ -573,11 +573,12 @@ group by sub.emp_id,sub.fingerprint_id,sub.myanmar_name,ot_day,ot_min,per_day,ot
                 </structure>
                 <structure>
                     <property name="name">Aggregation</property>
-                    <property name="dataType">integer</property>
-                    <property name="aggregateFunction">COUNT</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">RUNNINGSUM</property>
                     <list-property name="arguments">
                         <structure>
                             <property name="name">Expression</property>
+                            <expression name="value" type="javascript">1</expression>
                         </structure>
                     </list-property>
                     <property name="allowExport">true</property>
@@ -1147,10 +1148,4 @@ group by sub.emp_id,sub.fingerprint_id,sub.myanmar_name,ot_day,ot_min,per_day,ot
             </footer>
         </table>
     </body>
-    <property name="pageVariables">
-        <variable-element name="num">
-            <expression name="value" type="javascript">0</expression>
-            <property name="type">report</property>
-        </variable-element>
-    </property>
 </report>
