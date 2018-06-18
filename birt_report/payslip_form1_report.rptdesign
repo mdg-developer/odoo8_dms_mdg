@@ -7,7 +7,7 @@
     <property name="imageDPI">96</property>
     <list-property name="libraries">
         <structure>
-            <property name="fileName">birt_report/report_library.rptlibrary</property>
+            <property name="fileName">report_library.rptlibrary</property>
             <property name="namespace">report_library</property>
         </structure>
     </list-property>
@@ -351,7 +351,7 @@ else
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select sub.emp_id,sub.fingerprint_id,sub.myanmar_name,sub.job_name,sub.dept_name,(all_ded-ssb) as all_deduction,basic_salary,ssb,(basic_salary -(all_ded+ssb)) as form1_amount,remark,(basic_salary/30) as per_day,join_date,month,year from 
+            <xml-property name="queryText"><![CDATA[select sub.emp_id,sub.fingerprint_id,sub.myanmar_name,sub.job_name,sub.dept_name,(all_ded-ssb) as all_deduction,basic_salary,ssb,(basic_salary -(all_ded)) as form1_amount,remark,(basic_salary/30) as per_day,join_date,month,year from 
 (
 	select payslip.emp_id,payslip.fingerprint_id,payslip.myanmar_name,payslip.job_name,payslip.dept_name ,sum(all_deduction) as all_ded,sum(basic_salary) as basic_salary,sum(ssb) as ssb,payslip.remark,join_date,month,year
 	from 
@@ -372,9 +372,12 @@ else
 	)payslip,
 	(
 	select hpl.slip_id,hpl.code,hpl.employee_id,hsr.code,
-	case when hsr.code='DED' then hpl.total end as all_deduction,
-	case when hpl.code= 'BASIC' then hpl.total end as basic_salary,
-	case when hpl.code='SSB' then hpl.total end as ssb 
+	case when hsr.code='DED' then hpl.total 
+	     when hsr.code<>'DED' then 0.0 end as all_deduction,
+	case when hpl.code= 'BASIC' then hpl.total 
+	     when hpl.code<>'BASIC' then 0.0 end as basic_salary,
+	case when hpl.code='SSB' then hpl.total 
+	     when hpl.code<>'SSB' then 0.0 end as ssb 
 	from hr_payslip_line hpl
 	left join hr_salary_rule_category hsr on hsr.id=hpl.category_id
 	where hsr.code='DED'
