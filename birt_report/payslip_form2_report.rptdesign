@@ -476,6 +476,7 @@ sum(dpd+ajd+ins) as form2_ded
 		where he.id=hp.employee_id
 		and hp.date_from = ?
 		and hp.date_to = ?
+		--$department_id$
 		and case when ? = true then he.is_management = true
 		         when ?=false then he.is_management = false end
 		group by he.fingerprint_id,he.myanmar_name,hp.id ,he.id,he.is_management,hj.name,hd.name
@@ -1511,6 +1512,10 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="111">
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">aba</property>
                         </data>
@@ -1525,6 +1530,10 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="112">
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">jda</property>
                         </data>
@@ -1539,6 +1548,10 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="113">
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">ota</property>
                         </data>
@@ -1553,6 +1566,10 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="114">
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">sbn</property>
                         </data>
@@ -1567,6 +1584,10 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="115">
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">raa</property>
                         </data>
@@ -1581,6 +1602,10 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="116">
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">aja</property>
                         </data>
@@ -1595,6 +1620,10 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="117">
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">overtime</property>
                         </data>
@@ -1609,6 +1638,10 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="118">
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">all_allow</property>
                         </data>
@@ -1623,6 +1656,10 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="119">
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">dpd</property>
                         </data>
@@ -1637,6 +1674,10 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="120">
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">ins</property>
                         </data>
@@ -1651,6 +1692,10 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="121">
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">ajd</property>
                         </data>
@@ -1665,6 +1710,10 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="123">
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">form2_amount</property>
                         </data>
@@ -1679,6 +1728,10 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="122">
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">form1_amount</property>
                         </data>
@@ -1693,6 +1746,10 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="126">
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">total_amt</property>
                         </data>
