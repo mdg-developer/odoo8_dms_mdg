@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data>
+
+		<!-- ============================== Content Form ============================== -->
+		<record id="product_agree_rate_form" model="ir.ui.view">
+			<field name="name">Product Agree Rate Form</field>
+			<field name="model">product.agree.rate</field>
+			<field name="arch" type="xml">
+				<form string="Product Agree Rate Form">
+					<sheet>
+						<group>
+							<group>
+							  
+								<field name="name" class="oe_inline"/>
+								<field name="date" class="oe_inline"/>
+							</group>
+						</group>
+						<group>
+							<notebook>
+								<page string="Rate">
+									<field name="agress_lines">
+										<tree string="Product Agree Rate Line" editable="bottom">
+											<field name="product_id" />
+											<field name="agreed_price" />
+											<field name="currency" />
+											<field name="rate" />
+										</tree>
+									</field>
+								</page>
+							</notebook>
+						</group>
+					</sheet>
+				</form>
+			</field>
+
+		</record>
+		<!-- ============================== Content Tree ============================== -->
+		<record id="product_agree_rate_tree" model="ir.ui.view">
+			<field name="name">stock_return_tree</field>
+			<field name="model">product.agree.rate</field>
+			<field name="arch" type="xml">
+				<tree string="Contents">
+					<field name="name" />
+					<field name="date" />
+
+				</tree>
+			</field>
+		</record>
+		<!-- Product Agree Form -->
+		<record id="action_product_agree_return" model="ir.actions.act_window">
+			<field name="name">Product Agree Rate</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">product.agree.rate</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="product_agree_rate_tree" />
+			<field name="domain">[]</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to Register Product Agree Rate Note.
+				</p>
+			</field>
+
+		</record>
+
+		<menuitem action='action_product_agree_return' id="menu_product_agree"
+			parent="stock.menu_stock_warehouse_mgmt" groups="stock.group_stock_manager" />
+	</data>
+</openerp>
