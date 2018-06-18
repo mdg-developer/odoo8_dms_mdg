@@ -458,7 +458,7 @@ else
             <xml-property name="queryText"><![CDATA[select fingerprint_id,myanmar_name,aba,jda,ota,sbn,raa,aja,overtime,all_allow,dpd,ajd,ins,form1_amount,sum(all_allow - form2_ded) as form2_amount,remark,year,month from 
 (
 select sub.emp_id,sub.fingerprint_id,sub.myanmar_name,sub.job_name,sub.dept_name,(all_ded-ssb) as all_deduction,basic_salary,ssb,
-(basic_salary -(all_ded+ssb)) as form1_amount,remark,(basic_salary/30) as per_day,join_date,month,year,aba,jda,ota,sbn,raa,aja,overtime,
+(basic_salary -(all_ded)) as form1_amount,remark,(basic_salary/30) as per_day,join_date,month,year,aba,jda,ota,sbn,raa,aja,overtime,
 sum(aba+ jda+ ota+ sbn+ raa+ aja+ overtime) as all_allow,dpd,ajd,ins,
 sum(dpd+ajd+ins) as form2_ded
  from 
