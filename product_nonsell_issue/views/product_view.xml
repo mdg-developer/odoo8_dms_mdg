@@ -144,7 +144,7 @@
 
 		<!-- Menu -->
 		<record model="ir.actions.act_window" id="open_view_product_nonsell_issue_form">
-			<field name="name">Product Nonsale Issue</field>
+			<field name="name">Product Nonsales Issue</field>
 			<field name="res_model">product.nonsell.issue</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
