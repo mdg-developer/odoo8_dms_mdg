@@ -38,12 +38,12 @@ class product_maingroup(osv.osv):
                 help="This account will be used to value price difference between purchase price and cost price."),
             'property_difference_receivable_account': fields.property(
                 type='many2one',
-                relation='account.account', domain="[('type', '=', 'receivable')]",
+                relation='account.account', domain="[('type', 'in', ('receivable','payable'))]",
                 string="Difference Receivable Account",
                 help="This account will be used to value price difference between purchase price and cost price."),
             'property_difference_payable_account': fields.property(
                 type='many2one',
-                relation='account.account', domain="[('type', '=', 'payable')]",
+                relation='account.account', domain="[('type','in', ('receivable','payable'))]",
                 string="Difference Payable Account",
                 help="This account will be used to value price difference between purchase price and cost price."),
                                                                                                                     

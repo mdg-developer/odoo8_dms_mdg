@@ -104,7 +104,7 @@ class account_invoice(models.Model):
 
         if context is None:
             context = {}
-
+        import time
         date = time.strftime('%Y-%m-%d')
         period_ids = period_obj.find(cr, uid, dt=date, context=context)
         if period_ids:
