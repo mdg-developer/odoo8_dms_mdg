@@ -51,7 +51,10 @@ class hr_payslip_customize(osv.osv):
     _columns = {  
         'total_month_day': fields.float('Total Month Days'),
         'working_month': fields.float('Working Month'),
-        'badge_id': fields.char('Badge ID')
+        'badge_id': fields.char('Badge ID'),
+        'remark1':fields.text('Remark1'),
+        'remark2':fields.text('Remark2')
+        
         }
     
     def onchange_employee_id(self, cr, uid, ids, date_from, date_to, employee_id=False, contract_id=False, context=None):

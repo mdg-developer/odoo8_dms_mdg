@@ -13,6 +13,10 @@
 				<xpath expr="//label[@for='date_from']" position="before">
 					<field name="badge_id"/>
 				</xpath>
+				<xpath expr="//field[@name='credit_note']" position="after">
+					<field name="remark1"/>
+					<field name="remark2"/>
+				</xpath>
 			</field>
 		</record>  
 		
