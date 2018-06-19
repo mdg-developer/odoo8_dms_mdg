@@ -46,7 +46,8 @@ class account(osv.osv):
             res[line.id] = cur_obj.round(cr, uid, cur, amount)
         return res    
     _columns = {
-               'net_total': fields.function(_net_total, string='Subtotal', type='float'),
+            #  'price_subtotal':fields.function(_compute_price,string='Total(excl.tax)', digits= dp.get_precision('Account'),store=True, readonly=True)  ,           
+               'net_total': fields.function(_net_total, string='Total(incl.tax)', type='float'),
               'discount_amt':fields.float('Dis(amt)'),
               'discount':fields.float('Dis(%)'),
              'foc':fields.boolean('FOC')
@@ -110,7 +111,9 @@ class account_invoice_line(models.Model):
         if self.invoice_id:
             self.price_subtotal = self.invoice_id.currency_id.round(self.price_subtotal)
         return True
-    
+    _columns = {
+              'price_subtotal':fields.function(_compute_price,string='Total(excl.tax)', digits= dp.get_precision('Account'),store=True, readonly=True)  ,          
+              }    
     @api.model
 #     def _default_price_unit(self):
 #         if not self._context.get('check_total'):

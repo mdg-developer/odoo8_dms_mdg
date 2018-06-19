@@ -148,8 +148,8 @@ class sale_order_line(osv.osv):
     _columns= { 
          'price_unit': fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Product Price'), readonly=False),
         #'tax_id': fields.many2many('account.tax', 'sale_order_tax', 'order_line_id', 'tax_id', 'Taxes', readonly=True, domain=['|', ('active', '=', False), ('active', '=', True)]),          
-               'price_subtotal': fields.function(_amount_line1, string='Subtotal'),
-               'net_total':fields.function(_amount_line, string='Total', digits_compute= dp.get_precision('Account')),
+               'price_subtotal': fields.function(_amount_line1, string='Total(incl.tax)'),
+               'net_total':fields.function(_amount_line, string='Total(excl.tax)', digits_compute= dp.get_precision('Account')),
                'service_product' : fields.boolean('Service Product',default=False),
                'discount':fields.float('Discount (%)',store=True,readonly=True),
                'discount_amt':fields.float('Discount (amt)',store=True, readonly=True),
