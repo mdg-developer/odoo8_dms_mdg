@@ -21,11 +21,11 @@
 ##############################################################################
 
 {
-    'name': 'OT Approval V2',
+    'name': 'Absent Miss Punch Control',
     'version': '1.0',
     'category': 'HR',
     'sequence': 25,
-    'summary': 'OT Approval V2',
+    'summary': 'Absent Miss Punch Control',
     'description': """
 HR Section
 
