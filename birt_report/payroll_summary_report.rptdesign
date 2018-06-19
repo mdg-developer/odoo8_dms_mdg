@@ -7,7 +7,7 @@
     <property name="imageDPI">96</property>
     <list-property name="libraries">
         <structure>
-            <property name="fileName">birt_report/report_library.rptlibrary</property>
+            <property name="fileName">report_library.rptlibrary</property>
             <property name="namespace">report_library</property>
         </structure>
     </list-property>
@@ -195,8 +195,10 @@
 			from
 			(
 				select hd.name as dept_name,rb.name as branch_name,
-				case when he.bank_account_id  is NULL then sum(hpl.total) end as cash,
-				case when he.bank_account_id is not NULL then sum(hpl.total) end as bank,
+				case when he.payroll_cash = True then sum(hpl.total) 
+				     when he.payroll_cash <> True then 0.0 end as cash,
+				case when he.payroll_bank = True then sum(hpl.total) 
+				     when he.payroll_bank <> True then 0.0 end as bank,
 				extract(month from hp.date_to) as month,
 				extract(year from hp.date_to) as year
 				from hr_payslip hp,hr_payslip_line hpl,hr_employee he
@@ -207,7 +209,7 @@
 				and hpl.code='NET'
 				and hp.date_from=?
 				and hp.date_to=?
-				group by bank_account_id,hd.name,rb.name,date_to
+				group by payroll_cash,payroll_bank,hd.name,rb.name,date_to
 			)sub
 			group by sub.dept_name,sub.branch_name,month,year
 		)child
