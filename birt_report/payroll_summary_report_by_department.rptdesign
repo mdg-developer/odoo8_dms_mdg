@@ -177,8 +177,10 @@
 			from
 			(
 				select hd.name as dept_name,
-				case when he.bank_account_id  is NULL then sum(hpl.total) end as cash,
-				case when he.bank_account_id is not NULL then sum(hpl.total) end as bank,
+				case when he.payroll_cash = True then sum(hpl.total) 
+				     when he.payroll_cash <> True then 0.0 end as cash,
+				case when he.payroll_bank = True then sum(hpl.total) 
+				     when he.payroll_bank <> True then 0.0 end as bank,
 				extract(month from hp.date_to) as month,
 				extract(year from hp.date_to) as year
 				from hr_payslip hp,hr_payslip_line hpl,hr_employee he
@@ -189,16 +191,13 @@
 				and hpl.code='NET'
 				and hp.date_from=?
 				and hp.date_to=?
-				group by bank_account_id,hd.name,date_to
+				group by payroll_cash,payroll_bank,hd.name,date_to
 			)sub
 			group by sub.dept_name,month,year
 		)child
 	)parent 
 	group by parent.dept_name,parent.cash,parent.bank,month,year
-) A
-
-
-]]></xml-property>
+) A]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -336,13 +335,13 @@
         <grid id="114">
             <property name="width">7.947916666666667in</property>
             <column id="115">
-                <property name="width">3.5833333333333335in</property>
+                <property name="width">3.21875in</property>
             </column>
             <column id="116">
                 <property name="width">0.6354166666666666in</property>
             </column>
             <column id="117">
-                <property name="width">3.7291666666666665in</property>
+                <property name="width">4.09375in</property>
             </column>
             <row id="118">
                 <cell id="119">
@@ -766,7 +765,7 @@ month[dataSetRow["month"]-1];</expression>
                             <property name="fontWeight">bold</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
-                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">Aggregation_9</property>
@@ -781,7 +780,7 @@ month[dataSetRow["month"]-1];</expression>
                             <property name="fontWeight">bold</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
-                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">Aggregation_10</property>
@@ -797,7 +796,7 @@ month[dataSetRow["month"]-1];</expression>
                             <property name="fontWeight">bold</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
-                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">Aggregation_11</property>
