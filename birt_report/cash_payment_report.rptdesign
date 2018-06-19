@@ -636,7 +636,7 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="57">
-                            <text-property name="text">Remart</text-property>
+                            <text-property name="text">Remark</text-property>
                         </label>
                     </cell>
                 </row>
