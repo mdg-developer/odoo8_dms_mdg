@@ -245,13 +245,14 @@ class hr_payslip_customize(osv.osv):
         else:
             ot_minus = 0
             ot_day_count = 0
-        cr.execute("""select COALESCE( sum(ot_time),0) as ot_time  from attendance_data_import where 
+        cr.execute("""select COALESCE( sum(ot_time),0) as ot_time,count(date)  from attendance_data_import where 
         date >= %s and date <= %s and (date in (SELECT the_day ::date FROM  generate_series(%s::date, %s ::date, '1 day') d(the_day) 
         WHERE  extract('ISODOW' FROM the_day)= 7) or date in (select date from hr_holidays_public_line where date >= %s and date <= %s))
         and ot_time>0 and employee_id=%s and state='approve'""", (date_from, date_to,date_from,date_to,date_from,date_to,employee_id,))
         sun_holiday_ot = cr.fetchone()   
         if sun_holiday_ot:
             sun_holiday_ot_min = sun_holiday_ot[0]
+            sun_holiday_ot_day = sun_holiday_ot[1]
         else:
             sun_holiday_ot_min = 0
         cr.execute("""select count(*)*4 from attendance_data_import where 
@@ -448,13 +449,20 @@ class hr_payslip_customize(osv.osv):
                                'amount':sun_holiday_ot_min,
                                'contract_id': contract.id,
                               }
-                        if input.code == 'ODT':
+                        if input.code == 'OTD':
                             inputs = {
                                'name': input.name,
                                'code': input.code,
                                'amount':ot_day_count,
                                'contract_id': contract.id,
-                              }               
+                              } 
+                        if input.code == 'SPDT':
+                            inputs = {
+                               'name': input.name,
+                               'code': input.code,
+                               'amount':sun_holiday_ot_day,
+                               'contract_id': contract.id,
+                              }              
                         if input.code == 'EM':
                             inputs = {
                                'name': input.name,
