@@ -7,13 +7,27 @@
     <property name="imageDPI">96</property>
     <list-property name="libraries">
         <structure>
-            <property name="fileName">birt_report/report_library.rptlibrary</property>
+            <property name="fileName">report_library.rptlibrary</property>
             <property name="namespace">report_library</property>
         </structure>
     </list-property>
     <parameters>
         <scalar-parameter name="from_date" id="12" extends="report_library.from_date"/>
         <scalar-parameter name="to_date" id="13" extends="report_library.to_date"/>
+        <scalar-parameter name="is_management" id="123">
+            <text-property name="promptText">Management</text-property>
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">boolean</property>
+            <property name="distinct">true</property>
+            <simple-property-list name="defaultValue">
+                <value type="constant">False</value>
+            </simple-property-list>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">check-box</property>
+            <structure name="format"/>
+        </scalar-parameter>
     </parameters>
     <data-sources>
         <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="11"
@@ -21,6 +35,13 @@
     </data-sources>
     <data-sets>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="Data Set" id="10">
+            <list-property name="computedColumns">
+                <structure>
+                    <property name="name">total_ot_amount</property>
+                    <expression name="expression">row["normal_ot"]+row["holiday_ot"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+            </list-property>
             <list-property name="columnHints">
                 <structure>
                     <property name="columnName">emp_id</property>
@@ -53,22 +74,34 @@
                     <text-property name="heading">ot_rate</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">ot_min</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">ot_min</text-property>
-                    <text-property name="heading">ot_min</text-property>
-                </structure>
-                <structure>
                     <property name="columnName">ot_day</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">ot_day</text-property>
                     <text-property name="heading">ot_day</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">total</property>
+                    <property name="columnName">normal_ot</property>
                     <property name="analysis">measure</property>
-                    <text-property name="displayName">total</text-property>
-                    <text-property name="heading">total</text-property>
+                    <text-property name="displayName">normal_ot</text-property>
+                    <text-property name="heading">normal_ot</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">holiday_ot</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">holiday_ot</text-property>
+                    <text-property name="heading">holiday_ot</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">normal_ot_min</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">normal_ot_min</text-property>
+                    <text-property name="heading">normal_ot_min</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">holiday_ot_min</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">holiday_ot_min</text-property>
+                    <text-property name="heading">holiday_ot_min</text-property>
                 </structure>
             </list-property>
             <list-property name="parameters">
@@ -112,6 +145,26 @@
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
+                <structure>
+                    <property name="name">param_5</property>
+                    <property name="paramName">is_management</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">5</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_6</property>
+                    <property name="paramName">is_management</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">boolean</property>
+                    <property name="nativeDataType">-7</property>
+                    <property name="position">6</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
             </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
@@ -142,18 +195,33 @@
                     </structure>
                     <structure>
                         <property name="position">6</property>
-                        <property name="name">ot_min</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
-                        <property name="position">7</property>
                         <property name="name">ot_day</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">8</property>
-                        <property name="name">total</property>
+                        <property name="position">7</property>
+                        <property name="name">normal_ot</property>
                         <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">holiday_ot</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">normal_ot_min</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">holiday_ot_min</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">total_ot_amount</property>
+                        <property name="dataType">float</property>
                     </structure>
                 </list-property>
             </structure>
@@ -196,32 +264,49 @@
                 </structure>
                 <structure>
                     <property name="position">6</property>
-                    <property name="name">ot_min</property>
-                    <property name="nativeName">ot_min</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">-5</property>
-                </structure>
-                <structure>
-                    <property name="position">7</property>
                     <property name="name">ot_day</property>
                     <property name="nativeName">ot_day</property>
                     <property name="dataType">decimal</property>
-                    <property name="nativeDataType">-5</property>
+                    <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">8</property>
-                    <property name="name">total</property>
-                    <property name="nativeName">total</property>
+                    <property name="position">7</property>
+                    <property name="name">normal_ot</property>
+                    <property name="nativeName">normal_ot</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">holiday_ot</property>
+                    <property name="nativeName">holiday_ot</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">normal_ot_min</property>
+                    <property name="nativeName">normal_ot_min</property>
+                    <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
+                </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">holiday_ot_min</property>
+                    <property name="nativeName">holiday_ot_min</property>
+                    <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
+                </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select sub.emp_id,sub.fingerprint_id,sub.myanmar_name,per_day,ot_rate,sub.ot_min,sub.ot_day,sum(sub.total) as total from 
+            <xml-property name="queryText"><![CDATA[select emp_id,fingerprint_id,myanmar_name,per_day,ot_rate,ot_day,normal_ot,holiday_ot,sum(normal_ot_min) as normal_ot_min,sum(holiday_ot_min) as holiday_ot_min from
 (
-	select payslip.emp_id,payslip.fingerprint_id,payslip.myanmar_name,per_day,payslip.ot_day,payslip.ot_min,payslip_line.total as total,ot_rate
+
+select sub.emp_id,sub.fingerprint_id,sub.myanmar_name,per_day,ot_rate,sum(sub.normal_ot_min) as normal_ot_min,sum(sub.holiday_ot_min) as holiday_ot_min ,sub.ot_day as ot_day,sub.normal_ot as normal_ot,sub.holiday_ot as holiday_ot from 
+(
+	select payslip.emp_id,payslip.fingerprint_id,payslip.myanmar_name,per_day,sum(payslip_line.ot_day) as ot_day,payslip_line.normal_ot_min as normal_ot_min,sum(payslip_line.normal_ot) as normal_ot,sum(payslip_line.holiday_ot) as holiday_ot,ot_rate,payslip_line.holiday_ot_min as holiday_ot_min
 	from 
 	(
-		select hp.id as payslip_id,he.id as emp_id,he.fingerprint_id,he.myanmar_name,hc.is_management,count(adi.ot_time) as ot_day,sum(ot_time) as ot_min,(hc.wage/30) as per_day,
+		select hp.id as payslip_id,he.id as emp_id,he.fingerprint_id,he.myanmar_name,hc.is_management,(hc.wage/30) as per_day,
 		case when hc.is_management = False then (((hc.wage/30)/8/60)*1.5)
 		     when hc.is_management = True then 3000 end as ot_rate
 		from hr_employee he, hr_payslip hp,attendance_data_import adi,hr_contract hc
@@ -232,16 +317,36 @@
 		and adi.date between ? and ?
 		and hp.date_from = ?
 		and hp.date_to = ?
+		and case when ?=True then he.is_management = True 
+		         when ?=False then he.is_management = False end
 		group by he.fingerprint_id,he.myanmar_name,hp.id ,he.id,hc.is_management,hc.wage
 	)payslip,
 	(
-	select round(total,1) as total,slip_id,code,employee_id from hr_payslip_line
-	where code='OTN'
-	or code='SPOT'
+	select hpl.slip_id,hpl.code,hpl.employee_id,
+	case when hpl.code = 'OT' then hpl.total 
+	     when hpl.code <> 'OT' then 0.0 end as normal_ot,
+	case when hpl.code = 'SPOT' then hpl.total 
+	     when hpl.code <> 'SPOT' then 0.0 end as holiday_ot,
+	case when hpl.code = 'OTD' then hpl.total
+	     when hpl.code <> 'OTD' then 0.0 end as ot_day,
+	case when hpi.code = 'OM' then hpi.amount
+	     when hpi.code <> 'OM' then 0.0 end as normal_ot_min,
+	case when hpi.code = 'SPOM' then hpi.amount
+	     when hpi.code <> 'SPOM' then 0.0 end as holiday_ot_min
+	from hr_payslip_line hpl,hr_payslip_input hpi
+	where (hpl.code = 'OT'
+	or hpl.code='SPOT'
+	or hpl.code='OTD')
+	and (hpi.code='OM'
+	or hpi.code='SPOM')
 	)payslip_line
 	where payslip.payslip_id = payslip_line.slip_id
+	group by emp_id,fingerprint_id,myanmar_name,per_day,ot_rate,normal_ot_min,holiday_ot_min
 ) sub
-group by sub.emp_id,sub.fingerprint_id,sub.myanmar_name,ot_day,ot_min,per_day,ot_rate
+group by sub.emp_id,sub.fingerprint_id,sub.myanmar_name,normal_ot_min,per_day,ot_rate,ot_day,normal_ot,holiday_ot
+
+)parent
+group by emp_id,fingerprint_id,myanmar_name,per_day,ot_rate,ot_day,normal_ot,holiday_ot
 ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
@@ -301,6 +406,36 @@ group by sub.emp_id,sub.fingerprint_id,sub.myanmar_name,ot_day,ot_min,per_day,ot
             <design:position>4</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>5</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>6</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -583,6 +718,36 @@ group by sub.emp_id,sub.fingerprint_id,sub.myanmar_name,ot_day,ot_min,per_day,ot
                     </list-property>
                     <property name="allowExport">true</property>
                 </structure>
+                <structure>
+                    <property name="name">normal_ot_min</property>
+                    <text-property name="displayName">normal_ot_min</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["normal_ot_min"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">normal_ot</property>
+                    <text-property name="displayName">normal_ot</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["normal_ot"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">holiday_ot_min</property>
+                    <text-property name="displayName">holiday_ot_min</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["holiday_ot_min"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">holiday_ot</property>
+                    <text-property name="displayName">holiday_ot</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["holiday_ot"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">total_ot_amount</property>
+                    <text-property name="displayName">total_ot_amount</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["total_ot_amount"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
             </list-property>
             <column id="68">
                 <property name="width">0.5520833333333334in</property>
@@ -836,6 +1001,8 @@ group by sub.emp_id,sub.fingerprint_id,sub.myanmar_name,ot_day,ot_min,per_day,ot
             </header>
             <detail>
                 <row id="44">
+                    <property name="fontFamily">"Zawgyi-One"</property>
+                    <property name="fontSize">9pt</property>
                     <property name="height">0.28125in</property>
                     <cell id="45">
                         <property name="borderBottomStyle">solid</property>
@@ -931,11 +1098,10 @@ group by sub.emp_id,sub.fingerprint_id,sub.myanmar_name,ot_day,ot_min,per_day,ot
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="114">
-                            <property name="fontFamily">"Zawgyi-One"</property>
+                        <data id="124">
                             <property name="fontSize">8pt</property>
                             <property name="textAlign">center</property>
-                            <property name="resultSetColumn">ot_min</property>
+                            <property name="resultSetColumn">normal_ot_min</property>
                         </data>
                     </cell>
                     <cell id="51">
@@ -947,8 +1113,7 @@ group by sub.emp_id,sub.fingerprint_id,sub.myanmar_name,ot_day,ot_min,per_day,ot
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="115">
-                            <property name="fontFamily">"Zawgyi-One"</property>
+                        <data id="125">
                             <property name="fontSize">8pt</property>
                             <property name="textAlign">center</property>
                             <property name="resultSetColumn">ot_day</property>
@@ -963,15 +1128,14 @@ group by sub.emp_id,sub.fingerprint_id,sub.myanmar_name,ot_day,ot_min,per_day,ot
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="116">
-                            <property name="fontFamily">"Zawgyi-One"</property>
+                        <data id="126">
                             <property name="fontSize">8pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
                                 <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
-                            <property name="resultSetColumn">total</property>
+                            <property name="resultSetColumn">normal_ot</property>
                         </data>
                     </cell>
                     <cell id="53">
@@ -983,11 +1147,10 @@ group by sub.emp_id,sub.fingerprint_id,sub.myanmar_name,ot_day,ot_min,per_day,ot
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="117">
-                            <property name="fontFamily">"Zawgyi-One"</property>
+                        <data id="127">
                             <property name="fontSize">8pt</property>
                             <property name="textAlign">center</property>
-                            <property name="resultSetColumn">ot_min</property>
+                            <property name="resultSetColumn">holiday_ot_min</property>
                         </data>
                     </cell>
                     <cell id="54">
@@ -999,18 +1162,18 @@ group by sub.emp_id,sub.fingerprint_id,sub.myanmar_name,ot_day,ot_min,per_day,ot
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="118">
-                            <property name="fontFamily">"Zawgyi-One"</property>
+                        <data id="128">
                             <property name="fontSize">8pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
                                 <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
-                            <property name="resultSetColumn">total</property>
+                            <property name="resultSetColumn">holiday_ot</property>
                         </data>
                     </cell>
                     <cell id="55">
+                        <property name="fontSize">8pt</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftStyle">solid</property>
@@ -1019,15 +1182,13 @@ group by sub.emp_id,sub.fingerprint_id,sub.myanmar_name,ot_day,ot_min,per_day,ot
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="119">
-                            <property name="fontFamily">"Zawgyi-One"</property>
-                            <property name="fontSize">8pt</property>
+                        <data id="129">
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
                                 <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
-                            <property name="resultSetColumn">total</property>
+                            <property name="resultSetColumn">total_ot_amount</property>
                         </data>
                     </cell>
                 </row>
