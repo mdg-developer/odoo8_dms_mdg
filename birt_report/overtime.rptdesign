@@ -951,7 +951,7 @@
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="105">
-                            <text-property name="text">Cound Day</text-property>
+                            <text-property name="text">Count Day</text-property>
                         </label>
                     </cell>
                     <cell id="92">
