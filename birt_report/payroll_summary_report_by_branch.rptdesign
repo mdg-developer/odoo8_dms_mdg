@@ -177,8 +177,10 @@
 			from
 			(
 				select rb.name as branch_name,
-				case when he.bank_account_id  is NULL then sum(hpl.total) end as cash,
-				case when he.bank_account_id is not NULL then sum(hpl.total) end as bank,
+				case when he.payroll_cash=True then sum(hpl.total) 
+				     when he.payroll_cash <> True then 0.0 end as cash,
+				case when he.payroll_bank=True then sum(hpl.total) 
+				     when he.payroll_bank <> True then 0.0 end as bank,
 				extract(month from hp.date_to) as month,
 				extract(year from hp.date_to) as year
 				from hr_payslip hp,hr_payslip_line hpl,hr_employee he
@@ -189,7 +191,7 @@
 				and hpl.code='NET'
 				and hp.date_from=?
 				and hp.date_to=?
-				group by bank_account_id,rb.name,date_to
+				group by payroll_cash,payroll_bank,rb.name,date_to
 			)sub
 			group by sub.branch_name,month,year
 		)child
@@ -357,13 +359,13 @@
         <grid id="114">
             <property name="width">7.947916666666667in</property>
             <column id="115">
-                <property name="width">3.5833333333333335in</property>
+                <property name="width">3.65625in</property>
             </column>
             <column id="116">
-                <property name="width">0.6354166666666666in</property>
+                <property name="width">0.5104166666666666in</property>
             </column>
             <column id="117">
-                <property name="width">3.7291666666666665in</property>
+                <property name="width">3.78125in</property>
             </column>
             <row id="118">
                 <cell id="119">
@@ -840,7 +842,7 @@ month[dataSetRow["month"]-1];</expression>
                             <property name="fontWeight">bold</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
-                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">Aggregation_9</property>
@@ -855,7 +857,7 @@ month[dataSetRow["month"]-1];</expression>
                             <property name="fontWeight">bold</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
-                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">Aggregation_10</property>
@@ -871,7 +873,7 @@ month[dataSetRow["month"]-1];</expression>
                             <property name="fontWeight">bold</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
-                                <property name="pattern">###0.00{RoundingMode=HALF_UP}</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">Aggregation_11</property>
