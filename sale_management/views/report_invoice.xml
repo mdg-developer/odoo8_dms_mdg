@@ -40,7 +40,9 @@
 									<tr style="margin-top:-30pt;border:solid;border-color:white;">
 										<td style="font-size:20pt;" colspan="4">
 											<span
-												t-if="o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')">Invoice No - </span>
+												t-if="o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid') and o.is_nonsale !=True">Invoice No - </span>
+											<span
+												t-if="o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid') and o.is_nonsale ==True">Debit Note No - </span>
 											<span t-if="o.type == 'out_invoice' and o.state == 'proforma2'">PRO-FORMA</span>
 											<span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
 											<span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
@@ -234,30 +236,33 @@
 							</div>
 							<div class="col-xs-4 pull-right">
 								<table class="table">
-<!-- 									<tr> -->
-<!-- 										<td style="border-top-color:white;padding-bottom: 2mm;"> -->
-<!-- 											Sub Total -->
-<!-- 										</td> -->
-<!-- 										<td class="text-right" style="border-top-color:white;padding-bottom: 2mm;"> -->
-<!-- 											<span t-field="o.amount_untaxed" /> -->
-<!-- 										</td> -->
-<!-- 									</tr> -->
-<!-- 									<tr class="border-black"> -->
-<!-- 										<td style="padding-top: 2mm;padding-bottom: 2mm;"> -->
-<!-- 											Total Discount -->
-<!-- 										</td> -->
-<!-- 										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;"> -->
-<!-- 											<span t-field="o.discount_total" /> -->
-<!-- 										</td> -->
-<!-- 									</tr> -->
-<!-- 									<tr class="border-black"> -->
-<!-- 										<td style="padding-top: 2mm;padding-bottom: 2mm;"> -->
-<!-- 											Deduction Amount -->
-<!-- 										</td> -->
-<!-- 										<td class="text-right" style="padding-top: 2mm;padding-bottom: 2mm;"> -->
-<!-- 											<span t-field="o.deduct_amt" /> -->
-<!-- 										</td> -->
-<!-- 									</tr> -->
+									<!-- <tr> -->
+									<!-- <td style="border-top-color:white;padding-bottom: 2mm;"> -->
+									<!-- Sub Total -->
+									<!-- </td> -->
+									<!-- <td class="text-right" style="border-top-color:white;padding-bottom: 
+										2mm;"> -->
+									<!-- <span t-field="o.amount_untaxed" /> -->
+									<!-- </td> -->
+									<!-- </tr> -->
+									<!-- <tr class="border-black"> -->
+									<!-- <td style="padding-top: 2mm;padding-bottom: 2mm;"> -->
+									<!-- Total Discount -->
+									<!-- </td> -->
+									<!-- <td class="text-right" style="padding-top: 2mm;padding-bottom: 
+										2mm;"> -->
+									<!-- <span t-field="o.discount_total" /> -->
+									<!-- </td> -->
+									<!-- </tr> -->
+									<!-- <tr class="border-black"> -->
+									<!-- <td style="padding-top: 2mm;padding-bottom: 2mm;"> -->
+									<!-- Deduction Amount -->
+									<!-- </td> -->
+									<!-- <td class="text-right" style="padding-top: 2mm;padding-bottom: 
+										2mm;"> -->
+									<!-- <span t-field="o.deduct_amt" /> -->
+									<!-- </td> -->
+									<!-- </tr> -->
 									<tr>
 										<td style="padding-top: 2mm;padding-bottom: 2mm;">
 											<strong>Net Amount</strong>
@@ -274,7 +279,8 @@
 
 						<div class="row" style="padding-top:-2s0pt;width:500px;">
 							<div class="col-xs-4 pull-left" style="width:250px;" align="left">
-								<table class="table" style="border:solid;border-color:white;" align="left">
+								<table class="table" style="border:solid;border-color:white;"
+									align="left">
 									<tr style="border:solid;border-color:white;">
 										<td style="margin-top:-10pt;" align="left">
 											<span>
@@ -293,7 +299,8 @@
 							</div>
 
 							<div class="col-xs-2 pull-left" style="width:250px;" align="right">
-								<table class="table" style="border:solid;border-color:white;" align="right">
+								<table class="table" style="border:solid;border-color:white;"
+									align="right">
 									<tr style="border:solid;border-color:white;">
 										<td style="margin-top:-10pt;" align="left">
 											<span>
