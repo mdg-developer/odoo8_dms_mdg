@@ -136,6 +136,7 @@ class account_invoice(osv.osv):
         'paid_amount': fields.function(_get_paid_amount, type='char', string='Paid Amount',digits_compute= dp.get_precision('Product Price')),     
         'is_entry':fields.boolean('Is Entry'),
         'rebate_later': fields.boolean('Rebate Later', default=False, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
+        'credit_allow':fields.boolean('Credit Allow',default=False),
 
 }
         
@@ -152,7 +153,8 @@ class account_invoice(osv.osv):
             payment_term = partner.property_payment_term and partner.property_payment_term.id or False        
         values = {
              'payment_term':payment_term, }
-        return {'value': values}
+        domain = {'payment_term': [('id', '=', payment_term)]}
+        return {'value': values,'domain': domain}
     
     
 

@@ -172,6 +172,7 @@ class sale_order(osv.osv):
         'cancel_user_id': fields.many2one('res.users', 'Cancel By'),
         'is_entry': fields.boolean('Is Entry Data',default=False),
         'rebate_later': fields.boolean("Rebate Later" , default=False,readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
+        'credit_allow':fields.boolean('Credit Allow',default=False),
 
                }
 
@@ -249,7 +250,8 @@ class sale_order(osv.osv):
             payment_term = partner.property_payment_term and partner.property_payment_term.id or False        
         values = {
              'payment_term':payment_term, }
-        return {'value': values}
+        domain = {'payment_term': [('id', '=', payment_term)]}
+        return {'value': values, 'domain': domain}
     
     def on_change_section_id(self, cr, uid, ids, section_id, context=None):
         values = {}
@@ -280,8 +282,10 @@ class sale_order(osv.osv):
         pricelist = part.property_product_pricelist and part.property_product_pricelist.id or False
         invoice_part = self.pool.get('res.partner').browse(cr, uid, addr['invoice'], context=context)
         payment_term = invoice_part.property_payment_term and invoice_part.property_payment_term.id or False
+        credit_allow=False
         if part.credit_allow == True:
             payment_type = 'credit'
+            credit_allow=True
         elif part.is_consignment == True:
             payment_type = 'consignment'
         else:
@@ -302,9 +306,10 @@ class sale_order(osv.osv):
             'state_id': part.state_id and part.state_id.id or False,
             'country_id': part.country_id and part.country_id.id or False,
             'township': part.township and part.township.id or False,
+            'credit_allow':credit_allow,
         }
         print 'payment_typepayment_type', payment_type
-        domain = {'payment_type': [('payment_type', '=', payment_type)]}
+        domain = {'payment_term': [('id', '=', payment_term)]}
         print 'domain', domain
         delivery_onchange = self.onchange_delivery_id(cr, uid, ids, False, part.id, addr['delivery'], False, context=context)
         val.update(delivery_onchange['value'])
