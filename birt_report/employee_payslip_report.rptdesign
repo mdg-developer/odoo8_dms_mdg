@@ -1058,14 +1058,9 @@ group by fingerprint_id,myanmar_name,form1_amount,all_allow,aba,jda,ota,sbn,raa,
             <property name="rightMargin">0.1in</property>
             <property name="height">4.5in</property>
             <property name="width">3.2in</property>
+            <property name="showFooterOnLast">false</property>
             <property name="headerHeight">0.1in</property>
             <property name="footerHeight">0.1in</property>
-            <page-footer>
-                <text id="3">
-                    <property name="contentType">html</property>
-                    <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
-                </text>
-            </page-footer>
         </simple-master-page>
     </page-setup>
     <body>
