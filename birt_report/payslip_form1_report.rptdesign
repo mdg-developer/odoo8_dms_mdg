@@ -367,7 +367,7 @@ else
 		and hp.date_to = ?
 		--$department_id$
 		and case when ? = true then he.is_management = true
-		         when ?=false then he.is_management = false end
+		         when ?=false then he.is_management in (true,false) end
 		group by he.fingerprint_id,he.myanmar_name,hp.id ,he.id,he.is_management,hj.name,hd.name
 	)payslip,
 	(
