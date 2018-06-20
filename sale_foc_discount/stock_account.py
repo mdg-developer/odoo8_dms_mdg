@@ -182,7 +182,24 @@ class stock_quant(osv.osv):
                     raise orm.except_orm(_('Error :'), _("Please select FOC Principle Account Receivable in Product Category %s!")) % move.product_id.categ_id.name                  
 #                 debit_account_id_1 = move.product_id.categ_id.property_account_foc_credit.id 
 #                 credit_account_id_1 = move.product_id.categ_id.property_account_foc_principle_receivable.id
-            
+            income_account_id_1 = move.product_id.categ_id.property_account_income_categ.id 
+            pricelist_id = move.product_id.product_tmpl_id.main_group.pricelist_id.id  
+            principle_partner_id = move.product_id.product_tmpl_id.main_group.partner_id.id  
+            product_price = 0
+            income_price=0
+            if pricelist_id:
+                product = self.pool.get('product.product').browse(cr, uid, move.product_id.id, context=context)
+                cr.execute("select new_price from product_pricelist_item where price_version_id in ( select id from product_pricelist_version where pricelist_id=%s) and product_id=%s and product_uom_id=%s", (pricelist_id, product.id, product.product_tmpl_id.uom_id.id,))
+                product_price_data = cr.fetchone()[0]     
+                product_price =qty * product_price_data
+                if valuation_amount >=0:
+                    income_price = product_price - valuation_amount
+                if valuation_amount < 0:
+                    income_price =  - product_price + (-1*valuation_amount)
+                    
+
+               
+                
             debit_line_vals = {
                         'name': move.name,
                         'product_id': move.product_id.id,
@@ -215,10 +232,11 @@ class stock_quant(osv.osv):
                     'ref': move.picking_id and move.picking_id.name or False,
                     'date': move.date,
                     'partner_id': partner_id,
-                    'debit': valuation_amount > 0 and valuation_amount or 0,
-                    'credit': valuation_amount < 0 and -valuation_amount or 0,
+                    'debit': product_price > 0 and product_price or 0,
+                    'credit': product_price < 0 and -product_price or 0,
                     'account_id': debit_account_id_1,
                 }
+          
             credit_line_vals1 = {
                     'name': move.name,
                     'product_id': move.product_id.id,
@@ -231,7 +249,19 @@ class stock_quant(osv.osv):
                     'debit': valuation_amount < 0 and -valuation_amount or 0,
                     'account_id': credit_account_id_1,
             }
-            return [(0, 0, debit_line_vals), (0, 0, credit_line_vals), (0, 0, debit_line_vals1), (0, 0, credit_line_vals1)]    
+            credit_line_vals2 = {
+                    'name': move.name,
+                    'product_id': move.product_id.id,
+                    'quantity': qty,
+                    'product_uom_id': move.product_id.uom_id.id,
+                    'ref': move.picking_id and move.picking_id.name or False,
+                    'date': move.date,
+                    'partner_id': principle_partner_id,
+                    'credit': income_price > 0 and income_price or 0,
+                    'debit': income_price < 0 and -income_price or 0,
+                    'account_id': income_account_id_1,
+            }            
+            return [(0, 0, debit_line_vals), (0, 0, credit_line_vals), (0, 0, debit_line_vals1), (0, 0, credit_line_vals1), (0, 0, credit_line_vals2)]    
         else:
             debit_line_vals = {
                         'name': move.name,
