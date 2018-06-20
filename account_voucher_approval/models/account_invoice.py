@@ -25,7 +25,6 @@ class account_invoice(models.Model):
                 if vals.get('payment_term'):
                     domain = {'payment_term': [('id', '=', vals['payment_term'])]}
                 vals = dict(defaults, **vals)
-                vals['domain'] =domain
 
         res_id = super(account_invoice, self).create(
             cr, uid, vals, context=context)
@@ -68,6 +67,8 @@ class account_invoice(models.Model):
         country_id=False
         township=False
         pricelist=False
+        credit_allow=False
+
         payment_type='cash'
         if partner_id:
             p = self.env['res.partner'].browse(partner_id)
@@ -98,7 +99,6 @@ class account_invoice(models.Model):
             else:
                 account_id = pay_account.id
                 payment_term_id = p.property_supplier_payment_term.id
-            credit_allow=False
             if p.credit_allow ==True:
                 payment_type='credit'
                 credit_allow=True
