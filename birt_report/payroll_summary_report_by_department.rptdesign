@@ -335,13 +335,13 @@
         <grid id="114">
             <property name="width">7.947916666666667in</property>
             <column id="115">
-                <property name="width">3.21875in</property>
+                <property name="width">3.1041666666666665in</property>
             </column>
             <column id="116">
-                <property name="width">0.6354166666666666in</property>
+                <property name="width">0.5729166666666666in</property>
             </column>
             <column id="117">
-                <property name="width">4.09375in</property>
+                <property name="width">4.270833333333333in</property>
             </column>
             <row id="118">
                 <cell id="119">
