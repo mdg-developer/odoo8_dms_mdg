@@ -312,10 +312,11 @@
 			and he.id=hc.employee_id
 			and adi.ot_time >0
 			and adi.date between ? and ?
+			and adi.state='approve'
 			and hp.date_from = ?
 			and hp.date_to = ?
 			and case when ?=True then he.is_management = True 
-				 when ?=False then he.is_management = False end
+				 when ?=False then he.is_management in (False,True) end
 			group by he.fingerprint_id,he.myanmar_name,hp.id ,he.id,hc.is_management,hc.wage
 		)payslip,
 		(
@@ -550,27 +551,6 @@
         <design:resultColumnDefinitions>
           <design:attributes>
             <design:identifier>
-              <design:name>ot_min</design:name>
-              <design:position>6</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>-5</design:nativeDataTypeCode>
-            <design:precision>19</design:precision>
-            <design:scale>0</design:scale>
-            <design:nullability>Unknown</design:nullability>
-            <design:uiHints>
-              <design:displayName>ot_min</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>ot_min</design:label>
-            <design:formattingHints>
-              <design:displaySize>20</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
               <design:name>ot_day</design:name>
               <design:position>7</design:position>
             </design:identifier>
@@ -586,27 +566,6 @@
             <design:label>ot_day</design:label>
             <design:formattingHints>
               <design:displaySize>20</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>total</design:name>
-              <design:position>8</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>2</design:nativeDataTypeCode>
-            <design:precision>0</design:precision>
-            <design:scale>0</design:scale>
-            <design:nullability>Unknown</design:nullability>
-            <design:uiHints>
-              <design:displayName>total</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>total</design:label>
-            <design:formattingHints>
-              <design:displaySize>131089</design:displaySize>
             </design:formattingHints>
           </design:usageHints>
         </design:resultColumnDefinitions>
@@ -685,21 +644,9 @@
                     <property name="dataType">decimal</property>
                 </structure>
                 <structure>
-                    <property name="name">ot_min</property>
-                    <text-property name="displayName">ot_min</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["ot_min"]</expression>
-                    <property name="dataType">decimal</property>
-                </structure>
-                <structure>
                     <property name="name">ot_day</property>
                     <text-property name="displayName">ot_day</text-property>
                     <expression name="expression" type="javascript">dataSetRow["ot_day"]</expression>
-                    <property name="dataType">decimal</property>
-                </structure>
-                <structure>
-                    <property name="name">total</property>
-                    <text-property name="displayName">total</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["total"]</expression>
                     <property name="dataType">decimal</property>
                 </structure>
                 <structure>
