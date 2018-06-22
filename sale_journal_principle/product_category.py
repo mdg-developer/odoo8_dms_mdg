@@ -9,5 +9,6 @@ class product_category(osv.osv):
                 'property_account_discount_credit': fields.many2one('account.account', 'Discount Credit Account' , required=True),
                 'property_account_discount_cash': fields.many2one('account.account', 'Discount Cash Account' , required=True),
                 'property_account_foc_principle_receivable': fields.many2one('account.account', 'FOC Principle Account Receivable' , domain="[('type', '=', 'receivable')]",  required=True),
+                'property_account_foc_income': fields.many2one('account.account', 'FOC Income Account' , domain="[('type', '=', 'other')]",  required=True),
                 'property_account_discount_principle_receivable': fields.many2one('account.account', 'Discount Account Receivable' , domain="[('type', '=', 'receivable')]", required=True),
                }
