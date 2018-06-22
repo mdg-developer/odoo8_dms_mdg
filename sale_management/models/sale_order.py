@@ -140,7 +140,7 @@ class sale_order(osv.osv):
                     ('cash', 'Cash'),
                  #   ('consignment', 'Consignment'),
 #                     ('advanced', 'Advanced')
-                    ], 'Payment Type', default='cash'),
+                    ], 'Payment Type', default='cash',readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
                'delivery_remark':fields.selection([
                     ('partial', 'Partial'),
                     ('delivered', 'Delivered'),

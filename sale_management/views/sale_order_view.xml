@@ -112,7 +112,7 @@
 				</field>
 				<field name="date_order" position="after">
 				    <field name="credit_allow" invisible="1"/>
-					<field name="payment_type" options="{'no_create': True}"  on_change="on_change_payment_type(partner_id,payment_type)" attrs="{'readonly':[('credit_allow','!=',True),('state','!=','draft')]}"/>
+					<field name="payment_type" options="{'no_create': True}"  on_change="on_change_payment_type(partner_id,payment_type)" attrs="{'readonly':[('credit_allow','!=',True)]}"/>
 					<field name="payment_term" options="{'no_create': True}"  attrs="{'readonly':[('state','!=','draft')]}"/>
 					<field name="due_date"></field>
 				</field>
