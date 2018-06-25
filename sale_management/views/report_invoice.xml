@@ -143,6 +143,15 @@
 									</strong>
 								</td>
 							</tr>
+							<tr>
+								<td align="left">
+									<t t-if="o.subject and o.is_nonsale ==True">
+										<strong>Subject:</strong>
+										<span t-field="o.subject" />
+									</t>
+								</td>
+
+							</tr>
 						</table>
 						<table class="table table-condensed" style="border:1pt solid;">
 							<thead>
@@ -277,7 +286,7 @@
 
 
 
-						<div class="row" style="padding-top:-2s0pt;width:500px;">
+						<div t-if="o.is_nonsale!=True" class="row" style="padding-top:-2s0pt;width:500px;">
 							<div class="col-xs-4 pull-left" style="width:250px;" align="left">
 								<table class="table" style="border:solid;border-color:white;"
 									align="left">

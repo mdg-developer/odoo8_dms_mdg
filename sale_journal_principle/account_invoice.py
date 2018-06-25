@@ -1418,30 +1418,32 @@ class account_invoice(models.Model):
                                             'company_id':company_id,
                                             'branch_id': branch_id,
                                             'period_id':period_id,
+                                            
                                             }
                             move_id = account_move.create(account_move_vals)
                             print 'moveeeeeeeeeee',move_id
                             move_id=move_id.id
-                            cr_account = dr_account = None                                            
+                            cr_account = dr_account = None    
+                            state='valid'                                        
                             if dif_line['debit'] > 0 :
                                 amount = dif_line['debit']   
                                 dr_account = receivable_account_id
                                 cr_account = account_id
                                 
-                                self.env.cr.execute("""insert into account_move_line (partner_id,name,account_id,date_maturity,move_id,credit,debit,journal_id,date,company_id,period_id) 
-                                values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s),
-                                      (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
-                                      (partner_id, name , dr_account, date, move_id, 0.0, amount, journal_id, date, company_id, period_id,
-                                      partner_id, name, cr_account, date, move_id, amount, 0.0, journal_id, date, company_id, period_id,)) 
+                                self.env.cr.execute("""insert into account_move_line (partner_id,name,account_id,date_maturity,move_id,credit,debit,journal_id,date,company_id,period_id,state) 
+                                values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s),
+                                      (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
+                                      (partner_id, name , dr_account, date, move_id, 0.0, amount, journal_id, date, company_id, period_id,state,
+                                      partner_id, name, cr_account, date, move_id, amount, 0.0, journal_id, date, company_id, period_id,state,)) 
                             else:
                                 amount = dif_line['credit']   
                                 dr_account = account_id
                                 cr_account = payable_account_id                            
-                                self.env.cr.execute("""insert into account_move_line (partner_id,name,account_id,date_maturity,move_id,credit,debit,journal_id,date,company_id,period_id) 
-                                values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s),
-                                      (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
-                                      (partner_id, name , dr_account, date, move_id, 0.0, amount, journal_id, date, company_id, period_id,
-                                      partner_id, name, cr_account, date, move_id, amount, 0.0, journal_id, date, company_id, period_id,))
+                                self.env.cr.execute("""insert into account_move_line (partner_id,name,account_id,date_maturity,move_id,credit,debit,journal_id,date,company_id,period_id,state)  
+                                values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s),
+                                      (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
+                                      (partner_id, name , dr_account, date, move_id, 0.0, amount, journal_id, date, company_id, period_id,state,
+                                      partner_id, name, cr_account, date, move_id, amount, 0.0, journal_id, date, company_id, period_id,state,))
                  
                                          
                             self.env.cr.execute("""UPDATE account_move as m set state='posted' where m.id=%s                            

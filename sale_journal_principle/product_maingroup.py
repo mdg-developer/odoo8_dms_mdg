@@ -36,6 +36,11 @@ class product_maingroup(osv.osv):
                 relation='account.account',
                 string="Uses Account",
                 help="This account will be used to value price difference between purchase price and cost price."),
+            'property_destruction_account': fields.property(
+                type='many2one',
+                relation='account.account',
+                string="Destruction Account",
+                help="This account will be used to value price difference between purchase price and cost price."),                
             'property_difference_receivable_account': fields.property(
                 type='many2one',
                 relation='account.account', domain="[('type', 'in', ('receivable','payable'))]",

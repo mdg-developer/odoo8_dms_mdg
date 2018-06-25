@@ -64,7 +64,7 @@
 								</div>
 								<div t-if="o.company_id.partner_id">
 									<div t-field="o.company_id.partner_id"
-										t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax" ], "no_marker": true}' />
+										t-field-options='{"widget": "contact", "fields": ["address", "name", "phone" ], "no_marker": true}' />
 									<strong>Contact Person:</strong>
 									<span t-field="o.company_id.partner_id.temp_customer" />
 									<br />
@@ -190,7 +190,7 @@
 						<strong>Amount In Words:</strong>
 						<p t-field="o.inword" />
 						<div class="oe_structure" />
-						<strong>Remark:</strong>
+						<strong>Remarks:</strong>
 						<p t-field="o.notes" />
 						<div class="oe_structure" />
 					</div>
