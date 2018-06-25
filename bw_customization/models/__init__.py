@@ -5,3 +5,4 @@ import res_company
 import product_uom
 import stock_warehouse
 import account
+import purchase
