@@ -15,8 +15,17 @@
 							  
 								<field name="name" class="oe_inline"/>
 								<field name="date" class="oe_inline"/>
+								<field name="partner_id" />
+							</group>
+							<group>
+							  
+								
+								<field name="date" class="oe_inline"/>
+								<field name="currency" />
+								<field name="rate" />
 							</group>
 						</group>
+						
 						<group>
 							<notebook>
 								<page string="Rate">
@@ -24,8 +33,7 @@
 										<tree string="Product Agree Rate Line" editable="bottom">
 											<field name="product_id" />
 											<field name="agreed_price" />
-											<field name="currency" />
-											<field name="rate" />
+											
 										</tree>
 									</field>
 								</page>
@@ -65,7 +73,10 @@
 
 		</record>
 
+		<!-- <menuitem action='action_product_agree_return' id="menu_product_agree"
+			parent="stock.menu_stock_warehouse_mgmt" groups="stock.group_stock_manager" /> -->
 		<menuitem action='action_product_agree_return' id="menu_product_agree"
-			parent="stock.menu_stock_warehouse_mgmt" groups="stock.group_stock_manager" />
+           parent="stock.menu_stock_warehouse_mgmt" groups="stock.group_stock_manager" />
+           parent="purchase.menu_purchase_config_purchase" groups="base.group_no_one" sequence="100" />
 	</data>
 </openerp>

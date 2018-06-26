@@ -82,7 +82,7 @@ class purchase_order_line(osv.osv):
     
     def onchange_product_id(self, cr, uid, ids, pricelist_id, product_id, qty, uom_id,
             partner_id, date_order=False, fiscal_position_id=False, date_planned=False,
-            name=False, price_unit=False, state='draft', context=None):
+            name=False, price_unit=False, state='draft',currency_id=False, context=None):
         """
         onchange handler of product_id.
         """
@@ -92,7 +92,13 @@ class purchase_order_line(osv.osv):
         res = {'value': {'price_unit': price_unit or 0.0, 'name': name or '', 'product_uom' : uom_id or False}}
         if not product_id:
             return res
-
+                        
+        if not partner_id:
+            return res
+        
+        if not currency_id:
+            return res
+        
         product_product = self.pool.get('product.product')
         product_uom = self.pool.get('product.uom')
         res_partner = self.pool.get('res.partner')
@@ -165,11 +171,24 @@ class purchase_order_line(osv.osv):
                         product.id, qty or 1.0, partner_id or False, {'uom': uom_id, 'date': date_order_str})[pricelist_id]
             else:
                 price = product.standard_price
-
+                
         taxes = account_tax.browse(cr, uid, map(lambda x: x.id, product.supplier_taxes_id))
         fpos = fiscal_position_id and account_fiscal_position.browse(cr, uid, fiscal_position_id, context=context) or False
         taxes_ids = account_fiscal_position.map_tax(cr, uid, fpos, taxes)
-        res['value'].update({'price_unit': price, 'agreed_price': price, 'taxes_id': taxes_ids, 'price_subtotal':price * qty})
+        
+        if partner_id and currency_id and product_id:
+            order = 'date desc'
+            product_agree_rate_obj = self.pool.get('product.agree.rate')
+            cr.execute("select %s::date",(date_order,))
+            po_date = cr.fetchone()[0]
+            agree_ids =product_agree_rate_obj.search(cr,uid,[('date','<=',po_date),('partner_id','=',partner_id),('currency','=',currency_id)],order=order,limit=1)
+            for product_agree in product_agree_rate_obj.browse(cr,uid,agree_ids,context=None):
+                for agree_line in product_agree.agress_lines:
+                    if agree_line.product_id.id == product_id:
+                        if agree_line.agreed_price !=0:
+                            res['value'].update({'price_unit': agree_line.agreed_price / product_agree.rate, 'agreed_price': agree_line.agreed_price / product_agree.rate, 'taxes_id': taxes_ids, 'price_subtotal':(agree_line.agreed_price/ product_agree.rate) * qty})
+                            return res
+        res['value'].update({'price_unit': 50, 'agreed_price': price, 'taxes_id': taxes_ids, 'price_subtotal':price * qty})
 
         return res
 class account_invoice_line(osv.osv): 

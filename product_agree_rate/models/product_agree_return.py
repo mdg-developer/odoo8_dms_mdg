@@ -17,6 +17,9 @@ class prodcut_agree_rate(osv.osv):
     _columns ={
         'name':fields.char("Description",required = True),
         'date':fields.date("Date",required = True),
+        'partner_id':fields.many2one("res.partner","Supplier"),
+        'currency':fields.many2one('res.currency','Purchase Currency',required=True),
+        'rate':fields.float("Rate",required = True),
         'agress_lines':fields.one2many('product.agree.rate.line', 'line_id', 'Product Lines',copy=True),
 }
 
@@ -28,8 +31,8 @@ class product_agree_rate_line(osv.osv):
               'line_id':fields.many2one('product.agree.rate',"Product Line",required=True),
               'product_id':fields.many2one('product.product',"Product Name",required=True),
               'agreed_price':fields.float('Agreed Price',required =True),
-              'currency':fields.many2one('res.currency','Currency',required=True),
-              'rate':fields.float("Rate",required = True),
+#               'currency':fields.many2one('res.currency','Currency',required=True),
+#               'rate':fields.float("Rate",required = True),
               }
     
 
