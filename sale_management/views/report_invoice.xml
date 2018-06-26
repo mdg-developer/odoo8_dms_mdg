@@ -128,29 +128,29 @@
 
 						<table class="table"
 							style="border:solid;border-color:#ffffff;margin-bottom:-1pt;margin-top:-20pt;">
-							<tr>
+							<tr style="border:solid;border-color:white;">
 								<td align="left">
 									<t t-if="o.payment_term.note">
 										<strong>Payment Term:</strong>
 										<span t-field="o.payment_term.note" />
 									</t>
 								</td>
-								<td align="right">
-									<strong>
-										Amount in (
-										<span t-field="o.currency_id.name" />
-										)
-									</strong>
-								</td>
+								
 							</tr>
-							<tr>
+							<tr style="border:solid;border-color:white;">
 								<td align="left">
 									<t t-if="o.subject and o.is_nonsale ==True">
 										<strong>Subject:</strong>
 										<span t-field="o.subject" />
 									</t>
 								</td>
-
+                                <td align="right">
+									<strong>
+										Amount in (
+										<span t-field="o.currency_id.name" />
+										)
+									</strong>
+								</td>
 							</tr>
 						</table>
 						<table class="table table-condensed" style="border:1pt solid;">
