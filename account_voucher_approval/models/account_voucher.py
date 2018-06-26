@@ -91,7 +91,7 @@ class account_voucher(osv.osv):
         else:
             total_credit = price or 0.0
             if not account_type:
-                account_type = 'receivable'
+                account_type = 'receivable','payable'
         print 'account_type',account_type
         if not context.get('move_line_ids', False):
             ids = move_line_pool.search(cr, uid, [('state','=','valid'), ('account_id.type', 'in', (account_type)), ('reconcile_id', '=', False), ('partner_id', '=', partner_id)], context=context)
