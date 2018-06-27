@@ -29,6 +29,7 @@
 							</group>
 							<group>
 								<field name="date" />
+								<field name="create_date" />
 							</group>
 							<group>
 								<field name="location_id" />

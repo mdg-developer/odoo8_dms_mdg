@@ -8,6 +8,7 @@ class product_disassembly(osv.osv):
     _columns = {
         'name': fields.char('PDS Ref', readonly=True),
         'date': fields.date('Date'),
+        'create_date': fields.datetime('Create Date'),
         'location_id': fields.many2one('stock.location', 'Location'),
         'user_id': fields.many2one('res.users', 'Person'),
         'product_lines': fields.one2many('product.disassembly.line', 'line_id', 'Items Lines', copy=True),
@@ -15,6 +16,7 @@ class product_disassembly(osv.osv):
     }
     _defaults = {        
          'date':fields.datetime.now,
+         'create_date':fields.datetime.now,
          'is_disassembly':False,
           'user_id':lambda obj, cr, uid, context: uid
                   }    
