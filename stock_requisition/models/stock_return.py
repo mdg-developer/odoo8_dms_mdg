@@ -78,6 +78,7 @@ class stock_return(osv.osv):
             cr.execute('delete from stock_return_line where line_id=%s', (ids[0],))
             return_data = self.browse(cr, uid, ids, context=context)
             return_date = return_data.return_date
+            to_return_date=return_data.to_return_date
             from_location_id = return_data.from_location.id
             # return_from=return_data.return_from.id            
             to_location_id = return_data.to_location.id            
@@ -95,7 +96,7 @@ class stock_return(osv.osv):
 #                 note_id=note[0]
 #            print 'rereturn_date',return_date,sale_team_id
              # note_ids = note_obj.search(cr, uid, [('sale_team_id', '=', sale_team_id), ('issue_date', '=', return_date),('state','=','issue')])
-            mobile_ids = mobile_obj.search(cr, uid, [('return_date', '=', return_date), ('sale_team_id', '=', sale_team_id)], context=context)
+            mobile_ids = mobile_obj.search(cr, uid, [('return_date', '>=', return_date),('return_date', '<=', to_return_date) ,('sale_team_id', '=', sale_team_id)], context=context)
 #             if  mobile_ids:        
 #                 #cr.execute('select gin.from_location_id as location_id,product_id,big_uom_id,sum(big_issue_quantity) as big_issue_quantity,sum(issue_quantity) as issue_quantity,product_uom  as small_uom_id from good_issue_note gin ,good_issue_note_line  ginl where gin.id = ginl.line_id and gin.id in %s group by product_id,from_location_id,big_uom_id,product_uom', (tuple(note_ids),))
 #                 cr.execute('select product_id,product_uom,sum(return_quantity) as return_quantity,sum(sale_quantity) as sale_quantity from stock_return_mobile srm, stock_return_mobile_line srml where srm.id=srml.line_id and srm.id in %s group by product_id,product_uom', (tuple(mobile_ids),))
@@ -137,98 +138,123 @@ class stock_return(osv.osv):
 #                                           #'rec_small_uom_id':small_uom_id,
 #                                           #'rec_big_uom_id':big_uom_id,
 #                                         }, context=context)
-             
-            return_mobile = mobile_obj.browse(cr, uid, mobile_ids, context=context)            
-            for mobile_line in return_mobile.p_line:
-                product_id = mobile_line.product_id.id
-                return_quantity = mobile_line.return_quantity                
-                # if return_quantity<0:
-                    # substract_qty=return_quantity
-                # else:
-                    # substract_qty=0
-
-                sale_quantity = mobile_line.sale_quantity
-                # foc_quantity = mobile_line.foc_quantity
-                small_uom_id = mobile_line.product_uom.id             
-                # last_qty         = foc_quantity + sale_quantity
-                # openingQTY
-                cr.execute('''select  transfer_in.qty - transfer_out.qty as opening
-                                from
-                                (
-                                    select distinct aa.location_id, aa.product_id 
-                                    from (
-                                        select s.location_id, s.product_id
-                                        from stock_move s
-                                        where s.state='done'        
-                                        and  s.location_id=%s        
-                                        and s.product_id =%s
-                                        union
-                                        select s.location_dest_id as location_id,s.product_id 
-                                        from stock_move s
-                                        where s.state='done'        
-                                        and  s.location_dest_id=%s
-                                        and s.product_id =%s
-                                         )aa
-                                 )tmp
-                                left join 
-                                (select s.product_id,s.location_dest_id,greatest(0,sum(s.product_qty)) as qty
-                                from stock_move s,
-                                stock_location fl,
-                                stock_location tl
-                                where s.state='done'
-                                and s.location_dest_id=tl.id
-                                and s.location_id=fl.id
-                                and date_trunc('day', s.date::date) <= %s
-                                and  s.location_dest_id=%s
-                                and s.product_id =%s
-                                group by s.location_dest_id, s.product_id
-                                ) transfer_in on transfer_in.product_id=tmp.product_id and transfer_in.location_dest_id=tmp.location_id
-                                left join
-                                (
-                                select s.product_id,s.location_id,greatest(0,sum(s.product_qty)) as qty
-                                from stock_move s,
-                                stock_location fl,
-                                stock_location tl
-                                where s.state='done'
-                                and s.location_dest_id=tl.id
-                                and s.location_id=fl.id
-                                and date_trunc('day', s.date::date) <= %s
-                                and  s.location_id=%s
-                                and s.product_id =%s
-                                group by s.location_id, s.product_id
-                                ) transfer_out on transfer_out.product_id=tmp.product_id and transfer_out.location_id=tmp.location_id'''
-                  , (from_location_id, product_id, from_location_id, product_id, return_date, from_location_id, product_id, return_date, from_location_id, product_id,))                
-                opening_data = cr.fetchone()
-                if opening_data:
-                    if opening_data is not None:
-                        opening_qty = opening_data[0]
+            for mobile_id in mobile_ids:
+                return_mobile = mobile_obj.browse(cr, uid, mobile_id, context=context)    
+                return_quantity=0
+                for mobile_line in return_mobile.p_line:
+                    product_id = mobile_line.product_id.id
+                    if to_return_date ==mobile_line.line_id.return_date:
+                        return_quantity = mobile_line.return_quantity      
+                    # if return_quantity<0:
+                        # substract_qty=return_quantity
+                    # else:
+                        # substract_qty=0
+    
+                    sale_quantity = mobile_line.sale_quantity + mobile_line.foc_quantity
+                    # foc_quantity = mobile_line.foc_quantity
+                    small_uom_id = mobile_line.product_uom.id             
+                    # last_qty         = foc_quantity + sale_quantity
+                    # openingQTY
+                    cr.execute('''select coalesce (sum(transfer_in.qty),0.0) - coalesce (sum(transfer_out.qty),0.0) as opening
+                                    from
+                                    (
+                                        select distinct aa.location_id, aa.product_id 
+                                        from (
+                                            select s.location_id, s.product_id
+                                            from stock_move s
+                                            where s.state='done'        
+                                            and  s.location_id=%s        
+                                            and s.product_id =%s
+                                            union
+                                            select s.location_dest_id as location_id,s.product_id 
+                                            from stock_move s
+                                            where s.state='done'        
+                                            and  s.location_dest_id=%s
+                                            and s.product_id =%s
+                                             )aa
+                                     )tmp
+                                    left join 
+                                    (select s.product_id,s.location_dest_id,greatest(0,sum(s.product_qty)) as qty
+                                    from stock_move s,
+                                    stock_location fl,
+                                    stock_location tl
+                                    where s.state='done'
+                                    and s.location_dest_id=tl.id
+                                    and s.location_id=fl.id
+                                    and date_trunc('day', s.date::date) <= %s
+                                    and  s.location_dest_id=%s
+                                    and s.product_id =%s
+                                    group by s.location_dest_id, s.product_id
+                                    ) transfer_in on transfer_in.product_id=tmp.product_id and transfer_in.location_dest_id=tmp.location_id
+                                    left join
+                                    (
+                                    select s.product_id,s.location_id,greatest(0,sum(s.product_qty)) as qty
+                                    from stock_move s,
+                                    stock_location fl,
+                                    stock_location tl
+                                    where s.state='done'
+                                    and s.location_dest_id=tl.id
+                                    and s.location_id=fl.id
+                                    and date_trunc('day', s.date::date) <= %s
+                                    and  s.location_id=%s
+                                    and s.product_id =%s
+                                    group by s.location_id, s.product_id
+                                    ) transfer_out on transfer_out.product_id=tmp.product_id and transfer_out.location_id=tmp.location_id'''
+                      , (from_location_id, product_id, from_location_id, product_id, return_date, from_location_id, product_id, return_date, from_location_id, product_id,))                
+                    opening_data = cr.fetchone()
+                    if opening_data:
+                        if opening_data is not None:
+                            opening_qty = opening_data[0]
+                        else:
+                            opening_qty = 0
+                    # Stock In QTY
+                    cr.execute('''select coalesce (sum(transfer_in.qty),0.0) as opening
+                                    from
+                                    (select s.product_id,s.location_dest_id,greatest(0,sum(s.product_qty)) as qty
+                                    from stock_move s,
+                                    stock_location fl,
+                                    stock_location tl
+                                    where s.state='done'
+                                    and s.location_dest_id=tl.id
+                                    and s.location_id=fl.id
+                                    and date_trunc('day', s.date::date) >= %s
+                                    and date_trunc('day', s.date::date) <= %s
+                                    and  s.location_dest_id=%s
+                                    and s.product_id =%s
+                                    group by s.location_dest_id, s.product_id
+                                    ) transfer_in '''
+                      , (return_date,to_return_date, from_location_id, product_id,))                
+                    in_qty_data = cr.fetchone()
+                    if in_qty_data:
+                        if in_qty_data is not None:
+                            in_stock_qty = in_qty_data[0]
+                        else:
+                            in_stock_qty = 0                
+                    product_search = stock_return_obj.search(cr, uid, [('product_id', '=', product_id), ('line_id', '=', ids[0])], context=context) 
+                    if product_search:
+                        # cr.execute("update stock_return_line set receive_quantity=receive_quantity+%s + %s ,return_quantity=%s,sale_quantity=%s,foc_quantity=%s where line_id=%s and product_id=%s", (last_qty,substract_qty,return_quantity, sale_quantity, foc_quantity, ids[0], product_id,))
+                        cr.execute("update stock_return_line set return_quantity=return_quantity + %s,sale_quantity=sale_quantity + %s where line_id=%s and product_id=%s", (return_quantity, sale_quantity, ids[0], product_id,))
                     else:
-                        opening_qty = 0
-                
-                product_search = stock_return_obj.search(cr, uid, [('product_id', '=', product_id), ('line_id', '=', ids[0])], context=context) 
-                if product_search:
-                    # cr.execute("update stock_return_line set receive_quantity=receive_quantity+%s + %s ,return_quantity=%s,sale_quantity=%s,foc_quantity=%s where line_id=%s and product_id=%s", (last_qty,substract_qty,return_quantity, sale_quantity, foc_quantity, ids[0], product_id,))
-                    cr.execute("update stock_return_line set receive_quantity=receive_quantity,return_quantity=%s,sale_quantity=%s where line_id=%s and product_id=%s", (return_quantity, sale_quantity, ids[0], product_id,))
-                else:
-                    product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-                    sequence = product.sequence
-                    big_uom = product.product_tmpl_id.big_uom_id and product.product_tmpl_id.big_uom_id.id or False,
-                    stock_return_obj.create(cr, uid, {'line_id': ids[0],
-                                                'opening_stock_qty':opening_qty,
-                                               'sequence':sequence,
-                                              'product_id': product_id,
-                                              'product_uom': product.product_tmpl_id.uom_id.id,
-                                              'receive_quantity':0,
-                                              'return_quantity':return_quantity,
-                                              'sale_quantity':sale_quantity,
-                                              'status':'Stock Return',
-                                              # 'foc_quantity':foc_quantity,
-                                              'from_location_id':from_location_id ,
-                                              'to_location_id': to_location_id,
-                                              'rec_small_uom_id':small_uom_id,
-                                              'rec_big_uom_id':big_uom,
-                                              }, context=context)
-            trans_ids = product_trans_obj.search(cr, uid, [('date', '>=', return_date), ('date', '<=', return_date), ('void_flag', '=', 'none'), ('team_id', '=', sale_team_id)], context=context),
+                        product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+                        sequence = product.sequence
+                        big_uom = product.product_tmpl_id.big_uom_id and product.product_tmpl_id.big_uom_id.id or False,
+                        stock_return_obj.create(cr, uid, {'line_id': ids[0],
+                                                    'opening_stock_qty':opening_qty,
+                                                    'in_stock_qty':in_stock_qty,
+                                                   'sequence':sequence,
+                                                  'product_id': product_id,
+                                                  'product_uom': product.product_tmpl_id.uom_id.id,
+                                                  'receive_quantity':0,
+                                                  'return_quantity':return_quantity,
+                                                  'sale_quantity':sale_quantity,
+                                                  'status':'Stock Return',
+                                                  # 'foc_quantity':foc_quantity,
+                                                  'from_location_id':from_location_id ,
+                                                  'to_location_id': to_location_id,
+                                                  'rec_small_uom_id':small_uom_id,
+                                                  'rec_big_uom_id':big_uom,
+                                                  }, context=context)
+            trans_ids = product_trans_obj.search(cr, uid, [('date', '>=', return_date), ('date', '<=', to_return_date), ('void_flag', '=', 'none'), ('team_id', '=', sale_team_id)], context=context),
             for t_id in trans_ids:
                 # NormalReturn Location
                 if return_data.from_wh_normal_return_location_id:      
@@ -467,7 +493,8 @@ class stock_return(osv.osv):
          'so_no' : fields.char('Sales Order/Inv Ref;No.'),
          'returner' : fields.char('Returned By'),
          'wh_receiver' : fields.char('WH Receiver'),
-         'return_date':fields.date('Date of Return', required=True),
+         'return_date':fields.date('From Date of Return', required=True),
+         'to_return_date':fields.date('To Date of Return', required=True),
          'vehicle_id':fields.many2one('fleet.vehicle', 'Vehicle No'),
 #         'branch_id':fields.many2one('res.branch', 'Branch'),
          'state': fields.selection([
@@ -670,6 +697,7 @@ class stock_return_line(osv.osv):  # #prod_pricelist_update_line
         'different_qty':fields.integer('Different Qty'),
         'from_location_id':fields.many2one('stock.location', 'From Location'),
         'to_location_id':fields.many2one('stock.location', 'To Location'),
+        'in_stock_qty':fields.float('In Qty'),
     }
         
     def on_change_return_quantity(self, cr, uid, ids, closing_stock_qty, return_quantity, context=None):

@@ -182,7 +182,9 @@ class stock_quant(osv.osv):
                     raise orm.except_orm(_('Error :'), _("Please select FOC Principle Account Receivable in Product Category %s!")) % move.product_id.categ_id.name                  
 #                 debit_account_id_1 = move.product_id.categ_id.property_account_foc_credit.id 
 #                 credit_account_id_1 = move.product_id.categ_id.property_account_foc_principle_receivable.id
-            income_account_id_1 = move.product_id.categ_id.property_account_income_categ.id 
+            income_account_id_1 = move.product_id.categ_id.property_account_foc_income.id 
+            if income_account_id_1 is False:
+                raise orm.except_orm(_('Error :'), _("Please select FOC Income Account  in Product Category %s!")) % move.product_id.categ_id.name                  
             pricelist_id = move.product_id.product_tmpl_id.main_group.pricelist_id.id  
             principle_partner_id = move.product_id.product_tmpl_id.main_group.partner_id.id  
             product_price = 0

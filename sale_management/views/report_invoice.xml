@@ -128,14 +128,23 @@
 
 						<table class="table"
 							style="border:solid;border-color:#ffffff;margin-bottom:-1pt;margin-top:-20pt;">
-							<tr>
+							<tr style="border:solid;border-color:white;">
 								<td align="left">
 									<t t-if="o.payment_term.note">
 										<strong>Payment Term:</strong>
 										<span t-field="o.payment_term.note" />
 									</t>
 								</td>
-								<td align="right">
+								
+							</tr>
+							<tr style="border:solid;border-color:white;">
+								<td align="left">
+									<t t-if="o.subject and o.is_nonsale ==True">
+										<strong>Subject:</strong>
+										<span t-field="o.subject" />
+									</t>
+								</td>
+                                <td align="right">
 									<strong>
 										Amount in (
 										<span t-field="o.currency_id.name" />
@@ -277,7 +286,7 @@
 
 
 
-						<div class="row" style="padding-top:-2s0pt;width:500px;">
+						<div t-if="o.is_nonsale!=True" class="row" style="padding-top:-2s0pt;width:500px;">
 							<div class="col-xs-4 pull-left" style="width:250px;" align="left">
 								<table class="table" style="border:solid;border-color:white;"
 									align="left">

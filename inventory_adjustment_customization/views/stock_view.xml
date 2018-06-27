@@ -10,6 +10,9 @@
 				<xpath expr="//field[@name='filter']" position="after">
 					<field name="request_by" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 					<field name="validate_by" />
+					<field name="subject" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                    <field name="note" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+					
 				</xpath>
 				<xpath expr="//field[@name='product_qty']" position="after">
 					<field name="note" />

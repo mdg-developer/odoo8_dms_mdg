@@ -39,9 +39,10 @@ Purchase Order
              'views/res_partner_inherit_view.xml',
             'views/purchase_view.xml',
             'views/report_purchaseorder.xml',
-
+            'views/report_purchasequotation.xml',
     ],
     'installable': True,
     'auto_install': False,
     'application': True,
 }
+

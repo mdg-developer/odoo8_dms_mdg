@@ -168,7 +168,7 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <structure>
                         <property name="position">5</property>
                         <property name="name">amount_total</property>
-                        <property name="dataType">float</property>
+                        <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">6</property>
@@ -183,12 +183,12 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <structure>
                         <property name="position">8</property>
                         <property name="name">print_count</property>
-                        <property name="dataType">integer</property>
+                        <property name="dataType">string</property>
                     </structure>
                 </list-property>
             </structure>
-            <method name="beforeOpen"><![CDATA[this.queryText =this.queryText.replace("--$sales_team$", "and mso.sale_team in ("+ params["sales_team_id"].value.join(",")+")")
-this.queryText =this.queryText.replace("--$branch$", "and res.branch_id in ("+ params["branch_id"].value.join(",")+")")]]></method>
+            <method name="beforeOpen"><![CDATA[this.queryText =this.queryText.replace("--$sales_team$", "and mso.section_id in ("+ params["sales_team_id"].value.join(",")+")")
+this.queryText =this.queryText.replace("--$branch$", "and mso.branch_id in ("+ params["branch_id"].value.join(",")+")")]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
                 <structure>
@@ -223,8 +223,8 @@ this.queryText =this.queryText.replace("--$branch$", "and res.branch_id in ("+ p
                     <property name="position">5</property>
                     <property name="name">amount_total</property>
                     <property name="nativeName">amount_total</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
                     <property name="position">6</property>
@@ -244,18 +244,18 @@ this.queryText =this.queryText.replace("--$branch$", "and res.branch_id in ("+ p
                     <property name="position">8</property>
                     <property name="name">print_count</property>
                     <property name="nativeName">print_count</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select mso.name,rp.name customer_name,mso.customer_code,res.login,mso.amount_total,mso.branch_id,cc.name as sale_team,mso.print_count
-from pre_sale_order mso,res_partner rp,res_users res,crm_case_section cc
+            <xml-property name="queryText"><![CDATA[select so.name,rp.name customer_name,mso.customer_code,res.login,mso.total_amount as amount_total,mso.branch_id,cc.name as sale_team,mso.reprint_count as print_count
+from stock_delivery_reprint mso,res_partner rp,sale_order so,res_users res,crm_case_section cc
 where mso.partner_id=rp.id
-and mso.user_id=res.id
-and mso.sale_team=cc.id
-and void_flag='none'
-and mso.print_count > 0
-and ((mso.date at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+and mso.create_uid=res.id
+and mso.section_id=cc.id
+and so.id=mso.presaleorder_id
+and mso.reprint_count::integer > 0
+and mso.reprint_date between ? and ?
 --$branch$
 --$sales_team$
 order by sale_team]]></xml-property>
@@ -276,9 +276,6 @@ order by sale_team]]></xml-property>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
         </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
       </design:ParameterDefinition>
     </parameter>
     <parameter>
@@ -294,9 +291,6 @@ order by sale_team]]></xml-property>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
         </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
       </design:ParameterDefinition>
     </parameter>
   </DataSetParameters>

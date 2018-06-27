@@ -246,7 +246,7 @@
 <!-- 											<span t-field="o.deduct_amt" /> -->
 <!-- 										</td> -->
 <!-- 									</tr> -->
-									<tr>
+									<tr t-if="o.partner_id.is_exclusive==True">
 										<td style="padding-top: 2mm;padding-bottom: 2mm;">
 											<strong>Total Amount</strong>
 										</td>
@@ -259,7 +259,7 @@
 											</t>
 										</td>
 									</tr>
-									<tr>
+									<tr t-if="o.partner_id.is_exclusive==True">
 										<td style="padding-top: 2mm;padding-bottom: 2mm;">
 											<strong>C.Tax</strong>
 										</td>

@@ -300,7 +300,7 @@ class stock_requisition(osv.osv):
                             ori_small_qty = quantity
                             total = small_qty + ori_small_qty
                         opening_qty=0
-                        cr.execute('''select  transfer_in.qty - transfer_out.qty as opening
+                        cr.execute('''select coalesce (sum(transfer_in.qty),0.0) - coalesce (sum(transfer_out.qty),0.0) as opening
                                 from
                                 (
                                     select distinct aa.location_id, aa.product_id 

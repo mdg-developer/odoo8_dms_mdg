@@ -9,13 +9,15 @@ class stock_move(osv.osv):
               'issue_type':fields.selection([
                         ('donation', 'Donation'),
                         ('sampling', 'Sampling'),
+                        ('destruction', 'Destruction'),
                         ('other', 'Others'),
                         ], 'Issue Type'),
                }
 class account_invoice(osv.osv):
     _inherit = "account.invoice"
     _columns = {
-              'is_nonsale':fields.boolean('Is Claim', default=False),
+              'is_nonsale':fields.boolean('To Claim', default=False),
+              'subject':fields.char('Subject', required=False, readonly=False),
                }
         
 class stock_picking(osv.osv):
@@ -24,7 +26,9 @@ class stock_picking(osv.osv):
               'issue_type':fields.selection([
                         ('donation', 'Donation'),
                         ('sampling', 'Sampling'),
+                        ('destruction', 'Destruction'),
                         ('other', 'Others'),
+                        
                         ], 'Issue Type'),
                }
 class product_nonsell_issue(osv.osv):
@@ -92,6 +96,7 @@ class product_nonsell_issue(osv.osv):
          'issue_type':fields.selection([
             ('donation', 'Donation'),
             ('sampling', 'Sampling'),
+            ('destruction', 'Destruction'),
             ('other', 'Others'),
             ], 'Issue Type'),
           'is_claim': fields.boolean('To Claim'),
@@ -169,7 +174,9 @@ class product_nonsell_issue(osv.osv):
                 if  sell_data.issue_type == 'sampling':
                     from_location_id = location_obj.search(cr, uid, [('name', '=', 'Sampling')], context=context)                
                 if  sell_data.issue_type == 'other':
-                    from_location_id = location_obj.search(cr, uid, [('name', '=', 'Other Uses Location')], context=context)                 
+                    from_location_id = location_obj.search(cr, uid, [('name', '=', 'Other Uses Location')], context=context)       
+                if  sell_data.issue_type == 'destruction':
+                    from_location_id = location_obj.search(cr, uid, [('name', '=', 'Destruction')], context=context)                                    
                 move_id = move_obj.create(cr, uid, {'picking_id': picking_id,
                                        'picking_type_id':picking_type_id,
                                       'product_id': product_id,
@@ -226,7 +233,8 @@ class product_nonsell_issue(osv.osv):
                     account_id = invoice_line.product_id.product_tmpl_id.main_group.property_sampling_account.id           
                 if  issue_type == 'other':
                     account_id = invoice_line.product_id.product_tmpl_id.main_group.property_uses_account.id
-
+                if  issue_type == 'destruction':
+                    account_id = invoice_line.product_id.product_tmpl_id.main_group.property_destruction_account.id
                 inv_line = {'name': invoice_line.product_id.name,
                             'invoice_id':inv_id,
                     'account_id': account_id,
