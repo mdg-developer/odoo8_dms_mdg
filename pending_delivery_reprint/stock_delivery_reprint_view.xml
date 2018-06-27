@@ -16,6 +16,7 @@
 							<field name="partner_id" />
 							<field name="customer_code" />
 							<field name="total_amount" />
+							<field name="void_flag" />
 							<field name="reprint_count" />
 						</group>
 					</sheet>
@@ -35,6 +36,7 @@
 					<field name="partner_id" />
 					<field name="customer_code" />
 					<field name="total_amount" />
+					<field name="void_flag" />
 					<field name="reprint_count" />
 				</tree>
 			</field>

@@ -15,6 +15,7 @@ class stockdeliveryreprint(osv.osv):
                 'customer_code':fields.char('Customer Code',readonly=True),
                 'total_amount':fields.char('Total Amount',readonly=True),
                 'reprint_count':fields.char('Reprint Count',readonly=True),
+                'void_flag':fields.char('State',readonly=True),
               }
 
     
