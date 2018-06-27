@@ -107,7 +107,8 @@ class mobile_sale_order(osv.osv):
        'payment_line_ids':fields.one2many('customer.payment', 'payment_id', 'Payment Lines'),
       'branch_id': fields.many2one('res.branch', 'Branch', required=True),
       'is_convert':fields.boolean('Is Convert', readonly=True),
-      'print_count':fields.integer('RePrint Count'),
+      'print_count':fields.integer('Unvoid Reprint Count'),
+      'void_print_count':fields.integer('Voided Reprint Count'),
       'order_team':fields.many2one('crm.case.section', 'Order Team'),
       'rebate_later':fields.boolean('Rebate Later', readonly=True),
       'order_saleperson': fields.many2one('res.users', 'Order Saleperson'),
@@ -213,6 +214,7 @@ class mobile_sale_order(osv.osv):
                         'branch_id':branch_id,
                         'note':so['note'],
                         'print_count':so['print_count'],
+                        'void_print_count':so['void_print_count'],
                         'order_team':order_team,
                         'rebate_later':rebate,
                         'order_saleperson':so['order_saleperson'],
@@ -403,7 +405,7 @@ class mobile_sale_order(osv.osv):
                         order_id =cursor.fetchone()[0]                                
                         cursor.execute('select branch_id from crm_case_section where id=%s', (sync_reprint['section_id'],))
                         branch_id = cursor.fetchone()[0]
-                        cursor.execute("delete from stock_delivery_reprint where presaleorder_id = %s ", (order_id,))    
+                        cursor.execute("delete from stock_delivery_reprint where presaleorder_id = %s and void_flag = %s ", (order_id,sync_reprint['void_flag'],)) 
                         print_result = {
                             'reprint_date':datetime.now(),
                             'branch_id':branch_id,
@@ -413,6 +415,7 @@ class mobile_sale_order(osv.osv):
                             'customer_code':sync_reprint['customer_code'],
                             'total_amount':sync_reprint['total_amount'],
                             'reprint_count':sync_reprint['reprint_count'],
+                            'void_flag':sync_reprint['void_flag'],
                             }
                         sync_obj.create(cursor, user, print_result, context=context)
                 return True
@@ -459,13 +462,13 @@ class mobile_sale_order(osv.osv):
 #                         saleManId = None
                     sale_team_id = int(pt['team_id'])
                     sale_team_data = sale_team_obj.browse(cursor, user,sale_team_id , context=None)
-                    if pt['type'] =='Normal return':
+                    if pt['type'] =='Normal stock returned':
                         location_type_id = sale_team_data.normal_return_location_id.id
                     elif pt['type'] =='Expired':
                         location_type_id = sale_team_data.exp_location_id.id
                     elif pt['type'] =='Near expiry':
                         location_type_id = sale_team_data.near_exp_location_id.id
-                    elif pt['type'] =='Fresh stock not good':
+                    elif pt['type'] =='Fresh stock minor damage':
                         location_type_id = sale_team_data.fresh_stock_not_good_location_id.id
                     elif pt['type'] =='Damaged':
                         location_type_id = sale_team_data.damage_location_id.id
@@ -549,6 +552,7 @@ class mobile_sale_order(osv.osv):
                 for pm in product_mo:
                     mso_result = {
                         'date':pm['date'],
+                        'create_date':pm['create_datetime'],
                         'location_id':pm['location_id'],
                         'user_id':pm['user_id'] ,
                         'product_lines':pm['mo_id'],
@@ -1186,7 +1190,7 @@ class mobile_sale_order(osv.osv):
         
         cr.execute('''select  pp.id,pt.list_price , coalesce(replace(pt.description,',',';'), ' ') as description,pt.categ_id,pc.name as categ_name,pp.default_code, 
                          pt.name,substring(replace(cast(pt.image_small as text),'/',''),1,5) as image_small,pt.main_group,pt.uom_ratio,
-                         pp.product_tmpl_id,pt.is_foc,pp.sequence,pt.type
+                         pp.product_tmpl_id,pt.is_foc,pp.sequence,pt.type,pt.uom_id
                         from crm_case_section_product_product_rel crm_real ,
                         crm_case_section ccs ,product_template pt, product_product pp , product_category pc
                         where pp.id = crm_real.product_product_id
@@ -2044,11 +2048,10 @@ class mobile_sale_order(osv.osv):
                         'note':ar['note'],
                         'company_id':ar['company_id'],
                         'month_cost':ar['monthy_amt'],
-                        'rental_month':'month',
+                        'rental_month':ar['month'],
                         'latitude':ar['latitude'],
                         'longitude':ar['longitude'],
-                        'address':ar['address'],
-                        'month':ar['month'],
+                        'address':ar['address'],                       
                         'name':ar['name'],
                         'total_amt':ar['total_amt'],
                     }
