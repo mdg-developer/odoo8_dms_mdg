@@ -105,8 +105,10 @@
 											<field name="opening_stock_qty" string="Opening Stock Qty" readonly="1"/>
 											<field name="in_stock_qty" string="In Qty" readonly="1"/>
 											<field name="sale_quantity" string="Sales Qty" readonly="1"/>
+											<field name="exchange_in_qty" readonly="1"/>
+											<field name="exchange_out_qty" readonly="1"/>											
 											<field name="return_quantity" string="Return Qty" readonly="1"/>
-											<field name="onground_quantity" string="On Ground Qty"/>
+											<field name="onground_quantity" string="All Physical Stock Qty"/>
 											<field name="actual_return_quantity" string="Actual Return Qty"
 												on_change="on_change_return_quantity(closing_stock_qty,actual_return_quantity)" />
 											<field name="closing_stock_qty" string="Closing Stock Qty" on_change="on_change_ground_quantity(closing_stock_qty,actual_return_quantity)" />
