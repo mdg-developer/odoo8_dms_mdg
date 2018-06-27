@@ -148,8 +148,8 @@ class sale_order_line(osv.osv):
     _columns= { 
          'price_unit': fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Product Price'), readonly=False),
         #'tax_id': fields.many2many('account.tax', 'sale_order_tax', 'order_line_id', 'tax_id', 'Taxes', readonly=True, domain=['|', ('active', '=', False), ('active', '=', True)]),          
-               'price_subtotal': fields.function(_amount_line1, string='Subtotal'),
-               'net_total':fields.function(_amount_line, string='Total', digits_compute= dp.get_precision('Account')),
+               'price_subtotal': fields.function(_amount_line1, string='Total(incl.tax)'),
+               'net_total':fields.function(_amount_line, string='Total(excl.tax)', digits_compute= dp.get_precision('Account')),
                'service_product' : fields.boolean('Service Product',default=False),
                'discount':fields.float('Discount (%)',store=True,readonly=True),
                'discount_amt':fields.float('Discount (amt)',store=True, readonly=True),
@@ -391,7 +391,7 @@ class sale_order(osv.osv):
                 total=untax+amount_tax-deduct-(untax*(additional_discount/100))
                 cr.execute('update sale_order so set amount_total=%s,total_dis=%s,deduct_amt=%s,additional_discount=%s where so.id=%s',(total,total_dis_amt,deduct,additional_discount,ids))
             else:
-                cr.execute('select sum(discount_amt) from sale_order_line where order_id=%s',(ids[0],))
+                cr.execute('select COALESCE(sum(discount_amt),0.0) from sale_order_line where order_id=%s',(ids[0],))
                 total_dis_amt=cr.fetchone()[0]
                 cr.execute('select  COALESCE(sum(price_unit),0.0) from sale_order_line where price_unit <0 and order_id=%s',(ids[0],))
                 product_dis_amt=cr.fetchone()[0]
@@ -444,6 +444,7 @@ class sale_order(osv.osv):
             'invoice_line': [(6, 0, lines)],
             'currency_id': order.pricelist_id.currency_id.id,
             'comment': order.note,
+            'payment_type': order.payment_type,
             'payment_term': order.payment_term and order.payment_term.id or False,
             'fiscal_position': order.fiscal_position.id or order.partner_id.property_account_position.id,
             'date_invoice': context.get('date_invoice', False),
@@ -455,6 +456,7 @@ class sale_order(osv.osv):
             'discount_total':order.total_dis,
             'is_entry':order.is_entry,
             'rebate_later':order.rebate_later,
+            'credit_allow':order.credit_allow,
         }
 
         # Care for deprecated _inv_get() hook - FIXME: to be removed after 6.1

@@ -38,6 +38,7 @@ Product Nonsell Issue
     ],
     'data': [
         'views/sequence.xml',
+        'views/account_journal_view.xml',
        'views/product_view.xml',
     ],
     'installable': True,

@@ -7,7 +7,7 @@
 			<field name="inherit_id" ref="stock_requisition.stock_requisition_form" />
 			<field name="arch" type="xml">
 				<field name="so_no" position="after">
-					<field name="branch_id"  readonly="1"/>
+					<field name="branch_id" readonly="1" />
 				</field>
 			</field>
 		</record>
@@ -18,7 +18,7 @@
 			<field name="inherit_id" ref="stock_requisition.good_issue_note_form" />
 			<field name="arch" type="xml">
 				<field name="from_location_id" position="after">
-					<field name="branch_id"  readonly="1"/>
+					<field name="branch_id" readonly="1" />
 				</field>
 			</field>
 		</record>
@@ -28,8 +28,21 @@
 			<field name="inherit_id" ref="stock_requisition.stock_return_form" />
 			<field name="arch" type="xml">
 				<field name="return_date" position="after">
-					<field name="branch_id"  readonly="1"/>
+					<field name="branch_id" readonly="1" />
 				</field>
+			</field>
+		</record>
+
+		<record id="view_warehouse_form_branch_inherit" model="ir.ui.view">
+			<field name="name">stock.warehouse.form.inherit</field>
+			<field name="model">stock.warehouse</field>
+			<field name="inherit_id" ref="stock.view_warehouse" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//field[@name='code']" position="after">
+						<field name="branch_id" />
+					</xpath>
+				</data>
 			</field>
 		</record>
 	</data>

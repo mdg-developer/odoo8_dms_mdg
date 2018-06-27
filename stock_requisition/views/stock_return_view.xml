@@ -30,6 +30,8 @@
 								<field name="from_location"  readonly="1"/>
 								<field name="to_location"  readonly="1"  />
 								<field name="return_date" attrs="{'readonly':[('state','=','received')]}" />
+								<field name="to_return_date" attrs="{'readonly':[('state','=','received')]}" />
+								
 								<field name="write_date" attrs="{'readonly':[('state','=','received')]}" />
 								<!-- <field name="branch_id" widget="selection" /> -->
 							</group>
@@ -77,7 +79,7 @@
 								<page string="Stock List">
 									<field name="p_line" attrs="{'readonly':[('state','=','received')]}">
 										<tree string="Stock Return Line" editable="bottom"
-											default_order="sequence asc">
+											default_order="sequence,status asc">
 											<field name="sequence" invisible="1" />
 											<field name="product_id" attrs="{'readonly':True}" />
 											<!--<field name="receive_quantity" string="Issued Qty" attrs="{'readonly':True}" 
@@ -101,6 +103,7 @@
 											<field name="product_uom" string="UOM" invisible="0" readonly="1"/>
 											<field name="status" string="Status" readonly="1"/>
 											<field name="opening_stock_qty" string="Opening Stock Qty" readonly="1"/>
+											<field name="in_stock_qty" string="In Qty" readonly="1"/>
 											<field name="sale_quantity" string="Sales Qty" readonly="1"/>
 											<field name="return_quantity" string="Return Qty" readonly="1"/>
 											<field name="onground_quantity" string="On Ground Qty"/>

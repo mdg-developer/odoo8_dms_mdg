@@ -13,6 +13,7 @@ from openerp import netsvc
 # from openerp.exceptions import UserError
 import ast
 import openerp.addons.decimal_precision as dp
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
 
 class sale_order(osv.osv):
     _inherit = "sale.order"
@@ -73,6 +74,25 @@ class sale_order(osv.osv):
         sale_obj = self.pool.get('sale.order')
         sale_obj.write(cr, uid, ids, {'is_generate': False}, context=context)
         return True    
+    
+    def get_due_date(self, cursor, user, ids, name, arg, context=None):
+        res = {}
+        #date_order_str = datetime.strptime(date_order, DEFAULT_SERVER_DATETIME_FORMAT).strftime(DEFAULT_SERVER_DATE_FORMAT)
+
+        for sale in self.browse(cursor, user, ids, context=context):
+            res[sale.id] = False
+            if sale.date_order and sale.payment_term:
+                from datetime import datetime
+                date_invoice=datetime.strptime(sale.date_order, DEFAULT_SERVER_DATETIME_FORMAT).strftime(DEFAULT_SERVER_DATE_FORMAT)
+                print  'date_invoice ',date_invoice
+                pterm = self.pool.get('account.payment.term').browse(cursor, user, sale.payment_term.id, context=context)
+                pterm_list = pterm.compute(value=1, date_ref=date_invoice)[0]
+                if pterm_list:
+                    date_due=max(line[0] for line in pterm_list)
+                else:
+                    date_due=date_invoice
+                res[sale.id] = date_due
+        return res 
     def _invoiced(self, cursor, user, ids, name, arg, context=None):
         res = {}
         for sale in self.browse(cursor, user, ids, context=context):
@@ -140,13 +160,14 @@ class sale_order(osv.osv):
                     ('cash', 'Cash'),
                  #   ('consignment', 'Consignment'),
 #                     ('advanced', 'Advanced')
-                    ], 'Payment Type', default='cash'),
+                    ], 'Payment Type', default='cash',readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
                'delivery_remark':fields.selection([
                     ('partial', 'Partial'),
                     ('delivered', 'Delivered'),
                     ('none', 'None')
                ], 'Deliver Remark', readonly=True, default='none'),
-               'due_date':fields.date('Due Date', readonly=True),
+              # 'due_date':fields.date('Due Date', readonly=True),
+              'due_date' : fields.function(get_due_date,type='date', string='Due Date', readonly=True, store=True),
                'so_latitude':fields.float('Geo Latitude'),
                'so_longitude':fields.float('Geo Longitude'),
                'customer_code':fields.char('Customer Code'),
@@ -172,6 +193,7 @@ class sale_order(osv.osv):
         'cancel_user_id': fields.many2one('res.users', 'Cancel By'),
         'is_entry': fields.boolean('Is Entry Data',default=False),
         'rebate_later': fields.boolean("Rebate Later" , default=False,readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
+        'credit_allow':fields.boolean('Credit Allow',default=False),
 
                }
 
@@ -249,7 +271,8 @@ class sale_order(osv.osv):
             payment_term = partner.property_payment_term and partner.property_payment_term.id or False        
         values = {
              'payment_term':payment_term, }
-        return {'value': values}
+        domain = {'payment_term': [('id', '=', payment_term)]}
+        return {'value': values, 'domain': domain}
     
     def on_change_section_id(self, cr, uid, ids, section_id, context=None):
         values = {}
@@ -280,8 +303,10 @@ class sale_order(osv.osv):
         pricelist = part.property_product_pricelist and part.property_product_pricelist.id or False
         invoice_part = self.pool.get('res.partner').browse(cr, uid, addr['invoice'], context=context)
         payment_term = invoice_part.property_payment_term and invoice_part.property_payment_term.id or False
+        credit_allow=False
         if part.credit_allow == True:
             payment_type = 'credit'
+            credit_allow=True
         elif part.is_consignment == True:
             payment_type = 'consignment'
         else:
@@ -302,9 +327,10 @@ class sale_order(osv.osv):
             'state_id': part.state_id and part.state_id.id or False,
             'country_id': part.country_id and part.country_id.id or False,
             'township': part.township and part.township.id or False,
+            'credit_allow':credit_allow,
         }
         print 'payment_typepayment_type', payment_type
-        domain = {'payment_type': [('payment_type', '=', payment_type)]}
+        domain = {'payment_term': [('id', '=', payment_term)]}
         print 'domain', domain
         delivery_onchange = self.onchange_delivery_id(cr, uid, ids, False, part.id, addr['delivery'], False, context=context)
         val.update(delivery_onchange['value'])

@@ -22,7 +22,10 @@ class account_invoice(models.Model):
                 partner_id=vals['partner_id']
                 part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)    
                 defaults=self.onchange_partner_id(cr, uid, [], 'out_invoice', partner_id)['value']
+                if vals.get('payment_term'):
+                    domain = {'payment_term': [('id', '=', vals['payment_term'])]}
                 vals = dict(defaults, **vals)
+
         res_id = super(account_invoice, self).create(
             cr, uid, vals, context=context)
 
@@ -44,6 +47,7 @@ class account_invoice(models.Model):
                 partner_id=vals['partner_id']
                 part = self.pool.get('res.partner').browse(cursor, user, partner_id, context=context)    
                 defaults=self.onchange_partner_id(cursor, user, [], 'out_invoice', partner_id)['value']
+                
                 vals = dict(defaults, **vals)
         ctx = dict(context or {}, mail_create_nolog=True)
         new_id = super(account_invoice, self).write(cursor, user, ids, vals, context=context)
@@ -63,6 +67,8 @@ class account_invoice(models.Model):
         country_id=False
         township=False
         pricelist=False
+        credit_allow=False
+
         payment_type='cash'
         if partner_id:
             p = self.env['res.partner'].browse(partner_id)
@@ -95,6 +101,7 @@ class account_invoice(models.Model):
                 payment_term_id = p.property_supplier_payment_term.id
             if p.credit_allow ==True:
                 payment_type='credit'
+                credit_allow=True
             elif p.is_consignment==True:
                 payment_type='consignment'
             else:
@@ -123,6 +130,7 @@ class account_invoice(models.Model):
             'country_id': country_id ,
             'township': township,
             'pricelist_id':pricelist,
+            'credit_allow':credit_allow,
         }}
 
         if type in ('in_invoice', 'in_refund'):

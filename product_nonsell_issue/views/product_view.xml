@@ -5,11 +5,16 @@
 			<field name="model">account.invoice</field>
 			<field name="inherit_id" ref="account.invoice_form" />
 			<field name="arch" type="xml">
+
 				<field name="journal_id" position="after">
-					<field name="is_nonsale" attrs="{'invisible':[('is_nonsale','!=',True)]}" readonly="1"/>
+					<field name="is_nonsale" attrs="{'invisible':[('is_nonsale','!=',True)]}"
+						readonly="1" />
+					<field name="subject" attrs="{'invisible':[('is_nonsale','!=',True)]}" />
 				</field>
+
 			</field>
 		</record>
+
 
 		<record id="view_picking_form_issue_type_inherit" model="ir.ui.view">
 			<field name="name">stock.pricking.form</field>
@@ -78,19 +83,22 @@
 							<group>
 								<field name="name" />
 								<field name="user_id" attrs="{'readonly':[('state','!=','draft')]}" />
-								<field name="branch_id" attrs="{'readonly':[('state','!=','draft')]}" />
-								<field name="warehouse_id" attrs="{'readonly':[('state','!=','draft')]}"
-									on_change="on_change_warehouse_id(warehouse_id)" />
-								<field name="location_id" attrs="{'readonly':[('state','!=','draft')]}" />
+								<field name="branch_id" on_change="on_change_branch_id(branch_id)"
+									attrs="{'readonly':[('state','!=','draft')]}" />
+								<field name="warehouse_id" domain="[('branch_id','=',branch_id)]"
+									attrs="{'readonly':[('state','!=','draft')]}" on_change="on_change_warehouse_id(warehouse_id)" />
+								<field name="location_id"
+									domain="[('branch_id','=',branch_id),('usage','=','internal')]"
+									attrs="{'readonly':[('state','!=','draft')]}" />
+								<field name="is_claim_attachment" attrs="{'readonly':[('state','!=','draft')]}" />
 								<field name="memo_refno" attrs="{'readonly':[('state','!=','draft')]}" />
 								<field name="debit_note" readonly="1" />
-								<field name="is_claim_attachment" attrs="{'readonly':[('state','!=','draft')]}" />
 								<field name="claim_attachment" attrs="{'readonly':[('state','!=','draft')]}" />
 							</group>
 							<group>
 								<field name="issue_type" attrs="{'readonly':[('state','!=','draft')]}" />
 								<field name="is_claim" attrs="{'readonly':[('state','=','done')]}" />
-								<field name="principle_id"
+								<field name="principle_id" on_change="on_change_principle_id(principle_id)"
 									attrs="{'required':[('is_claim','=',True)],'invisible':[('is_claim','!=',True)],'readonly':[('state','=','done')]}" />
 								<label for="principle_support"
 									attrs="{'required':[('is_claim','=',True)],'invisible':[('is_claim','!=',True)],'readonly':[('state','=','done')]}" />
@@ -104,7 +112,7 @@
 								<field name="date" attrs="{'readonly':[('state','!=','draft')]}" />
 								<field name="picking_id" readonly="1" />
 								<field name="receive_date" attrs="{'readonly':[('state','!=','draft')]}" />
-								<field name="journal_id"
+								<field name="journal_id" domain="[('claim_journal','=',True)]"
 									attrs="{'required':[('is_claim','=',True)],'invisible':[('is_claim','!=',True)],'readonly':[('state','=','done')]}" />
 								<field name="pricelist_id" domain="[('type','=','sale')]"
 									attrs="{'readonly':[('state','!=','draft')]}" />
@@ -140,7 +148,7 @@
 
 		<!-- Menu -->
 		<record model="ir.actions.act_window" id="open_view_product_nonsell_issue_form">
-			<field name="name">Product Nonsale Issue</field>
+			<field name="name">Product Nonsales Issue</field>
 			<field name="res_model">product.nonsell.issue</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>

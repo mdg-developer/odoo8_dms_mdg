@@ -12,7 +12,8 @@ class stock_inventory(osv.osv):
         'name': fields.char('Inventory Reference', required=False, readonly=True, help="Inventory Name."),
         'request_by':fields.char('Request By', required=False, readonly=False),
         'validate_by':fields.many2one('res.users','Validate By', required=False, readonly=True),
-
+        'subject':fields.char('Subject', required=False, readonly=False),
+        'note':fields.char('Note', required=False, readonly=False),
               }
     
     def prepare_inventory(self, cr, uid, ids, context=None):

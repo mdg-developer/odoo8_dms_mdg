@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data>
-		<template id="report_purchaseorder_document_inherit"
-			inherit_id="purchase.report_purchaseorder_document">
+		<template id="report_purchasequotation_document" inherit_id="purchase.report_purchasequotation_document">
 			<xpath expr="//t[@t-call='report.external_layout']" position="replace">
-
 				<t t-call="report.external_layout">
 					<div class="page">
 						<div class="oe_structure" />
@@ -14,7 +12,7 @@
 								<br />
 								<br />
 								<h3>
-									<strong>Purchase Order</strong>
+									<strong>Request for Quotation</strong>
 								</h3>
 
 							</div>
@@ -64,7 +62,7 @@
 								</div>
 								<div t-if="o.company_id.partner_id">
 									<div t-field="o.company_id.partner_id"
-										t-field-options='{"widget": "contact", "fields": ["address", "name", "phone" ], "no_marker": true}' />
+										t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax" ], "no_marker": true}' />
 									<strong>Contact Person:</strong>
 									<span t-field="o.company_id.partner_id.temp_customer" />
 									<br />
@@ -100,7 +98,6 @@
 						</div>
 						<br />
 						<br />
-
 						<table class="table table-condensed" style="border:1pt solid;">
 							<thead>
 								<tr style="background-color:#0052cc;color:#ffffff;" height="10pt;">
@@ -110,8 +107,6 @@
 									<th style="border:1pt solid;border-color:black;">Pack Size</th>
 									<th style="border:1pt solid;border-color:black;">Unit</th>
 									<th style="border:1pt solid;border-color:black;">Quantity</th>
-									<th style="border:1pt solid;border-color:black;">Price</th>
-									<th style="border:1pt solid;border-color:black;">Total</th>
 									<th style="border:1pt solid;border-color:black;">Delivery Date</th>
 								</tr>
 							</thead>
@@ -139,58 +134,16 @@
 
 										<span t-field="line.product_qty" />
 									</td>
-
-									<td style="border:1pt solid;border-color:black;">
-										<span t-field="line.price_unit" />
-									</td>
-									<td style="border:1pt solid;border-color:black;">
-										<span t-field="line.price_subtotal"
-											t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}' />
-									</td>
 									<td style="border:1pt solid;border-color:black;">
 										<span t-field="line.date_planned" />
 									</td>
 								</tr>
 							</tbody>
 						</table>
-
-						<div class="row">
-							<div class="col-xs-4 pull-right">
-								<table class="table table-condensed">
-									<!-- <tr class="border-black"> -->
-									<!-- <td> -->
-									<!-- <strong>Total Without Taxes</strong> -->
-									<!-- </td> -->
-									<!-- <td class="text-right"> -->
-									<!-- <span t-field="o.amount_untaxed" -->
-									<!-- t-field-options='{"widget": "monetary", "display_currency": 
-										"o.currency_id"}' /> -->
-									<!-- </td> -->
-									<!-- </tr> -->
-									<!-- <tr> -->
-									<!-- <td>Taxes</td> -->
-									<!-- <td class="text-right"> -->
-									<!-- <span t-field="o.amount_tax" -->
-									<!-- t-field-options='{"widget": "monetary", "display_currency": 
-										"o.currency_id"}' /> -->
-									<!-- </td> -->
-									<!-- </tr> -->
-									<tr class="border-black">
-										<td>
-											<strong>Subtotal</strong>
-										</td>
-										<td class="text-right">
-											<span t-field="o.amount_total"
-												t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}' />
-										</td>
-									</tr>
-								</table>
-							</div>
-						</div>
-						<strong>Amount In Words:</strong>
+                        <strong>Amount In Words:</strong>
 						<p t-field="o.inword" />
 						<div class="oe_structure" />
-						<strong>Remarks:</strong>
+						<strong>Remark:</strong>
 						<p t-field="o.notes" />
 						<div class="oe_structure" />
 					</div>

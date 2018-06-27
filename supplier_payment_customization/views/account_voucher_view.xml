@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data>
-		
+
 		<record id="view_vendor_receipt_dialog_form_inherit" model="ir.ui.view">
 			<field name="name">account.voucher.receipt.dialog.form</field>
 			<field name="model">account.voucher</field>
@@ -9,26 +9,31 @@
 			<field name="arch" type="xml">
 				<data>
 					<field name="journal_id" position="replace">
-					    <field name="journal_id"
-                                domain="[('type','in',['bank', 'cash'])]"
-                                invisible="context.get('line_type', False)"
-                                widget="selection"
-                                on_change="onchange_journal(journal_id, line_cr_ids, False, partner_id, date, amount, type, company_id,voucher_rate, context)"
-                                string="Payment Method"/>
-						<field name="voucher_rate" on_change="rate_validation(payment_rate_currency_id, min_exchange_rate, max_exchange_rate, voucher_rate, context)" attrs="{'invisible': [('type','=','receipt')]}"/>
-						<field name="exchange_rate" readonly="1" attrs="{'invisible': [('type','=','receipt')]}"/>
-						<field name="min_exchange_rate" readonly="1" attrs="{'invisible': [('type','=','receipt')]}"/>
-						<field name="max_exchange_rate" readonly="1" attrs="{'invisible': [('type','=','receipt')]}"/>
-						<!-- <field name="date" invisible="context.get('line_type', False)" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id, context)"/> -->
+						<field name="journal_id" domain="[('type','in',['bank', 'cash'])]"
+							invisible="context.get('line_type', False)" widget="selection"
+							on_change="onchange_journal(journal_id, line_cr_ids, False, partner_id, date, amount, type, company_id,voucher_rate, context)"
+							string="Payment Method" />
+						<field name="voucher_rate"
+							on_change="rate_validation(payment_rate_currency_id, min_exchange_rate, max_exchange_rate, voucher_rate, context)"
+							attrs="{'invisible': [('type','=','receipt')]}" />
+						<field name="exchange_rate" readonly="1"
+							attrs="{'invisible': [('type','=','receipt')]}" />
+						<field name="min_exchange_rate" readonly="1"
+							attrs="{'invisible': [('type','=','receipt')]}" />
+						<field name="max_exchange_rate" readonly="1"
+							attrs="{'invisible': [('type','=','receipt')]}" />
+						<!-- <field name="date" invisible="context.get('line_type', False)" 
+							on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, 
+							company_id, context)"/> -->
 					</field>
-					
-					<!-- <field name="reconcile" position="after">
-						<field name="total_discount" sum="Total Discount" on_change="onchange_discount_amount(total_discount, context)"/>
-					</field> -->
+
+					<!-- <field name="reconcile" position="after"> <field name="total_discount" 
+						sum="Total Discount" on_change="onchange_discount_amount(total_discount, 
+						context)"/> </field> -->
 				</data>
 			</field>
 		</record>
-		
+
 		<!-- Supplier Payment -->
 		<record id="view_vendor_payment_form_inherit" model="ir.ui.view">
 			<field name="name">account.voucher.payment.form</field>
@@ -38,25 +43,60 @@
 				<data>
 					<field name="journal_id" position="after">
 						<!-- <field name="discount_account_id" /> -->
-						<field name="voucher_rate" on_change="rate_validation(payment_rate_currency_id, min_exchange_rate, max_exchange_rate, voucher_rate, context)" attrs="{'invisible': [('type','=','receipt')]}"/>
-						<field name="exchange_rate" readonly="1" attrs="{'invisible': [('type','=','receipt')]}"/>
-						<field name="min_exchange_rate" readonly="1" attrs="{'invisible': [('type','=','receipt')]}"/>
-						<field name="max_exchange_rate" readonly="1" attrs="{'invisible': [('type','=','receipt')]}"/>
+						<field name="voucher_rate"
+							on_change="rate_validation(payment_rate_currency_id, min_exchange_rate, max_exchange_rate, voucher_rate, context)"
+							attrs="{'invisible': [('type','=','receipt')]}" />
+						<field name="exchange_rate" readonly="1"
+							attrs="{'invisible': [('type','=','receipt')]}" />
+						<field name="min_exchange_rate" readonly="1"
+							attrs="{'invisible': [('type','=','receipt')]}" />
+						<field name="max_exchange_rate" readonly="1"
+							attrs="{'invisible': [('type','=','receipt')]}" />
 					</field>
-					
+
 					<xpath expr="//label[@for='payment_rate']" position="replace" />
-					
+
 					<field name="payment_rate" position="replace">
-						<field name="payment_rate" invisible="1" on_change="onchange_amount(amount, payment_rate, partner_id, journal_id, currency_id, type, date, payment_rate_currency_id, company_id, context)"/>
+						<field name="payment_rate" invisible="1"
+							on_change="onchange_amount(amount, payment_rate, partner_id, journal_id, currency_id, type, date, payment_rate_currency_id, company_id, context)" />
 					</field>
 					<field name="payment_rate_currency_id" position="replace">
-                    	<field name="payment_rate_currency_id" invisible="1" class="oe_inline" on_change="onchange_payment_rate_currency(currency_id, payment_rate, payment_rate_currency_id, date, amount, company_id, context)" groups="base.group_multi_currency"/>
-                    </field>
-					<!-- <field name="reconcile" position="after">
-						<field name="total_discount" sum="Total Discount" on_change="onchange_discount_amount(total_discount, context)"/>
-					</field> -->
+						<field name="payment_rate_currency_id" invisible="1" class="oe_inline"
+							on_change="onchange_payment_rate_currency(currency_id, payment_rate, payment_rate_currency_id, date, amount, company_id, context)"
+							groups="base.group_multi_currency" />
+					</field>
+					<!-- <field name="reconcile" position="after"> <field name="total_discount" 
+						sum="Total Discount" on_change="onchange_discount_amount(total_discount, 
+						context)"/> </field> -->
+					<field name="journal_id" position="replace">
+						<field name="journal_id" domain="[('type','in',['bank', 'cash','general'])]"
+							invisible="context.get('line_type', False)" widget="selection"
+							on_change="onchange_journal(journal_id, line_dr_ids, False, partner_id, date, amount, type, company_id, context)"
+							string="Payment Method" />
+					</field>
+				</data>
+			</field>
+		</record>
+
+
+
+
+
+		<record id="view_voucher_approval_vendor_receipt_form" model="ir.ui.view">
+			<field name="name">voucher_approval_form</field>
+			<field name="model">account.voucher</field>
+			<field name="inherit_id" ref="account_voucher.view_vendor_receipt_form" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//field[@name='journal_id']" position="replace">
+						<field name="journal_id" domain="[('type','in',['bank', 'cash','general'])]"
+							widget="selection"
+							on_change="onchange_journal(journal_id, line_cr_ids, False, partner_id, date, amount, type, company_id, context)"
+							string="Payment Method" />
+					</xpath>
 				</data>
 			</field>
 		</record>
 	</data>
+
 </openerp>

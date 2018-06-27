@@ -34,6 +34,7 @@
     'depends': ['base','account' ],
     'data': [
              'cash_sequence.xml',
+             'account_security.xml',
              'account_cash_view.xml',
         
 
