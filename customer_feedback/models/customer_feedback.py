@@ -16,8 +16,9 @@ class sync_log(osv.osv):
                 'contents':fields.text('Contents',readonly=True),
                 'm_status':fields.selection([('draft', 'Draft'),
                                                       ('open', 'Open'),('resolve','Resolved')], string='Status'),
-                'assignby':fields.text('Assigned By'),
+                'assignby':fields.many2one('res.users','Assigned By',readonly=True),
                 'assignto':fields.many2one('res.users','Assign To'),
+                'solution':fields.text('Solution')
   }
     _defaults = {
         'm_status' : 'draft',     
@@ -25,7 +26,7 @@ class sync_log(osv.osv):
     
     def action_assign(self, cr, uid, ids, context=None):
         
-        return self.write(cr, uid, ids, {'m_status':'open',})  
+        return self.write(cr, uid, ids, {'m_status':'open','assignby':uid})  
 
     def action_done(self, cr, uid, ids, context=None):
         

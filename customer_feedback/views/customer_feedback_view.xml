@@ -33,7 +33,8 @@
 							</group>
 							<group>						
 								<field name="assignby" />	
-								<field name="assignto" class="oe_inline" />																			
+								<field name="assignto" class="oe_inline" />	
+								<field name="solution" />																			
 							</group>
 						</group>
 					</sheet>
@@ -51,6 +52,8 @@
 					<field name="customer_id" class="oe_inline"/>																			
 					<field name="customer_code" />
 					<field name="m_status" />
+					<field name="assignby" />
+					<field name="assignto" />
 					<field name="feedback_type" />		
 				</tree>
 			</field>
@@ -61,10 +64,15 @@
 			<field name="model">customer.feedback</field>
 			<field name="arch" type="xml">
 				<search string="Search Customer Feedback">
+				<filter string="Open" domain="[ ('m_status', '=', 'open')]"
+						name="state" />
 					<group expand="0" string="Group By...">
 						<filter string="Sales Team" icon="terp-partner" domain="[]"
 							context="{'group_by':'sale_team_id'}" />
 						<filter string="Branch" icon="terp-partner" domain="[]" context="{'group_by':'branch_id'}" /> 
+						<filter string="Status" icon="terp-partner" domain="[]" context="{'group_by':'m_status'}" /> 
+						<filter string="Assign By" icon="terp-partner" domain="[]" context="{'group_by':'assignby'}" /> 
+						<filter string="Assign To" icon="terp-partner" domain="[]" context="{'group_by':'assignto'}" /> 
 					</group>
 				</search>
 			</field>
@@ -77,6 +85,7 @@
 			<field name="res_model">customer.feedback</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
+			<field name="context">{ 'search_default_state': 1}</field>
 			<field name="view_id" ref="view_customer_feedback_tree" />
 			<field name="search_view_id" ref="view_customer_feedback_filter" />
 		</record>
