@@ -272,7 +272,11 @@ class account_invoice(models.Model):
                 amount_currency = price > 0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False))
                 if line['credit'] != 0:
                    if amount_currency > 0:
-                      amount_currency = amount_currency * -1 
+                      amount_currency = amount_currency * -1
+                      rate = self.get_purchase_agree_rate()
+                      ap_account =self.partner_id.property_account_payable.id
+                      if rate != 0 and ap_account == line['account_id']:
+                          amount_currency = self.amount_total * -1
                 return {
                     'date_maturity': line.get('date_maturity', False),
                     'partner_id': part,
@@ -336,7 +340,87 @@ class account_invoice(models.Model):
                     'product_uom_id': line.get('uos_id', False),
                     'analytic_account_id': line.get('account_analytic_id', False),
                 }
-    
+    def line_get_convert_purchase_invoice_new(self, line, part, date):
+        account_id = property_account_payable = property_account_payable_clearing = None
+        cr = self._cr
+        type = 'out_invoice' 
+        print 'line_get_convert_newline_get_convert_new', line, part
+        origin = line.get('ref', False)
+        is_discount = line.get('is_discount', False)
+        for inv in self:
+            property_account_payable = inv.partner_id.property_account_payable.id
+            property_account_payable_clearing = inv.partner_id.property_account_payable_clearing.id        
+        print 'originoriginorigin', origin, is_discount
+        if origin:
+            cr.execute("select type,payment_type,is_nonsale from account_invoice where origin=%s and state!='cancel' ", (origin,))
+            type_data = cr.fetchone()
+            if type_data:
+                type = type_data[0]
+                payment_type = type_data[1]
+                is_nonsale= type_data[2]
+            else:
+                type = None
+                payment_type = None
+                is_nonsale=None
+        print 'typeeeeeeeee', type
+        
+         
+        if type == 'in_invoice' :
+            if line['price'] > 0:
+                product = self.env['product.product'].browse(line.get('product_id', False))
+                print 'product>>>', product.id
+                print 'line.get>>>', line.get('product_id', False)
+                if line.get('is_discount') == True:
+                    if payment_type == 'credit':
+                        account_id = product.product_tmpl_id.categ_id.property_account_discount_credit.id
+                    else:
+                        account_id = product.product_tmpl_id.categ_id.property_account_discount_cash.id
+                else:
+                    # account_id = product.product_tmpl_id.main_group.property_account_payable.id                
+                    account_id = property_account_payable
+                    if account_id is None:
+                        raise except_orm(_('Warning!'), _('Please define payable control account.'))
+                    
+                if line['ref'][:2] == 'PO':
+                    cr.execute("select avl.id from account_invoice av,account_invoice_line avl  where av.id=avl.invoice_id and av.origin=%s and avl.product_id=%s and avl.foc!=true", (origin, product.id,))
+                    invoice_line_id = cr.fetchone()
+                    if invoice_line_id:
+                        invoice_line_data = self.env['account.invoice.line'].browse(invoice_line_id)                    
+                    gross_margin = invoice_line_data.gross_margin
+                    different_id = invoice_line_data.product_id.product_tmpl_id.main_group.property_account_difference.id
+                    if different_id != line['account_id']:
+                        line['price'] = line['price'] 
+                        rate = self.get_purchase_agree_rate()
+                        if rate != 0:
+                            line['amount_currency'] += gross_margin
+                            line['price'] += gross_margin * rate
+                    else:
+                        line['name'] = 'Diff ACC ' + line['name']
+                res = {
+                    'date_maturity': line.get('date_maturity', False),
+                    'partner_id': part,
+                    'name': line['name'][:64],
+                    'date': date,
+                    'debit': line['price'] > 0 and line['price'],
+                    'credit': line['price'] < 0 and -line['price'],
+                    'account_id': line['account_id'],
+                    # 'account_id': account_id,
+                    'analytic_lines': line.get('analytic_lines', []),
+                    'amount_currency': line['price'] > 0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
+                    'currency_id': line.get('currency_id', False),
+                    'tax_code_id': line.get('tax_code_id', False),
+                    'tax_amount': line.get('tax_amount', False),
+                    'ref': line.get('ref', False),
+                    'quantity': line.get('quantity', 1.00),
+                    'product_id': line.get('product_id', False),
+                    'product_uom_id': line.get('uos_id', False),
+                    'analytic_account_id': line.get('account_analytic_id', False),
+                    'main_group': account_id,
+                    'is_discount': line.get('is_discount', False),
+
+                }
+                return res  
+            
     def line_get_convert_new(self, line, part, date):
         account_id = property_account_payable = property_account_payable_clearing = None
         cr = self._cr
@@ -840,7 +924,12 @@ class account_invoice(models.Model):
                             if tax_value > 0:
                                 tax_amt = tax_value                    
                     if line['ref'][:2] == 'PO':
-                        gross_margin = invoice_line_data.gross_margin
+                        rate = self.get_purchase_agree_rate()
+                        if rate != 0:
+                            gross_margin = 0
+                            
+                        else:
+                            gross_margin =invoice_line_data.gross_margin    
                         different_id = invoice_line_data.product_id.product_tmpl_id.main_group.property_account_difference.id
                         if different_id != line['account_id']:
                             line['price'] = line['price'] - discount_amt + tax_amt - gross_margin
@@ -1022,8 +1111,10 @@ class account_invoice(models.Model):
                     debit += res['debit']
                     tmp_currency = res['amount_currency']                    
                 if type == 'in_invoice':             
-                    credit += res['credit']    
+                    credit += res['credit']
+                    rate = self.get_purchase_agree_rate()
                     tmp_currency += -1 * res['amount_currency']
+                    
                 if type == 'out_refund':             
                     credit += res['credit']       
                     tmp_currency = res['amount_currency']                          
@@ -1209,8 +1300,47 @@ class account_invoice(models.Model):
 #             return res         
 # #         else:
 # #             account_id = 633
- 
-        
+    
+    @api.multi
+    def compute_invoice_totals_purchase(self, company_currency, ref, invoice_move_lines,rate):
+        total = 0
+        total_currency = 0
+        for line in invoice_move_lines:
+            if self.currency_id != company_currency:
+                currency = self.currency_id.with_context(date=self.date_invoice or fields.Date.context_today(self))
+                line['currency_id'] = currency.id
+                line['amount_currency'] = currency.round(line['price'])
+                line['price'] =line['price'] * rate
+            else:
+                line['currency_id'] = False
+                line['amount_currency'] = False
+                line['price'] = self.currency_id.round(line['price'])
+            line['ref'] = ref
+            if self.type in ('out_invoice','in_refund'):
+                total += line['price']
+                total_currency += line['amount_currency'] or line['price']
+                line['price'] = - line['price']
+            else:
+                if line['price_unit'] > 0 and self.type == 'in_invoice':
+                    total -= line['price']
+                    total_currency -= line['amount_currency'] or line['price']
+                 
+        return total, total_currency, invoice_move_lines
+    def get_purchase_agree_rate(self):
+        rate =0
+        for inv in self:
+            if inv.type == 'in_invoice' and inv.currency_id.name != 'MMK':
+                for line in self.invoice_line:
+                    product_agree_rate_obj = self.env['product.agree.rate']
+                    order = 'date desc'
+                    agree_id = product_agree_rate_obj.search([('date','<=',inv.date_invoice),('partner_id','=',inv.partner_id.id),('currency','=',inv.currency_id.id)],order=order,limit=1)
+                    #for product_agree in product_agree_rate_obj.browse(agree_ids):
+                    for agree_line in agree_id.agress_lines:
+                        if line.product_id.id == agree_line.product_id.id:
+                            rate = agree_id.rate    
+                            return rate
+            else:
+                return rate                
     @api.multi
     def action_move_create(self):
         """ Creates invoice related analytics and financial move lines """
@@ -1239,7 +1369,8 @@ class account_invoice(models.Model):
                     )                
                 inv.with_context(ctx).write({'date_invoice': fields.Date.context_today(self)})
             date_invoice = inv.date_invoice
-
+            
+            
             # create the analytical lines, one move line per invoice line
             iml = inv._get_analytic_lines()
             # check if taxes are all computed
@@ -1276,8 +1407,13 @@ class account_invoice(models.Model):
 
             diff_currency = inv.currency_id != company_currency
             # create one move line for the total and possibly adjust the other lines amount
-            total, total_currency, iml = inv.with_context(ctx).compute_invoice_totals(company_currency, ref, iml)
-
+            #total, total_currency, iml = inv.with_context(ctx).compute_invoice_totals(company_currency, ref, iml)
+            
+            rate = self.get_purchase_agree_rate()
+            if rate != 0:
+                total, total_currency, iml = inv.with_context(ctx).compute_invoice_totals_purchase(company_currency, ref, iml,rate)
+            else:
+                total, total_currency, iml = inv.with_context(ctx).compute_invoice_totals(company_currency, ref, iml)    
             name = inv.supplier_invoice_number or inv.name or '/'
             totlines = []
             if inv.payment_term:
@@ -1288,6 +1424,8 @@ class account_invoice(models.Model):
                 for i, t in enumerate(totlines):
                     if inv.currency_id != company_currency:
                         amount_currency = company_currency.with_context(ctx).compute(t[1], inv.currency_id)
+                        if rate != 0:
+                            amount_currency = t[1] / rate
                     else:
                         amount_currency = False
 
@@ -1334,9 +1472,18 @@ class account_invoice(models.Model):
                 data.append(res)
             iml = data
             print 'imllllllllllllllllllll', iml
-            line_cr = [self.line_get_convert_new(l, part.id, date) for l in iml]
+            if rate > 0:
+                line_cr = [self.line_get_convert_purchase_invoice_new(l, part.id, date) for l in iml]
+            else:    
+                line_cr = [self.line_get_convert_new(l, part.id, date) for l in iml]
             line_tmp = [self.line_get_convert_dr(l, part.id, date, tax_value, tax_amount_currency) for l in iml]
             line_dr = self.line_dr_convert_account_with_principle(line_tmp)
+            if rate != 0:
+                if line_dr[0]['credit'] > 0:
+                    if total > 0:
+                        line_dr[0]['credit'] =  total
+                    else:
+                        line_dr[0]['credit'] =  total * -1    
             # line_product = [self.line_get_product(l, part.id, date) for l in iml]
             # line_dr = [(0, 0, self.line_get_convert_accountid(l, part.id, date)) for l in line_cr]
             lines = line_cr + line_dr                        
@@ -1374,12 +1521,15 @@ class account_invoice(models.Model):
             ctx_nolang.pop('lang', None)
             print 'move_valsmove_valsmove_vals', move_vals
             move = account_move.with_context(ctx_nolang).create(move_vals)
-
+            jouranl_claim = True
+            if inv.currency_id.name != 'MMK' and inv.type == 'in_invoice':
+                jouranl_claim = False
             # make the invoice point to that move
             vals = {
                 'move_id': move.id,
                 'period_id': period.id,
                 'move_name': move.name,
+                'journal_claim': jouranl_claim,
             }
             inv.with_context(ctx).write(vals)
             # Pass invoice in context in method post: used if you want to get the same

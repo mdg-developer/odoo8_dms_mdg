@@ -80,6 +80,21 @@ class purchase_order_line(osv.osv):
                 'gross_margin': fields.function(_amount_margin, string='Gross Margin', digits_compute=dp.get_precision('Account'), store=True),
                 }     
     
+    def onchange_product_uom(self, cr, uid, ids, pricelist_id, product_id, qty, uom_id,
+            partner_id, date_order=False, fiscal_position_id=False, date_planned=False,
+            name=False, price_unit=False, state='draft',currency_id=False, context=None):
+        """
+        onchange handler of product_uom.
+        """
+        if context is None:
+            context = {}
+        if not uom_id:
+            return {'value': {'price_unit': price_unit or 0.0, 'name': name or '', 'product_uom' : uom_id or False}}
+        context = dict(context, purchase_uom_check=True)
+        return self.onchange_product_id(cr, uid, ids, pricelist_id, product_id, qty, uom_id,
+            partner_id, date_order=date_order, fiscal_position_id=fiscal_position_id, date_planned=date_planned,
+            name=name, price_unit=price_unit, state=state,currency_id=currency_id, context=context)
+        
     def onchange_product_id(self, cr, uid, ids, pricelist_id, product_id, qty, uom_id,
             partner_id, date_order=False, fiscal_position_id=False, date_planned=False,
             name=False, price_unit=False, state='draft',currency_id=False, context=None):
@@ -188,7 +203,7 @@ class purchase_order_line(osv.osv):
                         if agree_line.agreed_price !=0:
                             res['value'].update({'price_unit': agree_line.agreed_price / product_agree.rate, 'agreed_price': agree_line.agreed_price / product_agree.rate, 'taxes_id': taxes_ids, 'price_subtotal':(agree_line.agreed_price/ product_agree.rate) * qty})
                             return res
-        res['value'].update({'price_unit': 50, 'agreed_price': price, 'taxes_id': taxes_ids, 'price_subtotal':price * qty})
+        res['value'].update({'price_unit': price, 'agreed_price': price, 'taxes_id': taxes_ids, 'price_subtotal':price * qty})
 
         return res
 class account_invoice_line(osv.osv): 
