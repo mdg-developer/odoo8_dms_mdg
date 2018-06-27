@@ -67,7 +67,7 @@ class sale_rental(osv.osv):
         'latitude':fields.float('Geo Latitude'),
         'longitude':fields.float('Geo Longitude'),
         'month_cost':fields.char("Monthly Cost"),
-        'rental_month':fields.char('Rental Month'),
+        'rental_month':fields.integer('Rental Month'),
 #     'image' :fields.binary("Image", attachment=True,
 #         help="This field holds the image used as avatar for this contact, limited to 1024x1024px",
 #         default=lambda self: self._get_default_image(False, True)),   
