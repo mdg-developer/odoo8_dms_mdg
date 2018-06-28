@@ -7,13 +7,13 @@
     <property name="imageDPI">96</property>
     <list-property name="libraries">
         <structure>
-            <property name="fileName">report_library.rptlibrary</property>
-            <property name="namespace">report_library</property>
+            <property name="fileName">report_library_hr.rptlibrary</property>
+            <property name="namespace">report_library_hr</property>
         </structure>
     </list-property>
     <parameters>
-        <scalar-parameter name="from_date" id="12" extends="report_library.from_date"/>
-        <scalar-parameter name="to_date" id="13" extends="report_library.to_date"/>
+        <scalar-parameter name="from_date" id="12" extends="report_library_hr.from_date"/>
+        <scalar-parameter name="to_date" id="13" extends="report_library_hr.to_date"/>
         <scalar-parameter name="is_management" id="123">
             <text-property name="promptText">Management</text-property>
             <property name="valueType">static</property>
@@ -31,7 +31,7 @@
     </parameters>
     <data-sources>
         <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="11"
- extends="report_library.Data Source"/>
+ extends="report_library_hr.Data Source"/>
     </data-sources>
     <data-sets>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="Data Set" id="10">
@@ -576,7 +576,7 @@
 </model:DesignValues>]]></xml-property>
         </oda-data-set>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="company" id="120"
- extends="report_library.company"/>
+ extends="report_library_hr.company"/>
     </data-sets>
     <page-setup>
         <simple-master-page name="Simple MasterPage" id="2">
