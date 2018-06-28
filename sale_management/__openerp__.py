@@ -40,13 +40,11 @@ Sale Management
        'views/code_sequence.xml',
        'views/invoice_custom_layouts.xml',
        'views/sale_custom_layouts.xml',
-        'views/report_saleorder.xml',
-         'views/report_invoice.xml',
-     'wizard/sale_team_date_view.xml',
-          'wizard/location_assign_view.xml',
-
-              'views/account_invoice_view.xml',
-
+       'views/report_saleorder.xml',
+       'views/report_invoice.xml',
+       'wizard/sale_team_date_view.xml',
+        'wizard/location_assign_view.xml',
+        'views/account_invoice_view.xml',
         'views/sale_team_view.xml',
         'views/sale_order_view.xml',
         'views/sale_return_view.xml',
@@ -62,7 +60,8 @@ Sale Management
         'reports/custom_layout.xml',
         'reports/deliver_order_custom_layouts.xml',
         'reports/report_pre_sale_order.xml',
-        'reports/report_stock_picking.xml',
+        'views/report_invoice_with_price.xml',
+        
     ],
     'installable': True,
     'auto_install': False,

@@ -15,5 +15,10 @@
 		<report string="Picking" id="stock.action_report_picking" model="stock.picking" 
             report_type="qweb-pdf" name="sale_management.report_picking_inherit_document" 
             file="sale_management.report_picking_inherit_document" />
+            
+        <!-- Supplier Invoice-->
+		<report id="report_invoice_with_price" model="account.invoice" string="Invoice With Price"
+			report_type="qweb-pdf" name="sale_management.report_invoice_with_price_document" file="sale_management.report_invoice_with_price_document"/>
+			 
 	</data>
 </openerp>
