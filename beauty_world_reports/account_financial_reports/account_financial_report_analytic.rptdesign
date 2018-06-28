@@ -1175,12 +1175,6 @@ label;</expression>
                     <expression name="expression" type="javascript">dataSetRow["balance_value"]</expression>
                     <property name="dataType">decimal</property>
                 </structure>
-                <structure>
-                    <property name="name">Column Binding_1</property>
-                    <expression name="expression" type="javascript">row["balance"] * params["cur_rate"].value</expression>
-                    <property name="dataType">float</property>
-                    <property name="allowExport">true</property>
-                </structure>
             </list-property>
             <column id="42">
                 <property name="width">2.513888888888889in</property>
