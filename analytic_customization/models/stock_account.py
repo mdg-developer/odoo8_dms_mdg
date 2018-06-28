@@ -38,16 +38,25 @@ class stock_quant(osv.osv):
         if context is None:
             context = {}
         currency_obj = self.pool.get('res.currency')
+        
         if context.get('force_valuation_amount'):
             valuation_amount = context.get('force_valuation_amount')
         else:
-                if move.origin_returned_move_id:
-                    # use the original cost of the returned product to cancel the cost
-                    valuation_amount = move.origin_returned_move_id.price_unit
-                elif move.product_id.cost_method == 'real':
-                    valuation_amount = cost
-                else:
-                    valuation_amount = move.product_id.standard_price                 
+            if move.product_id.cost_method == 'average':
+                valuation_amount = cost if move.location_id.usage != 'internal' and move.location_dest_id.usage == 'internal' else move.product_id.standard_price
+            else:
+                valuation_amount = cost if move.product_id.cost_method == 'real' else move.product_id.standard_price
+                
+#         if context.get('force_valuation_amount'):
+#             valuation_amount = context.get('force_valuation_amount')
+#         else:
+#                 if move.origin_returned_move_id:
+#                     # use the original cost of the returned product to cancel the cost
+#                     valuation_amount = move.origin_returned_move_id.price_unit
+#                 elif move.product_id.cost_method == 'real':
+#                     valuation_amount = cost
+#                 else:
+#                     valuation_amount = move.product_id.standard_price                 
             #valuation_amount = move.product_id.cost_method == 'real' and cost or move.product_id.standard_price
         #the standard_price of the product may be in another decimal precision, or not compatible with the coinage of
         #the company currency... so we need to use round() before creating the accounting entries.
