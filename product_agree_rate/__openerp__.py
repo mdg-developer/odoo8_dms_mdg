@@ -14,7 +14,8 @@ Request Product Agree Rate For  Module
     'category': 'stock',
     'sequence': 16,
     'data': [
-        'views/product_agree_return_view.xml',
+        'views/product_agree_return_view.xml',        
+        'views/purchase_order_view.xml',
     ],
     'test': [
 
