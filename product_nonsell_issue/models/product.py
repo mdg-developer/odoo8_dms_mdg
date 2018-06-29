@@ -1,6 +1,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.exceptions import except_orm, Warning, RedirectWarning
+from openerp.osv import orm
 
 class stock_move(osv.osv):
     _inherit = "stock.move"
@@ -113,7 +114,7 @@ class product_nonsell_issue(osv.osv):
          'state': fields.selection([
             ('draft', 'Draft'),
             ('approve', 'Awaiting Claimed'),
-            ('cancel', 'Cancel'),
+            ('cancel', 'Cancelled'),
             ('done', 'Done'),
             ], 'Status', readonly=True, copy=False, help="Gives the status of the quotation or sales order.\
               \nThe exception status is automatically set when a cancel operation occurs \
@@ -126,7 +127,7 @@ class product_nonsell_issue(osv.osv):
           'issue_type':'donation',
         'branch_id': _get_default_branch,
         'state': 'draft',
-        'receive_date':fields.datetime.now,
+       # 'receive_date':fields.datetime.now,
                   }    
     
 
@@ -248,8 +249,15 @@ class product_nonsell_issue(osv.osv):
         return self.write(cr, uid, ids, {'state': 'done', 'debit_note':inv_id, })        
     
     def cancel(self, cr, uid, ids, context=None):
-        
-        return self.write(cr, uid, ids, {'state': 'cancel'})        \
+        sell_data = self.browse(cr, uid, ids, context=context)
+        picking_obj = self.pool.get('stock.picking')
+        if sell_data.receive_date:
+            raise osv.except_osv(_('Warning'),
+                                 _('You Cannot Cancel This Form!')) 
+        picking_id =sell_data.picking_id
+        if picking_id:
+            picking_obj.action_cancel(cr, uid, picking_id.id, context=context)
+        return self.write(cr, uid, ids, {'state': 'cancel'})       
             
     def show_claim_price(self, cr, uid, ids, context=None):
         sell_data = self.browse(cr, uid, ids, context=context)
