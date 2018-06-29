@@ -187,6 +187,10 @@ class stock_quant(osv.osv):
                 raise orm.except_orm(_('Error :'), _("Please select FOC Income Account  in Product Category %s!")) % move.product_id.categ_id.name                  
             pricelist_id = move.product_id.product_tmpl_id.main_group.pricelist_id.id  
             principle_partner_id = move.product_id.product_tmpl_id.main_group.partner_id.id  
+            if principle_partner_id is False:
+                raise orm.except_orm(_('Error :'), _("Please select Partner in Product Principle %s!")) % move.product_id.product_tmpl_id.main_group.name                  
+            
+            
             product_price = 0
             income_price=0
             if pricelist_id:
@@ -233,7 +237,7 @@ class stock_quant(osv.osv):
                     'product_uom_id': move.product_id.uom_id.id,
                     'ref': move.picking_id and move.picking_id.name or False,
                     'date': move.date,
-                    'partner_id': partner_id,
+                    'partner_id': principle_partner_id,
                     'debit': product_price > 0 and product_price or 0,
                     'credit': product_price < 0 and -product_price or 0,
                     'account_id': debit_account_id_1,

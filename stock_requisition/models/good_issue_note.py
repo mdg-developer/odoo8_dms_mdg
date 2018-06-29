@@ -239,6 +239,7 @@ class good_issue_line(osv.osv):  # #prod_pricelist_update_line
 
     def on_change_product_id(self, cr, uid, ids, product_id, context=None):
         values = {}
+        domain={}
         if product_id:
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             values = {
@@ -246,7 +247,15 @@ class good_issue_line(osv.osv):  # #prod_pricelist_update_line
                 'product_uom': product.product_tmpl_id.uom_id and product.product_tmpl_id.uom_id.id or False,
                 'uom_ratio': product.product_tmpl_id.uom_ratio,
             }
-        return {'value': values}
+            cr.execute("""SELECT uom.id FROM product_product pp 
+                          LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
+                          LEFT JOIN product_template_product_uom_rel rel ON (rel.product_template_id=pt.id)
+                          LEFT JOIN product_uom uom ON (rel.product_uom_id=uom.id)
+                          WHERE pp.id = %s""", (product.id,))
+            uom_list = cr.fetchall()
+            domain = {'product_uom': [('id', 'in', uom_list)]}
+            
+        return {'value': values,'domain':domain}
     
     def on_change_expired_date(self, cr, uid, ids, batch_no, context=None):
         values = {}

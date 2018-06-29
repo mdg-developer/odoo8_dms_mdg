@@ -1590,8 +1590,8 @@ class account_invoice(models.Model):
                                 dr_account = account_id
                                 cr_account = payable_account_id                            
                                 self.env.cr.execute("""insert into account_move_line (partner_id,name,account_id,date_maturity,move_id,credit,debit,journal_id,date,company_id,period_id,state)  
-                                values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s),
-                                      (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
+                                values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s),
+                                      (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
                                       (partner_id, name , dr_account, date, move_id, 0.0, amount, journal_id, date, company_id, period_id,state,
                                       partner_id, name, cr_account, date, move_id, amount, 0.0, journal_id, date, company_id, period_id,state,))
                  

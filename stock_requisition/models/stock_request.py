@@ -415,6 +415,7 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
     
     def on_change_product_id(self,cr,uid,ids,product_id,to_location_id, context=None):
         values = {}
+        domain={}
         qty_on_hand=0
         if to_location_id and product_id:
             cr.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (to_location_id, product_id,))
@@ -432,7 +433,15 @@ class stock_requisition_line(osv.osv):  # #prod_pricelist_update_line
                 'qty_on_hand':qty_on_hand,
                 'sequence':product.sequence,
             }
-        return {'value': values}
+            cr.execute("""SELECT uom.id FROM product_product pp 
+                          LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
+                          LEFT JOIN product_template_product_uom_rel rel ON (rel.product_template_id=pt.id)
+                          LEFT JOIN product_uom uom ON (rel.product_uom_id=uom.id)
+                          WHERE pp.id = %s""", (product.id,))
+            uom_list = cr.fetchall()
+            domain = {'product_uom': [('id', 'in', uom_list)]}
+            
+        return {'value': values,'domain':domain}
         
     _columns = {                
         'line_id':fields.many2one('stock.requisition', 'Line', ondelete='cascade', select=True),
