@@ -68,7 +68,11 @@ class stock_return(osv.osv):
         note_obj = self.pool.get('good.issue.note')
         note_line_obj = self.pool.get('good.issue.note.line')        
         product_trans_obj = self.pool.get('product.transactions')
+        product_disassembly_obj = self.pool.get('product.disassembly')
+        product_disassembly_line_obj = self.pool.get('product.disassembly.line')
+        
         product_trans_line_obj = self.pool.get('product.transactions.line')
+        
         mobile_obj = self.pool.get('stock.return.mobile')
         stock_return_obj = self.pool.get('stock.return.line')
         product_obj = self.pool.get('product.product')
@@ -182,7 +186,7 @@ class stock_return(osv.osv):
                                     where s.state='done'
                                     and s.location_dest_id=tl.id
                                     and s.location_id=fl.id
-                                    and date_trunc('day', s.date::date) <= %s
+                                    and date_trunc('day', s.date::date) < %s
                                     and  s.location_dest_id=%s
                                     and s.product_id =%s
                                     group by s.location_dest_id, s.product_id
@@ -196,7 +200,7 @@ class stock_return(osv.osv):
                                     where s.state='done'
                                     and s.location_dest_id=tl.id
                                     and s.location_id=fl.id
-                                    and date_trunc('day', s.date::date) <= %s
+                                    and date_trunc('day', s.date::date) < %s
                                     and  s.location_id=%s
                                     and s.product_id =%s
                                     group by s.location_id, s.product_id
@@ -222,9 +226,10 @@ class stock_return(osv.osv):
                                     and date_trunc('day', s.date::date) <= %s
                                     and  s.location_dest_id=%s
                                     and s.product_id =%s
+                                    and s.origin NOT LIKE %s
                                     group by s.location_dest_id, s.product_id
                                     ) transfer_in '''
-                      , (return_date,to_return_date, from_location_id, product_id,))                
+                      , (return_date,to_return_date, from_location_id, product_id,'PD%',))                
                     in_qty_data = cr.fetchone()
                     if in_qty_data:
                         if in_qty_data is not None:
@@ -234,7 +239,7 @@ class stock_return(osv.osv):
                     product_search = stock_return_obj.search(cr, uid, [('product_id', '=', product_id), ('line_id', '=', ids[0])], context=context) 
                     if product_search:
                         # cr.execute("update stock_return_line set receive_quantity=receive_quantity+%s + %s ,return_quantity=%s,sale_quantity=%s,foc_quantity=%s where line_id=%s and product_id=%s", (last_qty,substract_qty,return_quantity, sale_quantity, foc_quantity, ids[0], product_id,))
-                        cr.execute("update stock_return_line set return_quantity=return_quantity + %s,sale_quantity=sale_quantity + %s where line_id=%s and product_id=%s", (return_quantity, sale_quantity, ids[0], product_id,))
+                        cr.execute("update stock_return_line set return_quantity=return_quantity + %s,sale_quantity=sale_quantity - %s where line_id=%s and product_id=%s", (return_quantity, sale_quantity, ids[0], product_id,))
                     else:
                         product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
                         sequence = product.sequence
@@ -245,9 +250,9 @@ class stock_return(osv.osv):
                                                    'sequence':sequence,
                                                   'product_id': product_id,
                                                   'product_uom': product.product_tmpl_id.uom_id.id,
-                                                  #'receive_quantity':0,
+                                                  'assembly_qty':0,
                                                   'return_quantity':return_quantity,
-                                                  'sale_quantity':sale_quantity,
+                                                  'sale_quantity':-1*sale_quantity,
                                                   'status':'Stock Return',
                                                   # 'foc_quantity':foc_quantity,
                                                   'from_location_id':from_location_id ,
@@ -255,6 +260,56 @@ class stock_return(osv.osv):
                                                  # 'rec_small_uom_id':small_uom_id,
                                                 #  'rec_big_uom_id':big_uom,
                                                   }, context=context)
+                        
+            disassembly_ids = product_disassembly_obj.search(cr, uid, [('date', '>=', return_date), ('date', '<=', to_return_date), ('section_id', '=', sale_team_id)], context=context),
+            for d_list in disassembly_ids:
+                for d_id in d_list:
+                    dis_data=product_disassembly_obj.browse(cr, uid, d_id, context=context)
+                    location_type ='Disassembly'
+                    location_id =dis_data.location_id.id
+                    for product_line in dis_data.product_lines:   
+                        dis_data=product_disassembly_line_obj.browse(cr, uid, product_line.id, context=context)
+                        first_product_id =dis_data.product_id.id
+                        product_data = product_obj.browse(cr, uid, first_product_id, context=context)
+                        sequence = product_data.sequence
+                        first_uom_id =dis_data.big_uom_id.id
+                        first_big_quantity=dis_data.big_quantity
+                        sec_to_product_id=dis_data.to_product_id.id
+                        sec_uom_id=dis_data.uom_id.id
+                        sec_quantity=dis_data.quantity
+                        first_normal_stock_id = stock_return_obj.search(cr, uid , [('line_id', '=', ids[0]) , ('product_id', '=', first_product_id), ('status', '=', 'Stock Return')])
+                        if first_normal_stock_id:
+                            cr.execute('update stock_return_line set assembly_qty = assembly_qty - %s where id=%s ', (first_big_quantity, first_normal_stock_id[0],))                        
+                        else:
+                            stock_return_obj.create(cr, uid, {'line_id': ids[0],
+                                                       'sequence':sequence,
+                                                      'product_id': first_product_id,
+                                                      'product_uom': first_uom_id,
+                                                      'assembly_qty':-1 * first_big_quantity,
+                                                      'return_quantity':0,
+                                                      'exchange_qty':0,
+                                                      'sale_quantity':0,
+                                                      'status':location_type,
+                                                      'from_location_id':location_id ,
+                                                      'to_location_id': False,
+                                                      }, context=context)           
+                        sec_normal_stock_id = stock_return_obj.search(cr, uid , [('line_id', '=', ids[0]) , ('product_id', '=', sec_to_product_id), ('status', '=', 'Stock Return')])
+                        if sec_normal_stock_id:                           
+                            cr.execute('update stock_return_line set assembly_qty = assembly_qty +%s where id=%s ', (sec_quantity, sec_normal_stock_id[0],))   
+                        else:
+                            stock_return_obj.create(cr, uid, {'line_id': ids[0],
+                                                       'sequence':sequence,
+                                                      'product_id': sec_to_product_id,
+                                                      'product_uom': sec_uom_id,
+                                                      'assembly_qty': sec_quantity,
+                                                      'return_quantity':0,
+                                                      'exchange_qty':0,
+                                                      'sale_quantity':0,
+                                                      'status':location_type,
+                                                      'from_location_id':location_id ,
+                                                      'to_location_id': False,
+                                                      }, context=context)                                       
+                                                 
             trans_ids = product_trans_obj.search(cr, uid, [('date', '>=', return_date), ('date', '<=', to_return_date), ('void_flag', '=', 'none'), ('team_id', '=', sale_team_id)], context=context),
             for t_list in trans_ids:
                 for t_id in t_list:
@@ -279,7 +334,7 @@ class stock_return(osv.osv):
                                  
                             return_stock_id = stock_return_obj.search(cr, uid , [('line_id', '=', ids[0]) , ('product_id', '=', product_id), ('status', '=', location_type)])
                             if  return_stock_id:
-                                cr.execute('update stock_return_line set exchange_out_qty =exchange_out_qty + %s where id=%s ', (quantity, return_stock_id[0],))
+                                cr.execute('update stock_return_line set exchange_qty =exchange_qty - %s where id=%s ', (quantity, return_stock_id[0],))
                             else:                       
                                 stock_return_obj.create(cr, uid, {'line_id': ids[0],
                                                            'sequence':sequence,
@@ -287,7 +342,7 @@ class stock_return(osv.osv):
                                                           'product_uom': uom_id,
                                                           #'receive_quantity':0,
                                                           'return_quantity':0,
-                                                          'exchange_out_qty':quantity,
+                                                          'exchange_qty':-1*quantity,
                                                           'sale_quantity':0,
                                                           'status':location_type,
                                                        #   'rec_small_uom_id':small_uom_id,
@@ -318,7 +373,7 @@ class stock_return(osv.osv):
 #                             
                         return_stock_id = stock_return_obj.search(cr, uid , [('line_id', '=', ids[0]) , ('product_id', '=', product_id), ('status', '=', location_type)])
                         if  return_stock_id:
-                            cr.execute('update stock_return_line set exchange_in_qty =exchange_in_qty + %s,return_quantity =return_quantity+ %s where id=%s ', (quantity,quantity, return_stock_id[0],))
+                            cr.execute('update stock_return_line set exchange_qty =exchange_qty + %s,return_quantity =return_quantity+ %s where id=%s ', (quantity,quantity, return_stock_id[0],))
                         else:                       
                             stock_return_obj.create(cr, uid, {'line_id': ids[0],
                                                        'sequence':sequence,
@@ -326,7 +381,7 @@ class stock_return(osv.osv):
                                                       'product_uom': uom_id,
                                                     #  'receive_quantity':0,
                                                       'return_quantity':quantity,
-                                                      'exchange_in_qty':quantity,
+                                                      'exchange_qty':quantity,
                                                       'sale_quantity':0,
                                                       'status':location_type,
                                                    #   'rec_small_uom_id':small_uom_id,
@@ -354,7 +409,7 @@ class stock_return(osv.osv):
 #                                 cr.execute('update stock_return_line set return_quantity = return_quantity - %s where id=%s ', (quantity, normal_stock_id[0],))
                         return_stock_id = stock_return_obj.search(cr, uid , [('line_id', '=', ids[0]) , ('product_id', '=', product_id), ('status', '=', location_type)])
                         if  return_stock_id:
-                            cr.execute('update stock_return_line set exchange_in_qty =exchange_in_qty + %s,return_quantity =return_quantity+ %s where id=%s ', (quantity,quantity, return_stock_id[0],))
+                            cr.execute('update stock_return_line set exchange_qty =exchange_qty + %s,return_quantity =return_quantity+ %s where id=%s ', (quantity,quantity, return_stock_id[0],))
                         else:                       
                             stock_return_obj.create(cr, uid, {'line_id': ids[0],
                                                        'sequence':sequence,
@@ -362,7 +417,7 @@ class stock_return(osv.osv):
                                                       'product_uom': uom_id,
                                                      # 'receive_quantity':0,
                                                       'return_quantity':quantity,
-                                                      'exchange_in_qty':quantity,
+                                                      'exchange_qty':quantity,
                                                       'sale_quantity':0,
                                                       'status':location_type,
                                                     #  'rec_small_uom_id':small_uom_id,
@@ -390,7 +445,7 @@ class stock_return(osv.osv):
 #                                 cr.execute('update stock_return_line set return_quantity = return_quantity - %s where id=%s ', (quantity, normal_stock_id[0],))                                                
                         return_stock_id = stock_return_obj.search(cr, uid , [('line_id', '=', ids[0]) , ('product_id', '=', product_id), ('status', '=', location_type)])
                         if  return_stock_id:
-                            cr.execute('update stock_return_line set exchange_in_qty =exchange_in_qty + %s,return_quantity =return_quantity+ %s where id=%s ', (quantity,quantity, return_stock_id[0],))
+                            cr.execute('update stock_return_line set exchange_qty =exchange_qty + %s,return_quantity =return_quantity+ %s where id=%s ', (quantity,quantity, return_stock_id[0],))
                         else:                       
                             stock_return_obj.create(cr, uid, {'line_id': ids[0],
                                                        'sequence':sequence,
@@ -398,7 +453,7 @@ class stock_return(osv.osv):
                                                       'product_uom': uom_id,
                                                     #  'receive_quantity':0,
                                                       'return_quantity':quantity,
-                                                      'exchange_in_qty':quantity,
+                                                      'exchange_qty':quantity,
                                                       'sale_quantity':0,
                                                       'status':location_type,
                                                    #   'rec_small_uom_id':small_uom_id,
@@ -426,7 +481,7 @@ class stock_return(osv.osv):
 #                                 cr.execute('update stock_return_line set return_quantity = return_quantity - %s where id=%s ', (quantity, normal_stock_id[0],))                                                
                         return_stock_id = stock_return_obj.search(cr, uid , [('line_id', '=', ids[0]) , ('product_id', '=', product_id), ('status', '=', location_type)])
                         if  return_stock_id:
-                            cr.execute('update stock_return_line set exchange_in_qty =exchange_in_qty + %s,return_quantity =return_quantity+ %s where id=%s ', (quantity,quantity, return_stock_id[0],))
+                            cr.execute('update stock_return_line set exchange_qty =exchange_qty + %s,return_quantity =return_quantity+ %s where id=%s ', (quantity,quantity, return_stock_id[0],))
                         else:                       
                             stock_return_obj.create(cr, uid, {'line_id': ids[0],
                                                        'sequence':sequence,
@@ -434,7 +489,7 @@ class stock_return(osv.osv):
                                                       'product_uom': uom_id,
                                                     #  'receive_quantity':0,
                                                       'return_quantity':quantity,
-                                                      'exchange_in_qty':quantity,
+                                                      'exchange_qty':quantity,
                                                       'sale_quantity':0,
                                                       'status':location_type,
                                                      # 'rec_small_uom_id':small_uom_id,
@@ -461,7 +516,7 @@ class stock_return(osv.osv):
 #                                 cr.execute('update stock_return_line set return_quantity = return_quantity - %s where id=%s ', (quantity, normal_stock_id[0],))                                                
                         return_stock_id = stock_return_obj.search(cr, uid , [('line_id', '=', ids[0]) , ('product_id', '=', product_id), ('status', '=', location_type)])
                         if  return_stock_id:
-                            cr.execute('update stock_return_line set exchange_in_qty =exchange_in_qty + %s,return_quantity =return_quantity+ %s where id=%s ', (quantity,quantity, return_stock_id[0],))
+                            cr.execute('update stock_return_line set exchange_qty =exchange_qty + %s,return_quantity =return_quantity+ %s where id=%s ', (quantity,quantity, return_stock_id[0],))
                         else:                       
                             stock_return_obj.create(cr, uid, {'line_id': ids[0],
                                                        'sequence':sequence,
@@ -469,7 +524,7 @@ class stock_return(osv.osv):
                                                       'product_uom': uom_id,
                                                      # 'receive_quantity':0,
                                                       'return_quantity':quantity,
-                                                      'exchange_in_qty':quantity,
+                                                      'exchange_qty':quantity,
                                                       'sale_quantity':0,
                                                       'status':location_type,
                                                     #  'rec_small_uom_id':small_uom_id,
@@ -722,7 +777,7 @@ class stock_return_line(osv.osv):  # #prod_pricelist_update_line
         'opening_stock_qty' : fields.float(string='Opening Stock Qty', digits=(16, 0)),
         'sale_quantity' : fields.float(string='Sales Qty', digits=(16, 0)),
         'return_quantity' : fields.float(string='Returned Qty', digits=(16, 0)),
-        'onground_quantity' : fields.float(string='All Physical Stock Qty', digits=(16, 0)),
+        'onground_quantity' : fields.float(string='All Physical Stock Qty', digits=(16, 0),readonly=True),
         'actual_return_quantity' : fields.float(string='Actual Return Qty', digits=(16, 0)),
         'closing_stock_qty' : fields.float(string='Closing Stock Qty', digits=(16, 0)),
         # 'receive_quantity' : fields.float(string='Received Qty', digits=(16, 0)),
@@ -745,8 +800,8 @@ class stock_return_line(osv.osv):  # #prod_pricelist_update_line
         'from_location_id':fields.many2one('stock.location', 'From Location'),
         'to_location_id':fields.many2one('stock.location', 'To Location'),
         'in_stock_qty':fields.float('In Qty'),
-        'exchange_in_qty':fields.float('Exchange In Qty'),
-        'exchange_out_qty':fields.float('Exchange Out Qty'),
+        'exchange_qty':fields.float('Exchange Qty'),
+        'assembly_qty' :fields.float('Disassembly Qty'),
     }
         
     def on_change_return_quantity(self, cr, uid, ids, closing_stock_qty, return_quantity, context=None):
@@ -755,6 +810,8 @@ class stock_return_line(osv.osv):  # #prod_pricelist_update_line
         values = {
             'onground_quantity': closing_qty,
         }
+        if ids:
+            cr.execute("update stock_return_line set onground_quantity=%s where id =%s",(closing_qty,ids[0],))
         return {'value': values}        
     
     def on_change_ground_quantity(self, cr, uid, ids, closing_stock_qty, return_quantity, context=None):
@@ -763,5 +820,7 @@ class stock_return_line(osv.osv):  # #prod_pricelist_update_line
         values = {
             'onground_quantity': closing_qty,
         }
+        if ids:
+            cr.execute("update stock_return_line set onground_quantity=%s where id =%s",(closing_qty,ids[0],))
         return {'value': values}     
     
