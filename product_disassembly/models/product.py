@@ -10,7 +10,8 @@ class product_disassembly(osv.osv):
         'date': fields.date('Date'),
         'create_date': fields.datetime('Create Date'),
         'location_id': fields.many2one('stock.location', 'Location'),
-        'user_id': fields.many2one('res.users', 'Person'),
+        'section_id': fields.many2one('crm.case.section', 'Sales Team', readonly=False),
+        'user_id': fields.many2one('res.users', 'Person', readonly=False),
         'product_lines': fields.one2many('product.disassembly.line', 'line_id', 'Items Lines', copy=True),
          'is_disassembly': fields.boolean('Disassembly')
     }
