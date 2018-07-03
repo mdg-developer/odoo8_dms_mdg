@@ -251,17 +251,17 @@ class crm_case_section(osv.osv):
                 'credit_sale': fields.function(_get_credit_sale, digits_compute=dp.get_precision('Product Price'),
                 type='float', readonly=True,
                 string='Credit Outstanding'),
-                 'price_list_line': fields.one2many('price.list.line', 'team_id', 'Price List', copy=True),
-               'branch_id':fields.many2one('res.branch', 'Branch'),
-               'allow_foc':fields.boolean('Allow FOC'),
-             'allow_tax':fields.boolean('Allow Tax'),
-            'default_division':fields.many2one('res.country.state','Division'),
-               'normal_return_location_id': fields.many2one('stock.location', 'Normal Return location', required=True),
+                'price_list_line': fields.one2many('price.list.line', 'team_id', 'Price List', copy=True),
+                'branch_id':fields.many2one('res.branch', 'Branch'),
+                'allow_foc':fields.boolean('Allow FOC'),
+                'allow_tax':fields.boolean('Allow Tax'),
+                'default_division':fields.many2one('res.country.state','Division'),
+                'normal_return_location_id': fields.many2one('stock.location', 'Normal Return location', required=True),
                 'exp_location_id': fields.many2one('stock.location', 'Expiry location', required=True),
                 'near_exp_location_id': fields.many2one('stock.location', 'Near Expiry location', required=True),
                 'damage_location_id': fields.many2one('stock.location', 'Damage location', required=True),
                 'fresh_stock_not_good_location_id': fields.many2one('stock.location', 'Fresh Stock Not Good location', required=True),
-            
+                'optional_issue_location_id': fields.many2one('stock.location', 'Optional Issue Location'),
         }
     _sql_constraints = [
         ('code_uniq', 'unique (code)', 'The code of the sales team must be unique !')

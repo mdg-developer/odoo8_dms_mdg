@@ -73,6 +73,7 @@ class good_issue_note(osv.osv):
                 'company_id':fields.many2one('res.company', 'Company'),
                 'partner_id':fields.many2one('res.partner', string='Partner'),
                 'is_return':fields.boolean('Return'),
+                'issue_from_optional_location':fields.boolean('Issue from Optional Location',readonly=True),
 }
     _defaults = {
         'state' : 'draft',

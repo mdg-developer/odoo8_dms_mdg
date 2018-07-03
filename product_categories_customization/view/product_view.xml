@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data>
+	    
+	    <record id="inherit_product_category_form_view_inherit" model="ir.ui.view">
+			<field name="name">product.category.property.form.inherit</field>
+			<field name="model">product.category</field>
+			<field name="inherit_id" ref="stock.product_category_form_view_inherit" />
+			<field name="arch" type="xml">
+			<data>
+				<xpath expr="//group[@name='parent']" position="inside">
+				    <field name="issue_from_optional_location"/>
+				</xpath>
+			</data>
+			</field>
+		</record>
 
 		<record id="view_category_property_form" model="ir.ui.view">
 			<field name="name">product.category.stock.property.form.inherit

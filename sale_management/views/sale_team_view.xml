@@ -44,6 +44,7 @@
 				<field name="location_id" position="after">
 					<field name="issue_warehouse_id" />
 					<field name="issue_location_id" />
+					<field name="optional_issue_location_id" />
 					<field name="temp_location_id" />
                     <field name="normal_return_location_id" />
                     <field name="exp_location_id" />

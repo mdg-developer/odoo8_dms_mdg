@@ -24,7 +24,8 @@
 							<group>								
 								<field name="request_gin_id" class="oe_inline" readonly="1" />								
 								<field name="return_from"/>
-								<field name="return_date"/>								
+								<field name="return_date"/>	
+								<field name="issue_from_optional_location"/>							
 							</group>
 							<group>								
 								<field name="name" class="oe_inline" readonly="1" />

@@ -24,6 +24,7 @@ from openerp.osv import fields, osv
 class product_category(osv.osv):
     _inherit = "product.category"
     _columns = {
+        'issue_from_optional_location':fields.boolean('Issue from Optional Location'),
         'property_account_income_categ': fields.property(
             type='many2one',
             relation='account.account',

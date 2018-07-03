@@ -51,6 +51,7 @@ class sale_order(osv.osv):
             amount_total=sale_data.amount_total    
             partner_id=sale_data.partner_id.id
             payment_type=sale_data.payment_type
+            ignore_credit_limit=sale_data.ignore_credit_limit
             invoice_ids = invoice_obj.search(cr, uid, [('partner_id', '=', partner_id),('state','=','open')], context=context)
             for invoice_id in invoice_ids:
                 invoice_data=invoice_obj.browse(cr, uid, invoice_id, context=context)  
@@ -59,7 +60,7 @@ class sale_order(osv.osv):
             if credit_amt_total and partner_id and payment_type:
                 partner_data=self.pool.get('res.partner').browse(cr, uid, vals.get('partner_id'), context=context) 
                 credit_limit =partner_data.credit_limit
-                if credit_amt_total > credit_limit and payment_type=='credit':
+                if credit_amt_total > credit_limit and payment_type=='credit' and ignore_credit_limit==False:
                     raise osv.except_osv(_('Warning'),
                                          _('Credit Limit is Over!!!'))    
         self.message_post(cr, uid, [new_id], body=_("Quotation created"), context=ctx)
@@ -214,9 +215,8 @@ class sale_order(osv.osv):
         'is_entry': fields.boolean('Is Entry Data',default=False),
         'rebate_later': fields.boolean("Rebate Later" , default=False,readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
         'credit_allow':fields.boolean('Credit Allow',default=False),
-
+        'ignore_credit_limit':fields.boolean('Ignore Credit Limitation',default=False,readonly=True, states={'draft': [('readonly', False)]})
                }
-
     def action_reverse(self, cr, uid, ids, context=None):
         pick_obj = self.pool.get('stock.picking')
         invoice_obj = self.pool.get('account.invoice')

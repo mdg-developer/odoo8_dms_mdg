@@ -127,6 +127,7 @@ class stock_requisition(osv.osv):
      'pre_order':fields.boolean('Pre Order'),
      'partner_id':fields.many2one('res.partner', string='Partner'),
     'good_issue_id':fields.many2one('good.issue.note', 'GIN No' ,readonly=True),
+    'issue_from_optional_location':fields.boolean('Issue from Optional Location'),
 
 }
     _defaults = {
