@@ -48,6 +48,7 @@ class stock_return_note(osv.osv):
 #                but waiting for the scheduler to run on the order date.", select=True),
       'p_line':fields.one2many('stock.return.note.line', 'line_id', 'Product Lines',
                               copy=True),
+                'issue_from_optional_location':fields.boolean('Issue from Optional Location'),
                 
 }
     _defaults = {
