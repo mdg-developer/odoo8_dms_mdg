@@ -17,7 +17,7 @@ class product_supplierinfo(osv.osv):
     
 product_supplierinfo()
 
-class product_template(osv.osv_memory):
+class product_template(osv.osv):
     _inherit = 'product.template'
 
     def _product_available(self, cr, uid, ids, name, arg, context=None):
