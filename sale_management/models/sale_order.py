@@ -26,13 +26,17 @@ class sale_order(osv.osv):
         return False
         
     def create(self, cr, uid, vals, context=None):
+        credit_amt_total=0
+        credit_amt=0
+        invoice_obj=self.pool.get('account.invoice')
         if context is None:
             context = {}
         if vals.get('name', '/') == '/':
             vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'sale.order', context=context) or '/'
         if vals.get('partner_id'):
             defaults = self.onchange_partner_id(cr, uid, [], vals['partner_id'], context=context)['value']
-            vals = dict(defaults, **vals)            
+            vals = dict(defaults, **vals)    
+                    
         if vals.get('partner_id') and any(f not in vals for f in ['partner_invoice_id', 'partner_shipping_id', 'pricelist_id', 'fiscal_position']):
             defaults = self.onchange_partner_id(cr, uid, [], vals['partner_id'], context=context)['value']
             if not vals.get('fiscal_position') and vals.get('partner_shipping_id'):
@@ -42,10 +46,26 @@ class sale_order(osv.osv):
 
         ctx = dict(context or {}, mail_create_nolog=True)
         new_id = super(sale_order, self).create(cr, uid, vals, context=ctx)
-
+        if new_id:
+            sale_data=self.browse(cr, uid, new_id, context=context)   
+            amount_total=sale_data.amount_total    
+            partner_id=sale_data.partner_id.id
+            payment_type=sale_data.payment_type
+            invoice_ids = invoice_obj.search(cr, uid, [('partner_id', '=', partner_id),('state','=','open')], context=context)
+            for invoice_id in invoice_ids:
+                invoice_data=invoice_obj.browse(cr, uid, invoice_id, context=context)  
+                credit_amt +=invoice_data.residual
+            credit_amt_total=amount_total+credit_amt
+            if credit_amt_total and partner_id and payment_type:
+                partner_data=self.pool.get('res.partner').browse(cr, uid, vals.get('partner_id'), context=context) 
+                credit_limit =partner_data.credit_limit
+                if credit_amt_total > credit_limit and payment_type=='credit':
+                    raise osv.except_osv(_('Warning'),
+                                         _('Credit Limit is Over!!!'))    
         self.message_post(cr, uid, [new_id], body=_("Quotation created"), context=ctx)
         return new_id
-    
+
+
     def write(self, cursor, user, ids, vals, context=None):
         """
         Serialise before Write
