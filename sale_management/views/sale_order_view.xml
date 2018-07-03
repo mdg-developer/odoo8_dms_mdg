@@ -108,6 +108,7 @@
 					<field name="tb_ref_no" attrs="{'readonly':[('state','!=','draft')]}"></field>
 					<field name="delivery_remark" />
 					<field name="rebate_later" />
+					<field name="ignore_credit_limit" />
 					
 				</field>
 				<field name="date_order" position="after">
