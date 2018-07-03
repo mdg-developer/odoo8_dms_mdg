@@ -70,10 +70,18 @@ class account_invoice(models.Model):
                 if total_price != 0:
                     move_id = account_move.create(self.account_journal_get(inv))
                     if total_price > 0:
-                        account_move_line.create(self.first_move_line_get_ap_ar(inv, move_id,journal_id.id, 0, total_price,amount_currency, inv.partner_id.gain_account_id.id, inv.journal_id.company_id.currency_id.id, inv.currency_id.id))
-                        account_move_line.create(self.first_move_line_get_ap_ar(inv, move_id,journal_id.id, total_price,0,amount_currency, inv.partner_id.property_account_receivable.id, inv.journal_id.company_id.currency_id.id, inv.currency_id.id))
+                        account_move_line.create(self.first_move_line_get_ap_ar(inv, move_id,journal_id.id, total_price,0,amount_currency, inv.partner_id.loss_account_id.id, inv.journal_id.company_id.currency_id.id, inv.currency_id.id))
+                        account_move_line.create(self.first_move_line_get_ap_ar(inv, move_id,journal_id.id, 0,total_price,amount_currency, inv.partner_id.property_account_receivable.id, inv.journal_id.company_id.currency_id.id, inv.currency_id.id))
+                                                
                     else:
                         total_price = total_price * -1
-                        account_move_line.create(self.first_move_line_get_ap_ar(inv, move_id,journal_id.id, total_price,0,amount_currency, inv.partner_id.loss_account_id.id, inv.journal_id.company_id.currency_id.id, inv.currency_id.id))
-                        account_move_line.create(self.first_move_line_get_ap_ar(inv, move_id,journal_id.id, 0,total_price,amount_currency, inv.partner_id.property_account_receivable.id, inv.journal_id.company_id.currency_id.id, inv.currency_id.id))            
+                        account_move_line.create(self.first_move_line_get_ap_ar(inv, move_id,journal_id.id, 0, total_price,amount_currency, inv.partner_id.gain_account_id.id, inv.journal_id.company_id.currency_id.id, inv.currency_id.id))
+                        account_move_line.create(self.first_move_line_get_ap_ar(inv, move_id,journal_id.id, total_price,0,amount_currency, inv.partner_id.property_account_receivable.id, inv.journal_id.company_id.currency_id.id, inv.currency_id.id))            
+#                     if total_price > 0:
+#                         account_move_line.create(self.first_move_line_get_ap_ar(inv, move_id,journal_id.id, 0, total_price,amount_currency, inv.partner_id.gain_account_id.id, inv.journal_id.company_id.currency_id.id, inv.currency_id.id))
+#                         account_move_line.create(self.first_move_line_get_ap_ar(inv, move_id,journal_id.id, total_price,0,amount_currency, inv.partner_id.property_account_receivable.id, inv.journal_id.company_id.currency_id.id, inv.currency_id.id))
+#                     else:
+#                         total_price = total_price * -1
+#                         account_move_line.create(self.first_move_line_get_ap_ar(inv, move_id,journal_id.id, total_price,0,amount_currency, inv.partner_id.loss_account_id.id, inv.journal_id.company_id.currency_id.id, inv.currency_id.id))
+#                         account_move_line.create(self.first_move_line_get_ap_ar(inv, move_id,journal_id.id, 0,total_price,amount_currency, inv.partner_id.property_account_receivable.id, inv.journal_id.company_id.currency_id.id, inv.currency_id.id))            
                         
