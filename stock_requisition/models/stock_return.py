@@ -623,6 +623,7 @@ class stock_return(osv.osv):
         'to_wh_near_exp_location_id': fields.many2one('stock.location', 'To Near Expiry location'),
         'to_wh_damage_location_id': fields.many2one('stock.location', 'To Damage location'),
         'to_wh_fresh_stock_not_good_location_id': fields.many2one('stock.location', 'To Fresh Stock Not Good location'),
+         'issue_from_optional_location':fields.boolean('Issue from Optional Location'),
 
 }		
     

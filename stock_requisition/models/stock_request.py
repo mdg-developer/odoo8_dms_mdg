@@ -164,6 +164,7 @@ class stock_requisition(osv.osv):
                 sale_team_id = stock_request_data.sale_team_id.id
                 request_date = stock_request_data.request_date
                 location_id = stock_request_data.to_location_id.id
+                issue_from_optional_location=stock_request_data.issue_from_optional_location
                 
                 #sql = 'select id from sale_order where delivery_id=%s, shipped=False and is_generate=False and invoiced=False and state not in (%s,%s) and date_order between %s and %s'
                 #cr.execute(sql,(sale_team_id,issue_date_from,issue_date_to))
@@ -255,6 +256,7 @@ class stock_requisition(osv.osv):
             sale_team_id = req_value.sale_team_id.id
             branch_id = req_value.branch_id.id
             receiver = req_value.sale_team_id.receiver
+            issue_from_optional_location=req_value.issue_from_optional_location
             for order in req_value.order_line:
                 so_name = order.name
                 order_id = sale_order_obj.search(cr, uid, [('name', '=', so_name)], context=context) 
@@ -268,6 +270,7 @@ class stock_requisition(osv.osv):
                                           'from_location_id':from_location_id,
                                           'vehicle_id':vehicle_no,
                                           'receiver':receiver,
+                                          'issue_from_optional_location':issue_from_optional_location,
                                           'branch_id':branch_id}, context=context)
             
             req_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)

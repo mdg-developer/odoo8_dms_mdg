@@ -10,34 +10,36 @@
 			<field name="model">stock.return.note</field>
 			<field name="arch" type="xml">
 				<form string="Stock Return Note Form">
-<!-- 					<header> -->
-<!-- 						<button name="confirm" string="Sale Manager Approve" class="oe_highlight" -->
-<!-- 							type="object" states="draft" groups="stock.group_stock_manager" /> -->
-<!-- 						<button name="approve" string="WH Manager Approve" class="oe_highlight" -->
-<!-- 							type="object" states="confirm" groups="stock.group_stock_manager" /> -->
-<!-- 						<button name="cancel" string="Cancel" class="oe_highlight" -->
-<!-- 							type="object" states="confirm" groups="stock.group_stock_manager" /> -->
-<!-- 						<field name="state" widget="statusbar" /> -->
-<!-- 					</header> -->
+					<!-- <header> -->
+					<!-- <button name="confirm" string="Sale Manager Approve" class="oe_highlight" -->
+					<!-- type="object" states="draft" groups="stock.group_stock_manager" 
+						/> -->
+					<!-- <button name="approve" string="WH Manager Approve" class="oe_highlight" -->
+					<!-- type="object" states="confirm" groups="stock.group_stock_manager" 
+						/> -->
+					<!-- <button name="cancel" string="Cancel" class="oe_highlight" -->
+					<!-- type="object" states="confirm" groups="stock.group_stock_manager" 
+						/> -->
+					<!-- <field name="state" widget="statusbar" /> -->
+					<!-- </header> -->
 					<sheet>
 						<group>
-							<group>								
-								<field name="request_gin_id" class="oe_inline" readonly="1" />								
-								<field name="return_from"/>
-								<field name="return_date"/>	
-								<field name="issue_from_optional_location"/>							
+							<group>
+								<field name="request_gin_id" class="oe_inline" readonly="1" />
+								<field name="return_from" />
+								<field name="return_date" />
 							</group>
-							<group>								
+							<group>
 								<field name="name" class="oe_inline" readonly="1" />
-								<field name="sale_order_inv_id"/>								
-								<field name="vehicle_id"/>		
+								<field name="sale_order_inv_id" />
+								<field name="vehicle_id" />
 							</group>
 						</group>
 						<group>
 							<notebook>
 								<page>
 									<field name="p_line"> <!-- attrs="{'readonly':[('state','=','approve')]}" -->
-										<tree string="Stock Return Note(SRN)" editable="bottom">											
+										<tree string="Stock Return Note(SRN)" editable="bottom">
 											<field name="product_id" on_change="on_change_product_id(product_id)" />
 											<field name="product_uom" />
 											<field name="issue_quantity" />
@@ -46,9 +48,9 @@
 											<field name="foc_quantity" />
 											<field name="uom_ratio" />
 											<field name="actual_rec_quantity" />
-											<field name="batch_no"/>
-											<field name="expiry_date"/>
-											<field name="remark" />								
+											<field name="batch_no" />
+											<field name="expiry_date" />
+											<field name="remark" />
 										</tree>
 									</field>
 								</page>
@@ -57,11 +59,9 @@
 						</group>
 
 					</sheet>
-					<!-- <div class="oe_chatter">
-						<field name="message_follower_ids" widget="mail_followers"
-							groups="base.group_user" />
-						<field name="message_ids" widget="mail_thread" />
-					</div> -->
+					<!-- <div class="oe_chatter"> <field name="message_follower_ids" widget="mail_followers" 
+						groups="base.group_user" /> <field name="message_ids" widget="mail_thread" 
+						/> </div> -->
 				</form>
 			</field>
 		</record>
@@ -72,12 +72,12 @@
 			<field name="model">stock.return.note</field>
 			<field name="arch" type="xml">
 				<tree string="Contents">
-					<field name="request_gin_id" class="oe_inline" readonly="1"/>								
-					<field name="return_from"/>
-					<field name="return_date"/>		
+					<field name="request_gin_id" class="oe_inline" readonly="1" />
+					<field name="return_from" />
+					<field name="return_date" />
 					<field name="name" class="oe_inline" readonly="1" />
-					<field name="sale_order_inv_id"/>								
-					<field name="vehicle_id"/>	
+					<field name="sale_order_inv_id" />
+					<field name="vehicle_id" />
 				</tree>
 			</field>
 		</record>
@@ -115,7 +115,8 @@
 		</record>
 
 
- <menuitem action='action_stock_return_note' id="menu_stock_return_note"
-			parent="stock.menu_stock_warehouse_mgmt" groups="stock.group_stock_manager" sequence="13"/>
+		<menuitem action='action_stock_return_note' id="menu_stock_return_note"
+			parent="stock.menu_stock_warehouse_mgmt" groups="stock.group_stock_manager"
+			sequence="13" />
 	</data>
 </openerp>
