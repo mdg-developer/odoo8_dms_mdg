@@ -1157,15 +1157,15 @@ group by fingerprint_id,myanmar_name,form1_amount,all_allow,aba,jda,ota,sbn,raa,
         <simple-master-page name="Simple MasterPage" id="2">
             <property name="type">a4</property>
             <property name="orientation">portrait</property>
-            <property name="headerHeight">1in</property>
-            <property name="footerHeight">1in</property>
+            <property name="headerHeight">0.5in</property>
+            <property name="footerHeight">0.5in</property>
         </simple-master-page>
     </page-setup>
     <body>
         <table id="125">
             <property name="fontFamily">"Zawgyi-One"</property>
             <property name="marginLeft">5pt</property>
-            <property name="width">6.729166666666667in</property>
+            <property name="width">7.635416666666667in</property>
             <property name="dataSet">Data Set</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -1293,10 +1293,10 @@ month[dataSetRow["month"]-1];</expression>
                 </structure>
             </list-property>
             <column id="189">
-                <property name="width">1.9791666666666667in</property>
+                <property name="width">2.6041666666666665in</property>
             </column>
             <column id="190">
-                <property name="width">4.75in</property>
+                <property name="width">5.03125in</property>
             </column>
             <detail>
                 <row id="242">
@@ -1311,10 +1311,10 @@ month[dataSetRow["month"]-1];</expression>
                         <grid id="298">
                             <property name="width">7.666666666666667in</property>
                             <column id="299">
-                                <property name="width">1.3125in</property>
+                                <property name="width">2.6666666666666665in</property>
                             </column>
                             <column id="300">
-                                <property name="width">6.354166666666667in</property>
+                                <property name="width">5in</property>
                             </column>
                             <row id="301">
                                 <cell id="302">
@@ -1322,7 +1322,9 @@ month[dataSetRow["month"]-1];</expression>
                                     <property name="borderLeftStyle">none</property>
                                     <property name="borderRightStyle">none</property>
                                     <property name="borderTopStyle">none</property>
+                                    <property name="textAlign">right</property>
                                     <image id="15">
+                                        <property name="marginRight">10pt</property>
                                         <property name="height">0.7708333333333334in</property>
                                         <property name="width">0.84375in</property>
                                         <property name="source">embed</property>
@@ -1331,9 +1333,10 @@ month[dataSetRow["month"]-1];</expression>
                                 </cell>
                                 <cell id="303">
                                     <data id="269">
-                                        <property name="fontSize">14pt</property>
+                                        <property name="fontSize">16pt</property>
                                         <property name="fontWeight">bold</property>
                                         <property name="marginTop">15pt</property>
+                                        <property name="textAlign">left</property>
                                         <property name="dataSet">company</property>
                                         <list-property name="boundDataColumns">
                                             <structure>
@@ -1378,8 +1381,8 @@ month[dataSetRow["month"]-1];</expression>
                                     <property name="fontWeight">bold</property>
                                     <property name="textAlign">center</property>
                                     <data id="212">
-                                        <property name="fontSize">12pt</property>
-                                        <property name="marginRight">3in</property>
+                                        <property name="fontSize">14pt</property>
+                                        <property name="marginRight">5pt</property>
                                         <list-property name="boundDataColumns">
                                             <structure>
                                                 <property name="name">var_dept</property>
@@ -1395,21 +1398,21 @@ month[dataSetRow["month"]-1];</expression>
                             <row id="208">
                                 <cell id="209">
                                     <label id="213">
-                                        <property name="fontSize">12pt</property>
+                                        <property name="fontSize">14pt</property>
                                         <property name="fontWeight">bold</property>
                                         <text-property name="text">Pay Slip For :</text-property>
                                     </label>
                                 </cell>
                                 <cell id="210">
                                     <data id="214">
-                                        <property name="fontSize">12pt</property>
+                                        <property name="fontSize">14pt</property>
                                         <property name="fontWeight">bold</property>
                                         <property name="resultSetColumn">month</property>
                                     </data>
                                 </cell>
                                 <cell id="211">
                                     <data id="215">
-                                        <property name="fontSize">12pt</property>
+                                        <property name="fontSize">14pt</property>
                                         <property name="fontWeight">bold</property>
                                         <property name="resultSetColumn">year</property>
                                     </data>
@@ -1422,6 +1425,7 @@ month[dataSetRow["month"]-1];</expression>
                     <property name="fontFamily">serif</property>
                 </row>
                 <row id="236">
+                    <property name="height">0.125in</property>
                     <cell id="237">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1434,12 +1438,12 @@ month[dataSetRow["month"]-1];</expression>
                     </cell>
                 </row>
                 <row id="135">
-                    <property name="fontSize">11pt</property>
+                    <property name="fontSize">14pt</property>
                     <property name="borderBottomStyle">none</property>
                     <property name="borderLeftStyle">none</property>
                     <property name="borderRightStyle">none</property>
                     <property name="borderTopStyle">none</property>
-                    <property name="height">0.3958333333333333in</property>
+                    <property name="height">0.4895833333333333in</property>
                     <cell id="136">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1471,12 +1475,12 @@ month[dataSetRow["month"]-1];</expression>
                     </cell>
                 </row>
                 <row id="138">
-                    <property name="fontSize">11pt</property>
+                    <property name="fontSize">14pt</property>
                     <property name="borderBottomStyle">none</property>
                     <property name="borderLeftStyle">none</property>
                     <property name="borderRightStyle">none</property>
                     <property name="borderTopStyle">none</property>
-                    <property name="height">0.4166666666666667in</property>
+                    <property name="height">0.5in</property>
                     <cell id="139">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1503,19 +1507,19 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="paddingTop">5pt</property>
                         <data id="246">
                             <property name="fontFamily">"Myanmar3"</property>
-                            <property name="fontSize">12pt</property>
+                            <property name="fontSize">16pt</property>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">myanmar_name</property>
                         </data>
                     </cell>
                 </row>
                 <row id="141">
-                    <property name="fontSize">11pt</property>
+                    <property name="fontSize">14pt</property>
                     <property name="borderBottomStyle">none</property>
                     <property name="borderLeftStyle">none</property>
                     <property name="borderRightStyle">none</property>
                     <property name="borderTopStyle">none</property>
-                    <property name="height">0.3854166666666667in</property>
+                    <property name="height">0.4895833333333333in</property>
                     <cell id="142">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1547,12 +1551,12 @@ month[dataSetRow["month"]-1];</expression>
                     </cell>
                 </row>
                 <row id="144">
-                    <property name="fontSize">11pt</property>
+                    <property name="fontSize">14pt</property>
                     <property name="borderBottomStyle">none</property>
                     <property name="borderLeftStyle">none</property>
                     <property name="borderRightStyle">none</property>
                     <property name="borderTopStyle">none</property>
-                    <property name="height">0.3854166666666667in</property>
+                    <property name="height">0.4791666666666667in</property>
                     <cell id="145">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1584,12 +1588,12 @@ month[dataSetRow["month"]-1];</expression>
                     </cell>
                 </row>
                 <row id="147">
-                    <property name="fontSize">11pt</property>
+                    <property name="fontSize">14pt</property>
                     <property name="borderBottomStyle">none</property>
                     <property name="borderLeftStyle">none</property>
                     <property name="borderRightStyle">none</property>
                     <property name="borderTopStyle">none</property>
-                    <property name="height">0.3645833333333333in</property>
+                    <property name="height">0.4895833333333333in</property>
                     <cell id="148">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1625,12 +1629,12 @@ month[dataSetRow["month"]-1];</expression>
                     </cell>
                 </row>
                 <row id="150">
-                    <property name="fontSize">11pt</property>
+                    <property name="fontSize">14pt</property>
                     <property name="borderBottomStyle">none</property>
                     <property name="borderLeftStyle">none</property>
                     <property name="borderRightStyle">none</property>
                     <property name="borderTopStyle">none</property>
-                    <property name="height">0.375in</property>
+                    <property name="height">0.5in</property>
                     <cell id="151">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1666,12 +1670,12 @@ month[dataSetRow["month"]-1];</expression>
                     </cell>
                 </row>
                 <row id="153">
-                    <property name="fontSize">11pt</property>
+                    <property name="fontSize">14pt</property>
                     <property name="borderBottomStyle">none</property>
                     <property name="borderLeftStyle">none</property>
                     <property name="borderRightStyle">none</property>
                     <property name="borderTopStyle">none</property>
-                    <property name="height">0.34375in</property>
+                    <property name="height">0.4895833333333333in</property>
                     <cell id="154">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1707,12 +1711,12 @@ month[dataSetRow["month"]-1];</expression>
                     </cell>
                 </row>
                 <row id="156">
-                    <property name="fontSize">11pt</property>
+                    <property name="fontSize">14pt</property>
                     <property name="borderBottomStyle">none</property>
                     <property name="borderLeftStyle">none</property>
                     <property name="borderRightStyle">none</property>
                     <property name="borderTopStyle">none</property>
-                    <property name="height">0.3645833333333333in</property>
+                    <property name="height">0.5104166666666666in</property>
                     <cell id="157">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1748,12 +1752,12 @@ month[dataSetRow["month"]-1];</expression>
                     </cell>
                 </row>
                 <row id="159">
-                    <property name="fontSize">11pt</property>
+                    <property name="fontSize">14pt</property>
                     <property name="borderBottomStyle">none</property>
                     <property name="borderLeftStyle">none</property>
                     <property name="borderRightStyle">none</property>
                     <property name="borderTopStyle">none</property>
-                    <property name="height">0.375in</property>
+                    <property name="height">0.5104166666666666in</property>
                     <cell id="160">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1789,12 +1793,12 @@ month[dataSetRow["month"]-1];</expression>
                     </cell>
                 </row>
                 <row id="162">
-                    <property name="fontSize">11pt</property>
+                    <property name="fontSize">14pt</property>
                     <property name="borderBottomStyle">none</property>
                     <property name="borderLeftStyle">none</property>
                     <property name="borderRightStyle">none</property>
                     <property name="borderTopStyle">none</property>
-                    <property name="height">0.375in</property>
+                    <property name="height">0.4895833333333333in</property>
                     <cell id="163">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1830,12 +1834,12 @@ month[dataSetRow["month"]-1];</expression>
                     </cell>
                 </row>
                 <row id="165">
-                    <property name="fontSize">11pt</property>
+                    <property name="fontSize">14pt</property>
                     <property name="borderBottomStyle">none</property>
                     <property name="borderLeftStyle">none</property>
                     <property name="borderRightStyle">none</property>
                     <property name="borderTopStyle">none</property>
-                    <property name="height">0.375in</property>
+                    <property name="height">0.46875in</property>
                     <cell id="166">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1871,12 +1875,12 @@ month[dataSetRow["month"]-1];</expression>
                     </cell>
                 </row>
                 <row id="168">
-                    <property name="fontSize">11pt</property>
+                    <property name="fontSize">14pt</property>
                     <property name="borderBottomStyle">none</property>
                     <property name="borderLeftStyle">none</property>
                     <property name="borderRightStyle">none</property>
                     <property name="borderTopStyle">none</property>
-                    <property name="height">0.375in</property>
+                    <property name="height">0.46875in</property>
                     <cell id="169">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1912,12 +1916,12 @@ month[dataSetRow["month"]-1];</expression>
                     </cell>
                 </row>
                 <row id="171">
-                    <property name="fontSize">11pt</property>
+                    <property name="fontSize">14pt</property>
                     <property name="borderBottomStyle">none</property>
                     <property name="borderLeftStyle">none</property>
                     <property name="borderRightStyle">none</property>
                     <property name="borderTopStyle">none</property>
-                    <property name="height">0.3541666666666667in</property>
+                    <property name="height">0.4895833333333333in</property>
                     <cell id="172">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1953,12 +1957,12 @@ month[dataSetRow["month"]-1];</expression>
                     </cell>
                 </row>
                 <row id="174">
-                    <property name="fontSize">11pt</property>
+                    <property name="fontSize">14pt</property>
                     <property name="borderBottomStyle">none</property>
                     <property name="borderLeftStyle">none</property>
                     <property name="borderRightStyle">none</property>
                     <property name="borderTopStyle">none</property>
-                    <property name="height">0.3645833333333333in</property>
+                    <property name="height">0.4895833333333333in</property>
                     <cell id="175">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1994,12 +1998,12 @@ month[dataSetRow["month"]-1];</expression>
                     </cell>
                 </row>
                 <row id="177">
-                    <property name="fontSize">11pt</property>
+                    <property name="fontSize">14pt</property>
                     <property name="borderBottomStyle">none</property>
                     <property name="borderLeftStyle">none</property>
                     <property name="borderRightStyle">none</property>
                     <property name="borderTopStyle">none</property>
-                    <property name="height">0.3645833333333333in</property>
+                    <property name="height">0.4791666666666667in</property>
                     <cell id="178">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2035,12 +2039,12 @@ month[dataSetRow["month"]-1];</expression>
                     </cell>
                 </row>
                 <row id="180">
-                    <property name="fontSize">11pt</property>
+                    <property name="fontSize">14pt</property>
                     <property name="borderBottomStyle">none</property>
                     <property name="borderLeftStyle">none</property>
                     <property name="borderRightStyle">none</property>
                     <property name="borderTopStyle">none</property>
-                    <property name="height">0.3645833333333333in</property>
+                    <property name="height">0.4791666666666667in</property>
                     <cell id="181">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2068,12 +2072,12 @@ month[dataSetRow["month"]-1];</expression>
                     </cell>
                 </row>
                 <row id="183">
-                    <property name="fontSize">11pt</property>
+                    <property name="fontSize">14pt</property>
                     <property name="borderBottomStyle">none</property>
                     <property name="borderLeftStyle">none</property>
                     <property name="borderRightStyle">none</property>
                     <property name="borderTopStyle">none</property>
-                    <property name="height">0.3854166666666667in</property>
+                    <property name="height">0.5104166666666666in</property>
                     <cell id="184">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2095,23 +2099,6 @@ month[dataSetRow["month"]-1];</expression>
                         <property name="borderLeftWidth">thin</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <property name="paddingTop">5pt</property>
-                    </cell>
-                </row>
-                <row id="277">
-                    <property name="borderBottomStyle">none</property>
-                    <property name="borderLeftStyle">none</property>
-                    <property name="borderRightStyle">none</property>
-                    <property name="borderTopStyle">none</property>
-                    <property name="height">0.3854166666666667in</property>
-                    <cell id="278">
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <property name="paddingTop">5pt</property>
-                    </cell>
-                    <cell id="279">
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <property name="paddingTop">5pt</property>
