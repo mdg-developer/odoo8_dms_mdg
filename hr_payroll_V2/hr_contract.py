@@ -19,5 +19,6 @@ class hr_contract(osv.osv):
     _columns = {  
         'is_daily': fields.boolean('Is Daily Wage'),
         'trans_amt':fields.float('Transportation Allowance'),
+        'service_bonus':fields.float('Service Bonus'),
         'contract_no':fields.char('Contract No'),
         }  

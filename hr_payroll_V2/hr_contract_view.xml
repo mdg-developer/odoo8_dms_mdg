@@ -11,6 +11,7 @@
 				<field name="wage" position="after">
 					<field name="is_daily" />
 					<field name="trans_amt" />
+					<field name="service_bonus" />
 				</field>
 				<field name="type_id" position="after">
 					<field name="contract_no" />
