@@ -2606,6 +2606,7 @@ class mobile_sale_order(osv.osv):
                         'from_location_id':from_location_id,
                         'to_location_id':to_location_id,
                         'sale_team_id':delivery_id,
+                        'issue_from_optional_location':False,
                     }
                     stock_id = stock_request_obj.create(cursor, user, mso_result, context=context)
                     
@@ -2647,8 +2648,13 @@ class mobile_sale_order(osv.osv):
                                 qty_on_hand = 0    
                             if issue_category ==True:
                                 request_ids = stock_request_obj.search(cursor, user , [('issue_from_optional_location','=',True),('sale_team_id', '=', delivery_id),('request_date', '=', sr['request_date']), ('state', '=', 'draft')])
+                                cursor.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (optional_issue_location_id, srl['product_id'],))
+                                qty_on_hand = cursor.fetchone()
+                                if qty_on_hand:
+                                    qty_on_hand = qty_on_hand[0]
+                                else:
+                                    qty_on_hand = 0                                    
                                 if request_ids:
-                                    from_location_id =optional_issue_location_id
                                     issue_stock_id=request_ids[0]
                                 else:
                                     
