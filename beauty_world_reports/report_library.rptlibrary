@@ -107,10 +107,10 @@
                 </ex-property>
             </list-property>
             <property name="odaDriverClass">org.postgresql.Driver</property>
-            <property name="odaURL">jdbc:postgresql://localhost:5432/BW_5Dec</property>
-            <property name="odaUser">openerp</property>
-            <encrypted-property name="odaPassword" encryptionID="base64">b3BlbnBncHdk</encrypted-property>
-            <property name="odaJndiName">java:comp/env/jdbc/ReportDB</property>
+            <property name="odaURL">jdbc:postgresql://128.199.86.3:5432/beautyworld</property>
+            <property name="odaUser">odoo</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">b2RvbzEyMyQ=</encrypted-property>
+			<property name="odaJndiName">java:comp/env/jdbc/REPORTDB</property>
         </oda-data-source>
     </data-sources>
     <data-sets>

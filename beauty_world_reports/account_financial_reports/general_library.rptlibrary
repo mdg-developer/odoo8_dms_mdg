@@ -211,7 +211,7 @@
             <property name="odaURL">jdbc:postgresql://128.199.86.3:5432/beautyworld</property>
             <property name="odaUser">odoo</property>
             <encrypted-property name="odaPassword" encryptionID="base64">b2RvbzEyMyQ=</encrypted-property>
-	    <property name="odaJndiName">java:comp/env/jdbc/REPORTDB</property>
+			<property name="odaJndiName">java:comp/env/jdbc/REPORTDB</property>
         </oda-data-source>
     </data-sources>
     <data-sets>
