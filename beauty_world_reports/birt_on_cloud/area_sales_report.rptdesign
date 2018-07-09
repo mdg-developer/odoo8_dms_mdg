@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="bidiLayoutOrientation">ltr</property>
@@ -15,10 +15,12 @@
         <scalar-parameter name="from_date" id="248">
             <text-property name="promptText">From Date</text-property>
             <property name="valueType">static</property>
+            <property name="isRequired">true</property>
             <property name="dataType">date</property>
             <property name="distinct">true</property>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
             <property name="controlType">text-box</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
@@ -27,10 +29,12 @@
         <scalar-parameter name="to_date" id="249">
             <text-property name="promptText">To Date</text-property>
             <property name="valueType">static</property>
+            <property name="isRequired">true</property>
             <property name="dataType">date</property>
             <property name="distinct">true</property>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
             <property name="controlType">text-box</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
@@ -188,6 +192,26 @@
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
+                <structure>
+                    <property name="name">param_3</property>
+                    <property name="paramName">from_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">3</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_4</property>
+                    <property name="paramName">to_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">4</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
             </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
@@ -298,16 +322,26 @@
 
 select a.city_id,a.city_code,a.city_name,COALESCE(sum(a.credit_sales),0)credit_sales,
 COALESCE(sum(a.sales),0)sales,
-COALESCE(sum(a.cash_sales),0)cash_sales,COALESCE(sum(a.return),0)return from (select distinct so.city city_id,rc.code city_code, rc.name city_name, COALESCE(sum(so.amount_total),0) sales,
-case when so.payment_type='credit' then COALESCE(sum(so.amount_total),0) end as credit_sales,
-case when so.payment_type='cash' then COALESCE(sum(so.amount_total),0) end as cash_sales,
-COALESCE(sum(ai.amount_total),0) as return
+COALESCE(sum(a.cash_sales),0)cash_sales,
+COALESCE(return_tbl.return_amt,0)return from 
 
-from sale_order so, res_city rc,account_invoice ai,account_invoice_line ail,account_journal aj
-where rc.id=so.city and ai.city=so.city and ai.id=ail.invoice_id and ai.journal_id=aj.id and aj.name='Sale Return Journal'
+(select distinct so.city city_id,rc.code city_code, rc.name city_name, COALESCE(sum(so.amount_total),0) sales,
+case when so.payment_type='credit' then COALESCE(sum(so.amount_total),0) end as credit_sales,
+case when so.payment_type='cash' then COALESCE(sum(so.amount_total),0) end as cash_sales
+
+from sale_order so, res_city rc
+where rc.id=so.city 
 and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
-group by so.payment_type,rc.name,so.city,rc.code)a
-group by a.city_id,a.city_code,a.city_name]]></xml-property>
+group by so.payment_type,rc.name,so.city,rc.code
+)a
+left join (select ai.city,COALESCE(sum(ai.amount_total),0)return_amt  from 
+		account_invoice ai,account_journal aj
+		where ai.journal_id=aj.id
+		and aj.name='Sale Return Journal' 
+		and ai.type='out_refund' 
+		and date_invoice::date between ? and ?
+		group by ai.city)return_tbl on return_tbl.city=a.city_id
+group by a.city_id,a.city_code,a.city_name,return_tbl.return_amt]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -334,6 +368,36 @@ group by a.city_id,a.city_code,a.city_name]]></xml-property>
           <design:identifier>
             <design:name></design:name>
             <design:position>2</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>3</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>4</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
@@ -959,6 +1023,8 @@ group by a.city_id,a.city_code,a.city_name]]></xml-property>
                     <property name="verticalAlign">middle</property>
                     <property name="height">0.3416666666666667in</property>
                     <cell id="266">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -972,21 +1038,13 @@ group by a.city_id,a.city_code,a.city_name]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <property name="verticalAlign">middle</property>
-                    </cell>
-                    <cell id="267">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <property name="verticalAlign">middle</property>
+                        <label id="294">
+                            <property name="fontFamily">sans-serif</property>
+                            <property name="fontSize">8pt</property>
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">center</property>
+                            <text-property name="text">Grand Total</text-property>
+                        </label>
                     </cell>
                     <cell id="268">
                         <property name="borderBottomColor">#000000</property>
