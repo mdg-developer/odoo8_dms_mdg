@@ -53,13 +53,13 @@ class exchange_product(osv.osv):
             product_value = product_obj.browse(cr, uid, ids[0], context=context)
             location_id = product_value.customer_id.property_stock_customer.id
             payment_type = product_value.location_type
-            if payment_type == 'Normal return':
+            if payment_type == 'Normal stock returned':
                 from_location_id = product_value.team_id.normal_return_location_id.id
             elif payment_type == 'Expired':
                 from_location_id = product_value.team_id.exp_location_id.id
             elif payment_type == 'Near expiry':
                 from_location_id = product_value.team_id.near_exp_location_id.id
-            elif payment_type == 'Fresh stock not good':
+            elif payment_type == 'Fresh stock minor damage':
                 from_location_id = product_value.team_id.fresh_stock_not_good_location_id.id
             elif payment_type == 'Damaged':
                 from_location_id = product_value.team_id.damage_location_id.id            

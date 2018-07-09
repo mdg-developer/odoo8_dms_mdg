@@ -146,6 +146,9 @@ class stock_requisition(osv.osv):
             sale_team = self.pool.get('crm.case.section').browse(cursor, user, sale_team_id, context=context)
             to_location_id = sale_team.issue_location_id.id            
             from_location_id=sale_team.location_id.id
+        if  vals['issue_from_optional_location']:
+            if vals['issue_from_optional_location']==True:
+                to_location_id=sale_team.optional_issue_location_id.id
         id_code = self.pool.get('ir.sequence').get(cursor, user,
                                                 'request.code') or '/'
         vals['name'] = id_code
@@ -162,8 +165,13 @@ class stock_requisition(osv.osv):
                 issue_date_from = stock_request_data.issue_date
                 issue_date_to = stock_request_data.s_issue_date
                 sale_team_id = stock_request_data.sale_team_id.id
+                optional_issue_location_id = stock_request_data.sale_team_id.optional_issue_location_id.id
                 request_date = stock_request_data.request_date
+                issue_from_optional_location=stock_request_data.issue_from_optional_location
+                if issue_from_optional_location==True:
+                    cr.execute("update stock_requisition set to_location_id=%s where id =%s",(optional_issue_location_id,stock_request_data))
                 location_id = stock_request_data.to_location_id.id
+                    
                 
                 #sql = 'select id from sale_order where delivery_id=%s, shipped=False and is_generate=False and invoiced=False and state not in (%s,%s) and date_order between %s and %s'
                 #cr.execute(sql,(sale_team_id,issue_date_from,issue_date_to))
@@ -171,7 +179,7 @@ class stock_requisition(osv.osv):
                 #order_ids= []
                 print 'issue_date_from',issue_date_from,issue_date_to
                 if issue_date_from == issue_date_to:
-                    order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False), ('is_generate', '=', False), ('invoiced', '=', False), ('state', 'not in', ['done', 'cancel']), ('date_order', '<=', issue_date_from), ('date_order', '<=', issue_date_to)], context=context) 
+                    order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False), ('is_generate', '=', False), ('invoiced', '=', False), ('state', 'not in', ['done', 'cancel']), ('date_order', '>=', issue_date_from), ('date_order', '<=', issue_date_to)], context=context) 
                 else:
                     order_ids = sale_order_obj.search(cr, uid, [('delivery_id', '=', sale_team_id), ('shipped', '=', False), ('is_generate', '=', False), ('invoiced', '=', False), ('state', 'not in', ['done', 'cancel']), ('date_order', '>=', issue_date_from), ('date_order', '<=', issue_date_to)], context=context) 
                 print 'order_idsorder_ids',order_ids
@@ -180,7 +188,7 @@ class stock_requisition(osv.osv):
                 order_list = str(tuple(order_ids))
                 order_list = eval(order_list)
                 if request_date and order_list:
-                        cr.execute("select sol.product_id,sum(product_uom_qty) as qty ,sol.product_uom from sale_order so,sale_order_line sol where so.id=sol.order_id and so.id in %s group by product_id,product_uom", (order_list,))
+                        cr.execute("select sol.product_id,sum(product_uom_qty) as qty ,sol.product_uom from sale_order so,sale_order_line sol,product_product pp ,product_template pt,product_category pc where so.id=sol.order_id  and pp.id=sol.product_id and pp.product_tmpl_id =pt.id and pc.id=pt.categ_id and so.id in %s and pc.issue_from_optional_location =%s group by product_id,product_uom", (order_list,issue_from_optional_location,))
                         sale_record = cr.fetchall()             
                         if sale_record:
                             for sale_data in sale_record:
@@ -203,17 +211,20 @@ class stock_requisition(osv.osv):
                                 cr.execute("update stock_requisition_line set sale_req_quantity=sale_req_quantity+%s,qty_on_hand=%s,sequence=%s where product_id=%s and line_id=%s", (sale_qty, qty_on_hand, sequence,product_id, stock_request_data.id,))
                                             
                 for line in order_ids:
-                    order = sale_order_obj.browse(cr, uid, line, context=context)                
-                    cr.execute("select (date_order+ '6 hour'::interval + '30 minutes'::interval)  from sale_order where id=%s", (order.id,))
-                    sale_date = cr.fetchone()[0]                
-                    so_line_obj.create(cr, uid, {'stock_line_id': stock_request_data.id,
-                                                            'name':order.name,
-                                                             'ref_no':order.tb_ref_no,
-                                                            'amount':order.amount_total,
-                                                            'date':sale_date,
-                                                            'sale_team_id':order.section_id.id,
-                                                            'state':order.state
-                                             }, context=context) 
+                    cr.execute("select so.id from sale_order so,sale_order_line sol,product_product pp ,product_template pt,product_category pc where so.id=sol.order_id  and pp.id=sol.product_id and pp.product_tmpl_id =pt.id and pc.id=pt.categ_id and so.id = %s and pc.issue_from_optional_location =%s ", (line,issue_from_optional_location,))
+                    sale_record = cr.fetchone()
+                    if sale_record:     
+                        order = sale_order_obj.browse(cr, uid, sale_record[0], context=context)
+                        cr.execute("select (date_order+ '6 hour'::interval + '30 minutes'::interval)  from sale_order where id=%s", (order.id,))
+                        sale_date = cr.fetchone()[0]                
+                        so_line_obj.create(cr, uid, {'stock_line_id': stock_request_data.id,
+                                                                'name':order.name,
+                                                                 'ref_no':order.tb_ref_no,
+                                                                'amount':order.amount_total,
+                                                                'date':sale_date,
+                                                                'sale_team_id':order.section_id.id,
+                                                                'state':order.state
+                                                 }, context=context) 
         except ValueError as err: 
             message = 'Unable to refresh sale order %s', err   
             #raise message 
@@ -255,6 +266,7 @@ class stock_requisition(osv.osv):
             sale_team_id = req_value.sale_team_id.id
             branch_id = req_value.branch_id.id
             receiver = req_value.sale_team_id.receiver
+            issue_from_optional_location=req_value.issue_from_optional_location
             for order in req_value.order_line:
                 so_name = order.name
                 order_id = sale_order_obj.search(cr, uid, [('name', '=', so_name)], context=context) 
@@ -268,6 +280,7 @@ class stock_requisition(osv.osv):
                                           'from_location_id':from_location_id,
                                           'vehicle_id':vehicle_no,
                                           'receiver':receiver,
+                                          'issue_from_optional_location':issue_from_optional_location,
                                           'branch_id':branch_id}, context=context)
             
             req_line_id = product_line_obj.search(cr, uid, [('line_id', '=', ids[0])], context=context)
@@ -292,14 +305,13 @@ class stock_requisition(osv.osv):
                         uom_ratio = req_line_value.uom_ratio
                         quantity = req_line_value.req_quantity
                         sequence=req_line_value.sequence
-                        product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)                                                                          
-                        cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (product.product_tmpl_id.big_uom_id.id,))
-                        bigger_qty = cr.fetchone()[0]
-                        bigger_qty = int(bigger_qty)
-                        if  bigger_qty:
-                            small_qty = big_req_quantity * bigger_qty
-                            ori_small_qty = quantity
-                            total = small_qty + ori_small_qty
+                        product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)   
+                        if product_uom  != product.product_tmpl_id.uom_id.id  :                                                                  
+                            cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (product_uom,))
+                            bigger_qty = cr.fetchone()[0]
+                            bigger_qty = int(bigger_qty)
+                            if  bigger_qty:
+                                quantity = quantity * bigger_qty
                         opening_qty=0
                         cr.execute('''select coalesce (sum(transfer_in.qty),0.0) - coalesce (sum(transfer_out.qty),0.0) as opening
                                 from
@@ -353,21 +365,21 @@ class stock_requisition(osv.osv):
                                 opening_qty=opening_data[0]
                             else:
                                 opening_qty=0
-#                         if total > qty_on_hand:
-#                             raise osv.except_osv(_('Warning'),
-#                                      _('Please Check Qty On Hand For (%s)') % (product.name_template,))
-#                         else:          
-                        good_line_obj.create(cr, uid, {'line_id': good_id,
-                                              'product_id': product_id,
-                                              'opening_qty': opening_qty,
-                                              'product_uom': product_uom,
-                                              'uom_ratio':uom_ratio,
-                                             'big_uom_id':big_uom_id,
-                                              'issue_quantity':quantity,
-                                              'big_issue_quantity':big_req_quantity,
-                                              'qty_on_hand':qty_on_hand,
-                                              'sequence':sequence,
-                                              }, context=context)
+                        if quantity > qty_on_hand:
+                            raise osv.except_osv(_('Warning'),
+                                     _('Please Check Qty On Hand For (%s)') % (product.name_template,))
+                        else:          
+                            good_line_obj.create(cr, uid, {'line_id': good_id,
+                                                  'product_id': product_id,
+                                                  'opening_qty': opening_qty,
+                                                  'product_uom': product_uom,
+                                                  'uom_ratio':uom_ratio,
+                                                 'big_uom_id':big_uom_id,
+                                                  'issue_quantity':quantity,
+                                                  'big_issue_quantity':big_req_quantity,
+                                                  'qty_on_hand':qty_on_hand,
+                                                  'sequence':sequence,
+                                                  }, context=context)
         return self.write(cr, uid, ids, {'state':'approve' , 'approve_by':uid,'good_issue_id':good_id})    
     
     def cancel(self, cr, uid, ids, context=None):
