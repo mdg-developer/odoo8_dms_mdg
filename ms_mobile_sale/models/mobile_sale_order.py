@@ -555,6 +555,7 @@ class mobile_sale_order(osv.osv):
                         'create_date':pm['create_datetime'],
                         'location_id':pm['location_id'],
                         'user_id':pm['user_id'] ,
+                        'section_id':pm['saleteam_id'] ,
                         'product_lines':pm['mo_id'],
                     }
                     mo_id = product_mo_obj.create(cursor, user, mso_result, context=context)
