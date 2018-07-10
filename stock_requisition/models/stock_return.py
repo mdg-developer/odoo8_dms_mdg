@@ -332,7 +332,7 @@ class stock_return(osv.osv):
                     from datetime import datetime
                     exchange_date = datetime.strptime(exchange_data.date, DEFAULT_SERVER_DATETIME_FORMAT).strftime(DEFAULT_SERVER_DATE_FORMAT)
                     customer_location_id =exchange_data.customer_id.property_stock_customer.id
-                    out_quant_ids = move_obj.search(cr, uid, [('origin','=',exchange_name),('location_id', '=', customer_location_id)])
+                    out_quant_ids = move_obj.search(cr, uid, [('origin','=',exchange_name),('location_dest_id', '=', customer_location_id)])
                     if  out_quant_ids:        
                         for move_id in out_quant_ids:
                             move_data = move_obj.browse(cr, uid, move_id, context=context)
