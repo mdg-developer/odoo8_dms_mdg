@@ -305,13 +305,14 @@ class stock_requisition(osv.osv):
                         uom_ratio = req_line_value.uom_ratio
                         quantity = req_line_value.req_quantity
                         sequence=req_line_value.sequence
+                        quantity_on_hand=quantity
                         product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)   
                         if product_uom  != product.product_tmpl_id.uom_id.id  :                                                                  
                             cr.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (product_uom,))
                             bigger_qty = cr.fetchone()[0]
                             bigger_qty = int(bigger_qty)
                             if  bigger_qty:
-                                quantity = quantity * bigger_qty
+                                quantity_on_hand = quantity * bigger_qty
                         opening_qty=0
                         cr.execute('''select coalesce (sum(transfer_in.qty),0.0) - coalesce (sum(transfer_out.qty),0.0) as opening
                                 from
@@ -365,7 +366,7 @@ class stock_requisition(osv.osv):
                                 opening_qty=opening_data[0]
                             else:
                                 opening_qty=0
-                        if quantity > qty_on_hand:
+                        if quantity_on_hand > qty_on_hand:
                             raise osv.except_osv(_('Warning'),
                                      _('Please Check Qty On Hand For (%s)') % (product.name_template,))
                         else:          

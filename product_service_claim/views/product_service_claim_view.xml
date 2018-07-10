@@ -85,7 +85,8 @@
 										<tree string="Product Line" editable="bottom"
 											default_order="sequence asc">
 											<field name="sequence" invisible="1" />
-											<field name="product_id" on_change="on_change_product_id(product_id)" domain="[('type','=','service')]"/>
+											<field name="product_id" on_change="on_change_product_id(product_id)"
+												domain="[('type','=','service')]" />
 											<field name="uom_id" />
 											<field name="quantity" />
 											<field name="price_unit" />
@@ -106,14 +107,14 @@
 
 		<!-- Menu -->
 		<record model="ir.actions.act_window" id="open_view_product_service_claim_form">
-			<field name="name">Product Service Claim</field>
+			<field name="name">Service Claim Form</field>
 			<field name="res_model">product.service.claim</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 		</record>
 
-		<menuitem parent="stock.menu_stock_configuration" id="menu_open_view_product_service_claim_form"
-			action="open_view_product_service_claim_form" sequence="7" />
+		<menuitem parent="account.menu_finance_payables" id="menu_open_view_product_service_claim_form"
+			action="open_view_product_service_claim_form" sequence="11" />
 
 	</data>
 </openerp>

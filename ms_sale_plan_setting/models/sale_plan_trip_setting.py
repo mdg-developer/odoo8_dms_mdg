@@ -210,6 +210,7 @@ class sale_plan_for_trip_setting(osv.osv):
         sale_team_id = plan_setting.sale_team_id.id
         sale_team_name = plan_setting.sale_team_id.name
         main_group = plan_setting.main_group.ids
+        trip_name =plan_setting.name
         print ' main_group',main_group
         branch = plan_setting.branch_id.id
         date = plan_setting.date
@@ -231,7 +232,7 @@ class sale_plan_for_trip_setting(osv.osv):
             day_count_15 = plan_line.day_15                           
             partner_id = plan_line.partner_id.id
             if day_count_1 == True:
-                if day_count_1 == True:status = 'Day 1' + '(' + sale_team_name + ')'                
+                if day_count_1 == True:status = trip_name + ' Day 1' + '(' + sale_team_name + ')'                
                 setting_id = plan_obj.search(cr, uid, [('date', '=',date ), ('sale_team', '=', sale_team_id),('name','=',status)], context=context)             
                 if setting_id:
                     cr.execute("select partner_id from res_partner_sale_plan_trip_rel where sale_plan_trip_id=%s and partner_id=%s", (setting_id[0], partner_id,))
@@ -252,7 +253,7 @@ class sale_plan_for_trip_setting(osv.osv):
                         cr.execute('INSERT INTO product_maingroup_sale_plan_trip_rel (sale_plan_trip_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))     
 
             if day_count_2 == True:
-                if day_count_2 == True:status = 'Day 2' + '(' + sale_team_name + ')'                
+                if day_count_2 == True:status =  trip_name + ' Day 2' + '(' + sale_team_name + ')'                
                 setting_id = plan_obj.search(cr, uid, [('date', '=',date ), ('sale_team', '=', sale_team_id),('name','=',status)], context=context)             
                 if setting_id:
                     cr.execute("select partner_id from res_partner_sale_plan_trip_rel where sale_plan_trip_id=%s and partner_id=%s", (setting_id[0], partner_id,))
@@ -272,7 +273,7 @@ class sale_plan_for_trip_setting(osv.osv):
                     for main_group_id in main_group:
                         cr.execute('INSERT INTO product_maingroup_sale_plan_trip_rel (sale_plan_trip_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))     
             if day_count_3 == True:
-                if day_count_3 == True:status = 'Day 3' + '(' + sale_team_name + ')'                
+                if day_count_3 == True:status =  trip_name + ' Day 3' + '(' + sale_team_name + ')'                
                 setting_id = plan_obj.search(cr, uid, [('date', '=',date ), ('sale_team', '=', sale_team_id),('name','=',status)], context=context)             
                 if setting_id:
                     cr.execute("select partner_id from res_partner_sale_plan_trip_rel where sale_plan_trip_id=%s and partner_id=%s", (setting_id[0], partner_id,))
@@ -292,7 +293,7 @@ class sale_plan_for_trip_setting(osv.osv):
                     for main_group_id in main_group:
                         cr.execute('INSERT INTO product_maingroup_sale_plan_trip_rel (sale_plan_trip_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))     
             if day_count_4 == True:
-                if day_count_4 == True:status = 'Day 4' + '(' + sale_team_name + ')'                
+                if day_count_4 == True:status =  trip_name + ' Day 4' + '(' + sale_team_name + ')'                
                 setting_id = plan_obj.search(cr, uid, [('date', '=',date ), ('sale_team', '=', sale_team_id),('name','=',status)], context=context)             
                 if setting_id:
                     cr.execute("select partner_id from res_partner_sale_plan_trip_rel where sale_plan_trip_id=%s and partner_id=%s", (setting_id[0], partner_id,))
@@ -312,7 +313,7 @@ class sale_plan_for_trip_setting(osv.osv):
                     for main_group_id in main_group:
                         cr.execute('INSERT INTO product_maingroup_sale_plan_trip_rel (sale_plan_trip_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))     
             if day_count_5 == True:
-                if day_count_5 == True:status = 'Day 5' + '(' + sale_team_name + ')'                
+                if day_count_5 == True:status =  trip_name + ' Day 5' + '(' + sale_team_name + ')'                
                 setting_id = plan_obj.search(cr, uid, [('date', '=',date ), ('sale_team', '=', sale_team_id),('name','=',status)], context=context)             
                 if setting_id:
                     cr.execute("select partner_id from res_partner_sale_plan_trip_rel where sale_plan_trip_id=%s and partner_id=%s", (setting_id[0], partner_id,))
@@ -332,7 +333,7 @@ class sale_plan_for_trip_setting(osv.osv):
                     for main_group_id in main_group:
                         cr.execute('INSERT INTO product_maingroup_sale_plan_trip_rel (sale_plan_trip_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))     
             if day_count_6 == True:
-                if day_count_6 == True:status = 'Day 6' + '(' + sale_team_name + ')'                
+                if day_count_6 == True:status =  trip_name + ' Day 6' + '(' + sale_team_name + ')'                
                 setting_id = plan_obj.search(cr, uid, [('date', '=',date ), ('sale_team', '=', sale_team_id),('name','=',status)], context=context)             
                 if setting_id:
                     cr.execute("select partner_id from res_partner_sale_plan_trip_rel where sale_plan_trip_id=%s and partner_id=%s", (setting_id[0], partner_id,))
@@ -352,7 +353,7 @@ class sale_plan_for_trip_setting(osv.osv):
                     for main_group_id in main_group:
                         cr.execute('INSERT INTO product_maingroup_sale_plan_trip_rel (sale_plan_trip_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))     
             if day_count_7== True:
-                if day_count_7 == True:status = 'Day 7' + '(' + sale_team_name + ')'                
+                if day_count_7 == True:status =  trip_name + ' Day 7' + '(' + sale_team_name + ')'                
                 setting_id = plan_obj.search(cr, uid, [('date', '=',date ), ('sale_team', '=', sale_team_id),('name','=',status)], context=context)             
                 if setting_id:
                     cr.execute("select partner_id from res_partner_sale_plan_trip_rel where sale_plan_trip_id=%s and partner_id=%s", (setting_id[0], partner_id,))
@@ -372,7 +373,7 @@ class sale_plan_for_trip_setting(osv.osv):
                     for main_group_id in main_group:
                         cr.execute('INSERT INTO product_maingroup_sale_plan_trip_rel (sale_plan_trip_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))     
             if day_count_8 == True:
-                if day_count_8 == True:status = 'Day 8' + '(' + sale_team_name + ')'                
+                if day_count_8 == True:status = trip_name +  ' Day 8' + '(' + sale_team_name + ')'                
                 setting_id = plan_obj.search(cr, uid, [('date', '=',date ), ('sale_team', '=', sale_team_id),('name','=',status)], context=context)             
                 if setting_id:
                     cr.execute("select partner_id from res_partner_sale_plan_trip_rel where sale_plan_trip_id=%s and partner_id=%s", (setting_id[0], partner_id,))
@@ -392,7 +393,7 @@ class sale_plan_for_trip_setting(osv.osv):
                     for main_group_id in main_group:
                         cr.execute('INSERT INTO product_maingroup_sale_plan_trip_rel (sale_plan_trip_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))     
             if day_count_9 == True:
-                if day_count_9 == True:status = 'Day 9' + '(' + sale_team_name + ')'                
+                if day_count_9 == True:status = trip_name +  ' Day 9' + '(' + sale_team_name + ')'                
                 setting_id = plan_obj.search(cr, uid, [('date', '=',date ), ('sale_team', '=', sale_team_id),('name','=',status)], context=context)             
                 if setting_id:
                     cr.execute("select partner_id from res_partner_sale_plan_trip_rel where sale_plan_trip_id=%s and partner_id=%s", (setting_id[0], partner_id,))
@@ -412,7 +413,7 @@ class sale_plan_for_trip_setting(osv.osv):
                     for main_group_id in main_group:
                         cr.execute('INSERT INTO product_maingroup_sale_plan_trip_rel (sale_plan_trip_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))     
             if day_count_10 == True:
-                if day_count_10 == True:status = 'Day 10' + '(' + sale_team_name + ')'                
+                if day_count_10 == True:status =  trip_name + ' Day 10' + '(' + sale_team_name + ')'                
                 setting_id = plan_obj.search(cr, uid, [('date', '=',date ), ('sale_team', '=', sale_team_id),('name','=',status)], context=context)             
                 if setting_id:
                     cr.execute("select partner_id from res_partner_sale_plan_trip_rel where sale_plan_trip_id=%s and partner_id=%s", (setting_id[0], partner_id,))
@@ -432,7 +433,7 @@ class sale_plan_for_trip_setting(osv.osv):
                     for main_group_id in main_group:
                         cr.execute('INSERT INTO product_maingroup_sale_plan_trip_rel (sale_plan_trip_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))     
             if day_count_11 == True:
-                if day_count_11 == True:status = 'Day 11' + '(' + sale_team_name + ')'                
+                if day_count_11 == True:status = trip_name +  ' Day 11' + '(' + sale_team_name + ')'                
                 setting_id = plan_obj.search(cr, uid, [('date', '=',date ), ('sale_team', '=', sale_team_id),('name','=',status)], context=context)             
                 if setting_id:
                     cr.execute("select partner_id from res_partner_sale_plan_trip_rel where sale_plan_trip_id=%s and partner_id=%s", (setting_id[0], partner_id,))
@@ -452,7 +453,7 @@ class sale_plan_for_trip_setting(osv.osv):
                     for main_group_id in main_group:
                         cr.execute('INSERT INTO product_maingroup_sale_plan_trip_rel (sale_plan_trip_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))     
             if day_count_12 == True:
-                if day_count_12 == True:status = 'Day 12' + '(' + sale_team_name + ')'                
+                if day_count_12 == True:status = trip_name +  ' Day 12' + '(' + sale_team_name + ')'                
                 setting_id = plan_obj.search(cr, uid, [('date', '=',date ), ('sale_team', '=', sale_team_id),('name','=',status)], context=context)             
                 if setting_id:
                     cr.execute("select partner_id from res_partner_sale_plan_trip_rel where sale_plan_trip_id=%s and partner_id=%s", (setting_id[0], partner_id,))
@@ -472,7 +473,7 @@ class sale_plan_for_trip_setting(osv.osv):
                     for main_group_id in main_group:
                         cr.execute('INSERT INTO product_maingroup_sale_plan_trip_rel (sale_plan_trip_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))     
             if day_count_13 == True:
-                if day_count_13 == True:status = 'Day 13' + '(' + sale_team_name + ')'                
+                if day_count_13 == True:status = trip_name +  ' Day 13' + '(' + sale_team_name + ')'                
                 setting_id = plan_obj.search(cr, uid, [('date', '=',date ), ('sale_team', '=', sale_team_id),('name','=',status)], context=context)             
                 if setting_id:
                     cr.execute("select partner_id from res_partner_sale_plan_trip_rel where sale_plan_trip_id=%s and partner_id=%s", (setting_id[0], partner_id,))
@@ -492,7 +493,7 @@ class sale_plan_for_trip_setting(osv.osv):
                     for main_group_id in main_group:
                         cr.execute('INSERT INTO product_maingroup_sale_plan_trip_rel (sale_plan_trip_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))     
             if day_count_14 == True:
-                if day_count_14 == True:status = 'Day 14' + '(' + sale_team_name + ')'                
+                if day_count_14 == True:status =  trip_name + ' Day 14' + '(' + sale_team_name + ')'                
                 setting_id = plan_obj.search(cr, uid, [('date', '=',date ), ('sale_team', '=', sale_team_id),('name','=',status)], context=context)             
                 if setting_id:
                     cr.execute("select partner_id from res_partner_sale_plan_trip_rel where sale_plan_trip_id=%s and partner_id=%s", (setting_id[0], partner_id,))
@@ -512,7 +513,7 @@ class sale_plan_for_trip_setting(osv.osv):
                     for main_group_id in main_group:
                         cr.execute('INSERT INTO product_maingroup_sale_plan_trip_rel (sale_plan_trip_id,product_maingroup_id) VALUES (%s,%s)', (plan_id,main_group_id,))     
             if day_count_15== True:
-                if day_count_15 == True:status = 'Day 15' + '(' + sale_team_name + ')'                
+                if day_count_15 == True:status =  trip_name + ' Day 15' + '(' + sale_team_name + ')'                
                 setting_id = plan_obj.search(cr, uid, [('date', '=',date ), ('sale_team', '=', sale_team_id),('name','=',status)], context=context)             
                 if setting_id:
                     cr.execute("select partner_id from res_partner_sale_plan_trip_rel where sale_plan_trip_id=%s and partner_id=%s", (setting_id[0], partner_id,))
