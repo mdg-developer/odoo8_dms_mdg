@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
     <list-property name="propertyBindings">
         <structure>
             <property name="name">queryText</property>
@@ -29,6 +29,7 @@
         <scalar-parameter name="from_date" id="126">
             <text-property name="promptText">From Date</text-property>
             <property name="valueType">static</property>
+            <property name="isRequired">true</property>
             <property name="dataType">date</property>
             <property name="distinct">true</property>
             <list-property name="selectionList"/>
@@ -41,56 +42,64 @@
         <scalar-parameter name="to_date" id="127">
             <text-property name="promptText">To Date</text-property>
             <property name="valueType">static</property>
+            <property name="isRequired">true</property>
             <property name="dataType">date</property>
             <property name="distinct">true</property>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
             <property name="controlType">text-box</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
         <cascading-parameter-group name="NewCascadingParameterGroup1" id="327">
-            <property name="dataSet">branch_DS</property>
-            <property name="dataSetMode">single</property>
+            <property name="dataSet">company</property>
+            <property name="dataSetMode">multiple</property>
             <parameters>
                 <scalar-parameter name="company_id" id="328">
                     <text-property name="promptText">Company</text-property>
                     <property name="valueType">dynamic</property>
                     <property name="isRequired">true</property>
-                    <property name="dataSetName">branch_DS</property>
-                    <expression name="valueExpr">row["company_id"]</expression>
-                    <expression name="labelExpr">row["company_name"]</expression>
+                    <property name="dataSetName">company</property>
+                    <expression name="valueExpr">row["id"]</expression>
+                    <expression name="labelExpr">row["name"]</expression>
+                    <expression name="sortByColumn">dataSetRow["name"]</expression>
+                    <property name="sortDirection">asc</property>
                     <property name="dataType">integer</property>
                     <property name="paramType">simple</property>
                     <property name="controlType">list-box</property>
-                    <property name="fixedOrder">true</property>
+                    <property name="fixedOrder">false</property>
                     <structure name="format"/>
                 </scalar-parameter>
                 <scalar-parameter name="branch_id" id="329">
                     <text-property name="promptText">Branch</text-property>
                     <property name="valueType">dynamic</property>
-                    <property name="isRequired">true</property>
+                    <property name="isRequired">false</property>
                     <property name="dataSetName">branch_DS</property>
                     <expression name="valueExpr">row["branch_id"]</expression>
                     <expression name="labelExpr">row["branch_code"]</expression>
+                    <expression name="sortByColumn">dataSetRow["branch_code"]</expression>
+                    <property name="sortDirection">asc</property>
                     <property name="dataType">integer</property>
                     <property name="paramType">simple</property>
                     <property name="controlType">list-box</property>
-                    <property name="fixedOrder">true</property>
+                    <property name="fixedOrder">false</property>
                     <structure name="format"/>
                 </scalar-parameter>
                 <scalar-parameter name="sales_team_id" id="338">
                     <text-property name="promptText">Sales Team</text-property>
                     <property name="valueType">dynamic</property>
-                    <property name="isRequired">true</property>
+                    <property name="isRequired">false</property>
                     <property name="dataSetName">branch_DS</property>
                     <expression name="valueExpr">row["sale_team_id"]</expression>
                     <expression name="labelExpr">row["sale_team_code"]</expression>
+                    <expression name="sortByColumn">dataSetRow["sale_team_code"]</expression>
+                    <property name="sortDirection">asc</property>
                     <property name="dataType">integer</property>
                     <property name="paramType">simple</property>
                     <property name="controlType">list-box</property>
-                    <property name="fixedOrder">true</property>
+                    <property name="fixedOrder">false</property>
                     <structure name="format"/>
                 </scalar-parameter>
                 <scalar-parameter name="customer_id" id="339">
@@ -100,9 +109,11 @@
                     <property name="dataSetName">branch_DS</property>
                     <expression name="valueExpr">row["customer_id"]</expression>
                     <expression name="labelExpr">row["customer_name"]</expression>
+                    <expression name="sortByColumn">dataSetRow["customer_name"]</expression>
+                    <property name="sortDirection">asc</property>
                     <property name="dataType">integer</property>
                     <property name="controlType">list-box</property>
-                    <property name="fixedOrder">true</property>
+                    <property name="fixedOrder">false</property>
                     <structure name="format"/>
                 </scalar-parameter>
             </parameters>
@@ -134,67 +145,75 @@
     </data-sources>
     <data-sets>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="Data Set" id="77">
-            <list-property name="computedColumns">
-                <structure>
-                    <property name="name">closing_balance</property>
-                    <expression name="expression">row["opening_balance"]+row["credit_sales_amt"]-row["credit_collection_amount"]-row["sales_return"]-row["transport_charges"]</expression>
-                    <property name="dataType">float</property>
-                </structure>
-            </list-property>
             <list-property name="columnHints">
                 <structure>
                     <property name="columnName">seq</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">seq</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">seq</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">name</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">name</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">customer_code</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">customer_code</text-property>
+                    <property name="onColumnLayout">false</property>
+                    <text-property name="heading">customer_code</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">credit_limit</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">credit_limit</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">credit_limit</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">opening_balance</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">opening_balance</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">opening_balance</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">credit_sales_amt</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">credit_sales_amt</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">credit_sales_amt</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">credit_collection_amount</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">credit_collection_amount</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">credit_collection_amount</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">discount</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">discount</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">discount</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">sales_return</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">sales_return</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">sales_return</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">transport_charges</property>
+                    <property name="columnName">closing_balance</property>
                     <property name="analysis">measure</property>
-                    <text-property name="displayName">transport_charges</text-property>
-                    <text-property name="heading">transport_charges</text-property>
+                    <text-property name="displayName">closing_balance</text-property>
+                    <text-property name="heading">closing_balance</text-property>
                 </structure>
             </list-property>
             <list-property name="parameters">
@@ -205,6 +224,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">1</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -215,6 +235,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">2</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -225,6 +246,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">3</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -235,6 +257,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">4</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -245,6 +268,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">5</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -255,6 +279,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">6</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -265,6 +290,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">7</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -275,6 +301,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">8</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -285,6 +312,18 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">9</property>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_10</property>
+                    <property name="paramName">to_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">10</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -303,43 +342,43 @@
                     </structure>
                     <structure>
                         <property name="position">3</property>
+                        <property name="name">customer_code</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
                         <property name="name">credit_limit</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">4</property>
+                        <property name="position">5</property>
                         <property name="name">opening_balance</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">5</property>
+                        <property name="position">6</property>
                         <property name="name">credit_sales_amt</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">6</property>
+                        <property name="position">7</property>
                         <property name="name">credit_collection_amount</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">7</property>
+                        <property name="position">8</property>
                         <property name="name">discount</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">8</property>
+                        <property name="position">9</property>
                         <property name="name">sales_return</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">9</property>
-                        <property name="name">transport_charges</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
                         <property name="position">10</property>
                         <property name="name">closing_balance</property>
-                        <property name="dataType">float</property>
+                        <property name="dataType">decimal</property>
                     </structure>
                 </list-property>
             </structure>
@@ -399,106 +438,161 @@ else
                 </structure>
                 <structure>
                     <property name="position">3</property>
+                    <property name="name">customer_code</property>
+                    <property name="nativeName">customer_code</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
                     <property name="name">credit_limit</property>
                     <property name="nativeName">credit_limit</property>
                     <property name="dataType">float</property>
                     <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
-                    <property name="position">4</property>
+                    <property name="position">5</property>
                     <property name="name">opening_balance</property>
                     <property name="nativeName">opening_balance</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">5</property>
+                    <property name="position">6</property>
                     <property name="name">credit_sales_amt</property>
                     <property name="nativeName">credit_sales_amt</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">6</property>
+                    <property name="position">7</property>
                     <property name="name">credit_collection_amount</property>
                     <property name="nativeName">credit_collection_amount</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">7</property>
+                    <property name="position">8</property>
                     <property name="name">discount</property>
                     <property name="nativeName">discount</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">8</property>
+                    <property name="position">9</property>
                     <property name="name">sales_return</property>
                     <property name="nativeName">sales_return</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">9</property>
-                    <property name="name">transport_charges</property>
-                    <property name="nativeName">transport_charges</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
+                    <property name="position">10</property>
+                    <property name="name">closing_balance</property>
+                    <property name="nativeName">closing_balance</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select row_number() over (order by trim(name)) as seq,name,credit_limit,
-(select COALESCE(sum(debit-credit),0) 
-from account_move am,account_move_line aml,account_account aa
-where am.id=aml.move_id
-and aml.account_id=aa.id
-and type='receivable'
-and reconcile_id is null
-and aml.partner_id=rp.id
-and am.date<?
---$amlanalytic$
+            <xml-property name="queryText"><![CDATA[select row_number() over (order by trim(rp.name)) as seq,rp.name,rp.customer_code,credit_limit,
+(
+	select COALESCE(sum(aml.debit)- sum(aml.credit),0) as opening
+	from account_move_line aml,account_account aa,account_move am
+	left join account_invoice ai on am.id=ai.move_id
+	where am.id=aml.move_id
+	and aml.account_id=aa.id
+	and aa.type='receivable'
+	--and reconcile_id is null
+	and rp.id=aml.partner_id
+	and am.date <= ?
+	and (am.name not like '%INV%' or ai.payment_type ='credit')
+	--$amlanalytic$
 ) opening_balance,
-(select COALESCE(sum(amount_total),0) 
-from sale_order
-where partner_id=rp.id
-and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
-and state not in ('draft','cancel')
-and payment_type='credit'
+(
+	select  COALESCE(sum(credit_sale),0) credit from (
+	select (ai.amount_untaxed + ai.discount_total) as credit_sale
+	from account_invoice ai,account_invoice_line ail
+	where rp.id=ai.partner_id
+	and ai.id=ail.invoice_id
+	and ((ai.date_invoice at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+	and ai.state not in ('draft','cancel')	
+	and ai.type ='out_invoice'
+	and ai.payment_type='credit'
+	--$ailanalytic$
+	group by ai.amount_untaxed,ai.discount_total,ai.id)credit
 ) credit_sales_amt,
-(select COALESCE(sum(avl.amount),0)
-from account_voucher av,account_voucher_line avl,account_move_line aml,sale_order so
-where av.id=avl.voucher_id
-and avl.move_line_id=aml.id
-and aml.ref=so.name
-and av.partner_id=rp.id
-and av.date between ? and ?
-and av.state not in ('draft','cancel')
-and av.type='receipt'
-and payment_type='credit'
---$amlanalytic$
+(
+	select COALESCE(av.amount,0)
+	from account_voucher av,account_voucher_line avl,account_move_line aml,sale_order so
+	where av.id=avl.voucher_id
+	and avl.move_line_id=aml.id
+	and aml.ref=so.name
+	and rp.id=av.partner_id
+	and av.date between ? and ?
+	and av.state not in ('draft','cancel')
+	and av.type='receipt'
+	and so.payment_type='credit'
+	--$amlanalytic$
+	group by av.id
 ) credit_collection_amount,
-(select COALESCE((sum(amount_untaxed)+sum(total_dis))-sum(amount_total)-sum(amount_tax),0)
-from sale_order
-where partner_id=rp.id
-and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
-and state not in ('draft','cancel')
-and payment_type='credit'
+(
+	select COALESCE(sum(discount_total),0) discount_total from (
+	select ai.discount_total as discount_total
+	from account_invoice ai,account_invoice_line ail
+	where rp.id=ai.partner_id
+	and ((ai.date_invoice at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+	and ai.state not in ('draft','cancel')	
+	and ai.type ='out_invoice'
+	and ai.payment_type='credit'
+	group by ai.id ) discount
+	--$ailanalytic$
 ) discount,
-(select COALESCE(sum(ai.amount_total),0)return_amt  from 
-account_invoice ai,account_invoice_line ail,account_journal aj
-where ai.id=ail.invoice_id and ai.journal_id=aj.id and ai.partner_id=rp.id
-and aj.name='Sale Return Journal' 
-and ai.type='out_refund'
-and date_invoice::date between ? and ?
---$ailanalytic$
-) sales_return,0 transport_charges
+-- (
+-- 	select COALESCE(sum(debit-credit),0) 
+-- 	from account_move am,account_move_line aml,account_account aa
+-- 	where am.id=aml.move_id
+-- 	and aml.account_id=aa.id
+-- 	and aa.code='701000'
+-- 	and rp.id=aml.partner_id
+-- 	and am.date between ? and ?
+-- 	--$amlanalytic$
+-- ) transport_charges,
+(
+	select sum(return_amt) as return_amt from (
+	select COALESCE(ai.amount_total,0) as return_amt from 
+	account_invoice ai,account_invoice_line ail,account_journal aj
+	where ai.id=ail.invoice_id and ai.journal_id=aj.id 
+	and rp.id=ai.partner_id
+	and aj.name='Sale Return Journal' 
+	and ai.state not in ('draft','cancel')
+	and ai.type='out_refund'
+	and ai.payment_type='credit'
+	and date_invoice::date between ? and ?
+	group by ai.id )return
+	--$ailanalytic$
+) sales_return,
+( 
+	select  COALESCE(sum(debit-credit),0) as closing
+	from account_move_line aml,account_account aa,account_move am
+	left join account_invoice ai on am.id=ai.move_id
+	where am.id=aml.move_id
+	and aml.account_id=aa.id
+	and aa.type='receivable'
+	--and aml.reconcile_id is null
+	and aml.partner_id=rp.id
+	and am.date <= ?
+	and (am.name not like '%INV%' or ai.payment_type ='credit')
+	and rp.id=46121
+	--$amlanalytic$
+) closing_balance
 from res_partner rp,sale_team_customer_rel rel
 where rp.id=rel.partner_id
-and customer='true'
+and rp.customer='true'
+and rp.active='true'
 --$company_id$
 --$branch_id$
 --$sales_team_id$
 --$customer_id$
+group by rp.id
 order by name]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
@@ -631,6 +725,21 @@ order by name]]></xml-property>
           <design:identifier>
             <design:name></design:name>
             <design:position>9</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>10</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
@@ -1536,12 +1645,6 @@ dataSetRow["discount"]&#13;
                     <property name="dataType">integer</property>
                 </structure>
                 <structure>
-                    <property name="name">transport_charges</property>
-                    <text-property name="displayName">transport_charges</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["transport_charges"]</expression>
-                    <property name="dataType">integer</property>
-                </structure>
-                <structure>
                     <property name="name">closing_balance</property>
                     <text-property name="displayName">closing_balance</text-property>
                     <expression name="expression" type="javascript">dataSetRow["closing_balance"]</expression>
@@ -1596,18 +1699,6 @@ dataSetRow["discount"]&#13;
                     <property name="allowExport">true</property>
                 </structure>
                 <structure>
-                    <property name="name">Aggregation_4</property>
-                    <property name="dataType">float</property>
-                    <property name="aggregateFunction">SUM</property>
-                    <list-property name="arguments">
-                        <structure>
-                            <property name="name">Expression</property>
-                            <expression name="value" type="javascript">row["transport_charges"]</expression>
-                        </structure>
-                    </list-property>
-                    <property name="allowExport">true</property>
-                </structure>
-                <structure>
                     <property name="name">Aggregation_5</property>
                     <property name="dataType">float</property>
                     <property name="aggregateFunction">SUM</property>
@@ -1637,6 +1728,12 @@ dataSetRow["discount"]&#13;
                     <expression name="expression" type="javascript">dataSetRow["credit_limit"]</expression>
                     <property name="dataType">float</property>
                 </structure>
+                <structure>
+                    <property name="name">closing_balance_1</property>
+                    <text-property name="displayName">closing_balance</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["closing_balance"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
             </list-property>
             <column id="52">
                 <property name="width">0.5in</property>
@@ -1654,7 +1751,6 @@ dataSetRow["discount"]&#13;
             <column id="56"/>
             <column id="57"/>
             <column id="58"/>
-            <column id="59"/>
             <column id="60">
                 <property name="width">1.5in</property>
             </column>
@@ -1803,23 +1899,6 @@ dataSetRow["discount"]&#13;
                             <property name="fontSize">9pt</property>
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Sale Return</text-property>
-                        </label>
-                    </cell>
-                    <cell id="24">
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <property name="verticalAlign">middle</property>
-                        <label id="70">
-                            <property name="fontFamily">sans-serif</property>
-                            <property name="fontSize">9pt</property>
-                            <property name="fontWeight">bold</property>
-                            <text-property name="text">Transport Charges</text-property>
                         </label>
                     </cell>
                     <cell id="25">
@@ -2025,27 +2104,6 @@ dataSetRow["discount"]&#13;
                             <property name="resultSetColumn">sales_return</property>
                         </data>
                     </cell>
-                    <cell id="36">
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <data id="87">
-                            <property name="fontFamily">sans-serif</property>
-                            <property name="fontSize">9pt</property>
-                            <property name="paddingRight">3pt</property>
-                            <structure name="numberFormat">
-                                <property name="category">Currency</property>
-                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
-                            </structure>
-                            <property name="textAlign">right</property>
-                            <property name="resultSetColumn">transport_charges</property>
-                        </data>
-                    </cell>
                     <cell id="37">
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2055,10 +2113,9 @@ dataSetRow["discount"]&#13;
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="88">
+                        <data id="457">
                             <property name="fontFamily">sans-serif</property>
                             <property name="fontSize">9pt</property>
-                            <property name="paddingRight">3pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
                                 <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
@@ -2208,28 +2265,6 @@ dataSetRow["discount"]&#13;
                             </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">Aggregation_3</property>
-                        </data>
-                    </cell>
-                    <cell id="48">
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <data id="93">
-                            <property name="fontFamily">sans-serif</property>
-                            <property name="fontSize">9pt</property>
-                            <property name="fontWeight">bold</property>
-                            <property name="paddingRight">3pt</property>
-                            <structure name="numberFormat">
-                                <property name="category">Currency</property>
-                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
-                            </structure>
-                            <property name="textAlign">right</property>
-                            <property name="resultSetColumn">Aggregation_4</property>
                         </data>
                     </cell>
                     <cell id="49">
