@@ -640,13 +640,13 @@ class stock_return(osv.osv):
         'from_wh_exp_location_id': fields.many2one('stock.location', 'From Expiry location'),
         'from_wh_near_exp_location_id': fields.many2one('stock.location', 'From Near Expiry location'),
         'from_wh_damage_location_id': fields.many2one('stock.location', 'From Damage location'),
-        'from_wh_fresh_stock_not_good_location_id': fields.many2one('stock.location', 'From Fresh Stock Not Good location'),
+        'from_wh_fresh_stock_not_good_location_id': fields.many2one('stock.location', 'From Fresh stock minor damage location'),
         
         'to_wh_normal_return_location_id': fields.many2one('stock.location', 'To Normal Return location'),
         'to_wh_exp_location_id': fields.many2one('stock.location', 'To Expiry location'),
         'to_wh_near_exp_location_id': fields.many2one('stock.location', 'To Near Expiry location'),
         'to_wh_damage_location_id': fields.many2one('stock.location', 'To Damage location'),
-        'to_wh_fresh_stock_not_good_location_id': fields.many2one('stock.location', 'To Fresh Stock Not Good location'),
+        'to_wh_fresh_stock_not_good_location_id': fields.many2one('stock.location', 'To Fresh stock minor damage location'),
          'issue_from_optional_location':fields.boolean('Issue from Optional Location'),
 
 }		
