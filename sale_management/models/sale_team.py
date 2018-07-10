@@ -260,7 +260,7 @@ class crm_case_section(osv.osv):
                 'exp_location_id': fields.many2one('stock.location', 'Expiry location', required=True),
                 'near_exp_location_id': fields.many2one('stock.location', 'Near Expiry location', required=True),
                 'damage_location_id': fields.many2one('stock.location', 'Damage location', required=True),
-                'fresh_stock_not_good_location_id': fields.many2one('stock.location', 'Fresh Stock Not Good location', required=True),
+                'fresh_stock_not_good_location_id': fields.many2one('stock.location', 'Fresh stock minor damage location', required=True),
                 'optional_issue_location_id': fields.many2one('stock.location', 'Optional Issue Location'),
         }
     _sql_constraints = [
