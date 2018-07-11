@@ -521,7 +521,8 @@ else
 	group by ai.amount_untaxed,ai.discount_total,ai.id)credit
 ) credit_sales_amt,
 (
-	select COALESCE(av.amount,0)
+	select sum(collection) from(
+	select COALESCE(av.amount,0) as collection
 	from account_voucher av,account_voucher_line avl,account_move_line aml,sale_order so
 	where av.id=avl.voucher_id
 	and avl.move_line_id=aml.id
@@ -532,7 +533,7 @@ else
 	and av.type='receipt'
 	and so.payment_type='credit'
 	--$amlanalytic$
-	group by av.id
+	group by av.id)collecition
 ) credit_collection_amount,
 (
 	select COALESCE(sum(discount_total),0) discount_total from (
