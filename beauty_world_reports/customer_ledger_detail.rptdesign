@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
+    <list-property name="propertyBindings">
+        <structure>
+            <property name="name">queryText</property>
+            <property name="id">113</property>
+        </structure>
+        <structure>
+            <property name="name">queryTimeOut</property>
+            <property name="id">113</property>
+        </structure>
+        <structure>
+            <property name="name">rowFetchSize</property>
+            <property name="id">113</property>
+        </structure>
+    </list-property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="bidiLayoutOrientation">ltr</property>
@@ -39,58 +53,66 @@
             </structure>
         </scalar-parameter>
         <cascading-parameter-group name="NewCascadingParameterGroup" id="121">
-            <property name="dataSet">all_ds</property>
-            <property name="dataSetMode">single</property>
+            <property name="dataSet">company</property>
+            <property name="dataSetMode">multiple</property>
             <parameters>
                 <scalar-parameter name="company_id" id="122">
                     <text-property name="promptText">Company</text-property>
                     <property name="valueType">dynamic</property>
                     <property name="isRequired">true</property>
-                    <property name="dataSetName">all_ds</property>
-                    <expression name="valueExpr">row["company_id"]</expression>
-                    <expression name="labelExpr">row["company_name"]</expression>
+                    <property name="dataSetName">company</property>
+                    <expression name="valueExpr">row["id"]</expression>
+                    <expression name="labelExpr">row["name"]</expression>
+                    <expression name="sortByColumn">dataSetRow["name"]</expression>
+                    <property name="sortDirection">asc</property>
                     <property name="dataType">integer</property>
                     <property name="paramType">simple</property>
                     <property name="controlType">list-box</property>
-                    <property name="fixedOrder">true</property>
+                    <property name="fixedOrder">false</property>
                     <structure name="format"/>
                 </scalar-parameter>
                 <scalar-parameter name="branch_id" id="123">
                     <text-property name="promptText">Branch</text-property>
                     <property name="valueType">dynamic</property>
-                    <property name="isRequired">true</property>
-                    <property name="dataSetName">company</property>
+                    <property name="isRequired">false</property>
+                    <property name="dataSetName">all_ds</property>
                     <expression name="valueExpr">row["branch_id"]</expression>
                     <expression name="labelExpr">row["branch_code"]</expression>
+                    <expression name="sortByColumn">dataSetRow["branch_code"]</expression>
+                    <property name="sortDirection">asc</property>
                     <property name="dataType">integer</property>
                     <property name="paramType">simple</property>
                     <property name="controlType">list-box</property>
-                    <property name="fixedOrder">true</property>
+                    <property name="fixedOrder">false</property>
                     <structure name="format"/>
                 </scalar-parameter>
                 <scalar-parameter name="sales_team_id" id="124">
                     <text-property name="promptText">Sales Team</text-property>
                     <property name="valueType">dynamic</property>
-                    <property name="isRequired">true</property>
-                    <property name="dataSetName">company</property>
+                    <property name="isRequired">false</property>
+                    <property name="dataSetName">all_ds</property>
                     <expression name="valueExpr">row["sale_team_id"]</expression>
                     <expression name="labelExpr">row["sale_team_code"]</expression>
+                    <expression name="sortByColumn">dataSetRow["sale_team_code"]</expression>
+                    <property name="sortDirection">asc</property>
                     <property name="dataType">integer</property>
                     <property name="paramType">simple</property>
                     <property name="controlType">list-box</property>
-                    <property name="fixedOrder">true</property>
+                    <property name="fixedOrder">false</property>
                     <structure name="format"/>
                 </scalar-parameter>
                 <scalar-parameter name="customer_id" id="322">
                     <text-property name="promptText">Customer</text-property>
                     <property name="valueType">dynamic</property>
                     <property name="isRequired">false</property>
-                    <property name="dataSetName">company</property>
+                    <property name="dataSetName">all_ds</property>
                     <expression name="valueExpr">row["customer_id"]</expression>
                     <expression name="labelExpr">row["customer_name"]</expression>
+                    <expression name="sortByColumn">dataSetRow["customer_name"]</expression>
+                    <property name="sortDirection">asc</property>
                     <property name="dataType">integer</property>
                     <property name="controlType">list-box</property>
-                    <property name="fixedOrder">true</property>
+                    <property name="fixedOrder">false</property>
                     <structure name="format"/>
                 </scalar-parameter>
             </parameters>
@@ -195,6 +217,7 @@
 ]]></xml-property>
         </oda-data-set>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="Data Set" id="113">
+            <property name="nullsOrdering">nulls lowest</property>
             <list-property name="columnHints">
                 <structure>
                     <property name="columnName">type</property>
@@ -207,6 +230,12 @@
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">customer_name</text-property>
                     <text-property name="heading">customer_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">customer_code</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">customer_code</text-property>
+                    <text-property name="heading">customer_code</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">customer_id</property>
@@ -271,35 +300,32 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">1</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_2</property>
-                    <property name="paramName">from_date</property>
+                    <property name="paramName">to_date</property>
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">2</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_3</property>
-                    <property name="paramName">to_date</property>
+                    <property name="paramName">from_date</property>
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">3</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
                     <property name="name">param_4</property>
-                    <property name="paramName">from_date</property>
+                    <property name="paramName">to_date</property>
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
@@ -309,11 +335,81 @@
                 </structure>
                 <structure>
                     <property name="name">param_5</property>
-                    <property name="paramName">to_date</property>
+                    <property name="paramName">from_date</property>
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">5</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_6</property>
+                    <property name="paramName">to_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">6</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_7</property>
+                    <property name="paramName">from_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">7</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_8</property>
+                    <property name="paramName">to_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">8</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_9</property>
+                    <property name="paramName">from_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">9</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_10</property>
+                    <property name="paramName">to_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">10</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_11</property>
+                    <property name="paramName">from_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">11</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_12</property>
+                    <property name="paramName">to_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">12</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -332,46 +428,51 @@
                     </structure>
                     <structure>
                         <property name="position">3</property>
+                        <property name="name">customer_code</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
                         <property name="name">customer_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">4</property>
+                        <property name="position">5</property>
                         <property name="name">ref_no</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">5</property>
+                        <property name="position">6</property>
                         <property name="name">date</property>
                         <property name="dataType">date</property>
                     </structure>
                     <structure>
-                        <property name="position">6</property>
+                        <property name="position">7</property>
                         <property name="name">inv</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">7</property>
+                        <property name="position">8</property>
                         <property name="name">collection</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">8</property>
+                        <property name="position">9</property>
                         <property name="name">cn</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">9</property>
+                        <property name="position">10</property>
                         <property name="name">discount</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">10</property>
+                        <property name="position">11</property>
                         <property name="name">closing_balance</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">11</property>
+                        <property name="position">12</property>
                         <property name="name">sequence</property>
                         <property name="dataType">integer</property>
                     </structure>
@@ -434,142 +535,221 @@ else
                 </structure>
                 <structure>
                     <property name="position">3</property>
+                    <property name="name">customer_code</property>
+                    <property name="nativeName">customer_code</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
                     <property name="name">customer_id</property>
                     <property name="nativeName">customer_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">4</property>
+                    <property name="position">5</property>
                     <property name="name">ref_no</property>
                     <property name="nativeName">ref_no</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">5</property>
+                    <property name="position">6</property>
                     <property name="name">date</property>
                     <property name="nativeName">date</property>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                 </structure>
                 <structure>
-                    <property name="position">6</property>
+                    <property name="position">7</property>
                     <property name="name">inv</property>
                     <property name="nativeName">inv</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">7</property>
+                    <property name="position">8</property>
                     <property name="name">collection</property>
                     <property name="nativeName">collection</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">8</property>
+                    <property name="position">9</property>
                     <property name="name">cn</property>
                     <property name="nativeName">cn</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">9</property>
+                    <property name="position">10</property>
                     <property name="name">discount</property>
                     <property name="nativeName">discount</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">10</property>
+                    <property name="position">11</property>
                     <property name="name">closing_balance</property>
                     <property name="nativeName">closing_balance</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">11</property>
+                    <property name="position">12</property>
                     <property name="name">sequence</property>
                     <property name="nativeName">sequence</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[with receivable_amount as (
-	select 'INV'::character varying as type,trim(rp.name) customer_name,rp.id customer_id,'Opening Balance'::character varying ref_no,null::date date,null::numeric inv,null::numeric collection,0 cn,0 discount,COALESCE(sum(debit-credit),0) closing_balance,1 as sequence
+            <xml-property name="queryText"><![CDATA[with receivable_amount as 
+(
+	
+	select 'INV'::character varying as type,trim(rp.name) customer_name,rp.customer_code customer_code,rp.id customer_id,'Opening Balance'::character varying ref_no,null::date date,null::numeric inv,null::numeric collection,null::numeric cn,0 discount,COALESCE(sum(debit-credit),0) closing_balance,1 as sequence
 	from account_move am
 	left join account_move_line aml on (am.id=aml.move_id)
 	left join account_account aa on (aml.account_id=aa.id)
 	left join res_partner rp on (aml.partner_id=rp.id)
+	left join account_invoice ai on am.id=ai.move_id
 	where aa.type='receivable'
 	and reconcile_id is null	
-	and am.date<?
+	and am.date <=?
+	and (am.name not like '%INV%' or ai.payment_type ='credit')
 	--$amlanalytic$
-	group by rp.name,customer_id)
-select null::character varying as type,trim(rp.name) customer_name,rp.id customer_id,'Opening Balance'::character varying ref_no,null::date date,null::numeric inv,null::numeric collection,
-null::numeric cn,null::numeric discount,
-case when (select closing_balance from receivable_amount where customer_id=rp.id) is null then 0 else (select closing_balance from receivable_amount where customer_id=rp.id) end as closing_balance,1 as sequence
-from res_partner rp
-left join account_move_line aml on (rp.id=aml.partner_id)
-join account_move am on (am.id=aml.move_id)
-join account_account aa on (aml.account_id=aa.id)
-join account_invoice inv on (rp.id=inv.partner_id)
-where rp.active='true'
-and rp.customer='true'
-and payment_type='credit'
---$company_id$
---$branch_id$
---$sales_team_id$
---$customer_id$
---$amlanalytic$
-group by rp.name,rp.id
+	group by rp.name,customer_id		
+)
+
+	select null::character varying as type,trim(rp.name) customer_name,rp.customer_code as customer_code,rp.id customer_id,'Opening Balance'::character varying ref_no,null::date date,null::numeric inv,null::numeric collection,
+	null::numeric cn,null::numeric discount,
+	case when (select closing_balance from receivable_amount where customer_id=rp.id) is null then 0 else (select closing_balance from receivable_amount where customer_id=rp.id) end as closing_balance,1 as sequence
+	from res_partner rp
+	left join account_move_line aml on (rp.id=aml.partner_id)
+	join account_move am on (am.id=aml.move_id)
+	join account_account aa on (aml.account_id=aa.id)
+	join account_invoice inv on (rp.id=inv.partner_id)
+	where rp.active='true'
+	and rp.customer='true'
+	--and rp.id=res.id
+	--$company_id$
+	--$branch_id$
+	--$sales_team_id$
+	--$customer_id$
+	--$amlanalytic$
+	group by rp.name,rp.id
+
+union
+select * from 
+(
+with receivable_amount1 as 
+(
+	
+	select 'INV'::character varying as type,trim(rp.name) customer_name,rp.customer_code customer_code,rp.id customer_id,'Closing Balance'::character varying ref_no,null::date date,null::numeric inv,null::numeric collection,null::numeric cn,0 discount,COALESCE(sum(debit-credit),0) closing_balance,3 as sequence
+	from account_move am
+	left join account_move_line aml on (am.id=aml.move_id)
+	left join account_account aa on (aml.account_id=aa.id)
+	left join res_partner rp on (aml.partner_id=rp.id)
+	left join account_invoice ai on am.id=ai.move_id
+	where aa.type='receivable'
+	and reconcile_id is null	
+	and am.date<=?
+	and (am.name not like '%INV%' or ai.payment_type ='credit')
+	--$amlanalytic$
+	group by rp.name,customer_id		
+)
+
+	select null::character varying as type,trim(rp.name) customer_name,rp.customer_code as customer_code,rp.id customer_id,'Closing Balance'::character varying ref_no,null::date date,null::numeric inv,null::numeric collection,
+	null::numeric cn,null::numeric discount,
+	case when (select closing_balance from receivable_amount1 where customer_id=rp.id) is null then 0 else (select closing_balance from receivable_amount1 where customer_id=rp.id) end as closing_balance,3 as sequence
+	from res_partner rp
+	left join account_move_line aml on (rp.id=aml.partner_id)
+	join account_move am on (am.id=aml.move_id)
+	join account_account aa on (aml.account_id=aa.id)
+	join account_invoice inv on (rp.id=inv.partner_id)
+	where rp.active='true'
+	and rp.customer='true'
+	and payment_type='credit'
+	--$company_id$
+	--$branch_id$
+	--$sales_team_id$
+	--$customer_id$
+	--$amlanalytic$
+	group by rp.name,rp.id
+) closing 
 
 union
 
-select type,customer_name,customer_id,ref_no,date,inv,COALESCE(collection,0)collection,cn,discount,(inv-collection-cn) closing_balance,sequence 
-from 
-(
-select 'INV'::character varying as type,trim(rp.name) customer_name,number ref_no,date_invoice date,sum(amount_total) inv,
-(select COALESCE(sum(avl.amount),0) 
-from account_voucher av,account_voucher_line avl,account_move_line aml,account_invoice ai
-where av.id=avl.voucher_id
-and avl.move_line_id=aml.id
-and aml.ref=ai.origin
-and ai.number=inv.number
-and av.state not in ('draft','cancel')
-and av.type='receipt'
---$amlanalytic$
-and payment_type='credit') collection,
-(select COALESCE(sum(ai.amount_total),0)return_amt from 
-account_invoice ai,account_journal aj, account_invoice_line ail 
-where ai.journal_id=aj.id and ai.id=ail.invoice_id
-and aj.name='Sale Return Journal' 
-and ai.type='out_refund'
-and ai.number=inv.number
-and ai.state not in ('draft','cancel')
-and date_invoice between ? and ?
---$ailanalytic$
-)cn,
-(select COALESCE((sum(amount_untaxed)+sum(discount_total))-sum(amount_total)-sum(amount_tax),0)
-from account_invoice, account_invoice_line ail
-where number=inv.number and account_invoice.id=ail.invoice_id
-and state not in ('draft','cancel')
---$ailanalytic$
-and payment_type='credit') discount,2 as sequence,rp.id customer_id
-from account_invoice inv,res_partner rp, account_invoice_line ail
-where inv.partner_id=rp.id and ail.invoice_id=inv.id
-and state not in ('draft','cancel')
-and date_invoice between ? and ?
-and payment_type='credit'
---$company_id$
---$branch_id$
---$sales_team_id$
---$customer_id$
---$ailanalytic$
-group by rp.name,rp.id,number,date_invoice
-)A
-order by sequence]]></xml-property>
+	select type,customer_name,customer_code,customer_id,ref_no,date,
+	COALESCE(inv,0)inv,COALESCE(collection,0)collection,COALESCE(cn,0)cn,COALESCE(discount,0)discount,(
+	case when inv is null then 0 else inv end- case when collection is null then 0 else collection end - 
+	case when cn is null then 0 else cn end- case when discount is null then 0 else discount end 
+	) closing_balance,sequence 
+	from 
+	(
+		select 'INV'::character varying as type,trim(rp.name) customer_name,number ref_no,date_invoice date,
+		(
+
+			select COALESCE(sum(avl.amount),0) 
+			from account_voucher av,account_voucher_line avl,account_move_line aml,account_invoice ai
+			where av.id=avl.voucher_id
+			and avl.move_line_id=aml.id
+			and aml.ref=ai.origin
+			and ai.number=inv.number
+			and av.state not in ('draft','cancel')
+			and av.date between ? and ?
+			and av.type='receipt'
+			--$amlanalytic$
+			and payment_type='credit'
+
+		) collection,
+		(
+			select COALESCE(ai.amount_total,0) return_amt from 
+			account_invoice ai,account_journal aj, account_invoice_line ail 
+			where ai.journal_id=aj.id 
+			and ai.id=ail.invoice_id
+			and aj.name='Sale Return Journal' 
+			and ai.type='out_refund'
+			and ai.number=inv.number
+			and ai.state not in ('draft','cancel')
+			and date_invoice between ? and ?
+			--$ailanalytic$
+			group by ai.id
+		)cn,
+		(
+			
+			select COALESCE(ai.discount_total,0) as discount_total
+			from account_invoice ai,account_invoice_line ail
+			where ai.id=ail.invoice_id
+			and ai.number=inv.number
+			and ((ai.date_invoice at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+			and (ai.state not in ('draft','cancel')	or ai.type ='out_invoice' )
+			and ai.payment_type='credit'
+			group by ai.id
+		) discount,
+		(
+			select COALESCE((ai.amount_untaxed + ai.discount_total),0) as inv_amount from account_invoice ai,account_invoice_line ail
+			where ai.state not in ('draft','cancel')
+			and ai.date_invoice between ? and ?
+			and ai.number=inv.number
+			and ai.payment_type='credit'
+			and ai.type='out_invoice'
+			group by ai.amount_untaxed,ai.discount_total,ai.id
+		)inv,
+		2 as sequence,rp.id customer_id,rp.customer_code customer_code
+		from account_invoice inv,res_partner rp, account_invoice_line ail
+		where inv.partner_id=rp.id 
+		and ail.invoice_id=inv.id
+		and inv.date_invoice between ? and ?
+		and inv.payment_type='credit'
+		--$company_id$
+		--$branch_id$
+		--$sales_team_id$
+		--$customer_id$
+		--$ailanalytic$
+		group by rp.name,rp.id,number,date_invoice
+	)A
+	order by sequence,customer_name]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -641,6 +821,111 @@ order by sequence]]></xml-property>
           <design:identifier>
             <design:name></design:name>
             <design:position>5</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>6</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>7</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>8</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>9</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>10</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>11</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>12</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
@@ -1567,7 +1852,8 @@ sales_team+'Customer Ledger('+Formatter.format(params["from_date"],'dd.MM.yy')+'
                     <property name="name">cn</property>
                     <text-property name="displayName">cn</text-property>
                     <expression name="expression" type="javascript">dataSetRow["cn"]</expression>
-                    <property name="dataType">integer</property>
+                    <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
                 </structure>
                 <structure>
                     <property name="name">discount</property>
@@ -1715,6 +2001,12 @@ sales_team+'Customer Ledger('+Formatter.format(params["from_date"],'dd.MM.yy')+'
                         </structure>
                     </list-property>
                     <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">cn_1</property>
+                    <text-property name="displayName">cn</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["cn"]</expression>
+                    <property name="dataType">decimal</property>
                 </structure>
             </list-property>
             <column id="47">
@@ -2153,9 +2445,7 @@ sales_team+'Customer Ledger('+Formatter.format(params["from_date"],'dd.MM.yy')+'
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="91">
-                            <property name="fontSize">9pt</property>
-                            <property name="paddingRight">3pt</property>
+                        <data id="456">
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
                                 <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
@@ -2195,9 +2485,8 @@ sales_team+'Customer Ledger('+Formatter.format(params["from_date"],'dd.MM.yy')+'
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="93">
+                        <data id="457">
                             <property name="fontSize">9pt</property>
-                            <property name="paddingRight">3pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
                                 <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
