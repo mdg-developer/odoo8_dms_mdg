@@ -449,6 +449,8 @@ class account_voucher(osv.osv):
                     m_rate = (tmp_rate - v_rate)
                     if m_rate < 0:
                         move_line['debit'] = (line.amount * tmp_rate) + total_discount
+                        if tmp_rate == 1 and v_rate > 1 :
+                            move_line['debit'] = (amount) + total_discount
                         #tot_line += (m_rate * line.amount) * -1
                         tot_line = 0
                         #print 'tot_line>>',tot_line
