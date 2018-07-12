@@ -10,15 +10,16 @@ class exchange_product(osv.osv):
                 'transaction_id':fields.char('ID'),
                 'customer_id':fields.many2one('res.partner', 'Customer Name'),
                 'customer_code':fields.char('Customer Code', readonly=True),
-                'team_id'  : fields.many2one('crm.case.section', 'Sale Team'),
+                'team_id'  : fields.many2one('crm.case.section', 'Sale Team', required=True),
                 'date':fields.datetime('Date'),
               'exchange_type':fields.selection([('Exchange', 'Exchange'), ('Color Change', 'Color Change'), ('Sale Return', 'Sale Return'), ], 'Type'),
                 'item_line': fields.one2many('product.transactions.line', 'transaction_id', 'Items Lines', copy=True),
                 'void_flag':fields.selection([('none', 'Unvoid'), ('voided', 'Voided')], 'Void Status'),
-                'location_id'  : fields.many2one('stock.location', 'Location', required=True),
+                'location_id': fields.many2one('stock.location', 'Location', required=True),
                 'e_status':fields.char('Status'),
                 'note':fields.text('Note'),
-                'location_type':fields.char('Location Type', readonly=True),
+                'location_type':fields.selection([('Normal stock returned', 'Normal stock returned'), ('Expired', 'Expired'), ('Near expiry', 'Near expiry'), ('Fresh stock minor damage', 'Fresh stock minor damage'), ('Damaged', 'Damaged')], 'Location Type', required=True),
+               # 'location_type':fields.char('Location Type', readonly=True),
                 'partner_id':fields.many2one('res.partner', string='Partner'),
     }
     
@@ -44,7 +45,26 @@ class exchange_product(osv.osv):
         if datas:
             result.update({'location_id':datas['location_id']})            
         return {'value':result}     
-
+    
+    def onchange_location_type(self, cr, uid, ids, team_id, type, context=None):
+        
+        result = {}
+        section = self.pool.get('crm.case.section')
+        if team_id:
+            sale_team_data = section.browse(cr, uid, team_id, context=context)
+            if type == 'Normal stock returned':
+                location_type_id = sale_team_data.normal_return_location_id.id
+            elif type == 'Expired':
+                location_type_id = sale_team_data.exp_location_id.id
+            elif type == 'Near expiry':
+                location_type_id = sale_team_data.near_exp_location_id.id
+            elif type == 'Fresh stock minor damage':
+                location_type_id = sale_team_data.fresh_stock_not_good_location_id.id
+            elif type == 'Damaged':
+                location_type_id = sale_team_data.damage_location_id.id            
+            result.update({'location_id':location_type_id})            
+        return {'value':result}     
+    
     def action_convert_ep(self, cr, uid, ids, context=None):
         product_line_obj = self.pool.get('product.transactions.line')
         product_obj = self.pool.get('product.transactions')
@@ -64,7 +84,7 @@ class exchange_product(osv.osv):
             elif payment_type == 'Damaged':
                 from_location_id = product_value.team_id.damage_location_id.id            
             
-            #from_location_id = product_value.team_id.return_location_id.id
+            # from_location_id = product_value.team_id.return_location_id.id
             car_location_id = product_value.team_id.location_id.id
             origin = product_value.transaction_id
             product_line_id = product_line_obj.search(cr, uid, [('transaction_id', '=', ids[0])], context=context)
@@ -182,14 +202,14 @@ class exchange_product_line_item(osv.osv):
                 'batchno':fields.char('Batch No'),
                 }
 
-    def onchange_product_id(self, cr, uid, ids, product_id, uom_id,context=None):
+    def onchange_product_id(self, cr, uid, ids, product_id, uom_id, context=None):
         """ Changes UoM and name if product_id changes.
         @param name: Name of the field
         @param product_id: Changed product_id
         @return:  Dictionary of changed values
         """
-        #global prod_uom_ids
-        prod_uom_ids=[]
+        # global prod_uom_ids
+        prod_uom_ids = []
         value = {'uom_id': []}
         domain = {'uom_id': []}
         if product_id:

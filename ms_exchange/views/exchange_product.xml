@@ -33,12 +33,13 @@
 					<!-- type="object" class="oe_highlight" groups="base.group_user" -->
 					<!-- attrs="{'invisible':[('e_status', '=', 'done')]}"></button> -->
 					<!-- </header> -->
-                    <header>
-                        <field name="e_status"  invisible="1" />
-                        <button name="action_convert_ep" string="Convert Stock Move"
-                            type="object" class="oe_highlight" groups="base.group_user"  attrs="{'invisible':[('e_status', '=', 'done')]}" />
-                    </header>
-					
+					<header>
+						<field name="e_status" invisible="1" />
+						<button name="action_convert_ep" string="Convert Stock Move"
+							type="object" class="oe_highlight" groups="base.group_user"
+							attrs="{'invisible':[('e_status', '=', 'done')]}" />
+					</header>
+
 					<sheet>
 						<group>
 							<group>
@@ -48,13 +49,15 @@
 								</h2>
 								<field name="customer_id" on_change='onchange_customer_id(customer_id)' />
 								<field name="customer_code" />
-								<field name="team_id"  on_change='onchange_team_id(team_id)' />
+								<field name="team_id" on_change='onchange_team_id(team_id)' />
 								<field name="note" />
 							</group>
 							<group>
 								<field name="date" />
 								<field name="exchange_type" />
-							    <field name="location_type" />
+								<field name="location_type"
+									on_change="onchange_location_type(team_id,location_type)"
+									attrs="{'readonly':[('e_status', '=', 'done')]}" />
 								<field name="void_flag" />
 								<field name="location_id" />
 							</group>
@@ -78,7 +81,8 @@
 									</form>
 									<tree string="Item Lines" editable="bottom">
 										<field name="so_No" />
-										<field name="product_id" on_change="onchange_product_id(product_id,uom_id,context)" />
+										<field name="product_id"
+											on_change="onchange_product_id(product_id,uom_id,context)" />
 										<field name="uom_id" />
 										<field name="product_qty" />
 										<field name="batchno" invisible="0" />
