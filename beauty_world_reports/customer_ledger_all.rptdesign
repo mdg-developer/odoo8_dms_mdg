@@ -521,7 +521,7 @@ else
 	group by ai.amount_untaxed,ai.discount_total,ai.id)credit
 ) credit_sales_amt,
 (
-	select sum(collection) from(
+	select COALESCE(sum(collection),0) from(
 	select COALESCE(av.amount,0) as collection
 	from account_voucher av,account_voucher_line avl,account_move_line aml,sale_order so
 	where av.id=avl.voucher_id
@@ -558,7 +558,7 @@ else
 -- 	--$amlanalytic$
 -- ) transport_charges,
 (
-	select sum(return_amt) as return_amt from (
+	select COALESCE(sum(return_amt),0) as return_amt from (
 	select COALESCE(ai.amount_total,0) as return_amt from 
 	account_invoice ai,account_invoice_line ail,account_journal aj
 	where ai.id=ail.invoice_id and ai.journal_id=aj.id 
@@ -582,7 +582,6 @@ else
 	and aml.partner_id=rp.id
 	and am.date <= ?
 	and (am.name not like '%INV%' or ai.payment_type ='credit')
-	and rp.id=46121
 	--$amlanalytic$
 ) closing_balance
 from res_partner rp,sale_team_customer_rel rel
@@ -2114,7 +2113,7 @@ dataSetRow["discount"]&#13;
                         <property name="borderRightWidth">thin</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="457">
+                        <data id="456">
                             <property name="fontFamily">sans-serif</property>
                             <property name="fontSize">9pt</property>
                             <structure name="numberFormat">
