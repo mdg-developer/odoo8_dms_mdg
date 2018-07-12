@@ -81,13 +81,15 @@
             <property name="dataSetName">pDS</property>
             <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
             <expression name="labelExpr" type="javascript">dataSetRow["name_template"]</expression>
+            <expression name="sortByColumn">dataSetRow["name_template"]</expression>
+            <property name="sortDirection">asc</property>
             <property name="dataType">string</property>
             <property name="distinct">true</property>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
             <property name="controlType">list-box</property>
             <property name="mustMatch">true</property>
-            <property name="fixedOrder">true</property>
+            <property name="fixedOrder">false</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
             </structure>
@@ -261,6 +263,12 @@ from stock_warehouse]]></xml-property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">x_closing</text-property>
                     <text-property name="heading">x_closing</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">in_bal</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">in_bal</text-property>
+                    <text-property name="heading">in_bal</text-property>
                 </structure>
             </list-property>
             <list-property name="parameters">
@@ -627,6 +635,11 @@ from stock_warehouse]]></xml-property>
                         <property name="name">x_closing</property>
                         <property name="dataType">decimal</property>
                     </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">in_bal</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
                 </list-property>
             </structure>
             <method name="beforeOpen"><![CDATA[if (params["warehouse_id"].value == null )
@@ -720,8 +733,16 @@ this.queryText =this.queryText.replace("--$product$", myvar)
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
+                <structure>
+                    <property name="position">11</property>
+                    <property name="name">in_bal</property>
+                    <property name="nativeName">in_bal</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select w.name as x_warehouse,
+            <xml-property name="queryText"><![CDATA[select *,(x_opening+x_in) as in_bal from (
+select w.name as x_warehouse,
 s.date as x_date,
 s.origin as x_origin,
 concat('from ',(select sl.name from stock_location sl where sl.id=s.location_id),' to ',(select sl.name from stock_location sl where sl.id=s.location_dest_id)) as desp,
@@ -942,7 +963,7 @@ select product_id,location_dest_id,greatest(0,sum(product_qty)) as qty
 from stock_move,
 stock_location fl,
 stock_location tl
-where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? 
+where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date <= ? 
 and state='done'
 --$product$
 --and stock_move.product_id=?
@@ -958,7 +979,7 @@ select product_id,location_dest_id,greatest(0,sum(product_qty)) as qty
 from stock_move,
 stock_location fl,
 stock_location tl
-where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? 
+where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date <= ? 
 and state='done'
 --$product$
 --and stock_move.product_id=?
@@ -974,7 +995,7 @@ select stock_move.product_id,stock_move.location_id,greatest(0,sum(stock_move.pr
 from stock_move,
 stock_location fl,
 stock_location tl
-where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? 
+where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date <= ? 
 and state='done'
 --$product$
 --and stock_move.product_id=?
@@ -990,7 +1011,7 @@ select stock_move.product_id,stock_move.location_id,greatest(0,sum(stock_move.pr
 from stock_move,
 stock_location fl,
 stock_location tl
-where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? 
+where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date <= ? 
 and state='done'
 --$product$
 --and stock_move.product_id=?
@@ -1006,7 +1027,7 @@ select product_id,location_dest_id,greatest(0,sum(product_qty)) as qty
 from stock_move,
 stock_location fl,
 stock_location tl
-where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? 
+where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date <= ? 
 and state='done'
 --$product$
 --and stock_move.product_id=?
@@ -1022,7 +1043,7 @@ select stock_move.product_id,stock_move.location_id,greatest(0,sum(stock_move.pr
 from stock_move,
 stock_location fl,
 stock_location tl
-where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? 
+where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date <= ? 
 and state='done'
 --$product$
 --and stock_move.product_id=?
@@ -1038,7 +1059,7 @@ select stock_move.product_id,stock_move.location_id,greatest(0,sum(stock_move.pr
 from stock_move,
 stock_location fl,
 stock_location tl
-where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? 
+where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date <= ? 
 and state='done'
 --$product$
 --and stock_move.product_id=?
@@ -1054,7 +1075,7 @@ select stock_move.product_id,stock_move.location_id,greatest(0,sum(stock_move.pr
 from stock_move,
 stock_location fl,
 stock_location tl
-where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? 
+where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date <= ? 
 and state='done'
 --$product$
 --and stock_move.product_id=?
@@ -1070,7 +1091,7 @@ select stock_move.product_id,stock_move.location_dest_id,greatest(0,sum(stock_mo
 from stock_move,
 stock_location fl,
 stock_location tl
-where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date < ? 
+where ((stock_move.date at time zone 'utc' )at time zone 'asia/rangoon')::date <= ? 
 and state='done'
 --$product$
 --and stock_move.location_id in (select id from stock_location where active='t' and location_id in (select view_location_id from stock_warehouse where id=?)order by id)
@@ -1082,7 +1103,7 @@ group by stock_move.location_dest_id, stock_move.product_id
 ) lm_adjustment on s.product_id=lm_adjustment.product_id and s.location_id=lm_adjustment.location_dest_id
 
 where w.lot_stock_id=s.location_id
-order by ll.complete_name, pp.default_code]]></xml-property>
+order by ll.complete_name, pp.name)final]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -2427,6 +2448,12 @@ where p.product_tmpl_id=t.id and pu.id=t.uom_po_id and p.active='t']]></xml-prop
                     <expression name="expression" type="javascript">dataSetRow["type"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">in_bal</property>
+                    <text-property name="displayName">in_bal</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["in_bal"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
             </list-property>
             <column id="121"/>
             <column id="122"/>
@@ -2692,15 +2719,14 @@ where p.product_tmpl_id=t.id and pu.id=t.uom_po_id and p.active='t']]></xml-prop
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="146">
+                        <data id="214">
                             <property name="fontSize">8pt</property>
-                            <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
-                                <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
+                                <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=HALF_UP}</property>
                             </structure>
                             <property name="textAlign">right</property>
-                            <property name="resultSetColumn">x_in</property>
+                            <property name="resultSetColumn">in_bal</property>
                         </data>
                     </cell>
                     <cell id="109">
