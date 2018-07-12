@@ -223,72 +223,84 @@
                     <property name="columnName">type</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">type</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">type</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">customer_name</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">customer_name</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">customer_name</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">customer_code</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">customer_code</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">customer_code</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">customer_id</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">customer_id</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">customer_id</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">ref_no</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">ref_no</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">ref_no</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">date</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">date</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">date</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">inv</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">inv</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">inv</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">collection</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">collection</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">collection</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">cn</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">cn</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">cn</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">discount</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">discount</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">discount</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">closing_balance</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">closing_balance</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">closing_balance</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">sequence</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">sequence</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">sequence</text-property>
                 </structure>
             </list-property>
@@ -300,6 +312,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">1</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -310,6 +323,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">2</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -320,6 +334,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">3</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -330,6 +345,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">4</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -340,6 +356,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">5</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -350,6 +367,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">6</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -360,6 +378,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">7</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -370,6 +389,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">8</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -380,6 +400,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">9</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -390,6 +411,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">10</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -400,6 +422,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">11</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -410,6 +433,7 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">12</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -690,7 +714,7 @@ union
 		select 'INV'::character varying as type,trim(rp.name) customer_name,number ref_no,date_invoice date,
 		(
 
-			select COALESCE(sum(avl.amount),0) 
+			select COALESCE(sum(av.amount),0) 
 			from account_voucher av,account_voucher_line avl,account_move_line aml,account_invoice ai
 			where av.id=avl.voucher_id
 			and avl.move_line_id=aml.id
@@ -704,7 +728,7 @@ union
 
 		) collection,
 		(
-			select COALESCE(ai.amount_total,0) return_amt from 
+			select COALESCE(ai.amount_untaxed - ai.discount_total,0) return_amt from 
 			account_invoice ai,account_journal aj, account_invoice_line ail 
 			where ai.journal_id=aj.id 
 			and ai.id=ail.invoice_id
