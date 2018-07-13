@@ -355,13 +355,10 @@ class stock_return(osv.osv):
                                                                'sequence':sequence,
                                                               'product_id': product_id,
                                                               'product_uom': uom_id,
-                                                              #'receive_quantity':0,
                                                               'return_quantity':0,
                                                               'exchange_qty':-1*quantity,
                                                               'sale_quantity':0,
                                                               'status':location_type,
-                                                           #   'rec_small_uom_id':small_uom_id,
-                                                            #  'rec_big_uom_id':big_uom,
                                                               'from_location_id':from_location_id ,
                                                               'to_location_id': customer_location_id,
                                                               }, context=context)                
@@ -396,7 +393,6 @@ class stock_return(osv.osv):
                                                            'sequence':sequence,
                                                           'product_id': product_id,
                                                           'product_uom': uom_id,
-                                                        #  'receive_quantity':0,
                                                           'return_quantity':quantity,
                                                           'exchange_qty':quantity,
                                                           'sale_quantity':0,
@@ -433,7 +429,6 @@ class stock_return(osv.osv):
                                                            'sequence':sequence,
                                                           'product_id': product_id,
                                                           'product_uom': uom_id,
-                                                         # 'receive_quantity':0,
                                                           'return_quantity':quantity,
                                                           'exchange_qty':quantity,
                                                           'sale_quantity':0,
@@ -471,7 +466,6 @@ class stock_return(osv.osv):
                                                            'sequence':sequence,
                                                           'product_id': product_id,
                                                           'product_uom': uom_id,
-                                                        #  'receive_quantity':0,
                                                           'return_quantity':quantity,
                                                           'exchange_qty':quantity,
                                                           'sale_quantity':0,
@@ -509,7 +503,6 @@ class stock_return(osv.osv):
                                                            'sequence':sequence,
                                                           'product_id': product_id,
                                                           'product_uom': uom_id,
-                                                        #  'receive_quantity':0,
                                                           'return_quantity':quantity,
                                                           'exchange_qty':quantity,
                                                           'sale_quantity':0,
@@ -546,7 +539,6 @@ class stock_return(osv.osv):
                                                            'sequence':sequence,
                                                           'product_id': product_id,
                                                           'product_uom': uom_id,
-                                                         # 'receive_quantity':0,
                                                           'return_quantity':quantity,
                                                           'exchange_qty':quantity,
                                                           'sale_quantity':0,
@@ -729,10 +721,16 @@ class stock_return(osv.osv):
         
     def received(self, cr, uid, ids, context=None):
         move_obj = self.pool.get('stock.move')     
-        location_obj = self.pool.get('stock.location')     
+        location_obj = self.pool.get('stock.location')   
+        check_obj = self.pool.get('stock.return.check')  
+        check_line_obj = self.pool.get('stock.return.check.line')     
+        product_obj = self.pool.get('product.product')  
         return_obj = self.browse(cr, uid, ids, context=context)    
         tmp_location_id = return_obj.sale_team_id.temp_location_id.id
+        return_date =return_obj.to_return_date
         origin = return_obj.name
+        team_id= return_obj.sale_team_id.id
+        branch_id =return_obj.branch_id.id
         for line in return_obj.p_line:
             from_location_id = line.from_location_id.id
             to_location_id = line.to_location_id.id
@@ -789,7 +787,33 @@ class stock_return(osv.osv):
                                               'origin':origin,
                                              'manual':False,
                                               'state':'confirmed'}, context=context)     
-                        move_obj.action_done(cr, uid, move_id, context=context)                     
+                        move_obj.action_done(cr, uid, move_id, context=context)      
+        check_value = {'name':return_obj.id,
+                                      'return_date':return_date,
+                                      'sale_team_id':team_id,
+                                      'branch_id':branch_id,
+                                     }    
+        check_id=check_obj.create(cr,uid,check_value,context=context)
+        cr.execute('select srnl.product_id,srnl.product_uom,srnl.actual_return_quantity,srnl.to_location_id,srnl.status,srn.return_date from stock_return srn, stock_return_line srnl where srn.id=srnl.line_id and srnl.actual_return_quantity >0 and srnl.status != %s and srn.id = %s', ('Stock Return',return_obj.id,))
+        stock_return = cr.fetchall()
+        if stock_return:
+            for srn_data_line in stock_return:
+                product_id = srn_data_line[0]
+                pro_data = product_obj.browse(cr, uid, product_id, context=context)
+                sequence=pro_data.sequence
+                uom_id = srn_data_line[1]
+                qty = srn_data_line[2]
+                current_location = srn_data_line[3]            
+                if pro_data.product_tmpl_id.type=='product':
+                    check_line_obj.create(cr, uid,{
+                                      'line_id':check_id,
+                                      'sequence':sequence,
+                                      'product_id':product_id,
+                                      'current_product_uom': uom_id,
+                                      'to_product_uom':uom_id,
+                                      'current_location':current_location,
+                                      'current_qty':qty,
+                                      }, context=context)    
         return self.write(cr, uid, ids, {'state':'received'})      
 
             

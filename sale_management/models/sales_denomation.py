@@ -323,7 +323,7 @@ class sale_denomination(osv.osv):
                     discount_amount+=deduct_amt                    
                 line_ids = invoice_obj.search(cursor, user, [('invoice_id', 'in', pre_mobile_ids)], context=context)         
                 order_line_ids = invoice_obj.browse(cursor, user, line_ids, context=context)         
-                cursor.execute('select product_id,sum(quantity) as quantity,sum(price_subtotal) as  sub_total,uos_id from account_invoice_line where id in %s group by product_id,uos_id', (tuple(order_line_ids.ids),))
+                cursor.execute('select product_id,sum(quantity) as quantity,sum(quantity*price_unit) as  sub_total,uos_id from account_invoice_line where id in %s group by product_id,uos_id', (tuple(order_line_ids.ids),))
                 order_line = cursor.fetchall()
                 for data in order_line:
                     product = self.pool.get('product.product').browse(cursor, user, data[0], context=context)
