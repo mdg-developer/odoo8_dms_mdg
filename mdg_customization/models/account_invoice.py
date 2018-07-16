@@ -1,5 +1,6 @@
 from openerp import models, fields, api, _
 from openerp.exceptions import except_orm, Warning, RedirectWarning
+from openerp.osv import fields, osv
 
 class account_invoice_line(models.Model):
     _inherit = "account.invoice.line"
@@ -12,7 +13,7 @@ class account_invoice_line(models.Model):
             company_id=None):
         
         context = self._context
-        cr=self._cr
+        cr = self._cr
         company_id = company_id if company_id is not None else context.get('company_id', False)
         self = self.with_context(company_id=company_id, force_company=company_id)
 
@@ -73,8 +74,8 @@ class account_invoice_line(models.Model):
                       LEFT JOIN product_uom uom ON (rel.product_uom_id=uom.id)
                       WHERE pp.id = %s""", (product.id,))
         uom_list = cr.fetchall()
-        print 'UOM-->>',uom_list
-        domain = {'uos_id': [('category_id', '=', product.uom_id.category_id.id),('id', 'in', uom_list)]}
+        print 'UOM-->>', uom_list
+        domain = {'uos_id': [('category_id', '=', product.uom_id.category_id.id), ('id', 'in', uom_list)]}
 
         company = self.env['res.company'].browse(company_id)
         currency = self.env['res.currency'].browse(currency_id)
@@ -88,3 +89,10 @@ class account_invoice_line(models.Model):
                     product.uom_id.id, values['price_unit'], values['uos_id'])
 
         return {'value': values, 'domain': domain}
+    
+class account_invoice(osv.osv):
+    
+    _inherit = 'account.invoice'    
+    _columns = {              
+                'mobile_order_ref':fields.char('Mobile Order Reference'),
+                }

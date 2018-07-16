@@ -48,3 +48,12 @@ class stock_quant(osv.osv):
     _columns = {
                 'product_code': fields.char(related='product_id.default_code', string="Product Code")
             }
+    
+class stock_picking(osv.osv):
+    
+    _inherit = "stock.picking"
+    
+    _columns = {              
+                'mobile_order_ref':fields.char('Mobile Order Reference'),
+               }   
+        

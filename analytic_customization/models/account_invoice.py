@@ -131,6 +131,7 @@ class account_invoice(models.Model):
                 'company_id': inv.company_id.id,
                 'branch_id': inv.branch_id.id,
                 'account_analytic_id': analytic_row,
+                'mobile_order_ref': inv.mobile_order_ref,
             }
             ctx['company_id'] = inv.company_id.id
             period = inv.period_id

@@ -407,6 +407,7 @@ class sale_order(osv.osv):
             'discount_total':order.total_dis,
             'branch_id': order.branch_id.id,
             'payment_type': order.payment_type,
+            'mobile_order_ref': order.tb_ref_no,
         }
 
         # Care for deprecated _inv_get() hook - FIXME: to be removed after 6.1

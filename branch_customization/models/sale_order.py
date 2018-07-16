@@ -27,6 +27,6 @@ class sale_order(osv.osv):
         
         data = self.browse(cr, uid, ids,context=context)
         if data:
-            cr.execute("update stock_picking set branch_id=%s where origin=%s",(data.branch_id.id,data.name,))
+            cr.execute("update stock_picking set branch_id=%s,mobile_order_ref=%s where origin=%s",(data.branch_id.id,data.tb_ref_no,data.name,))
             cr.execute("update stock_move set branch_id=%s where picking_id in(select id from stock_picking where origin=%s)",(data.branch_id.id,data.name,))    
         return True

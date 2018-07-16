@@ -42,6 +42,7 @@ MDG Customization
         #     'security/sales_security.xml',
         'views/sale_order_view.xml',
         'views/stock_view.xml',
+        'views/account_view.xml',
     #    'views/stock_valuation_history_view.xml',
     ],
     'installable': True,

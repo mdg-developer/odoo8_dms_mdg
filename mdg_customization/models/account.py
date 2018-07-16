@@ -42,7 +42,7 @@ class account_voucher(osv.osv):
                 msg = _("You should configure the 'Loss Exchange Rate Account' to manage automatically the booking of accounting entries related to differences between exchange rates.")
                 raise RedirectWarning(msg, action_id, _('Go to the configuration panel'))
         else:
-            #account_id = line.voucher_id.partner_id.loss_account_id.id
+            # account_id = line.voucher_id.partner_id.loss_account_id.id
             account_id = line.voucher_id.company_id.income_currency_exchange_account_id
             if not account_id:
                 model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'account', 'action_account_form')
@@ -102,7 +102,7 @@ class account_invoice(osv.osv):
         'state_id': fields.many2one("res.country.state", 'State', ondelete='restrict', readonly=True),
         'country_id': fields.many2one('res.country', 'Country', ondelete='restrict', readonly=True),
         'township': fields.many2one('res.township', 'Township', ondelete='restrict', readonly=True),
-        'payment_term' : fields.many2one('account.payment.term', string='Payment Terms',readonly=True,
+        'payment_term' : fields.many2one('account.payment.term', string='Payment Terms', readonly=True,
         help="If you use payment terms, the due date will be computed automatically at the generation "
              "of accounting entries. If you keep the payment term and the due date empty, it means direct payment. "
              "The payment term may compute several due dates, for example 50% now, 50% in one month.")         
@@ -126,3 +126,27 @@ class account_invoice(osv.osv):
 
 account_invoice()   
 
+class account_move(osv.osv):
+    
+    _inherit = 'account.move'   
+    
+    _columns = {              
+                'mobile_order_ref':fields.char('Mobile Order Reference'),
+               }   
+    
+class account_move_line(osv.osv):
+    
+    _inherit = "account.move.line"
+    
+    def name_get(self, cr, uid, ids, context=None):
+        if not ids:
+            return []
+        result = []
+        for line in self.browse(cr, uid, ids, context=context):
+            if line.ref and line.move_id.mobile_order_ref:
+                result.append((line.id, (line.move_id.name or '') + ' (' + line.ref + ',' + line.move_id.mobile_order_ref + ')'))
+            elif line.ref and not line.move_id.mobile_order_ref:
+                result.append((line.id, (line.move_id.name or '') + ' (' + line.ref + ')'))
+            else:
+                result.append((line.id, line.move_id.name))
+        return result
