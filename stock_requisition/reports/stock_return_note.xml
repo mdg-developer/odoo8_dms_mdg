@@ -123,9 +123,12 @@
 							<th class="text-right">UOM</th>
 							<th class="text-right">Status</th>
 							<th class="text-right">Opening Stock Qty</th>
+							<th class="text-right">In Qty</th>
+							<th class="text-right">Disassembly Qty</th>
 							<th class="text-right">Sales Qty</th>
+							<th class="text-right">Exchange Qty</th>
 							<th class="text-right">Return Qty</th>
-							<th class="text-right">On Ground Qty</th>
+							<th class="text-right">All Physical Stock Qty</th>
 							<th class="text-right">Actual Return Qty</th>
 							<th class="text-right">Closing Stock Qty</th>
 							<th>Expiry</th>
@@ -153,8 +156,18 @@
 								<span t-field="l.opening_stock_qty" />
 							</td>
 							<td class="text-right">
+								<span t-field="l.in_stock_qty" />
+							</td>
+							<td class="text-right">
+								<span t-field="l.assembly_qty" />
+							</td>
+							<td class="text-right">
 								<span t-field="l.sale_quantity" />
 							</td>
+							<td class="text-right">
+								<span t-field="l.exchange_qty" />
+							</td>
+
 							<td class="text-right">
 								<span t-field="l.return_quantity" />
 							</td>

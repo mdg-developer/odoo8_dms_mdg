@@ -28,7 +28,7 @@ class stock_return_check(osv.osv):
         team_id   =[]    
         product_obj = self.pool.get('product.product')
         if name:
-            cr.execute('select srnl.product_id,srnl.product_uom,srnl.actual_return_quantity,srnl.to_location_id,srnl.status,srn.return_date,srn.sale_team_id from stock_return srn, stock_return_line srnl where srn.id=srnl.line_id and srnl.status != %s and srn.id = %s', ('Stock Return',name,))
+            cr.execute('select srnl.product_id,srnl.product_uom,srnl.actual_return_quantity,srnl.to_location_id,srnl.status,srn.return_date,srn.sale_team_id from stock_return srn, stock_return_line srnl where srn.id=srnl.line_id and srnl.actual_return_quantity >0 and srnl.status != %s and srn.id = %s', ('Stock Return',name,))
             stock_return = cr.fetchall()
             if stock_return:
                 for srn_data_line in stock_return:
