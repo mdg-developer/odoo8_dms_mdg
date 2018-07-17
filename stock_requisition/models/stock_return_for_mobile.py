@@ -98,7 +98,17 @@ class stock_return_from_mobile(osv.osv):
                             bigger_qty = cr.fetchone()[0]
                             bigger_qty = int(bigger_qty)
                             sale_qty = bigger_qty * sale_qty
-                        cr.execute('update stock_return_mobile_line set return_quantity = return_quantity - %s, sale_quantity = sale_quantity + %s where line_id= %s and product_id =%s ',(sale_qty,sale_qty,ids[0],product_id,))                
+                        product_search = stock_return_obj.search(cr, uid, [('product_id', '=', product_id),('line_id','=',ids[0])], context=context) 
+                        if product_search:
+                            cr.execute('update stock_return_mobile_line set return_quantity = return_quantity - %s, sale_quantity = sale_quantity + %s where line_id= %s and product_id =%s ',(sale_qty,sale_qty,ids[0],product_id,))                
+                        else:
+                            stock_return_obj.create(cr, uid, {'line_id': ids[0],
+                                  'product_id': product_id,
+                                  'return_quantity':-1 * sale_qty,
+                                  'sale_quantity':sale_qty,
+                                  'foc_quantity':0,
+                                  'product_uom':  product.product_tmpl_id.uom_id.id ,
+                            }, context=context)
                 cr.execute("select avl.product_id,sum(quantity) as qty ,avl.uos_id from account_invoice_line avl where  avl.invoice_id in %s and avl.foc=True group by product_id,uos_id", (order_list,))
                 account_foc_record = cr.fetchall()             
                 if account_foc_record:
@@ -112,7 +122,17 @@ class stock_return_from_mobile(osv.osv):
                             bigger_qty = cr.fetchone()[0]
                             bigger_qty = int(bigger_qty)
                             foc_qty = bigger_qty * foc_qty
-                        cr.execute('update stock_return_mobile_line set return_quantity = return_quantity - %s, foc_quantity = foc_quantity + %s where line_id= %s and product_id =%s ',(foc_qty,foc_qty,ids[0],product_id,))                        
+                        product_foc_search = stock_return_obj.search(cr, uid, [('product_id', '=', product_id),('line_id','=',ids[0])], context=context) 
+                        if product_foc_search:                            
+                            cr.execute('update stock_return_mobile_line set return_quantity = return_quantity - %s, foc_quantity = foc_quantity + %s where line_id= %s and product_id =%s ',(foc_qty,foc_qty,ids[0],product_id,))                        
+                        else:
+                            stock_return_obj.create(cr, uid, {'line_id': ids[0],
+                                  'product_id': product_id,
+                                  'return_quantity':-1 * foc_qty,
+                                  'sale_quantity':0,
+                                  'foc_quantity':foc_qty,
+                                  'product_uom':  product.product_tmpl_id.uom_id.id ,
+                            }, context=context)        
         return True 
                
 class stock_return_from_mobile_line(osv.osv):

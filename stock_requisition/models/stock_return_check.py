@@ -170,16 +170,36 @@ class stock_return_check(osv.osv):
 class stock_return_check_line(osv.osv):
     _name = 'stock.return.check.line'
     _description = 'Return Check Line'
-           
+
+
+    def on_change_product_id(self, cr, uid, ids, product_id, context=None):
+        values = {}
+        domain={}
+        if product_id:
+            product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+            values = {
+                      'current_product_uom':product.product_tmpl_id.uom_id and product.product_tmpl_id.uom_id.id or False,
+                'to_product_uom': product.product_tmpl_id.uom_id and product.product_tmpl_id.uom_id.id or False,
+            }
+            
+        return {'value': values}
+    
+    def create(self, cr, uid, values, context=None):
+        if values.get('line_id') and values.get('product_id'):
+            defaults = self.on_change_product_id(cr, uid, [], values['product_id'], context=dict(context or {}))['value']
+            values = dict(defaults, **values)
+        return super(stock_return_check_line, self).create(cr, uid, values, context=context)
+    
+               
     _columns = {                
         'line_id':fields.many2one('stock.return.check', 'Line', ondelete='cascade', select=True),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'sequence':fields.integer('Sequence'),
-        'current_location':fields.many2one('stock.location', 'Current Location', readonly=True),
-        'current_product_uom': fields.many2one('product.uom', 'UOM', required=True),
+        'current_location':fields.many2one('stock.location', 'Current Location',  required=True,readonly=False),
+        'current_product_uom': fields.many2one('product.uom', 'UOM', required=True, readonly=True),
         'current_qty':  fields.float(string='Current Qty', digits=(16, 0)),
         'to_location':fields.many2one('stock.location', 'To Location'),
-        'to_product_uom': fields.many2one('product.uom', 'UOM', required=False),
+        'to_product_uom': fields.many2one('product.uom', 'UOM', required=False, readonly=True),
         'to_qty':  fields.float(string='Qty', digits=(16, 0)),
     }     
    
