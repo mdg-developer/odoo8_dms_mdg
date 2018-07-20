@@ -372,6 +372,7 @@ class stock_requisition(osv.osv):
                         else:          
                             good_line_obj.create(cr, uid, {'line_id': good_id,
                                                   'product_id': product_id,
+                                                  'opening_product_uom':product.product_tmpl_id.uom_id.id,
                                                   'opening_qty': opening_qty,
                                                   'product_uom': product_uom,
                                                   'uom_ratio':uom_ratio,

@@ -280,8 +280,8 @@ class good_issue_line(osv.osv):  # #prod_pricelist_update_line
         'big_issue_quantity' : fields.float(string='Qty', digits=(16, 0)),               
          'qty_on_hand':fields.float(string='Qty On Hand', digits=(16, 0),readonly=True),
         'sequence':fields.integer('Sequence'),
-        'opening_qty':fields.float('Opening Qty'),
-
+        'opening_qty':fields.float('Opening Qty',readonly=True, digits=(16, 0)),
+        'opening_product_uom': fields.many2one('product.uom', 'Opening UoM',readonly=True, digits=(16, 0)),
 
     }
         
