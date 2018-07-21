@@ -73,3 +73,44 @@ class res_partner(osv.osv):
                
     }
     
+    def name_get(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        res = []
+        for record in self.browse(cr, uid, ids, context=context):
+            name = record.name
+            if record.parent_id and not record.is_company:
+                name = "%s, %s" % (record.parent_name, name)
+            if context.get('show_address_only'):
+                name = self._display_address(cr, uid, record, without_company=True, context=context)
+            if context.get('show_address'):
+                name = name + "\n" + self._display_address(cr, uid, record, without_company=True, context=context)
+            name = name.replace('\n\n','\n')
+            name = name.replace('\n\n','\n')
+            if context.get('show_email') and record.email:
+                name = "%s <%s>" % (name, record.email)
+            if record.customer_code:
+                name = "[" + record.customer_code + "] " + record.name
+            res.append((record.id, name))            
+        return res
+    
+    def name_search(self, cr, uid, name, args=None, operator='ilike',
+                    context=None, limit=100):
+        if not args:
+            args = []
+        args = args[:]
+        ids = []
+        if name:
+            ids = self.search(cr, uid,
+                              [('customer_code', '=like', name + "%")] + args,
+                              limit=limit)
+            if not ids:
+                ids = self.search(cr, uid,
+                                  [('name', operator, name)] + args,
+                                  limit=limit)
+        else:
+            ids = self.search(cr, uid, args, context=context, limit=limit)
+        return self.name_get(cr, uid, ids, context=context)
+    
