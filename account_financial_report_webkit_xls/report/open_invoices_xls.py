@@ -280,6 +280,11 @@ class open_invoices_xls(report_xls):
                     ('curr', 1, 0, 'text', _('Curr.'),
                      None, self.style_yellow_bold_right),
                 ]
+        
+        c_specs += [
+            ('analytic account', 1, 0, 'text', _('Analytic Account'), None, self.style_yellow_bold),
+            
+        ]        
         row_data = self.xls_row_template(c_specs, [x[0] for x in c_specs])
         row_position = self.xls_write_row(
             self.ws, row_position, row_data, row_style=self.style_yellow_bold)
@@ -328,7 +333,7 @@ class open_invoices_xls(report_xls):
         if line.get('invoice_number'):
             label_elements.append("(%s)" % (line['invoice_number'],))
         label = ' '.join(label_elements)
-        print 'line>>>',line
+        
         # Mako: <div class="act_as_row lines
         # ${line.get('is_from_previous_periods') and
         # 'open_invoice_previous_line' or ''} ${line.get('is_clearance_line')
@@ -385,7 +390,11 @@ class open_invoices_xls(report_xls):
 
         c_specs += [('cumul', 1, 0, 'number', None,
                      cumul_balance, style_line_decimal)]
-
+        
+        if line.get('analytic_code'):
+            c_specs += [('analytic account', 1, 0, 'text', line.get('analytic_code') or '')]
+                        
+            
         if _p.amount_currency(data):
             if line.get('currency_code'):
                 c_specs += [
@@ -479,7 +488,11 @@ class open_invoices_xls(report_xls):
                 ('curramount', 1, 0, 'text', '-', None, style_line_right),
                 ('currcode', 1, 0, 'text', '', None, style_line_right),
             ]
-
+        
+        if line.get('analytic_account'):
+             c_specs += [
+                         ('analytic account', 1, 0, 'text', '', None, style_line_right),
+                         ]    
         row_data = self.xls_row_template(c_specs, [x[0] for x in c_specs])
         row_position = self.xls_write_row(
             self.ws, row_position, row_data, style_line_default)
@@ -757,7 +770,7 @@ class open_invoices_xls(report_xls):
     # export the invoice AR/AP lines when the option currency regroup is
     # selected
     def print_grouped_line_report(self, row_pos, account, _xs, xlwt, _p, data):
-        print '_p>>>>',_p
+        #print '_p>>>>',_p
         if account.grouped_ledger_lines and \
            _p['partners_order'][account.id]:
             row_start_account = row_pos
@@ -791,7 +804,7 @@ class open_invoices_xls(report_xls):
 
     # export the invoice AR/AP lines
     def print_ledger_lines(self, row_pos, account, _xs, xlwt, _p, data):
-        print '_p>>>>',_p
+        #print '_p>>>>',_p
         if _p['ledger_lines'][account.id] \
            and _p['partners_order'][account.id]:
 

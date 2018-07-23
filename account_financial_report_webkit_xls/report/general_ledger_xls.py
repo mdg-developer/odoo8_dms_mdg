@@ -68,7 +68,6 @@ class general_ledger_xls(report_xls):
         
         branch_obj = self.pool.get('res.branch')
         branch_name = '' 
-        print '_p>>>',_p  
         try:
             if _p.branch_id:
             

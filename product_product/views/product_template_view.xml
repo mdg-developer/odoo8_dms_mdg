@@ -32,18 +32,18 @@
 									<field name="per_pallet" />
 								</group>
 							</form>
-							<tree string="UOM Price Lines" editable="bottom">
-								<field name="name" on_change="onchange_product_uom(name)" />
-								<field name="category_id" />
-								<field name="factor" />
-								<field name="price" />
-								<field name="uom_ratio" />
-								<field name="weight" />
-								<field name="length" />
-								<field name="width" />
-								<field name="height" />
-								<field name="per_pallet" />
-							</tree>
+<!-- 							<tree string="UOM Price Lines" editable="bottom"> -->
+<!-- 								<field name="name" on_change="onchange_product_uom(name)" /> -->
+<!-- 								<field name="category_id" /> -->
+<!-- 								<field name="factor" /> -->
+<!-- 								<field name="price" /> -->
+<!-- 								<field name="uom_ratio" /> -->
+<!-- 								<field name="weight" /> -->
+<!-- 								<field name="length" /> -->
+<!-- 								<field name="width" /> -->
+<!-- 								<field name="height" /> -->
+<!-- 								<field name="per_pallet" /> -->
+<!-- 							</tree> -->
 						</field>
 					</page>
 

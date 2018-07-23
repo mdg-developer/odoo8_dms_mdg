@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+<!-- 
+      <record id="action_account_profit_loss_menu_webkit" model="ir.actions.act_window">
+          <field name="name">Profit And Loss</field>
+          <field name="type">ir.actions.act_window</field>
+          <field name="res_model">profit.loss.webkit</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">form</field>
+          <field name="view_id" ref="account.accounting_report_view"/>
+          <field name="target">new</field>
+          <field name="context" eval="{'default_account_report_id':ref('account.account_financial_report_profitandloss0')}"/>
+      </record>
+
+      <record model="ir.values" id="action_account_profit_loss_values_webkit">
+          <field name="model_id" ref="account.model_accounting_report"/>
+          <field name="name">Profit And Loss</field>
+          <field name="key2">client_print_multi</field>
+          <field name="value"
+              eval="'ir.actions.act_window,' +str(ref('action_account_profit_loss_menu_webkit'))"/>
+          <field name="key">action</field>
+          <field name="model">accounting.report</field>
+      </record>
+
+      <menuitem id="account.menu_account_report_pl" name="Profit and Loss" action="action_account_profit_loss_menu_webkit" parent="account.final_accounting_reports"/>
+	   -->
+	   
+	   <record id="accounting_profit_and_loss_report_view" model="ir.ui.view">
+            <field name="name">Profit and Loss Report</field>
+            <field name="model">profit.loss.webkit</field>
+            <field name="inherit_id" ref="account.account_common_report_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='target_move']" position="after">
+                    <field name="account_report_id" domain="[('parent_id','=',False)]"/>
+                    <field name="enable_filter"/>
+                    <field name="debit_credit" attrs="{'invisible': [('enable_filter','=',True)]}"/>
+                </xpath>
+                <xpath expr="//notebook/page[@string='Filters']" position="after">
+                    <page string="Comparison" attrs="{'invisible': [('enable_filter','=',False)]}">
+                        <group>
+                            <field name="label_filter" attrs="{'required': [('enable_filter', '=', True)]}"/>
+                            <field name="fiscalyear_id_cmp"/><newline/>
+                            <field name="filter_cmp"/>
+                        </group>
+                        <group string="Dates" attrs="{'invisible':[('filter_cmp', '!=', 'filter_date')]}">
+                            <field name="date_from_cmp" attrs="{'required':[('filter_cmp', '=', 'filter_date')]}"/>
+                            <field name="date_to_cmp" attrs="{'required':[('filter_cmp', '=', 'filter_date')]}"/>
+                        </group>
+                        <group string="Periods" attrs="{'invisible':[('filter_cmp', '!=', 'filter_period')]}">
+                            <field name="period_from_cmp" domain="[('fiscalyear_id', '=', fiscalyear_id_cmp)]" attrs="{'required':[('filter_cmp', '=', 'filter_period')]}"/>
+                            <field name="period_to_cmp" domain="[('fiscalyear_id', '=', fiscalyear_id_cmp)]" attrs="{'required':[('filter_cmp', '=', 'filter_period')]}"/>
+                        </group>
+                   </page>
+                </xpath>
+                <xpath expr="//notebook/page[@string='Journals']" position="replace">
+                	<page string="Analytic Accounts Filters" name="analytic_accounts">
+                            
+                            <field name="analytic_account_ids" colspan="4" nolabel="1">
+                                <tree>
+                                    <field name="code"/>
+                                    <field name="name"/>                                    
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Branches Filters" name="branch_ids">
+                            
+                            <field name="branch_ids" colspan="4" nolabel="1">
+                                <tree>
+                                    <field name="branch_code"/>
+                                    <field name="name"/>                                    
+                                </tree>
+                            </field>
+                        </page>
+                </xpath>
+                 <data>
+		            <button string="Print" position="replace">
+		              <button icon="gtk-execute" name="xls_export" string="Export" type="object" context="{'xls_export': 1,'account_report_id':account_report_id}" colspan="2"/>
+		            </button>
+          		</data>
+            </field>
+        </record>
+        
+        <record id="action_account_report_pl_branch" model="ir.actions.act_window">
+             <field name="name">Profit and Loss</field>
+             <field name="res_model">profit.loss.webkit</field>
+             <field name="type">ir.actions.act_window</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">form</field>
+             <field name="view_id" ref="accounting_profit_and_loss_report_view"/>
+             <field name="target">new</field>
+             <field name="context">{}</field>
+             <!-- <field name="context" eval="{'default_account_report_id':ref('account.account_financial_report_profitandloss0')}"/> -->
+        </record>
+        <menuitem icon="STOCK_PRINT" name="Profit And Loss" action="report_balancesheet_xls.action_account_report_pl_branch" id="account.menu_account_report_pl" parent="account.final_accounting_reports"/>
+        	
+     <!--  <record id="action_account_balance_sheet_menu_webkit" model="ir.actions.act_window">
+          <field name="name">Balance Sheet</field>
+          <field name="type">ir.actions.act_window</field>
+          <field name="res_model">profit.loss.webkit</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">form</field>
+          <field name="view_id" ref="account.accounting_report_view"/>
+          <field name="target">new</field>
+          <field name="context" eval="{'default_account_report_id':ref('account.account_financial_report_balancesheet0')}"/>
+      </record>
+
+      <record model="ir.values" id="action_account_profit_loss_values_webkit">
+          <field name="model_id" ref="account.model_accounting_report"/>
+          <field name="name">Balance Sheet</field>
+          <field name="key2">client_print_multi</field>
+          <field name="value"
+              eval="'ir.actions.act_window,' +str(ref('action_account_balance_sheet_menu_webkit'))"/>
+          <field name="key">action</field>
+          <field name="model">accounting.report</field>
+      </record> -->
+	  
+	  <record id="account_report_balance_sheet_branches_view" model="ir.ui.view">
+			<field name="name">Balance Sheet</field>
+			<field name="model">profit.loss.webkit</field>
+			<field name="inherit_id" ref="account.account_common_report_view" />
+			<field name="arch" type="xml">
+				<data>
+					
+					
+					
+          		</data>
+			</field>
+		</record>
+		<record id="action_account_report_bs_branches" model="ir.actions.act_window">
+             <field name="name">Balance Sheet</field>
+             <field name="res_model">profit.loss.webkit</field>
+             <field name="type">ir.actions.act_window</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">form</field>
+             <field name="view_id" ref="account_report_balance_sheet_branches_view"/>
+             <field name="target">new</field>
+             <!-- <field name="context" eval="{'default_account_report_id':ref('account.account_financial_report_balancesheet0')}"/> -->
+        </record>	
+      <menuitem id="account.menu_account_report_bs" name="Balance Sheet" action="report_balancesheet_xls.action_account_report_bs_branches" parent="account.final_accounting_reports"/>
+
+<!--       <record id="action_account_report_webkit" model="ir.actions.act_window"> -->
+<!--            <field name="name">Financial Reports</field> -->
+<!--            <field name="res_model">profit.loss.webkit</field> -->
+<!--            <field name="type">ir.actions.act_window</field> -->
+<!--            <field name="view_type">form</field> -->
+<!--            <field name="view_mode">form</field> -->
+<!--            <field name="view_id" ref="account.accounting_report_view"/> -->
+<!--            <field name="target">new</field> -->
+<!--       </record> -->
+	  <record id="accounting_financial_report_branch_view" model="ir.ui.view">
+            <field name="name">Financial Reports</field>
+            <field name="model">profit.loss.webkit</field>
+            <field name="inherit_id" ref="account.account_common_report_view"/>
+            <field name="arch" type="xml">
+               <data>
+				
+				
+				
+         		</data>
+            </field>
+        </record>
+        
+        <record id="action_account_financial_report_branch" model="ir.actions.act_window">
+             <field name="name">Financial Reports</field>
+             <field name="res_model">profit.loss.webkit</field>
+             <field name="type">ir.actions.act_window</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">form</field>
+             <field name="view_id" ref="accounting_financial_report_branch_view"/>
+             <field name="target">new</field>
+        </record>
+        	
+      <menuitem icon="STOCK_PRINT" name="Financial Report" action="report_balancesheet_xls.action_account_financial_report_branch" id="account.menu_account_report" parent="account.final_accounting_reports" sequence="100"/>
+            
+      <record id="financial_report_xls_wizard_view" model="ir.ui.view">
+        <field name="name">financial.report.webkit.xls</field>
+        <field name="model">profit.loss.webkit</field>
+        <field name="inherit_id" ref="account.accounting_report_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Analytic Accounts Filters" name="analytic_accounts">
+                            <separator string="Print only" colspan="4"/>
+                            <field name="analytic_account_ids" colspan="4" nolabel="1">
+                                <tree>
+                                    <field name="code"/>
+                                    <field name="name"/>                                    
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Branches Filters" name="branch_ids">
+                            <separator string="Print only" colspan="4"/>
+                            <field name="branch_ids" colspan="4" nolabel="1">
+                                <tree>
+                                    <field name="branch_code"/>
+                                    <field name="name"/>                                    
+                                </tree>
+                            </field>
+                        </page> 
+             </xpath>   
+            
+          <data>
+            <button string="Print" position="replace">
+              <button icon="gtk-execute" name="xls_export" string="Export" type="object" context="{'xls_export': 1,'account_report_id':account_report_id}" colspan="2"/>
+            </button>
+          </data>
+        </field>
+      </record>
+      
+  </data>
+</openerp>
