@@ -223,7 +223,6 @@ class GeneralLedgerWebkit(report_sxw.rml_parse, CommonReportHeaderWebkit):
         for acc_id in accounts_ids:
             move_line_ids = self.get_move_lines_ids(
                 acc_id, new_analytic_account_ids, main_filter, start, stop, target_move,branch)
-            print 'move_line_ids',move_line_ids
             if not move_line_ids:
                 res[acc_id] = []
                 continue

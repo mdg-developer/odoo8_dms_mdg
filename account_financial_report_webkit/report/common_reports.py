@@ -220,7 +220,7 @@ class CommonReportHeaderWebkit(common_report_header):
         res_ids = list(OrderedDict.fromkeys(accounts))
         res_ids = self.sort_accounts_with_structure(
             account_ids, res_ids, context=context)
-        print 'aaaaa',exclude_type,only_type,filter_report_type
+        
         if exclude_type or only_type or filter_report_type:
             sql_filters = {'ids': tuple(res_ids)}
             sql_select = "SELECT a.id FROM account_account a"
@@ -231,7 +231,6 @@ class CommonReportHeaderWebkit(common_report_header):
                 sql_filters.update({'exclude_type': tuple(exclude_type)})
             if only_type:
                 if only_type == ('all',):
-                    print 'wheere>>>',sql_where
                     sql_where += " "
                 else:    
                     sql_where += " AND a.type IN %(only_type)s"
@@ -586,7 +585,6 @@ class CommonReportHeaderWebkit(common_report_header):
             return []
         search = [
             ('period_id', 'in', periods), ('account_id', '=', account_id)]
-        print 'new_analytic_account_ids',new_analytic_account_ids
         if new_analytic_account_ids:
             search = [
                       ('period_id', 'in', periods), ('account_id', '=', account_id),('analytic_account_id', 'in', new_analytic_account_ids)]
@@ -626,7 +624,6 @@ class CommonReportHeaderWebkit(common_report_header):
     def get_move_lines_ids(self, account_id, new_analytic_account_ids, main_filter, start, stop,
                            target_move,branch, mode='include_opening'):
         """Get account move lines base on form data"""
-        print 'get_move_lines_ids',new_analytic_account_ids
         if mode not in ('include_opening', 'exclude_opening'):
             raise osv.except_osv(
                 _('Invalid query mode'),
