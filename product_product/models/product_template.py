@@ -132,7 +132,7 @@ class product_uom_price(osv.osv):
         'length': fields.float('Length', required=True),
         'width': fields.float('Width', required=True),
         'height': fields.float('Height', required=True),
-        'per_pallet':fields.char('Per Pallet', required=True, readonly=False),
+        'per_pallet':fields.char('Per Pallet', required=False, readonly=False),
     }
 
     _defaults = {

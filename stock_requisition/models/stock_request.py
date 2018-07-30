@@ -291,20 +291,45 @@ class stock_requisition(osv.osv):
                 condition_data = cr.fetchone()[0]         
                 if condition_data == 0.0:
                     raise osv.except_osv(_('Warning'),
-                                     _('Please Press Update Qty Button'))                
-                for data in req_line_id:
-                    req_line_value = product_line_obj.browse(cr, uid, data, context=context)
-                    #comment by EMTW
-#                     if (req_line_value.req_quantity + req_line_value.big_req_quantity) != 0:
-                    if (req_line_value.req_quantity) != 0:
-                        product_id = req_line_value.product_id.id
-                        product_uom = req_line_value.product_uom.id
-                        qty_on_hand = req_line_value.qty_on_hand
-                        big_uom_id = req_line_value.big_uom_id.id
-                        big_req_quantity = req_line_value.big_req_quantity
-                        uom_ratio = req_line_value.uom_ratio
-                        quantity = req_line_value.req_quantity
-                        sequence=req_line_value.sequence
+                                     _('Please Press Update Qty Button'))  
+                data_line = []
+                req_list = str(tuple(req_line_id))
+                req_list = eval(req_list)
+                cr.execute('''select sum(req_quantity * floor(round(1/factor,2))) as req_quantity,l.product_id
+                            from stock_requisition_line l ,product_uom uom 
+                            where l.product_uom =uom.id and l.id in %s
+                            group by product_id ''', (req_list,))
+                req_record = cr.fetchall()             
+                if req_record:
+                    for req_data in req_record:
+                        product_id = int(req_data[1])
+                        print 'product_id',product_id
+                        sale_qty = float(req_data[0])
+                        cr.execute("""SELECT uom.id , floor(round(1/factor,2)) as ratio  FROM product_product pp 
+                          LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
+                          LEFT JOIN product_template_product_uom_rel rel ON (rel.product_template_id=pt.id)
+                          LEFT JOIN product_uom uom ON (rel.product_uom_id=uom.id)
+                          WHERE pp.id = %s
+                          order by ratio desc""", (product_id,))
+                        uom_list = cr.fetchall() 
+                        for uom_data in uom_list:
+                            if  sale_qty >= uom_data[1]:
+                                req_quantity=sale_qty/uom_data[1]
+                                sale_qty=sale_qty % uom_data[1]
+                                data_line.append({'req_quantity':req_quantity,'product_uom':uom_data[0],'product_id':product_id})
+#                            else:
+#                                data_line.append({'req_quantity':sale_qty,'product_uom':uom_data[0],'product_id':product_id})
+                                                              
+                for req_line_value in data_line:
+                    if (req_line_value['req_quantity']) != 0:
+                        cr.execute('select qty_on_hand,uom_ratio,sequence from stock_requisition_line where line_id=%s and product_id=%s ', (ids[0],req_line_value['product_id'],))
+                        line_data = cr.fetchone()  
+                        product_id = req_line_value['product_id']
+                        product_uom = req_line_value['product_uom']
+                        qty_on_hand = line_data[0]
+                        uom_ratio = line_data[1]
+                        quantity = req_line_value['req_quantity']
+                        sequence=line_data[2]
                         quantity_on_hand=quantity
                         product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)   
                         if product_uom  != product.product_tmpl_id.uom_id.id  :                                                                  
@@ -376,9 +401,7 @@ class stock_requisition(osv.osv):
                                                   'opening_qty': opening_qty,
                                                   'product_uom': product_uom,
                                                   'uom_ratio':uom_ratio,
-                                                 'big_uom_id':big_uom_id,
                                                   'issue_quantity':quantity,
-                                                  'big_issue_quantity':big_req_quantity,
                                                   'qty_on_hand':qty_on_hand,
                                                   'sequence':sequence,
                                                   }, context=context)
