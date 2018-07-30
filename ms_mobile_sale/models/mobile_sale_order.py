@@ -2648,17 +2648,16 @@ class mobile_sale_order(osv.osv):
                             else:
                                 qty_on_hand = 0    
                             if issue_category ==True:
-                                request_ids = stock_request_obj.search(cursor, user , [('issue_from_optional_location','=',True),('sale_team_id', '=', delivery_id),('request_date', '=', sr['request_date']), ('state', '=', 'draft')])
+                                request_ids = stock_request_obj.search(cursor, user , [('issue_from_optional_location','=',True),('sale_team_id', '=', delivery_id),('request_date', '=', sr['request_date']), ('so_no', '=', sr['rfi_no'])])
                                 cursor.execute('select  SUM(COALESCE(qty,0)) qty from stock_quant where location_id=%s and product_id=%s and qty >0 group by product_id', (optional_issue_location_id, srl['product_id'],))
                                 qty_on_hand = cursor.fetchone()
                                 if qty_on_hand:
                                     qty_on_hand = qty_on_hand[0]
                                 else:
-                                    qty_on_hand = 0                                    
+                                    qty_on_hand = 0              
                                 if request_ids:
                                     issue_stock_id=request_ids[0]
                                 else:
-                                    
                                     mso_result = {
                                         'request_date':sr['request_date'],
                                         'request_by':sr['request_by'],
@@ -2673,9 +2672,9 @@ class mobile_sale_order(osv.osv):
                                         'to_location_id':optional_issue_location_id,
                                         'sale_team_id':delivery_id,
                                         'issue_from_optional_location':True,
+                                        'so_no':sr['rfi_no'],
                                     }
                                     issue_stock_id = stock_request_obj.create(cursor, user, mso_result, context=context)
-                                                                
 
                             #comment by EMTW           
 #                             if int(srl['product_uom']) == int(big_uom_id):                                                                          
@@ -2709,9 +2708,6 @@ class mobile_sale_order(osv.osv):
                                       'sequence':sequence,
                                       }
                             stock_request_line_obj.create(cursor, user, mso_line_res, context=context)
-            request_line_ids = stock_request_line_obj.search(cursor, user , [('line_id','=',stock_id)])
-            if not request_line_ids:
-                cursor.execute('delete from stock_requisition where id =%s',(stock_id,))
             print 'True'
             return True       
         except Exception, e:
