@@ -66,7 +66,7 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
         </scalar-parameter>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="1211"
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="1214"
  extends="report_library.Data Source"/>
     </data-sources>
     <data-sets>
@@ -450,7 +450,7 @@ and pp.id in (select product_product_id from crm_case_section_product_product_re
   </design:ResultSets>
 </model:DesignValues>]]></xml-property>
         </oda-data-set>
-        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="Data Set" id="1210">
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="Data Set" id="1212">
             <list-property name="columnHints">
                 <structure>
                     <property name="columnName">account_name</property>
@@ -798,9 +798,9 @@ and pp.id in (select product_product_id from crm_case_section_product_product_re
                     </structure>
                 </list-property>
             </structure>
-            <method name="beforeOpen"><![CDATA[this.queryText =this.queryText.replace("--$branch_id$", "and branch_id in ("+ params["branch_id"].value.join(",")+")")
-this.queryText =this.queryText.replace("--$sale_team_id$", "and team_id in ("+ params["sales_team_id"].value.join(",")+")")       
-this.queryText =this.queryText.replace("--$product_id$", "and product_id in ("+ params["product_id"].value.join(",")+")")       ]]></method>
+            <method name="beforeOpen"><![CDATA[this.queryText =this.queryText.replace("--$branch_id$", "and report.branch_id in ("+ params["branch_id"].value.join(",")+")")
+this.queryText =this.queryText.replace("--$sale_team_id$", "and report.team_id in ("+ params["sales_team_id"].value.join(",")+")")       
+this.queryText =this.queryText.replace("--$product_id$", "and report.product_id in ("+ params["product_id"].value.join(",")+")")       ]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
                 <structure>
