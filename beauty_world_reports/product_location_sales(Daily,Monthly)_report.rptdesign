@@ -498,8 +498,7 @@ From
    from sale_order so,sale_order_line line , crm_case_section ccs
    where so.id=line.order_id and ccs.id=so.section_id    
    and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
-   and ccs.active='true'
-   --and product_id=13088
+   and ccs.active='true'   
    --$product$
    --$company_id$
    --$branch$
