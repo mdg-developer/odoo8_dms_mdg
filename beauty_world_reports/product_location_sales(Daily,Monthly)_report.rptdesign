@@ -490,51 +490,45 @@ else
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[Select a.pid,a.name_template,a.default_code, COALESCE(sum(a.qty_sold),0) qty_sold, COALESCE(sum(a.foc_qty_sold),0) foc_qty_sold,
-COALESCE(sum(a.credit_sales),0)credit_sales, COALESCE(sum(a.cash_sales),0)cash_sales, COALESCE(sum(a.return_qty),0)return,a.team_name,a.team_code 
+COALESCE(sum(a.credit_sales),0)credit_sales, COALESCE(sum(a.cash_sales),0)cash_sales, COALESCE(b.return_qty,0)return,a.team_name,a.team_code 
 From 
 (with qty_sold as (
-	select COALESCE(sum(product_uom_qty),0) qty_sold,product_id,
-	payment_type,ccs.code team_code,ccs.name team_name,so.section_id team_id
-	from sale_order so,sale_order_line line , crm_case_section ccs
-	where so.id=line.order_id and ccs.id=so.section_id 	
-	and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between  ? and ? 
-	and ccs.active='true'
-	--$product$
-	--$company_id$
-	--$branch$
-	group by product_id,payment_type,ccs.name,so.section_id,ccs.code
-	),
+   select COALESCE(sum(product_uom_qty),0) qty_sold,product_id,
+   payment_type,ccs.code team_code,ccs.name team_name,so.section_id team_id
+   from sale_order so,sale_order_line line , crm_case_section ccs
+   where so.id=line.order_id and ccs.id=so.section_id    
+   and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+   and ccs.active='true'
+   --and product_id=13088
+   --$product$
+   --$company_id$
+   --$branch$
+   group by product_id,payment_type,ccs.name,so.section_id,ccs.code
+   ),
 foc_qty_sold as (
-	select COALESCE(sum(product_uom_qty),0) foc_qty_sold,product_id,
-	payment_type,ccs.code team_code,ccs.name team_name,so.section_id team_id
-	from sale_order so,sale_order_line line, crm_case_section ccs
-	where so.id=line.order_id and ccs.id=so.section_id
-	and sale_foc='true' 	
-	and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between  ? and ? 
-	and ccs.active='true' 
-	--$product$
-	--$company_id$
-	--$branch$
-	group by product_id,payment_type,ccs.name,so.section_id,ccs.code
-	),
-return_qty as (select ail.product_id,ai.section_id,COALESCE(sum(ai.amount_total),0)return_qty  from 
-		account_invoice ai,account_invoice_line ail,account_journal aj
-		where ai.id=ail.invoice_id and ai.journal_id=aj.id
-		and aj.name='Sale Return Journal' 
-		and date_invoice::date between ? and ? 
-		group by ail.product_id,ai.section_id)
+   select COALESCE(sum(product_uom_qty),0) foc_qty_sold,product_id,
+   payment_type,ccs.code team_code,ccs.name team_name,so.section_id team_id
+   from sale_order so,sale_order_line line, crm_case_section ccs
+   where so.id=line.order_id and ccs.id=so.section_id
+   and sale_foc='true'    
+   and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+   and ccs.active='true'
+   --$product$
+   --$company_id$
+   --$branch$
+   group by product_id,payment_type,ccs.name,so.section_id,ccs.code
+   )
 
 select distinct pp.id pid,name_template,default_code,
 greatest(0,qty_sold.qty_sold) qty_sold, greatest(0,foc_qty_sold.foc_qty_sold) foc_qty_sold,
 case when sales_record.payment_type='credit' then greatest(0,sales_record.sales) end as credit_sales,
 case when sales_record.payment_type='cash' then greatest(0,sales_record.sales) end as cash_sales,
-greatest(0,return_qty.return_qty) return_qty,
 sales_record.team_name,sales_record.team_code
 from (select COALESCE(sum((product_uom_qty*price_unit)-discount_amt),0) sales,product_id,
 payment_type,ccs.code team_code,ccs.name team_name,so.section_id team_id
 from sale_order so,sale_order_line line, crm_case_section ccs
 where so.id=line.order_id and ccs.id=so.section_id
-and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date  between ? and ? 
+and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date  between ? and ?
 and ccs.active='true'
 --$product$
 --$company_id$
@@ -543,11 +537,20 @@ group by product_id,payment_type,ccs.name,so.section_id,ccs.code
 ) sales_record
 inner join product_product pp on pp.id=sales_record.product_id 
 inner join product_template pt on pt.id=pp.product_tmpl_id  
-left join qty_sold on qty_sold.product_id=pp.id
+left join qty_sold on qty_sold.product_id=sales_record.product_id and qty_sold.payment_type=sales_record.payment_type
 left join foc_qty_sold on foc_qty_sold.product_id=pp.id
-left join return_qty on return_qty.product_id=sales_record.product_id
 where pp.active='true'
-order by pp.id)a group by a.pid,a.name_template,a.default_code,a.team_name,a.team_code ]]></xml-property>
+order by pp.id)a
+left join
+(
+    select ail.product_id,ai.section_id,COALESCE(sum(ai.amount_total),0)return_qty  from
+       account_invoice ai,account_invoice_line ail,account_journal aj
+       where ai.id=ail.invoice_id and ai.journal_id=aj.id
+       and aj.name='Sale Return Journal'
+       and date_invoice::date between ? and ?
+       group by ail.product_id,ai.section_id
+    ) b on a.pid=b.product_id
+    group by a.pid,a.name_template,a.default_code,a.team_name,a.team_code,b.return_qty]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -2036,6 +2039,7 @@ order by rc.id,rb.id]]></xml-property>
                             <property name="borderTopWidth">thin</property>
                             <property name="verticalAlign">middle</property>
                             <data id="326">
+                                <property name="fontFamily">sans-serif</property>
                                 <property name="fontSize">8pt</property>
                                 <property name="paddingRight">2pt</property>
                                 <structure name="numberFormat">
@@ -2237,6 +2241,7 @@ order by rc.id,rb.id]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="325">
+                            <property name="fontFamily">sans-serif</property>
                             <property name="fontSize">8pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
@@ -2415,6 +2420,7 @@ order by rc.id,rb.id]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="327">
+                            <property name="fontFamily">sans-serif</property>
                             <property name="fontSize">8pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
