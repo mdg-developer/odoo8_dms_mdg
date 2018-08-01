@@ -3,6 +3,7 @@
     <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="layoutPreference">auto layout</property>
     <property name="bidiLayoutOrientation">ltr</property>
     <property name="imageDPI">96</property>
     <list-property name="libraries">
@@ -217,7 +218,7 @@ else
                     <property name="nativeDataType">2</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select date_invoice::character varying,ccs.name sales_team,aa.name analytic_account,sum(amount_total) amount_total
+            <xml-property name="queryText"><![CDATA[select date_invoice::character varying,ccs.name sales_team,aa.name analytic_account,sum(line.price_subtotal) amount_total
 from account_invoice inv,crm_case_section ccs,account_invoice_line line,account_analytic_account aa
 where inv.section_id=ccs.id 
 and inv.id=line.invoice_id
@@ -229,7 +230,7 @@ and date_invoice between ? and ?
 --$branch_id$
 --$sales_team_id$
 --$analytic$
-group by date_invoice,ccs.name,aa.name
+group by date_invoice,ccs.name,aa.name,inv.number
 ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
