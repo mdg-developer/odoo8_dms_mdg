@@ -203,12 +203,6 @@
                     <text-property name="heading">cash_sales</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">return</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">return</text-property>
-                    <text-property name="heading">return</text-property>
-                </structure>
-                <structure>
                     <property name="columnName">customer_name</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">customer_name</text-property>
@@ -219,6 +213,12 @@
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">customer_code</text-property>
                     <text-property name="heading">customer_code</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">return</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">return</text-property>
+                    <text-property name="heading">return</text-property>
                 </structure>
             </list-property>
             <list-property name="parameters">
@@ -348,18 +348,18 @@
                     </structure>
                     <structure>
                         <property name="position">8</property>
-                        <property name="name">return</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
-                        <property name="position">9</property>
                         <property name="name">customer_name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">10</property>
+                        <property name="position">9</property>
                         <property name="name">customer_code</property>
                         <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">return</property>
+                        <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">11</property>
@@ -434,60 +434,55 @@ this.queryText = this.queryText.replace("--$product$", "and line.product_id in (
                 </structure>
                 <structure>
                     <property name="position">8</property>
-                    <property name="name">return</property>
-                    <property name="nativeName">return</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">2</property>
-                </structure>
-                <structure>
-                    <property name="position">9</property>
                     <property name="name">customer_name</property>
                     <property name="nativeName">customer_name</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">10</property>
+                    <property name="position">9</property>
                     <property name="name">customer_code</property>
                     <property name="nativeName">customer_code</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">return</property>
+                    <property name="nativeName">return</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[Select a.pid,a.name_template,a.default_code, COALESCE(sum(a.qty_sold),0) qty_sold, COALESCE(sum(a.foc_qty_sold),0) foc_qty_sold,
-COALESCE(sum(a.credit_sales),0)credit_sales, COALESCE(sum(a.cash_sales),0)cash_sales, COALESCE(sum(a.return_qty),0)return,a.customer_name ,a.customer_code
-From (with qty_sold as (
-	select COALESCE(sum(product_uom_qty),0) qty_sold,product_id,
-	payment_type,rp.name customer_name,rp.customer_code,so.partner_id customer_id
-	from sale_order so,sale_order_line line , res_partner rp
-	where so.id=line.order_id and rp.id=so.partner_id 	
-	and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
-	--$product$
-	group by product_id,payment_type,rp.name,so.partner_id,rp.customer_code
-	),
+            <xml-property name="queryText"><![CDATA[select aa.*,bb.return_qty as return
+from
+(
+with qty_sold as (
+    select COALESCE(sum(product_uom_qty),0) qty_sold,product_id,
+    payment_type,rp.name customer_name,rp.customer_code,so.partner_id customer_id
+    from sale_order so,sale_order_line line , res_partner rp
+    where so.id=line.order_id and rp.id=so.partner_id     
+    and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+    --$product$
+    group by product_id,payment_type,rp.name,so.partner_id,rp.customer_code
+    ),
 foc_qty_sold as (
-	select COALESCE(sum(product_uom_qty),0) foc_qty_sold,product_id,
-	payment_type,rp.name customer_name,so.partner_id customer_id,rp.customer_code
-	from sale_order so,sale_order_line line , res_partner rp
-	where so.id=line.order_id and rp.id=so.partner_id 	
-	and sale_foc='true' 	
-	and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
-	--$product$
-	group by product_id,payment_type,rp.name,so.partner_id,rp.customer_code
-	),
-return_qty as (select ail.product_id,ai.section_id,COALESCE(sum(ai.amount_total),0)return_qty  from 
-		account_invoice ai,account_invoice_line ail,account_journal aj
-		where ai.id=ail.invoice_id and ai.journal_id=aj.id
-		and aj.name='Sale Return Journal' 
-		and ai.type='out_refund'
-		and date_invoice::date between ? and ?
-		group by ail.product_id,ai.section_id)
-
+    select COALESCE(sum(product_uom_qty),0) foc_qty_sold,product_id,
+    payment_type,rp.name customer_name,so.partner_id customer_id,rp.customer_code
+    from sale_order so,sale_order_line line , res_partner rp
+    where so.id=line.order_id and rp.id=so.partner_id     
+    and sale_foc='true'     
+    and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+    --$product$
+    group by product_id,payment_type,rp.name,so.partner_id,rp.customer_code
+    )
+Select a.pid,a.name_template,a.default_code, COALESCE(sum(a.qty_sold),0) qty_sold, COALESCE(sum(a.foc_qty_sold),0) foc_qty_sold,
+COALESCE(sum(a.credit_sales),0)credit_sales, COALESCE(sum(a.cash_sales),0)cash_sales,a.customer_name ,a.customer_code
+From (
 select distinct pp.id pid,name_template,default_code,
 greatest(0,qty_sold.qty_sold) qty_sold, greatest(0,foc_qty_sold.foc_qty_sold) foc_qty_sold,
 case when sales_record.payment_type='credit' then greatest(0,sales_record.sales) end as credit_sales,
 case when sales_record.payment_type='cash' then greatest(0,sales_record.sales) end as cash_sales,
-greatest(0,return_qty.return_qty) return_qty,
 sales_record.customer_name,sales_record.customer_code
 from (select COALESCE(sum((product_uom_qty*price_unit)-discount_amt),0) sales,product_id,
 payment_type,rp.name customer_name,so.partner_id customer_id,rp.customer_code
@@ -500,11 +495,22 @@ group by product_id,payment_type,rp.name,so.partner_id,rp.customer_code
 ) sales_record
 inner join product_product pp on pp.id=sales_record.product_id 
 inner join product_template pt on pt.id=pp.product_tmpl_id  
-left join qty_sold on qty_sold.product_id=pp.id
+left join qty_sold on qty_sold.product_id=sales_record.product_id and sales_record.payment_type=qty_sold.payment_type and qty_sold.customer_name=sales_record.customer_name
 left join foc_qty_sold on foc_qty_sold.product_id=pp.id
-left join return_qty on return_qty.product_id=sales_record.product_id
 where pp.active='true'
-order by pp.id)a group by a.pid,a.name_template,a.default_code,a.customer_name,a.customer_code]]></xml-property>
+order by pp.id) a group by a.pid,a.name_template,a.default_code,a.customer_name,a.customer_code
+)aa
+left join
+(
+select p.name customer_name, ail.product_id,ai.section_id,COALESCE(sum(ai.amount_total),0)return_qty  from 
+        account_invoice ai,account_invoice_line ail,account_journal aj, res_partner p
+        where ai.id=ail.invoice_id and ai.journal_id=aj.id
+        and aj.name='Sale Return Journal' 
+        and ai.type='out_refund'
+        and date_invoice::date between ? and ?
+        and ai.partner_id=p.id
+        group by ail.product_id,ai.section_id,p.id
+)bb on aa.pid=bb.product_id and aa.customer_name=bb.customer_name]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -1672,6 +1678,7 @@ order by id]]></xml-property>
                             <property name="borderTopStyle">solid</property>
                             <property name="borderTopWidth">thin</property>
                             <data id="256">
+                                <property name="fontFamily">sans-serif</property>
                                 <property name="fontSize">8pt</property>
                                 <property name="paddingRight">2pt</property>
                                 <structure name="numberFormat">
@@ -1896,6 +1903,7 @@ order by id]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="255">
+                            <property name="fontFamily">sans-serif</property>
                             <property name="fontSize">8pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
@@ -2099,6 +2107,7 @@ order by id]]></xml-property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="257">
+                            <property name="fontFamily">sans-serif</property>
                             <property name="fontSize">8pt</property>
                             <property name="paddingRight">2pt</property>
                             <structure name="numberFormat">
