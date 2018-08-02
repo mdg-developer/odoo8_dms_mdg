@@ -16,16 +16,16 @@
         <scalar-parameter name="from_date" id="10" extends="report_library.from_date"/>
         <scalar-parameter name="to_date" id="11" extends="report_library.to_date"/>
         <cascading-parameter-group name="NewCascadingParameterGroup" id="216">
-            <property name="dataSet">all_ds</property>
-            <property name="dataSetMode">single</property>
+            <property name="dataSet">company</property>
+            <property name="dataSetMode">multiple</property>
             <parameters>
                 <scalar-parameter name="company_id" id="217">
                     <text-property name="promptText">Company</text-property>
                     <property name="valueType">dynamic</property>
                     <property name="isRequired">true</property>
-                    <property name="dataSetName">all_ds</property>
-                    <expression name="valueExpr">row["company_id"]</expression>
-                    <expression name="labelExpr">row["company_name"]</expression>
+                    <property name="dataSetName">company</property>
+                    <expression name="valueExpr">row["id"]</expression>
+                    <expression name="labelExpr">row["name"]</expression>
                     <property name="dataType">integer</property>
                     <property name="paramType">simple</property>
                     <property name="controlType">list-box</property>
@@ -36,7 +36,7 @@
                     <text-property name="promptText">Branch</text-property>
                     <property name="valueType">dynamic</property>
                     <property name="isRequired">false</property>
-                    <property name="dataSetName">company</property>
+                    <property name="dataSetName">all_ds</property>
                     <expression name="valueExpr">row["branch_id"]</expression>
                     <expression name="labelExpr">row["branch_code"]</expression>
                     <property name="dataType">integer</property>
@@ -49,7 +49,7 @@
                     <text-property name="promptText">Sales Team</text-property>
                     <property name="valueType">dynamic</property>
                     <property name="isRequired">false</property>
-                    <property name="dataSetName">company</property>
+                    <property name="dataSetName">all_ds</property>
                     <expression name="valueExpr">row["sale_team_id"]</expression>
                     <expression name="labelExpr">row["sale_team_code"]</expression>
                     <property name="dataType">integer</property>
