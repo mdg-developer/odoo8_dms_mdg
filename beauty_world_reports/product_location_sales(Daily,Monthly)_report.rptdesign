@@ -400,7 +400,7 @@ this.queryText =this.queryText.replace("--$product$", "")
 }
 else
 {
-this.queryText = this.queryText.replace("--$product$", "and line.product_id in (" + params["product"].value.join(",") + ")" );
+this.queryText = this.queryText.replace("--$product$", "and line.product_id = "+params["product"]);
 }
 if (params["company_id"].value == null ){     
    this.queryText =this.queryText.replace("--$company_id$", "")
