@@ -73,10 +73,12 @@
                     <property name="dataSetName">all_ds</property>
                     <expression name="valueExpr">row["customer_id"]</expression>
                     <expression name="labelExpr">row["customer_name"]</expression>
+                    <expression name="sortByColumn">dataSetRow["customer_name"]</expression>
+                    <property name="sortDirection">asc</property>
                     <property name="dataType">integer</property>
                     <property name="paramType">simple</property>
                     <property name="controlType">list-box</property>
-                    <property name="fixedOrder">true</property>
+                    <property name="fixedOrder">false</property>
                     <structure name="format"/>
                 </scalar-parameter>
             </parameters>
@@ -370,7 +372,18 @@
                     </structure>
                 </list-property>
             </structure>
-            <method name="beforeOpen"><![CDATA[if (params["customer_id"].value == null )
+            <method name="beforeOpen"><![CDATA[if (params["company_id"].value == null )
+{
+this.queryText =this.queryText.replace("--$company$", "")
+this.queryText =this.queryText.replace("--$companys$", "")
+}
+else
+{
+this.queryText = this.queryText.replace("--$company$", "and so.company_id = " + params["company_id"]);
+this.queryText = this.queryText.replace("--$companys$", "and ai.company_id = " + params["company_id"]);
+}
+
+if (params["customer_id"].value == null )
 {
 this.queryText =this.queryText.replace("--$customers$", "")
 this.queryText =this.queryText.replace("--$customerss$", "")
@@ -463,6 +476,7 @@ this.queryText = this.queryText.replace("--$branchs$", "and ai.branch_id = " + p
     from sale_order so,sale_order_line line , res_partner rp
     where so.id=line.order_id and rp.id=so.partner_id     
     and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+    --$company$
     --$customers$
     --$branch$
     group by product_id,payment_type,rp.name,so.partner_id
@@ -474,6 +488,7 @@ foc_qty_sold as (
     where so.id=line.order_id and rp.id=so.partner_id     
     and sale_foc='true'     
     and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+    --$company$    
     --$customers$
     --$branch$
     group by product_id,payment_type,rp.name,so.partner_id
@@ -496,6 +511,7 @@ from (select a.product_id,a.customer_id,a.customer_name,sum(a.credit_sales)credi
     where so.id=line.order_id and rp.id=so.partner_id 
     and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
     and rp.active='true'
+    --$company$
     --$customers$
     --$branch$
     group by product_id,payment_type,rp.name,so.partner_id
@@ -504,7 +520,7 @@ from (select a.product_id,a.customer_id,a.customer_name,sum(a.credit_sales)credi
     ) sales_record
 inner join product_product pp on pp.id=sales_record.product_id 
 inner join product_template pt on pt.id=pp.product_tmpl_id  
-left join qty_sold on qty_sold.product_id=pp.id
+left join qty_sold on qty_sold.product_id=sales_record.product_id and sales_record.customer_name= qty_sold.customer_name
 left join foc_qty_sold on foc_qty_sold.product_id=pp.id
 where pp.active='true'
 group by  pp.id,name_template,default_code,sales_record.customer_name,cash_sales,credit_sales
@@ -516,6 +532,7 @@ order by pp.id
         and aj.name='Sale Return Journal' 
         and ai.type='out_refund'
         and ai.partner_id=p.id
+     	--$companys$
         --$customerss$
         --$branchs$
         and date_invoice::date between ? and ?
