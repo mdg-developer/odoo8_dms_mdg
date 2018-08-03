@@ -1529,6 +1529,7 @@ order by rc.id,rb.id,ccs.id,rp.id]]></xml-property>
                                                     <property name="fontFamily">sans-serif</property>
                                                     <property name="fontSize">9pt</property>
                                                     <property name="fontWeight">normal</property>
+                                                    <property name="textAlign">left</property>
                                                     <property name="resultSetColumn">customer_code</property>
                                                 </data>
                                             </property>
@@ -1557,7 +1558,7 @@ order by rc.id,rb.id,ccs.id,rp.id]]></xml-property>
                                                     <property name="fontFamily">sans-serif</property>
                                                     <property name="fontSize">9pt</property>
                                                     <property name="fontWeight">normal</property>
-                                                    <property name="textAlign">center</property>
+                                                    <property name="textAlign">left</property>
                                                     <property name="resultSetColumn">customer</property>
                                                 </data>
                                             </property>
