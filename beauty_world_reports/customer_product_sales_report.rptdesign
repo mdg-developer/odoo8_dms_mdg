@@ -476,6 +476,7 @@ this.queryText = this.queryText.replace("--$branchs$", "and ai.branch_id = " + p
     from sale_order so,sale_order_line line , res_partner rp
     where so.id=line.order_id and rp.id=so.partner_id     
     and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+    and so.state not in ('draft','cancel')
     --$company$
     --$customers$
     --$branch$
@@ -488,6 +489,7 @@ foc_qty_sold as (
     where so.id=line.order_id and rp.id=so.partner_id     
     and sale_foc='true'     
     and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+    and so.state not in ('draft','cancel')
     --$company$    
     --$customers$
     --$branch$
@@ -511,6 +513,7 @@ from (select a.product_id,a.customer_id,a.customer_name,sum(a.credit_sales)credi
     where so.id=line.order_id and rp.id=so.partner_id 
     and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
     and rp.active='true'
+    and so.state not in ('draft','cancel')
     --$company$
     --$customers$
     --$branch$
@@ -532,6 +535,7 @@ order by pp.id
         and aj.name='Sale Return Journal' 
         and ai.type='out_refund'
         and ai.partner_id=p.id
+        and ai.state not in ('draft','cancel')
      	--$companys$
         --$customerss$
         --$branchs$
