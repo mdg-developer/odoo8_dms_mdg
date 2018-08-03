@@ -639,7 +639,7 @@ else
 	left join account_invoice ai on am.id=ai.move_id
 	where aa.type='receivable'
 	and reconcile_id is null	
-	and am.date <=?
+	and am.date <?
 	and (am.name not like '%INV%' or ai.payment_type ='credit')
 	--$amlanalytic$
 	group by rp.name,customer_id		

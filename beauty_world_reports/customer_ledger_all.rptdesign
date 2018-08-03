@@ -503,7 +503,7 @@ else
 	and aa.type='receivable'
 	--and reconcile_id is null
 	and rp.id=aml.partner_id
-	and am.date <= ?
+	and am.date < ?
 	and (am.name not like '%INV%' or ai.payment_type ='credit')
 	--$amlanalytic$
 ) opening_balance,
