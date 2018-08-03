@@ -242,13 +242,6 @@ order by payment_type]]></xml-property>
                     <text-property name="heading">uom_id</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">big_uom_id</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">big_uom_id</text-property>
-                    <property name="onColumnLayout">false</property>
-                    <text-property name="heading">big_uom_id</text-property>
-                </structure>
-                <structure>
                     <property name="columnName">product_quantity</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">product_quantity</text-property>
@@ -441,21 +434,16 @@ order by payment_type]]></xml-property>
                     </structure>
                     <structure>
                         <property name="position">14</property>
-                        <property name="name">big_uom_id</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">15</property>
                         <property name="name">product_quantity</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">16</property>
+                        <property name="position">15</property>
                         <property name="name">status</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">17</property>
+                        <property name="position">16</property>
                         <property name="name">seq</property>
                         <property name="dataType">integer</property>
                     </structure>
@@ -577,36 +565,30 @@ else
                 </structure>
                 <structure>
                     <property name="position">14</property>
-                    <property name="name">big_uom_id</property>
-                    <property name="nativeName">big_uom_id</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">15</property>
                     <property name="name">product_quantity</property>
                     <property name="nativeName">product_quantity</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">16</property>
+                    <property name="position">15</property>
                     <property name="name">status</property>
                     <property name="nativeName">status</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">17</property>
+                    <property name="position">16</property>
                     <property name="name">seq</property>
                     <property name="nativeName">seq</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[with foc_qty as (
-	select rp.id customer_id,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,product_id,name_template,ail.uos_id,pt.uom_id,pt.big_uom_id,
-	case when ail.uos_id=pt.uom_id then sum(round(quantity,0)) when ail.uos_id=pt.big_uom_id then sum(round(quantity*(select floor(round(1/factor,2)) from product_uom where id=big_uom_id),0)) end as product_quantity,'Foc Qty'::text as status,pp.sequence as seq
+            <xml-property name="queryText"><![CDATA[
+with foc_qty as (
+	select rp.id customer_id,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,product_id,name_template,ail.uos_id,pt.uom_id,
+	case when ail.uos_id=pt.uom_id then sum(round(quantity,0)) when ail.uos_id!=pt.uom_id then sum(round(quantity*(select floor(round(1/factor,2)) from product_uom where id=ail.uos_id),0)) end as product_quantity,'Foc Qty'::text as status,pp.sequence as seq
 	from account_invoice ai,res_partner rp,res_township rt,account_invoice_line ail,product_uom uom,product_product pp,product_template pt,crm_case_section ccs
 	where ai.partner_id=rp.id
 	and rp.township=rt.id
@@ -617,12 +599,15 @@ else
 	and ai.section_id=ccs.id
 	and foc='true'
 	and date_invoice between ? and ?
-	group by rp.id,rp.name,rt.code,number,payment_type,date_invoice,ai.section_id,ccs.name,ai.branch_id,product_id,name_template,pp.sequence,ail.uos_id,pt.uom_id,big_uom_id
+	group by rp.id,rp.name,rt.code,number,payment_type,date_invoice,ai.section_id,ccs.name,ai.branch_id,product_id,name_template,pp.sequence,ail.uos_id,pt.uom_id
 	order by seq),
 sale_qty as (
 	select rp.id customer,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,
-        ccs.name sales_team,ai.branch_id,product_id,name_template,ail.uos_id,pt.uom_id,pt.big_uom_id,
-        case when ail.uos_id=pt.uom_id then sum(round(quantity,0)) when ail.uos_id=pt.big_uom_id then sum(round(quantity*(select floor(round(1/factor,2)) from product_uom where id=big_uom_id),0)) end as product_quantity,'Sales Qty'::text as status,pp.sequence as seq
+        ccs.name sales_team,ai.branch_id,product_id,name_template,ail.uos_id,pt.uom_id,
+        
+        case when ail.uos_id=pt.uom_id then sum(round(quantity,0)) 
+        when ail.uos_id!=pt.uom_id then sum(round(quantity*(select floor(round(1/factor,2)) from product_uom where id=ail.uos_id),0)) 
+        end as product_quantity,'Sales Qty'::text as status,pp.sequence as seq
 	from account_invoice ai,res_partner rp,res_township rt,account_invoice_line ail,product_uom uom,product_product pp,product_template pt,crm_case_section ccs
 	where ai.partner_id=rp.id
 	and rp.township=rt.id
@@ -633,10 +618,10 @@ sale_qty as (
 	and ai.section_id=ccs.id			
 	and foc='false'
 	and date_invoice between ? and ?
-        group by rp.id,rp.name,rt.code,number,payment_type,date_invoice,ai.section_id,ccs.name,ai.branch_id,product_id,name_template,pp.sequence,ail.uos_id,pt.uom_id,big_uom_id
+        group by rp.id,rp.name,rt.code,number,payment_type,date_invoice,ai.section_id,ccs.name,ai.branch_id,product_id,name_template,pp.sequence,ail.uos_id,pt.uom_id
 	order by seq),
 total_amt as (
-	select rp.id customer,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,0,'Total Amt.'::character varying name_template,0,0,0,
+	select rp.id customer,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,0,'Total Amt.'::character varying name_template,0,0,
 	round((amount_untaxed)+(amount_tax*1)+(discount_total*1),0) as product_quantity,''::text as status,90001::int as seq
 	from account_invoice ai,res_partner rp,res_township rt,crm_case_section ccs
 	where ai.partner_id=rp.id	
@@ -646,7 +631,7 @@ total_amt as (
 	order by rp.name
 ),
 total_discount as (
-	select rp.id customer,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,0,'Total Disc.'::character varying name_template,0,0,0,
+	select rp.id customer,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,0,'Total Disc.'::character varying name_template,0,0,
 	round(discount_total,0) as product_quantity,''::text as status,90002::int as seq
 	from account_invoice ai,res_partner rp,res_township rt,crm_case_section ccs
 	where ai.partner_id=rp.id
@@ -656,7 +641,7 @@ total_discount as (
 	order by rp.name
 ),
 net_amt as (
-	select rp.id customer,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,0,'Net Amt.'::character varying name_template,0,0,0,
+	select rp.id customer,rp.name customer_name,rt.code township,number,payment_type,to_char(date_invoice,'dd-mm-yyyy') date_invoice,ai.section_id,ccs.name sales_team,ai.branch_id,0,'Net Amt.'::character varying name_template,0,0,
 	round(amount_total,0) as product_quantity,''::text as status,90003::int as seq
 	from account_invoice ai,res_partner rp,res_township rt,crm_case_section ccs
 	where ai.partner_id=rp.id

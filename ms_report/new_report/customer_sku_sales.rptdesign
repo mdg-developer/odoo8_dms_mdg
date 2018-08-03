@@ -1,20 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
     <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
-    <list-property name="propertyBindings">
-        <structure>
-            <property name="name">queryText</property>
-            <property name="id">60</property>
-        </structure>
-        <structure>
-            <property name="name">queryTimeOut</property>
-            <property name="id">60</property>
-        </structure>
-        <structure>
-            <property name="name">rowFetchSize</property>
-            <property name="id">60</property>
-        </structure>
-    </list-property>
     <property name="units">in</property>
     <method name="initialize"><![CDATA[branchList = params["branch_id"].value.join(",");
 teamList = params["sales_team_id"].value.join(",");]]></method>
@@ -149,6 +135,7 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <property name="columnName">name</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">name</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">name</text-property>
                 </structure>
                 <structure>
@@ -161,66 +148,77 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <property name="columnName">outlettype</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">outlettype</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">outlettype</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">outlettype_id</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">outlettype_id</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">outlettype_id</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">township</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">township</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">township</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">township_id</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">township_id</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">township_id</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">sales_team</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">sales_team</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">sales_team</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">section_id</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">section_id</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">section_id</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">branch_id</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">branch_id</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">branch_id</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">name_template</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">name_template</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">name_template</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">status</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">status</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">status</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">seq</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">seq</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">seq</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">quantity</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">quantity</text-property>
+                    <property name="onColumnLayout">false</property>
                     <text-property name="heading">quantity</text-property>
                 </structure>
             </list-property>
@@ -232,6 +230,7 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">1</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -242,6 +241,7 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">2</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -252,6 +252,7 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">3</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -262,6 +263,7 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">4</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -272,6 +274,7 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">5</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -282,6 +285,7 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">6</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -292,6 +296,7 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">7</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -302,6 +307,7 @@ teamList = params["sales_team_id"].value.join(",");]]></method>
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">8</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -492,8 +498,8 @@ if (params["status"].value == 'non_foc' )
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[with sale_qty as (
-	select rp.name,rp.customer_code,oo.name as outlettype,oo.id as outlettype_id,rt.code as township,rt.id township_id,ccs.name sales_team,ai.section_id,ai.branch_id,name_template,'Sales Qty'::text as status,pp.sequence as seq,
-	case when ail.uos_id=pt.uom_id then sum(round(quantity,0)) when ail.uos_id=pt.big_uom_id then sum(round(quantity*(select floor(round(1/factor,2)) from product_uom where id=big_uom_id),0)) end as quantity
+	select rp.name,rp.customer_code as customer_code,oo.name as outlettype,oo.id as outlettype_id,rt.code as township,rt.id township_id,ccs.name sales_team,ai.section_id,ai.branch_id,name_template,'Sales Qty'::text as status,pp.sequence as seq,
+	case when ail.uos_id=pt.uom_id then sum(round(quantity,0)) when ail.uos_id!=pt.uom_id then sum(round(quantity*(select floor(round(1/factor,2)) from product_uom where id=ail.uos_id),0)) end as quantity
 	from account_invoice ai,res_partner rp,res_township rt,account_invoice_line ail,product_uom uom,product_product pp,product_template pt,crm_case_section ccs,outlettype_outlettype oo
 	where ai.partner_id=rp.id
 	and rp.township=rt.id
@@ -508,8 +514,8 @@ if (params["status"].value == 'non_foc' )
 	group by rp.name,rp.customer_code,oo.name,oo.id,rt.code,rt.id,ccs.name,ai.section_id,ai.branch_id,name_template,pp.sequence,ail.uos_id,pt.uom_id,big_uom_id
 	order by seq),
 total_amt as (
-	select rp.name,rp.customer_code,oo.name as outlettype,oo.id as outlettype_id,rt.code as township,rt.id township_id,ccs.name sales_team,ai.section_id,ai.branch_id,'Gross Net Amt.'::character varying name_template,''::text as status,90001::int as seq,
-	round((amount_untaxed)+(discount_total*1),0) as quantity
+	select rp.name,rp.customer_code as customer_code,oo.name as outlettype,oo.id as outlettype_id,rt.code as township,rt.id township_id,ccs.name sales_team,ai.section_id,ai.branch_id,'Gross Net Amt.'::character varying name_template,''::text as status,90001::int as seq,
+	round((amount_untaxed)+(amount_tax*1)+(discount_total*1),0) as quantity
 	from account_invoice ai,res_partner rp,res_township rt,crm_case_section ccs,outlettype_outlettype oo
 	where ai.partner_id=rp.id	
 	and rp.township=rt.id
@@ -519,7 +525,7 @@ total_amt as (
 	order by rp.name
 ),
 total_discount as (
-	select rp.name,rp.customer_code,oo.name as outlettype,oo.id as outlettype_id,rt.code as township,rt.id township_id,ccs.name sales_team,ai.section_id,ai.branch_id,'Total Disc.'::character varying name_template,''::text as status,90002::int as seq,
+	select rp.name,rp.customer_code as customer_code,oo.name as outlettype,oo.id as outlettype_id,rt.code as township,rt.id township_id,ccs.name sales_team,ai.section_id,ai.branch_id,'Total Disc.'::character varying name_template,''::text as status,90002::int as seq,
 	round(discount_total,0) as quantity
 	from account_invoice ai,res_partner rp,res_township rt,crm_case_section ccs,outlettype_outlettype oo
 	where ai.partner_id=rp.id
@@ -530,8 +536,8 @@ total_discount as (
 	order by rp.name
 ),
 net_amt as (
-	select rp.name,rp.customer_code,oo.name as outlettype,oo.id as outlettype_id,rt.code as township,rt.id township_id,ccs.name sales_team,ai.section_id,ai.branch_id,'Net Amt.'::character varying name_template,''::text as status,90003::int as seq,
-	round(amount_untaxed,0) as quantity
+	select rp.name,rp.customer_code as customer_code,oo.name as outlettype,oo.id as outlettype_id,rt.code as township,rt.id township_id,ccs.name sales_team,ai.section_id,ai.branch_id,'Net Amt.'::character varying name_template,''::text as status,90003::int as seq,
+	round(amount_total,0) as quantity
 	from account_invoice ai,res_partner rp,res_township rt,crm_case_section ccs,outlettype_outlettype oo
 	where ai.partner_id=rp.id
 	and rp.township=rt.id	
@@ -1629,7 +1635,7 @@ order by code,name]]></xml-property>
                             <property name="content">
                                 <data id="881">
                                     <property name="fontWeight">normal</property>
-                                    <property name="paddingLeft">3pt</property>
+                                    <property name="paddingLeft">5pt</property>
                                     <structure name="numberFormat">
                                         <property name="category">Currency</property>
                                         <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
@@ -1646,7 +1652,7 @@ order by code,name]]></xml-property>
                             <property name="content">
                                 <data id="890">
                                     <property name="fontWeight">bold</property>
-                                    <property name="paddingLeft">3pt</property>
+                                    <property name="paddingLeft">5pt</property>
                                     <structure name="numberFormat">
                                         <property name="category">Currency</property>
                                         <property name="pattern">#,##0{RoundingMode=HALF_UP}</property>
