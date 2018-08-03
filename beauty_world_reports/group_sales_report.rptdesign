@@ -289,6 +289,7 @@ from
        from sale_order so
        inner join sale_order_line line on line.order_id=so.id
        where ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+       and so.state not in ('draft','cancel')
        --$company_id$
        group by line.product_id,so.payment_type
    ) product on product.product_id=sale.pid)aaa5555
@@ -301,6 +302,7 @@ left join
    where ai.id=ail.invoice_id and ai.journal_id=aj.id
    and aj.name='Sale Return Journal'
    and ai.type='out_refund'
+   and ai.state not in ('draft','cancel')
    --$company$
    and date_invoice::date between ? and ?
    group by ail.product_id
