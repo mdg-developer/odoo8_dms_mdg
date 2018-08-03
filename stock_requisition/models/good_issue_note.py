@@ -232,6 +232,8 @@ class good_issue_note(osv.osv):
                                            'origin':origin,
                                           'state':'confirmed'}, context=context)     
                     move_obj.action_done(cr, uid, move_id, context=context)  
+                    cr.execute('''update stock_move set date=((%s::date)::text || ' ' || date::time(0))::timestamp where state='done' and origin =%s''',(issue_date,origin,))
+
         return self.write(cr, uid, ids, {'state': 'issue'})  
                             
 class good_issue_line(osv.osv):  # #prod_pricelist_update_line

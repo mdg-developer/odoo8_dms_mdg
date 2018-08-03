@@ -128,7 +128,7 @@
 							<th class="text-right">Sales Qty</th>
 							<th class="text-right">Exchange Qty</th>
 							<th class="text-right">Return Qty</th>
-							<th class="text-right">All Physical Stock Qty</th>
+							<th class="center">All Physical Stock Qty</th>
 							<th class="text-right">Actual Return Qty</th>
 							<th class="text-right">Closing Stock Qty</th>
 							<th>Expiry</th>
@@ -180,11 +180,11 @@
 							<td align="text-right">
 								<span t-field="l.closing_stock_qty" />
 							</td>
-							<td align="center">
-								<span t-field="l.expiry_date" />
+							<td class="text-right">
+								<span t-field="l.expiry_date"/>
 							</td>
-							<td align="center">
-								<span t-field="l.remark" />
+							<td align="text-right">
+								<span t-field="l.remark"/>
 							</td>
 						</tr>
 					</tbody>

@@ -150,8 +150,6 @@
 					<thead>
 						<tr>
 							<th>Product</th>
-							<th>Opening Qty</th>
-							<th>Opening UOM</th>
 							<th class="text-center">Qty</th>
 							<th class="text-center">UOM</th>
 							<th>Batch No</th>
@@ -164,12 +162,6 @@
 						<tr t-foreach="o.p_line.sorted(key=lambda b: b.sequence)" t-as="l">
 							<td>
 								<span t-field="l.product_id" />
-							</td>
-							<td align="center">
-								<span t-field="l.opening_qty" />
-							</td>
-							<td align="center">
-								<span t-field="l.opening_product_uom" />
 							</td>
 							<td align="center">
 								<!-- <span t-field="l.big_issue_quantity" /> / -->
