@@ -391,11 +391,12 @@ else
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[Select a.name_template,a.default_code, COALESCE(sum(a.qty_sold),0) qty_sold, COALESCE(sum(a.foc_qty_sold),0) foc_qty_sold,
-COALESCE(sum(a.credit_sales),0)credit_sales, COALESCE(sum(a.cash_sales),0)cash_sales, COALESCE(sum(a.return_qty),0)return,a.group 
+a.credit_sales,a.cash_sales,COALESCE(sum(a.return_qty),0)return,a.group 
 From (with qty_sold as (
 	select COALESCE(sum(product_uom_qty),0) qty_sold,product_id
 	from sale_order so,sale_order_line line 
 	where so.id=line.order_id 	
+	and so.state not in ('draft','cancel')
 	and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
 	--$company_id$
 	group by product_id
@@ -405,30 +406,42 @@ foc_qty_sold as (
 	from sale_order so,sale_order_line line 
 	where so.id=line.order_id 
 	and sale_foc='true' 	
+	and so.state not in ('draft','cancel')
 	and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
 	--$company_id$
 	group by product_id
 	),
 sales_record as (	
-	select COALESCE(sum((product_uom_qty*price_unit)-discount_amt),0) sales,product_id,payment_type
-	from sale_order so,sale_order_line line
-	where so.id=line.order_id
+	select ss.product_id,sum(ss.credit_sales)credit_sales,sum(ss.cash_sales)cash_sales 
+	from (select product_id,payment_type,
+	case when payment_type='credit' then COALESCE(sum((product_uom_qty*price_unit)-discount_amt),0) end as credit_sales,
+	case when payment_type='cash' then COALESCE(sum((product_uom_qty*price_unit)-discount_amt),0) end as cash_sales
+	from sale_order so,sale_order_line line, res_partner rp
+	where so.id=line.order_id and rp.id=so.partner_id 
 	and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
-	--$company_id$
+	and rp.active='true'
+	and so.state not in ('draft','cancel')
+	--$company$
+	--$customers$
+	--$branch$
 	group by product_id,payment_type
+    ) ss
+    group by ss.product_id
 	),
 return_qty as (select ail.product_id,ai.section_id,COALESCE(sum(ai.amount_total),0)return_qty  from 
 		account_invoice ai,account_invoice_line ail,account_journal aj
 		where ai.id=ail.invoice_id and ai.journal_id=aj.id
 		and aj.name='Sale Return Journal' 
+		and ai.type='out_refund'
+		and ai.state not in ('draft','cancel')
 		and date_invoice::date between ? and ?
 		group by ail.product_id,ai.section_id)
 
 select name_template,default_code,cat.name as group,
+greatest(0,sales_record.credit_sales) credit_sales,
+greatest(0,sales_record.cash_sales) cash_sales,
 greatest(0,qty_sold.qty_sold) qty_sold, 
 greatest(0,foc_qty_sold.foc_qty_sold) foc_qty_sold,
-case when sales_record.payment_type='credit' then greatest(0,sales_record.sales) end as credit_sales,
-case when sales_record.payment_type='cash' then greatest(0,sales_record.sales) end as cash_sales,
 greatest(0,return_qty.return_qty) return_qty
 from product_product pp
 inner join product_template pt on pp.product_tmpl_id=pt.id 
@@ -439,7 +452,7 @@ left join foc_qty_sold on foc_qty_sold.product_id=pp.id
 left join return_qty on return_qty.product_id=sales_record.product_id
 where pp.active='true'
 --$category_id$
-order by cat.name,default_code)a group by a.name_template,a.default_code,a.group
+order by cat.name,default_code)a group by a.name_template,a.default_code,a.group,a.credit_sales,a.cash_sales
 order by qty_sold Desc]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
