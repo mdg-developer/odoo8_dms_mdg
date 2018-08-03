@@ -291,7 +291,7 @@
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">7</property>
+                    <property name="position">6</property>
                     <property name="name">credit_sales</property>
                     <property name="nativeName">credit_sales</property>
                     <property name="dataType">decimal</property>
@@ -315,6 +315,7 @@ return_tbl as (select ai.partner_id,COALESCE(sum(ai.amount_total),0)return_amt  
 		and aj.name='Sale Return Journal'
 		and ai.type='out_refund' 
 		and date_invoice::date between ? and ?
+		and ai.state not in ('draft','cancel')
 		group by ai.partner_id)
 select distinct so.partner_id customer_id,COALESCE(sum(so.amount_total),0) sales,
 so.payment_type,rp.name customer_name,rp.customer_code,return_tbl.return_amt return,
@@ -324,6 +325,7 @@ from sale_order so
 inner join res_partner rp on rp.id=so.partner_id
 left join return_tbl on return_tbl.partner_id=so.partner_id
 where ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+and so.state not in ('draft','cancel')
 and rp.active='true'
 group by so.payment_type,rp.name,so.partner_id,rp.customer_code,return_tbl.return_amt)a group by  a.customer_id,a.customer_name,a.customer_code]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
