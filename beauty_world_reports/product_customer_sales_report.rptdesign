@@ -380,6 +380,7 @@ this.queryText =this.queryText.replace("--$product$", "")
 else
 {
 this.queryText = this.queryText.replace("--$product$", "and line.product_id in (" + params["product"].value.join(",") + ")" );
+this.queryText = this.queryText.replace("--$products$", "and ail.product_id in (" + params["product"].value.join(",") + ")" );
 };]]></method>
             <property name="dataSource">Data Source</property>
             <list-property name="resultSet">
@@ -463,6 +464,7 @@ with qty_sold as (
     from sale_order so,sale_order_line line , res_partner rp
     where so.id=line.order_id and rp.id=so.partner_id     
     and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+    and so.state not in ('draft','cancel')
     --$product$
     group by product_id,payment_type,rp.name,so.partner_id,rp.customer_code
     ),
@@ -473,6 +475,7 @@ foc_qty_sold as (
     where so.id=line.order_id and rp.id=so.partner_id     
     and sale_foc='true'     
     and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+    and so.state not in ('draft','cancel')
     --$product$
     group by product_id,payment_type,rp.name,so.partner_id,rp.customer_code
     )
@@ -489,6 +492,7 @@ payment_type,rp.name customer_name,so.partner_id customer_id,rp.customer_code
 from sale_order so,sale_order_line line, res_partner rp
 where so.id=line.order_id and rp.id=so.partner_id 
 and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+and so.state not in ('draft','cancel')
 and rp.active='true'
 --$product$
 group by product_id,payment_type,rp.name,so.partner_id,rp.customer_code
@@ -508,7 +512,9 @@ select p.name customer_name, ail.product_id,ai.section_id,COALESCE(sum(ai.amount
         and aj.name='Sale Return Journal' 
         and ai.type='out_refund'
         and date_invoice::date between ? and ?
+        and ai.state not in ('draft','cancel')
         and ai.partner_id=p.id
+        --$products$
         group by ail.product_id,ai.section_id,p.id
 )bb on aa.pid=bb.product_id and aa.customer_name=bb.customer_name]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
