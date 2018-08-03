@@ -155,11 +155,17 @@ class mobile_sale_order(osv.osv):
                     if so['order_saleteam'] != 'null':
                         cursor.execute('select id from crm_case_section where name=%s', (so['order_saleteam'],))
                         order_team = cursor.fetchone()[0]
-                        so['sale_team']=order_team
+                        #so['sale_team']=order_team
+                        so['sale_team']=so['sale_team']
+                        order_team=None
                     else:
                         order_team = None
-                    if so['order_saleperson']: 
-                        so['user_id']=so['order_saleperson']
+                    if so['order_saleperson']!= 'null' and so['order_saleperson']:
+                       # so['user_id']=so['order_saleperson']
+                        so['user_id']=so['user_id']
+                        so['order_saleperson']=None
+                    else:
+                        so['order_saleperson']=None
                         
                     cursor.execute('select branch_id from crm_case_section where id=%s', (so['sale_team'],))
                     branch_id = cursor.fetchone()[0]     
@@ -1728,7 +1734,7 @@ class mobile_sale_order(osv.osv):
                     for invoice_id in invoice_data:
                         invoice = Order_obj.browse(cursor, user, invoice_id, context=context)
                         deduct_amt = invoice.deduct_amt
-                        amount_total = invoice.amount_untaxed
+                        amount_total = invoice.amount_total
                         deduct_percent = invoice.additional_discount / 100
                         discount_total += amount_total * deduct_percent
                         discount_amount += deduct_amt                    
@@ -1740,13 +1746,13 @@ class mobile_sale_order(osv.osv):
                     for data in line_ids:
                         order_line_data = Order_Lineobj.browse(cursor, user, data, context=context)
                         product_id=order_line_data.product_id.id      
-                        product_amount += order_line_data.net_total
+                        product_amount += order_line_data.price_subtotal
                         pre_qty=order_line_data.product_uom_qty
                         pre_p_uom=order_line_data.product_uom.id
                         product = self.pool.get('product.product').browse(cursor, user, product_id, context=context)
                         sequence = product.sequence
-                        if pre_p_uom == product.product_tmpl_id.big_uom_id.id:                                                                          
-                            cursor.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (product.product_tmpl_id.big_uom_id.id,))
+                        if pre_p_uom != product.product_tmpl_id.uom_id.id:                                                                          
+                            cursor.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (pre_p_uom,))
                             bigger_qty = cursor.fetchone()[0]
                             bigger_qty = int(bigger_qty)
                             pre_qty = bigger_qty * pre_qty         
@@ -1754,10 +1760,10 @@ class mobile_sale_order(osv.osv):
                                           'product_uom_qty':pre_qty,
                                           'denomination_product_ids':deno_id,
                                           'sequence':sequence,
-                                          'amount':order_line_data.net_total}
+                                          'amount':order_line_data.price_subtotal}
                         exit_data = deno_product_obj.search(cursor, user, [('denomination_product_ids', '=', deno_id), ('product_id', '=', product_id)], context=context)         
                         if exit_data:
-                            cursor.execute("update sales_denomination_product_line set product_uom_qty = product_uom_qty + %s , amount = amount + %s where denomination_product_ids = %s and product_id =%s", (pre_qty, order_line_data.net_total, deno_id, product_id,))
+                            cursor.execute("update sales_denomination_product_line set product_uom_qty = product_uom_qty + %s , amount = amount + %s where denomination_product_ids = %s and product_id =%s", (pre_qty, order_line_data.price_subtotal, deno_id, product_id,))
                         else:
                             deno_product_obj.create(cursor, user, data_id, context=context)                       
                 cursor.execute("select id from account_invoice where date_invoice=%s and section_id =%s and state='open' and payment_type='cash' ", (de_date, team_id,))
@@ -1776,7 +1782,7 @@ class mobile_sale_order(osv.osv):
                         discount_amount+=deduct_amt                    
                     line_ids = invoice_obj.search(cursor, user, [('invoice_id', 'in', total_mobile_ids)], context=context)         
                     order_line_ids = invoice_obj.browse(cursor, user, line_ids, context=context)         
-                    cursor.execute('select product_id,sum(quantity) as quantity,sum(price_subtotal) as  sub_total,uos_id from account_invoice_line where id in %s group by product_id,uos_id', (tuple(order_line_ids.ids),))
+                    cursor.execute('select product_id,sum(quantity) as quantity,sum(quantity * price_unit) as  sub_total,uos_id from account_invoice_line where id in %s group by product_id,uos_id', (tuple(order_line_ids.ids),))
                     order_line = cursor.fetchall()
                     for data in order_line:
                         product = self.pool.get('product.product').browse(cursor, user, data[0], context=context)
@@ -1784,8 +1790,8 @@ class mobile_sale_order(osv.osv):
                         product_amount+=data[2]
                         pre_qty=data[1]
                         pre_p_uom=data[3]
-                        if pre_p_uom == product.product_tmpl_id.big_uom_id.id:                                                                          
-                            cursor.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (product.product_tmpl_id.big_uom_id.id,))
+                        if pre_p_uom != product.product_tmpl_id.uom_id.id:                                                                          
+                            cursor.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (pre_p_uom,))
                             bigger_qty = cursor.fetchone()[0]
                             bigger_qty = int(bigger_qty)
                             pre_qty = bigger_qty * pre_qty         
@@ -1819,8 +1825,8 @@ class mobile_sale_order(osv.osv):
                         product_amount += data[2]
                         sale_qty = int(data[1])
                         product_uom = int(data[3])
-                        if product_uom == product.product_tmpl_id.big_uom_id.id:                                                                          
-                            cursor.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (product.product_tmpl_id.big_uom_id.id,))
+                        if product_uom != product.product_tmpl_id.uom_id.id:                                                                          
+                            cursor.execute("select floor(round(1/factor,2)) as ratio from product_uom where active = true and id=%s", (product_uom,))
                             bigger_qty = cursor.fetchone()[0]
                             bigger_qty = int(bigger_qty)
                             sale_qty = bigger_qty * sale_qty
