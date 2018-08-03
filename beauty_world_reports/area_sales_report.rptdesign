@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="bidiLayoutOrientation">ltr</property>
@@ -330,6 +330,7 @@ case when so.payment_type='cash' then COALESCE(sum(so.amount_total),0) end as ca
 from sale_order so, res_city rc
 where rc.id=so.city 
 and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+and so.state not in ('draft','cancel')
 group by so.payment_type,rc.name,so.city,rc.code
 )a
 left join (select ai.city,COALESCE(sum(ai.amount_total),0)return_amt  from 
@@ -338,6 +339,7 @@ left join (select ai.city,COALESCE(sum(ai.amount_total),0)return_amt  from
 		and aj.name='Sale Return Journal' 
 		and ai.type='out_refund' 
 		and date_invoice::date between ? and ?
+		and ai.state not in ('draft','cancel')
 		group by ai.city)return_tbl on return_tbl.city=a.city_id
 group by a.city_id,a.city_code,a.city_name,return_tbl.return_amt]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
