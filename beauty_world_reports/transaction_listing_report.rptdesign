@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
     <list-property name="propertyBindings">
         <structure>
             <property name="name">queryText</property>
@@ -207,7 +207,28 @@
                     <text-property name="heading">grand</text-property>
                 </structure>
             </list-property>
-            <list-property name="parameters"/>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">param_1</property>
+                    <property name="paramName">from_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_2</property>
+                    <property name="paramName">to_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">2</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
                     <structure>
@@ -253,21 +274,28 @@
                     <structure>
                         <property name="position">9</property>
                         <property name="name">total</property>
-                        <property name="dataType">decimal</property>
+                        <property name="dataType">float</property>
                     </structure>
                     <structure>
                         <property name="position">10</property>
                         <property name="name">net</property>
-                        <property name="dataType">float</property>
+                        <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">11</property>
                         <property name="name">grand</property>
-                        <property name="dataType">float</property>
+                        <property name="dataType">decimal</property>
                     </structure>
                 </list-property>
             </structure>
-            <method name="beforeOpen"><![CDATA[if (params["customer_id"].value == null ){     
+            <method name="beforeOpen"><![CDATA[if (params["branch_id"].value == null ){     
+   this.queryText =this.queryText.replace("--$branch$", "")
+}
+else
+{     
+   this.queryText =this.queryText.replace("--$branch$", "and ai.branch_id="+params["branch_id"])
+}
+if (params["customer_id"].value == null ){     
    this.queryText =this.queryText.replace("--$customer$", "")
 }
 else
@@ -350,39 +378,76 @@ else
                     <property name="position">9</property>
                     <property name="name">total</property>
                     <property name="nativeName">total</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">2</property>
+                    <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
                 </structure>
                 <structure>
                     <property name="position">10</property>
                     <property name="name">net</property>
                     <property name="nativeName">net</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
                     <property name="position">11</property>
                     <property name="name">grand</property>
                     <property name="nativeName">grand</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select ai.number refno,ai.date_invoice,ai.payment_type,(ai.cash_discount + ai.additional_discount + ai.deduct_amt + ai.discount_total) discount_total,
-ap.name period,rp.customer_code,rp.name,ai.amount_tax tax,ai.amount_untaxed total,
-(ai.amount_untaxed - (ai.cash_discount + ai.additional_discount + ai.deduct_amt + ai.discount_total)) net,
-(ai.amount_untaxed - ai.amount_tax - (ai.cash_discount + ai.additional_discount + ai.deduct_amt + ai.discount_total)) grand
+            <xml-property name="queryText"><![CDATA[select * from (
+select ai.number refno,ai.date_invoice,ai.payment_type,COALESCE((ai.cash_discount + ai.additional_discount + ai.deduct_amt + ai.discount_total),0) discount_total,
+ap.name period,rp.customer_code,rp.name,ai.amount_tax tax,
+(ai.amount_total + COALESCE((ai.cash_discount + ai.additional_discount + ai.deduct_amt + ai.discount_total),0)) total,
+(ai.amount_total ) net,
+(ai.amount_total - ai.amount_tax) grand
 from account_invoice ai,account_invoice_line ail,account_period ap,res_partner rp
 where ai.id=ail.invoice_id and
 ai.period_id=ap.id and ai.partner_id=rp.id
 and rp.active=true
-and date_invoice between '2018-01-01' and '2018-01-03'
+and date_invoice between ? and ?
+--$branch$
 --$payment$
 --$customer$
---$analytic$]]></xml-property>
+--$analytic$
+)transaction_list 
+group by refno,date_invoice,payment_type,discount_total,discount_total,period,customer_code,name,tax,total,net,grand]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>2</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
   <design:ResultSets derivedMetaData="true">
     <design:resultSetDefinitions>
       <design:resultSetColumns>
