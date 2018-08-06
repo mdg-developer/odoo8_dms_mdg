@@ -319,10 +319,12 @@
             </structure>
             <method name="beforeOpen"><![CDATA[if (params["company_id"].value == null ){     
    this.queryText =this.queryText.replace("--$company_id$", "")
+   this.queryText =this.queryText.replace("--$company$", "")
 }
 else
 {     
    this.queryText =this.queryText.replace("--$company_id$", "and so.company_id="+params["company_id"])
+   this.queryText =this.queryText.replace("--$company$", "and ai.company_id="+params["company_id"])
 }
 if (params["group"].value == null ){     
    this.queryText =this.queryText.replace("--$category_id$", "")
@@ -421,9 +423,7 @@ sales_record as (
 	and ((date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
 	and rp.active='true'
 	and so.state not in ('draft','cancel')
-	--$company$
-	--$customers$
-	--$branch$
+	--$company_id$
 	group by product_id,payment_type
     ) ss
     group by ss.product_id
@@ -435,6 +435,7 @@ return_qty as (select ail.product_id,ai.section_id,COALESCE(sum(ai.amount_total)
 		and ai.type='out_refund'
 		and ai.state not in ('draft','cancel')
 		and date_invoice::date between ? and ?
+		--$company$
 		group by ail.product_id,ai.section_id)
 
 select name_template,default_code,cat.name as group,
