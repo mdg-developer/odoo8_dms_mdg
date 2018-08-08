@@ -422,7 +422,6 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">11</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -433,7 +432,6 @@
                     <property name="dataType">date</property>
                     <property name="nativeDataType">91</property>
                     <property name="position">12</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -713,18 +711,13 @@ union
 	(
 		select 'INV'::character varying as type,trim(rp.name) customer_name,number ref_no,date_invoice date,
 		(
-
-			select COALESCE(sum(av.amount),0) 
-			from account_voucher av,account_voucher_line avl,account_move_line aml,account_invoice ai
-			where av.id=avl.voucher_id
-			and avl.move_line_id=aml.id
-			and aml.ref=ai.origin
+			select COALESCE((ai.amount_total - ai.residual),0) as collection_amount from account_invoice ai,account_invoice_line ail
+			where ai.state not in ('draft','cancel')
+			and ai.date_invoice between ? and ?
 			and ai.number=inv.number
-			and av.state not in ('draft','cancel')
-			and av.date between ? and ?
-			and av.type='receipt'
-			--$amlanalytic$
-			and payment_type='credit'
+			and ai.payment_type='credit'
+			and ai.type='out_invoice'
+			group by ai.amount_untaxed,ai.discount_total,ai.id
 
 		) collection,
 		(
@@ -773,7 +766,7 @@ union
 		--$ailanalytic$
 		group by rp.name,rp.id,number,date_invoice
 	)A
-	order by sequence,customer_name]]></xml-property>
+	order by sequence,date,ref_no,customer_name]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
