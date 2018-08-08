@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="bidiLayoutOrientation">ltr</property>
@@ -512,28 +512,22 @@ where f.id=p.fiscalyear_id]]></xml-property>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="Data Set" id="233">
             <list-property name="columnHints">
                 <structure>
-                    <property name="columnName">desp</property>
+                    <property name="columnName">number</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">desp</text-property>
-                    <text-property name="heading">desp</text-property>
+                    <text-property name="displayName">number</text-property>
+                    <text-property name="heading">number</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">origin</property>
+                    <property name="columnName">date_order</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">origin</text-property>
-                    <text-property name="heading">origin</text-property>
+                    <text-property name="displayName">date_order</text-property>
+                    <text-property name="heading">date_order</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">period_name</property>
+                    <property name="columnName">supplier</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">period_name</text-property>
-                    <text-property name="heading">period_name</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">date_invoice</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">date_invoice</text-property>
-                    <text-property name="heading">date_invoice</text-property>
+                    <text-property name="displayName">supplier</text-property>
+                    <text-property name="heading">supplier</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">payment_type</property>
@@ -542,10 +536,16 @@ where f.id=p.fiscalyear_id]]></xml-property>
                     <text-property name="heading">payment_type</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">number</property>
+                    <property name="columnName">dest_branch</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">number</text-property>
-                    <text-property name="heading">number</text-property>
+                    <text-property name="displayName">dest_branch</text-property>
+                    <text-property name="heading">dest_branch</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">source_branch</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">source_branch</text-property>
+                    <text-property name="heading">source_branch</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">amount_total</property>
@@ -560,6 +560,18 @@ where f.id=p.fiscalyear_id]]></xml-property>
                     <text-property name="heading">discount</text-property>
                 </structure>
                 <structure>
+                    <property name="columnName">amount_tax</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">amount_tax</text-property>
+                    <text-property name="heading">amount_tax</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">period_name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">period_name</text-property>
+                    <text-property name="heading">period_name</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">amount_untaxed</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">amount_untaxed</text-property>
@@ -572,46 +584,10 @@ where f.id=p.fiscalyear_id]]></xml-property>
                     <text-property name="heading">net</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">amount_tax</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">amount_tax</text-property>
-                    <text-property name="heading">amount_tax</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">source_origin</property>
+                    <property name="columnName">desp</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">source_origin</text-property>
-                    <text-property name="heading">source_origin</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">location_id</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">location_id</text-property>
-                    <text-property name="heading">location_id</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">source_branch</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">source_branch</text-property>
-                    <text-property name="heading">source_branch</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">dest_origin</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">dest_origin</text-property>
-                    <text-property name="heading">dest_origin</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">location_dest_id</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">location_dest_id</text-property>
-                    <text-property name="heading">location_dest_id</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">dest_branch</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">dest_branch</text-property>
-                    <text-property name="heading">dest_branch</text-property>
+                    <text-property name="displayName">desp</text-property>
+                    <text-property name="heading">desp</text-property>
                 </structure>
             </list-property>
             <list-property name="parameters">
@@ -637,77 +613,37 @@ where f.id=p.fiscalyear_id]]></xml-property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
-                <structure>
-                    <property name="name">param_3</property>
-                    <property name="paramName">from_date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">3</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_4</property>
-                    <property name="paramName">to_date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">4</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_5</property>
-                    <property name="paramName">from_date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">5</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_6</property>
-                    <property name="paramName">to_date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">6</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
             </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
                     <structure>
                         <property name="position">1</property>
-                        <property name="name">desp</property>
+                        <property name="name">number</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">2</property>
-                        <property name="name">origin</property>
-                        <property name="dataType">string</property>
+                        <property name="name">date_order</property>
+                        <property name="dataType">date</property>
                     </structure>
                     <structure>
                         <property name="position">3</property>
-                        <property name="name">period_name</property>
+                        <property name="name">supplier</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">4</property>
-                        <property name="name">date_invoice</property>
-                        <property name="dataType">date</property>
-                    </structure>
-                    <structure>
-                        <property name="position">5</property>
                         <property name="name">payment_type</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
+                        <property name="position">5</property>
+                        <property name="name">dest_branch</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
                         <property name="position">6</property>
-                        <property name="name">number</property>
+                        <property name="name">source_branch</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
@@ -722,47 +658,27 @@ where f.id=p.fiscalyear_id]]></xml-property>
                     </structure>
                     <structure>
                         <property name="position">9</property>
-                        <property name="name">amount_untaxed</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
-                        <property name="position">10</property>
-                        <property name="name">net</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">11</property>
                         <property name="name">amount_tax</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">12</property>
-                        <property name="name">source_origin</property>
+                        <property name="position">10</property>
+                        <property name="name">period_name</property>
                         <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">amount_untaxed</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
+                        <property name="name">net</property>
+                        <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">13</property>
-                        <property name="name">location_id</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">14</property>
-                        <property name="name">source_branch</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">15</property>
-                        <property name="name">dest_origin</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">16</property>
-                        <property name="name">location_dest_id</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">17</property>
-                        <property name="name">dest_branch</property>
+                        <property name="name">desp</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
@@ -778,43 +694,43 @@ else
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
-                    <property name="name">desp</property>
-                    <property name="nativeName">desp</property>
+                    <property name="name">number</property>
+                    <property name="nativeName">number</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
                     <property name="position">2</property>
-                    <property name="name">origin</property>
-                    <property name="nativeName">origin</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
+                    <property name="name">date_order</property>
+                    <property name="nativeName">date_order</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
                 </structure>
                 <structure>
                     <property name="position">3</property>
-                    <property name="name">period_name</property>
-                    <property name="nativeName">period_name</property>
+                    <property name="name">supplier</property>
+                    <property name="nativeName">supplier</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
                     <property name="position">4</property>
-                    <property name="name">date_invoice</property>
-                    <property name="nativeName">date_invoice</property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                </structure>
-                <structure>
-                    <property name="position">5</property>
                     <property name="name">payment_type</property>
                     <property name="nativeName">payment_type</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
+                    <property name="position">5</property>
+                    <property name="name">dest_branch</property>
+                    <property name="nativeName">dest_branch</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
                     <property name="position">6</property>
-                    <property name="name">number</property>
-                    <property name="nativeName">number</property>
+                    <property name="name">source_branch</property>
+                    <property name="nativeName">source_branch</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
@@ -834,86 +750,65 @@ else
                 </structure>
                 <structure>
                     <property name="position">9</property>
-                    <property name="name">amount_untaxed</property>
-                    <property name="nativeName">amount_untaxed</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">2</property>
-                </structure>
-                <structure>
-                    <property name="position">10</property>
-                    <property name="name">net</property>
-                    <property name="nativeName">net</property>
-                    <property name="dataType">float</property>
-                    <property name="nativeDataType">8</property>
-                </structure>
-                <structure>
-                    <property name="position">11</property>
                     <property name="name">amount_tax</property>
                     <property name="nativeName">amount_tax</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">12</property>
-                    <property name="name">source_origin</property>
-                    <property name="nativeName">source_origin</property>
+                    <property name="position">10</property>
+                    <property name="name">period_name</property>
+                    <property name="nativeName">period_name</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">11</property>
+                    <property name="name">amount_untaxed</property>
+                    <property name="nativeName">amount_untaxed</property>
+                    <property name="dataType">float</property>
+                    <property name="nativeDataType">8</property>
+                </structure>
+                <structure>
+                    <property name="position">12</property>
+                    <property name="name">net</property>
+                    <property name="nativeName">net</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
                     <property name="position">13</property>
-                    <property name="name">location_id</property>
-                    <property name="nativeName">location_id</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">14</property>
-                    <property name="name">source_branch</property>
-                    <property name="nativeName">source_branch</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-                <structure>
-                    <property name="position">15</property>
-                    <property name="name">dest_origin</property>
-                    <property name="nativeName">dest_origin</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-                <structure>
-                    <property name="position">16</property>
-                    <property name="name">location_dest_id</property>
-                    <property name="nativeName">location_dest_id</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">17</property>
-                    <property name="name">dest_branch</property>
-                    <property name="nativeName">dest_branch</property>
+                    <property name="name">desp</property>
+                    <property name="nativeName">desp</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select concat('from ',source.source_branch,' to ',dest.dest_branch) as desp,* from (select ai.origin,ap.name period_name,date_invoice,payment_type,ai.number,ai.amount_total,(ai.discount_total + ai.additional_discount + ai.cash_discount + ai.deduct_amt )discount,
-ai.amount_untaxed,(ai.amount_untaxed - (ai.discount_total + ai.additional_discount + ai.cash_discount + ai.deduct_amt ))net,
-ai.amount_tax
-from account_invoice ai,account_invoice_line ail,account_period ap
-where ai.id=ail.invoice_id and ap.id=ai.period_id 
-and ai.partner_id in (select id from res_partner where inter_company=true and customer=true)
+            <xml-property name="queryText"><![CDATA[select *,concat('from ',source_branch,' to ',dest_branch) as desp from (
+select so.name number,so.date_order::date,rp.name supplier,so.payment_type,rbd.name dest_branch,rb.name source_branch,
+so.amount_total,COALESCE((so.total_dis + so.cash_discount),0)discount,so.amount_tax,ap.name period_name,
+(COALESCE(so.amount_untaxed,0)+COALESCE((so.total_dis + so.cash_discount),0)) amount_untaxed,COALESCE((so.amount_untaxed),0)net
+from sale_order so,res_partner rp,stock_picking_type spt,stock_warehouse sw,stock_picking sp,stock_move sm,res_branch rbd,
+res_branch rb,stock_location sld,stock_location sl,account_invoice ai,account_invoice_line ail,account_period ap
+where so.warehouse_id=sw.id
+and spt.warehouse_id=sw.id 
+and so.partner_id=rp.id 
+and sp.picking_type_id=spt.id
+and sm.picking_id=sp.id
+and sld.branch_id=rbd.id
+and sl.branch_id=rb.id
+and sm.location_dest_id=sld.id
+and sm.location_id=sl.id
+and so.name=ai.origin
+and ai.period_id=ap.id
+and ai.id=ail.invoice_id
+and so.state not in ('draft','cancel')
 --$analytic$
-and ((ai.date_invoice at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?)sale
-inner join 
-(select distinct sm.origin source_origin,sm.location_id,rb.name source_branch from stock_move sm,res_branch rb,stock_location sl 
-where sl.branch_id=rb.id 
-and sm.location_dest_id=sl.id
-and ((sm.date at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?)source on source.source_origin=sale.origin
-inner join 
-(select distinct sm.origin dest_origin,sm.location_dest_id,rb.name dest_branch from stock_move sm,res_branch rb,stock_location sl 
-where sl.branch_id=rb.id 
-and sm.location_dest_id=sl.id
-and ((sm.date at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?)dest on dest.dest_origin=sale.origin]]></xml-property>
+and ((so.date_order at time zone 'utc' )at time zone 'asia/rangoon')::date between ? and ?
+group by so.name,date_order,rp.name,so.payment_type,so.amount_total,so.amount_untaxed,so.amount_tax,rbd.name,rb.name,
+so.total_dis,so.cash_discount,ap.name
+)A
+order by date_order,number]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -940,66 +835,6 @@ and ((sm.date at time zone 'utc' )at time zone 'asia/rangoon')::date between ? a
           <design:identifier>
             <design:name></design:name>
             <design:position>2</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>3</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>4</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>5</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>6</design:position>
           </design:identifier>
           <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
@@ -1539,22 +1374,10 @@ where type not in ('view')]]></xml-property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">origin</property>
-                    <text-property name="displayName">origin</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["origin"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
                     <property name="name">period_name</property>
                     <text-property name="displayName">period_name</text-property>
                     <expression name="expression" type="javascript">dataSetRow["period_name"]</expression>
                     <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="name">date_invoice</property>
-                    <text-property name="displayName">date_invoice</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["date_invoice"]</expression>
-                    <property name="dataType">date</property>
                 </structure>
                 <structure>
                     <property name="name">payment_type</property>
@@ -1599,34 +1422,10 @@ where type not in ('view')]]></xml-property>
                     <property name="dataType">decimal</property>
                 </structure>
                 <structure>
-                    <property name="name">source_origin</property>
-                    <text-property name="displayName">source_origin</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["source_origin"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="name">location_id</property>
-                    <text-property name="displayName">location_id</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["location_id"]</expression>
-                    <property name="dataType">integer</property>
-                </structure>
-                <structure>
                     <property name="name">source_branch</property>
                     <text-property name="displayName">source_branch</text-property>
                     <expression name="expression" type="javascript">dataSetRow["source_branch"]</expression>
                     <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="name">dest_origin</property>
-                    <text-property name="displayName">dest_origin</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["dest_origin"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="name">location_dest_id</property>
-                    <text-property name="displayName">location_dest_id</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["location_dest_id"]</expression>
-                    <property name="dataType">integer</property>
                 </structure>
                 <structure>
                     <property name="name">dest_branch</property>
@@ -1750,6 +1549,54 @@ where type not in ('view')]]></xml-property>
                     </list-property>
                     <property name="allowExport">true</property>
                 </structure>
+                <structure>
+                    <property name="name">date_order</property>
+                    <text-property name="displayName">date_order</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["date_order"]</expression>
+                    <property name="dataType">date</property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation</property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Period</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">dataSetRow["amount_tax"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">tax</property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Period</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">dataSetRow["amount_tax"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">gtax</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["tax"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
             </list-property>
             <column id="354">
                 <property name="width">1.1166666666666667in</property>
@@ -1770,6 +1617,9 @@ where type not in ('view')]]></xml-property>
                 <property name="width">0.7in</property>
             </column>
             <column id="362">
+                <property name="width">1.1in</property>
+            </column>
+            <column id="541">
                 <property name="width">1.1in</property>
             </column>
             <column id="364">
@@ -1905,6 +1755,23 @@ where type not in ('view')]]></xml-property>
                             <text-property name="text">Net</text-property>
                         </label>
                     </cell>
+                    <cell id="536">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="542">
+                            <text-property name="text">Tax</text-property>
+                        </label>
+                    </cell>
                     <cell id="326">
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
@@ -1937,7 +1804,7 @@ where type not in ('view')]]></xml-property>
                         <property name="verticalAlign">middle</property>
                         <property name="height">0.3in</property>
                         <cell id="492">
-                            <property name="colSpan">8</property>
+                            <property name="colSpan">9</property>
                             <property name="rowSpan">1</property>
                             <property name="borderBottomColor">#000000</property>
                             <property name="borderBottomStyle">solid</property>
@@ -2057,6 +1924,30 @@ where type not in ('view')]]></xml-property>
                                 <property name="resultSetColumn">gnet</property>
                             </data>
                         </cell>
+                        <cell id="539">
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderLeftColor">#000000</property>
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">thin</property>
+                            <property name="borderRightColor">#000000</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                            <property name="borderTopColor">#000000</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <property name="verticalAlign">middle</property>
+                            <data id="547">
+                                <property name="fontSize">8pt</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Currency</property>
+                                    <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">tax</property>
+                            </data>
+                        </cell>
                         <cell id="508">
                             <property name="borderBottomColor">#000000</property>
                             <property name="borderBottomStyle">solid</property>
@@ -2102,11 +1993,9 @@ where type not in ('view')]]></xml-property>
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="478">
+                        <data id="543">
                             <property name="fontSize">8pt</property>
-                            <property name="paddingLeft">2pt</property>
-                            <property name="textAlign">left</property>
-                            <property name="resultSetColumn">date_invoice</property>
+                            <property name="resultSetColumn">date_order</property>
                         </data>
                     </cell>
                     <cell id="332">
@@ -2145,7 +2034,7 @@ where type not in ('view')]]></xml-property>
                         <data id="480">
                             <property name="fontSize">8pt</property>
                             <property name="paddingLeft">2pt</property>
-                            <property name="textAlign">left</property>
+                            <property name="textAlign">center</property>
                             <property name="resultSetColumn">payment_type</property>
                         </data>
                     </cell>
@@ -2239,6 +2128,29 @@ where type not in ('view')]]></xml-property>
                             </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">net</property>
+                        </data>
+                    </cell>
+                    <cell id="538">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="544">
+                            <property name="fontSize">8pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">amount_tax</property>
                         </data>
                     </cell>
                     <cell id="339">
@@ -2364,6 +2276,29 @@ where type not in ('view')]]></xml-property>
                             </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">gt_net</property>
+                        </data>
+                    </cell>
+                    <cell id="540">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="548">
+                            <property name="fontSize">8pt</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">gtax</property>
                         </data>
                     </cell>
                     <cell id="352">
