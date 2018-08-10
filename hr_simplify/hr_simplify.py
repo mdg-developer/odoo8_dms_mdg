@@ -115,7 +115,7 @@ class hr_contract(osv.osv):
         if employee_id:
             dept_id = self.pool.get('hr.employee').browse(cr, uid, employee_id,
                                                           context=context).department_id.id
-            dom['job_id'] = [('department_id', '=', dept_id)]
+            #dom['job_id'] = [('department_id', '=', dept_id)]
             val['employee_dept_id'] = dept_id
         return {'value': val, 'domain': dom}
 

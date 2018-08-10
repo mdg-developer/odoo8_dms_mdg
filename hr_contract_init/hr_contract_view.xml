@@ -119,7 +119,8 @@
             <field name="inherit_id" ref="hr_simplify.view_contract_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='job_id']" position="replace">
-                    <field name="job_id" required="1" domain="[('department_id', '=', employee_dept_id)]" on_change="onchange_job(job_id)"/>
+                   <!--  <field name="job_id" required="1" domain="[('department_id', '=', employee_dept_id)]" on_change="onchange_job(job_id)"/> -->
+               		<field name="job_id" required="1" on_change="onchange_job(job_id)"/>               		
                 </xpath>
             </field>
         </record>
