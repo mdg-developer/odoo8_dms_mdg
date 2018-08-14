@@ -140,6 +140,7 @@ class AccountMoveLineImport(models.TransientModel):
             'tax account': {'method': self._handle_tax_code},
             'tax_code': {'method': self._handle_tax_code},
             'analytic account': {'method': self._handle_analytic_account},
+            'branch': {'method': self._handle_branch},
         }
         return res
 
@@ -407,6 +408,21 @@ class AccountMoveLineImport(models.TransientModel):
             else:
                 code = codes[0]
                 aml_vals['tax_code_id'] = code.id
+                
+    def _handle_branch(self, field, line, move, aml_vals):
+        if not aml_vals.get('branch'):
+            input = line[field]
+            codes = []
+            tc_mod = self.env['res.branch']
+            names = tc_mod.search([('name', '=ilike', input)])
+            if (len(names) > 1 or len(names)==0) :
+                msg = _("Multiple %s entries with Code "
+                        "or Name '%s' found !") % (field, input)
+                self._log_line_error(line, msg)
+                return
+            else:
+                code = names[0]
+                aml_vals['branch_id'] = code.id
 
     def _handle_analytic_account(self, field, line, move, aml_vals):
         if not aml_vals.get('analytic_account_id'):
@@ -482,7 +498,8 @@ class AccountMoveLineImport(models.TransientModel):
             self._context['active_id'])
         accounts = self.env['account.account'].search([
             ('type', 'not in', ['view', 'consolidation', 'closed']),
-            ('company_id', '=', move.company_id.id)
+            ('company_id', '=', move.company_id.id),
+            ('active','=', 't')
             ])
         self._accounts_dict = {a.code: a.id for a in accounts}
         self._sum_debit = self._sum_credit = 0.0
