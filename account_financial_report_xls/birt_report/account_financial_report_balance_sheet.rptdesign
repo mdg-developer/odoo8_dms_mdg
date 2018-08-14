@@ -1,139 +1,115 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.4.2.v201410272105 Build &lt;4.4.2.v20150217-1805></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
     <list-property name="propertyBindings">
         <structure>
             <property name="name">queryText</property>
-            <property name="id">12</property>
+            <property name="id">17</property>
         </structure>
         <structure>
             <property name="name">queryTimeOut</property>
-            <property name="id">12</property>
+            <property name="id">17</property>
         </structure>
         <structure>
             <property name="name">rowFetchSize</property>
-            <property name="id">12</property>
+            <property name="id">17</property>
         </structure>
         <structure>
             <property name="name">queryText</property>
-            <property name="id">178</property>
+            <property name="id">406</property>
         </structure>
         <structure>
             <property name="name">queryTimeOut</property>
-            <property name="id">178</property>
+            <property name="id">406</property>
         </structure>
         <structure>
             <property name="name">rowFetchSize</property>
-            <property name="id">178</property>
+            <property name="id">406</property>
         </structure>
     </list-property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
-    <property name="layoutPreference">fixed layout</property>
     <property name="bidiLayoutOrientation">ltr</property>
     <property name="imageDPI">96</property>
+    <list-property name="libraries">
+        <structure>
+            <property name="fileName">birt_report/general_library.rptlibrary</property>
+            <property name="namespace">general_library</property>
+        </structure>
+    </list-property>
     <parameters>
         <scalar-parameter name="report_id" id="9">
+            <property name="hidden">true</property>
             <text-property name="promptText">Report Name</text-property>
             <property name="valueType">dynamic</property>
             <property name="isRequired">true</property>
             <property name="dataSetName">report_name</property>
             <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
             <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
-            <expression name="sortByColumn">dataSetRow["name"]</expression>
-            <property name="sortDirection">asc</property>
             <property name="dataType">integer</property>
             <property name="distinct">true</property>
+            <simple-property-list name="defaultValue">
+                <value type="constant">282</value>
+            </simple-property-list>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
             <property name="controlType">list-box</property>
             <property name="mustMatch">true</property>
-            <property name="fixedOrder">false</property>
+            <property name="fixedOrder">true</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
-        <scalar-parameter name="fiscal_year_id" id="11">
-            <text-property name="promptText">Fiscal Year</text-property>
-            <property name="valueType">dynamic</property>
-            <property name="isRequired">true</property>
-            <property name="dataSetName">fiscal_year</property>
-            <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
-            <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
-            <expression name="sortByColumn">dataSetRow["name"]</expression>
-            <property name="sortDirection">asc</property>
-            <property name="dataType">integer</property>
-            <property name="distinct">true</property>
-            <list-property name="selectionList"/>
-            <property name="paramType">simple</property>
-            <property name="controlType">list-box</property>
-            <property name="mustMatch">true</property>
-            <property name="fixedOrder">false</property>
-            <structure name="format">
-                <property name="category">Unformatted</property>
-            </structure>
-        </scalar-parameter>
-        <scalar-parameter name="analytic_id" id="144">
-            <text-property name="promptText">Analytic</text-property>
-            <property name="valueType">dynamic</property>
-            <property name="isRequired">false</property>
-            <property name="dataSetName">analytic</property>
-            <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
-            <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
-            <expression name="sortByColumn">dataSetRow["name"]</expression>
-            <property name="sortDirection">asc</property>
-            <property name="dataType">integer</property>
-            <property name="distinct">true</property>
-            <list-property name="selectionList"/>
-            <property name="paramType">simple</property>
-            <property name="controlType">list-box</property>
-            <property name="mustMatch">true</property>
-            <property name="fixedOrder">false</property>
-            <structure name="format">
-                <property name="category">Unformatted</property>
-            </structure>
-        </scalar-parameter>
-        <scalar-parameter name="start_period_id" id="13">
-            <text-property name="promptText">Start Period</text-property>
-            <property name="valueType">dynamic</property>
-            <property name="isRequired">true</property>
-            <property name="dataSetName">period</property>
-            <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
-            <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
-            <expression name="sortByColumn">dataSetRow["id"]</expression>
-            <property name="sortDirection">asc</property>
-            <property name="dataType">integer</property>
-            <property name="distinct">true</property>
-            <list-property name="selectionList"/>
-            <property name="paramType">simple</property>
-            <property name="controlType">list-box</property>
-            <property name="mustMatch">true</property>
-            <property name="fixedOrder">false</property>
-            <structure name="format">
-                <property name="category">Unformatted</property>
-            </structure>
-        </scalar-parameter>
-        <scalar-parameter name="end_period_id" id="93">
-            <text-property name="promptText">End Period</text-property>
-            <property name="valueType">dynamic</property>
-            <property name="isRequired">true</property>
-            <property name="dataSetName">period</property>
-            <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
-            <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
-            <expression name="sortByColumn">dataSetRow["id"]</expression>
-            <property name="sortDirection">asc</property>
-            <property name="dataType">integer</property>
-            <property name="distinct">true</property>
-            <list-property name="selectionList"/>
-            <property name="paramType">simple</property>
-            <property name="controlType">list-box</property>
-            <property name="mustMatch">true</property>
-            <property name="fixedOrder">false</property>
-            <structure name="format">
-                <property name="category">Unformatted</property>
-            </structure>
-        </scalar-parameter>
-        <scalar-parameter name="start_date" id="96">
+        <cascading-parameter-group name="fiscal_year_period" id="408">
+            <property name="dataSet">fiscal_year</property>
+            <property name="dataSetMode">multiple</property>
+            <parameters>
+                <scalar-parameter name="fiscal_year_id" id="409">
+                    <property name="valueType">dynamic</property>
+                    <property name="isRequired">true</property>
+                    <property name="dataSetName">fiscal_year</property>
+                    <expression name="valueExpr">row["id"]</expression>
+                    <expression name="labelExpr">row["name"]</expression>
+                    <expression name="sortByColumn">dataSetRow["id"]</expression>
+                    <property name="sortDirection">asc</property>
+                    <property name="dataType">integer</property>
+                    <property name="paramType">simple</property>
+                    <property name="controlType">list-box</property>
+                    <property name="fixedOrder">false</property>
+                    <structure name="format">
+                        <property name="category">Unformatted</property>
+                    </structure>
+                </scalar-parameter>
+                <scalar-parameter name="start_period_id" id="410">
+                    <property name="valueType">dynamic</property>
+                    <property name="isRequired">true</property>
+                    <property name="dataSetName">period</property>
+                    <expression name="valueExpr">row["id"]</expression>
+                    <expression name="labelExpr">row["name"]</expression>
+                    <expression name="sortByColumn">dataSetRow["id"]</expression>
+                    <property name="sortDirection">asc</property>
+                    <property name="dataType">integer</property>
+                    <property name="paramType">simple</property>
+                    <property name="controlType">list-box</property>
+                    <property name="fixedOrder">false</property>
+                    <structure name="format"/>
+                </scalar-parameter>
+                <scalar-parameter name="end_period_id" id="411">
+                    <property name="valueType">dynamic</property>
+                    <property name="isRequired">true</property>
+                    <property name="dataSetName">period</property>
+                    <expression name="valueExpr">row["id"]</expression>
+                    <expression name="labelExpr">row["name"]</expression>
+                    <expression name="sortByColumn">dataSetRow["id"]</expression>
+                    <property name="sortDirection">asc</property>
+                    <property name="dataType">integer</property>
+                    <property name="controlType">list-box</property>
+                    <property name="fixedOrder">false</property>
+                    <structure name="format"/>
+                </scalar-parameter>
+            </parameters>
+        </cascading-parameter-group>
+        <scalar-parameter name="start_date" id="413">
             <text-property name="promptText">Start Date</text-property>
             <property name="valueType">static</property>
             <property name="isRequired">false</property>
@@ -141,32 +117,27 @@
             <property name="distinct">true</property>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
-            <property name="concealValue">false</property>
             <property name="controlType">text-box</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
-        <scalar-parameter name="end_date" id="97">
-            <text-property name="promptText">End  Date</text-property>
+        <scalar-parameter name="end_date" id="414">
+            <text-property name="promptText">End Date</text-property>
             <property name="valueType">static</property>
             <property name="isRequired">false</property>
             <property name="dataType">date</property>
             <property name="distinct">true</property>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
-            <property name="concealValue">false</property>
             <property name="controlType">text-box</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
-        <scalar-parameter name="target_move" id="15">
+        <scalar-parameter name="target_move" id="415">
             <text-property name="promptText">Target Move</text-property>
             <property name="valueType">static</property>
-            <property name="isRequired">true</property>
-            <property name="sortBy">label</property>
-            <property name="sortDirection">asc</property>
             <property name="dataType">string</property>
             <property name="distinct">true</property>
             <simple-property-list name="defaultValue">
@@ -185,38 +156,19 @@
             <property name="paramType">simple</property>
             <property name="controlType">list-box</property>
             <property name="mustMatch">true</property>
-            <property name="fixedOrder">false</property>
+            <property name="fixedOrder">true</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="7">
-            <list-property name="privateDriverProperties">
-                <ex-property>
-                    <name>metadataBidiFormatStr</name>
-                    <value>ILYNN</value>
-                </ex-property>
-                <ex-property>
-                    <name>disabledMetadataBidiFormatStr</name>
-                </ex-property>
-                <ex-property>
-                    <name>contentBidiFormatStr</name>
-                    <value>ILYNN</value>
-                </ex-property>
-                <ex-property>
-                    <name>disabledContentBidiFormatStr</name>
-                </ex-property>
-            </list-property>
-            <property name="odaDriverClass">org.postgresql.Driver</property>
-            <property name="odaURL">jdbc:postgresql://localhost:5432/MyitShweWah</property>
-            <property name="odaUser">openerp</property>
-            <encrypted-property name="odaPassword" encryptionID="base64">b3BlbnBncHdk</encrypted-property>
-        </oda-data-source>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="427"
+ extends="general_library.Data Source"/>
     </data-sources>
     <data-sets>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="report_name" id="8">
+            <property name="nullsOrdering">nulls lowest</property>
             <list-property name="columnHints">
                 <structure>
                     <property name="columnName">id</property>
@@ -263,10 +215,9 @@
                     <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select id,name from account_financial_report where parent_id is null and id in (1,282)]]></xml-property>
+            <xml-property name="queryText"><![CDATA[select id,name from account_financial_report where parent_id is null and id in (1,282,9)]]></xml-property>
         </oda-data-set>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="fiscal_year" id="10">
-            <property name="nullsOrdering">nulls lowest</property>
             <list-property name="columnHints">
                 <structure>
                     <property name="columnName">id</property>
@@ -368,33 +319,165 @@
   </design:ResultSets>
 </model:DesignValues>]]></xml-property>
         </oda-data-set>
-        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="period" id="12">
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="balance_sheet_report" id="17">
             <property name="nullsOrdering">nulls lowest</property>
             <list-property name="columnHints">
-                <structure>
-                    <property name="columnName">id</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">id</text-property>
-                    <text-property name="heading">id</text-property>
-                </structure>
                 <structure>
                     <property name="columnName">name</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">name</text-property>
                     <text-property name="heading">name</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">style_overwrite</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">style_overwrite</text-property>
+                    <text-property name="heading">style_overwrite</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">sign</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">sign</text-property>
+                    <text-property name="heading">sign</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">financial_report_balance</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">financial_report_balance</text-property>
+                    <text-property name="heading">financial_report_balance</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">depth</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">depth</text-property>
+                    <text-property name="heading">depth</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">report_name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">report_name</text-property>
+                    <text-property name="heading">report_name</text-property>
+                </structure>
             </list-property>
-            <list-property name="parameters"/>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">param_1</property>
+                    <property name="paramName">fiscal_year_id</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">1</property>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_2</property>
+                    <property name="paramName">start_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">2</property>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_3</property>
+                    <property name="paramName">end_date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                    <property name="position">3</property>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_4</property>
+                    <property name="paramName">start_period_id</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">4</property>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_5</property>
+                    <property name="paramName">end_period_id</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">5</property>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_6</property>
+                    <property name="paramName">target_move</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">6</property>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_7</property>
+                    <property name="paramName">report_id</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">7</property>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_8</property>
+                    <property name="paramName">report_id</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">8</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
                     <structure>
                         <property name="position">1</property>
-                        <property name="name">id</property>
-                        <property name="dataType">integer</property>
+                        <property name="name">name</property>
+                        <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">2</property>
-                        <property name="name">name</property>
+                        <property name="name">style_overwrite</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">sign</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">financial_report_balance</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">depth</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">report_name</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
@@ -403,23 +486,179 @@
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
-                    <property name="name">id</property>
-                    <property name="nativeName">id</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">2</property>
                     <property name="name">name</property>
                     <property name="nativeName">name</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">style_overwrite</property>
+                    <property name="nativeName">style_overwrite</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">sign</property>
+                    <property name="nativeName">sign</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">financial_report_balance</property>
+                    <property name="nativeName">financial_report_balance</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">depth</property>
+                    <property name="nativeName">depth</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">report_name</property>
+                    <property name="nativeName">report_name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select id,name from account_period]]></xml-property>
+            <xml-property name="queryText"><![CDATA[select A.name,A.style_overwrite,A.sign,A.financial_report_balance,A.depth,frt.name as report_name
+from(select  name,style_overwrite,sign,
+financial_report_balance(id,?,?,?,?,?,?) ,depth
+from financial_report_tree where depth>1 and 
+parent_id=? and sequence is not null
+)A,financial_report_tree frt
+where frt.id=?]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>2</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>3</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>4</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>5</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>6</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>7</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>8</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
   <design:ResultSets derivedMetaData="true">
     <design:resultSetDefinitions>
       <design:resultSetColumns>
@@ -447,8 +686,344 @@
         <design:resultColumnDefinitions>
           <design:attributes>
             <design:identifier>
-              <design:name>name</design:name>
+              <design:name>parent_left</design:name>
               <design:position>2</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>parent_left</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>parent_left</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>parent_right</design:name>
+              <design:position>3</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>parent_right</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>parent_right</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>code</design:name>
+              <design:position>4</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>64</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>code</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>code</design:label>
+            <design:formattingHints>
+              <design:displaySize>64</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>create_date</design:name>
+              <design:position>5</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>93</design:nativeDataTypeCode>
+            <design:precision>29</design:precision>
+            <design:scale>6</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>create_date</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>create_date</design:label>
+            <design:formattingHints>
+              <design:displaySize>29</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>reconcile</design:name>
+              <design:position>6</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+            <design:precision>1</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>reconcile</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>reconcile</design:label>
+            <design:formattingHints>
+              <design:displaySize>1</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>user_type</design:name>
+              <design:position>7</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>user_type</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>user_type</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>write_uid</design:name>
+              <design:position>8</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>write_uid</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>write_uid</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>create_uid</design:name>
+              <design:position>9</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>create_uid</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>create_uid</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>company_id</design:name>
+              <design:position>10</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>company_id</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>company_id</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>shortcut</design:name>
+              <design:position>11</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>12</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>shortcut</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>shortcut</design:label>
+            <design:formattingHints>
+              <design:displaySize>12</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>note</design:name>
+              <design:position>12</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>2147483647</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>note</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>note</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>parent_id</design:name>
+              <design:position>13</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>parent_id</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>parent_id</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>type</design:name>
+              <design:position>14</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>2147483647</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>type</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>type</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>write_date</design:name>
+              <design:position>15</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>93</design:nativeDataTypeCode>
+            <design:precision>29</design:precision>
+            <design:scale>6</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>write_date</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>write_date</design:label>
+            <design:formattingHints>
+              <design:displaySize>29</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>active</design:name>
+              <design:position>16</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+            <design:precision>1</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>active</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>active</design:label>
+            <design:formattingHints>
+              <design:displaySize>1</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>currency_id</design:name>
+              <design:position>17</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>currency_id</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>currency_id</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>name</design:name>
+              <design:position>18</design:position>
             </design:identifier>
             <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
             <design:precision>2147483647</design:precision>
@@ -462,6 +1037,69 @@
             <design:label>name</design:label>
             <design:formattingHints>
               <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>level</design:name>
+              <design:position>19</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>level</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>level</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>currency_mode</design:name>
+              <design:position>20</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>2147483647</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>currency_mode</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>currency_mode</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>centralized</design:name>
+              <design:position>21</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>-7</design:nativeDataTypeCode>
+            <design:precision>1</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>centralized</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>centralized</design:label>
+            <design:formattingHints>
+              <design:displaySize>1</design:displaySize>
             </design:formattingHints>
           </design:usageHints>
         </design:resultColumnDefinitions>
@@ -502,8 +1140,21 @@
             </list-property>
             <xml-property name="queryText"><![CDATA[select name from res_company where id = 1]]></xml-property>
         </oda-data-set>
-        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="analytic" id="143">
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="account_financial_balance_sheet_report" id="296">
+            <property name="nullsOrdering">nulls lowest</property>
             <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">serial_no</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">serial_no</text-property>
+                    <text-property name="heading">serial_no</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">schedule_no</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">schedule_no</text-property>
+                    <text-property name="heading">schedule_no</text-property>
+                </structure>
                 <structure>
                     <property name="columnName">id</property>
                     <property name="analysis">measure</property>
@@ -515,655 +1166,6 @@
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">name</text-property>
                     <text-property name="heading">name</text-property>
-                </structure>
-            </list-property>
-            <structure name="cachedMetaData">
-                <list-property name="resultSet">
-                    <structure>
-                        <property name="position">1</property>
-                        <property name="name">id</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">2</property>
-                        <property name="name">name</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                </list-property>
-            </structure>
-            <property name="dataSource">Data Source</property>
-            <list-property name="resultSet">
-                <structure>
-                    <property name="position">1</property>
-                    <property name="name">id</property>
-                    <property name="nativeName">id</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">2</property>
-                    <property name="name">name</property>
-                    <property name="nativeName">name</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-            </list-property>
-            <xml-property name="queryText"><![CDATA[select id , name 
-from account_analytic_account ]]></xml-property>
-            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
-  <Version>2.0</Version>
-  <design:ResultSets derivedMetaData="true">
-    <design:resultSetDefinitions>
-      <design:resultSetColumns>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>id</design:name>
-              <design:position>1</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-            <design:precision>10</design:precision>
-            <design:scale>0</design:scale>
-            <design:nullability>NotNullable</design:nullability>
-            <design:uiHints>
-              <design:displayName>id</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>id</design:label>
-            <design:formattingHints>
-              <design:displaySize>11</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>name</design:name>
-              <design:position>2</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
-            <design:precision>2147483647</design:precision>
-            <design:scale>0</design:scale>
-            <design:nullability>NotNullable</design:nullability>
-            <design:uiHints>
-              <design:displayName>name</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>name</design:label>
-            <design:formattingHints>
-              <design:displaySize>2147483647</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-      </design:resultSetColumns>
-      <design:criteria/>
-    </design:resultSetDefinitions>
-  </design:ResultSets>
-</model:DesignValues>]]></xml-property>
-        </oda-data-set>
-        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="balance_sheet_report" id="145">
-            <property name="nullsOrdering">nulls lowest</property>
-            <list-property name="columnHints"/>
-            <list-property name="parameters">
-                <structure>
-                    <property name="name">param_1</property>
-                    <property name="paramName">fiscal_year_id</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                    <property name="position">1</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_2</property>
-                    <property name="paramName">start_date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">2</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_3</property>
-                    <property name="paramName">end_date</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                    <property name="position">3</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_4</property>
-                    <property name="paramName">start_period_id</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                    <property name="position">4</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_5</property>
-                    <property name="paramName">end_period_id</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                    <property name="position">5</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_6</property>
-                    <property name="paramName">target_move</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                    <property name="position">6</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_7</property>
-                    <property name="paramName">analytic_id</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                    <property name="position">7</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-                <structure>
-                    <property name="name">param_8</property>
-                    <property name="paramName">report_id</property>
-                    <property name="nativeName"></property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                    <property name="position">8</property>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-            </list-property>
-            <structure name="cachedMetaData">
-                <list-property name="resultSet">
-                    <structure>
-                        <property name="position">1</property>
-                        <property name="name">name</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">2</property>
-                        <property name="name">style_overwrite</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">3</property>
-                        <property name="name">sign</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">4</property>
-                        <property name="name">balance</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
-                        <property name="position">5</property>
-                        <property name="name">depth</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                </list-property>
-            </structure>
-            <property name="dataSource">Data Source</property>
-            <list-property name="resultSet">
-                <structure>
-                    <property name="position">1</property>
-                    <property name="name">name</property>
-                    <property name="nativeName">name</property>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="position">2</property>
-                    <property name="name">style_overwrite</property>
-                    <property name="nativeName">style_overwrite</property>
-                    <property name="dataType">integer</property>
-                </structure>
-                <structure>
-                    <property name="position">3</property>
-                    <property name="name">sign</property>
-                    <property name="nativeName">sign</property>
-                    <property name="dataType">integer</property>
-                </structure>
-                <structure>
-                    <property name="position">4</property>
-                    <property name="name">balance</property>
-                    <property name="nativeName">balance</property>
-                    <property name="dataType">decimal</property>
-                </structure>
-                <structure>
-                    <property name="position">5</property>
-                    <property name="name">depth</property>
-                    <property name="nativeName">depth</property>
-                    <property name="dataType">integer</property>
-                </structure>
-            </list-property>
-            <xml-property name="queryText"><![CDATA[select  name,style_overwrite,sign,
-COALESCE(financial_report_balance_analytic(id,?,?,?,?,?,?,?),0) as balance,depth
-from financial_report_tree where depth>1 and 
-parent_id=? and sequence is not null]]></xml-property>
-            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
-  <Version>2.0</Version>
-  <DataSetParameters>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>1</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>2</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>3</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>4</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>5</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>6</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>7</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
-      </design:ParameterDefinition>
-    </parameter>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name></design:name>
-            <design:position>8</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-          <design:precision>0</design:precision>
-          <design:scale>0</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes/>
-        </design:inputAttributes>
-      </design:ParameterDefinition>
-    </parameter>
-  </DataSetParameters>
-  <design:ResultSets derivedMetaData="true">
-    <design:resultSetDefinitions>
-      <design:resultSetColumns>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>name</design:name>
-              <design:position>1</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
-            <design:precision>2147483647</design:precision>
-            <design:scale>0</design:scale>
-            <design:nullability>Nullable</design:nullability>
-            <design:uiHints>
-              <design:displayName>name</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>name</design:label>
-            <design:formattingHints>
-              <design:displaySize>2147483647</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>style_overwrite</design:name>
-              <design:position>2</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-            <design:precision>10</design:precision>
-            <design:scale>0</design:scale>
-            <design:nullability>Nullable</design:nullability>
-            <design:uiHints>
-              <design:displayName>style_overwrite</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>style_overwrite</design:label>
-            <design:formattingHints>
-              <design:displaySize>11</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>sign</design:name>
-              <design:position>3</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-            <design:precision>10</design:precision>
-            <design:scale>0</design:scale>
-            <design:nullability>Nullable</design:nullability>
-            <design:uiHints>
-              <design:displayName>sign</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>sign</design:label>
-            <design:formattingHints>
-              <design:displaySize>11</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>financial_report_balance_analytic</design:name>
-              <design:position>4</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>2</design:nativeDataTypeCode>
-            <design:precision>0</design:precision>
-            <design:scale>0</design:scale>
-            <design:nullability>Unknown</design:nullability>
-            <design:uiHints>
-              <design:displayName>financial_report_balance_analytic</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>financial_report_balance_analytic</design:label>
-            <design:formattingHints>
-              <design:displaySize>131089</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>depth</design:name>
-              <design:position>5</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-            <design:precision>10</design:precision>
-            <design:scale>0</design:scale>
-            <design:nullability>Nullable</design:nullability>
-            <design:uiHints>
-              <design:displayName>depth</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>depth</design:label>
-            <design:formattingHints>
-              <design:displaySize>11</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-      </design:resultSetColumns>
-      <design:criteria/>
-    </design:resultSetDefinitions>
-  </design:ResultSets>
-</model:DesignValues>]]></xml-property>
-        </oda-data-set>
-        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="TodayDate" id="178">
-            <property name="nullsOrdering">nulls lowest</property>
-            <list-property name="columnHints">
-                <structure>
-                    <property name="columnName">date</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">date</text-property>
-                    <text-property name="heading">date</text-property>
-                </structure>
-            </list-property>
-            <structure name="cachedMetaData">
-                <list-property name="resultSet">
-                    <structure>
-                        <property name="position">1</property>
-                        <property name="name">date</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                </list-property>
-            </structure>
-            <property name="dataSource">Data Source</property>
-            <list-property name="resultSet">
-                <structure>
-                    <property name="position">1</property>
-                    <property name="name">date</property>
-                    <property name="nativeName">date</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">91</property>
-                </structure>
-            </list-property>
-            <xml-property name="queryText"><![CDATA[SELECT DATE(NOW())
- ]]></xml-property>
-            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
-  <Version>2.0</Version>
-  <design:ResultSets derivedMetaData="true">
-    <design:resultSetDefinitions>
-      <design:resultSetColumns>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>date</design:name>
-              <design:position>1</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
-            <design:precision>13</design:precision>
-            <design:scale>0</design:scale>
-            <design:nullability>Unknown</design:nullability>
-            <design:uiHints>
-              <design:displayName>date</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>date</design:label>
-            <design:formattingHints>
-              <design:displaySize>13</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-      </design:resultSetColumns>
-      <design:criteria/>
-    </design:resultSetDefinitions>
-  </design:ResultSets>
-</model:DesignValues>]]></xml-property>
-        </oda-data-set>
-        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="SrNo_Schedule_No" id="198">
-            <property name="nullsOrdering">nulls lowest</property>
-            <list-property name="columnHints">
-                <structure>
-                    <property name="columnName">serial_no</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">serial_no</text-property>
-                    <text-property name="heading">serial_no</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">schedule_no</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">schedule_no</text-property>
-                    <text-property name="heading">schedule_no</text-property>
-                </structure>
-            </list-property>
-            <list-property name="parameters"/>
-            <structure name="cachedMetaData">
-                <list-property name="resultSet">
-                    <structure>
-                        <property name="position">1</property>
-                        <property name="name">serial_no</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">2</property>
-                        <property name="name">schedule_no</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                </list-property>
-            </structure>
-            <property name="dataSource">Data Source</property>
-            <list-property name="resultSet">
-                <structure>
-                    <property name="position">1</property>
-                    <property name="name">serial_no</property>
-                    <property name="nativeName">serial_no</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-                <structure>
-                    <property name="position">2</property>
-                    <property name="name">schedule_no</property>
-                    <property name="nativeName">schedule_no</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                </structure>
-            </list-property>
-            <xml-property name="queryText"><![CDATA[select serial_no,schedule_no 
-from account_financial_report
-where id in (select  id
-from financial_report_tree where depth>1 and 
-parent_id=282 and sequence is not null) order by
-serial_no]]></xml-property>
-        </oda-data-set>
-        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="financial_report_balance_sheet" id="209">
-            <list-property name="columnHints">
-                <structure>
-                    <property name="columnName">serial_no</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">serial_no</text-property>
-                    <text-property name="heading">serial_no</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">schedule_no</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">schedule_no</text-property>
-                    <text-property name="heading">schedule_no</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">fname</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">fname</text-property>
-                    <text-property name="heading">fname</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">style_overwrite</property>
@@ -1178,10 +1180,10 @@ serial_no]]></xml-property>
                     <text-property name="heading">sign</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">balance</property>
+                    <property name="columnName">financial_report_balance</property>
                     <property name="analysis">measure</property>
-                    <text-property name="displayName">balance</text-property>
-                    <text-property name="heading">balance</text-property>
+                    <text-property name="displayName">financial_report_balance</text-property>
+                    <text-property name="heading">financial_report_balance</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">depth</property>
@@ -1189,10 +1191,16 @@ serial_no]]></xml-property>
                     <text-property name="displayName">depth</text-property>
                     <text-property name="heading">depth</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">report_name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">report_name</text-property>
+                    <text-property name="heading">report_name</text-property>
+                </structure>
             </list-property>
             <list-property name="parameters">
                 <structure>
-                    <property name="name">param_1</property>
+                    <property name="name">fiscal_year_id</property>
                     <property name="paramName">fiscal_year_id</property>
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
@@ -1202,7 +1210,7 @@ serial_no]]></xml-property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
-                    <property name="name">param_2</property>
+                    <property name="name">start_date</property>
                     <property name="paramName">start_date</property>
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
@@ -1212,7 +1220,7 @@ serial_no]]></xml-property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
-                    <property name="name">param_3</property>
+                    <property name="name">end_date</property>
                     <property name="paramName">end_date</property>
                     <property name="nativeName"></property>
                     <property name="dataType">date</property>
@@ -1222,7 +1230,7 @@ serial_no]]></xml-property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
-                    <property name="name">param_4</property>
+                    <property name="name">start_period_id</property>
                     <property name="paramName">start_period_id</property>
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
@@ -1232,7 +1240,7 @@ serial_no]]></xml-property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
-                    <property name="name">param_5</property>
+                    <property name="name">end_period_id</property>
                     <property name="paramName">end_period_id</property>
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
@@ -1242,7 +1250,7 @@ serial_no]]></xml-property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
-                    <property name="name">param_6</property>
+                    <property name="name">target_move</property>
                     <property name="paramName">target_move</property>
                     <property name="nativeName"></property>
                     <property name="dataType">string</property>
@@ -1252,8 +1260,8 @@ serial_no]]></xml-property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
-                    <property name="name">param_7</property>
-                    <property name="paramName">analytic_id</property>
+                    <property name="name">report_id</property>
+                    <property name="paramName">report_id</property>
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
@@ -1262,7 +1270,7 @@ serial_no]]></xml-property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
-                    <property name="name">param_8</property>
+                    <property name="name">freport_id</property>
                     <property name="paramName">report_id</property>
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
@@ -1286,28 +1294,38 @@ serial_no]]></xml-property>
                     </structure>
                     <structure>
                         <property name="position">3</property>
-                        <property name="name">fname</property>
-                        <property name="dataType">string</property>
+                        <property name="name">id</property>
+                        <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">4</property>
+                        <property name="name">name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
                         <property name="name">style_overwrite</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">5</property>
+                        <property name="position">6</property>
                         <property name="name">sign</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">6</property>
-                        <property name="name">balance</property>
+                        <property name="position">7</property>
+                        <property name="name">financial_report_balance</property>
                         <property name="dataType">decimal</property>
                     </structure>
                     <structure>
-                        <property name="position">7</property>
+                        <property name="position">8</property>
                         <property name="name">depth</property>
                         <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">report_name</property>
+                        <property name="dataType">string</property>
                     </structure>
                 </list-property>
             </structure>
@@ -1329,47 +1347,61 @@ serial_no]]></xml-property>
                 </structure>
                 <structure>
                     <property name="position">3</property>
-                    <property name="name">fname</property>
-                    <property name="nativeName">fname</property>
+                    <property name="name">id</property>
+                    <property name="nativeName">id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">name</property>
+                    <property name="nativeName">name</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">4</property>
+                    <property name="position">5</property>
                     <property name="name">style_overwrite</property>
                     <property name="nativeName">style_overwrite</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">5</property>
+                    <property name="position">6</property>
                     <property name="name">sign</property>
                     <property name="nativeName">sign</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">6</property>
-                    <property name="name">balance</property>
-                    <property name="nativeName">balance</property>
+                    <property name="position">7</property>
+                    <property name="name">financial_report_balance</property>
+                    <property name="nativeName">financial_report_balance</property>
                     <property name="dataType">decimal</property>
                     <property name="nativeDataType">2</property>
                 </structure>
                 <structure>
-                    <property name="position">7</property>
+                    <property name="position">8</property>
                     <property name="name">depth</property>
                     <property name="nativeName">depth</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">report_name</property>
+                    <property name="nativeName">report_name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select a.serial_no as serial_no,a.schedule_no as schedule_no,f.name as fname ,f.style_overwrite as style_overwrite,f.sign as sign,
-COALESCE(financial_report_balance_analytic(f.id,?,?,?,?,?,?,?),0) as balance,f.depth as depth
-from financial_report_tree f, account_financial_report a
-where f.depth>1 and 
-f.parent_id=? and 
-f.sequence is not null and
-f.id=a.id]]></xml-property>
+            <xml-property name="queryText"><![CDATA[select acc.serial_no as serial_no,acc.schedule_no as schedule_no,A.id,A.name,A.style_overwrite,A.sign,A.financial_report_balance,A.depth,frt.name as report_name
+from(select  id,name,style_overwrite,sign,
+financial_report_balance(id,?,?,?,?,?,?),depth
+from financial_report_tree where depth>1 and 
+parent_id=? and sequence is not null
+)A,financial_report_tree frt,account_financial_report acc
+where frt.id=? and acc.id=A.id]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -1501,29 +1533,8 @@ f.id=a.id]]></xml-property>
         <design:resultColumnDefinitions>
           <design:attributes>
             <design:identifier>
-              <design:name>fid</design:name>
-              <design:position>1</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
-            <design:precision>10</design:precision>
-            <design:scale>0</design:scale>
-            <design:nullability>Nullable</design:nullability>
-            <design:uiHints>
-              <design:displayName>fid</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>fid</design:label>
-            <design:formattingHints>
-              <design:displaySize>11</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
               <design:name>serial_no</design:name>
-              <design:position>2</design:position>
+              <design:position>1</design:position>
             </design:identifier>
             <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
             <design:precision>2147483647</design:precision>
@@ -1544,7 +1555,7 @@ f.id=a.id]]></xml-property>
           <design:attributes>
             <design:identifier>
               <design:name>schedule_no</design:name>
-              <design:position>3</design:position>
+              <design:position>2</design:position>
             </design:identifier>
             <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
             <design:precision>10</design:precision>
@@ -1564,7 +1575,28 @@ f.id=a.id]]></xml-property>
         <design:resultColumnDefinitions>
           <design:attributes>
             <design:identifier>
-              <design:name>fname</design:name>
+              <design:name>id</design:name>
+              <design:position>3</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>id</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>id</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>name</design:name>
               <design:position>4</design:position>
             </design:identifier>
             <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
@@ -1572,11 +1604,11 @@ f.id=a.id]]></xml-property>
             <design:scale>0</design:scale>
             <design:nullability>Nullable</design:nullability>
             <design:uiHints>
-              <design:displayName>fname</design:displayName>
+              <design:displayName>name</design:displayName>
             </design:uiHints>
           </design:attributes>
           <design:usageHints>
-            <design:label>fname</design:label>
+            <design:label>name</design:label>
             <design:formattingHints>
               <design:displaySize>2147483647</design:displaySize>
             </design:formattingHints>
@@ -1627,7 +1659,7 @@ f.id=a.id]]></xml-property>
         <design:resultColumnDefinitions>
           <design:attributes>
             <design:identifier>
-              <design:name>balance</design:name>
+              <design:name>financial_report_balance</design:name>
               <design:position>7</design:position>
             </design:identifier>
             <design:nativeDataTypeCode>2</design:nativeDataTypeCode>
@@ -1635,11 +1667,11 @@ f.id=a.id]]></xml-property>
             <design:scale>0</design:scale>
             <design:nullability>Unknown</design:nullability>
             <design:uiHints>
-              <design:displayName>balance</design:displayName>
+              <design:displayName>financial_report_balance</design:displayName>
             </design:uiHints>
           </design:attributes>
           <design:usageHints>
-            <design:label>balance</design:label>
+            <design:label>financial_report_balance</design:label>
             <design:formattingHints>
               <design:displaySize>131089</design:displaySize>
             </design:formattingHints>
@@ -1663,6 +1695,234 @@ f.id=a.id]]></xml-property>
             <design:label>depth</design:label>
             <design:formattingHints>
               <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>report_name</design:name>
+              <design:position>9</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>2147483647</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>report_name</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>report_name</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="Report Date" id="406">
+            <property name="nullsOrdering">nulls lowest</property>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">date_stop</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">date_stop</text-property>
+                    <text-property name="heading">date_stop</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">end_date_param</property>
+                    <property name="paramName">end_period_id</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">date_stop</property>
+                        <property name="dataType">date</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">date_stop</property>
+                    <property name="nativeName">date_stop</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select date_stop from account_period where id = ?]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>date</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+            <design:precision>13</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>date</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>date</design:label>
+            <design:formattingHints>
+              <design:displaySize>13</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="period" id="12">
+            <property name="nullsOrdering">nulls lowest</property>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">id</text-property>
+                    <text-property name="heading">id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">name</text-property>
+                    <text-property name="heading">name</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">fiscal_year_id</property>
+                    <property name="paramName">fiscal_year_id</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">0</property>
+                    <property name="position">1</property>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">id</property>
+                    <property name="nativeName">id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">name</property>
+                    <property name="nativeName">name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select id,name from account_period where fiscalyear_id = ?]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>id</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>id</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>id</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>name</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>2147483647</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>name</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>name</design:label>
+            <design:formattingHints>
+              <design:displaySize>2147483647</design:displaySize>
             </design:formattingHints>
           </design:usageHints>
         </design:resultColumnDefinitions>
@@ -1726,9 +1986,75 @@ f.id=a.id]]></xml-property>
             </structure>
             <property name="verticalAlign">bottom</property>
         </style>
+        <style name="financial_cell" id="141">
+            <property name="fontFamily">"Arial"</property>
+            <property name="fontSize">9pt</property>
+            <list-property name="highlightRules">
+                <structure>
+                    <property name="operator">eq</property>
+                    <property name="fontSize">12pt</property>
+                    <property name="fontWeight">bold</property>
+                    <expression name="testExpr" type="javascript">row["Column Binding"]</expression>
+                    <simple-property-list name="value1">
+                        <value type="javascript">1</value>
+                    </simple-property-list>
+                </structure>
+                <structure>
+                    <property name="operator">eq</property>
+                    <property name="fontSize">10pt</property>
+                    <property name="fontWeight">bold</property>
+                    <expression name="testExpr" type="javascript">row["Column Binding"]</expression>
+                    <simple-property-list name="value1">
+                        <value type="javascript">2</value>
+                    </simple-property-list>
+                </structure>
+                <structure>
+                    <property name="operator">eq</property>
+                    <property name="fontSize">10pt</property>
+                    <property name="fontWeight">bold</property>
+                    <expression name="testExpr" type="javascript">row["Column Binding"]</expression>
+                    <simple-property-list name="value1">
+                        <value type="javascript">3</value>
+                    </simple-property-list>
+                </structure>
+                <structure>
+                    <property name="operator">eq</property>
+                    <property name="fontSize">10pt</property>
+                    <expression name="testExpr" type="javascript">row["Column Binding"]</expression>
+                    <simple-property-list name="value1">
+                        <value type="javascript">4</value>
+                    </simple-property-list>
+                </structure>
+                <structure>
+                    <property name="operator">eq</property>
+                    <property name="fontFamily">"Arial"</property>
+                    <property name="fontSize">9pt</property>
+                    <property name="fontStyle">normal</property>
+                    <expression name="testExpr" type="javascript">row["Column Binding"]</expression>
+                    <simple-property-list name="value1">
+                        <value type="javascript">5</value>
+                    </simple-property-list>
+                </structure>
+                <structure>
+                    <property name="operator">eq</property>
+                    <property name="fontFamily">"Arial"</property>
+                    <property name="fontSize">9pt</property>
+                    <property name="fontStyle">normal</property>
+                    <property name="fontWeight">bold</property>
+                    <expression name="testExpr" type="javascript">row["Column Binding"]</expression>
+                    <simple-property-list name="value1">
+                        <value type="javascript">6</value>
+                    </simple-property-list>
+                </structure>
+            </list-property>
+        </style>
         <style name="financial_amt_cell" id="142">
             <property name="fontFamily">"Arial"</property>
             <property name="fontSize">10pt</property>
+            <structure name="numberFormat">
+                <property name="category">Currency</property>
+                <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=HALF_UP}</property>
+            </structure>
             <list-property name="highlightRules">
                 <structure>
                     <property name="operator">eq</property>
@@ -1736,7 +2062,6 @@ f.id=a.id]]></xml-property>
                     <simple-property-list name="value1">
                         <value type="javascript">1</value>
                     </simple-property-list>
-                    <property name="style">bold_underline</property>
                 </structure>
                 <structure>
                     <property name="operator">eq</property>
@@ -1752,7 +2077,6 @@ f.id=a.id]]></xml-property>
                     <simple-property-list name="value1">
                         <value type="javascript">3</value>
                     </simple-property-list>
-                    <property name="style">double_underline</property>
                 </structure>
                 <structure>
                     <property name="operator">eq</property>
@@ -1760,7 +2084,6 @@ f.id=a.id]]></xml-property>
                     <simple-property-list name="value1">
                         <value type="javascript">4</value>
                     </simple-property-list>
-                    <property name="style">Normal_underline</property>
                 </structure>
                 <structure>
                     <property name="operator">eq</property>
@@ -1784,154 +2107,26 @@ f.id=a.id]]></xml-property>
                 </structure>
             </list-property>
         </style>
-        <style name="financial_cell" id="141">
-            <property name="fontFamily">"Arial"</property>
-            <property name="fontSize">10pt</property>
-            <property name="fontWeight">normal</property>
-            <structure name="numberFormat">
-                <property name="category">Currency</property>
-                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
-            </structure>
-            <structure name="stringFormat">
-                <property name="category">Unformatted</property>
-            </structure>
-            <list-property name="highlightRules">
-                <structure>
-                    <property name="operator">eq</property>
-                    <property name="fontSize">12pt</property>
-                    <property name="fontWeight">bold</property>
-                    <expression name="testExpr" type="javascript">row["Column Binding"]</expression>
-                    <simple-property-list name="value1">
-                        <value type="javascript">1</value>
-                    </simple-property-list>
-                </structure>
-                <structure>
-                    <property name="operator">eq</property>
-                    <property name="fontSize">10pt</property>
-                    <property name="fontWeight">bold</property>
-                    <expression name="testExpr" type="javascript">row["Column Binding"]</expression>
-                    <simple-property-list name="value1">
-                        <value type="javascript">2</value>
-                    </simple-property-list>
-                </structure>
-                <structure>
-                    <property name="operator">eq</property>
-                    <property name="fontSize">10pt</property>
-                    <property name="fontWeight">bold</property>
-                    <expression name="testExpr" type="javascript">row["Column Binding"]</expression>
-                    <simple-property-list name="value1">
-                        <value type="javascript">3</value>
-                    </simple-property-list>
-                </structure>
-                <structure>
-                    <property name="operator">eq</property>
-                    <expression name="testExpr" type="javascript">row["Column Binding"]</expression>
-                    <simple-property-list name="value1">
-                        <value type="javascript">4</value>
-                    </simple-property-list>
-                </structure>
-                <structure>
-                    <property name="operator">eq</property>
-                    <property name="fontFamily">"Arial"</property>
-                    <property name="fontSize">9pt</property>
-                    <property name="fontStyle">normal</property>
-                    <expression name="testExpr" type="javascript">row["Column Binding"]</expression>
-                    <simple-property-list name="value1">
-                        <value type="javascript">5</value>
-                    </simple-property-list>
-                </structure>
-                <structure>
-                    <property name="operator">eq</property>
-                    <property name="fontFamily">"Arial"</property>
-                    <property name="fontSize">9pt</property>
-                    <property name="fontStyle">normal</property>
-                    <property name="fontWeight">bold</property>
-                    <expression name="testExpr" type="javascript">row["Column Binding"]</expression>
-                    <simple-property-list name="value1">
-                        <value type="javascript">6</value>
-                    </simple-property-list>
-                </structure>
-            </list-property>
-        </style>
-        <style name="Normal_underline" id="171">
+        <style name="Normal_underline" id="143">
             <property name="fontSize">small</property>
             <property name="borderBottomStyle">dashed</property>
             <property name="borderBottomWidth">thin</property>
         </style>
-        <style name="title2_underline" id="172">
+        <style name="title2_underline" id="144">
+            <property name="fontFamily">"Arial"</property>
             <property name="fontWeight">bold</property>
             <property name="fontStyle">normal</property>
             <property name="textUnderline">none</property>
-            <property name="borderBottomStyle">solid</property>
-            <property name="borderBottomWidth">thin</property>
+            <property name="borderBottomStyle">double</property>
+            <property name="borderBottomWidth">thick</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">thin</property>
         </style>
-        <style name="Account_financial" id="280">
+        <style name="total_underline" id="419">
             <property name="fontFamily">"Arial"</property>
-            <property name="fontSize">9pt</property>
-            <property name="fontWeight">bold</property>
-            <property name="textLineThrough">none</property>
-            <property name="textOverline">none</property>
-            <property name="textUnderline">none</property>
-            <structure name="numberFormat">
-                <property name="category">Unformatted</property>
-            </structure>
-            <list-property name="highlightRules">
-                <structure>
-                    <property name="operator">eq</property>
-                    <property name="fontSize">12pt</property>
-                    <property name="fontWeight">bold</property>
-                    <expression name="testExpr" type="javascript">row["Column Binding"]</expression>
-                    <simple-property-list name="value1">
-                        <value type="javascript">1</value>
-                    </simple-property-list>
-                </structure>
-                <structure>
-                    <property name="operator">eq</property>
-                    <property name="fontSize">10pt</property>
-                    <property name="fontWeight">bold</property>
-                    <expression name="testExpr" type="javascript">row["Column Binding"]</expression>
-                    <simple-property-list name="value1">
-                        <value type="javascript">2</value>
-                    </simple-property-list>
-                </structure>
-                <structure>
-                    <property name="operator">eq</property>
-                    <property name="fontSize">10pt</property>
-                    <property name="fontWeight">bold</property>
-                    <expression name="testExpr" type="javascript">row["Column Binding"]</expression>
-                    <simple-property-list name="value1">
-                        <value type="javascript">3</value>
-                    </simple-property-list>
-                </structure>
-                <structure>
-                    <property name="operator">eq</property>
-                    <property name="fontSize">10pt</property>
-                    <expression name="testExpr" type="javascript">row["Column Binding"]</expression>
-                    <simple-property-list name="value1">
-                        <value type="javascript">4</value>
-                    </simple-property-list>
-                </structure>
-                <structure>
-                    <property name="operator">eq</property>
-                    <property name="fontSize">10pt</property>
-                    <property name="fontWeight">bold</property>
-                    <expression name="testExpr" type="javascript">row["Column Binding"]</expression>
-                    <simple-property-list name="value1">
-                        <value type="javascript">5</value>
-                    </simple-property-list>
-                </structure>
-                <structure>
-                    <property name="operator">eq</property>
-                    <property name="fontSize">9pt</property>
-                    <expression name="testExpr" type="javascript">row["Column Binding"]</expression>
-                    <simple-property-list name="value1">
-                        <value type="javascript">6</value>
-                    </simple-property-list>
-                </structure>
-            </list-property>
-        </style>
-        <style name="NewStyle" id="316">
-            <property name="fontWeight">bold</property>
+            <property name="borderBottomStyle">double</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">thin</property>
         </style>
     </styles>
     <page-setup>
@@ -1949,16 +2144,9 @@ f.id=a.id]]></xml-property>
     <body>
         <table id="18">
             <property name="fontFamily">"Zawgyi-One"</property>
-            <property name="width">7.791666666666667in</property>
+            <property name="width">7.763888888888889in</property>
             <property name="dataSet">balance_sheet_report</property>
             <list-property name="boundDataColumns">
-                <structure>
-                    <property name="name">Column Binding</property>
-                    <text-property name="displayName">style_overwrite</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["style_overwrite"]</expression>
-                    <property name="dataType">integer</property>
-                    <property name="allowExport">false</property>
-                </structure>
                 <structure>
                     <property name="name">name</property>
                     <text-property name="displayName">name</text-property>
@@ -1969,31 +2157,44 @@ label;</expression>
                     <property name="allowExport">true</property>
                 </structure>
                 <structure>
-                    <property name="name">balance</property>
-                    <text-property name="displayName">balance</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["balance"]</expression>
+                    <property name="name">financial_report_balance</property>
+                    <text-property name="displayName">financial_report_balance</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["financial_report_balance"] * dataSetRow["sign"]</expression>
                     <property name="dataType">decimal</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">Column Binding</property>
+                    <text-property name="displayName">style_overwrite</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["style_overwrite"]</expression>
+                    <property name="dataType">integer</property>
+                    <property name="allowExport">false</property>
+                </structure>
+                <structure>
+                    <property name="name">report_name</property>
+                    <text-property name="displayName">report_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["report_name"]</expression>
+                    <property name="dataType">string</property>
                 </structure>
             </list-property>
             <column id="42">
-                <property name="width">0.9166666666666666in</property>
+                <property name="width">3.6527777777777777in</property>
             </column>
             <column id="43">
-                <property name="width">3.611111111111111in</property>
+                <property name="width">0.9166666666666666in</property>
             </column>
             <column id="44">
-                <property name="width">1.375in</property>
+                <property name="width">1.5138888888888888in</property>
             </column>
             <column id="45">
-                <property name="width">1.8888888888888888in</property>
+                <property name="width">1.6805555555555556in</property>
             </column>
             <header>
                 <row id="98">
                     <property name="fontFamily">"Arial"</property>
                     <property name="fontSize">12pt</property>
                     <property name="fontWeight">bold</property>
-                    <property name="verticalAlign">middle</property>
-                    <property name="height">0.625in</property>
+                    <property name="height">0.4444444444444444in</property>
                     <cell id="99">
                         <property name="colSpan">4</property>
                         <property name="rowSpan">1</property>
@@ -2001,9 +2202,9 @@ label;</expression>
                         <property name="borderLeftStyle">none</property>
                         <property name="borderRightStyle">none</property>
                         <property name="borderTopStyle">none</property>
-                        <data id="168">
-                            <property name="fontSize">15pt</property>
-                            <property name="fontWeight">bold</property>
+                        <data id="148">
+                            <property name="fontSize">14pt</property>
+                            <property name="marginRight">0pt</property>
                             <property name="textAlign">center</property>
                             <property name="dataSet">company</property>
                             <list-property name="boundDataColumns">
@@ -2020,211 +2221,91 @@ label;</expression>
                 </row>
                 <row id="46">
                     <property name="fontFamily">"Arial"</property>
-                    <property name="height">0.5694444444444444in</property>
+                    <property name="height">0.4027777777777778in</property>
                     <cell id="47">
-                        <property name="colSpan">2</property>
-                        <property name="rowSpan">1</property>
-                        <property name="borderBottomStyle">dotted</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">none</property>
-                        <property name="borderRightStyle">none</property>
-                        <property name="borderTopStyle">none</property>
-                        <data id="208">
-                            <property name="fontSize">15pt</property>
-                            <property name="fontWeight">bold</property>
-                            <property name="textAlign">right</property>
-                            <property name="dataSet">report_name</property>
-                            <list-property name="boundDataColumns">
-                                <structure>
-                                    <property name="name">name</property>
-                                    <text-property name="displayName">name</text-property>
-                                    <expression name="expression" type="javascript">dataSetRow["name"]</expression>
-                                    <property name="dataType">string</property>
-                                </structure>
-                            </list-property>
-                            <property name="resultSetColumn">name</property>
-                        </data>
-                    </cell>
-                    <cell id="175">
                         <property name="colSpan">1</property>
                         <property name="rowSpan">1</property>
-                        <property name="borderBottomStyle">dotted</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderRightStyle">none</property>
-                        <property name="borderTopStyle">none</property>
-                        <label id="207">
-                            <property name="fontSize">15pt</property>
-                            <property name="fontWeight">bold</property>
-                            <text-property name="text">as  at</text-property>
-                        </label>
-                    </cell>
-                    <cell id="206">
-                        <property name="borderBottomStyle">dotted</property>
-                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderBottomStyle">none</property>
                         <property name="borderLeftStyle">none</property>
                         <property name="borderRightStyle">none</property>
                         <property name="borderTopStyle">none</property>
-                        <data id="179">
-                            <property name="fontSize">15pt</property>
+                        <property name="textAlign">center</property>
+                        <data id="401">
+                            <property name="fontFamily">"Arial"</property>
+                            <property name="fontSize">14pt</property>
                             <property name="fontWeight">bold</property>
-                            <property name="textAlign">left</property>
-                            <property name="dataSet">TodayDate</property>
+                            <property name="textUnderline">underline</property>
+                            <property name="textAlign">right</property>
+                            <property name="dataSet">account_financial_balance_sheet_report</property>
                             <list-property name="boundDataColumns">
                                 <structure>
-                                    <property name="name">date</property>
-                                    <text-property name="displayName">date</text-property>
-                                    <expression name="expression" type="javascript">dataSetRow["date"]</expression>
+                                    <property name="name">report_name</property>
+                                    <text-property name="displayName">report_name</text-property>
+                                    <expression name="expression" type="javascript">dataSetRow["report_name"]</expression>
                                     <property name="dataType">string</property>
                                 </structure>
                             </list-property>
-                            <property name="resultSetColumn">date</property>
+                            <property name="resultSetColumn">report_name</property>
+                        </data>
+                    </cell>
+                    <cell id="418">
+                        <property name="borderBottomStyle">none</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">none</property>
+                        <property name="borderTopStyle">none</property>
+                        <property name="textAlign">center</property>
+                        <label id="405">
+                            <property name="fontSize">14pt</property>
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">center</property>
+                            <text-property name="text">as  at </text-property>
+                        </label>
+                    </cell>
+                    <cell id="403">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <property name="borderBottomStyle">none</property>
+                        <property name="borderLeftStyle">none</property>
+                        <property name="borderRightStyle">none</property>
+                        <property name="borderTopStyle">none</property>
+                        <property name="textAlign">center</property>
+                        <data id="417">
+                            <property name="fontSize">14pt</property>
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">center</property>
+                            <property name="dataSet">Report Date</property>
+                            <list-property name="boundDataColumns">
+                                <structure>
+                                    <property name="name">date_stop</property>
+                                    <text-property name="displayName">date_stop</text-property>
+                                    <expression name="expression" type="javascript">dataSetRow["date_stop"]</expression>
+                                    <property name="dataType">date</property>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">date_stop</property>
                         </data>
                     </cell>
                 </row>
-                <row id="110">
-                    <property name="fontFamily">"Arial"</property>
-                    <property name="height">0.7222222222222222in</property>
-                    <cell id="111">
-                        <property name="colSpan">4</property>
-                        <property name="rowSpan">1</property>
-                        <grid id="115">
-                            <property name="height">0.625in</property>
-                            <column id="116"/>
-                            <column id="117"/>
-                            <column id="118"/>
-                            <column id="119"/>
-                            <column id="120"/>
-                            <column id="121"/>
-                            <row id="122">
-                                <property name="height">0.3229166666666667in</property>
-                                <cell id="123">
-                                    <label id="66">
-                                        <property name="fontSize">11pt</property>
-                                        <property name="fontWeight">bold</property>
-                                        <text-property name="text">Fiscal Year:</text-property>
-                                    </label>
-                                </cell>
-                                <cell id="124">
-                                    <label id="67">
-                                        <property name="fontSize">11pt</property>
-                                        <property name="fontWeight">bold</property>
-                                        <text-property name="text">Period:</text-property>
-                                    </label>
-                                </cell>
-                                <cell id="125">
-                                    <label id="94">
-                                        <property name="fontSize">11pt</property>
-                                        <property name="fontWeight">bold</property>
-                                        <text-property name="text">End Period</text-property>
-                                    </label>
-                                </cell>
-                                <cell id="126">
-                                    <label id="136">
-                                        <property name="fontWeight">bold</property>
-                                        <text-property name="text">Start Date:</text-property>
-                                    </label>
-                                </cell>
-                                <cell id="127">
-                                    <label id="137">
-                                        <property name="fontWeight">bold</property>
-                                        <text-property name="text">End Date:</text-property>
-                                    </label>
-                                </cell>
-                                <cell id="128">
-                                    <label id="69">
-                                        <property name="fontSize">11pt</property>
-                                        <property name="fontWeight">bold</property>
-                                        <text-property name="text">Target Move:</text-property>
-                                    </label>
-                                </cell>
-                            </row>
-                            <row id="129">
-                                <property name="height">0.3020833333333333in</property>
-                                <cell id="130">
-                                    <data id="57">
-                                        <list-property name="boundDataColumns">
-                                            <structure>
-                                                <property name="name">fiscal_year_id</property>
-                                                <expression name="expression" type="javascript">params["fiscal_year_id"].displayText</expression>
-                                                <property name="dataType">string</property>
-                                                <property name="allowExport">true</property>
-                                            </structure>
-                                        </list-property>
-                                        <property name="resultSetColumn">fiscal_year_id</property>
-                                    </data>
-                                </cell>
-                                <cell id="131">
-                                    <data id="58">
-                                        <list-property name="boundDataColumns">
-                                            <structure>
-                                                <property name="name">start_period_id</property>
-                                                <expression name="expression" type="javascript">params["start_period_id"].displayText</expression>
-                                                <property name="dataType">string</property>
-                                                <property name="allowExport">true</property>
-                                            </structure>
-                                        </list-property>
-                                        <property name="resultSetColumn">start_period_id</property>
-                                    </data>
-                                </cell>
-                                <cell id="132">
-                                    <data id="95">
-                                        <list-property name="boundDataColumns">
-                                            <structure>
-                                                <property name="name">end_period_id</property>
-                                                <expression name="expression" type="javascript">params["end_period_id"].displayText</expression>
-                                                <property name="dataType">string</property>
-                                                <property name="allowExport">true</property>
-                                            </structure>
-                                        </list-property>
-                                        <property name="resultSetColumn">end_period_id</property>
-                                    </data>
-                                </cell>
-                                <cell id="133">
-                                    <data id="138">
-                                        <list-property name="boundDataColumns">
-                                            <structure>
-                                                <property name="name">start_date</property>
-                                                <expression name="expression" type="javascript">params["start_date"]</expression>
-                                                <property name="dataType">date</property>
-                                            </structure>
-                                        </list-property>
-                                        <property name="resultSetColumn">start_date</property>
-                                    </data>
-                                </cell>
-                                <cell id="134">
-                                    <data id="139">
-                                        <list-property name="boundDataColumns">
-                                            <structure>
-                                                <property name="name">end_date</property>
-                                                <expression name="expression" type="javascript">params["end_date"]</expression>
-                                                <property name="dataType">date</property>
-                                            </structure>
-                                        </list-property>
-                                        <property name="resultSetColumn">end_date</property>
-                                    </data>
-                                </cell>
-                                <cell id="135">
-                                    <data id="60">
-                                        <list-property name="boundDataColumns">
-                                            <structure>
-                                                <property name="name">target_move</property>
-                                                <expression name="expression" type="javascript">params["target_move"].displayText</expression>
-                                                <property name="dataType">string</property>
-                                                <property name="allowExport">true</property>
-                                            </structure>
-                                        </list-property>
-                                        <property name="resultSetColumn">target_move</property>
-                                    </data>
-                                </cell>
-                            </row>
-                        </grid>
-                    </cell>
+                <row id="61">
+                    <property name="height">0.16666666666666666in</property>
+                    <cell id="62"/>
+                    <cell id="63"/>
+                    <cell id="64"/>
+                    <cell id="65"/>
                 </row>
             </header>
         </table>
-        <table id="220">
+        <table id="363">
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">thin</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">thin</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">thin</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">thin</property>
             <property name="width">7.722222222222222in</property>
-            <property name="dataSet">financial_report_balance_sheet</property>
+            <property name="dataSet">account_financial_balance_sheet_report</property>
             <list-property name="boundDataColumns">
                 <structure>
                     <property name="name">serial_no</property>
@@ -2239,37 +2320,19 @@ label;</expression>
                     <property name="dataType">integer</property>
                 </structure>
                 <structure>
-                    <property name="name">fname</property>
-                    <text-property name="displayName">fname</text-property>
+                    <property name="name">name</property>
+                    <text-property name="displayName">name</text-property>
                     <expression name="expression" type="javascript">label='\xA0';
-label+=dataSetRow["fname"];
+label+=dataSetRow["name"];
 label;</expression>
                     <property name="dataType">string</property>
                     <property name="allowExport">true</property>
                 </structure>
                 <structure>
-                    <property name="name">style_overwrite</property>
-                    <text-property name="displayName">style_overwrite</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["style_overwrite"]</expression>
-                    <property name="dataType">integer</property>
-                </structure>
-                <structure>
-                    <property name="name">sign</property>
-                    <text-property name="displayName">sign</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["sign"]</expression>
-                    <property name="dataType">integer</property>
-                </structure>
-                <structure>
-                    <property name="name">balance</property>
-                    <text-property name="displayName">balance</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["balance"]</expression>
+                    <property name="name">financial_report_balance</property>
+                    <text-property name="displayName">financial_report_balance</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["financial_report_balance"]</expression>
                     <property name="dataType">decimal</property>
-                </structure>
-                <structure>
-                    <property name="name">depth</property>
-                    <text-property name="displayName">depth</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["depth"]</expression>
-                    <property name="dataType">integer</property>
                 </structure>
                 <structure>
                     <property name="name">Column Binding</property>
@@ -2278,266 +2341,188 @@ label;</expression>
                     <property name="allowExport">true</property>
                 </structure>
             </list-property>
-            <column id="259">
-                <property name="width">0.7222222222222222in</property>
+            <column id="387">
+                <property name="width">0.7361111111111112in</property>
             </column>
-            <column id="260">
-                <property name="width">4.125in</property>
+            <column id="388">
+                <property name="width">4.069444444444445in</property>
             </column>
-            <column id="261">
-                <property name="width">1.1944444444444444in</property>
+            <column id="389">
+                <property name="width">0.9583333333333334in</property>
             </column>
-            <column id="264">
-                <property name="width">1.6805555555555556in</property>
+            <column id="390">
+                <property name="width">1.9583333333333333in</property>
             </column>
             <header>
-                <row id="221">
-                    <cell id="222">
-                        <property name="backgroundColor">silver</property>
-                        <property name="borderBottomStyle">dotted</property>
+                <row id="364">
+                    <property name="backgroundColor">silver</property>
+                    <property name="fontFamily">"Arial"</property>
+                    <property name="fontSize">12pt</property>
+                    <property name="fontWeight">bold</property>
+                    <cell id="365">
+                        <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftStyle">solid</property>
                         <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <label id="223">
-                            <property name="fontFamily">"Arial"</property>
-                            <property name="fontSize">12pt</property>
-                            <property name="fontWeight">bold</property>
+                        <label id="366">
                             <text-property name="text">Sr.No.</text-property>
                         </label>
                     </cell>
-                    <cell id="224">
-                        <property name="backgroundColor">silver</property>
-                        <property name="borderBottomStyle">dotted</property>
+                    <cell id="367">
+                        <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftStyle">solid</property>
                         <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <label id="225">
-                            <property name="fontFamily">"Arial"</property>
-                            <property name="fontSize">12pt</property>
-                            <property name="fontWeight">bold</property>
+                        <label id="368">
                             <text-property name="text">Description</text-property>
                         </label>
                     </cell>
-                    <cell id="226">
-                        <property name="backgroundColor">silver</property>
-                        <property name="borderBottomStyle">dotted</property>
+                    <cell id="369">
+                        <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftStyle">solid</property>
                         <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <label id="227">
-                            <property name="fontFamily">"Arial"</property>
-                            <property name="fontSize">12pt</property>
-                            <property name="fontWeight">bold</property>
+                        <label id="370">
                             <text-property name="text">Schedule No.</text-property>
                         </label>
                     </cell>
-                    <cell id="232">
-                        <property name="backgroundColor">silver</property>
-                        <property name="borderBottomStyle">dotted</property>
+                    <cell id="371">
+                        <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftStyle">solid</property>
                         <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <label id="233">
-                            <property name="fontFamily">"Arial"</property>
-                            <property name="fontSize">12pt</property>
-                            <property name="fontWeight">bold</property>
+                        <label id="372">
                             <text-property name="text">Amount  in US$</text-property>
                         </label>
                     </cell>
                 </row>
-                <row id="271">
+                <row id="391">
                     <property name="backgroundColor">white</property>
-                    <cell id="272">
-                        <property name="backgroundColor">white</property>
-                        <property name="borderBottomStyle">dotted</property>
+                    <property name="fontFamily">"Arial"</property>
+                    <property name="fontSize">12pt</property>
+                    <property name="fontWeight">bold</property>
+                    <cell id="392">
+                        <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftStyle">solid</property>
                         <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <label id="276">
-                            <property name="fontFamily">"Arial"</property>
-                            <property name="fontWeight">bold</property>
+                        <label id="396">
                             <text-property name="text">1</text-property>
                         </label>
                     </cell>
-                    <cell id="273">
-                        <property name="backgroundColor">white</property>
-                        <property name="borderBottomStyle">dotted</property>
+                    <cell id="393">
+                        <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftStyle">solid</property>
                         <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <label id="277">
-                            <property name="fontFamily">"Arial"</property>
-                            <property name="fontWeight">bold</property>
+                        <label id="397">
                             <text-property name="text">2</text-property>
                         </label>
                     </cell>
-                    <cell id="274">
-                        <property name="backgroundColor">white</property>
-                        <property name="borderBottomStyle">dotted</property>
+                    <cell id="394">
+                        <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftStyle">solid</property>
                         <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <label id="278">
-                            <property name="fontFamily">"Arial"</property>
-                            <property name="fontWeight">bold</property>
+                        <label id="398">
                             <text-property name="text">3</text-property>
                         </label>
                     </cell>
-                    <cell id="275">
-                        <property name="backgroundColor">white</property>
-                        <property name="borderBottomStyle">dotted</property>
+                    <cell id="395">
+                        <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">dotted</property>
+                        <property name="borderLeftStyle">solid</property>
                         <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">dotted</property>
+                        <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">dotted</property>
+                        <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <label id="279">
-                            <property name="fontFamily">"Arial"</property>
-                            <property name="fontWeight">bold</property>
+                        <label id="399">
                             <text-property name="text">4</text-property>
                         </label>
                     </cell>
                 </row>
             </header>
             <detail>
-                <row id="236">
-                    <cell id="237">
-                        <property name="borderBottomStyle">dotted</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">dotted</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">dotted</property>
+                <row id="373">
+                    <cell id="374">
+                        <property name="style">financial_cell</property>
+                        <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">dotted</property>
-                        <property name="borderTopWidth">thin</property>
-                        <data id="238">
+                        <data id="375">
                             <property name="fontFamily">"Arial"</property>
                             <property name="textAlign">center</property>
                             <property name="resultSetColumn">serial_no</property>
                         </data>
                     </cell>
-                    <cell id="239">
-                        <property name="borderBottomStyle">dotted</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">dotted</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">dotted</property>
+                    <cell id="376">
+                        <property name="style">financial_cell</property>
+                        <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">dotted</property>
-                        <property name="borderTopWidth">thin</property>
-                        <data id="242">
+                        <data id="379">
                             <property name="style">financial_cell</property>
-                            <property name="fontFamily">"Arial"</property>
-                            <property name="fontWeight">normal</property>
-                            <property name="textAlign">left</property>
-                            <property name="resultSetColumn">fname</property>
+                            <property name="resultSetColumn">name</property>
                         </data>
                     </cell>
-                    <cell id="241">
-                        <property name="borderBottomStyle">dotted</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">dotted</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">dotted</property>
+                    <cell id="378">
+                        <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">dotted</property>
-                        <property name="borderTopWidth">thin</property>
-                        <data id="240">
+                        <data id="377">
+                            <property name="style">financial_amt_cell</property>
                             <property name="fontFamily">"Arial"</property>
                             <property name="textAlign">center</property>
                             <property name="resultSetColumn">schedule_no</property>
                         </data>
                     </cell>
-                    <cell id="247">
-                        <property name="borderBottomStyle">dotted</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">dotted</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">dotted</property>
+                    <cell id="380">
+                        <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">dotted</property>
-                        <property name="borderTopWidth">thin</property>
-                        <data id="248">
-                            <property name="style">Account_financial</property>
-                            <property name="fontFamily">"Arial"</property>
+                        <data id="381">
+                            <property name="style">financial_amt_cell</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
                             <property name="textAlign">right</property>
-                            <property name="resultSetColumn">balance</property>
+                            <property name="resultSetColumn">financial_report_balance</property>
                         </data>
                     </cell>
                 </row>
             </detail>
             <footer>
-                <row id="251">
-                    <cell id="252">
-                        <property name="borderBottomStyle">dotted</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">dotted</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">dotted</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">dotted</property>
-                        <property name="borderTopWidth">thin</property>
-                    </cell>
-                    <cell id="253">
-                        <property name="borderBottomStyle">dotted</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">dotted</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">dotted</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">dotted</property>
-                        <property name="borderTopWidth">thin</property>
-                    </cell>
-                    <cell id="254">
-                        <property name="borderBottomStyle">dotted</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">dotted</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">dotted</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">dotted</property>
-                        <property name="borderTopWidth">thin</property>
-                    </cell>
-                    <cell id="257">
-                        <property name="borderBottomStyle">dotted</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftStyle">dotted</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightStyle">dotted</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopStyle">dotted</property>
-                        <property name="borderTopWidth">thin</property>
-                    </cell>
+                <row id="382">
+                    <cell id="383"/>
+                    <cell id="384"/>
+                    <cell id="385"/>
+                    <cell id="386"/>
                 </row>
             </footer>
         </table>

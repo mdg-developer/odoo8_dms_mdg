@@ -1,0 +1,9 @@
+1.break_hr_for_whole_day_employee.rptdesign
+2.break_hrs_for_shilt_employee.rptdesign
+3.early_sign_out_for_all_employee.rptdesign
+4.lates_report.rptdesign
+5.over_thirty_late.rptdesign
+6.payslip.rptdesign
+7.summary_amount_by_all_dept.rptdesign
+8.summary_amount_by_each_dept.rptdesign
+9.summary_amount_by_each_emp.rptdesign

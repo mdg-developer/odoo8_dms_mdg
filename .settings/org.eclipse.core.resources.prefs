@@ -1,4 +1,5 @@
 eclipse.preferences.version=1
+encoding//account_financial_report_xls/account_financial_srno_line.py=utf-8
 encoding//account_move_import/models/account_move.py=utf-8
 encoding//account_move_import/wizard/import_move_line_wizard.py=utf-8
 encoding//sale_foc_discount/sale.py=utf-8
