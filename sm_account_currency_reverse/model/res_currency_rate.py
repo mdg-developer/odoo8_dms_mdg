@@ -51,10 +51,10 @@ class ResCurrenyRate(models.Model):
             return currency.rate     
         return res
 
-    @api.multi
-    def name_get(self):
-          
-        return [(currency.id, tools.ustr(currency.rate_new)) for currency in self]
+#     @api.multi
+#     def name_get(self):
+#           
+#         return [(currency.id, tools.ustr(currency.rate_new)) for currency in self]
      
 #     @api.multi
 #     def name_get(self):
