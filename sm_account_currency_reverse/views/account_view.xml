@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="sm_res_currency_reverse_rate" model="ir.ui.view">
+            <field name="name">sm.res.currency.reverse.rate</field>
+            <field name="model">res.currency</field>
+            <field name="inherit_id" ref="base.view_currency_form"/>
+            <field name="arch" type="xml">
+                <field name="rate_ids" position="replace"> 
+                    <field mode="tree" name="rate_ids" attrs="{'readonly':[('base','=',True)]}">
+	                    <tree string="Rates" editable="bottom">
+		                    <field name="name" /> 
+		                    <field name="rate" invisible="1"/>  
+		                    <field name="rate_new" />                   
+		                   
+		                 </tree>
+	                 </field>
+                </field>
+                
+                
+            </field>
+        </record>
+        
+        <!-- <record id="sm_res_currency_reverse_rate_tree_inherit" model="ir.ui.view">
+            <field name="name">sm.res.currency.reverse.rate.tree</field>
+            <field name="model">res.currency</field>
+            <field name="inherit_id" ref="base.view_currency_tree"/>
+            <field name="arch" type="xml">
+                <field name="rate" position="replace"> 
+                    <field name="rate" invisible="1"/>
+                    <field name="rate_new" />                   
+                    
+                </field>
+            </field>
+        </record>
+        	
+        <record id="sm_res_currency_view_currency_rate_tree" model="ir.ui.view">
+            <field name="name">sm.res.currency.reverse.rate,tree</field>
+            <field name="model">res.currency.rate</field>
+            <field name="inherit_id" ref="base.view_currency_rate_tree"/>
+            <field name="arch" type="xml">
+                <field name="rate" position="replace"> 
+                    <field name="rate" invisible="1"/>                   
+                    <field name="rate_new" string="Rate"/>
+                </field>
+            </field>
+        </record> -->
+        
+
+        
+        
+    </data>
+</openerp>
