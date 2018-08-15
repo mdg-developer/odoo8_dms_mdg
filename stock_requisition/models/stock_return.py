@@ -820,7 +820,13 @@ class stock_return(osv.osv):
 class stock_return_line(osv.osv):  # #prod_pricelist_update_line
     _name = 'stock.return.line'
     _description = 'Return Line'
-        
+    
+    def _amount_compute(self, cursor, user, ids, name, attr, context=None):
+        res = {}
+        for line in self.browse(cursor, user, ids, context=context):
+            res[line.id] = line.closing_stock_qty + line.actual_return_quantity
+        return res
+    
     _columns = {                
         'line_id':fields.many2one('stock.return', 'Line', ondelete='cascade', select=True),
         'product_id': fields.many2one('product.product', 'Product', required=True),
@@ -829,7 +835,10 @@ class stock_return_line(osv.osv):  # #prod_pricelist_update_line
         'opening_stock_qty' : fields.float(string='Opening Stock Qty', digits=(16, 0)),
         'sale_quantity' : fields.float(string='Sales Qty', digits=(16, 0)),
         'return_quantity' : fields.float(string='Returned Qty', digits=(16, 0)),
-        'onground_quantity' : fields.float(string='All Physical Stock Qty', digits=(16, 0),readonly=True),
+       #'onground_quantity' : fields.float(string='All Physical Stock Qty', digits=(16, 0),readonly=True),
+        
+        'onground_quantity': fields.function(_amount_compute, string='All Physical Stock Qty',store=True, digits=(16, 0),readonly=True, type='float'),
+
         'actual_return_quantity' : fields.float(string='Actual Return Qty', digits=(16, 0)),
         'closing_stock_qty' : fields.float(string='Closing Stock Qty', digits=(16, 0)),
         # 'receive_quantity' : fields.float(string='Received Qty', digits=(16, 0)),

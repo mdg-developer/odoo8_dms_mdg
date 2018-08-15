@@ -300,6 +300,7 @@ class cashier_approval(osv.osv):
                 invoice = invoiceObj.browse(cr, uid, inv_id, context=context)
                 partner_id = invoice.partner_id.id
                 period_id = invoice.period_id.id
+                payment_type=invoice.payment_type
                 if payment[7] is None:
                     invoice_num = invoice.number
                 else:
@@ -332,8 +333,12 @@ class cashier_approval(osv.osv):
                 if voucherId:
                     vlist = []
                     vlist.append(voucherId)
-                    cr.execute ("select account_id,credit+debit as amount_total,id,reconcile_partial_id  from  account_move_line where move_id=%s and name='/'  and reconcile_id is null  order by credit+debit", (invoice.move_id.id,)) 
-                    move_line_data = cr.fetchall()    
+                    if payment_type !='credit':
+                        cr.execute ("select account_id,credit+debit as amount_total,id,reconcile_partial_id  from  account_move_line where move_id=%s and name='/'  and reconcile_id is null  order by credit+debit", (invoice.move_id.id,)) 
+                        move_line_data = cr.fetchall()    
+                    else:
+                        cr.execute ("select account_id,credit+debit as amount_total,id,reconcile_partial_id  from  account_move_line where move_id=%s and name='Clearing'  and reconcile_id is null  order by credit+debit", (invoice.move_id.id,)) 
+                        move_line_data = cr.fetchall()                            
 #                     cr.execute ("select sum(credit+debit) as amount_total  from  account_move_line where move_id=%s and name='/' ",( invoice.move_id.id,)) 
 #                     move_line_amount =cr.fetchone()          
 #                     if move_line_amount:

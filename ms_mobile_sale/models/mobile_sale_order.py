@@ -748,6 +748,7 @@ class mobile_sale_order(osv.osv):
                                             'branch_id':ms_ids.branch_id.id,
                                              'note':ms_ids.note,
                                             'rebate_later':ms_ids.rebate_later,
+                                             'ignore_credit_limit':True,
 
 
                                         }

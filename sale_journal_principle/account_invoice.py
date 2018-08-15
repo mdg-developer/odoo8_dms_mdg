@@ -466,29 +466,31 @@ class account_invoice(models.Model):
                 print 'account_id>>>', account_id        
     
                 print 'line>>>', line
-                res = {
-                    'date_maturity': line.get('date_maturity', False),
-                    'partner_id': part,
-                    'name': line['name'][:64],
-                    'date': date,
-                    'debit': line['price'] > 0 and line['price'],
-                    'credit': line['price'] < 0 and -line['price'],
-                    'account_id': line['account_id'],
-                    # 'account_id': account_id,
-                    'analytic_lines': line.get('analytic_lines', []),
-                    'amount_currency': line['price'] > 0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
-                    'currency_id': line.get('currency_id', False),
-                    'tax_code_id': line.get('tax_code_id', False),
-                    'tax_amount': line.get('tax_amount', False),
-                    'ref': line.get('ref', False),
-                    'quantity': line.get('quantity', 1.00),
-                    'product_id': line.get('product_id', False),
-                    'product_uom_id': line.get('uos_id', False),
-                    'analytic_account_id': line.get('account_analytic_id', False),
-                    'main_group': account_id,
-                    'is_discount': line.get('is_discount', False),
-                }
-                return res
+                if line['type']!='dest':
+                
+                    res = {
+                        'date_maturity': line.get('date_maturity', False),
+                        'partner_id': part,
+                        'name': line['name'][:64],
+                        'date': date,
+                        'debit': line['price'] > 0 and line['price'],
+                        'credit': line['price'] < 0 and -line['price'],
+                        'account_id': line['account_id'],
+                        # 'account_id': account_id,
+                        'analytic_lines': line.get('analytic_lines', []),
+                        'amount_currency': line['price'] > 0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
+                        'currency_id': line.get('currency_id', False),
+                        'tax_code_id': line.get('tax_code_id', False),
+                        'tax_amount': line.get('tax_amount', False),
+                        'ref': line.get('ref', False),
+                        'quantity': line.get('quantity', 1.00),
+                        'product_id': line.get('product_id', False),
+                        'product_uom_id': line.get('uos_id', False),
+                        'analytic_account_id': line.get('account_analytic_id', False),
+                        'main_group': account_id,
+                        'is_discount': line.get('is_discount', False),
+                    }
+                    return res
         if type == 'in_refund' :
             if line['price'] < 0:
                 product = self.env['product.product'].browse(line.get('product_id', False))
