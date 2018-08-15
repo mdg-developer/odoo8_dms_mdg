@@ -88,7 +88,7 @@
 						</button>
 						<button class="oe_inline oe_stat_button" type="action"
 							name="%(account.action_invoice_tree)d"
-							attrs="{'invisible': ['|',('customer', '=', False),('credit_allow','=',False)]}"
+							attrs="{'invisible': [('customer', '=', False)]}"
 							context="{'search_default_partner_id': active_id,'default_partner_id': active_id,'default_state':'open','default_payment':'credit'}"
 							string="Due Invoice" icon="fa-strikethrough">
 						</button>
