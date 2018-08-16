@@ -288,7 +288,7 @@ class pol_import(orm.TransientModel):
 #                             uom_ids = productObj.uom_id.id
                         else:
                             raise osv.except_osv(_('User Error!'),
-                                         _("This Supplier Code doesn't exist in ther System.\n Suppler Code: %s")% suppliercode_name)
+                                         _("This Supplier Code doesn't exist in the System.\n Suppler Code: %s")% suppliercode_name)
                     if ln[uom_i]: 
                         uoms = str(ln[uom_i]).strip()
                     if uoms:
