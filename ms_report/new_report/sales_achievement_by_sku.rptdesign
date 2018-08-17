@@ -206,7 +206,7 @@ this.queryText =this.queryText.replace("--$branch_id$", "and branch_id in ("+ pa
             </list-property>
             <xml-property name="queryText"><![CDATA[with sale_order as (
 	select name_template,section_id,pp.sequence as pseq,
-	case when ail.uos_id=pt.uom_id then quantity when ail.uos_id=pt.big_uom_id then quantity*(select floor(round(1/factor,2)) from product_uom where id=big_uom_id) end as quantity,
+	case when ail.uos_id=pt.uom_id then quantity when ail.uos_id!=pt.uom_id then quantity*(select floor(round(1/factor,2)) from product_uom where id=ail.uos_id) end as quantity,
 	(quantity*price_unit)::numeric as ach_amt,date_part('month',date_invoice)::int as month,date_part('year',date_invoice)::int as year,product_id,(date_invoice+ '6 hour'::interval + '30 minutes'::interval)::date as date_order,branch_id
 	from account_invoice ai,account_invoice_line ail,product_product pp,product_template pt
 	where ai.id=ail.invoice_id
