@@ -60,7 +60,10 @@ class purchase_order_line(osv.osv):
         
         if product.supplier_code:
             supplier_code = product.supplier_code 
-              
+            
+        if product.description:
+            name =product.description
+                      
         res['value'].update({'name': name, 'supplier_code': supplier_code})
 
         # - set a domain on product_uom
