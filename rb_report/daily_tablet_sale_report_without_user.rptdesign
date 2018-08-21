@@ -8,7 +8,7 @@
     <property name="imageDPI">96</property>
     <list-property name="libraries">
         <structure>
-            <property name="fileName">report_library.rptlibrary</property>
+            <property name="fileName">rb_report/library/report_library.rptlibrary</property>
             <property name="namespace">report_library</property>
         </structure>
     </list-property>
@@ -122,7 +122,7 @@
         </scalar-parameter>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="2684"
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="2732"
  extends="report_library.Data Source"/>
     </data-sources>
     <data-sets>
@@ -474,34 +474,46 @@ limit 1
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
-                    <property name="name">main_group</property>
+                    <property name="name">date</property>
                     <property name="paramName">main_group</property>
+                    <property name="nativeName">date</property>
                     <property name="dataType">integer</property>
+                    <property name="nativeDataType">91</property>
                     <property name="position">3</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
-                    <property name="name">branch_id</property>
+                    <property name="name">vr_no</property>
                     <property name="paramName">branch</property>
+                    <property name="nativeName">vr_no</property>
                     <property name="dataType">integer</property>
+                    <property name="nativeDataType">12</property>
                     <property name="position">4</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
-                    <property name="name">team_id</property>
+                    <property name="name">customer_code</property>
                     <property name="paramName">sales_teams</property>
+                    <property name="nativeName">customer_code</property>
                     <property name="dataType">integer</property>
+                    <property name="nativeDataType">12</property>
                     <property name="position">5</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
                 <structure>
-                    <property name="name">user_id</property>
+                    <property name="name">customerid</property>
                     <property name="paramName">user_id</property>
+                    <property name="nativeName">customerid</property>
                     <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
                     <property name="position">6</property>
+                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -550,106 +562,116 @@ limit 1
                     </structure>
                     <structure>
                         <property name="position">9</property>
-                        <property name="name">discount</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">10</property>
                         <property name="name">sub_total</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
+                        <property name="position">10</property>
+                        <property name="name">discount</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
                         <property name="position">11</property>
+                        <property name="name">discount_amt</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
+                        <property name="name">net_total</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">13</property>
                         <property name="name">sale_group</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">12</property>
+                        <property name="position">14</property>
                         <property name="name">m_status</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">13</property>
+                        <property name="position">15</property>
                         <property name="name">type</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">14</property>
+                        <property name="position">16</property>
                         <property name="name">township</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">15</property>
+                        <property name="position">17</property>
                         <property name="name">village</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">16</property>
+                        <property name="position">18</property>
                         <property name="name">city</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">17</property>
+                        <property name="position">19</property>
                         <property name="name">channel</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">18</property>
+                        <property name="position">20</property>
                         <property name="name">territory</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">19</property>
+                        <property name="position">21</property>
                         <property name="name">state</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">20</property>
+                        <property name="position">22</property>
                         <property name="name">delivery_remark</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">21</property>
+                        <property name="position">23</property>
                         <property name="name">additional_discount</property>
                         <property name="dataType">float</property>
                     </structure>
                     <structure>
-                        <property name="position">22</property>
+                        <property name="position">24</property>
                         <property name="name">sale_plan_day_name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">23</property>
+                        <property name="position">25</property>
                         <property name="name">sale_plan_trip_name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">24</property>
+                        <property name="position">26</property>
                         <property name="name">void</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">25</property>
+                        <property name="position">27</property>
                         <property name="name">vid</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">26</property>
+                        <property name="position">28</property>
                         <property name="name">product_code</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">27</property>
+                        <property name="position">29</property>
                         <property name="name">branch</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">28</property>
+                        <property name="position">30</property>
                         <property name="name">main_group</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">29</property>
+                        <property name="position">31</property>
                         <property name="name">product_category</property>
                         <property name="dataType">string</property>
                     </structure>
@@ -707,132 +729,144 @@ limit 1
                 </structure>
                 <structure>
                     <property name="position">9</property>
-                    <property name="name">discount</property>
-                    <property name="nativeName">discount</property>
-                    <property name="dataType">float</property>
-                </structure>
-                <structure>
-                    <property name="position">10</property>
                     <property name="name">sub_total</property>
                     <property name="nativeName">sub_total</property>
                     <property name="dataType">float</property>
                 </structure>
                 <structure>
+                    <property name="position">10</property>
+                    <property name="name">discount</property>
+                    <property name="nativeName">discount</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
                     <property name="position">11</property>
+                    <property name="name">discount_amt</property>
+                    <property name="nativeName">discount_amt</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">12</property>
+                    <property name="name">net_total</property>
+                    <property name="nativeName">net_total</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">13</property>
                     <property name="name">sale_group</property>
                     <property name="nativeName">sale_group</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">12</property>
+                    <property name="position">14</property>
                     <property name="name">m_status</property>
                     <property name="nativeName">m_status</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">13</property>
+                    <property name="position">15</property>
                     <property name="name">type</property>
                     <property name="nativeName">type</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">14</property>
+                    <property name="position">16</property>
                     <property name="name">township</property>
                     <property name="nativeName">township</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">15</property>
+                    <property name="position">17</property>
                     <property name="name">village</property>
                     <property name="nativeName">village</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">16</property>
+                    <property name="position">18</property>
                     <property name="name">city</property>
                     <property name="nativeName">city</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">17</property>
+                    <property name="position">19</property>
                     <property name="name">channel</property>
                     <property name="nativeName">channel</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">18</property>
+                    <property name="position">20</property>
                     <property name="name">territory</property>
                     <property name="nativeName">territory</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">19</property>
+                    <property name="position">21</property>
                     <property name="name">state</property>
                     <property name="nativeName">state</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">20</property>
+                    <property name="position">22</property>
                     <property name="name">delivery_remark</property>
                     <property name="nativeName">delivery_remark</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">21</property>
+                    <property name="position">23</property>
                     <property name="name">additional_discount</property>
                     <property name="nativeName">additional_discount</property>
                     <property name="dataType">float</property>
                 </structure>
                 <structure>
-                    <property name="position">22</property>
+                    <property name="position">24</property>
                     <property name="name">sale_plan_day_name</property>
                     <property name="nativeName">sale_plan_day_name</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">23</property>
+                    <property name="position">25</property>
                     <property name="name">sale_plan_trip_name</property>
                     <property name="nativeName">sale_plan_trip_name</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">24</property>
+                    <property name="position">26</property>
                     <property name="name">void</property>
                     <property name="nativeName">void</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">25</property>
+                    <property name="position">27</property>
                     <property name="name">vid</property>
                     <property name="nativeName">vid</property>
                     <property name="dataType">integer</property>
                 </structure>
                 <structure>
-                    <property name="position">26</property>
+                    <property name="position">28</property>
                     <property name="name">product_code</property>
                     <property name="nativeName">product_code</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">27</property>
+                    <property name="position">29</property>
                     <property name="name">branch</property>
                     <property name="nativeName">branch</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">28</property>
+                    <property name="position">30</property>
                     <property name="name">main_group</property>
                     <property name="nativeName">main_group</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">29</property>
+                    <property name="position">31</property>
                     <property name="name">product_category</property>
                     <property name="nativeName">product_category</property>
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[{ call daily_sale_report_without_user (?,?,?,?,?,?) } ]]></xml-property>
+            <xml-property name="queryText"><![CDATA[select * from daily_sale_report_without_user(?,?,?,?,?,?) ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -850,6 +884,9 @@ limit 1
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
         </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes/>
+        </design:inputAttributes>
       </design:ParameterDefinition>
     </parameter>
     <parameter>
@@ -865,6 +902,9 @@ limit 1
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
         </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes/>
+        </design:inputAttributes>
       </design:ParameterDefinition>
     </parameter>
     <parameter>
@@ -880,6 +920,9 @@ limit 1
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
         </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes/>
+        </design:inputAttributes>
       </design:ParameterDefinition>
     </parameter>
     <parameter>
@@ -895,6 +938,9 @@ limit 1
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
         </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes/>
+        </design:inputAttributes>
       </design:ParameterDefinition>
     </parameter>
     <parameter>
@@ -910,6 +956,9 @@ limit 1
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
         </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes/>
+        </design:inputAttributes>
       </design:ParameterDefinition>
     </parameter>
     <parameter>
@@ -925,6 +974,9 @@ limit 1
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
         </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes/>
+        </design:inputAttributes>
       </design:ParameterDefinition>
     </parameter>
   </DataSetParameters>
@@ -1639,6 +1691,72 @@ order by login]]></xml-property>
                     </list-property>
                     <property name="allowExport">true</property>
                 </structure>
+                <structure>
+                    <property name="name">discount_amt</property>
+                    <text-property name="displayName">discount_amt</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["discount_amt"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">net_total</property>
+                    <text-property name="displayName">net_total</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["net_total"]</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_disamount</property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>product_category</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">dataSetRow["discount_amt"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">sum_nettotal</property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>product_category</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">dataSetRow["net_total"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation4</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["sum_disamount"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">Aggregation5</property>
+                    <property name="dataType">float</property>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["sum_nettotal"]</expression>
+                        </structure>
+                    </list-property>
+                    <property name="allowExport">true</property>
+                </structure>
             </list-property>
             <column id="1671"/>
             <column id="1672"/>
@@ -1655,10 +1773,10 @@ order by login]]></xml-property>
                 <property name="width">1.2in</property>
             </column>
             <column id="1674">
-                <property name="width">1.2in</property>
+                <property name="width">1.125in</property>
             </column>
             <column id="1675">
-                <property name="width">1.5in</property>
+                <property name="width">1.5729166666666667in</property>
             </column>
             <column id="1676">
                 <property name="width">1.5in</property>
@@ -1667,16 +1785,32 @@ order by login]]></xml-property>
                 <property name="width">0.7166666666666667in</property>
             </column>
             <column id="1677">
-                <property name="width">1.9833333333333334in</property>
+                <property name="width">1.7916666666666667in</property>
             </column>
             <column id="2457">
+                <property name="width">1.6875in</property>
+            </column>
+            <column id="1678">
+                <property name="width">1.3020833333333333in</property>
+            </column>
+            <column id="1679">
+                <property name="width">0.7291666666666666in</property>
+            </column>
+            <column id="1681">
+                <property name="width">1.3020833333333333in</property>
+            </column>
+            <column id="2730">
+                <property name="width">0.6041666666666666in</property>
+            </column>
+            <column id="2706">
+                <property name="width">0.9895833333333334in</property>
+            </column>
+            <column id="2718">
                 <property name="width">1.5in</property>
             </column>
-            <column id="1678"/>
-            <column id="1679"/>
-            <column id="1680"/>
-            <column id="1681"/>
-            <column id="2515"/>
+            <column id="2515">
+                <property name="width">0.7083333333333334in</property>
+            </column>
             <column id="1682">
                 <property name="width">0.75in</property>
             </column>
@@ -1689,8 +1823,12 @@ order by login]]></xml-property>
             <column id="1684"/>
             <column id="2477"/>
             <column id="2486"/>
-            <column id="1685"/>
-            <column id="1686"/>
+            <column id="1685">
+                <property name="width">0.4479166666666667in</property>
+            </column>
+            <column id="1686">
+                <property name="width">1.2083333333333333in</property>
+            </column>
             <header>
                 <row id="1794">
                     <property name="height">0.4583333333333333in</property>
@@ -1756,7 +1894,7 @@ order by login]]></xml-property>
                     <cell id="1847"/>
                     <cell id="1798"/>
                     <cell id="1799">
-                        <property name="colSpan">9</property>
+                        <property name="colSpan">8</property>
                         <property name="rowSpan">1</property>
                         <data id="39">
                             <property name="fontSize">16pt</property>
@@ -1777,6 +1915,9 @@ order by login]]></xml-property>
                             <property name="resultSetColumn">company_name</property>
                         </data>
                     </cell>
+                    <cell id="2720"/>
+                    <cell id="2696"/>
+                    <cell id="2708"/>
                     <cell id="2508"/>
                     <cell id="1806"/>
                     <cell id="2495"/>
@@ -1850,7 +1991,7 @@ order by login]]></xml-property>
                     <cell id="1848"/>
                     <cell id="1815"/>
                     <cell id="1816">
-                        <property name="colSpan">9</property>
+                        <property name="colSpan">8</property>
                         <property name="rowSpan">1</property>
                         <label id="215">
                             <property name="fontSize">16pt</property>
@@ -1863,6 +2004,9 @@ order by login]]></xml-property>
                             <text-property name="text">Daily Sales Report</text-property>
                         </label>
                     </cell>
+                    <cell id="2721"/>
+                    <cell id="2697"/>
+                    <cell id="2709"/>
                     <cell id="2509"/>
                     <cell id="1823"/>
                     <cell id="2496"/>
@@ -1982,8 +2126,10 @@ order by login]]></xml-property>
                         </data>
                     </cell>
                     <cell id="1786"/>
-                    <cell id="1787"/>
                     <cell id="1788"/>
+                    <cell id="2722"/>
+                    <cell id="2698"/>
+                    <cell id="2710"/>
                     <cell id="2510"/>
                     <cell id="1789"/>
                     <cell id="2497"/>
@@ -2225,25 +2371,6 @@ order by login]]></xml-property>
                             <text-property name="text">Unit Price</text-property>
                         </label>
                     </cell>
-                    <cell id="1630">
-                        <property name="fontSize">9pt</property>
-                        <property name="fontWeight">bold</property>
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <label id="1067">
-                            <text-property name="text">Dis</text-property>
-                        </label>
-                    </cell>
                     <cell id="1631">
                         <property name="fontSize">9pt</property>
                         <property name="fontWeight">bold</property>
@@ -2261,6 +2388,63 @@ order by login]]></xml-property>
                         <property name="borderTopWidth">thin</property>
                         <label id="1069">
                             <text-property name="text">Total</text-property>
+                        </label>
+                    </cell>
+                    <cell id="2723">
+                        <property name="fontSize">9pt</property>
+                        <property name="fontWeight">bold</property>
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="2731">
+                            <text-property name="text">Dis</text-property>
+                        </label>
+                    </cell>
+                    <cell id="2699">
+                        <property name="fontSize">9pt</property>
+                        <property name="fontWeight">bold</property>
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="2707">
+                            <text-property name="text">Dis Amt</text-property>
+                        </label>
+                    </cell>
+                    <cell id="2711">
+                        <property name="fontSize">9pt</property>
+                        <property name="fontWeight">bold</property>
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="2719">
+                            <text-property name="text">Net Total</text-property>
                         </label>
                     </cell>
                     <cell id="2511">
@@ -2469,8 +2653,10 @@ order by login]]></xml-property>
                         <cell id="2533"/>
                         <cell id="2534"/>
                         <cell id="2535"/>
-                        <cell id="2536"/>
                         <cell id="2537"/>
+                        <cell id="2724"/>
+                        <cell id="2700"/>
+                        <cell id="2712"/>
                         <cell id="2538"/>
                         <cell id="2539"/>
                         <cell id="2540"/>
@@ -2515,7 +2701,6 @@ order by login]]></xml-property>
                             </data>
                         </cell>
                         <cell id="2559"/>
-                        <cell id="2560"/>
                         <cell id="2561">
                             <data id="2624">
                                 <property name="fontSize">10pt</property>
@@ -2526,6 +2711,29 @@ order by login]]></xml-property>
                                 </structure>
                                 <property name="textAlign">center</property>
                                 <property name="resultSetColumn">Aggregation_1</property>
+                            </data>
+                        </cell>
+                        <cell id="2728"/>
+                        <cell id="2704">
+                            <data id="2738">
+                                <property name="fontWeight">bold</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Currency</property>
+                                    <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">sum_disamount</property>
+                            </data>
+                        </cell>
+                        <cell id="2716">
+                            <data id="2739">
+                                <property name="fontWeight">bold</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Currency</property>
+                                    <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">sum_nettotal</property>
                             </data>
                         </cell>
                         <cell id="2562"/>
@@ -2565,8 +2773,10 @@ order by login]]></xml-property>
                         <cell id="2636"/>
                         <cell id="2637"/>
                         <cell id="2638"/>
-                        <cell id="2639"/>
                         <cell id="2640"/>
+                        <cell id="2725"/>
+                        <cell id="2701"/>
+                        <cell id="2713"/>
                         <cell id="2641"/>
                         <cell id="2642"/>
                         <cell id="2643"/>
@@ -2598,8 +2808,10 @@ order by login]]></xml-property>
                         <cell id="2660"/>
                         <cell id="2661"/>
                         <cell id="2662"/>
-                        <cell id="2663"/>
                         <cell id="2664"/>
+                        <cell id="2727"/>
+                        <cell id="2703"/>
+                        <cell id="2715"/>
                         <cell id="2665"/>
                         <cell id="2666"/>
                         <cell id="2667"/>
@@ -2852,25 +3064,6 @@ order by login]]></xml-property>
                             <property name="resultSetColumn">price_unit</property>
                         </data>
                     </cell>
-                    <cell id="1647">
-                        <property name="fontSize">9pt</property>
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <property name="textAlign">center</property>
-                        <data id="1100">
-                            <property name="resultSetColumn">discount</property>
-                        </data>
-                    </cell>
                     <cell id="1648">
                         <property name="fontSize">9pt</property>
                         <property name="borderBottomColor">#000000</property>
@@ -2893,6 +3086,73 @@ order by login]]></xml-property>
                             </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">sub_total</property>
+                        </data>
+                    </cell>
+                    <cell id="2726">
+                        <property name="fontSize">9pt</property>
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <property name="textAlign">center</property>
+                        <data id="1100">
+                            <property name="resultSetColumn">discount</property>
+                        </data>
+                    </cell>
+                    <cell id="2702">
+                        <property name="fontSize">9pt</property>
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <property name="textAlign">center</property>
+                        <data id="2734">
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">discount_amt</property>
+                        </data>
+                    </cell>
+                    <cell id="2714">
+                        <property name="fontSize">9pt</property>
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <property name="textAlign">center</property>
+                        <data id="2736">
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">net_total</property>
                         </data>
                     </cell>
                     <cell id="2513">
@@ -3101,7 +3361,6 @@ order by login]]></xml-property>
                         </data>
                     </cell>
                     <cell id="1663"/>
-                    <cell id="1664"/>
                     <cell id="1665">
                         <data id="1776">
                             <property name="fontSize">11pt</property>
@@ -3112,6 +3371,29 @@ order by login]]></xml-property>
                             </structure>
                             <property name="textAlign">right</property>
                             <property name="resultSetColumn">Aggregation3</property>
+                        </data>
+                    </cell>
+                    <cell id="2729"/>
+                    <cell id="2705">
+                        <data id="2740">
+                            <property name="fontWeight">bold</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">Aggregation4</property>
+                        </data>
+                    </cell>
+                    <cell id="2717">
+                        <data id="2741">
+                            <property name="fontWeight">bold</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00{RoundingMode=HALF_UP}</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">Aggregation5</property>
                         </data>
                     </cell>
                     <cell id="2514"/>
