@@ -170,12 +170,19 @@ class hr_payslip_customize(osv.osv):
         rule_ids = self.pool.get('hr.payroll.structure').get_all_rules(cr, uid, structure_ids, context=context)
         sorted_rule_ids = [id for id, sequence in sorted(rule_ids, key=lambda x:x[1])]
         cr.execute("""select sum(fine_amount) from hr_fine where lost_date between %s and %s
-            and employee_id= %s and reason_id in (select id from hr_fine_reason where upper(code) not in ('DPS','UCL','LON'))""", (date_from, date_to, employee_id,))
+            and employee_id= %s and reason_id in (select id from hr_fine_reason where upper(code) not in ('DPS','UCL','LON','SSB'))""", (date_from, date_to, employee_id,))
         fine_data = cr.fetchone()
         if fine_data:
             fine_amount = fine_data[0]
         else:
             fine_amount = 0.0
+        cr.execute("""select sum(fine_amount) from hr_fine where lost_date between %s and %s
+            and employee_id= %s and reason_id in (select id from hr_fine_reason where upper(code) in ('SSB'))""", (date_from, date_to, employee_id,))
+        ssb_data = cr.fetchone()
+        if ssb_data:
+            ssb_amount = ssb_data[0]
+        else:
+            deposit_amount = 0.0
         cr.execute("""select sum(fine_amount) from hr_fine where lost_date between %s and %s
             and employee_id= %s and reason_id in (select id from hr_fine_reason where upper(code) in ('DPS'))""", (date_from, date_to, employee_id,))
         deposit_data = cr.fetchone()
@@ -426,6 +433,13 @@ class hr_payslip_customize(osv.osv):
                                'name': input.name,
                                'code': input.code,
                                'amount':fine_amount,
+                               'contract_id': contract.id,
+                              }
+                        if input.code == 'SSB':
+                            inputs = {
+                               'name': input.name,
+                               'code': input.code,
+                               'amount':ssb_amount,
                                'contract_id': contract.id,
                               }
                         if input.code == 'TLC':
