@@ -1,5 +1,5 @@
 from openerp.osv import fields, osv
-from django.template.defaultfilters import default
+#from django.template.defaultfilters import default
 
 class plan_frequency(osv.osv):
     _name = 'plan.frequency'

@@ -1,2 +1,0 @@
-import stock_move
-

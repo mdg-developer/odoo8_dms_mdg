@@ -418,9 +418,9 @@ class mobile_sale_order(osv.osv):
                     bigger_qty = int(bigger_qty)
                     product_uom_qty = bigger_qty * p_qty  
                     user_data = self.pool.get('res.users').browse(cursor, user, user, context=context)
-                    comps = [x.id for x in user_data.company_ids]
-#                     for comp in comps:            
-#                         procurement_obj.run_scheduler(cursor, user, use_new_cursor=cursor.dbname, company_id = comp, context=context)                                      
+#                    comps = [x.id for x in user_data.company_ids]
+#                    for comp in comps:            
+#                        procurement_obj.run_scheduler(cursor, user, use_new_cursor=cursor.dbname, company_id = comp, context=context)                                      
                     cursor.execute("select COALESCE(sum(qty),0) from stock_quant where location_id  in  %s and product_id =%s and reservation_id is null", (tuple(location_ids),tuple(product_id),))      
                     qty = cursor.fetchone()[0]   
                     if uom:
@@ -2091,73 +2091,8 @@ class mobile_sale_order(osv.osv):
                 print' list', list
         return list
     
-    def update_deliver_sale_order(self, cr, uid, saleorderList, context=None):
-         
-            context = {'lang':'en_US', 'params':{'action':458}, 'tz': 'Asia/Rangoon', 'uid': 1}
-            soObj = self.pool.get('sale.order')        
-            invObj = self.pool.get("sale.advance.payment.inv")
-            invoiceObj = self.pool.get('account.invoice')                
-            stockPickingObj = self.pool.get('stock.picking')
-            stockDetailObj = self.pool.get('stock.transfer_details')        
-            partner_obj = self.pool.get('res.partner')
-            pending_obj =self.pool.get('pending.delivery')
-            pending_ids=[]            
-            str = "{" + saleorderList + "}"    
-            str = str.replace("'',", "',")  # null
-            str = str.replace(":',", ":'',")  # due to order_id
-            str = str.replace("}{", "}|{")
-            str = str.replace(":'}{", ":''}")
-            new_arr = str.split('|')
-            result = []
-            for data in new_arr:            
-                x = ast.literal_eval(data)                
-                result.append(x)
-            deliver_data = []
-            for r in result:
-                deliver_data.append(r)  
-            if deliver_data:
-                
-                for deli in deliver_data:       
-                    print 'Missssssssssssssssss', deli['miss'], deli
-                    so_ref_no = deli['so_refNo'].replace('\\', '').replace('\\', '')          
-                    print 'so_ref_noso_ref_no', so_ref_no
-                    if deli['miss'] == 't':
-                        So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
-                                                       , ('name', '=', so_ref_no)], context=context)    
-                        so_data = soObj.browse(cr, uid, So_id, context=context)
-                        delivery_team_id =so_data.delivery_id.id
-                        delivery = {                                                            
-                                  'order_id':So_id[0],
-                                  'miss':True,
-                                  'delivery_date':datetime.now(),
-                                  'due_date':deli['due_date'],                        
-                                  'state':'draft', 
-                                  'delivery_team_id': delivery_team_id ,
-                            }
-                        pending_id=pending_obj.create(cr, uid, delivery, context=context)                                            
-                    else:                            
-                        So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
-                                                       , ('name', '=', so_ref_no)], context=context)
-                        so_data = soObj.browse(cr, uid, So_id, context=context)
-                        delivery_team_id =so_data.delivery_id.id                        
-                        delivery = {                                                            
-                                  'order_id':So_id[0],
-                                  'miss':False,
-                                  'due_date':deli['due_date'],
-                                  'delivery_date':datetime.now(),
-                                  'state':'draft', 
-                                  'delivery_team_id': delivery_team_id ,                                  
-                            }
-                        pending_id=pending_obj.create(cr, uid, delivery, context=context)                                                                                                                                 
-                    pending_ids.append(pending_id)
-            session = ConnectorSession(cr, uid, context)
-            #jobid=pending_obj.create_automation_pending_delivery(cr, uid, pending_ids, context=context)       
-            jobid=automation_pending_delivery.delay(session,pending_ids, priority = 50)
-            runner = ConnectorRunner()
-            runner.run_jobs()
-            return True                                              
 #     def update_deliver_sale_order(self, cr, uid, saleorderList, context=None):
-#           
+#          
 #             context = {'lang':'en_US', 'params':{'action':458}, 'tz': 'Asia/Rangoon', 'uid': 1}
 #             soObj = self.pool.get('sale.order')        
 #             invObj = self.pool.get("sale.advance.payment.inv")
@@ -2165,7 +2100,8 @@ class mobile_sale_order(osv.osv):
 #             stockPickingObj = self.pool.get('stock.picking')
 #             stockDetailObj = self.pool.get('stock.transfer_details')        
 #             partner_obj = self.pool.get('res.partner')
-#              
+#             pending_obj =self.pool.get('pending.delivery')
+#             pending_ids=[]            
 #             str = "{" + saleorderList + "}"    
 #             str = str.replace("'',", "',")  # null
 #             str = str.replace(":',", ":'',")  # due to order_id
@@ -2180,84 +2116,148 @@ class mobile_sale_order(osv.osv):
 #             for r in result:
 #                 deliver_data.append(r)  
 #             if deliver_data:
-#                  
+#                 
 #                 for deli in deliver_data:       
 #                     print 'Missssssssssssssssss', deli['miss'], deli
-#                     so_ref_no = deli['so_refNo'].replace('\\','').replace('\\','')          
-#                     print 'so_ref_noso_ref_no',so_ref_no
+#                     so_ref_no = deli['so_refNo'].replace('\\', '').replace('\\', '')          
+#                     print 'so_ref_noso_ref_no', so_ref_no
 #                     if deli['miss'] == 't':
-#                         cr.execute('update sale_order set is_generate = false, due_date = %s where name=%s', (deli['due_date'], so_ref_no,))
-#                         cr.execute('select tb_ref_no from sale_order where name=%s',( so_ref_no,))
-#                         ref_no=cr.fetchone()[0]
-#                         cr.execute("update pre_sale_order set void_flag = 'voided' where name=%s", ( ref_no,))
+#                         So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
+#                                                        , ('name', '=', so_ref_no)], context=context)    
+#                         so_data = soObj.browse(cr, uid, So_id, context=context)
+#                         delivery_team_id =so_data.delivery_id.id
+#                         delivery = {                                                            
+#                                   'order_id':So_id[0],
+#                                   'miss':True,
+#                                   'delivery_date':datetime.now(),
+#                                   'due_date':deli['due_date'],                        
+#                                   'state':'draft', 
+#                                   'delivery_team_id': delivery_team_id ,
+#                             }
+#                         pending_id=pending_obj.create(cr, uid, delivery, context=context)                                            
 #                     else:                            
 #                         So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
 #                                                        , ('name', '=', so_ref_no)], context=context)
-#                         invoice_id = invoiceObj.search(cr, uid, [('state', '=', 'draft'), ('origin', '=', so_ref_no)], context=context)                        
-#                         if So_id:
-#                             solist = So_id                               
-#                             cr.execute('select branch_id,delivery_id,delivery_remark from sale_order where name=%s', (so_ref_no,))
-#                             data = cr.fetchone()
-#                             if data:
-#                                 branch_id = data[0]
-#                                 section_id = data[1]
-#                                 delivery_remark = data[2]
-#  
-#                             cr.execute('select delivery_team_id from crm_case_section where id=%s', (section_id,))
-#                             delivery = cr.fetchone()
-#                             if delivery:
-#                                 delivery_team_id = delivery[0]
-#                             else:
-#                                 delivery_team_id = None
-#                              
-#                             # For DO
-#                             print 'So_idSo_idSo_idSo_id',So_id
-#                             stockViewResult = soObj.action_view_delivery(cr, uid, So_id, context=context)
-#                             print     'stockViewResult',stockViewResult['res_id']
-#                             if stockViewResult:
-#                                 pickList = []
-#                                  
-#                                 # stockViewResult is form result
-#                                 # stocking id =>stockViewResult['res_id']
-#                                 # click force_assign
-# #                                 stockPickingObj.force_assign(cr, uid, stockViewResult['res_id'], context=context)
-# #                                 stockViewResult
-#                                 # transfer
-#                                 # call the transfer wizard
-#                                 # change list
-#                                 cr.execute('''select picking.id 
-#                                             from sale_order so, crm_case_section team,stock_picking picking,stock_picking_type spt ,procurement_group pg                              
-#                                             where so.state!= 'cancel' 
-#                                             and picking.picking_type_id=spt.id
-#                                             and picking.picking_type_id in (select out_type_id from stock_warehouse where id in ( select warehouse_id from crm_case_section where id =%s))
-#                                             and picking.group_id= pg.id
-#                                             and pg.name = so.name
-#                                             and picking.state ='assigned'
-#                                             and  team.id = so.section_id
-#                                             and so.name=%s ''', (section_id,so_ref_no,))
-#                                 picking_ids    =cr.fetchall()       
-#                                 #picking_ids = stockPickingObj.search(cr, uid, [('origin', '=', so_ref_no), ('state', '=', 'assigned')], context=context)                        
-#                                 for picking_id in picking_ids:
-#                                     pickList.append(picking_id)
-#                                 wizResult = stockPickingObj.do_enter_transfer_details(cr, uid, pickList, context=context)
-#                                 # pop up wizard form => wizResult
-#                                 detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
-#                                 if detailObj:
-#                                     detailObj.do_detailed_transfer()    
-#                                 print 'testing---------------',
-#                             # Create Invoice
-#                             print 'Context', context
-# #                             invoice_id = self.create_invoices(cr, uid, solist, context=context)
-# #                             print ' invoice_id', invoice_id
-# #                           cr.execute('update account_invoice set date_invoice = now()::date , branch_id =%s ,payment_type=%s,delivery_remark =%s ,section_id=%s,user_id=%s, payment_term = %s where id =%s',(branch_id, deli['payment_type'], delivery_remark, delivery_team_id, uid,deli['payment_term'],invoice_id))                                                
-#                                                          
-#                            # invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
-#                             if invoice_id:
-#                                 self.pool['account.invoice'].signal_workflow(cr, uid, invoice_id, 'invoice_open')
-#                                 # pre_order =True
-#                                 invoiceObj.write(cr, uid, invoice_id, {'pre_order':True,'user_id':uid,'section_id':section_id,'collection_team_id':section_id,'collection_user_id' :uid ,'date_invoice':datetime.now() }, context)                                                                                                                             
-#                                                                          
-#             return True 
+#                         so_data = soObj.browse(cr, uid, So_id, context=context)
+#                         delivery_team_id =so_data.delivery_id.id                        
+#                         delivery = {                                                            
+#                                   'order_id':So_id[0],
+#                                   'miss':False,
+#                                   'due_date':deli['due_date'],
+#                                   'delivery_date':datetime.now(),
+#                                   'state':'draft', 
+#                                   'delivery_team_id': delivery_team_id ,                                  
+#                             }
+#                         pending_id=pending_obj.create(cr, uid, delivery, context=context)                                                                                                                                 
+#                     pending_ids.append(pending_id)
+#             session = ConnectorSession(cr, uid, context)
+#             #jobid=pending_obj.create_automation_pending_delivery(cr, uid, pending_ids, context=context)       
+#             jobid=automation_pending_delivery.delay(session,pending_ids, priority = 50)
+#             runner = ConnectorRunner()
+#             runner.run_jobs()
+#             return True                                              
+    def update_deliver_sale_order(self, cr, uid, saleorderList, context=None):
+           
+            context = {'lang':'en_US', 'params':{'action':458}, 'tz': 'Asia/Rangoon', 'uid': 1}
+            soObj = self.pool.get('sale.order')        
+            invObj = self.pool.get("sale.advance.payment.inv")
+            invoiceObj = self.pool.get('account.invoice')                
+            stockPickingObj = self.pool.get('stock.picking')
+            stockDetailObj = self.pool.get('stock.transfer_details')        
+            partner_obj = self.pool.get('res.partner')
+              
+            str = "{" + saleorderList + "}"    
+            str = str.replace("'',", "',")  # null
+            str = str.replace(":',", ":'',")  # due to order_id
+            str = str.replace("}{", "}|{")
+            str = str.replace(":'}{", ":''}")
+            new_arr = str.split('|')
+            result = []
+            for data in new_arr:            
+                x = ast.literal_eval(data)                
+                result.append(x)
+            deliver_data = []
+            for r in result:
+                deliver_data.append(r)  
+            if deliver_data:
+                  
+                for deli in deliver_data:       
+                    print 'Missssssssssssssssss', deli['miss'], deli
+                    so_ref_no = deli['so_refNo'].replace('\\','').replace('\\','')          
+                    print 'so_ref_noso_ref_no',so_ref_no
+                    if deli['miss'] == 't':
+                        cr.execute('update sale_order set is_generate = false, due_date = %s where name=%s', (deli['due_date'], so_ref_no,))
+                        cr.execute('select tb_ref_no from sale_order where name=%s',( so_ref_no,))
+                        ref_no=cr.fetchone()[0]
+                        cr.execute("update pre_sale_order set void_flag = 'voided' where name=%s", ( ref_no,))
+                    else:                            
+                        So_id = soObj.search(cr, uid, [('pre_order', '=', True), ('shipped', '=', False), ('invoiced', '=', False)
+                                                       , ('name', '=', so_ref_no)], context=context)
+                        invoice_id = invoiceObj.search(cr, uid, [('state', '=', 'draft'), ('origin', '=', so_ref_no)], context=context)                        
+                        if So_id:
+                            solist = So_id                               
+                            cr.execute('select branch_id,delivery_id,delivery_remark from sale_order where name=%s', (so_ref_no,))
+                            data = cr.fetchone()
+                            if data:
+                                branch_id = data[0]
+                                section_id = data[1]
+                                delivery_remark = data[2]
+  
+                            cr.execute('select delivery_team_id from crm_case_section where id=%s', (section_id,))
+                            delivery = cr.fetchone()
+                            if delivery:
+                                delivery_team_id = delivery[0]
+                            else:
+                                delivery_team_id = None
+                              
+                            # For DO
+                            print 'So_idSo_idSo_idSo_id',So_id
+                            stockViewResult = soObj.action_view_delivery(cr, uid, So_id, context=context)
+                            print     'stockViewResult',stockViewResult['res_id']
+                            if stockViewResult:
+                                pickList = []
+                                  
+                                # stockViewResult is form result
+                                # stocking id =>stockViewResult['res_id']
+                                # click force_assign
+#                                 stockPickingObj.force_assign(cr, uid, stockViewResult['res_id'], context=context)
+#                                 stockViewResult
+                                # transfer
+                                # call the transfer wizard
+                                # change list
+                                cr.execute('''select picking.id 
+                                            from sale_order so, crm_case_section team,stock_picking picking,stock_picking_type spt ,procurement_group pg                              
+                                            where so.state!= 'cancel' 
+                                            and picking.picking_type_id=spt.id
+                                            and picking.picking_type_id in (select out_type_id from stock_warehouse where id in ( select warehouse_id from crm_case_section where id =%s))
+                                            and picking.group_id= pg.id
+                                            and pg.name = so.name
+                                            and picking.state ='assigned'
+                                            and  team.id = so.section_id
+                                            and so.name=%s ''', (section_id,so_ref_no,))
+                                picking_ids    =cr.fetchall()       
+                                #picking_ids = stockPickingObj.search(cr, uid, [('origin', '=', so_ref_no), ('state', '=', 'assigned')], context=context)                        
+                                for picking_id in picking_ids:
+                                    pickList.append(picking_id)
+                                wizResult = stockPickingObj.do_enter_transfer_details(cr, uid, pickList, context=context)
+                                # pop up wizard form => wizResult
+                                detailObj = stockDetailObj.browse(cr, uid, wizResult['res_id'], context=context)
+                                if detailObj:
+                                    detailObj.do_detailed_transfer()    
+                                print 'testing---------------',
+                            # Create Invoice
+                            print 'Context', context
+#                             invoice_id = self.create_invoices(cr, uid, solist, context=context)
+#                             print ' invoice_id', invoice_id
+#                           cr.execute('update account_invoice set date_invoice = now()::date , branch_id =%s ,payment_type=%s,delivery_remark =%s ,section_id=%s,user_id=%s, payment_term = %s where id =%s',(branch_id, deli['payment_type'], delivery_remark, delivery_team_id, uid,deli['payment_term'],invoice_id))                                                
+                                                          
+                           # invoiceObj.button_reset_taxes(cr, uid, [invoice_id], context=context)
+                            if invoice_id:
+                                self.pool['account.invoice'].signal_workflow(cr, uid, invoice_id, 'invoice_open')
+                                # pre_order =True
+                                invoiceObj.write(cr, uid, invoice_id, {'pre_order':True,'user_id':uid,'section_id':section_id,'collection_team_id':section_id,'collection_user_id' :uid ,'date_invoice':datetime.now() }, context)                                                                                                                             
+                                                                          
+            return True 
           
     def cancel_deliver_order(self, cr, uid, saleorderList, context=None):
          

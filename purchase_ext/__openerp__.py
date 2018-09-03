@@ -40,7 +40,7 @@ Purchase Ext
        'wizard/product_select_wizard_view.xml',      
        'views/account_voucher_view.xml',      
        'views/purchase_order_view.xml',  
-       
+       'views/report_purchase_view.xml',
     ],
     # 'demo': ['hr_recruitment_demo.xml'],
     # 'test': ['test/recruitment_process.yml'],

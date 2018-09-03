@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 4.5.0.v201506092134 Build &lt;@BUILD@></property>
     <list-property name="userProperties">
         <structure>
             <property name="name">account_cube.balance_sheet_report.x</property>
@@ -58,12 +58,18 @@
     <property name="layoutPreference">auto layout</property>
     <property name="bidiLayoutOrientation">ltr</property>
     <property name="imageDPI">96</property>
+    <list-property name="libraries">
+        <structure>
+            <property name="fileName">birt_report/adidas_account_general_library.rptlibrary</property>
+            <property name="namespace">adidas_account_general_library</property>
+        </structure>
+    </list-property>
     <parameters>
         <scalar-parameter name="report_id" id="9">
-            <property name="hidden">false</property>
+            <property name="hidden">true</property>
             <text-property name="promptText">Report Name</text-property>
             <property name="valueType">dynamic</property>
-            <property name="isRequired">true</property>
+            <property name="isRequired">false</property>
             <property name="dataSetName">report_name</property>
             <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
             <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
@@ -78,118 +84,20 @@
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
-        <scalar-parameter name="fiscal_year_id" id="11">
-            <text-property name="helpText">财政年度</text-property>
-            <text-property name="promptText">财政年度 (Fiscal Year)</text-property>
-            <property name="valueType">dynamic</property>
-            <property name="isRequired">true</property>
-            <property name="dataSetName">fiscal_year</property>
-            <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
-            <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
-            <expression name="sortByColumn">dataSetRow["name"]</expression>
-            <property name="sortDirection">asc</property>
-            <property name="dataType">integer</property>
-            <property name="distinct">true</property>
-            <list-property name="selectionList"/>
-            <property name="paramType">simple</property>
-            <property name="controlType">list-box</property>
-            <property name="mustMatch">true</property>
-            <property name="fixedOrder">false</property>
-            <structure name="format">
-                <property name="category">Unformatted</property>
-            </structure>
-        </scalar-parameter>
-        <scalar-parameter name="start_period_id" id="13">
-            <text-property name="helpText">启动期间</text-property>
-            <text-property name="promptText">启动期间 (Start Period)</text-property>
-            <property name="valueType">dynamic</property>
-            <property name="isRequired">true</property>
-            <property name="dataSetName">period</property>
-            <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
-            <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
-            <property name="dataType">integer</property>
-            <property name="distinct">true</property>
-            <list-property name="selectionList"/>
-            <property name="paramType">simple</property>
-            <property name="controlType">list-box</property>
-            <property name="mustMatch">true</property>
-            <property name="fixedOrder">true</property>
-            <structure name="format">
-                <property name="category">Unformatted</property>
-            </structure>
-        </scalar-parameter>
-        <scalar-parameter name="end_period_id" id="93">
-            <text-property name="helpText">期末</text-property>
-            <text-property name="promptText">期末 (End Period)</text-property>
-            <property name="valueType">dynamic</property>
-            <property name="isRequired">true</property>
-            <property name="dataSetName">period</property>
-            <expression name="valueExpr" type="javascript">dataSetRow["id"]</expression>
-            <expression name="labelExpr" type="javascript">dataSetRow["name"]</expression>
-            <property name="dataType">integer</property>
-            <property name="distinct">true</property>
-            <list-property name="selectionList"/>
-            <property name="paramType">simple</property>
-            <property name="controlType">list-box</property>
-            <property name="mustMatch">true</property>
-            <property name="fixedOrder">true</property>
-            <structure name="format">
-                <property name="category">Unformatted</property>
-            </structure>
-        </scalar-parameter>
-        <scalar-parameter name="target_move" id="15">
-            <text-property name="promptText">Target Move</text-property>
-            <property name="valueType">static</property>
-            <property name="isRequired">true</property>
-            <property name="sortBy">label</property>
-            <property name="sortDirection">asc</property>
-            <property name="dataType">string</property>
-            <property name="distinct">true</property>
-            <simple-property-list name="defaultValue">
-                <value type="constant">all</value>
-            </simple-property-list>
-            <list-property name="selectionList">
-                <structure>
-                    <property name="value">all</property>
-                    <property name="label">所有参赛作品 (All Entries)</property>
-                </structure>
-                <structure>
-                    <property name="value">posted</property>
-                    <property name="label">所有参赛作品发布 (All Posted Entries)</property>
-                </structure>
-            </list-property>
-            <property name="paramType">simple</property>
-            <property name="controlType">list-box</property>
-            <property name="mustMatch">true</property>
-            <property name="fixedOrder">false</property>
-            <structure name="format">
-                <property name="category">Unformatted</property>
-            </structure>
-        </scalar-parameter>
+        <cascading-parameter-group name="fiscal_year_period" id="605" extends="adidas_account_general_library.fiscal_year_period">
+            <overridden-values>
+                <ref-entry baseId="24" name="fiscal_year_id" id="24"/>
+                <ref-entry baseId="25" name="start_period_id" id="25"/>
+                <ref-entry baseId="26" name="end_period_id" id="26"/>
+            </overridden-values>
+        </cascading-parameter-group>
+        <scalar-parameter name="start_date" id="606" extends="adidas_account_general_library.start_date"/>
+        <scalar-parameter name="end_date" id="607" extends="adidas_account_general_library.end_date"/>
+        <scalar-parameter name="target_move" id="608" extends="adidas_account_general_library.target_move"/>
     </parameters>
     <data-sources>
-        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="7">
-            <list-property name="privateDriverProperties">
-                <ex-property>
-                    <name>metadataBidiFormatStr</name>
-                    <value>ILYNN</value>
-                </ex-property>
-                <ex-property>
-                    <name>disabledMetadataBidiFormatStr</name>
-                </ex-property>
-                <ex-property>
-                    <name>contentBidiFormatStr</name>
-                    <value>ILYNN</value>
-                </ex-property>
-                <ex-property>
-                    <name>disabledContentBidiFormatStr</name>
-                </ex-property>
-            </list-property>
-            <property name="odaDriverClass">org.postgresql.Driver</property>
-            <property name="odaURL">jdbc:postgresql://localhost:5433/Tsang_Yin</property>
-            <property name="odaUser">openerp</property>
-            <encrypted-property name="odaPassword" encryptionID="base64">b3BlbnBncHdk</encrypted-property>
-        </oda-data-source>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="604"
+ extends="adidas_account_general_library.Data Source"/>
     </data-sources>
     <data-sets>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="report_name" id="8">
@@ -239,7 +147,7 @@
                     <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select id,name from account_financial_report where parent_id is null and id in (1,4,9)]]></xml-property>
+            <xml-property name="queryText"><![CDATA[select id,name from account_financial_report where parent_id is null]]></xml-property>
         </oda-data-set>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="fiscal_year" id="10">
             <list-property name="columnHints">
@@ -391,7 +299,7 @@
                     <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select id,name from account_period
+            <xml-property name="queryText"><![CDATA[select id,name from account_period where name not like '%Opening Period%'
 ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
@@ -1374,7 +1282,7 @@ where frt.id=?]]></xml-property>
             <property name="borderBottomStyle">double</property>
             <structure name="numberFormat">
                 <property name="category">Currency</property>
-                <property name="pattern">#,##0.00{RoundingMode=UNNECESSARY}</property>
+                <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=UNNECESSARY}</property>
             </structure>
         </style>
         <style name="bold_underline" id="140">
@@ -1387,7 +1295,7 @@ where frt.id=?]]></xml-property>
             <property name="borderTopStyle">none</property>
             <structure name="numberFormat">
                 <property name="category">Currency</property>
-                <property name="pattern">#,##0.00{RoundingMode=UNNECESSARY}</property>
+                <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=UNNECESSARY}</property>
             </structure>
             <property name="verticalAlign">bottom</property>
         </style>
@@ -1400,7 +1308,7 @@ where frt.id=?]]></xml-property>
             <property name="borderTopStyle">none</property>
             <structure name="numberFormat">
                 <property name="category">Currency</property>
-                <property name="pattern">#,##0.00;(#,##0.00){RoundingMode=HALF_UP}</property>
+                <property name="pattern">#,##0;(#,##0){RoundingMode=HALF_UP}</property>
             </structure>
             <list-property name="highlightRules">
                 <structure>
@@ -1447,13 +1355,11 @@ where frt.id=?]]></xml-property>
                 </structure>
                 <structure>
                     <property name="operator">eq</property>
-                    <property name="fontFamily">"Arial"</property>
-                    <property name="fontSize">9pt</property>
-                    <property name="fontStyle">normal</property>
                     <expression name="testExpr" type="javascript">row["Column Binding"]</expression>
                     <simple-property-list name="value1">
                         <value type="javascript">6</value>
                     </simple-property-list>
+                    <property name="style">NewStyle</property>
                 </structure>
             </list-property>
         </style>
@@ -1486,9 +1392,6 @@ where frt.id=?]]></xml-property>
                 </structure>
                 <structure>
                     <property name="operator">eq</property>
-                    <property name="fontFamily">"Arial"</property>
-                    <property name="fontSize">10pt</property>
-                    <property name="fontWeight">bold</property>
                     <expression name="testExpr" type="javascript">row["Column Binding"]</expression>
                     <simple-property-list name="value1">
                         <value type="javascript">3</value>
@@ -1514,13 +1417,11 @@ where frt.id=?]]></xml-property>
                 </structure>
                 <structure>
                     <property name="operator">eq</property>
-                    <property name="fontFamily">"Arial"</property>
-                    <property name="fontSize">9pt</property>
-                    <property name="fontStyle">normal</property>
                     <expression name="testExpr" type="javascript">row["Column Binding"]</expression>
                     <simple-property-list name="value1">
                         <value type="javascript">6</value>
                     </simple-property-list>
+                    <property name="style">NewStyle</property>
                 </structure>
             </list-property>
         </style>
@@ -1565,11 +1466,29 @@ where frt.id=?]]></xml-property>
         <style name="normal_underline" id="582">
             <property name="borderBottomStyle">dashed</property>
             <property name="borderBottomWidth">thin</property>
+            <structure name="numberFormat">
+                <property name="category">Currency</property>
+                <property name="pattern">###0.00;(###0.00){RoundingMode=HALF_UP}</property>
+            </structure>
         </style>
         <style name="title2_underline" id="583">
             <property name="fontWeight">bold</property>
             <property name="borderBottomStyle">solid</property>
             <property name="borderBottomWidth">thin</property>
+            <structure name="numberFormat">
+                <property name="category">Currency</property>
+                <property name="pattern">###0.00;(###0.00){RoundingMode=HALF_UP}</property>
+            </structure>
+        </style>
+        <style name="NewStyle" id="588">
+            <property name="fontFamily">"Arial"</property>
+            <property name="fontWeight">bold</property>
+            <property name="borderBottomStyle">dashed</property>
+            <property name="borderBottomWidth">thin</property>
+            <structure name="numberFormat">
+                <property name="category">Currency</property>
+                <property name="pattern">###0;(###0){RoundingMode=HALF_UP}</property>
+            </structure>
         </style>
     </styles>
     <page-setup>
@@ -1625,6 +1544,7 @@ where frt.id=?]]></xml-property>
                         <property name="borderTopStyle">none</property>
                         <property name="verticalAlign">middle</property>
                         <data id="585">
+                            <property name="fontSize">17pt</property>
                             <property name="marginRight">0pt</property>
                             <property name="textAlign">center</property>
                             <property name="dataSet">company</property>
@@ -1651,14 +1571,13 @@ where frt.id=?]]></xml-property>
                         <property name="borderLeftStyle">none</property>
                         <property name="borderRightStyle">none</property>
                         <property name="borderTopStyle">none</property>
-                        <data id="584">
-                            <property name="fontSize">16pt</property>
+                        <label id="586">
+                            <property name="fontSize">14pt</property>
                             <property name="fontWeight">bold</property>
-                            <property name="textUnderline">underline</property>
-                            <property name="paddingLeft">10pt</property>
                             <property name="textAlign">left</property>
-                            <property name="resultSetColumn">report_name</property>
-                        </data>
+                            <text-property name="text">&#13;
+損益表(PROFIT OR LOSS)</text-property>
+                        </label>
                     </cell>
                 </row>
                 <row id="110">
@@ -1910,10 +1829,14 @@ where frt.id=?]]></xml-property>
                                         <extended-item extensionName="CrosstabCell" id="523">
                                             <property name="content">
                                                 <data name="name" id="525">
-                                                    <property name="style">financial_cell</property>
+                                                    <property name="style">financial_amt_cell</property>
                                                     <property name="fontWeight">normal</property>
                                                     <property name="fontStyle">normal</property>
                                                     <property name="textUnderline">none</property>
+                                                    <property name="borderBottomStyle">none</property>
+                                                    <property name="borderLeftStyle">none</property>
+                                                    <property name="borderRightStyle">none</property>
+                                                    <property name="borderTopStyle">none</property>
                                                     <property name="textAlign">left</property>
                                                     <property name="resultSetColumn">name</property>
                                                 </data>
@@ -1960,6 +1883,21 @@ where frt.id=?]]></xml-property>
                             <property name="levels">
                                 <extended-item extensionName="LevelView" name="NewLevel View2" id="553">
                                     <property name="level">Group2/period_name</property>
+                                    <property name="sort">
+                                        <sort-element>
+                                            <expression name="key" type="javascript">var period = String(dimension["Group2"]["period_name"]);&#13;
+var periodcode = period.substring(0,period.indexOf('/'));&#13;
+if(period.indexOf('Opening')!=-1)&#13;
+{&#13;
+0&#13;
+}else &#13;
+{&#13;
+periodcode&#13;
+}</expression>
+                                            <property name="direction">asc</property>
+                                            <property name="strength">-1</property>
+                                        </sort-element>
+                                    </property>
                                     <property name="member">
                                         <extended-item extensionName="CrosstabCell" id="554">
                                             <property name="content">

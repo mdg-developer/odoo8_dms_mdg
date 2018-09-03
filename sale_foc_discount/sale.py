@@ -413,7 +413,6 @@ class sale_order(osv.osv):
             'additional_discount':order.additional_discount,
             'cash_discount':order.cash_discount,
             'discount_total':order.total_dis,
-            'payment_type':order.payment_type,
         }
 
         # Care for deprecated _inv_get() hook - FIXME: to be removed after 6.1

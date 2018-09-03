@@ -119,7 +119,7 @@ class account_report(osv.osv):
                                 ln.append(str(l))
                             val = len(b3)
                     header_line = True
-                    company_i = fr_name_i = sequence_i = type_i = parent_ac_i = display_type_i = sign_i = report_style_i = coa_name_i = account_code_i = display_code_i = analytic_code_i = None
+                    company_i = fr_name_i = sequence_i = type_i = parent_ac_i = display_type_i = sign_i = report_style_i = coa_name_i = account_code_i = display_code_i = analytic_code_i = branch_i = None
                     column_cnt = 0
                     i = 0
                     for cnt in range(len(ln)):
@@ -158,6 +158,8 @@ class account_report(osv.osv):
                             analytic_code_i = i
                         elif header_field == 'company':
                             company_i = i
+                        elif header_field == 'branch':
+                            branch_i = i 
                                       
                     for f in [(company_i, 'company'), (analytic_code_i, 'analytic code'), (display_type_i, 'display type'), (fr_name_i, 'fr name'), (sequence_i, 'sequence'), (type_i, 'type'), (sign_i, 'sign'), (parent_ac_i, 'parent a/c'), (report_style_i , 'financial report style'), (coa_name_i, 'coa name'), (account_code_i, 'account code')]:
                         if not isinstance(f[0], int):
@@ -181,7 +183,8 @@ class account_report(osv.osv):
                         import_vals['account code'] = ln[account_code_i]  
                         import_vals['display type'] = ln[display_type_i]           
                         import_vals['analytic code'] = ln[analytic_code_i]      
-                        import_vals['company'] = ln[company_i]                
+                        import_vals['company'] = ln[company_i]    
+                        import_vals['branch'] = ln[branch_i]            
                         amls.append(import_vals)
                     except Exception , e:
                         print e
@@ -192,7 +195,7 @@ class account_report(osv.osv):
         else:
             for aml in amls:
                 try:
-                    company = fr_name = sequence = type = coa_name = parent = sign = report_style = account_code = display_type = analytic_code = parent_id = None
+                    company = fr_name = sequence = type = coa_name = parent = sign = report_style = account_code = display_type = analytic_code = branch = parent_id = None
                     count = acc_count = 0
                     parent_report_val = report_val = {}
                     company_id = None
@@ -289,6 +292,17 @@ class account_report(osv.osv):
                                 raise e
                         else:
                             analytic_code = None
+                        
+                        #branch
+                        if aml['branch']:
+                            try:
+                                branch = str(aml['branch']).strip() 
+                                branch = branch.lower()   
+                            except Exception , e:
+                                raise e
+                        else:
+                            branch = None
+
                     except Exception, e:    
                         raise e
                         

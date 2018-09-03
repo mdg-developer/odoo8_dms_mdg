@@ -222,7 +222,6 @@ class account_invoice_line(models.Model):
                          'foc':False,
                         'account_analytic_id': inv.invoice_line[0].account_analytic_id.id,
                         'taxes': False,
-                        'uos_id': line.uos_id.id,
                         }
                 res.append(val1)                
             total=line.discount_amt
@@ -239,7 +238,6 @@ class account_invoice_line(models.Model):
                      'foc':False,
                     'account_analytic_id': inv.invoice_line[0].account_analytic_id.id,
                     'taxes': False,
-                    'uos_id': line.uos_id.id,
                     }
             if total>0:
                 res.append(val1)
@@ -256,7 +254,6 @@ class account_invoice_line(models.Model):
                              'foc':False,
                             'account_analytic_id': inv.invoice_line[0].account_analytic_id.id,
                             'taxes': False,
-                            'uos_id': line.uos_id.id,
                             }
                 res.append(val2)
 

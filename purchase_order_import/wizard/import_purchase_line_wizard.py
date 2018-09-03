@@ -28,6 +28,7 @@ import xlrd
 from xlrd import open_workbook
 from datetime import datetime
 import openerp.addons.decimal_precision as dp
+from openerp.tools.translate import _
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -285,6 +286,9 @@ class pol_import(orm.TransientModel):
 #                             supplier_code_id = supplier_code_ids[0]
 #                             productObj = product_obj.browse(cr, uid, supplier_code_id, context=None)
 #                             uom_ids = productObj.uom_id.id
+                        else:
+                            raise osv.except_osv(_('User Error!'),
+                                         _("This Supplier Code doesn't exist in the System.\n Suppler Code: %s")% suppliercode_name)
                     if ln[uom_i]: 
                         uoms = str(ln[uom_i]).strip()
                     if uoms:

@@ -13,7 +13,14 @@
 							<field name="account_analytic_id" colspan="4" nolabel="1" />
 						</page>
 					</xpath>
-					
+					<xpath expr="//form/footer/button[@name='check_report']"
+						position="after">
+						<a
+							href="http://192.168.0.100:8080/birt/frameset?__report=account_financial_report.rptdesign"
+							target="_blank"> Excel
+						</a>
+						or
+					</xpath>
 				</data>
 			</field>
 		</record>

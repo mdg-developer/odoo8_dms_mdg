@@ -17,7 +17,7 @@
         </record>
 
         <record id="action_is_not_absent" model="ir.actions.act_window">
-            <field name="name">Is Not Absent</field>
+            <field name="name">Make Absent False</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">absent.misspunch.control</field>
             <field name="view_type">form</field>
