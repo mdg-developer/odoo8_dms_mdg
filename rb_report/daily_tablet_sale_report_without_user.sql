@@ -1,4 +1,4 @@
-﻿-- Table: public.daily_sale_temp
+-- Table: public.daily_sale_temp
 -- select * from daily_sale_temp
 -- DROP TABLE public.daily_sale_temp;
 -- committed_date(21-08-2018) //add product_category for storeprocedure error
@@ -34,7 +34,8 @@ CREATE TABLE public.daily_sale_temp
   product_code character varying,
   branch character varying,
   main_group character varying,
-  product_category character varying
+  product_category character varying,
+  seq integer
 )
 WITH (
   OIDS=FALSE
@@ -60,7 +61,7 @@ discount_amt double precision,net_total double precision,sale_group character va
 township character varying, village character varying,city character varying, channel character varying, territory character varying, 
 state character varying, delivery_remark character varying,additional_discount double precision, sale_plan_day_name character varying, 
 sale_plan_trip_name character varying,void character varying,vid integer,product_code character varying, branch character varying, 
-main_group character varying, product_category character varying) AS
+main_group character varying, product_category character varying,seq integer) AS
 $BODY$
 DECLARE 
 data_record record;
@@ -93,14 +94,22 @@ and branch.id in (select brel.bid from res_branch_users_rel brel where brel.user
 loop
 insert into daily_sale_temp(date,vr_no,customer_code,customerid,customer,product,product_uos_qty,price_unit,sub_total,discount,
 discount_amt,net_total,sale_group,m_status,type,township,village ,city,channel, state,delivery_remark,additional_discount,
-sale_plan_day_name ,sale_plan_trip_name,void,product_code,branch,main_group,product_category)
+sale_plan_day_name ,sale_plan_trip_name,void,product_code,branch,main_group,product_category,seq)
 values(data_record.date,data_record.vr_no,data_record.customer_code,data_record.customerid,data_record.customer,
 data_record.product,data_record.product_uos_qty,data_record.sprice_unit,data_record.sub_total,data_record.discount,
 data_record.discount_amt,data_record.net_total,data_record.sale_group,data_record.m_status ,data_record.type,data_record.township ,
 data_record.village,data_record.city,data_record.channel,data_record.state,data_record.delivery_remark,data_record.additional_discount,
-'','',data_record.void_flag,data_record.product_code,data_record.branch,data_record.main_group,data_record.product_category);
+'','',data_record.void_flag,data_record.product_code,data_record.branch,data_record.main_group,data_record.product_category,1);
 end loop;
 
+	--add additional discount line
+	INSERT INTO daily_sale_temp(date,vr_no,product_code,discount,discount_amt,seq)
+	select s.date,s.name,'Discount'::character varying product_code,s.additional_discount,(amount_total-net_amount) net_amt,2
+	from mobile_sale_order s,res_partner p			
+	where s.partner_id=p.id
+	and s.additional_discount>0
+	and (s.date+ '6 hour'::interval + '30 minutes'::interval)::date between from_date and to_date;
+			
 	--update sale_plan_day 
 	for up_record 
 	in 
@@ -154,25 +163,25 @@ update daily_sale_temp dst set void='Unvoid' where dst.void like 'none';
 update daily_sale_temp dst set void='Voided' where dst.void like 'voided';
 
 	IF m_group IS NULL AND param_branch IS NULL AND param_team IS NULL THEN
-		return  query select * from daily_sale_temp ds;
+		return  query select * from daily_sale_temp ds order by seq;
 	ELSEIF m_group IS NOT NULL AND param_branch IS NULL AND param_team IS NULL THEN
-		return  query select ds.* from daily_sale_temp ds,product_product pp,product_template pt where ds.product_code=pp.default_code and pp.product_tmpl_id=pt.id and pt.main_group=m_group;
+		return  query select ds.* from daily_sale_temp ds,product_product pp,product_template pt where ds.product_code=pp.default_code and pp.product_tmpl_id=pt.id and pt.main_group=m_group order by seq;
 	ELSEIF m_group IS NULL AND param_branch IS NOT NULL AND param_team IS NOT NULL THEN
-		return  query select ds.* from daily_sale_temp ds,res_partner res,crm_case_section cs where ds.customerid=res.id and ds.sale_group=cs.code and res.branch_id=param_branch and cs.id=param_team;
+		return  query select ds.* from daily_sale_temp ds,res_partner res,crm_case_section cs where ds.customerid=res.id and ds.sale_group=cs.code and res.branch_id=param_branch and cs.id=param_team order by seq;
 	ELSEIF m_group IS NULL AND param_branch IS NOT NULL AND param_team IS NULL THEN
-		return  query select ds.* from daily_sale_temp ds,res_partner res where ds.customerid=res.id and res.branch_id=param_branch;
+		return  query select ds.* from daily_sale_temp ds,res_partner res where ds.customerid=res.id and res.branch_id=param_branch order by seq;
 	ELSEIF m_group IS NULL AND param_branch IS NULL AND param_team IS NOT NULL THEN
-		return  query select ds.* from daily_sale_temp ds,crm_case_section cs where ds.sale_group=cs.code and cs.id=param_team;
+		return  query select ds.* from daily_sale_temp ds,crm_case_section cs where ds.sale_group=cs.code and cs.id=param_team order by seq;
 	ELSEIF m_group IS NOT NULL AND param_branch IS NOT NULL AND param_team IS NULL THEN
-		return  query select ds.* from daily_sale_temp ds,res_partner res,product_product pp,product_template pt where ds.customerid=res.id and ds.product_code=pp.default_code and pp.product_tmpl_id=pt.id and pt.main_group=m_group and res.branch_id=param_branch;
+		return  query select ds.* from daily_sale_temp ds,res_partner res,product_product pp,product_template pt where ds.customerid=res.id and ds.product_code=pp.default_code and pp.product_tmpl_id=pt.id and pt.main_group=m_group and res.branch_id=param_branch order by seq;
 	ELSEIF m_group IS NOT NULL AND param_branch IS NULL AND param_team IS NOT NULL THEN
-		return  query select ds.* from daily_sale_temp ds,crm_case_section cs,res_partner res,product_product pp,product_template pt where ds.customerid=res.id and ds.sale_group=cs.code and ds.product_code=pp.default_code and pp.product_tmpl_id=pt.id and pt.main_group=m_group and cs.id=param_team;
+		return  query select ds.* from daily_sale_temp ds,crm_case_section cs,res_partner res,product_product pp,product_template pt where ds.customerid=res.id and ds.sale_group=cs.code and ds.product_code=pp.default_code and pp.product_tmpl_id=pt.id and pt.main_group=m_group and cs.id=param_team order by seq;
 	ELSEIF m_group IS NOT NULL AND param_branch IS NOT NULL AND param_team IS NOT NULL THEN
 		return  query select ds.* 
 		from daily_sale_temp ds,crm_case_section cs,
 		res_partner res,product_product pp,product_template pt 
 		where ds.customerid=res.id and ds.product_code=pp.default_code and ds.sale_group=cs.code
-		and pp.product_tmpl_id=pt.id and pt.main_group=m_group and res.branch_id=param_branch and cs.id=param_team;						
+		and pp.product_tmpl_id=pt.id and pt.main_group=m_group and res.branch_id=param_branch and cs.id=param_team order by seq;						
 	END IF;
 	END;
 $BODY$
