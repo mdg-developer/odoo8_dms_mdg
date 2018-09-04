@@ -6,11 +6,11 @@
 			<field name="model">purchase.order</field>
 			<field name="inherit_id" ref="purchase.purchase_order_form" />
 			<field name="arch" type="xml">
-
-				<field name="picking_type_id" position="after">
-					<field name="pr_ref" />
-				</field>
-
+			    <xpath expr="//field[@name='picking_type_id']" position="after">
+			        <field name="pr_ref" />
+			        <field name="pr_ref_purchase" />
+			    </xpath>  
+			
 				<xpath
 					expr="//notebook/page[@string='Deliveries &amp; Invoices']/group/group/field[@name='minimum_planned_date']"
 					position="replace">
@@ -73,8 +73,9 @@
 			<field name="inherit_id" ref="purchase.purchase_order_tree" />
 			<field name="arch" type="xml">
 				<xpath expr="//field[@name='origin']" position="after">
-					<field name="pr_ref" string="PR Reference" />
-				</xpath>
+					<field name="pr_ref" string="Sale PR Ref" />
+					<field name="pr_ref_purchase" string="Purchase PR Ref" />
+				</xpath>				
 			</field>
 		</record>
 
@@ -84,8 +85,10 @@
 			<field name="inherit_id" ref="purchase.view_purchase_order_filter" />
 			<field name="arch" type="xml">
 				<xpath expr="//filter[@string='Supplier']" position="after">
-					<filter string="PR Reference" icon="terp-partner" domain="[]"
+					<filter string="Sale PR Ref" icon="terp-partner" domain="[]"
 						context="{'group_by':'pr_ref'}" />
+					<filter string="Purchase PR Ref" icon="terp-partner" domain="[]"
+						context="{'group_by':'purchase_ref'}" />
 				</xpath>
 			</field>
 		</record>

@@ -10,7 +10,7 @@ class purchase_order(osv.osv):
     _inherit = "purchase.order"
 
     _columns = {
-        'pr_ref' : fields.char('PR Ref'),
+        'pr_ref' : fields.char('Sale PR Ref'),              
         'eta' : fields.datetime('Expected Time Arrived'),
         'etd' : fields.datetime('Expected Time Departure'),
         'received_date': fields.datetime('Received Date'),
@@ -22,6 +22,7 @@ class purchase_order(osv.osv):
         'agent_date': fields.date('Agent Date'),
         'target_date': fields.date('Target Date'),
         'finished_date': fields.date('Finished Date'),
+        'pr_ref_purchase' : fields.char('Purchse PR Ref'),
     }
     
     def product_tree_view(self, cr, uid, res_id, context=None):
