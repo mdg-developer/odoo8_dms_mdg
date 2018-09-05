@@ -1,20 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data>
+
+		<record id="view_picking_form_adjustment_inherit" model="ir.ui.view">
+			<field name="name">stock.pricking.form</field>
+			<field name="model">stock.picking</field>
+			<field name="inherit_id" ref="stock.view_picking_form" />
+			<field name="arch" type="xml">
+				<field name="partner_id" position="after">
+					<field name="is_adjustment" />
+				</field>
+			</field>
+		</record>
+		<record id="view_move_picking_form_adjustment_inherit" model="ir.ui.view">
+			<field name="name">stock.move.form.inherit</field>
+			<field name="model">stock.move</field>
+			<field name="inherit_id" ref="stock.view_move_form" />
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//field[@name='origin']" position="before">
+						<field name="is_adjustment" />
+					</xpath>
+				</data>
+			</field>
+		</record>
+
+		<record id="stock.action_picking_tree" model="ir.actions.act_window">
+			<field name="name">Transfers</field>
+			<field name="res_model">stock.picking</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form,calendar</field>
+			<field name="domain"></field>
+			<field name="context">{
+				'search_default_picking_type_id': [active_id],
+				'default_picking_type_id': active_id,
+				'contact_display': 'partner_address',
+				'default_is_adjustment':True
+				}
+			</field>
+			<field name="search_view_id" ref="stock.view_picking_internal_search" />
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Click to create a stock operation.
+				</p>
+				<p>
+					Most operations are prepared automatically by Odoo according
+					to your preconfigured logistics rules, but you can also record
+					manual stock movements.
+				</p>
+			</field>
+		</record>
+		
 		<record id="view_inventory_form_inherit" model="ir.ui.view">
 			<field name="name">stock.inventory.form.inherit</field>
 			<field name="model">stock.inventory</field>
 			<field name="inherit_id" ref="stock.view_inventory_form" />
 			<field name="arch" type="xml">
 				<xpath expr="//field[@name='name']" position="replace">
-				    <field name="name" placeholder="e.g. Annual inventory" readonly="1"/>
+					<field name="name" placeholder="e.g. Annual inventory"
+						readonly="1" />
 					<div>
-						<label for="subject" class="oe_edit_only" style="font-size: 12px;"/>
-						<field name="subject"  required ="1" attrs="{'readonly': [('state', 'in', ('done','cancel'))]}"/>
+						<label for="subject" class="oe_edit_only" style="font-size: 12px;" />
+						<field name="subject" required="1"
+							attrs="{'readonly': [('state', 'in', ('done','cancel'))]}" />
 					</div>
 				</xpath>
 				<xpath expr="//field[@name='filter']" position="after">
-					<field name="request_by" attrs="{'readonly': [('state', 'in', ('done','cancel'))],'required': [('state', '=', 'confirm')]}"/>
+					<field name="request_by"
+						attrs="{'readonly': [('state', 'in', ('done','cancel'))],'required': [('state', '=', 'confirm')]}" />
 					<field name="validate_by" />
 					<field name="note" attrs="{'readonly': [('state', '!=', 'draft')]}" />
 
