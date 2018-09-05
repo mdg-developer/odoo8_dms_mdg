@@ -301,10 +301,12 @@ class cashier_approval(osv.osv):
                 partner_id = invoice.partner_id.id
                 period_id = invoice.period_id.id
                 payment_type=invoice.payment_type
-                if payment[7] is None:
-                    invoice_num = invoice.number
-                else:
-                    invoice_num = payment[7]
+                invoice_num = invoice.number
+                print 'invoice_num',invoice_num
+#                 if payment[7] is None:
+#                     invoice_num = invoice.number
+#                 else:
+#                     invoice_num = payment[7]
                 
                 cr.execute('select default_credit_account_id,type from account_journal where id=%s', (payment[0],))
                 data = cr.fetchall()

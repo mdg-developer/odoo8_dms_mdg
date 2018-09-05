@@ -235,7 +235,6 @@ class mobile_sale_order(osv.osv):
                                     productId = data[0][0]
                                     product = product_obj.browse(cursor, user, productId, context=context)
                                     product_type = product.product_tmpl_id.type
-
                                 else:
                                     productId = None
                                     product_type = None
@@ -478,13 +477,16 @@ class mobile_sale_order(osv.osv):
                         location_type_id = sale_team_data.fresh_stock_not_good_location_id.id
                     elif pt['type'] =='Damaged':
                         location_type_id = sale_team_data.damage_location_id.id
-                        
+                    if pt['date']:
+                        exchange_date_time =pt['date']
+                        exhange_date = datetime.strptime(exchange_date_time, '%Y-%m-%d %H:%M:%S')- timedelta(hours=6,minutes=30)
+                        #check_date = date.date()                        
                     mso_result = {
                                 'transaction_id':pt['transaction_id'],
                                 'customer_id':pt['customer_id'],
                                 'customer_code':pt['customer_code'] ,
                                 'team_id':pt['team_id'],
-                                'date':pt['date'],
+                                'date':exhange_date,
                                 'exchange_type':pt['exchange_type'],
                                 'void_flag':pt['void_flag'],
                                 'location_id':location_type_id, #pt['location_id'],
