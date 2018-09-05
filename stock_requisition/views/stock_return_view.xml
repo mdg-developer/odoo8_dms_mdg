@@ -69,7 +69,7 @@
 						<group>
 							<notebook>
 								<page string="Stock List">
-									<field name="p_line" attrs="{'readonly':[('state','=','received')]}">
+									<field name="p_line" >
 										<tree string="Stock Return Line" editable="bottom"
 											default_order="sequence,status asc">
 											<field name="sequence" invisible="1" />
@@ -91,7 +91,7 @@
 											<!--<field name="rec_small_quantity" string="Received Qty(S)" 
 												/> -->
 											<field name="from_location_id" readonly="1" />
-											<field name="to_location_id" />
+											<field name="to_location_id" attrs="{'readonly':[('state','=','received')]}"/>
 											<field name="product_uom" string="UOM" invisible="0"
 												readonly="1" />
 											<field name="status" string="Status" readonly="1" />
@@ -104,14 +104,15 @@
 											<field name="exchange_qty" readonly="1" />
 											<field name="return_quantity" string="Return Qty"
 												readonly="1" />
-											<field name="onground_quantity" string="All Physical Stock Qty" />
+											<field name="onground_quantity" string="All Physical Stock Qty" attrs="{'readonly':[('state','=','received')]}"/>
 											<field name="actual_return_quantity" string="Actual Return Qty"
-												on_change="on_change_return_quantity(closing_stock_qty,actual_return_quantity)" />
+												on_change="on_change_return_quantity(closing_stock_qty,actual_return_quantity)" attrs="{'readonly':[('state','=','received')]}"/>
 											<field name="closing_stock_qty" string="Closing Stock Qty"
-												on_change="on_change_ground_quantity(closing_stock_qty,actual_return_quantity)" />
-											<field name="different_qty" invisible="1" />
-											<field name="expiry_date" string="Expiry" />
-											<field name="remark" string="Remark" />
+												on_change="on_change_ground_quantity(closing_stock_qty,actual_return_quantity)" attrs="{'readonly':[('state','=','received')]}"/>
+											<field name="different_qty" group="base.group_no_one"/>
+											<field name="expiry_date" string="Expiry" attrs="{'readonly':[('state','=','received')]}"/>
+											<field name="remark" string="Remark" attrs="{'readonly':[('state','=','received')]}"/>
+											<field name="state" invisible="1"/>
 										</tree>
 									</field>
 								</page>

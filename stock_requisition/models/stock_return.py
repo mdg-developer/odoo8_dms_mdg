@@ -832,6 +832,12 @@ class stock_return_line(osv.osv):  # #prod_pricelist_update_line
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'product_uom': fields.many2one('product.uom', 'UOM', required=True),
         'status' : fields.char('Status'),
+        'state': fields.related('line_id', 'state', string='State', readonly=True, type='selection', selection=[
+            ('draft', 'Pending'),
+            ('received', 'Received'),
+            ('cancel', 'Cancel'),
+            ('reversed', 'Reversed'),
+            ]),
         'opening_stock_qty' : fields.float(string='Opening Stock Qty', digits=(16, 0)),
         'sale_quantity' : fields.float(string='Sales Qty', digits=(16, 0)),
         'return_quantity' : fields.float(string='Returned Qty', digits=(16, 0)),
