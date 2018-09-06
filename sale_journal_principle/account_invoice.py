@@ -5,6 +5,7 @@ from openerp import models, fields, api, _
 from openerp.exceptions import except_orm, Warning, RedirectWarning
 from openerp.tools import float_compare
 import openerp.addons.decimal_precision as dp
+
 class account_invoice_tax(models.Model):
     _inherit = "account.invoice.tax"
     _description = "Invoice Tax"
@@ -40,7 +41,16 @@ class account_invoice_line(models.Model):
     
 class account_invoice(models.Model):
     _inherit = "account.invoice"
-    
+    @api.multi
+    def action_cancel_draft(self):
+        # go from canceled state to draft state
+        self.write({'state': 'draft'})
+        self.delete_workflow()
+        self.create_workflow()
+        self.env.cr.execute("update account_invoice_line set line_paid =False where invoice_id =%s",(self.id,))
+        print 'TRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR' 
+        return True
+        
     def cancel_credit(self, cr, uid, ids, context=None):
         invoice_obj = self.pool.get('account.invoice')
         # invoice_obj.action_cancel(cr, uid, ids, context=context)
