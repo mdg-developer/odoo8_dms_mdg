@@ -737,15 +737,24 @@ class hr_payslip_customize(osv.osv):
                 leave_half_count=0
             cr.execute("select  COALESCE( sum(number_of_days_temp))  as leave_count from hr_holidays  where  employee_id =%s and date_to between %s and %s ",(contract.employee_id.id,date_from, period_end,))
             leave_count =cr.fetchone()[0]
-            cr.execute("""SELECT count(the_day::date) as date FROM generate_series(%s::date, %s ::date, '1 day') d(the_day)  
-                WHERE  extract('ISODOW' FROM the_day) = 7 and the_day::date in
-                (select generate_series(date_from::date, date_to::date, '1 day')::date as date from hr_holidays
-                WHERE employee_id=%s and date_from >=  date_from and date_to <= date_to )""",(date_from,date_to, employee_id,))
-            sun_leave =cr.fetchone()[0]
             if leave_count is None:
-                leave_count=0             
-            attendances['number_of_days'] = (nb_of_days - (public_count + sun_count + leave_count))
+                leave_count=0 
+            sun_leave=0
             if leaves:
-                leaves[leave_type]['number_of_days'] += sun_leave
+                for leave in leaves:
+                    cr.execute("""SELECT count(the_day::date) as date FROM generate_series(%s::date, %s ::date, '1 day') d(the_day)  
+                    WHERE  extract('ISODOW' FROM the_day) = 7 and the_day::date in
+                    (select generate_series(hh.date_from::date, hh.date_to::date, '1 day')::date as date from hr_holidays hh,hr_holidays_status hhs
+                    WHERE hh.holiday_status_id=hhs.id and hh.type='remove' and employee_id=%s and date_from >=  date_from and date_to <= date_to
+                    and hhs.name=%s)""",(date_from,date_to, employee_id,leave['code'],))
+                    sun_leave =cr.fetchone()[0] 
+                    if sun_leave>0:
+                        cr.execute("""select hhs.name from hr_holidays hh,hr_holidays_status hhs
+                        WHERE hh.holiday_status_id=hhs.id and hh.type='remove' and employee_id=%s and date_from >=  date_from and date_to <= date_to
+                        and hhs.name=%s""",(employee_id,leave['code']))
+                        leave_name = cr.fetchone()[0]
+                        if leave_name == leave['code']:
+                            leave['number_of_days'] += sun_leave           
+            attendances['number_of_days'] = (nb_of_days - (public_count + sun_count + leave_count))
             res += [attendances] + leaves 
         return res
