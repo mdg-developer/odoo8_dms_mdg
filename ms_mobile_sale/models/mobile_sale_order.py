@@ -592,7 +592,7 @@ class mobile_sale_order(osv.osv):
     def create_visit(self, cursor, user, vals, context=None):
         
         try:
-            print 'vals', vals
+            #print 'vals', vals
             customer_visit_obj = self.pool.get('customer.visit')
             str = "{" + vals + "}"    
             str = str.replace("'',", "',")  # null
@@ -612,30 +612,31 @@ class mobile_sale_order(osv.osv):
                     cursor.execute('select branch_id from crm_case_section where id=%s', (vs['sale_team_id'],))
                     branch_id = cursor.fetchone()[0]
                     cursor.execute('select id from res_partner where customer_code=%s', (vs['customer_code'],))
-                    customer_id = cursor.fetchone()[0]                    
-                    visit_result = {
-                        'customer_code':vs['customer_code'],
-                        'branch_id':branch_id,
-                        'customer_id':customer_id,
-                        'sale_plan_day_id':vs['sale_plan_day_id'],
-                        'sale_plan_trip_id':vs['sale_plan_trip_id'] ,
-                        'sale_plan_name':vs['sale_plan_name'],
-                        'sale_team':vs['sale_team'],
-                        'sale_team_id':vs['sale_team_id'],
-                        'user_id':vs['user_id'],
-                        'date':vs['date'],
-                        'tablet_id':vs['tablet_id'],
-                        'other_reason':vs['other_reason'],
-                        'visit_reason':vs['visit_reason'],
-                        'latitude':vs['latitude'],
-                        'longitude':vs['longitude'],
-                        'image':vs['image'],
-                        'image1':vs['image1'],
-                        'image2':vs['image2'],
-                        'image3':vs['image3'],
-                        'image4':vs['image4'],
-                    }
-                    customer_visit_obj.create(cursor, user, visit_result, context=context)
+                    customer_id = cursor.fetchone()  
+                    if customer_id:                                                             
+                        visit_result = {
+                            'customer_code':vs['customer_code'],
+                            'branch_id':branch_id,
+                            'customer_id':customer_id[0],
+                            'sale_plan_day_id':vs['sale_plan_day_id'],
+                            'sale_plan_trip_id':vs['sale_plan_trip_id'] ,
+                          #  'sale_plan_name':vs['sale_plan_name'],
+                            #'sale_team':vs['sale_team'],
+                            'sale_team_id':vs['sale_team_id'],
+                            'user_id':vs['user_id'],
+                            'date':vs['date'],
+                            'tablet_id':vs['tablet_id'],
+                            'other_reason':vs['other_reason'],
+                            'visit_reason':vs['visit_reason'],
+                            'latitude':vs['latitude'],
+                            'longitude':vs['longitude'],
+                            'image':vs['image'],
+                            'image1':vs['image1'],
+                            'image2':vs['image2'],
+                            'image3':vs['image3'],
+                            'image4':vs['image4'],
+                        }
+                        customer_visit_obj.create(cursor, user, visit_result, context=context)
             return True
         except Exception, e:
             print e            
