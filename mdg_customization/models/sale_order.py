@@ -205,7 +205,7 @@ class stock_picking(osv.osv):
             self._create_backorder(cr, uid, picking, context=context)
             if toassign_move_ids:
                 stock_move_obj.action_assign(cr, uid, toassign_move_ids, context=context)
-            if len(picking.origin) > 0:
+            if picking.origin:
                 so_obj = self.pool.get('sale.order')
                 so_id = so_obj.search(cr, uid, [('name', '=',picking.origin)])
                 if len(so_id) > 0:
