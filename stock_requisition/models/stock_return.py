@@ -802,13 +802,13 @@ class stock_return(osv.osv):
                 if different_qty:
                     if different_qty < 0:
                         # Tmp===> Car
-                        inventory_location_id = location_obj.search(cr, uid, [('name', '=', 'Inventory loss')])
+                        #inventory_location_id = location_obj.search(cr, uid, [('name', '=', 'Inventory loss')])
                         move_id = move_obj.create(cr, uid, {
                                               'product_id': product_id,
                                               'product_uom_qty':-1 * different_qty ,
                                               'product_uos_qty':-1 * different_qty,
                                               'product_uom':uom_id,
-                                              'location_id':inventory_location_id[0],
+                                              'location_id':tmp_location_id,
                                               'location_dest_id':from_location_id,
                                               'name':name,
                                                'origin':origin,

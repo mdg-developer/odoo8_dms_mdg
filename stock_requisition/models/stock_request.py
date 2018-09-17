@@ -314,7 +314,7 @@ class stock_requisition(osv.osv):
                         uom_list = cr.fetchall() 
                         for uom_data in uom_list:
                             if  sale_qty >= uom_data[1]:
-                                req_quantity=sale_qty/uom_data[1]
+                                req_quantity=int(sale_qty/uom_data[1])
                                 sale_qty=sale_qty % uom_data[1]
                                 data_line.append({'req_quantity':req_quantity,'product_uom':uom_data[0],'product_id':product_id})
 #                            else:
