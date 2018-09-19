@@ -31,6 +31,8 @@ from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 import calendar
 from openerp.tools.safe_eval import safe_eval as eval
+from dateutil import parser
+from datetime import datetime, date, timedelta
 
 class hr_payslip_worked_days(osv.osv):
     '''
@@ -40,7 +42,10 @@ class hr_payslip_worked_days(osv.osv):
     _description = 'Payslip Worked Days'
     _columns = {  
         'total_month_day': fields.float('Total Month Days'),
+        'total_no_of_days': fields.float('Total Number of Days'),
         'working_month': fields.float('Working Month'),
+        'real_working_month': fields.float('Real Working Month'),
+        'age_for_ssb': fields.integer('Age for SSB')
         }  
     
 class hr_payslip_customize(osv.osv):
@@ -50,7 +55,11 @@ class hr_payslip_customize(osv.osv):
     _inherit = 'hr.payslip'
     _columns = {  
         'total_month_day': fields.float('Total Month Days'),
+        'total_no_of_days': fields.float('Total Number of Days'),
         'working_month': fields.float('Working Month'),
+        'real_working_month': fields.float('Real Working Month'),
+        'branch_id':fields.many2one('res.branch','Branch'),
+        'department_id':fields.many2one('hr.department','Department'),
         'badge_id': fields.char('Badge ID'),
         'remark1':fields.text('Remark1'),
         'remark2':fields.text('Remark2')
@@ -133,21 +142,27 @@ class hr_payslip_customize(osv.osv):
     def get_inputs(self, cr, uid, contract_ids, date_from, date_to, context=None):
         res = []
         contract_obj = self.pool.get('hr.contract')
+        emloyee_obj = self.pool.get('hr.employee')
         rule_obj = self.pool.get('hr.salary.rule')
         financial_year = 0
         total_income = 0
         tax_paid = 0   
         payroll_total_income = 0
         income_tax = 0
-        # get Employee data
+        # get Contract data
         cr.execute("select employee_id,date_start,date_end,state,effective_date from hr_contract where id=%s", (contract_ids))
-        emp_data = cr.fetchone()
-        employee_id = emp_data[0]
-        initial_date =emp_data[1]
-        termination_date = emp_data[2]
-        con_state = emp_data[3]
-        effective_date = emp_data[4]
+        contract_data = cr.fetchone()
+        employee_id = contract_data[0]
+        initial_date =contract_data[1]
+        termination_date = contract_data[2]
+        con_state = contract_data[3]
+        effective_date = contract_data[4]
         
+        #get Employee Data
+        cr.execute("""select id,initial_employment_date from hr_employee where id=%s""",(employee_id,))
+        emp_data = cr.fetchone()
+        if emp_data:
+            initial_employment_date = emp_data[1]
         cr.execute("select fiscalyear_id from account_period where date_start <=%s and date_stop >= %s", (date_from, date_to,))
         fiscalyear_id = cr.fetchone()
         if fiscalyear_id:
@@ -270,15 +285,47 @@ class hr_payslip_customize(osv.osv):
             actual_working_hour = actual_working_data[0]
         else:
             actual_working_hour = 0
-        cr.execute("select COALESCE( sum(normal),0) as normal  from attendance_data_import where \
-        date >= %s and date <= %s and date not in (SELECT the_day ::date FROM  generate_series(%s::date, %s  ::date, '1 day') d(the_day) \
-        WHERE  extract('ISODOW' FROM the_day)= 7)\
-        and date not in (select date from hr_holidays_public_line where date >= %s and date <= %s)\
-        and date not in (select generate_series(hh.date_from::date, hh.date_to::date, '1 day')::date as date from hr_holidays hh,hr_holidays_status ss  where hh.holiday_status_id = ss.id and hh.type='remove' and hh.employee_id =%s and ss.name !='Unpaid_Leave' and hh.date_to >= %s and hh.date_to <= hh.date_to)\
-        and absent =true and employee_id=%s",(date_from, date_to,date_from, date_to,date_from, date_to,employee_id,date_from,employee_id,))
-        absent_data =cr.fetchone()
-        if absent_data:
-            absent_count=absent_data[0]
+        if initial_employment_date >= date_from and termination_date >= date_to:
+            cr.execute("""select COALESCE( sum(normal),0) as normal  from attendance_data_import where 
+            date >= %s and date <= %s and date not in (SELECT the_day ::date FROM  generate_series(%s::date, %s  ::date, '1 day') d(the_day) 
+            WHERE  extract('ISODOW' FROM the_day)= 7)
+            and date not in (select date from hr_holidays_public_line where date >= %s and date <= %s)
+            and date not in (select generate_series(hh.date_from::date, hh.date_to::date, '1 day')::date as date from hr_holidays hh,hr_holidays_status ss  where hh.holiday_status_id = ss.id and hh.type='remove' and hh.employee_id =%s and ss.name !='Unpaid_Leave' and hh.date_to >= %s and hh.date_to <= hh.date_to)
+            and absent =true and employee_id=%s""",(initial_employment_date, date_to,initial_employment_date, date_to,initial_employment_date, date_to,employee_id,initial_employment_date,employee_id,))
+            absent_data =cr.fetchone()
+            if absent_data:
+                absent_count=absent_data[0]
+        
+        elif initial_employment_date <= date_from and termination_date <= date_to:
+            cr.execute("select COALESCE( sum(normal),0) as normal  from attendance_data_import where \
+            date >= %s and date <= %s and date not in (SELECT the_day ::date FROM  generate_series(%s::date, %s  ::date, '1 day') d(the_day) \
+            WHERE  extract('ISODOW' FROM the_day)= 7)\
+            and date not in (select date from hr_holidays_public_line where date >= %s and date <= %s)\
+            and date not in (select generate_series(hh.date_from::date, hh.date_to::date, '1 day')::date as date from hr_holidays hh,hr_holidays_status ss  where hh.holiday_status_id = ss.id and hh.type='remove' and hh.employee_id =%s and ss.name !='Unpaid_Leave' and hh.date_to >= %s and hh.date_to <= hh.date_to)\
+            and absent =true and employee_id=%s",(date_from, termination_date,date_from, termination_date,date_from, termination_date,employee_id,date_from,employee_id,))
+            absent_data =cr.fetchone()
+            if absent_data:
+                absent_count=absent_data[0]
+        elif initial_employment_date >= date_from and termination_date <= date_to:
+            cr.execute("select COALESCE( sum(normal),0) as normal  from attendance_data_import where \
+            date >= %s and date <= %s and date not in (SELECT the_day ::date FROM  generate_series(%s::date, %s  ::date, '1 day') d(the_day) \
+            WHERE  extract('ISODOW' FROM the_day)= 7)\
+            and date not in (select date from hr_holidays_public_line where date >= %s and date <= %s)\
+            and date not in (select generate_series(hh.date_from::date, hh.date_to::date, '1 day')::date as date from hr_holidays hh,hr_holidays_status ss  where hh.holiday_status_id = ss.id and hh.type='remove' and hh.employee_id =%s and ss.name !='Unpaid_Leave' and hh.date_to >= %s and hh.date_to <= hh.date_to)\
+            and absent =true and employee_id=%s",(initial_employment_date, termination_date,initial_employment_date, termination_date,initial_employment_date, termination_date,employee_id,initial_employment_date,employee_id,))
+            absent_data =cr.fetchone()
+            if absent_data:
+                absent_count=absent_data[0]
+        else:
+            cr.execute("select COALESCE( sum(normal),0) as normal  from attendance_data_import where \
+            date >= %s and date <= %s and date not in (SELECT the_day ::date FROM  generate_series(%s::date, %s  ::date, '1 day') d(the_day) \
+            WHERE  extract('ISODOW' FROM the_day)= 7)\
+            and date not in (select date from hr_holidays_public_line where date >= %s and date <= %s)\
+            and date not in (select generate_series(hh.date_from::date, hh.date_to::date, '1 day')::date as date from hr_holidays hh,hr_holidays_status ss  where hh.holiday_status_id = ss.id and hh.type='remove' and hh.employee_id =%s and ss.name !='Unpaid_Leave' and hh.date_to >= %s and hh.date_to <= hh.date_to)\
+            and absent =true and employee_id=%s",(date_from, date_to,date_from, date_to,date_from, date_to,employee_id,date_from,employee_id,))
+            absent_data =cr.fetchone()
+            if absent_data:
+                absent_count=absent_data[0]
         cr.execute("select COALESCE( sum(normal) ,0) as total_working_day  from attendance_data_import where \
         date between %s and  %s and date not in (SELECT the_day ::date FROM  generate_series(%s::date, %s  ::date, '1 day') d(the_day) \
         WHERE  extract('ISODOW' FROM the_day) = 7 )\
@@ -597,15 +644,27 @@ class hr_payslip_customize(osv.osv):
         @param contract_ids: list of contract id
         @return: returns a list of dict containing the input that should be applied for the given contract between date_from and date_to
         """
+        second_type=False
         day_from = datetime.strptime(date_from, "%Y-%m-%d").date()
         day_to = datetime.strptime(date_to, "%Y-%m-%d").date()
         month_days = calendar.monthrange(day_from.year, day_from.month)[1]   
-        print 'month_days', month_days
         cr.execute('select employee_id,date_start from hr_contract where id = %s', (contract_ids))
         employee_data = cr.fetchone() 
         if  employee_data:
             employee_id=employee_data[0]
             initial_date=employee_data[1]
+        cr.execute('select initial_employment_date,birthday from hr_employee where id = %s', (employee_id,))
+        employee_datas = cr.fetchone()
+        if employee_datas:
+            joining_date =employee_datas[0]     
+            birthday = employee_datas[1]
+        age_for_ssb =0
+        current_date = datetime.now()
+        current_year = current_date.year
+        current_month = current_date.month
+        if birthday:
+            birth_date = parser.parse(birthday)
+            age_for_ssb = current_year - birth_date.year  
         working_month = 0
         cr.execute("SELECT EXTRACT(MONTH FROM %s::date) as next_month", (date_from,))
         next_month = cr.fetchone()[0]
@@ -625,30 +684,56 @@ class hr_payslip_customize(osv.osv):
                 if w_month[0] >= 12:
                     working_month = 12;
                 else:
-                    working_month = w_month[0]
-            print 'working_month', working_month, next_year             
+                    working_month = w_month[0]     
+        #cr.execute("SELECT (date_part('month',age('%s-04-01',%s))) + 1 as month ",(next_year,joining_date,))
+        cr.execute("SELECT (DATE_PART('year', '%s-04-01'::date) - DATE_PART('year', %s::date)) * 12 + (DATE_PART('month', '%s-04-01'::date) - DATE_PART('month', %s::date)) as month ",(next_year,joining_date,next_year,joining_date,))
+        total_working_month =cr.fetchone()[0]
+        if total_working_month >12:
+            total_working_month=12  
+##########################BW-243:Change FAIR DEAL Version(19-09-2018)#########################################################			
         def was_on_leave(employee_id, datetime_day, context=None):
             # res = False
             leave_type = False
             day_temp = False
+            second_type=False
+            second_day_temp=False
             day = datetime_day.strftime("%Y-%m-%d")
             holiday_ids = self.pool.get('hr.holidays').search(cr, uid, [('state', '=', 'validate'), ('employee_id', '=', employee_id), ('type', '=', 'remove'), ('date_from', '<=', day), ('date_to', '>=', day)])
             if holiday_ids:
-                leave_type = self.pool.get('hr.holidays').browse(cr, uid, holiday_ids, context=context)[0].holiday_status_id.name
-                day_temp = self.pool.get('hr.holidays').browse(cr, uid, holiday_ids, context=context)[0].number_of_days_temp
-            return leave_type, day_temp
+                if len(holiday_ids)>1:
+                    leave_type = self.pool.get('hr.holidays').browse(cr, uid, holiday_ids, context=context)[0].holiday_status_id.name
+                    day_temp = self.pool.get('hr.holidays').browse(cr, uid, holiday_ids, context=context)[0].number_of_days_temp            
+                    second_type = self.pool.get('hr.holidays').browse(cr, uid, holiday_ids, context=context)[1].holiday_status_id.name
+                    second_day_temp = self.pool.get('hr.holidays').browse(cr, uid, holiday_ids, context=context)[1].number_of_days_temp
+                else:   
+                    leave_type = self.pool.get('hr.holidays').browse(cr, uid, holiday_ids, context=context)[0].holiday_status_id.name
+                    day_temp = self.pool.get('hr.holidays').browse(cr, uid, holiday_ids, context=context)[0].number_of_days_temp                    
+            return leave_type, day_temp ,second_type ,second_day_temp
 
         res = []
         for contract in self.pool.get('hr.contract').browse(cr, uid, contract_ids, context=context):
             if not contract.working_hours:
                 # fill only if the contract as a working schedule linked
                 continue
-            # add function return from store procedure                                  
+            # add function return from store procedure  
+            effective_day = datetime.strptime(contract.effective_date, "%Y-%m-%d") 
+            last_working_day = datetime.strptime(contract.date_end, "%Y-%m-%d")
+            effective_date = datetime.strptime(contract.effective_date, "%Y-%m-%d").date()    
+            last_working_date = datetime.strptime(contract.date_end, "%Y-%m-%d").date()                            
             day_from = datetime.strptime(date_from, "%Y-%m-%d")
             day_to = datetime.strptime(date_to, "%Y-%m-%d")
+            date_start = datetime.strptime(date_from, "%Y-%m-%d").date()
+            date_end = datetime.strptime(date_to, "%Y-%m-%d").date()
             period_end =day_to+ timedelta(days=1)
-            nb_of_days = (day_to - day_from).days + 1
-            
+            if effective_date >= date_start and last_working_date >= date_end:
+                nb_of_days = (day_to - effective_day).days + 1
+            elif effective_date <= date_start and last_working_date <= date_end:
+                nb_of_days = (last_working_day - day_from).days + 1
+            elif effective_date >= date_start and last_working_date <= date_end:
+                nb_of_days = (last_working_day - effective_day).days + 1
+            else:
+                nb_of_days = (day_to - day_from).days + 1
+            total_nb_of_days = (day_to - day_from).days + 1
             attendances = {
                  'name': _("Normal Working Days paid at 100%"),
                  'sequence': 0,
@@ -657,80 +742,257 @@ class hr_payslip_customize(osv.osv):
                  'number_of_hours': 0.0,
                  'number_of_minutes':0.0,
                 'total_month_day':nb_of_days,
+                'total_no_of_days':total_nb_of_days,
                 'working_month':working_month,
+                'real_working_month':total_working_month,
+                'age_for_ssb':age_for_ssb,
                  'contract_id': contract.id,
             }
             leaves = {}
             day_from = datetime.strptime(date_from, "%Y-%m-%d")
             day_to = datetime.strptime(date_to, "%Y-%m-%d")
-
-            for day in range(0, nb_of_days):
-                working_hours_on_day = self.pool.get('resource.calendar').working_hours_on_day(cr, uid, contract.working_hours, day_from + timedelta(days=day), context)
-                cr.execute('select sum(number_of_days)*-1 as leave from hr_holidays where number_of_days<0 and employee_id=%s and date_from between %s and %s', (contract.employee_id.id, day_from, day_to))   
-                leave = cr.fetchone()
-                if leave:
-                    leave_day = leave[0]
-                    if leave_day is None:
-                        leave_day = 0.0
-                else:
-                    leave_day = 0.0
-                if working_hours_on_day:
-                    # the employee had to work
-                    leave_type, day_temp = was_on_leave(contract.employee_id.id, day_from + timedelta(days=day), context=context)
-                    if leave_type:
-                        # if he was on leave, fill the leaves dict
-                        if leave_type in leaves and day_temp != 0.5:
-                            leaves[leave_type]['number_of_days'] += 1
-                            leaves[leave_type]['number_of_hours'] += working_hours_on_day
-                        elif leave_type in leaves  and day_temp == 0.5 :
-
-                            leaves[leave_type]['number_of_days'] += day_temp
-                            leaves[leave_type]['number_of_hours'] += working_hours_on_day / 2   
-                             
-                        elif day_temp == 0.5:
-
-                            leaves[leave_type] = {
-                                'name': leave_type,
-                                'sequence': 5,
-                                'code': leave_type,
-                                'number_of_days': day_temp,
-                                'number_of_hours': working_hours_on_day / 2,
-                                'contract_id': contract.id,
-                            }
-                        elif day_temp != 0.5:
-                            leaves[leave_type] = {
-                                'name': leave_type,
-                                'sequence': 5,
-                                'code': leave_type,
-                                'number_of_days': 1.0,
-                                'number_of_hours': working_hours_on_day,
-                                'contract_id': contract.id,
-                            }
+            if effective_date > date_start and last_working_date >= date_end:
+                for day in range(0, nb_of_days):
+                    working_hours_on_day = self.pool.get('resource.calendar').working_hours_on_day(cr, uid, contract.working_hours, effective_day + timedelta(days=day), context)
+                    cr.execute('select sum(number_of_days)*-1 as leave from hr_holidays where number_of_days<0 and employee_id=%s and date_from between %s and %s', (contract.employee_id.id, day_from, day_to))   
+                    leave = cr.fetchone()
+                    if leave:
+                        leave_day = leave[0]
+                        if leave_day is None:
+                            leave_day = 0.0
                     else:
-                        attendances['number_of_days'] += 1.0
-                        attendances['number_of_hours'] += working_hours_on_day
-            leaves = [value for key, value in leaves.items()]
-            cr.execute("select count(id) from hr_holidays_public_line where date between %s and  %s ",(day_from,day_to,))
-            public_count =cr.fetchone()
-            if public_count:
-                public_count=public_count[0]
+                        leave_day = 0.0
+                    if working_hours_on_day:
+                        # the employee had to work
+                        leave_type, day_temp ,second_type ,second_day_temp= was_on_leave(contract.employee_id.id, effective_day + timedelta(days=day), context=context)
+                        if leave_type:
+                            # if he was on leave, fill the leaves dict
+                            if leave_type in leaves and day_temp != 0.5:
+                                leaves[leave_type]['number_of_days'] += 1
+                                leaves[leave_type]['number_of_hours'] += working_hours_on_day
+                            elif leave_type in leaves  and day_temp == 0.5 :
+    
+                                leaves[leave_type]['number_of_days'] += day_temp
+                                leaves[leave_type]['number_of_hours'] += working_hours_on_day / 2   
+                                 
+                            elif day_temp == 0.5:
+    
+                                leaves[leave_type] = {
+                                    'name': leave_type,
+                                    'sequence': 5,
+                                    'code': leave_type,
+                                    'number_of_days': day_temp,
+                                    'number_of_hours': working_hours_on_day / 2,
+                                    'contract_id': contract.id,
+                                }
+                            elif day_temp != 0.5:
+                                leaves[leave_type] = {
+                                    'name': leave_type,
+                                    'sequence': 5,
+                                    'code': leave_type,
+                                    'number_of_days': 1.0,
+                                    'number_of_hours': working_hours_on_day,
+                                    'contract_id': contract.id,
+                                }
+                        if second_type:
+
+                            if second_type in leaves  and second_day_temp == 0.5 :
+    
+                                leaves[second_type]['number_of_days'] += second_day_temp
+                                leaves[second_type]['number_of_hours'] += working_hours_on_day / 2   
+                                 
+                            elif second_day_temp == 0.5:
+    
+                                leaves[second_type] = {
+                                    'name': second_type,
+                                    'sequence': 5,
+                                    'code': second_type,
+                                    'number_of_days': second_day_temp,
+                                    'number_of_hours': working_hours_on_day / 2,
+                                    'contract_id': contract.id,
+                                }                                           
+                        else:
+                            attendances['number_of_days'] += 1.0
+                            attendances['number_of_hours'] += working_hours_on_day
+            elif effective_date > date_start and last_working_date < date_end:   
+                for day in range(0, nb_of_days):
+                    working_hours_on_day = self.pool.get('resource.calendar').working_hours_on_day(cr, uid, contract.working_hours, effective_day + timedelta(days=day), context)
+                    cr.execute('select sum(number_of_days)*-1 as leave from hr_holidays where number_of_days<0 and employee_id=%s and date_from between %s and %s', (contract.employee_id.id, day_from, day_to))   
+                    leave = cr.fetchone()
+                    if leave:
+                        leave_day = leave[0]
+                        if leave_day is None:
+                            leave_day = 0.0
+                    else:
+                        leave_day = 0.0
+                    if working_hours_on_day:
+                        # the employee had to work
+                        leave_type, day_temp,second_type ,second_day_temp = was_on_leave(contract.employee_id.id, effective_day + timedelta(days=day), context=context)
+                        if leave_type:
+                            # if he was on leave, fill the leaves dict
+                            if leave_type in leaves and day_temp != 0.5:
+                                leaves[leave_type]['number_of_days'] += 1
+                                leaves[leave_type]['number_of_hours'] += working_hours_on_day
+                            elif leave_type in leaves  and day_temp == 0.5 :
+    
+                                leaves[leave_type]['number_of_days'] += day_temp
+                                leaves[leave_type]['number_of_hours'] += working_hours_on_day / 2   
+                                 
+                            elif day_temp == 0.5:
+    
+                                leaves[leave_type] = {
+                                    'name': leave_type,
+                                    'sequence': 5,
+                                    'code': leave_type,
+                                    'number_of_days': day_temp,
+                                    'number_of_hours': working_hours_on_day / 2,
+                                    'contract_id': contract.id,
+                                }
+                            elif day_temp != 0.5:
+                                leaves[leave_type] = {
+                                    'name': leave_type,
+                                    'sequence': 5,
+                                    'code': leave_type,
+                                    'number_of_days': 1.0,
+                                    'number_of_hours': working_hours_on_day,
+                                    'contract_id': contract.id,
+                                }
+                        if second_type:
+
+                            if second_type in leaves  and second_day_temp == 0.5 :
+    
+                                leaves[second_type]['number_of_days'] += second_day_temp
+                                leaves[second_type]['number_of_hours'] += working_hours_on_day / 2   
+                                 
+                            elif second_day_temp == 0.5:
+    
+                                leaves[second_type] = {
+                                    'name': second_type,
+                                    'sequence': 5,
+                                    'code': second_type,
+                                    'number_of_days': second_day_temp,
+                                    'number_of_hours': working_hours_on_day / 2,
+                                    'contract_id': contract.id,
+                                }                                              
+                        else:
+                            attendances['number_of_days'] += 1.0
+                            attendances['number_of_hours'] += working_hours_on_day
             else:
-                public_count=0
+                for day in range(0, nb_of_days):
+                    working_hours_on_day = self.pool.get('resource.calendar').working_hours_on_day(cr, uid, contract.working_hours, day_from + timedelta(days=day), context)
+                    cr.execute('select sum(number_of_days)*-1 as leave from hr_holidays where number_of_days<0 and employee_id=%s and date_from between %s and %s', (contract.employee_id.id, day_from, day_to))   
+                    leave = cr.fetchone()
+                    if leave:
+                        leave_day = leave[0]
+                        if leave_day is None:
+                            leave_day = 0.0
+                    else:
+                        leave_day = 0.0
+                    if working_hours_on_day:
+                        # the employee had to work
+                        leave_type, day_temp,second_type ,second_day_temp = was_on_leave(contract.employee_id.id, day_from + timedelta(days=day), context=context)
+                        if leave_type:
+                            # if he was on leave, fill the leaves dict
+                            if leave_type in leaves and day_temp != 0.5:
+                                leaves[leave_type]['number_of_days'] += 1
+                                leaves[leave_type]['number_of_hours'] += working_hours_on_day
+                            elif leave_type in leaves  and day_temp == 0.5 :
+    
+                                leaves[leave_type]['number_of_days'] += day_temp
+                                leaves[leave_type]['number_of_hours'] += working_hours_on_day / 2   
+                                 
+                            elif day_temp == 0.5:
+    
+                                leaves[leave_type] = {
+                                    'name': leave_type,
+                                    'sequence': 5,
+                                    'code': leave_type,
+                                    'number_of_days': day_temp,
+                                    'number_of_hours': working_hours_on_day / 2,
+                                    'contract_id': contract.id,
+                                }
+                            elif day_temp != 0.5:
+                                leaves[leave_type] = {
+                                    'name': leave_type,
+                                    'sequence': 5,
+                                    'code': leave_type,
+                                    'number_of_days': 1.0,
+                                    'number_of_hours': working_hours_on_day,
+                                    'contract_id': contract.id,
+                                }
+                        if second_type:
+    
+                            if second_type in leaves  and second_day_temp == 0.5 :
+    
+                                leaves[second_type]['number_of_days'] += second_day_temp
+                                leaves[second_type]['number_of_hours'] += working_hours_on_day / 2   
+                                 
+                            elif second_day_temp == 0.5:
+    
+                                leaves[second_type] = {
+                                    'name': second_type,
+                                    'sequence': 5,
+                                    'code': second_type,
+                                    'number_of_days': second_day_temp,
+                                    'number_of_hours': working_hours_on_day / 2,
+                                    'contract_id': contract.id,
+                                }                                                  
+                            else:
+                                attendances['number_of_days'] += 1.0
+                                attendances['number_of_hours'] += working_hours_on_day               
+            leaves = [value for key, value in leaves.items()]
+            if effective_date > date_start and last_working_date > date_end:
+                cr.execute("select count(id) from hr_holidays_public_line where date between %s and  %s ",(effective_date,day_to,))
+                public_count =cr.fetchone()
+                if public_count:
+                    public_count=public_count[0]
+                else:
+                    public_count=0
+            elif effective_date < date_start and last_working_date < date_end:
+                cr.execute("select count(id) from hr_holidays_public_line where date between %s and  %s ",(date_from,last_working_date,))
+                public_count =cr.fetchone()
+                if public_count:
+                    public_count=public_count[0]
+                else:
+                    public_count=0
+            elif effective_date > date_start and last_working_date < date_end:
+                cr.execute("select count(id) from hr_holidays_public_line where date between %s and  %s ",(effective_date,last_working_date,))
+                public_count =cr.fetchone()
+                if public_count:
+                    public_count=public_count[0]
+                else:
+                    public_count=0
+            else:
+                cr.execute("select count(id) from hr_holidays_public_line where date between %s and  %s ",(date_from,date_to,))
+                public_count =cr.fetchone()
+                if public_count:
+                    public_count=public_count[0]
+                else:
+                    public_count=0
             before_day=0
             sun_count=0
             if initial_date > date_from:
                 cr.execute("SELECT TRUNC(DATE_PART('day',  %s::timestamp - %s::timestamp))",(initial_date,date_from,))
                 before_day=cr.fetchone()[0]
-            cr.execute("SELECT count(the_day ::date) as sat_count FROM generate_series(%s::date, %s ::date, '1 day') d(the_day)  WHERE  extract('ISODOW' FROM the_day) = 7  ",(date_from,date_to,))
-            sun_count =cr.fetchone()[0]
-            print 'sun_count',sun_count
-               
+            if effective_date > date_start and last_working_date >= date_end:
+                cr.execute("SELECT count(the_day ::date) as sun_count FROM generate_series(%s::date, %s ::date, '1 day') d(the_day)  WHERE  extract('ISODOW' FROM the_day) = 7  ",(str(effective_date),date_to,))
+                sun_count =cr.fetchone()[0]
+            elif effective_date < date_start and last_working_date < date_end:   
+                cr.execute("SELECT count(the_day ::date) as sun_count FROM generate_series(%s::date, %s ::date, '1 day') d(the_day)  WHERE  extract('ISODOW' FROM the_day) = 7  ",(date_from,str(last_working_day),))
+                sun_count =cr.fetchone()[0]     
+            elif effective_date > date_start and last_working_date < date_end:
+                cr.execute("SELECT count(the_day ::date) as sun_count FROM generate_series(%s::date, %s ::date, '1 day') d(the_day)  WHERE  extract('ISODOW' FROM the_day) = 7  ",(effective_day,last_working_day,))
+                sun_count =cr.fetchone()[0]    
+            else:
+                cr.execute("SELECT count(the_day ::date) as sun_count FROM generate_series(%s::date, %s ::date, '1 day') d(the_day)  WHERE  extract('ISODOW' FROM the_day) = 7  ",(date_from,date_to,))
+                sun_count =cr.fetchone()[0]
             cr.execute("SELECT count(the_day ::date) as sat_count FROM generate_series(%s::date, %s ::date, '1 day') d(the_day)  WHERE  extract('ISODOW' FROM the_day) = 6  ",(day_from,day_to,))
             sat_count =cr.fetchone()
             if sat_count:
                 sat_count=sat_count[0]/2
             else:
-                sat_count=0    
+                sat_count=0  
+######################## END BW-243:Change FAIR DEAL Version(19-09-2018)###########################################################						
             cr.execute("select  COALESCE( sum(number_of_days_temp - floor(number_of_days_temp)))  as leave_count from hr_holidays  where  employee_id =%s and date_to between %s and %s ",(contract.employee_id.id,date_from, date_to,))
             leave_half_count =cr.fetchone()[0]
             if leave_half_count is None:
