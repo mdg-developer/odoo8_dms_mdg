@@ -290,48 +290,49 @@ class hr_payslip_customize(osv.osv):
             date >= %s and date <= %s and date not in (SELECT the_day ::date FROM  generate_series(%s::date, %s  ::date, '1 day') d(the_day) 
             WHERE  extract('ISODOW' FROM the_day)= 7)
             and date not in (select date from hr_holidays_public_line where date >= %s and date <= %s)
-            and date not in (select generate_series(hh.date_from::date, hh.date_to::date, '1 day')::date as date from hr_holidays hh,hr_holidays_status ss  where hh.holiday_status_id = ss.id and hh.type='remove' and hh.employee_id =%s and ss.name !='Unpaid_Leave' and hh.date_to >= %s and hh.date_to <= hh.date_to)
+            and date not in (select generate_series(hh.date_from::date, hh.date_to::date, '1 day')::date as date from hr_holidays hh,hr_holidays_status ss  where hh.holiday_status_id = ss.id and hh.type='remove' and hh.employee_id =%s and hh.date_to >= %s and hh.date_to <= hh.date_to)
             and absent =true and employee_id=%s""",(initial_employment_date, date_to,initial_employment_date, date_to,initial_employment_date, date_to,employee_id,initial_employment_date,employee_id,))
             absent_data =cr.fetchone()
             if absent_data:
                 absent_count=absent_data[0]
         
         elif initial_employment_date <= date_from and termination_date <= date_to:
-            cr.execute("select COALESCE( sum(normal),0) as normal  from attendance_data_import where \
-            date >= %s and date <= %s and date not in (SELECT the_day ::date FROM  generate_series(%s::date, %s  ::date, '1 day') d(the_day) \
-            WHERE  extract('ISODOW' FROM the_day)= 7)\
-            and date not in (select date from hr_holidays_public_line where date >= %s and date <= %s)\
-            and date not in (select generate_series(hh.date_from::date, hh.date_to::date, '1 day')::date as date from hr_holidays hh,hr_holidays_status ss  where hh.holiday_status_id = ss.id and hh.type='remove' and hh.employee_id =%s and ss.name !='Unpaid_Leave' and hh.date_to >= %s and hh.date_to <= hh.date_to)\
-            and absent =true and employee_id=%s",(date_from, termination_date,date_from, termination_date,date_from, termination_date,employee_id,date_from,employee_id,))
+            cr.execute("""select COALESCE( sum(normal),0) as normal  from attendance_data_import where 
+            date >= %s and date <= %s and date not in (SELECT the_day ::date FROM  generate_series(%s::date, %s  ::date, '1 day') d(the_day) 
+            WHERE  extract('ISODOW' FROM the_day)= 7)
+            and date not in (select date from hr_holidays_public_line where date >= %s and date <= %s)
+            and date not in (select generate_series(hh.date_from::date, hh.date_to::date, '1 day')::date as date from hr_holidays hh,hr_holidays_status ss  where hh.holiday_status_id = ss.id and hh.type='remove' and hh.employee_id =%s and hh.date_to >= %s and hh.date_to <= hh.date_to)
+            and absent =true and employee_id=%s""",(date_from, termination_date,date_from, termination_date,date_from, termination_date,employee_id,date_from,employee_id,))
             absent_data =cr.fetchone()
             if absent_data:
                 absent_count=absent_data[0]
         elif initial_employment_date >= date_from and termination_date <= date_to:
-            cr.execute("select COALESCE( sum(normal),0) as normal  from attendance_data_import where \
-            date >= %s and date <= %s and date not in (SELECT the_day ::date FROM  generate_series(%s::date, %s  ::date, '1 day') d(the_day) \
-            WHERE  extract('ISODOW' FROM the_day)= 7)\
-            and date not in (select date from hr_holidays_public_line where date >= %s and date <= %s)\
-            and date not in (select generate_series(hh.date_from::date, hh.date_to::date, '1 day')::date as date from hr_holidays hh,hr_holidays_status ss  where hh.holiday_status_id = ss.id and hh.type='remove' and hh.employee_id =%s and ss.name !='Unpaid_Leave' and hh.date_to >= %s and hh.date_to <= hh.date_to)\
-            and absent =true and employee_id=%s",(initial_employment_date, termination_date,initial_employment_date, termination_date,initial_employment_date, termination_date,employee_id,initial_employment_date,employee_id,))
+            cr.execute("""select COALESCE( sum(normal),0) as normal  from attendance_data_import where 
+            date >= %s and date <= %s and date not in (SELECT the_day ::date FROM  generate_series(%s::date, %s  ::date, '1 day') d(the_day) 
+            WHERE  extract('ISODOW' FROM the_day)= 7)
+            and date not in (select date from hr_holidays_public_line where date >= %s and date <= %s)
+            and date not in (select generate_series(hh.date_from::date, hh.date_to::date, '1 day')::date as date from hr_holidays hh,hr_holidays_status ss  where hh.holiday_status_id = ss.id and hh.type='remove' and hh.employee_id =%s and hh.date_to >= %s and hh.date_to <= hh.date_to)
+            and absent =true and employee_id=%s""",(initial_employment_date, termination_date,initial_employment_date, termination_date,initial_employment_date, termination_date,employee_id,initial_employment_date,employee_id,))
             absent_data =cr.fetchone()
             if absent_data:
                 absent_count=absent_data[0]
         else:
-            cr.execute("select COALESCE( sum(normal),0) as normal  from attendance_data_import where \
-            date >= %s and date <= %s and date not in (SELECT the_day ::date FROM  generate_series(%s::date, %s  ::date, '1 day') d(the_day) \
-            WHERE  extract('ISODOW' FROM the_day)= 7)\
-            and date not in (select date from hr_holidays_public_line where date >= %s and date <= %s)\
-            and date not in (select generate_series(hh.date_from::date, hh.date_to::date, '1 day')::date as date from hr_holidays hh,hr_holidays_status ss  where hh.holiday_status_id = ss.id and hh.type='remove' and hh.employee_id =%s and ss.name !='Unpaid_Leave' and hh.date_to >= %s and hh.date_to <= hh.date_to)\
-            and absent =true and employee_id=%s",(date_from, date_to,date_from, date_to,date_from, date_to,employee_id,date_from,employee_id,))
+            cr.execute("""select COALESCE( sum(normal),0) as normal  from attendance_data_import where 
+            date >= %s and date <= %s and date not in (SELECT the_day ::date FROM  generate_series(%s::date, %s  ::date, '1 day') d(the_day) 
+            WHERE  extract('ISODOW' FROM the_day)= 7)
+            and date not in (select date from hr_holidays_public_line where date >= %s and date <= %s)
+            and date not in (select generate_series(hh.date_from::date, hh.date_to::date, '1 day')::date as date from hr_holidays hh,hr_holidays_status ss  where hh.holiday_status_id = ss.id and hh.type='remove' and hh.employee_id =%s and hh.date_to >= %s and hh.date_to <= hh.date_to)
+            and absent =true and employee_id=%s""",(date_from, date_to,date_from, date_to,date_from, date_to,employee_id,date_from,employee_id,))
             absent_data =cr.fetchone()
             if absent_data:
                 absent_count=absent_data[0]
-        cr.execute("select COALESCE( sum(normal) ,0) as total_working_day  from attendance_data_import where \
-        date between %s and  %s and date not in (SELECT the_day ::date FROM  generate_series(%s::date, %s  ::date, '1 day') d(the_day) \
-        WHERE  extract('ISODOW' FROM the_day) = 7 )\
-        and date not in ( select date from hr_holidays_public_line where date between %s and  %s )\
-        and date not in (select generate_series(date_from::date, date_to::date, '1 day')::date as date from hr_holidays where  employee_id =%s and date_to between  %s and %s )\
-        and absent != true and employee_id=%s",(date_from, date_to,date_from, date_to,date_from, date_to,employee_id,date_from, date_to,employee_id,))
+        cr.execute("""select COALESCE( sum(normal) ,0) as total_working_day  from attendance_data_import where 
+        date between %s and  %s and date not in (SELECT the_day ::date FROM  generate_series(%s::date, %s  ::date, '1 day') d(the_day) 
+        WHERE  extract('ISODOW' FROM the_day) = 7 )
+        and date not in ( select hpl.date from hr_holidays_public_line hpl inner join hr_holidays_public hp on hpl.holidays_id = hp.id 
+        where hpl.date between %s::date and %s::date)
+        and date not in (select generate_series(date_from::date, date_to::date, '1 day')::date as date from hr_holidays where  employee_id =%s and date_to between  %s and %s )
+        and absent != true and employee_id=%s""",(date_from, date_to,date_from, date_to,date_from, date_to,employee_id,date_from, date_to,employee_id,))
         present_data =cr.fetchone()
         cr.execute("select  COALESCE( sum(number_of_days_temp - floor(number_of_days_temp)))  as leave_count from hr_holidays  where  employee_id =%s and date_to between %s and %s ",(employee_id,date_from, date_to,))
         leave_half_count =cr.fetchone()[0]
@@ -343,7 +344,7 @@ class hr_payslip_customize(osv.osv):
             and extract('ISODOW' FROM date)= 6 and employee_id=%s and date between %s and %s""",(employee_id,date_from, date_to,))        
         sat_data =cr.fetchone()[0]
         if present_data:
-            present_count=present_data[0]+sat_data+leave_half_count
+            present_count=present_data[0]+leave_half_count
 #             cr.execute("select employee_id from attendance_data_import where date='2017-11-11' and timetable='Afternoon' and absent='true' and employee_id=%s",(employee_id,))   
 #             oct_fourteen_absent_count=cr.fetchall()   
 #             if oct_fourteen_absent_count:
