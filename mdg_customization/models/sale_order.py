@@ -137,9 +137,9 @@ class sale_order_line(osv.osv):
                 warning_msgs += _("No valid pricelist line found ! :") + warn_msg +"\n\n"
             else:
                 price = self.pool['account.tax']._fix_tax_included_price(cr, uid, price, taxes, result['tax_id'])
-                result.update({'price_unit': price})
+                result.update({'price_unit': round(price)})
                 if context.get('uom_qty_change', False):
-                    values = {'price_unit': price}
+                    values = {'price_unit':  round(price)}
                     if result.get('product_uos_qty'):
                         values['product_uos_qty'] = result['product_uos_qty']
                     return {'value': values, 'domain': {}, 'warning': False}
