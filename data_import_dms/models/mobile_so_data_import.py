@@ -396,6 +396,8 @@ class mobile_sale_import(osv.osv):
                     data = cr.fetchall()
                     if data:
                         product_ids = data[0]
+                    else:
+                        raise osv.except_osv(_('Warning!'), _("Please Check Your Product Name '%s'!") % (products_name,))
 #                     product_ids = product_obj.search(cr, uid, [('name', '=', products_name)])
                     if product_ids:
                         product_id = product_ids[0]
