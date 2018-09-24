@@ -96,7 +96,7 @@
             <div class="row mt32 mb32">
                 <div t-if="o.name" class="col-xs-3">
                     <strong>Purchase PR Ref:</strong>
-                    <p t-field="o.pr_ref"/>
+                    <p t-field="o.pr_ref_purchase"/>
                 </div>
                 <div t-if="o.partner_ref" class="col-xs-3">
                     <strong>Your Order Reference</strong>
