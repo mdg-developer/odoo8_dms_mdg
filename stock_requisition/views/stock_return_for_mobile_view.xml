@@ -22,6 +22,7 @@
 								<field name="write_date" />
 								<field name="vehicle_id" />
 								<field name="company_id" />
+								<field name='manual' string ='Is Entry'/>
 							</group>
 						</group>
 						<group>
@@ -39,11 +40,11 @@
 								<page string="Stock List">
 									<field name="p_line">
 										<tree string="Stock Return From Mobile Line" editable="bottom">
-											<field name="product_id" />
+											<field name="product_id" on_change="onchange_product_id(product_id)" />
 											<field name="return_quantity" />
-											<field name="sale_quantity" />
-											<field name="foc_quantity" />
-											<field name="product_uom" />
+											<field name="sale_quantity" groups="base.group_no_one" />
+											<field name="foc_quantity" groups="base.group_no_one" />
+											<field name="product_uom" readonly="1"/>
 										</tree>
 									</field>
 								</page>

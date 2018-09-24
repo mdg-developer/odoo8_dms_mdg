@@ -148,7 +148,7 @@ class cashier_approval(osv.osv):
         'name': fields.char('Txn', size=64, readonly=True),
         'user_id':fields.many2one('res.users', 'Salesman', required=True),
         'sale_team_id':fields.many2one('crm.case.section', 'Sales Team', required=True),
-      'date':fields.date('Date'),
+      'date':fields.date('From Date'),
       'to_date':fields.date('To Date'),
       'cashier_line': fields.one2many('cashier.approval.invoice.line', 'cashier_id', 'Cashier Approval Form', copy=True),
       'ar_line': fields.one2many('cashier.approval.ar.line', 'cashier_id', 'Cashier Approval Form', copy=True),

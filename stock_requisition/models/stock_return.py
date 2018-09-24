@@ -154,6 +154,7 @@ class stock_return(osv.osv):
             for mobile_id in mobile_ids:
                 return_mobile = mobile_obj.browse(cr, uid, mobile_id, context=context)    
                 return_quantity=0
+                manual =return_mobile.manual
                 for mobile_line in return_mobile.p_line:
                     product_id = mobile_line.product_id.id
                     product_cat = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
@@ -303,9 +304,14 @@ class stock_return(osv.osv):
                             else:
                                 in_stock_qty = 0                
                         product_search = stock_return_obj.search(cr, uid, [('product_id', '=', product_id), ('line_id', '=', ids[0])], context=context) 
-                        if product_search:
+                        actual_return_quantity=0
+                        onground_quantity=0
+                        if manual==True:
+                            onground_quantity=return_quantity
+                            actual_return_quantity=return_quantity  
+                        if product_search:                                                                                         
                             # cr.execute("update stock_return_line set receive_quantity=receive_quantity+%s + %s ,return_quantity=%s,sale_quantity=%s,foc_quantity=%s where line_id=%s and product_id=%s", (last_qty,substract_qty,return_quantity, sale_quantity, foc_quantity, ids[0], product_id,))
-                            cr.execute("update stock_return_line set return_quantity=return_quantity + %s,sale_quantity=sale_quantity - %s where line_id=%s and product_id=%s", (return_quantity, sale_quantity, ids[0], product_id,))
+                            cr.execute("update stock_return_line set return_quantity=return_quantity + %s,onground_quantity=onground_quantity + %s,actual_return_quantity=actual_return_quantity + %s,sale_quantity=sale_quantity - %s where line_id=%s and product_id=%s", (return_quantity, onground_quantity,actual_return_quantity,sale_quantity, ids[0], product_id,))
                         else:
                             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
                             sequence = product.sequence
@@ -318,6 +324,8 @@ class stock_return(osv.osv):
                                                       'product_uom': product.product_tmpl_id.uom_id.id,
                                                       'assembly_qty':0,
                                                       'return_quantity':return_quantity,
+                                                       'onground_quantity':onground_quantity,
+                                                       'actual_return_quantity':actual_return_quantity,
                                                       'sale_quantity':-1*sale_quantity,
                                                       'status':'Stock Return',
                                                       # 'foc_quantity':foc_quantity,

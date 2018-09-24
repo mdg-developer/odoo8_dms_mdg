@@ -34,10 +34,12 @@ class stock_return_from_mobile(osv.osv):
                               copy=True),
                'branch_id':fields.many2one('res.branch', 'Branch'),
         'company_id':fields.many2one('res.company', 'Company'),
+        'manual':fields.boolean('Manual'),
 
 }
     _defaults = {
         'state' : 'draft',
+        'manual':False,
     }     
     def manual_data(self, cr, uid, ids, context=None):
         note_obj = self.pool.get('good.issue.note')
@@ -139,6 +141,24 @@ class stock_return_from_mobile(osv.osv):
 class stock_return_from_mobile_line(osv.osv):
     _name = 'stock.return.mobile.line'
     _description = 'Return Line From Mobile'
+    
+    def onchange_product_id(self, cr, uid, ids, product_id, context=None):
+        product_obj = self.pool.get('product.product')
+        uom_id=False
+        if product_id:
+            product_data = product_obj.browse(cr, uid, product_id, context=context)
+            uom_id = product_data.uom_id.id         
+        return {'value': {'product_uom': uom_id}}   
+    
+              
+    def create(self, cr, uid, data, context=None):
+        product=data['product_id']
+        if product:
+            product_data= self.pool.get('product.product').browse(cr, uid, product, context=context)
+            uom_id=product_data.uom_id.id
+            data['product_uom']=uom_id
+        return super(stock_return_from_mobile_line, self).create(cr, uid, data, context=context)    
+    
     _columns = {                
         'line_id':fields.many2one('stock.return.mobile', 'Line', ondelete='cascade', select=True),
         'product_id': fields.many2one('product.product', 'Product', required=True),

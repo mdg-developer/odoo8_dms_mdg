@@ -196,7 +196,7 @@
 										<field name="type" />
 										<field name="cheque_no" />
 										<field name="journal_id" />
-										<field name="amount" />
+										<field name="amount" sum="Payment Total"/>
 										<field name="notes" />
 										<field name="selected" invisible="0" />
 									</form>
@@ -207,7 +207,7 @@
 										<field name="type" />
 										<field name="cheque_no" />
 										<field name="journal_id" />
-										<field name="amount" />
+										<field name="amount" sum="Payment Total"/>
 										<field name="notes" />
 										<field name="selected" invisible="0" readonly="1" />
 									</tree>

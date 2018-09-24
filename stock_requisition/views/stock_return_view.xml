@@ -26,7 +26,7 @@
 							<group>
 								<field name="name" />
 								<field name="sale_team_id" attrs="{'readonly':[('state','=','received')]}"
-									on_change="on_change_sale_team_id(sale_team_id)" widget="selection" />
+									on_change="on_change_sale_team_id(sale_team_id)" />
 								<field name="from_location" readonly="1" />
 								<field name="to_location" readonly="1" />
 								<field name="return_date" attrs="{'readonly':[('state','=','received')]}" />
