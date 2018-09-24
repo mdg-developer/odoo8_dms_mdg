@@ -36,7 +36,7 @@
 								<field name="sale_team_id" attrs="{'readonly':[('state','=','issue')]}"
 									widget="selection" />
 								<field name="to_location_id" readonly="1" />
-								<field name="request_by" readonly="1" widget="selection" />
+								<field name="request_by" readonly="1" />
 								<field name="issue_date" attrs="{'readonly':[('state','=','issue')]}" />
 								<field name="write_date" attrs="{'readonly':[('state','=','issue')]}" />
 								<field name="issue_from_optional_location"/>
@@ -46,7 +46,7 @@
 								<field name="request_id" />
 								<field name="from_location_id" readonly="1" />
 								<field name="vehicle_id" readonly="1" />
-								<field name="approve_by" readonly="1" widget="selection" />
+								<field name="approve_by" readonly="1"/>
 								<field name="issue_by"
 									attrs="{'readonly':[('state','=','issue')],'required':[('state','=','approve')]}" />
 								<field name="receiver"
