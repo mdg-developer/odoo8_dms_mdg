@@ -1227,7 +1227,7 @@ class mobile_sale_order(osv.osv):
        cr.execute('''select CAST(RPAD(pi.id::text, 6, '0')||LPAD(pi.product_tmpl_id::text, 6, '0')||LPAD(rel.product_uom_id::text, 4, '0') AS bigint)as id,pi.price_discount,pi.sequence,pi.product_tmpl_id,pi.name,pp.id base_pricelist_id,
                    pi.product_id,pi.base,pi.price_version_id,pi.min_quantity,
                    pi.categ_id,
-                   ((pi.price_surcharge/floor(1/pi_uom.factor))*(floor(1/uom.factor))) price_surcharge,
+                   round((pi.price_surcharge/floor(1/pi_uom.factor))*(floor(1/uom.factor))) price_surcharge,
                    rel.product_uom_id
                    from product_pricelist_item pi,
                    product_pricelist_version pv,

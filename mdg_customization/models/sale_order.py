@@ -137,9 +137,9 @@ class sale_order_line(osv.osv):
                 warning_msgs += _("No valid pricelist line found ! :") + warn_msg +"\n\n"
             else:
                 price = self.pool['account.tax']._fix_tax_included_price(cr, uid, price, taxes, result['tax_id'])
-                result.update({'price_unit': price})
+                result.update({'price_unit': round(price)})
                 if context.get('uom_qty_change', False):
-                    values = {'price_unit': price}
+                    values = {'price_unit':  round(price)}
                     if result.get('product_uos_qty'):
                         values['product_uos_qty'] = result['product_uos_qty']
                     return {'value': values, 'domain': {}, 'warning': False}
@@ -205,7 +205,7 @@ class stock_picking(osv.osv):
             self._create_backorder(cr, uid, picking, context=context)
             if toassign_move_ids:
                 stock_move_obj.action_assign(cr, uid, toassign_move_ids, context=context)
-            if len(picking.origin) > 0:
+            if picking.origin:
                 so_obj = self.pool.get('sale.order')
                 so_id = so_obj.search(cr, uid, [('name', '=',picking.origin)])
                 if len(so_id) > 0:
