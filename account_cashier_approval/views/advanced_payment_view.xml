@@ -10,7 +10,7 @@
 			<field name="priority" eval="20" />
 			<field name="arch" type="xml">
 				<field name="parent_id" position="after">
-					<field name="team_partner_id"/>
+					<field name="team_partner_id" />
 				</field>
 			</field>
 		</record>
@@ -71,6 +71,44 @@
 							</page>
 
 						</notebook>
+						<notebook>
+							<page string="Cheque" readonly="0">
+								<field name="denomination_cheque_line">
+									<form string="Cheque">
+										<group>
+											<group>
+												<field name="journal_id" string="Bank" />
+												<field name="cheque_no" />
+												<field name="amount" sum="Invoice Total" />
+											</group>
+										</group>
+									</form>
+									<tree string="Cheque" editable="bottom">
+										<field name="journal_id" string="Bank" />
+										<field name="cheque_no" />
+										<field name="amount" sum="Invoice Total" />
+									</tree>
+								</field>
+							</page>
+						</notebook>
+						<notebook>
+							<page string="Bank" readonly="0">
+								<field name="denomination_bank_line">
+									<form string="Bank">
+										<group>
+											<group>
+												<field name="journal_id" string="Bank" />
+												<field name="amount" sum="Invoice Total" />
+											</group>
+										</group>
+									</form>
+									<tree string="Bank" editable="bottom">
+										<field name="journal_id" string="Bank" />
+										<field name="amount" sum="Invoice Total" />
+									</tree>
+								</field>
+							</page>
+						</notebook>
 						<group>
 							<group>
 								<field name="note" class="oe_inline" placeholder="Note..." />
@@ -112,6 +150,7 @@
 				<tree string="Sales Denomination" default_order="name desc">
 					<field name="name" />
 					<field name="date" />
+					<field name="invoice_count" />
 					<field name="sale_team_id" />
 					<field name="user_id" />
 				</tree>
@@ -119,7 +158,7 @@
 		</record>
 
 		<record id="action_manual_sales_denomination_view" model="ir.actions.act_window">
-			<field name="name">Sales Denomination</field>
+			<field name="name">Advanced Receive</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">manual.sales.denomination</field>
 			<field name="view_type">form</field>
@@ -134,7 +173,7 @@
 		</record>
 
 		<menuitem id="manual_sales_denomination" action="action_manual_sales_denomination_view"
-			parent="account.menu_finance_bank_and_cash" name="Advanced Payment"
+			parent="account.menu_finance_bank_and_cash" name="Advanced Receive"
 			sequence="15" />
 	</data>
 </openerp>

@@ -26,7 +26,15 @@ class manual_sale_denomination(osv.osv):
                 note = note_data.notes
                 note=note.replace(',','')
                 qty = note_data.note_qty
-                val1 += (float(note) * float(qty))                           
+                val1 += (float(note) * float(qty))    
+            for line in order.denomination_cheque_line:
+                cheque_data=self.pool.get('manual.sales.denomination.cheque.line').browse(cr, uid, line.id, context=context)
+                cheque_amt = cheque_data.amount
+                val1 += cheque_amt      
+            for line in order.denomination_bank_line:
+                bank_data=self.pool.get('manual.sales.denomination.bank.line').browse(cr, uid, line.id, context=context)
+                bank_amt = bank_data.amount
+                val1 += bank_amt                                                        
             res[order.id]= val1
         return res  
     
@@ -63,8 +71,10 @@ class manual_sale_denomination(osv.osv):
         'sale_team_id':fields.many2one('crm.case.section', 'Sales Team' , required=True),
         'user_id':fields.many2one('res.users', 'Salesman Name'  , required=True, select=True, track_visibility='onchange'),
         'name':fields.char('Txn' , readonly=True),
-        'invoice_count':fields.integer('Invoiced' , readonly=False),
+        'invoice_count':fields.char('Invoiced' , readonly=False),
        'denomination_note_line':fields.one2many('manual.sales.denomination.note.line', 'denomination_note_ids', string='Sale denomination Product Line', copy=True),
+       'denomination_cheque_line':fields.one2many('manual.sales.denomination.cheque.line', 'denomination_cheque_ids', string='Sale denomination Cheque Line', copy=True),
+    'denomination_bank_line':fields.one2many('manual.sales.denomination.bank.line', 'denomination_bank_ids', string='Sale denomination Bank Line', copy=True),       
         'note':fields.text('Note'),    
       'partner_id':fields.many2one('res.partner', string='Partner'),
     'total_amount':fields.function(_deno_amount, string='Denomination Total', digits_compute=dp.get_precision('Product Price'),type='float'),
@@ -125,4 +135,32 @@ class manual_sale_denomination_note_line(osv.osv):
     _defaults = {
         'amount': 0.0,
         }   
-manual_sale_denomination_note_line()       
+manual_sale_denomination_note_line()   
+    
+class manual_sale_denomination_cheque_line(osv.osv):    
+    _name = 'manual.sales.denomination.cheque.line'
+    
+    _columns = {
+                'denomination_cheque_ids': fields.many2one('manual.sales.denomination', 'Sales Denomination'),
+                'cheque_no':fields.char('Cheque No', required=True),
+                'amount':fields.float('Total', digits_compute=dp.get_precision('Product Price')),
+                'journal_id':fields.many2one('account.journal', "Journal"),
+                }
+    _defaults = {
+        'amount': 0.0,
+        }   
+    
+manual_sale_denomination_cheque_line()    
+class manual_sale_denomination_bank_line(osv.osv):    
+    _name = 'manual.sales.denomination.bank.line'
+    
+    _columns = {
+                'denomination_bank_ids': fields.many2one('manual.sales.denomination', 'Sales Denomination'),
+                'amount':fields.float('Total', digits_compute=dp.get_precision('Product Price')),
+                'journal_id':fields.many2one('account.journal', "Journal"),
+                }
+    _defaults = {
+        'amount': 0.0,
+        }   
+    
+manual_sale_denomination_bank_line()    

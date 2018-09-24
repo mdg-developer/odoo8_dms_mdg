@@ -41,8 +41,9 @@
 								</group>
 							</group>
 							<group>
-								<field name="account_id" domain="[('type','&lt;&gt;','view')]" class="oe_inline"/>
-								<field name="journal_id"  class="oe_inline"/>
+								<field name="account_id" domain="[('type','&lt;&gt;','view')]"
+									class="oe_inline" />
+								<field name="journal_id" class="oe_inline" />
 							</group>
 							<group>
 								<button name="action_generate" string="Show"
@@ -159,6 +160,14 @@
 										<label string="Denomination Total" class="oe_inline" />
 
 										<field name="denomaination_total" nolabel="1" class="oe_inline" />
+										<label string="Cheque Total" class="oe_inline" />
+
+										<field name="cheque_total" nolabel="1" class="oe_inline" />
+										<label string="Bank Total" class="oe_inline" />
+										<field name="bank_total" nolabel="1" class="oe_inline" />
+										<label string="Grand Total" class="oe_inline" />
+
+										<field name="grand_total" nolabel="1" class="oe_inline" />
 										<label string="Different Amount" class="oe_inline" />
 
 										<field name="sign_diff_amount" nolabel="1" class="oe_inline" />
@@ -193,8 +202,28 @@
 										<field name="denomination_sub_total" nolabel="1" class="oe_inline" />
 									</group>
 								</group>
-
-
+								<field name="cheque_line" attrs="{'readonly':[('state','=','done')]}">
+									<form string="Cheque Lines">
+										<field name="journal_id" />
+										<field name="cheque_no" />
+										<field name="amount" />
+									</form>
+									<tree string="Cheque Lines" editable="bottom">
+										<field name="journal_id" />
+										<field name="cheque_no" />
+										<field name="amount" sum="Cheque Total" />
+									</tree>
+								</field>
+								<field name="bank_line" attrs="{'readonly':[('state','=','done')]}">
+									<form string="Bank Lines">
+										<field name="journal_id" />
+										<field name="amount" />
+									</form>
+									<tree string="Bank Lines" editable="bottom">
+										<field name="journal_id" />
+										<field name="amount" sum="Bank Total" />
+									</tree>
+								</field>
 							</page>
 
 							<page string="Payment">
@@ -206,7 +235,7 @@
 										<field name="type" />
 										<field name="cheque_no" />
 										<field name="journal_id" />
-										<field name="amount" />
+										<field name="amount" sum="Payment Total" />
 										<field name="notes" />
 										<field name="selected" invisible="0" />
 									</form>
@@ -217,7 +246,7 @@
 										<field name="type" />
 										<field name="cheque_no" />
 										<field name="journal_id" />
-										<field name="amount" />
+										<field name="amount" sum="Payment Total" />
 										<field name="notes" />
 										<field name="selected" invisible="0" readonly="1" />
 									</tree>

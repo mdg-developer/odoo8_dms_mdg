@@ -90,7 +90,7 @@ class manual_cashier_approval(osv.osv):
             val = val1 = 0.0            
             for line in order.denomination_line:
                 val1 += line.notes * line.note_qty
-            cr.execute("""update manual_cashier_approval set denomination_sub_total=%s,denomaination_total=%s where id=%s  """, (val1,val1, ids[0],))                 
+            cr.execute("""update manual_cashier_approval set denomination_sub_total=%s,denomaination_total=%s where id=%s  """, (val1, val1, ids[0],))                 
             res[order.id]['denomination_sub_total'] = round(val1)  # cur_obj.round(cr, uid, cur, val1)
         return res
     
@@ -103,7 +103,7 @@ class manual_cashier_approval(osv.osv):
             }
             val = val1 = 0.0 
             val1 += (order.cash_sub_total + order.ar_sub_total) - order.cr_sub_total 
-            #cr.execute("""update manual_cashier_approval set total=%s where id=%s""", (val1, ids[0],))       
+            # cr.execute("""update manual_cashier_approval set total=%s where id=%s""", (val1, ids[0],))       
             res[order.id]['total'] = round(val1)  # cur_obj.round(cr, uid, cur, val1)
         return res     
      
@@ -111,9 +111,9 @@ class manual_cashier_approval(osv.osv):
         cur_obj = self.pool.get('res.currency')
         res = {}
 
-        denomination=self._amount_denomination_all(cr, uid, ids, ['denomination_sub_total'], None, context)
+        denomination = self._amount_denomination_all(cr, uid, ids, ['denomination_sub_total'], None, context)
         for k, denomination_sub_total in denomination.iteritems():
-            denomination_sub_total=denomination_sub_total['denomination_sub_total']
+            denomination_sub_total = denomination_sub_total['denomination_sub_total']
         for order in self.browse(cr, uid, ids, context=context):
             res[order.id] = {                
                 'denomaination_total': 0.0,
@@ -122,7 +122,57 @@ class manual_cashier_approval(osv.osv):
             val1 += order.denomination_sub_total 
             res[order.id]['denomaination_total'] = round(denomination_sub_total)  
         return res     
-  
+    
+    def _amount_cheque_total(self, cr, uid, ids, field_name, arg, context=None):
+        cur_obj = self.pool.get('res.currency')
+        res = {}
+        for order in self.browse(cr, uid, ids, context=context):
+            res[order.id] = {                
+                'cheque_total': 0.0,
+            }
+            val = val1 = 0.0            
+            for line in order.cheque_line:
+                val1 += line.amount
+            cr.execute("""update manual_cashier_approval set cheque_total=%s where id=%s""", (val1, ids[0],))                 
+            res[order.id]['cheque_total'] = round(val1)  # cur_obj.round(cr, uid, cur, val1)
+        return res   
+    
+    def _amount_bank_total(self, cr, uid, ids, field_name, arg, context=None):
+        cur_obj = self.pool.get('res.currency')
+        res = {}
+        for order in self.browse(cr, uid, ids, context=context):
+            res[order.id] = {                
+                'bank_total': 0.0,
+            }
+            val = val1 = 0.0            
+            for line in order.bank_line:
+                val1 += line.amount
+            cr.execute("""update manual_cashier_approval set bank_total=%s where id=%s""", (val1, ids[0],))                 
+            res[order.id]['bank_total'] = round(val1)  # cur_obj.round(cr, uid, cur, val1)
+        return res 
+    
+          
+    def _amount_grand_total(self, cr, uid, ids, field_name, arg, context=None):
+        cur_obj = self.pool.get('res.currency')
+        res = {}
+        for order in self.browse(cr, uid, ids, context=context):
+            res[order.id] = {                
+                'grand_total': 0.0,
+            }
+            denomination_sub_total = self._amount_denomination_all(cr, uid, ids, field_name, None, context)
+            cheque_total = self._amount_cheque_total(cr, uid, ids, field_name, None, context)   
+            bank_total = self._amount_bank_total(cr, uid, ids, field_name, None, context)
+            for k, denomination_sub_total in denomination_sub_total.iteritems():
+                denomination_sub_total = denomination_sub_total['denomination_sub_total']
+            for k, cheque_total in cheque_total.iteritems():
+                cheque_total = cheque_total['cheque_total']
+            for k, bank_total in bank_total.iteritems():
+                bank_total = bank_total['bank_total']                                
+            val1 = denomination_sub_total + cheque_total + bank_total
+            cr.execute("""update manual_cashier_approval set grand_total=%s where id=%s""", (val1, ids[0],))                 
+            res[order.id]['grand_total'] = round(val1)  # cur_obj.round(cr, uid, cur, val1)
+        return res         
+    
     def _get_order(self, cr, uid, ids, context=None):
         result = {}
         for line in self.pool.get('manual.cashier.approval.invoice.line').browse(cr, uid, ids, context=context):
@@ -132,6 +182,7 @@ class manual_cashier_approval(osv.osv):
         self._amount_total_all(cr, uid, ids, ['total'], None, context)
         self._amount_denomination_all(cr, uid, ids, ['denomination_sub_total'], None, context)
         self._amount_ar_all(cr, uid, ids, ['ar_sub_total'], None, context)
+        self._amount_grand_total(cr, uid, ids, ['grand_total'], None, context)
         self._amount_denomination_total(cr, uid, ids, ['denomaination_total'], None, context)
         self._get_plusorminus_diff_amount(cr, uid, ids, ['sign_diff_amount'], None, context)
         return True    
@@ -168,19 +219,19 @@ class manual_cashier_approval(osv.osv):
         if context is None:
             context = {}                
              
-        val1=0.0
+        val1 = 0.0
         sign = ""
-        denomination_sub_total=self._amount_denomination_all(cr, uid, ids,field_name, None, context)
-        total=self._amount_total_all(cr, uid, ids, field_name, None, context)
-        denomination=self._amount_denomination_total(cr, uid, ids, field_name, None, context)
-        
-        for k, denomination_sub_total in denomination_sub_total.iteritems():
-            denomination_sub_total=denomination_sub_total['denomination_sub_total']
+        denomination_sub_total = self._amount_denomination_all(cr, uid, ids, field_name, None, context)
+        total = self._amount_total_all(cr, uid, ids, field_name, None, context)
+        denomination = self._amount_denomination_total(cr, uid, ids, field_name, None, context)
+        grand_total = self._amount_grand_total(cr, uid, ids, field_name, None, context)
+        for k, grand_total in grand_total.iteritems():
+            grand_total = grand_total['grand_total']
         for k, total in total.iteritems():
-            total=total['total']
+            total = total['total']
         for order in self.browse(cr, uid, ids, context=context):
 
-            val1=total-denomination_sub_total
+            val1 = total - grand_total
             cr.execute("""update manual_cashier_approval set diff_amount=%s where id=%s""", (val1, ids[0],))       
             sign = str(val1)
             if val1 > 0:
@@ -191,7 +242,7 @@ class manual_cashier_approval(osv.osv):
            
                 sign = "(Surplus) " + str(val1)
                                       
-            res[order.id]= sign 
+            res[order.id] = sign 
         return res  
     
     def _get_diff_amount(self, cr, uid, ids, field_name, arg, context=None):
@@ -199,11 +250,11 @@ class manual_cashier_approval(osv.osv):
         if context is None:
             context = {}                
              
-        val1=0.0
+        val1 = 0.0
         sign = ""
         for order in self.browse(cr, uid, ids, context=context):
-            val1=order.total-order.denomaination_total
-            res[order.id]= val1 
+            val1 = order.total - order.grand_total
+            res[order.id] = val1 
         return res      
         
     _columns = {
@@ -212,12 +263,16 @@ class manual_cashier_approval(osv.osv):
         'sale_team_id':fields.many2one('crm.case.section', 'Sales Team', required=True),
         'account_id': fields.many2one('account.account', 'Control Account' , required=False),
         'journal_id': fields.many2one('account.journal', 'Journal' , required=False),
-      'date':fields.date('Date'),
+      'date':fields.date('From Date'),
       'to_date':fields.date('To Date'),
       'cashier_line': fields.one2many('manual.cashier.approval.invoice.line', 'cashier_id', 'Cashier Approval Form', copy=True),
       'ar_line': fields.one2many('manual.cashier.approval.ar.line', 'cashier_id', 'Cashier Approval Form', copy=True),
       'credit_line': fields.one2many('manual.cashier.approval.credit.line', 'cashier_id', 'Cashier Approval Form', copy=True),
       'denomination_line': fields.one2many('manual.cashier.denomination.line', 'cashier_id', 'Cashier Approval Form', copy=True),
+      'cheque_line': fields.one2many('manual.cashier.cheque.line', 'cashier_id', 'Cashier Approval Form', copy=True),
+      'bank_line': fields.one2many('manual.cashier.bank.line', 'cashier_id', 'Cashier Approval Form', copy=True),
+
+      
       'denomination_product_line': fields.one2many('manual.cashier.denomination.product.line', 'cashier_id', 'Cashier Approval Form', copy=True),
       'cashier_customer_payment_line': fields.one2many('manual.cashier.customer.payment', 'cashier_id', 'Cashier Approval Form', copy=True),
       'cash_sub_total': fields.function(_amount_cash, digits_compute=dp.get_precision('Account'), string='SubTotal',
@@ -251,11 +306,18 @@ class manual_cashier_approval(osv.osv):
         'confirm_by':fields.many2one('res.users', 'Confirm By'),
         'approve_by':fields.many2one('res.users', 'Approve By'),
         'confirm_date':fields.datetime('Confirm Date'),
-        'approve_date':fields.datetime('Approve Date'), 
+        'approve_date':fields.datetime('Approve Date'),
        'denomaination_total': fields.function(_amount_denomination_total, digits_compute=dp.get_precision('Account'), string='Denomination Total',
-            multi='sums', help="The deno total amount.",store=True),        
+            multi='sums', help="The deno total amount.", store=True),
+       'cheque_total': fields.function(_amount_cheque_total, digits_compute=dp.get_precision('Account'), string='Denomination Total',
+            multi='sums', help="The deno total amount.", store=True),    
+       'bank_total': fields.function(_amount_bank_total, digits_compute=dp.get_precision('Account'), string='Denomination Total',
+            multi='sums', help="The deno total amount.", store=True),      
+       'grand_total': fields.function(_amount_grand_total, digits_compute=dp.get_precision('Account'), string='Denomination Total',
+            multi='sums', help="The deno total amount.", store=True),                      
+                                      
     'sign_diff_amount': fields.function(_get_plusorminus_diff_amount, string="Difference Amount", type="char"),
-    'diff_amount': fields.function(_get_diff_amount, string="Difference Amount", type="float",store=True),
+    'diff_amount': fields.function(_get_diff_amount, string="Difference Amount", type="float", store=True),
         }
     
     
@@ -310,7 +372,7 @@ class manual_cashier_approval(osv.osv):
                 raise osv.except_osv(_('Warning'),
                                      _('Please Select At Lease One Record.'))      
         self.button_dummy(cr, uid, ids, context=context)                
-        self.write(cr, uid, ids, {'state':'pending', 'confirm_by':uid,'confirm_date':datetime.datetime.now()}, context=context)
+        self.write(cr, uid, ids, {'state':'pending', 'confirm_by':uid, 'confirm_date':datetime.datetime.now()}, context=context)
         return True   
      
     def set_to_draft(self, cr, uid, ids, context=None):
@@ -351,7 +413,7 @@ class manual_cashier_approval(osv.osv):
                                      _('Please Select At Lease One Record.'))   
             self.create_journal_ms(cr, uid, ids, context)
             self.create_journal_account_move(cr, uid, ids, context)
-        self.write(cr, uid, ids, {'state':'done', 'approve_by':uid,'approve_date':datetime.datetime.now()}, context=context)
+        self.write(cr, uid, ids, {'state':'done', 'approve_by':uid, 'approve_date':datetime.datetime.now()}, context=context)
         return True   
     
     def create_journal_ms(self, cr, uid, ids, context=None):
@@ -369,7 +431,7 @@ class manual_cashier_approval(osv.osv):
                 invoice = invoiceObj.browse(cr, uid, inv_id, context=context)
                 partner_id = invoice.partner_id.id
                 period_id = invoice.period_id.id
-                payment_type=invoice.payment_type
+                payment_type = invoice.payment_type
                 if payment[7] is None:
                     invoice_num = invoice.number
                 else:
@@ -402,7 +464,7 @@ class manual_cashier_approval(osv.osv):
                 if voucherId:
                     vlist = []
                     vlist.append(voucherId)
-                    if payment_type !='credit':
+                    if payment_type != 'credit':
                         cr.execute ("select account_id,credit+debit as amount_total,id,reconcile_partial_id  from  account_move_line where move_id=%s and name='/'  and reconcile_id is null  order by credit+debit", (invoice.move_id.id,)) 
                         move_line_data = cr.fetchall()    
                     else:
@@ -480,23 +542,23 @@ class manual_cashier_approval(osv.osv):
         move_Obj = self.pool.get('account.move')
 
         if ids:
-            approval_data=self.browse(cr, uid, ids, context=context)
-            partner_id=approval_data.sale_team_id.team_partner_id.id
-            control_account_id=approval_data.account_id.id
-            cash_account_id=approval_data.journal_id.default_credit_account_id.id
-            journal_id=approval_data.journal_id.id
-            date=approval_data.date
-            amount=approval_data.diff_amount
-            name=approval_data.name
-            branch_id=approval_data.branch_id.id
-            company_id=approval_data.create_uid.company_id.id
+            approval_data = self.browse(cr, uid, ids, context=context)
+            partner_id = approval_data.sale_team_id.team_partner_id.id
+            control_account_id = approval_data.account_id.id
+            cash_account_id = approval_data.journal_id.default_credit_account_id.id
+            journal_id = approval_data.journal_id.id
+            date = approval_data.date
+            amount = approval_data.diff_amount
+            name = approval_data.name
+            branch_id = approval_data.branch_id.id
+            company_id = approval_data.create_uid.company_id.id
             
        
                 
-        if journal_id is not None and amount!=0:
+        if journal_id is not None and amount != 0:
              
-            cr.execute("select * from account_period where %s >=date_start and %s <=date_stop",(date,date,))         
-            period_id=cr.fetchone()[0]
+            cr.execute("select * from account_period where %s >=date_start and %s <=date_stop", (date, date,))         
+            period_id = cr.fetchone()[0]
             account_move = {
                             'journal_id': journal_id,
                             'state': 'draft',
@@ -509,31 +571,31 @@ class manual_cashier_approval(osv.osv):
                             }
             move_id = move_Obj.create(cr, uid, account_move, context=context)
             #  move_Obj.write(cr, uid,{'partner_id': partner_id,'ref':name},context=context)
-            cr.execute("update account_move set partner_id=%s,ref=%s where id=%s",(partner_id,name,move_id,))
+            cr.execute("update account_move set partner_id=%s,ref=%s where id=%s", (partner_id, name, move_id,))
 
             cr_account = dr_account = None                                           
             dr_account = control_account_id
             cr_account = cash_account_id      
-            if amount <0 :
-                amount=-1*amount;    
+            if amount < 0 :
+                amount = -1 * amount;    
                 
                 cr.execute("""insert into account_move_line (partner_id,name,account_id,date_maturity,move_id,credit,debit,journal_id,date,company_id,period_id) 
                 values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s),
-                      (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""", 
-                      (partner_id, name , cr_account, date, move_id, 0.0,amount, journal_id, date,company_id,period_id,
-                      partner_id,name, dr_account, date, move_id, amount, 0.0, journal_id, date, company_id,period_id,))
+                      (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
+                      (partner_id, name , cr_account, date, move_id, 0.0, amount, journal_id, date, company_id, period_id,
+                      partner_id, name, dr_account, date, move_id, amount, 0.0, journal_id, date, company_id, period_id,))
  
             else:
 
                 cr.execute("""insert into account_move_line (partner_id,name,account_id,date_maturity,move_id,credit,debit,journal_id,date,company_id,period_id) 
                 values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s),
-                      (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""", 
-                      (partner_id, name , dr_account, date, move_id, 0.0,amount, journal_id, date,company_id,period_id,
-                      partner_id,name, cr_account, date, move_id, amount, 0.0, journal_id, date, company_id,period_id,))
+                      (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
+                      (partner_id, name , dr_account, date, move_id, 0.0, amount, journal_id, date, company_id, period_id,
+                      partner_id, name, cr_account, date, move_id, amount, 0.0, journal_id, date, company_id, period_id,))
  
                          
             cr.execute("""UPDATE account_move as m set state='posted' where m.id=%s                            
-                            """,(move_id,))    
+                            """, (move_id,))    
 
     def action_generate(self, cr, uid, ids, context=None):
         cr.execute("""delete from manual_cashier_approval_invoice_line where cashier_id=%s""", (ids[0],))
@@ -586,7 +648,10 @@ class manual_cashier_approval(osv.osv):
             
             self.generte_ar(cr, uid, ids, context=context)
             self.generte_cr(cr, uid, ids, context=context) 
-            self.generate_denomination(cr, uid, ids, context=context)   
+            self.generate_denomination(cr, uid, ids, context=context)  
+            self.generate_cheque(cr, uid, ids, context=context)  
+            self.generate_bank(cr, uid, ids, context=context)  
+             
           #  self.generate_denomination_product(cr, uid, ids, context=context)
             self.generate_payment(cr, uid, ids, context=context)
 #            self.generate_payment_pre_so(cr, uid, ids, context=context)     
@@ -724,6 +789,87 @@ class manual_cashier_approval(osv.osv):
             self._amount_denomination_all(cr, uid, ids, ['denomination_sub_total'], None, context)
         return result
     
+    def generate_cheque(self, cr, uid, ids, context=None):
+        cr.execute("""delete from manual_cashier_cheque_line where cashier_id=%s""", (ids[0],))
+        result = {}
+        manual_cashier_approval_obj = self.pool.get('manual.cashier.approval')
+        invoice_line_obj = self.pool.get('manual.cashier.cheque.line') 
+        datas = manual_cashier_approval_obj.read(cr, uid, ids, ['date', 'to_date', 'user_id', 'sale_team_id'], context=None)
+        frm_date = to_date = user_id = None            
+        if datas:
+            for data in datas:
+                frm_date = data['date']
+                to_date = data['to_date']
+                user_id = data['user_id'][0]
+                team_id = data['sale_team_id'][0]
+            if to_date:
+                cr.execute("""select * from 
+                (select journal_id,cheque_no,sum(n.amount) from manual_sales_denomination d,manual_sales_denomination_cheque_line n
+                where d.id = n.denomination_cheque_ids and d.sale_team_id=%s and d.user_id=%s and date::date >=%s and date::date<=%s
+                group by journal_id,cheque_no)A
+                order by journal_id desc
+                """, (team_id, user_id, frm_date, to_date,))
+            else:
+                cr.execute(""" select * from
+                (select journal_id,cheque_no,sum(n.amount)  from  manual_sales_denomination d,manual_sales_denomination_cheque_line n
+                where d.id = n.denomination_cheque_ids and d.sale_team_id=%s and d.user_id=%s and date::date=%s 
+                group by journal_id,cheque_no)A
+                order by journal_id desc
+                """, (team_id, user_id, frm_date,))
+            vals = cr.fetchall()           
+        for val in vals:
+            data_id = {'journal_id':val[0],
+                    'cheque_no': val[1],
+                    'amount':val[2],
+                     'cashier_id':ids[0],
+                    }
+            inv_id = invoice_line_obj.create(cr, uid, data_id, context=context)
+            for details in self.browse(cr, uid, ids, context=context):
+                
+                result[details.id] = inv_id
+            self._amount_cheque_total(cr, uid, ids, ['cheque_total'], None, context)
+        return result   
+     
+    def generate_bank(self, cr, uid, ids, context=None):
+        cr.execute("""delete from manual_cashier_bank_line where cashier_id=%s""", (ids[0],))
+        result = {}
+        manual_cashier_approval_obj = self.pool.get('manual.cashier.approval')
+        invoice_line_obj = self.pool.get('manual.cashier.bank.line') 
+        datas = manual_cashier_approval_obj.read(cr, uid, ids, ['date', 'to_date', 'user_id', 'sale_team_id'], context=None)
+        frm_date = to_date = user_id = None            
+        if datas:
+            for data in datas:
+                frm_date = data['date']
+                to_date = data['to_date']
+                user_id = data['user_id'][0]
+                team_id = data['sale_team_id'][0]
+            if to_date:
+                cr.execute("""select * from 
+                (select journal_id,sum(n.amount) from manual_sales_denomination d,manual_sales_denomination_bank_line n
+                where d.id = n.denomination_bank_ids and d.sale_team_id=%s and d.user_id=%s and date::date >=%s and date::date<=%s
+                group by journal_id)A
+                order by journal_id desc
+                """, (team_id, user_id, frm_date, to_date,))
+            else:
+                cr.execute(""" select * from
+                (select journal_id,sum(n.amount)  from  manual_sales_denomination d,manual_sales_denomination_bank_line n
+                where d.id = n.denomination_bank_ids and d.sale_team_id=%s and d.user_id=%s and date::date=%s 
+                group by journal_id)A
+                order by journal_id desc
+                """, (team_id, user_id, frm_date,))
+            vals = cr.fetchall()           
+        for val in vals:
+            data_id = {'journal_id':val[0],
+                    'amount':val[1],
+                     'cashier_id':ids[0],
+                    }
+            inv_id = invoice_line_obj.create(cr, uid, data_id, context=context)
+            for details in self.browse(cr, uid, ids, context=context):
+                result[details.id] = inv_id
+            self._amount_bank_total(cr, uid, ids, ['bank_total'], None, context)
+            self._amount_grand_total(cr, uid, ids, ['grand_total'], None, context)
+        return result     
+    
     def generate_denomination_product(self, cr, uid, ids, context=None):
         cr.execute("""delete from cashier_denomination_product_line where cashier_id=%s""", (ids[0],))
         result = {}
@@ -843,13 +989,13 @@ class manual_cashier_approval(osv.osv):
                 to_date = data['to_date']
                 user_id = data['user_id'][0]
                 team_id = data['sale_team_id'][0]
-            invoice_data=manual_cashier_approval_obj.browse(cr, uid, ids, context=context)
+            invoice_data = manual_cashier_approval_obj.browse(cr, uid, ids, context=context)
             for invoice_line in invoice_data.cashier_line:
                 
 
                 cr.execute("""select (select id from account_journal where type ='cash' and is_tablet=True limit 1 ) as journal_id,a.residual,a.payment_type,a.partner_id,a.date_invoice,a.period_id,a.account_id,a.number,a.id from account_invoice a 
                 where  a.user_id=%s  and a.section_id=%s   and a.id=%s
-                """, ( user_id, team_id,invoice_line.invoice_id.id,))
+                """, (user_id, team_id, invoice_line.invoice_id.id,))
                 vals = cr.fetchall()           
             
                 for val in vals:
@@ -1080,3 +1226,31 @@ class manual_cashier_customer_payment(osv.osv):
         return {'value': values}    
         
 manual_cashier_customer_payment()
+
+class manual_cashier_cheque_line(osv.osv):    
+    _name = 'manual.cashier.cheque.line'
+    
+    _columns = {
+              'cashier_id':fields.many2one('manual.cashier.approval', 'Cashier Approval'),
+                'cheque_no':fields.char('Cheque No', required=True),
+                'amount':fields.float('Total', digits_compute=dp.get_precision('Product Price')),
+                'journal_id':fields.many2one('account.journal', "Journal"),
+                }
+    _defaults = {
+        'amount': 0.0,
+        }   
+    
+manual_cashier_cheque_line()    
+class manual_cashier_bank_line(osv.osv):    
+    _name = 'manual.cashier.bank.line'
+    
+    _columns = {
+              'cashier_id':fields.many2one('manual.cashier.approval', 'Cashier Approval'),
+                'amount':fields.float('Total', digits_compute=dp.get_precision('Product Price')),
+                'journal_id':fields.many2one('account.journal', "Journal"),
+                }
+    _defaults = {
+        'amount': 0.0,
+        }   
+    
+manual_cashier_bank_line()   
