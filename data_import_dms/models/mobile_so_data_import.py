@@ -404,6 +404,7 @@ class mobile_sale_import(osv.osv):
                             uom_ids = productObj.uom_id.id
                             
                         
+<<<<<<< HEAD
                     if void.lower() == "" and void.lower() == "unvoid": 
                         _state = "draft"
                     elif void.lower() == "void":
@@ -412,6 +413,44 @@ class mobile_sale_import(osv.osv):
                         _state = "draft"
                      
                      
+=======
+                if section_name:
+                    cr.execute(""" select id from crm_case_section where lower(name) =%s """, (section_name.lower(),))
+                    data = cr.fetchall()
+                    if data:
+                        section_ids = data[0]
+#                     section_ids = section_obj.search(cr, uid, [('name', '=', section_name)])
+                    if section_ids:
+                        section_id = section_ids[0]
+                        secObj = section_obj.browse(cr, uid, section_id, context=None)
+                if secObj:
+                    warehouse_id = secObj.warehouse_id.id       
+                if payment_term_name:
+                    cr.execute(""" select id from account_payment_term where lower(name) = %s """, (payment_term_name.lower(),))
+                    data = cr.fetchall()
+                    if data:
+                        payment_term_ids = data[0]
+#                     payment_term_ids = payment_term_obj.search(cr, uid, [('name', '=', payment_term_name)])
+                    if payment_term_ids:
+                        payment_term_id = payment_term_ids[0]
+                if payment_term_id:
+                    cr.execute(""" select days from account_payment_term_line where payment_id=%s""", (payment_term_id,))
+                    data = cr.fetchall()
+                    if data:
+                        numberOfDays = data[0][0]
+                if products_name:
+                    cr.execute(""" select id from product_product where lower(name_template) = %s """, (products_name.lower(),))
+                    data = cr.fetchall()
+                    if data:
+                        product_ids = data[0]
+                    else:
+                        raise osv.except_osv(_('Warning!'), _("Please Check Your Product Name '%s'!") % (products_name,))
+#                     product_ids = product_obj.search(cr, uid, [('name', '=', products_name)])
+                    if product_ids:
+                        product_id = product_ids[0]
+                        productObj = product_obj.browse(cr, uid, product_id, context=None)
+                        uom_ids = productObj.uom_id.id
+>>>>>>> 116d1741bd1545505d1374518ef3e28ab7d65494
                         
                     if deduct_amt == "":
                         deduct_amt = 0
