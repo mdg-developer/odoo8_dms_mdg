@@ -845,22 +845,23 @@ class manual_cashier_approval(osv.osv):
                 team_id = data['sale_team_id'][0]
             if to_date:
                 cr.execute("""select * from 
-                (select journal_id,sum(n.amount) from manual_sales_denomination d,manual_sales_denomination_bank_line n
+                (select journal_id,sum(n.amount),txn_no from manual_sales_denomination d,manual_sales_denomination_bank_line n
                 where d.id = n.denomination_bank_ids and d.sale_team_id=%s and d.user_id=%s and date::date >=%s and date::date<=%s
-                group by journal_id)A
+                group by journal_id,txn_no)A
                 order by journal_id desc
                 """, (team_id, user_id, frm_date, to_date,))
             else:
                 cr.execute(""" select * from
-                (select journal_id,sum(n.amount)  from  manual_sales_denomination d,manual_sales_denomination_bank_line n
+                (select journal_id,sum(n.amount),txn_no  from  manual_sales_denomination d,manual_sales_denomination_bank_line n
                 where d.id = n.denomination_bank_ids and d.sale_team_id=%s and d.user_id=%s and date::date=%s 
-                group by journal_id)A
+                group by journal_id,txn_no)A
                 order by journal_id desc
                 """, (team_id, user_id, frm_date,))
             vals = cr.fetchall()           
         for val in vals:
             data_id = {'journal_id':val[0],
                     'amount':val[1],
+                    'txn_no':val[2],
                      'cashier_id':ids[0],
                     }
             inv_id = invoice_line_obj.create(cr, uid, data_id, context=context)
@@ -1245,6 +1246,7 @@ class manual_cashier_bank_line(osv.osv):
     _name = 'manual.cashier.bank.line'
     
     _columns = {
+             'txn_no':fields.char('Txn No.', required=False),
               'cashier_id':fields.many2one('manual.cashier.approval', 'Cashier Approval'),
                 'amount':fields.float('Total', digits_compute=dp.get_precision('Product Price')),
                 'journal_id':fields.many2one('account.journal', "Journal"),

@@ -1,0 +1,482 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<template id="report_advanced_receive_document">
+			<t t-call="account_cashier_approval.custom_layout">
+				<div class="page" style="font-size:10pt;">
+					<table border="0" cellspacing="0" cellpadding="0" width="100%">
+						<tbody>
+							<tr>
+								<td>
+									<center>
+										<table width="100%" border="0" cellspacing="0"
+											cellpadding="0"
+											style="padding:0px 20px 20px 20px; margin:0; font-family: Arial,Helvetica, sans-serif;line-height: .1;">
+											<tr>
+												<td valign="top" align="left"
+													style="padding:15px; width:50%; line-height:18px;">
+													<h4 align="center">
+														<strong>MDG Co.,Ltd</strong>
+													</h4>
+													<h4 align="center">
+														<strong>Advance Receive Report</strong>
+													</h4>
+
+													<table class="table table-condensed">
+														<tr>
+															<td style="border:0pt;font-size:10pt;">
+																<strong>Sales Group :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong t-field="o.sale_team_id.name"></strong>
+															</td>
+															<td style="border:0pt;font-size:8pt;">
+																<strong>Date :</strong>
+															</td>
+															<td style="border:0pt;font-size:8pt;">
+																<strong t-field="o.date"></strong>
+															</td>
+
+														</tr>
+
+														<tr>
+															<td style="border:0pt;font-size:10pt;">
+																<strong>Name :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong t-field="o.user_id.name" />
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong>Branch :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong t-field="o.branch_id.name"></strong>
+															</td>
+
+														</tr>
+
+														<tr>
+															<td style="border:0pt;font-size:10pt;">
+																<strong>Receive From :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong t-field="o.receive_from" />
+															</td>
+														</tr>
+														<tr>
+															<td style="border:0pt;font-size:8pt;">
+																<strong>Last Updated On :</strong>
+															</td>
+															<td style="border:0pt;font-size:8pt;">
+																<strong t-field="o.write_date" />
+															</td>
+															<td style="border:0pt;font-size:8pt;">
+																<strong>Last Updated By :</strong>
+															</td>
+															<td style="border:0pt;font-size:8pt;">
+																<strong t-field="o.write_uid" />
+															</td>
+														</tr>
+														<table t-if="o.denomination_note_line" class="table table-condensed"
+															style="border:1pt solid;">
+															<h6 align="rignt">
+																<span class="text-right">
+																	<U>
+																		<b>Cash Denomination</b>
+																	</U>
+																</span>
+															</h6>
+															<thead>
+																<tr>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Notes</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Total</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Remark</th>
+																</tr>
+															</thead>
+															<tbody class="invoice_tbody">
+																<tr t-foreach="o.denomination_note_line" t-as="l">
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="l.notes" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="l.note_qty" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="right">
+																		<span t-field="l.amount" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center"></td>
+																</tr>
+															</tbody>
+														</table>
+
+
+
+														<table t-if="o.denomination_cheque_line" class="table table-condensed"
+															style="border:1pt solid;">
+															<h6 align="rignt">
+																<span class="text-right">
+																	<U>
+																		<b>Cheque</b>
+																	</U>
+																</span>
+															</h6>
+															<thead>
+																<tr>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Bank</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Cheque No</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Total</th>
+																</tr>
+															</thead>
+															<tbody class="invoice_tbody">
+																<tr t-foreach="o.denomination_cheque_line" t-as="c">
+
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="c.journal_id" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="c.cheque_no" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="right">
+																		<span t-field="c.amount" />
+																	</td>
+
+																</tr>
+															</tbody>
+
+														</table>
+
+														<table t-if="o.denomination_bank_line" class="table table-condensed"
+															style="border:1pt solid;">
+															<h6 align="rignt">
+																<span class="text-right">
+																	<U>
+																		<b>Bank</b>
+																	</U>
+																</span>
+															</h6>
+															<thead>
+																<tr>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Bank</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Tax No.</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Total</th>
+																</tr>
+															</thead>
+															<tbody class="invoice_tbody">
+																<tr t-foreach="o.denomination_bank_line" t-as="c">
+
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="c.journal_id" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="c.txn_no" />
+																	</td>
+
+																	<td style="border:1pt solid;border-color:black;"
+																		align="right">
+																		<span t-field="c.amount" />
+																	</td>
+
+																</tr>
+
+															</tbody>
+
+
+														</table>
+														<h5 align="right">
+															<b>
+																<span>Amount Total :</span>
+																<span t-field="o.total_amount" />
+															</b>
+														</h5>
+														<h5 align="right">
+															<b>
+																<span>Invoice Total :</span>
+																<span t-field="o.invoice_total" />
+															</b>
+														</h5>
+														<h5 align="right">
+															<b>
+																<span>Difference Amount:</span>
+																<span t-field="o.sign_diff_amount" />
+																<!-- <span t-field="o.sign" /> <span t-field="o.sign_amount"/> -->
+																<!-- <span t-field="o.diff_amount" /> -->
+
+															</b>
+														</h5>
+														<h5 align="left">
+															<b>
+																<span>Note:</span>
+																<span t-field="o.note" />
+															</b>
+														</h5>
+														<table class="table table-condensed" style="border:0pt;">
+															<thead>
+																<tr>
+																	<td style="margin-top:-5pt;" align="left">
+																		<b>
+																			<span>Paid By</span>
+																		</b>
+																	</td>
+																	<td style="margin-top:-5pt;" align="right">
+																		<b>
+																			<span>Received By</span>
+																		</b>
+																	</td>
+																</tr>
+															</thead>
+														</table>
+													</table>
+												</td>
+
+												<td valign="top" align="right"
+													style="padding:15px; width:50%; line-height:18px;">
+													<h4 align="center">
+														<strong>MDG Co.,Ltd</strong>
+													</h4>
+													<h4 align="center">
+														<strong>Advance Receive Report</strong>
+													</h4>
+
+													<table class="table table-condensed">
+														<tr>
+															<td style="border:0pt;font-size:10pt;">
+																<strong>Sales Group :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong t-field="o.sale_team_id.name"></strong>
+															</td>
+															<td style="border:0pt;font-size:8pt;">
+																<strong>Date :</strong>
+															</td>
+															<td style="border:0pt;font-size:8pt;">
+																<strong t-field="o.date"></strong>
+															</td>
+														</tr>
+
+														<tr>
+															<td style="border:0pt;font-size:10pt;">
+																<strong>Name :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong t-field="o.user_id.name" />
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong>Branch :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong t-field="o.branch_id.name"></strong>
+															</td>
+														</tr>
+
+														<tr>
+															<td style="border:0pt;font-size:10pt;">
+																<strong>Receive From :</strong>
+															</td>
+															<td style="border:0pt;font-size:10pt;">
+																<strong t-field="o.receive_from" />
+															</td>
+														</tr>
+														<tr>
+															<td style="border:0pt;font-size:8pt;">
+																<strong>Last Updated On :</strong>
+															</td>
+															<td style="border:0pt;font-size:8pt;">
+																<strong t-field="o.write_date" />
+															</td>
+															<td style="border:0pt;font-size:8pt;">
+																<strong>Last Updated By :</strong>
+															</td>
+															<td style="border:0pt;font-size:8pt;">
+																<strong t-field="o.write_uid" />
+															</td>
+														</tr>
+
+														<table t-if="o.denomination_note_line" class="table table-condensed"
+															style="border:1pt solid;">
+															<h6 align="left">
+																<span class="text-right">
+																	<U>
+																		<b>Cash Denomination</b>
+																	</U>
+																</span>
+															</h6>
+															<thead>
+																<tr>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Notes</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Quantity</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Total</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Remark</th>
+																</tr>
+															</thead>
+															<tbody class="invoice_tbody">
+																<tr t-foreach="o.denomination_note_line" t-as="l">
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="l.notes" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="l.note_qty" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="right">
+																		<span t-field="l.amount" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center"></td>
+																</tr>
+															</tbody>
+														</table>
+														<table t-if="o.denomination_cheque_line" class="table table-condensed"
+															style="border:1pt solid;">
+															<h6 align="left">
+																<span class="text-right">
+																	<U>
+																		<b>Cheque</b>
+																	</U>
+																</span>
+															</h6>
+															<thead>
+																<tr>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Bank</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Cheque No</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Total</th>
+																</tr>
+															</thead>
+															<tbody class="invoice_tbody">
+																<tr t-foreach="o.denomination_cheque_line" t-as="c">
+
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="c.journal_id" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="c.cheque_no" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="right">
+																		<span t-field="c.amount" />
+																	</td>
+
+																</tr>
+															</tbody>
+
+														</table>
+
+														<table t-if="o.denomination_bank_line" class="table table-condensed"
+															style="border:1pt solid;">
+															<h6 align="left">
+																<span class="text-right">
+																	<U>
+																		<b>Bank</b>
+																	</U>
+																</span>
+															</h6>
+															<thead>
+																<tr>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Bank</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Tax No.</th>
+																	<th class="text-center" style="border:1pt solid;border-color:black;">Total</th>
+																</tr>
+															</thead>
+															<tbody class="invoice_tbody">
+																<tr t-foreach="o.denomination_bank_line" t-as="c">
+
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="c.journal_id" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="center">
+																		<span t-field="c.txn_no" />
+																	</td>
+																	<td style="border:1pt solid;border-color:black;"
+																		align="right">
+																		<span t-field="c.amount" />
+																	</td>
+
+																</tr>
+															</tbody>
+
+														</table>
+														<h5 align="right">
+															<b>
+																<span>Amount Total :</span>
+																<span t-field="o.total_amount" />
+
+															</b>
+														</h5>
+														<h5 align="right">
+															<b>
+																<span>Invoice Total :</span>
+																<span t-field="o.invoice_total" />
+
+															</b>
+														</h5>
+														<h5 align="right">
+															<b>
+																<!-- <span>Different Amount:</span> -->
+																<span>Difference Amount:</span>
+																<span t-field="o.sign_diff_amount" />
+																<!-- <span t-field="o.sign" /> <span t-field="o.sign_amount"/> -->
+																<!-- <span t-field="o.diff_amount" /> -->
+
+															</b>
+														</h5>
+														<h5 align="left">
+															<b>
+																<span>Note:</span>
+																<span t-field="o.note" />
+															</b>
+														</h5>
+														<table class="table table-condensed" style="border:0pt;">
+															<thead>
+																<tr>
+																	<td style="margin-top:-5pt;" align="left">
+																		<b>
+																			<span>Paid By</span>
+																		</b>
+																	</td>
+																	<td style="margin-top:-5pt;" align="right">
+																		<b>
+																			<span>Received By</span>
+																		</b>
+																	</td>
+																</tr>
+															</thead>
+														</table>
+													</table>
+												</td>
+											</tr>
+											<div class="oe_structure" />
+										</table>
+									</center>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</t>
+		</template>
+
+		<template id="manual_sales_denomination_report">
+			<t t-call="report.html_container">
+				<t t-foreach="doc_ids" t-as="doc_id">
+					<t
+						t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', 'account_cashier_approval.report_advanced_receive_document')" />
+				</t>
+			</t>
+		</template>
+	</data>
+</openerp>

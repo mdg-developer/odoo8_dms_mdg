@@ -217,10 +217,12 @@
 								<field name="bank_line" attrs="{'readonly':[('state','=','done')]}">
 									<form string="Bank Lines">
 										<field name="journal_id" />
+										<field name="txn_no" />
 										<field name="amount" />
 									</form>
 									<tree string="Bank Lines" editable="bottom">
 										<field name="journal_id" />
+										<field name="txn_no" />
 										<field name="amount" sum="Bank Total" />
 									</tree>
 								</field>

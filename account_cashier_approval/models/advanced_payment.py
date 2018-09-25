@@ -65,7 +65,11 @@ class manual_sale_denomination(osv.osv):
             res[order.id]= sign 
         return res  
     
-    
+    def _get_default_branch(self, cr, uid, context=None):
+        branch_id = self.pool.get('res.users')._get_branch(cr, uid, context=context)
+        if not branch_id:
+            raise osv.except_osv(_('Error!'), _('There is no default branch for the current user!'))
+        return branch_id    
     _columns = {
         'date':fields.datetime('Date'),
         'sale_team_id':fields.many2one('crm.case.section', 'Sales Team' , required=True),
@@ -77,14 +81,17 @@ class manual_sale_denomination(osv.osv):
     'denomination_bank_line':fields.one2many('manual.sales.denomination.bank.line', 'denomination_bank_ids', string='Sale denomination Bank Line', copy=True),       
         'note':fields.text('Note'),    
       'partner_id':fields.many2one('res.partner', string='Partner'),
-    'total_amount':fields.function(_deno_amount, string='Denomination Total', digits_compute=dp.get_precision('Product Price'),type='float'),
+    'total_amount':fields.function(_deno_amount, string='Amount Total', digits_compute=dp.get_precision('Product Price'),type='float'),
     'sign_diff_amount': fields.function(_get_plusorminus_diff_amount, string="Difference Amount", type="char"),
         'receive_from':fields.char('Received From'),
-        'invoice_total':fields.float('Invoice Total')
-        
+        'invoice_total':fields.float('Invoice Total'),
+        'branch_id':fields.many2one('res.branch', 'Branch',readonly=True),
+
                  }
     _defaults = {
         'date': fields.datetime.now,
+        'branch_id': _get_default_branch,
+
         }        
 
     def create(self, cursor, user, vals, context=None):
@@ -155,6 +162,7 @@ class manual_sale_denomination_bank_line(osv.osv):
     _name = 'manual.sales.denomination.bank.line'
     
     _columns = {
+                'txn_no':fields.char('Txn No.', required=False),
                 'denomination_bank_ids': fields.many2one('manual.sales.denomination', 'Sales Denomination'),
                 'amount':fields.float('Total', digits_compute=dp.get_precision('Product Price')),
                 'journal_id':fields.many2one('account.journal', "Journal"),

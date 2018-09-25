@@ -32,6 +32,7 @@
 							</group>
 							<group>
 								<field name="invoice_count" />
+								<field name="branch_id" />
 								<field name="create_uid" />
 								<field name="create_date" />
 								<field name="write_uid" />
@@ -98,12 +99,14 @@
 										<group>
 											<group>
 												<field name="journal_id" string="Bank" />
+												<field name="txn_no"/>
 												<field name="amount" sum="Invoice Total" />
 											</group>
 										</group>
 									</form>
 									<tree string="Bank" editable="bottom">
 										<field name="journal_id" string="Bank" />
+										<field name="txn_no"/>
 										<field name="amount" sum="Invoice Total" />
 									</tree>
 								</field>
@@ -132,7 +135,7 @@
 			<field name="name">Send Denomination Filter</field>
 			<field name="model">manual.sales.denomination</field>
 			<field name="arch" type="xml">
-				<search string="Search Sales denomination">
+				<search string="Search Advanced Receive">
 					<group expand="0" string="Group By...">
 						<filter string="Salesman Name" icon="terp-partner" domain="[]"
 							context="{'group_by':'user_id'}" />
@@ -147,7 +150,7 @@
 			<field name="name">manual.sales.denomination.tree</field>
 			<field name="model">manual.sales.denomination</field>
 			<field name="arch" type="xml">
-				<tree string="Sales Denomination" default_order="name desc">
+				<tree string="Advance Receive" default_order="name desc">
 					<field name="name" />
 					<field name="date" />
 					<field name="invoice_count" />
@@ -158,7 +161,7 @@
 		</record>
 
 		<record id="action_manual_sales_denomination_view" model="ir.actions.act_window">
-			<field name="name">Advanced Receive</field>
+			<field name="name">Advance Receive</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">manual.sales.denomination</field>
 			<field name="view_type">form</field>
@@ -173,7 +176,7 @@
 		</record>
 
 		<menuitem id="manual_sales_denomination" action="action_manual_sales_denomination_view"
-			parent="account.menu_finance_bank_and_cash" name="Advanced Receive"
+			parent="account.menu_finance_bank_and_cash" name="Advance Receive"
 			sequence="15" />
 	</data>
 </openerp>

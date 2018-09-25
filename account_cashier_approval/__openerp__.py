@@ -43,8 +43,10 @@ Sale Cashier Approval
         'views/report_cashier_approval.xml',
         'views/custom_layout.xml',
         'views/manual_cashier_approval_view.xml',
-        'views/advanced_payment_view.xml'
-        
+        'views/advanced_payment_view.xml',
+        'reports/qweb_view.xml',
+        'reports/report_denomination.xml',
+        'reports/custom_layout.xml',        
     ],
     'installable': True,
     'auto_install': False,
