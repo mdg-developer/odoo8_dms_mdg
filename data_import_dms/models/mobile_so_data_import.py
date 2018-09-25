@@ -178,18 +178,17 @@ class mobile_sale_import(osv.osv):
                             DiscountAmount_i = i
                         elif header_field == 'deductionamount':
                             DeductionAmount_i = i
-
                         elif header_field == 'orderreference':
                             OrderRefNo_i = i
-#                         elif header_field == 'Tax':
-#                             Tax_i=i                               
+                        elif header_field == 'tax':
+                            Tax_i=i                               
                       
                     for f in [(OrderRefNo_i, 'orderreference'), (DiscountAmount_i, 'discountamount'), (CustomerCode_i, 'customercode'),
                               (SalemanName_i, 'salemanname'), (SalePlanDay_i, 'saleplanday'), (SalePlanTrip_i, 'saleplantrip'),
                               (Date_i, 'date'), (PaymentType_i, 'paymenttype'), (DeliverRemark_i, 'deliverremark'),
                               (Discount_i, 'discount(%)'), (DeductionAmount_i, 'deductionamount'), (PriceList_i, 'pricelist'),
                               (Paid_i, 'paid'), (Void_i, 'void'), (Products_i, 'product'), (Quantity_i, 'quantity(pcs)'), (UnitPrice_i, 'unitprice'),
-                              (SaleTeam_i, 'saleteam'), (PaymentTerm_i, 'paymentterm')]:
+                              (SaleTeam_i, 'saleteam'), (Tax_i, 'Tax'),(PaymentTerm_i, 'paymentterm')]:
                         if not isinstance(f[0], int):
                             err_log += '\n' + _("Invalid Excel file, Header '%s' is missing !") % f[1]                           
 
@@ -225,6 +224,7 @@ class mobile_sale_import(osv.osv):
                     import_vals['discountamount'] = ln[DiscountAmount_i]
       
                     import_vals['orderreference'] = ln[OrderRefNo_i]
+                    import_vals['Tax']=ln[Tax_i]
                     amls.append(import_vals)
                     
         if err_log:
@@ -236,7 +236,7 @@ class mobile_sale_import(osv.osv):
             try : 
                 for aml in amls:
                     order_ids = pricelist_ids = payment_term_ids = uom_ids = partner_ids = _tax = _foc = _state = analytic_id = pricelist_id = partner_id = country_id = saleperson_id = warehouse_id = product_id = user_id = sale_plan_day_id = sale_plan_trip_id = section_id = payment_term_id = _duedate = None
-                    void = secObj = orderRef = partner_code = payment_type = delivery_remark = saleperson_name = sale_plan_day_name = sale_plan_trip_name = section_name = payment_term_name = pricelist_name = date = pricelist_name = so_partner_id=so_date=so_ref=None
+                    void = secObj = orderRef = partner_code = branch_id=payment_type = delivery_remark = saleperson_name = sale_plan_day_name = sale_plan_trip_name = section_name = payment_term_name = pricelist_name = date = pricelist_name = so_partner_id=so_date=so_ref=None
                    # product_code = aml['ProductsCODE']
                     discount_amount = qty_pcs = unit_price = discount = deduct_amt = numberOfDays = 0
                     if aml['product']: 
@@ -246,6 +246,8 @@ class mobile_sale_import(osv.osv):
                     
                     if aml['orderreference']:
                         orderRef = str(aml['orderreference']).strip()
+                    if aml['Tax']:
+                        tax=str(aml['Tax']).strip()
                     if aml['customercode']:
                         partner_code = str(aml['customercode']).strip()
                         
@@ -378,7 +380,8 @@ class mobile_sale_import(osv.osv):
                             section_id = section_ids[0]
                             secObj = section_obj.browse(cr, uid, section_id, context=None)
                     if secObj:
-                        warehouse_id = secObj.warehouse_id.id       
+                        warehouse_id = secObj.warehouse_id.id
+                        branch_id=secObj.branch_id.id
                     if payment_term_name:
                         cr.execute(""" select id from account_payment_term where lower(name) = %s """, (payment_term_name.lower(),))
                         data = cr.fetchall()
@@ -387,6 +390,7 @@ class mobile_sale_import(osv.osv):
         #                     payment_term_ids = payment_term_obj.search(cr, uid, [('name', '=', payment_term_name)])
                         if payment_term_ids:
                             payment_term_id = payment_term_ids[0]
+                                                                  
                     if payment_term_id:
                         cr.execute(""" select days from account_payment_term_line where payment_id=%s""", (payment_term_id,))
                         data = cr.fetchall()
@@ -402,9 +406,10 @@ class mobile_sale_import(osv.osv):
                             product_id = product_ids[0]
                             productObj = product_obj.browse(cr, uid, product_id, context=None)
                             uom_ids = productObj.uom_id.id
-                            
+                        else:
+                            raise osv.except_osv(_('Warning!'), _("Please Check Your Product Name '%s'!") % (products_name,))                                      
                         
-<<<<<<< HEAD
+
                     if void.lower() == "" and void.lower() == "unvoid": 
                         _state = "draft"
                     elif void.lower() == "void":
@@ -413,7 +418,7 @@ class mobile_sale_import(osv.osv):
                         _state = "draft"
                      
                      
-=======
+
                 if section_name:
                     cr.execute(""" select id from crm_case_section where lower(name) =%s """, (section_name.lower(),))
                     data = cr.fetchall()
@@ -424,7 +429,8 @@ class mobile_sale_import(osv.osv):
                         section_id = section_ids[0]
                         secObj = section_obj.browse(cr, uid, section_id, context=None)
                 if secObj:
-                    warehouse_id = secObj.warehouse_id.id       
+                    warehouse_id = secObj.warehouse_id.id   
+                    branch_id=secObj.branch_id.id    
                 if payment_term_name:
                     cr.execute(""" select id from account_payment_term where lower(name) = %s """, (payment_term_name.lower(),))
                     data = cr.fetchall()
@@ -450,8 +456,7 @@ class mobile_sale_import(osv.osv):
                         product_id = product_ids[0]
                         productObj = product_obj.browse(cr, uid, product_id, context=None)
                         uom_ids = productObj.uom_id.id
->>>>>>> 116d1741bd1545505d1374518ef3e28ab7d65494
-                        
+                                  
                     if deduct_amt == "":
                         deduct_amt = 0
                     elif deduct_amt is None:
@@ -480,10 +485,26 @@ class mobile_sale_import(osv.osv):
                     if discount != 0:
                         discount_amount = (qty_pcs * unit_price) * (discount / 100)
           
+                    if tax:
+                        cr.execute(""" select id from account_tax where description = %s """, (tax,))
+                        tax_record = cr.fetchall()     
+                        if tax_record:
+                            taxs = tax_record[0][0]
+                            if taxs and partner_id:
+                                partner=partner_obj.browse(cr, uid, partner_id, context=context)
+                                taxs=self.pool.get('account.tax').browse(cr, uid, taxs, context=context)
+                                fpos = partner.property_account_position or False
+                                tax_id = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxs, context=context)
+                                tax_data=[[6, 0, tax_id]]
+                        else:
+                            tax_data=False
+                            raise osv.except_osv(_('Warning!'), _("Please Check Your Tax Name '%s'!") % (tax.lower(),))                                      
                     
                     # Sale Plan Name, Sale Plan Day,Sale Plan Trip, Deliver Remark, Discount, Deduction Amount,Paid Amount, Paid,Void
+
                     order_value = {
                                   'partner_id':partner_id,
+                                  'branch_id':branch_id,
                                   'company_id':1,  # company_id,
                                   'user_id':user_id,
                                   'customer_code':partner_code,
@@ -492,6 +513,7 @@ class mobile_sale_import(osv.osv):
                                   'section_id':section_id,
                                   'payment_term':payment_term_id,
                                   'date_order':date,
+                                  
         #                               'date_confirm':date + timedelta(days=numberOfDays),
                                   'due_date':date + timedelta(days=numberOfDays),
                                   'payment_type':payment_type.lower(),
@@ -502,6 +524,7 @@ class mobile_sale_import(osv.osv):
                                   'warehouse_id':warehouse_id,
                                   'deduct_amt':deduct_amt,
                                   'tb_ref_no':orderRef
+                                  
                                   }
                     cr.execute(""" select id,tb_ref_no from sale_order where lower(tb_ref_no) =%s""", (orderRef.lower(),))
                     data = cr.fetchall()
@@ -516,8 +539,8 @@ class mobile_sale_import(osv.osv):
                             cr.execute("""delete from sale_order_line where order_id=%s""", (order_id,))
                 #forinsert
                 for aml in amls:
-                    order_ids = pricelist_ids = payment_term_ids = uom_ids = partner_ids = _tax = _foc = _state = analytic_id = pricelist_id = partner_id = country_id = saleperson_id = warehouse_id = product_id = user_id = sale_plan_day_id = sale_plan_trip_id = section_id = payment_term_id = _duedate = None
-                    void = secObj = orderRef = partner_code = payment_type = delivery_remark = saleperson_name = sale_plan_day_name = sale_plan_trip_name = section_name = payment_term_name = pricelist_name = date = pricelist_name = so_partner_id=so_date=so_ref=None
+                    order_ids = pricelist_ids = payment_term_ids = uom_ids = partner_ids = tax = _foc = _state = analytic_id = pricelist_id = partner_id = country_id = saleperson_id = warehouse_id = product_id = user_id = sale_plan_day_id = sale_plan_trip_id = section_id = payment_term_id = _duedate = None
+                    void = secObj = orderRef = partner_code = payment_type =branch_id= delivery_remark = saleperson_name = sale_plan_day_name = sale_plan_trip_name = section_name = payment_term_name = pricelist_name = date = pricelist_name = so_partner_id=so_date=so_ref=None
                    # product_code = aml['ProductsCODE']
                     discount_amount = qty_pcs = unit_price = discount = deduct_amt = numberOfDays = 0
                     if aml['product']: 
@@ -578,6 +601,8 @@ class mobile_sale_import(osv.osv):
                         
                     if aml['void']:
                         void = str(aml['void']).strip()
+                    if aml['Tax']:
+                        tax = str(aml['Tax']).strip()                        
                         
                     if aml['date']:
                         try:
@@ -659,7 +684,8 @@ class mobile_sale_import(osv.osv):
                             section_id = section_ids[0]
                             secObj = section_obj.browse(cr, uid, section_id, context=None)
                     if secObj:
-                        warehouse_id = secObj.warehouse_id.id       
+                        warehouse_id = secObj.warehouse_id.id     
+                        branch_id=secObj.branch_id.id  
                     if payment_term_name:
                         cr.execute(""" select id from account_payment_term where lower(name) = %s """, (payment_term_name.lower(),))
                         data = cr.fetchall()
@@ -722,10 +748,24 @@ class mobile_sale_import(osv.osv):
                     if discount != 0:
                         discount_amount = (qty_pcs * unit_price) * (discount / 100)
           
-                    
+                    if tax:
+                        cr.execute(""" select id from account_tax where description = %s """, (tax,))
+                        tax_record = cr.fetchall()     
+                        if tax_record:
+                            taxs = tax_record[0][0]
+                            if taxs and partner_id:
+                                partner=partner_obj.browse(cr, uid, partner_id, context=context)
+                                taxs=self.pool.get('account.tax').browse(cr, uid, taxs, context=context)
+                                fpos = partner.property_account_position or False
+                                tax_id = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxs, context=context)
+                                tax_data=[[6, 0, tax_id]]
+                        else:
+                            tax_data=False
+                            raise osv.except_osv(_('Warning!'), _("Please Check Your Tax Name '%s'!") % (tax.lower(),))                        
                     # Sale Plan Name, Sale Plan Day,Sale Plan Trip, Deliver Remark, Discount, Deduction Amount,Paid Amount, Paid,Void
                     order_value = {
                                   'partner_id':partner_id,
+                                  'branch_id':branch_id,
                                   'company_id':1,  # company_id,
                                   'user_id':user_id,
                                   'customer_code':partner_code,
@@ -769,6 +809,7 @@ class mobile_sale_import(osv.osv):
                                       'discount_amt':discount_amount,
                                       'company_id':1,  # company_id,
                                       'state':'draft',
+                                      'tax_id': tax_data,
                                       # 'invoiced':'TRUE',
                     
                                     }
