@@ -106,7 +106,7 @@
 																	</td>
 																	<td style="border:1pt solid;border-color:black;"
 																		align="right">
-																		<span t-field="l.amount" />
+																		<t t-esc="'{0:,.0f}'.format(l.amount)"/>
 																	</td>
 																	<td style="border:1pt solid;border-color:black;"
 																		align="center"></td>
@@ -145,7 +145,7 @@
 																	</td>
 																	<td style="border:1pt solid;border-color:black;"
 																		align="right">
-																		<span t-field="c.amount" />
+																		<span t-esc="'{0:,.0f}'.format(c.amount)" />
 																	</td>
 
 																</tr>
@@ -183,7 +183,7 @@
 
 																	<td style="border:1pt solid;border-color:black;"
 																		align="right">
-																		<span t-field="c.amount" />
+																		<span t-esc="'{0:,.0f}'.format(c.amount)"/>
 																	</td>
 
 																</tr>
@@ -195,19 +195,19 @@
 														<h5 align="right">
 															<b>
 																<span>Amount Total :</span>
-																<span t-field="o.total_amount" />
+																<span t-esc="'{0:,.0f}'.format(o.total_amount)"/>
 															</b>
 														</h5>
 														<h5 align="right">
 															<b>
 																<span>Invoice Total :</span>
-																<span t-field="o.invoice_total" />
+																<span t-esc="'{0:,.0f}'.format(o.invoice_total)" />
 															</b>
 														</h5>
 														<h5 align="right">
 															<b>
 																<span>Difference Amount:</span>
-																<span t-field="o.sign_diff_amount" />
+                                                                <span t-field="o.sign_diff_amount" />
 																<!-- <span t-field="o.sign" /> <span t-field="o.sign_amount"/> -->
 																<!-- <span t-field="o.diff_amount" /> -->
 
@@ -330,7 +330,7 @@
 																	</td>
 																	<td style="border:1pt solid;border-color:black;"
 																		align="right">
-																		<span t-field="l.amount" />
+																		<span t-esc="'{0:,.0f}'.format(l.amount)" />
 																	</td>
 																	<td style="border:1pt solid;border-color:black;"
 																		align="center"></td>
@@ -366,7 +366,7 @@
 																	</td>
 																	<td style="border:1pt solid;border-color:black;"
 																		align="right">
-																		<span t-field="c.amount" />
+																		<span t-esc="'{0:,.0f}'.format(c.amount)" />
 																	</td>
 
 																</tr>
@@ -403,7 +403,7 @@
 																	</td>
 																	<td style="border:1pt solid;border-color:black;"
 																		align="right">
-																		<span t-field="c.amount" />
+																		<span t-esc="'{0:,.0f}'.format(c.amount)"/>
 																	</td>
 
 																</tr>
@@ -413,14 +413,14 @@
 														<h5 align="right">
 															<b>
 																<span>Amount Total :</span>
-																<span t-field="o.total_amount" />
+																<span t-esc="'{0:,.0f}'.format(o.total_amount)"  />
 
 															</b>
 														</h5>
 														<h5 align="right">
 															<b>
 																<span>Invoice Total :</span>
-																<span t-field="o.invoice_total" />
+																<span  t-esc="'{0:,.0f}'.format(o.invoice_total)" />
 
 															</b>
 														</h5>
@@ -428,7 +428,7 @@
 															<b>
 																<!-- <span>Different Amount:</span> -->
 																<span>Difference Amount:</span>
-																<span t-field="o.sign_diff_amount" />
+                                                                <span t-field="o.sign_diff_amount" />
 																<!-- <span t-field="o.sign" /> <span t-field="o.sign_amount"/> -->
 																<!-- <span t-field="o.diff_amount" /> -->
 

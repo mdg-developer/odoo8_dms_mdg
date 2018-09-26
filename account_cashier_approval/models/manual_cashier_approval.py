@@ -1246,7 +1246,7 @@ class manual_cashier_bank_line(osv.osv):
     _name = 'manual.cashier.bank.line'
     
     _columns = {
-             'txn_no':fields.char('Txn No.', required=False),
+             'txn_no':fields.char('Txn No.', required=True),
               'cashier_id':fields.many2one('manual.cashier.approval', 'Cashier Approval'),
                 'amount':fields.float('Total', digits_compute=dp.get_precision('Product Price')),
                 'journal_id':fields.many2one('account.journal', "Journal"),

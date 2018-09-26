@@ -125,12 +125,13 @@ class manual_sale_denomination_note_line(osv.osv):
     _name = 'manual.sales.denomination.note.line'
     
     def on_change_note_qty(self, cr, uid, ids, notes, note_qty, context=None):
-        values = {}
+        values = {'amount':0}
         if notes and note_qty:
             notes = notes.replace(',', '')
             values = {
                 'amount':float(notes) * note_qty,
             }
+ 
         return {'value': values}   
     
     _columns = {
@@ -162,7 +163,7 @@ class manual_sale_denomination_bank_line(osv.osv):
     _name = 'manual.sales.denomination.bank.line'
     
     _columns = {
-                'txn_no':fields.char('Txn No.', required=False),
+                'txn_no':fields.char('Txn No.', required=True),
                 'denomination_bank_ids': fields.many2one('manual.sales.denomination', 'Sales Denomination'),
                 'amount':fields.float('Total', digits_compute=dp.get_precision('Product Price')),
                 'journal_id':fields.many2one('account.journal', "Journal"),

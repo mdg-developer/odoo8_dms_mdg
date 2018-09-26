@@ -28,7 +28,7 @@
 									<field name="date" attrs="{'readonly':[('state','=','done')]}" />
 									<field name="sale_team_id" on_change="onchange_sale_team_id(sale_team_id)"
 										attrs="{'readonly':[('state','=','done')]}" />
-									<field name="user_id" 
+									<field name="user_id" domain="[('default_section_id', '=',sale_team_id)]"
 										attrs="{'readonly':[('state','=','done')]}" />
 								</group>
 								<group>

@@ -26,7 +26,7 @@
 							<group>
 								<field name="name" />
 								<field name="sale_team_id" />
-								<field name="user_id" />
+								<field name="user_id" domain="[('default_section_id', '=',sale_team_id)]"/>
 								<field name="date" />
 								<field name="receive_from" />
 							</group>
